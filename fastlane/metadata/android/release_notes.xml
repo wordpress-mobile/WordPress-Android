@@ -1,180 +1,106 @@
 <ar>
-17.5:
-ما الجديد في الإصدار 17.5؟
-
-تسمح لك المكوِّنات القابلة لإعادة الاستخدام بإنشاء محتوى المكوِّن مرة واحدة وإعادة استخدامه عدد مرات غير محدود، مباشرةً من أداة إدراج المكوِّن.
-
-تجعل الأوامر التي تبدأ بشرطة إضافة المكوِّنات أمرًا سهلاً: ما عليك سوى الضغط على شرطة مائلة إلى الأمام واسم المكوِّن في المحرِّر.
-
-يمكنك الآن الاحتفاظ بالصوت عبر عنوان URL باستخدام مكوِّن الصوت.
-
-وأخيرًا، يمكن لقراء الشاشة الآن تحديد خلية السائر.
+17.7:
+- جديد! الحصول على مطالبات تذكير التدوين في أيام من اختيارك
+- محرِّر المكوِّن: شبكة تخطيط مكوِّن جديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
+- تم إصلاح مشكلة المقالة المكررة للقارئ
+- تمت إضافة القدرة على الاشتراك في المحادثات عن طريق البريد الإلكتروني من القارئ
 </ar>
 <de-DE>
-17.5:
-Was ist neu in 17.5?
-
-Mit wiederverwendbaren Blöcken musst du Blockinhalte nur einmal erstellen. Dann kannst du sie direkt über den Block-Inserter beliebig oft wiederverwenden.
-
-Schrägstrichbefehle erleichtern dir das Hinzufügen von Blöcken: Gib dazu einfach einen Schrägstrich gefolgt vom Blocknamen in den Editor ein.
-
-Mit dem Audioblock kannst du nun Audiodateien per URL einbinden.
-
-Und nicht zuletzt können Screenreader ab sofort die Stepper-Zelle auswählen.
+17.7:
+- Neu! Erhalte Blog-Erinnerungen an Tagen deiner Wahl
+- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
+- Problem mit doppeltem Beitrag im Reader behoben
+- Möglichkeit zum Abonnieren von Unterhaltungen per E-Mail im Reader hinzugefügt
 </de-DE>
 <en-US>
-17.5:
-What’s new in 17.5?
-
-Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
-
-Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
-
-You can now pull in audio via URL with the Audio block.
-
-Finally, screen readers can now select the stepper cell.
+17.7:
+- New! Get blogging reminder prompts on days of your choice
+- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
+- Fixed Reader duplicate post issue
+- Added ability to subscribe to conversations by email from Reader
 </en-US>
+<es-ES>
+17.7:
+- ¡Nuevo! Obtén avisos de recordatorio de blogueo los días que elijas
+- Editor de bloques: Nuevo bloque de diseño de cuadrícula, retoques del estilo de las acreditaciones, corrección de un nuevo bloque no creado al pulsar Intro dentro del bloque basado en texto, correcciones de la vista en tableta para el botón de inserción
+- Corregido el problema de entradas duplicadas en el lector.
+- Añadida la posibilidad de suscripción a conversaciones por correo electrónico desde el lector
+</es-ES>
 <iw-IL>
-17.5:
-מה חדש בגרסת 17.5?
-
-בלוקים לשימוש חוזר מאפשרים לך ליצור תוכן של בלוק פעם אחת ולהשתמש בו שוב ושוב, ללא הגבלה, ישירות מתוך מוסיף הבלוקים.
-
-פקודות של קו נטוי מאפשרות לך להוסיף בלוקים בקלות: אפשר להקיש על הקו הנטוי לפנים ולהקליד את שם הבלוק בעורך.
-
-אפשר להוסיף אודיו דרך כתובת URL באמצעות בלוק האודיו.
-
-אחרון חביב, קוראי מסכים כעת בוחרים את התא של השלבים.
+17.7:
+- חדש! הודעות תזכורת להתחיל בכתיבת בלוג בימים שבחרת
+עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
+- תוקנה בעיה של פוסט משוכפל בקורא
+- נוספה היכולת להירשם מהקורא לשיחות באימייל
 </iw-IL>
 <id>
-17.5:
-Apa yang baru di versi 17.5?
-
-Blok pakai ulang memungkinkan Anda membuat konten blok satu kali dan menggunakannya berulang kali, langsung dari penyisip blok.
-
-Perintah garis miring mempermudah penambahan blok: cukup ketik garis miring dan nama blok ke dalam editor.
-
-Sekarang Anda dapat menambahkan audio melalui URL dengan blok Audio.
-
-Terakhir, sekarang pembaca layar dapat memilih sel yang lebih rumit.
+17.7:
+- Baru! Dapatkan pesan pengingat blogging pada hari yang sudah dipilih
+- Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
+- Masalah pos duplikat di Pembaca sudah diperbaiki
+- Fitur berlangganan ke percakapan melalui email dari Pembaca sudah ditambahkan
 </id>
-<it-IT>
-17.5
-:Novità nella versione 17.5?
-
-I blocchi Riutilizzabili ti consentono di creare il contenuto del blocco una volta e riutilizzarlo infinite volte, direttamente dallo strumento per l'inserimento dei blocchi.
-
-I comandi slash semplificano l'aggiunta di blocchi: basta toccare una barra e il nome del blocco nell'editor.
-
-Ora puoi inserire l'audio tramite URL con il blocco Audio.
-
-Infine, i lettori di schermo possono ora selezionare la casella passo passo.
-</it-IT>
 <ja-JP>
-17.5:
-17.5の新機能
-
-再利用可能ブロックでブロックコンテンツを一度作成しておくと、「ブロック挿入」から何度でも再使用できるようになりました。
-
-スラッシュコマンドでブロック追加操作が簡単になりました。スラッシュとブロック名をタップしてエディターに入力するだけです。
-
-音声ブロックを使用することで URL を介して音声を取り込めるようになりました。
-
-ついに、スクリーンリーダーではステッパーセルを選択できるようになりました。
+17.7:
+- 新しくなりました ! 指定した日にブログ作成のリマインダーを受け取ることができます
+- ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
+- Reader の重複投稿の問題を修正
+- Reader からメールで会話をフォローする機能の追加
+ 
 </ja-JP>
 <ko-KR>
-17.5:
-17.5의 새로운 기능
-
-재활용 가능한 블록을 통해 블록 콘텐츠를 한 번 생성하면 횟수 제한 없이 블록 편집기에서 바로 재활용할 수 있습니다.
-
-슬래시 명령을 통해 블록을 쉽게 추가할 수 있습니다. 편집기에서 슬래시와 블록 이름을 활용하면 됩니다.
-
-이제 오디오 블록으로 URL을 통해 오디오를 가져올 수 있습니다.
-
-마지막으로, 이제 화면 리더에서 스텝퍼 셀을 선택할 수 있습니다.
+17.7:
+- 새로운 기능! 선택한 일자의 블로깅 알림 메시지 받기
+- 블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
+- 리더 중복 글 문제를 해결했음
+- 리더에서 이메일로 대화를 구독하는 기능을 추가했음
 </ko-KR>
 <nl-NL>
-17.5:
-Wat is er nieuw in 17.5?
-
-Met herbruikbare blokken kun je eenmaal blokinhoud maken en deze oneindig vaak hergebruiken, rechtstreeks vanuit de blok inserter.
-
-Slash opdrachten maken het toevoegen van blokken eenvoudig: tik gewoon op een voorwaartse schuine streep en bloknaam in de editor.
-
-Je kunt nu audio via URL ophalen met het audioblok.
-
-Ten slotte kunnen schermlezers nu de stepper cel selecteren.
+17.7:
+- Nieuw! Ontvang herinneringen om te bloggen op zelf te kiezen dagen
+- Blokeditor: Nieuwe indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
+- Probleem van dubbel bericht in de lezer verholpen
+- Functie toegevoegd om vanaf de lezer je per e-mail te abonneren op gesprekken
 </nl-NL>
 <pt-BR>
-17.5:
-Quais as novidades da versão 17.5?
-
-Blocos reutilizáveis permitem que você crie o conteúdo de blocos apenas uma vez e reutilize infinitas vezes diretamente no adicionador de blocos.
-
-Comandos com barra facilitam a adição de blocos: digite uma barra e depois o nome de um bloco no editor.
-
-Agora você pode adicionar arquivos de áudio com um URL no bloco de áudio.
-
-Por fim, leitores de tela agora podem selecionar células de passagem no editor.
+17.7:
+- Novidade! Receba lembretes para publicar nos dias que você quiser
+- Editor de blocos: Novo bloco de layout em grade, melhorias no estilo dos rótulos, correção de blocos não criados ao pressionar Enter em um bloco de texto. Correções no botão de inserção na visão em tablet
+- Correção de post duplicado no Leitor
+- Adição de possibilidade de inscrever-se a uma conversa por e-mail no Leitor
 </pt-BR>
 <ru-RU>
-17,5:
-Что нового в версии 17.5?
-
-Библиотека "Мои блоки" позволяет создавать содержимое блока один раз и повторно использовать его бесконечное количество раз прямо из панели для вставки блоков.
-
-Команды с косой чертой (слеш) упрощают добавление блоков: просто коснитесь слеша и имени блока в редакторе.
-
-Теперь вы можете вставлять аудио через URL-адрес с помощью блока Audio.
-
-Наконец, программы чтения с экрана теперь могут выбирать шаговую ячейку.
+17,7:
+- Новое! Получайте напоминания о необходимости ведении блога в выбранные вами дни
+- Редактор блоков: Новая сетка макета, настройки стилей бейджей. Исправление создание нового блока при нажатии Ввода внутри текстового блока. Для кнопки вставки исправлен просмотр для планшета.
+- Исправлены проблемы с дублированием записей в Чтиве.
+- Добавлена возможность подписки на обсуждения по email из Чтива.
 </ru-RU>
 <sv-SE>
-17.5:
-Nytt i 17.5.
-
-Återanvändbara block låter dig skapa blockinnehåll en gång och sedan återanvända det gång på gång, direkt från blockinfogaren.
-
-Snedstreckskommandon gör enkelt att lägga till block: tryck på snedstreck och skriv in blocknamnet i redigeraren.
-
-Nu kan du lägga in ljudfiler via en URL i ljudblocket.
-
-Slutligen har skärmläsare nu möjlighet att markera stegningscellen.
+17.7:
+- Nyhet! Nu kan du få bloggningspåminnelser de dagar du själv väljer
+- Blockredigeraren: Nytt rutnät för layout av block, justeringar av knappstilar, rättat ett fel där nya block inte skapades när man tryckte enter inuti ett textbaserat block, korrigeringar av vy i surfplatta för infogningsknapp
+- Rättat fel med duplicerade inlägg i läsaren
+- Lagt till möjlighet att prenumerera på konversationer via e-post inifrån läsaren
 </sv-SE>
 <tr-TR>
-17.5:
-17.5 sürümündeki yenilikler neler?
-
-Yeniden kullanılabilir bloklar, doğrudan blok yerleştiriciden blok içeriğini bir kez oluşturup sonsuz kez yeniden kullanmanıza olanak tanır.
-
-Eğik çizgi komutları blok eklemeyi kolaylaştırır: Düzenleyicide bir eğik çizgiye ve blok adına dokunmanız yeterlidir.
-
-Artık Ses bloku ile URL üzerinden ses alabilirsiniz.
-
-Son olarak, ekran okuyucular artık adım hücresini seçebilir.
+17.7:
+- Yeni! Seçtiğiniz günlerde blog hatırlatıcı istemleri alın
+- Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
+- Okuyucu'da yinelenen gönderi sorunu düzeltildi
+- Okuycu içinden e-posta ile konuşmalara abone olma özelliği eklendi
 </tr-TR>
 <zh-CN>
-17.5：
-17.5 有什么新特性？
-
-可重用区块让您只需创建一次区块内容，就可以在区块插入器中无限次重复使用。
-
-斜线命令使添加区块变得简单：只需在编辑器中点按一下正斜线和区块名称。
-
-您现在可以用音频区块通过URL嵌入音频。
-
-最后，屏幕阅读器现以可选择单元格。
+17.7：
+- 新功能！ 在您选定的日期收到博客发布提醒提示
+- 区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
+- 修复了阅读器重复发布文章的问题
+- 增加了通过电子邮件从阅读器订阅对话的功能
 </zh-CN>
 <zh-TW>
-17.5：
-17.5 版有哪些新功能？
-
-可重複使用區塊讓你只要建立一次區塊內容，就能直接從區塊插入工具重複使用，不限次數。
-
-斜線指令可輕鬆新增區塊：只要在編輯器中點選斜線和區塊名稱即可。
-
-你現在可使用音訊區塊透過 URL 嵌入音訊。
-
-最後，螢幕閱讀器現在可以選取步進器欄位。
+17.7：
+- 全新推出！ 您可以選擇要在哪些日子收到網誌提醒
+- 區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
+- 修正閱讀器重複文章問題
+- 新增透過電子郵件收到閱讀器討論的訂閱功能
 </zh-TW>

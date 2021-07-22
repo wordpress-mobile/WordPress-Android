@@ -37,6 +37,8 @@ class GetLikesHandler @Inject constructor(
         limit: Int = LIKES_RESULT_NO_LIMITS,
         expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0." }
         getLikesUseCase.getLikesForPost(
                 fingerPrint,
                 PaginationParams(
@@ -55,6 +57,8 @@ class GetLikesHandler @Inject constructor(
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0" }
         getLikesUseCase.getLikesForComment(
                 fingerPrint,
                 PaginationParams(

@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-14 17:42:00+0000
+Translation-Revision-Date: 2021-07-12 22:04:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ogiltig URL. Ange en giltig URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Inbäddat innehåll från %s kan för närvarande inte visas i den mobila redigeraren. Förhandsvisa sidan för att se det inbäddade innehållet.</string>
+    <string name="gutenberg_native_embed_caption_s">Bädda in bildtext. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Beskrivning för inbäddning. Tom</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">LÄGG TILL LÄNK</string>
+    <string name="activity_log_visit_our_documentation_page">besök vår dokumentationssida</string>
+    <string name="activity_log_multisite_message">Jetpack Backup för Multisite-installationer möjliggör nedladdningsbara säkerhetskopior utan återställning med ett klick. Mer information: %1$s.</string>
+    <string name="blogging_reminders_tip_message">Genom att publicera regelbundet kan du bidra till att hålla dina läsare engagerade och locka nya besökare till webbplatsen.</string>
+    <string name="blogging_reminders_tip">Tips</string>
+    <string name="blogging_reminders_select_days_message">Du kan uppdatera detta när som helst</string>
+    <string name="blogging_reminders_select_days">Ange på vilka dagar du vill blogga</string>
+    <string name="blogging_reminders_epilogue_caption">Du kan ändra detta när som helst via Min webbplats → Inställningar → Bloggningspåminnelser.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Du har inga påminnelser inställda.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Du får påminnelser om att blogga &lt;b&gt;varje dag&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Du kommer att få bloggningspåminnelser %1$s per vecka på %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Påminnelser borttagna!</string>
+    <string name="blogging_reminders_epilogue_title">Allt är klart!</string>
+    <string name="blogging_reminders_update">Uppdatera</string>
+    <string name="blogging_reminders_not_set">Ingenting är inställt</string>
+    <string name="blogging_reminders_n_a_week">%s per vecka</string>
+    <string name="set_your_blogging_reminders_button">Ställ in påminnelser</string>
+    <string name="set_up_blogging_reminders_message">Ställ in bloggningspåminnelser de dagar du vill publicera.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Ditt inlägg håller på att publiceras … Medan du väntar kan du konfigurera bloggningspåminnelser för de dagar du vill publicera något.</string>
+    <string name="set_your_blogging_reminders_title">Ange dina bloggningspåminnelser</string>
+    <string name="blogging_reminders_notification_text">Det här är din påminnelse om att skapa något idag</string>
+    <string name="blogging_reminders_notification_title">Det är dags att blogga på %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Redigering av återanvändbara block stöds ännu inte i WordPress för iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Redigering av återanvändbara block stöds ännu inte i WordPress för Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Som ett alternativ kan du frikoppla dessa block och redigera dem separat genom att trycka på ”konvertera till vanliga block”.</string>
     <string name="blogging_reminders_done">Klart</string>
     <string name="blogging_reminders_notify_me">Påminn mig</string>
-    <string name="blogging_goals_not_set">Ingenting har konfigurerats</string>
-    <string name="blogging_goals_n_times_a_week">%d gånger per vecka</string>
-    <string name="set_your_blogging_goals_button">Konfigurera mål</string>
-    <string name="set_your_blogging_goals_message">Ditt inlägg håller på att publiceras … Medan du väntar kan du konfigurera dina bloggningsmål för att få påminnelser och följa upp dina framsteg.</string>
-    <string name="set_your_blogging_goals_title">Ange mål för din bloggning</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att möjliggöra återställning av webbplatsen från säkerhetskopior med ett klick.</string>
     <string name="gutenberg_native_set_as_featured_image">Ställ in som utvald bild </string>
     <string name="gutenberg_native_remove_as_featured_image">Ta bort som utvald bild </string>
@@ -23,7 +47,7 @@ Language: sv_SE
     <string name="site_settings_categories_empty_subtitle">Lägg till dina vanligaste kategorier här, så att du snabbt kan välja dem för att kategorisera dina inlägg</string>
     <string name="site_settings_categories_empty_button">Skapa en kategori</string>
     <string name="site_settings_categories_title">Kategorier</string>
-    <string name="site_settings_blogging_reminders_title">Bloggningsmål</string>
+    <string name="site_settings_blogging_reminders_title">Bloggningspåminnelser</string>
     <string name="page_is_posts_page_warning">Innehållet på sidan med dina senaste inlägg genereras automatiskt och kan inte redigeras.</string>
     <string name="gutenberg_native_border_settings">Raminställningar</string>
     <string name="storage_utils_dialog_dont_show_button">Visa inte igen</string>
@@ -60,7 +84,7 @@ Language: sv_SE
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hoten.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hotet.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltryck för att lägga till en länk.</string>
-    <string name="gutenberg_native_add_link">LÄGG TILL LÄNK</string>
+    <string name="gutenberg_native_edit_link">REDIGERA  LÄNK</string>
     <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
     <string name="login_empty_view_see_instructions">Se instruktionerna</string>
     <string name="login_no_jetpack_sites_error_message">Om du redan har en webbplats behöver du installera gratis-tillägget Jetpack och ansluta det till ditt konto hos WordPress.com.</string>
@@ -80,6 +104,7 @@ Language: sv_SE
     <string name="gutenberg_native_post_meta_settings">Inställningar för metainformation om inlägg</string>
     <string name="gutenberg_native_post_content_settings">Inställningar för inläggsinnehåll</string>
     <string name="gutenberg_native_featured">Utvalda</string>
+    <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
@@ -99,9 +124,7 @@ Language: sv_SE
     <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
     <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
-    <string name="gutenberg_native_search_blocks">Sök block</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
-    <string name="gutenberg_native_search_block">Sök block</string>
     <string name="gutenberg_native_outside">Utsida</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Ingen anpassad platshållare angiven</string>
     <string name="gutenberg_native_no_button">Ingen knapp</string>
@@ -123,6 +146,7 @@ Language: sv_SE
     <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
     <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
     <string name="comment_status_unreplied">Obesvarat</string>
+    <string name="gutenberg_native_add_link">Lägg till länk</string>
     <string name="gutenberg_native_search_settings">Sökinställningar</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
@@ -193,8 +217,6 @@ Language: sv_SE
     <string name="backup_item_roots">WordPress-rot</string>
     <string name="backup_download_details_choose_items_header">Objekt som ingår i denna nedladdning</string>
     <string name="gutenberg_native_uploading">Laddar upp …</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Återanvändbara block kan inte redigeras i WordPress för iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Återanvändbara block kan inte redigeras i WordPress för Android</string>
     <string name="gutenberg_native_replace_file">Ersätt fil</string>
     <string name="gutenberg_native_replace_audio">Ersätt ljudfilen</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem att öppna ljudet</string>
@@ -2855,4 +2877,13 @@ Language: sv_SE
     <string name="add">Lägg till</string>
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
+    <string-array name="blogging_reminders_count">
+        <item>En gång</item>
+        <item>Två gånger</item>
+        <item>Tre gånger</item>
+        <item>Fyra gånger</item>
+        <item>Fem gånger</item>
+        <item>Sex gånger</item>
+        <item>Sju gånger</item>
+    </string-array>
 </resources>

@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-11 14:23:20+0000
+Translation-Revision-Date: 2021-07-07 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Durch regelmäßige Beiträge bindest du deine Leser und lockst neue Besucher auf deine Website.</string>
+    <string name="blogging_reminders_tip">Tipp</string>
+    <string name="blogging_reminders_select_days_message">Du kannst dies jederzeit aktualisieren</string>
+    <string name="blogging_reminders_select_days">Lege fest, an welchen Tagen du bloggen willst</string>
+    <string name="blogging_reminders_epilogue_caption">Unter „Meine Website“ &amp;rarr; „Einstellungen“ &amp;rarr; „Blog-Erinnerungen“ kannst du dies jederzeit aktualisieren.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Du hast keine Erinnerungen festgelegt.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Du erhältst &lt;b&gt;täglich&lt;/b&gt; Blog-Erinnerungen.</string>
+    <string name="blogging_reminders_epilogue_body_days">Du erhältst %1$swöchentlich am %2$s Blog-Erinnerungen</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Erinnerungen entfernt!</string>
+    <string name="blogging_reminders_epilogue_title">Fertig!</string>
+    <string name="blogging_reminders_update">Aktualisieren</string>
+    <string name="blogging_reminders_not_set">Nicht festgelegt</string>
+    <string name="blogging_reminders_n_a_week">%s pro Woche</string>
+    <string name="set_your_blogging_reminders_button">Erinnerungen festlegen</string>
+    <string name="set_up_blogging_reminders_message">Richte Blog-Erinnerungen für die Tage ein, an denen du einen Beitrag erstellen möchtest.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Dein Beitrag wird veröffentlicht. In der Zwischenzeit kannst du Blog-Erinnerungen für Tage einrichten, an denen du einen Beitrag erstellen möchtest.</string>
+    <string name="set_your_blogging_reminders_title">Festlegen deiner Blog-Erinnerungen</string>
+    <string name="blogging_reminders_notification_text">Dies ist deine Erinnerung, heute kreativ zu sein</string>
+    <string name="blogging_reminders_notification_title">Am %s ist es Zeit, einen Beitrag zu veröffentlichen</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Das Bearbeiten von wiederverwendbaren Blöcken wird in WordPress für iOS noch nicht unterstützt</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Das Bearbeiten von wiederverwendbaren Blöcken wird in WordPress für Android noch nicht unterstützt</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „In normale Blöcke umwandeln“ tippst.</string>
+    <string name="blogging_reminders_done">Fertig</string>
+    <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>
+    <string name="gutenberg_native_set_as_featured_image">Als Beitragsbild festlegen </string>
+    <string name="gutenberg_native_remove_as_featured_image">Als Beitragsbild entfernen </string>
+    <string name="fab_add_category_desc">Kategorie erstellen</string>
+    <string name="support_ticket_subject">WordPress für Android-Support</string>
+    <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
+    <string name="site_settings_categories_empty_title">Es sind keine Kategorien vorhanden</string>
+    <string name="site_settings_categories_empty_subtitle">Füge deine häufig verwendeten Kategorien hier hinzu, sodass du sie beim Kategorisieren deiner Beiträge schnell auswählen kannst</string>
+    <string name="site_settings_categories_empty_button">Eine Kategorie erstellen</string>
+    <string name="site_settings_categories_title">Kategorien</string>
+    <string name="site_settings_blogging_reminders_title">Blog-Erinnerungen</string>
+    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
@@ -41,7 +77,6 @@ Language: de
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um Bedrohungen zu beheben.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um die Bedrohung zu beheben.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Zum Hinzufügen eines Links zweimal tippen</string>
-    <string name="gutenberg_native_add_link">LINK HINZUFÜGEN</string>
     <string name="login_empty_view_try_another_account">Mit einem anderen Konto probieren</string>
     <string name="login_empty_view_see_instructions">Anweisungen anzeigen</string>
     <string name="login_no_jetpack_sites_error_message">Wenn du bereits eine Website hast, musst du das kostenlose Jetpack-Plugin installieren und es mit deinem WordPress.com-Konto verbinden.</string>
@@ -80,9 +115,7 @@ Language: de
     <string name="gutenberg_native_use_icon_button">Icon-Button verwenden</string>
     <string name="gutenberg_native_search_input_field">Eingabefelder suchen</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Button suchen Aktueller Button-Text ist</string>
-    <string name="gutenberg_native_search_blocks">Blöcke suchen</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Blocklabel suchen Aktueller Text ist</string>
-    <string name="gutenberg_native_search_block">Block suchen</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Kein individueller Platzhalter eingestellt</string>
     <string name="gutenberg_native_no_button">Kein Button</string>
     <string name="gutenberg_native_inside">Innen</string>
@@ -103,6 +136,7 @@ Language: de
     <string name="get_likes_no_network_error">Kein Netzwerk verfügbar</string>
     <string name="comments_empty_list_filtered_unreplied">Keine unbeantworteten Kommentare</string>
     <string name="comment_status_unreplied">Unbeantwortet</string>
+    <string name="gutenberg_native_search_settings">Sucheinstellungen</string>
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
@@ -172,8 +206,6 @@ Language: de
     <string name="backup_item_roots">WordPress-Root</string>
     <string name="backup_download_details_choose_items_header">In diesem Download enthaltene Elemente</string>
     <string name="gutenberg_native_uploading">Wird hochgeladen …</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Wiederverwendbare Blöcke können auf WordPress für iOS nicht bearbeitet werden</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Wiederverwendbare Blöcke können auf WordPress für Android nicht bearbeitet werden</string>
     <string name="gutenberg_native_replace_file">Datei ersetzen</string>
     <string name="gutenberg_native_replace_audio">Audio ersetzen</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem beim Öffnen der Audiodatei</string>
@@ -185,6 +217,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Doppeltippen, um die Audiodatei anzuhören</string>
     <string name="gutenberg_native_choose_audio">Audio-Datei wählen</string>
     <string name="gutenberg_native_audio_player">Audio-Player</string>
+    <string name="gutenberg_native_audio_file">Audiodatei</string>
     <string name="gutenberg_native_audio_caption_s">Audiountertitel. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audiountertitel. Leer</string>
     <string name="gutenberg_native_add_audio">AUDIO HINZUFÜGEN</string>
@@ -201,6 +234,7 @@ Language: de
     <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
     <string name="scan_fixing_threats_description_singular">Wir arbeiten im Hintergrund daran, die Bedrohung zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
+    <string name="scan_scanning_description">Du erhältst eine Benachrichtigung, wenn eine Bedrohung gefunden wird. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_fixing_threats_title_plural">Bedrohungen werden behoben</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan konnte einen Scan deiner Website ausführen. Schau bitte nach, ob deine Website erreichbar ist. Wenn ja, versuche es erneut. Wenn sie nicht erreichbar ist oder wenn mit Jetpack Scan weiterhin Probleme auftreten, wende dich bitte an unser Support-Team.</string>
     <string name="scan_request_failed_title">Etwas ist schiefgelaufen</string>
@@ -2832,4 +2866,13 @@ Language: de
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
+    <string-array name="blogging_reminders_count">
+        <item>Einmal</item>
+        <item>Zweimal</item>
+        <item>Dreimal</item>
+        <item>Viermal</item>
+        <item>Fünfmal</item>
+        <item>Sechsmal</item>
+        <item>Siebenmal</item>
+    </string-array>
 </resources>

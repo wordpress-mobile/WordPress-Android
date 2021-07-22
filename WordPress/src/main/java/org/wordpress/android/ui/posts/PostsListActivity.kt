@@ -165,11 +165,14 @@ class PostsListActivity : LocaleAwareActivity(),
                 LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
             }
 
+            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
+            val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
+
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel()
+            initCreateMenuViewModel(tabIndex, actionsShownByDefault)
             loadIntentData(intent)
         }
     }
@@ -220,7 +223,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel() {
+    private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
@@ -262,7 +265,10 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start(site)
+        // Notification opens in Drafts tab
+        tabLayout.getTabAt(tabIndex)?.select()
+
+        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
@@ -361,7 +367,9 @@ class PostsListActivity : LocaleAwareActivity(),
                         findViewById(R.id.coordinator),
                         uploadActionUseCase,
                         uploadUtilsWrapper
-                )
+                ) { isFirstTimePublishing ->
+                    bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
+                }
             }
         })
     }
@@ -464,10 +472,6 @@ class PostsListActivity : LocaleAwareActivity(),
                 }
 
                 viewModel.handleEditPostResult(data)
-                bloggingRemindersViewModel.onPostCreated(
-                        site.id,
-                        data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
-                )
             }
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()
@@ -484,7 +488,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
-                bloggingRemindersViewModel.onPostCreated(
+                bloggingRemindersViewModel.onPublishingPost(
                         site.id,
                         isNewStory
                 )
@@ -647,11 +651,27 @@ class PostsListActivity : LocaleAwareActivity(),
 
     companion object {
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
+        private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
+        private const val TAB_INDEX = "tab_index"
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
+            return buildIntent(context, site, PostListType.PUBLISHED, false)
+        }
+
+        @JvmStatic
+        fun buildIntent(
+            context: Context,
+            site: SiteModel,
+            postListType: PostListType,
+            actionsShownByDefault: Boolean
+        ): Intent {
+            val intent = Intent(context, PostsListActivity::class.java)
+            intent.putExtra(WordPress.SITE, site)
+            intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
+            intent.putExtra(TAB_INDEX, postListType.ordinal)
             return intent
         }
     }

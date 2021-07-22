@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-23 11:54:07+0000
+Translation-Revision-Date: 2021-07-13 20:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">פרסום באופן שגרתי יכול לעזור בשילוב הקוראים שלך, ולמשוך מבקרים חדשים לאתר שלך.</string>
+    <string name="blogging_reminders_tip">עצה</string>
+    <string name="blogging_reminders_select_days_message">אפשר לעדכן את ההגדרה הזאת בכל עת</string>
+    <string name="blogging_reminders_select_days">לבחור את הימים שבהם ברצונך לכתוב את הבלוג</string>
+    <string name="blogging_reminders_epilogue_caption">אפשר לעדכן זאת בכל עת דרך האתר שלי &gt; הגדרות &gt; תזכורת לכתיבת בלוג.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">עדיין אין לך תזכורות.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">אנחנו נשלח לך תזכורות לכתוב בלוג ⁦%1$s⁩ בשבוע ביום ⁦%2$s⁩.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">התזכורות הוסרו!</string>
+    <string name="blogging_reminders_epilogue_title">הכול מוכן!</string>
+    <string name="blogging_reminders_update">לעדכן</string>
+    <string name="blogging_reminders_not_set">לא הוגדרו אפשרויות</string>
+    <string name="blogging_reminders_n_a_week">%s בשבוע</string>
+    <string name="set_your_blogging_reminders_button">הגדרת תזכורות</string>
+    <string name="set_up_blogging_reminders_message">הגדרת התזכורות לכתיבת בלוג בימים שבחרת לפרסם.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">הפוסט שלך מתפרסם… בינתיים, אפשר להגדיר את התזכורות שלך לכתוב בלוג בימים שבחרת לפרסם.</string>
+    <string name="set_your_blogging_reminders_title">להגדיר את התזכורות שלך לכתוב בלוג</string>
+    <string name="blogging_reminders_notification_text">זוהי תזכורת ליצור משהו היום</string>
+    <string name="blogging_reminders_notification_title">הגיע הזמן לכתוב בלוג ביום %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשת הטקסט \"המרה לבלוקים רגילים\".</string>
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
-    <string name="blogging_goals_not_set">לא הוגדרו אפשרויות</string>
-    <string name="blogging_goals_n_times_a_week">%d פעמים בשבוע</string>
-    <string name="set_your_blogging_goals_button">לקבוע מטרות</string>
-    <string name="set_your_blogging_goals_message">הפוסט שלך מתפרסם… בינתיים, אפשר להגדיר את המטרות שלך לבלוג כדי לקבל תזכורות ולעקוב אחר ההתקדמות שלך.</string>
-    <string name="set_your_blogging_goals_title">להגדיר את המטרות שלך לבלוג</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
     <string name="gutenberg_native_set_as_featured_image">להגדיר כתמונה מרכזית </string>
     <string name="gutenberg_native_remove_as_featured_image">להסיר מהתמונה המרכזית </string>
@@ -23,8 +40,8 @@ Language: he_IL
     <string name="site_settings_categories_empty_subtitle">אפשר להוסיף את הקטגוריות שנפוצות אצלך כאן כדי לבחור בהן במהירות בעת הקצאת קטגוריות לפוסטים שלך</string>
     <string name="site_settings_categories_empty_button">ליצור קטגוריה</string>
     <string name="site_settings_categories_title">קטגוריות</string>
-    <string name="site_settings_blogging_reminders_title">מטרות לכתיבה בבלוג</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
+    <string name="site_settings_blogging_reminders_title">תזכורת לכתיבת בלוג</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>
     <string name="storage_utils_dialog_ok_button">להציג את שטח האחסון</string>
@@ -60,7 +77,6 @@ Language: he_IL
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיומים האלה.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיום הזה.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">יש להקיש פעמיים כדי להוסיף קישור.</string>
-    <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
     <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
     <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
@@ -99,9 +115,7 @@ Language: he_IL
     <string name="gutenberg_native_use_icon_button">הכפתור \'להשתמש בסמל\'</string>
     <string name="gutenberg_native_search_input_field">שדה להזנת חיפוש.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">הכפתור \'חיפוש\'. הטקסט הנוכחי של הכפתור הוא</string>
-    <string name="gutenberg_native_search_blocks">בלוקים של חיפוש</string>
     <string name="gutenberg_native_search_block_label_current_text_is">תווית של בלוק החיפוש. הטקסט הנוכחי הוא</string>
-    <string name="gutenberg_native_search_block">בלוק החיפוש</string>
     <string name="gutenberg_native_no_custom_placeholder_set">לא הוגדר מציין מיקום מותאם</string>
     <string name="gutenberg_native_no_button">ללא כפתור</string>
     <string name="gutenberg_native_inside">פנימי</string>
@@ -122,6 +136,7 @@ Language: he_IL
     <string name="get_likes_no_network_error">אין רשת זמינה.</string>
     <string name="comments_empty_list_filtered_unreplied">אין תגובות ללא מענה</string>
     <string name="comment_status_unreplied">ללא מענה</string>
+    <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
@@ -191,8 +206,6 @@ Language: he_IL
     <string name="backup_item_roots">בסיס של WordPress</string>
     <string name="backup_download_details_choose_items_header">הפריטים שכלולים בהורדה זו</string>
     <string name="gutenberg_native_uploading">מעלה…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">לא ניתן לערוך בלוקים לשימוש חוזר ב-WordPress ל-iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">לא ניתן לערוך בלוקים לשימוש חוזר ב-WordPress ל-Android</string>
     <string name="gutenberg_native_replace_file">להחליף את הקובץ</string>
     <string name="gutenberg_native_replace_audio">להחליף אודיו</string>
     <string name="gutenberg_native_problem_opening_the_audio">בעיה בפתיחת האודיו</string>
@@ -204,6 +217,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">יש להקיש פעמיים כדי להאזין לקובץ האודיו</string>
     <string name="gutenberg_native_choose_audio">לבחור אודיו</string>
     <string name="gutenberg_native_audio_player">לנגן אודיו</string>
+    <string name="gutenberg_native_audio_file">קובץ אודיו</string>
     <string name="gutenberg_native_audio_caption_s">תיאור אודיו. %s</string>
     <string name="gutenberg_native_audio_caption_empty">תיאור אודיו. ריק</string>
     <string name="gutenberg_native_add_audio">להוסיף אודיו</string>
@@ -367,6 +381,8 @@ Language: he_IL
     <string name="scan_idle_last_scan_description">השירות של Jetpack Scan פעל %s ולא איתר סיכונים. %s</string>
     <string name="scan_in_few_seconds">לפני מספר שניות</string>
     <string name="threats_fix_all">לתקן הכול</string>
+    <string name="scan_in_minutes_ago">לפני %s דקות</string>
+    <string name="scan_in_hours_ago">לפני %s שעות</string>
     <string name="scan_idle_threats_found_title">ייתכן שהאתר שלך בסיכון</string>
     <string name="scan_idle_no_threats_found_title">אל דאגה</string>
     <string name="scan_again">לסרוק שוב</string>
@@ -2850,4 +2866,13 @@ Language: he_IL
     <string name="preview">תצוגה מקדימה</string>
     <string name="notification_settings">הגדרות התראות</string>
     <string name="publish_now">לפרסם כעת</string>
+    <string-array name="blogging_reminders_count">
+        <item>פעם אחת</item>
+        <item>פעמיים</item>
+        <item>שלוש פעמים</item>
+        <item>ארבע פעמים</item>
+        <item>חמש פעמים</item>
+        <item>שש פעמים</item>
+        <item>שבע פעמים</item>
+    </string-array>
 </resources>

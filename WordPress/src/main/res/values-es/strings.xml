@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-19 15:42:59+0000
+Translation-Revision-Date: 2021-07-13 06:49:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
-    <string name="set_your_blogging_goals_button">Establecer los objetivos</string>
-    <string name="blogging_goals_n_times_a_week">%d veces a la semana</string>
-    <string name="blogging_goals_not_set">Ninguno establecido</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL no válida. Por favor, introduce una URL válida.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">El contenido incrustado de %s no se puede ver en este momento en el editor móvil. Por favor, previsualiza la página para ver el contenido incrustado.</string>
+    <string name="activity_log_multisite_message">Jetpack Backup para instalaciones multisitio proporciona copias de seguridad descargables, no restauraciones con un solo clic. Para más información, %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">visita nuestra página de documentación</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">AÑADIR ENLACE</string>
+    <string name="gutenberg_native_embed_caption_empty">Leyenda incrustada. Vacía</string>
+    <string name="gutenberg_native_embed_caption_s">Leyenda incrustada. %s</string>
+    <string name="blogging_reminders_tip_message">Publicar regularmente puede ayudar a que tus lectores permanezcan implicados, y a atraer nuevos visitantes a tu sitio.</string>
+    <string name="blogging_reminders_tip">Consejo</string>
+    <string name="blogging_reminders_select_days_message">Puedes actualizar esto en cualquier momento</string>
+    <string name="blogging_reminders_select_days">Selecciona los días en los que quieres bloguear</string>
+    <string name="blogging_reminders_epilogue_caption">Puedes actualizar esto en cualquier momento desde Mi sitio &gt; Ajustes &gt; Recordatorios de blogueo.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">No tienes configurado ningún recordatorio.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Tienes recordatorios para bloguear &lt;b&gt;todos los días&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">¡Recordatorios eliminados!</string>
+    <string name="blogging_reminders_epilogue_title">¡Todo configurado!</string>
+    <string name="blogging_reminders_epilogue_body_days">Tienes recordatorios para bloguear %1$s a la semana en %2$s.</string>
+    <string name="blogging_reminders_update">Actualizar</string>
+    <string name="blogging_reminders_not_set">Nada configurado</string>
+    <string name="blogging_reminders_n_a_week">%s a la semana</string>
+    <string name="set_your_blogging_reminders_button">Configurar recordatorios</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Tu entrada se está publicando … mientras tanto puedes configurar recordatorios de blogueo los días que quiera publicar.</string>
+    <string name="set_up_blogging_reminders_message">Configura recordatorios de blogueo los días que quieras publicar.</string>
+    <string name="set_your_blogging_reminders_title">Configura tus recordatorios de blogueo</string>
+    <string name="blogging_reminders_notification_text">Este es tu recordatorio para crear algo hoy</string>
+    <string name="blogging_reminders_notification_title">Es hora de bloguear en %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aún no es compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aún no es compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, puedes separar y editar estos bloques por separado tocando en «Convertir en bloques normales».</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="blogging_reminders_done">Hecho</string>
-    <string name="set_your_blogging_goals_message">Tu entrada se está publicando… Mientras tanto, configura tus objetivos de blogueo para recibir recordatorios y seguir tu progreso.</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
-    <string name="set_your_blogging_goals_title">Establece tus objetivos de blogueo</string>
     <string name="fab_add_category_desc">Crear una categoría</string>
     <string name="gutenberg_native_remove_as_featured_image">Eliminar como imagen destacada</string>
     <string name="gutenberg_native_set_as_featured_image">Establecer como imagen destacada</string>
@@ -22,9 +46,9 @@ Language: es
     <string name="site_settings_categories_empty_title">Aún no tienes categorías</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
-    <string name="site_settings_blogging_reminders_title">Objetivos de blogueo</string>
     <string name="site_settings_categories_title">Categorías</string>
     <string name="site_settings_categories_empty_button">Crear una categoría</string>
+    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="gutenberg_native_border_settings">Ajustes del borde</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
     <string name="storage_utils_dialog_ok_button">Ver el almacenamiento</string>
@@ -60,10 +84,10 @@ Language: es
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir las amenazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir la amenaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dos veces para añadir un enlace.</string>
-    <string name="gutenberg_native_add_link">AÑADIR ENLACE</string>
     <string name="login_empty_view_try_another_account">Probar con otra cuenta</string>
     <string name="login_empty_view_see_instructions">Ver las instrucciones</string>
     <string name="login_no_jetpack_sites_error_message">Si ya tienes un sitio, tendrás que instalar el plugin gratuito de Jetpack y conectarlo a tu cuenta de WordPress.</string>
+    <string name="gutenberg_native_edit_link">EDITAR ENLACE</string>
     <string name="login_empty_view_avatar_content_description">Tu foto de perfil</string>
     <string name="login_not_a_jetpack_site">Si quieres usar esta aplicación para %1$s, deberás tener el plugin de Jetpack configurado y conectado a una cuenta de WordPress.com.</string>
     <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
@@ -80,6 +104,7 @@ Language: es
     <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_post_meta_settings">Ajustes meta de la entrada</string>
     <string name="gutenberg_native_featured">Destacado</string>
+    <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
@@ -99,9 +124,7 @@ Language: es
     <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
     <string name="gutenberg_native_search_input_field">Campo de introducción de búsqueda.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Botón de búsqueda. El texto actual del botón es</string>
-    <string name="gutenberg_native_search_blocks">Bloques de búsqueda</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta del bloque de búsqueda. El texto actual es</string>
-    <string name="gutenberg_native_search_block">Bloque de búsqueda</string>
     <string name="gutenberg_native_inside">Dentro</string>
     <string name="gutenberg_native_no_custom_placeholder_set">No se ha establecido ningún marcador de posición personalizado</string>
     <string name="gutenberg_native_no_button">Sin botón</string>
@@ -124,6 +147,7 @@ Language: es
     <string name="comments_empty_list_filtered_unreplied">No hay ningún comentario sin responder</string>
     <string name="comment_status_unreplied">Sin responder</string>
     <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
+    <string name="gutenberg_native_add_link">Añadir enlace</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
@@ -193,8 +217,6 @@ Language: es
     <string name="backup_item_roots">Raíz de WordPress</string>
     <string name="gutenberg_native_uploading">Subiendo…</string>
     <string name="backup_download_details_choose_items_header">Elementos incluidos en esta descarga</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Los bloques reutilizables no se pueden editar en WordPress para iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Los bloques reutilizables no se pueden editar en WordPress para Android</string>
     <string name="gutenberg_native_replace_file">Reemplazar archivo</string>
     <string name="gutenberg_native_replace_audio">Reemplazar audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema al abrir el audio</string>
@@ -2855,4 +2877,13 @@ Language: es
     <string name="on">en</string>
     <string name="notification_settings">Ajustes de avisos</string>
     <string name="publish_now">Publicar ahora</string>
+    <string-array name="blogging_reminders_count">
+        <item>Una vez</item>
+        <item>Dos veces</item>
+        <item>Tres veces</item>
+        <item>Cuatro veces</item>
+        <item>Cinco veces</item>
+        <item>Seis veces</item>
+        <item>Siete veces</item>
+    </string-array>
 </resources>
