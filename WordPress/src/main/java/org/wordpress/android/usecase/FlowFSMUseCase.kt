@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 abstract class FlowFSMUseCase<PARAMETERS, ACTION, RESULT_DATA>(
     initialState: StateInterface<ACTION, RESULT_DATA>
 ) {
-    private val _flowChannel = MutableSharedFlow<UseCaseResult<RESULT_DATA>>()
+    private val _flowChannel = MutableSharedFlow<RESULT_DATA>()
     private var _internalState: StateInterface<ACTION, RESULT_DATA> = initialState
 
-    fun subscribe(): SharedFlow<UseCaseResult<RESULT_DATA>> {
+    fun subscribe(): SharedFlow<RESULT_DATA> {
         return _flowChannel.asSharedFlow()
     }
 
@@ -23,7 +23,7 @@ abstract class FlowFSMUseCase<PARAMETERS, ACTION, RESULT_DATA>(
     interface StateInterface<ACTION, RESULT> {
         suspend fun runAction(
             action: ACTION,
-            flowChannel: MutableSharedFlow<UseCaseResult<RESULT>>
+            flowChannel: MutableSharedFlow<RESULT>
         ): StateInterface<ACTION, RESULT>
     }
 }
