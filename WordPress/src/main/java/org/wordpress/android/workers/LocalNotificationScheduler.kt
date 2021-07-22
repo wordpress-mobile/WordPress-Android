@@ -9,17 +9,18 @@ import javax.inject.Inject
 class LocalNotificationScheduler(private val workManager: WorkManager) {
     @Inject constructor(context: Context) : this(WorkManager.getInstance(context))
 
-    fun scheduleOneTimeNotification(localNotification: LocalNotification) {
-        val work = OneTimeWorkRequestBuilder<LocalNotificationWorker>()
-                .setInitialDelay(localNotification.delay, localNotification.delayUnits)
-                .addTag(localNotification.type.tag)
-                .setInputData(LocalNotificationWorker.buildData(localNotification))
-                .build()
-
-        workManager.enqueue(work)
+    fun scheduleOneTimeNotification(vararg localNotifications: LocalNotification) {
+        workManager.enqueue(localNotifications.map { buildOneTimeWorkRequest(it) })
     }
 
     fun cancelScheduledNotification(notificationType: Type) {
         workManager.cancelAllWorkByTag(notificationType.tag)
     }
+
+    private fun buildOneTimeWorkRequest(localNotification: LocalNotification) =
+            OneTimeWorkRequestBuilder<LocalNotificationWorker>()
+                    .setInitialDelay(localNotification.delay, localNotification.delayUnits)
+                    .addTag(localNotification.type.tag)
+                    .setInputData(LocalNotificationWorker.buildData(localNotification))
+                    .build()
 }
