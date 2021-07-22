@@ -141,6 +141,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
+import org.wordpress.android.workers.CreateSiteNotificationScheduler;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -232,6 +233,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -405,6 +407,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotification();
 
         initViewModel();
     }
