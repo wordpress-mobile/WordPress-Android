@@ -88,6 +88,7 @@ class FetchScanStateUseCase @Inject constructor(
         sealed class Failure : FetchScanState() {
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
+            object MultisiteNotSupported : Failure()
         }
     }
 }
