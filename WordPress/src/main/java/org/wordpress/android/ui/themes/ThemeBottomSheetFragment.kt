@@ -64,6 +64,8 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    override fun getTheme(): Int  = R.style.ThemeActivationBottomSheetStyle
+
     private fun toggleSelection(@NonNull viewTapped: View, vararg otherViews: View) {
         viewTapped.visibility = VISIBLE
         otherViews.forEach { it.visibility = INVISIBLE }

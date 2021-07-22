@@ -36,7 +36,7 @@ class ThemesViewModel @Inject constructor(
     val bottomSheetAction: MutableLiveData<BottomSheetAction> = _bottomSheetAction
 
     fun start(site: SiteModel) {
-//        if (isStarted) return
+        if (isStarted) return
 
         this.site = site
         _bottomSheetUiState.value = BottomSheetUIState()
