@@ -18,9 +18,7 @@ import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
 class ThemesViewModel @Inject constructor(
     private val themeStore: ThemeStore,
     private val resourceProvider: ResourceProvider,
