@@ -16,5 +16,28 @@ class WCProductModelTest {
         assertThat(productModelUnderTest).isNotNull
         assertThat(productModelUnderTest?.addons).isNotEmpty
     }
+
+    @Test
+    fun `Product metadata is serialized correctly`() {
+        val productModelUnderTest =
+                "wc/product-with-addons.json"
+                        .jsonFileAs(ProductApiResponse::class.java)
+                        ?.asProductModel()
+
+        assertThat(productModelUnderTest).isNotNull
+        assertThat(productModelUnderTest?.metadata).isNotNull
+    }
+
+    @Test
+    fun `Product addons with incorrect key should return empty array`() {
+        val productModelUnderTest =
+                "wc/product-with-incorrect-addons-key.json"
+                        .jsonFileAs(ProductApiResponse::class.java)
+                        ?.asProductModel()
+
+        assertThat(productModelUnderTest).isNotNull
+        assertThat(productModelUnderTest?.addons).isNotNull
+        assertThat(productModelUnderTest?.addons).isEmpty()
+    }
 }
 
