@@ -1147,6 +1147,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.LOGIN_EPILOGUE:
+                setSite(data);
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
