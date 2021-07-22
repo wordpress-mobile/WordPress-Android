@@ -106,7 +106,6 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
-        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
