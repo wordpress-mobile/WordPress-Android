@@ -249,6 +249,10 @@
         </item>
     </style>
 
+    <style name="ThemeActivationBottomSheetStyle" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:navigationBarColor">@color/theme_action_sheet_button_layout_bg</item>
+    </style>
+
     <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">
             @style/WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay
@@ -1582,4 +1586,24 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
+
+    <style name="ThemeActionSheetTitle">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/theme_bottom_sheet_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ThemeActionSheetOptionText">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/theme_bottom_sheet_text_size</item>
+    </style>
+
+    <style name="ThemeBottomSheetButtonFilled" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="ThemeBottomSheetButtonOutlined" parent="Widget.ModalLayoutPicker.Button.Secondary"/>
+
 </resources>
