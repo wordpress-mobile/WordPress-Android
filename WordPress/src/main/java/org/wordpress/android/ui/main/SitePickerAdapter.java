@@ -44,7 +44,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    interface OnSiteClickListener {
+    public interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
 
         boolean onSiteLongClick(SiteRecord site);
@@ -280,7 +280,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedCountListener = listener;
     }
 
-    void setOnSiteClickListener(OnSiteClickListener listener) {
+    public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
         notifyDataSetChanged();
     }
