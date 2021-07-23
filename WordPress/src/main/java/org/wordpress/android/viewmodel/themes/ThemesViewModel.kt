@@ -13,9 +13,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.KeepCurrentHomepage
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -41,7 +38,7 @@ class ThemesViewModel @Inject constructor(
         isStarted = true
     }
 
-    private fun currentViewState(): BottomSheetUIState = bottomSheetUiState.value!!
+    private fun currentViewState(): BottomSheetUIState? = bottomSheetUiState.value
 
     fun onActivateMenuItemClicked(themeId: String) {
         if (!site.isUsingWpComRestApi) {
@@ -59,9 +56,20 @@ class ThemesViewModel @Inject constructor(
         setBottomSheetTexts(theme.name)
     }
 
-    fun onUseThemeHomepageSelected() = setBottomSheetSelection(UseThemeHomepage)
+    fun onUseThemeHomepageSelected() {
+        _bottomSheetUiState.value = currentViewState()?.copy(
+                themeHomepageCheckmarkVisible = true,
+                currentHomepageCheckmarkVisible = false
+        )
+    }
 
-    fun onKeepCurrentHomepageSelected() = setBottomSheetSelection(KeepCurrentHomepage)
+
+    fun onKeepCurrentHomepageSelected() {
+        _bottomSheetUiState.value = currentViewState()?.copy(
+                currentHomepageCheckmarkVisible = true,
+                themeHomepageCheckmarkVisible = false
+        )
+    }
 
     fun onPreviewButtonClicked() {
         // todo
@@ -76,16 +84,12 @@ class ThemesViewModel @Inject constructor(
     }
 
     private fun setBottomSheetTexts(themeName: String) {
-        _bottomSheetUiState.value = currentViewState().copy(
+        _bottomSheetUiState.value = currentViewState()?.copy(
                 themeNameText = themeName,
                 sheetInfoText = resourceProvider.getString(R.string.theme_bottom_sheet_info, themeName),
                 useThemeHomePageOptionText = resourceProvider
                         .getString(R.string.theme_bottom_sheet_use_theme_layout_main_text, themeName)
         )
-    }
-
-    private fun setBottomSheetSelection(selection: Selection) {
-        _bottomSheetUiState.value = currentViewState().copy(selection = selection)
     }
 
     sealed class BottomSheetAction {
@@ -97,11 +101,7 @@ class ThemesViewModel @Inject constructor(
         val themeNameText: String = "",
         val sheetInfoText: String = "",
         val useThemeHomePageOptionText: String = "",
-        val selection: Selection = KeepCurrentHomepage
-    ) {
-        sealed class Selection {
-            object UseThemeHomepage : Selection()
-            object KeepCurrentHomepage : Selection()
-        }
-    }
+        val themeHomepageCheckmarkVisible: Boolean = false,
+        val currentHomepageCheckmarkVisible: Boolean = true
+    )
 }

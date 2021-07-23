@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.from
@@ -16,8 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ThemeBottomSheetBinding
 import org.wordpress.android.viewmodel.themes.ThemesViewModel
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.KeepCurrentHomepage
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
 import javax.inject.Inject
 
 class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
@@ -49,11 +46,8 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
                 themeName.text = it.themeNameText
                 sheetInfo.text = it.sheetInfoText
                 useThemeHomepageOption.text = it.useThemeHomePageOptionText
-
-                when (it.selection) {
-                    is UseThemeHomepage -> toggleSelection(useThemeCheck, keepCurrentCheck)
-                    is KeepCurrentHomepage -> toggleSelection(keepCurrentCheck, useThemeCheck)
-                }
+                setUseThemeHomepageVisibility(it.themeHomepageCheckmarkVisible)
+                setKeepCurrentHomepageVisibility(it.currentHomepageCheckmarkVisible)
             }
 
             closeButton.setOnClickListener { viewModel.onDismissButtonClicked() }
@@ -64,12 +58,15 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun getTheme(): Int = R.style.ThemeActivationBottomSheetStyle
-
-    private fun toggleSelection(@NonNull viewTapped: View, vararg otherViews: View) {
-        viewTapped.visibility = VISIBLE
-        otherViews.forEach { it.visibility = INVISIBLE }
+    private fun ThemeBottomSheetBinding.setUseThemeHomepageVisibility(isVisible: Boolean) {
+        useThemeCheck.visibility = if (isVisible) VISIBLE else INVISIBLE
     }
+
+    private fun ThemeBottomSheetBinding.setKeepCurrentHomepageVisibility(isVisible: Boolean) {
+        keepCurrentCheck.visibility = if (isVisible) VISIBLE else INVISIBLE
+    }
+
+    override fun getTheme(): Int = R.style.ThemeActivationBottomSheetStyle
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
