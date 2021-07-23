@@ -7,6 +7,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -20,8 +21,6 @@ import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.KeepCurrentHomepage
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
 
 private const val THEME_ID = "theme-id"
 private const val THEME_NAME = "Awesome Theme"
@@ -105,7 +104,7 @@ class ThemesViewModelTest : BaseUnitTest() {
         viewModel.onUseThemeHomepageSelected()
 
         // Assert
-        assertThat(state.selection).isInstanceOf(UseThemeHomepage::class.java)
+        assertTrue(state.themeHomepageCheckmarkVisible)
     }
 
     @Test
@@ -114,7 +113,7 @@ class ThemesViewModelTest : BaseUnitTest() {
         viewModel.onKeepCurrentHomepageSelected()
 
         // Assert
-        assertThat(state.selection).isInstanceOf(KeepCurrentHomepage::class.java)
+        assertTrue(state.currentHomepageCheckmarkVisible)
     }
 
     @Test
