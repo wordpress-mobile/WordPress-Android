@@ -3,21 +3,16 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsState.Idle
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentParameters
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.Failure
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.InProgress
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.Success
 import org.wordpress.android.usecase.FlowFSMUseCase
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
 import org.wordpress.android.usecase.UseCaseResult.Loading
 import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComment
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import javax.inject.Inject
 
@@ -27,6 +22,9 @@ class BatchModerateCommentsUseCase @Inject constructor(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
+    override suspend fun runLogic(parameters: ModerateCommentParameters) {
+        manageAction(OnModerateComment(parameters))
+    }
 
     sealed class ModerateCommentsState
         : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
@@ -92,3 +90,4 @@ class BatchModerateCommentsUseCase @Inject constructor(
             val newStatus: CommentStatus,
         )
     }
+}

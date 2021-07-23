@@ -10,7 +10,6 @@ import javax.inject.Singleton
 
 @Singleton
 class LocalCommentCacheUpdateHandler @Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val localCommentCacheUpdateUseCase: LocalCommentCacheUpdateUseCase
 ) {
     private val useCases = listOf(localCommentCacheUpdateUseCase)

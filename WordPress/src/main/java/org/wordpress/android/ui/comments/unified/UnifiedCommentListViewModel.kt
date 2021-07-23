@@ -19,10 +19,13 @@ import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.CommentsUseCaseType
+import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
+import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateHandler
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -76,8 +79,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
     private val _commentsProvider = unifiedCommentsListHandler.subscribe()
-    private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
-    private val _batchModerationState = unifiedCommentsListHandler.subscribeToCommentModeraionEvents()
+    private val _batchModerationState = unifiedCommentsListHandler.batchModerationUseCase.subscribe()
 
     val _batchModerationUiState = MutableStateFlow<BatchModerationUiState>(BatchModerationUiState.Idle)
 
@@ -90,10 +92,10 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
-                _commentsProvider,
+                _commentsProvider.filter { it.type == PAGINATE_USE_CASE },
                 _selectedComments,
-                _batchModerationUiState
-        ) { commentData, selectedIds, batchModerationUiState ->
+                _commentsProvider.filter { it.type == MODERATE_USE_CASE },
+        ) { commentData, selectedIds, moderationData ->
             CommentsUiModel(
                     buildCommentList(commentData, selectedIds),
                     buildCommentsListUiModel(commentData),
@@ -119,14 +121,14 @@ class UnifiedCommentListViewModel @Inject constructor(
         launch(bgDispatcher) {
             _batchModerationState.collectLatest {
                 when (it) {
-                    is BatchModerationState.InProgress -> {
+                    is UseCaseResult.Loading -> {
                         _batchModerationUiState.emit(BatchModerationUiState.InProgress)
                     }
-                    is BatchModerationState.Failure -> {
+                    is UseCaseResult.Failure<*, *, *> -> {
                         _batchModerationUiState.emit(BatchModerationUiState.Failure)
                     }
 
-                    is BatchModerationState.Success -> {
+                    is UseCaseResult.Success -> {
                         localCommentCacheUpdateHandler.requestCommentsUpdate()
                         _selectedComments.emit(emptyList())
                         _batchModerationUiState.emit(BatchModerationUiState.Idle)
@@ -171,12 +173,12 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
-            _commentsProvider.filter { it is Failure<> }.collectLatest {
-                val errorMessage = (it as PaginationFailure).error.message
-                if (!errorMessage.isNullOrEmpty()) {
-                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
-                }
-            }
+//            _commentsProvider.filter { it is Failure<> }.collectLatest {
+//                val errorMessage = (it as PaginationFailure).error.message
+//                if (!errorMessage.isNullOrEmpty()) {
+//                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
+//                }
+//            }
         }
     }
 
@@ -271,12 +273,12 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentsDataResult: UseCaseResult<PagingData>,
+        commentsDataResult: UseCaseResult<CommentsUseCaseType,Failure,CommentDeta >,
         selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
         val (comments, hasMore) = when (commentsDataResult) {
-            is Failure<*, PagingData> -> Pair(commentsDataResult.cachedData.comments, commentsDataResult.cachedData.hasMore)
-            Loading -> Pair(listOf(), false)
+            is Failure<*, PagingData, *> -> Pair(commentsDataResult.cachedData.comments, commentsDataResult.cachedData.hasMore)
+            Loading<*> -> Pair(listOf(), false)
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
 

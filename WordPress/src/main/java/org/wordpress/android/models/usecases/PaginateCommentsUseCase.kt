@@ -35,7 +35,7 @@ class PaginateCommentsUseCase @Inject constructor(
             override suspend fun runAction(
                 resourceProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
-                flowChannel: MutableSharedFlow<UseCaseResult<PagingData, CommentsUseCaseType>>
+                flowChannel: MutableSharedFlow<UseCaseResult<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>>
             ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
                 return when (action) {
                     is OnGetPage -> {
@@ -79,7 +79,7 @@ class PaginateCommentsUseCase @Inject constructor(
 
                         val data = result.data ?: PagingData.empty()
 
-                        //data.hasMore = parameters.hasMore
+                        // data.hasMore = parameters.hasMore
 
                         if (result.isError) {
                             flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))
@@ -104,11 +104,11 @@ class PaginateCommentsUseCase @Inject constructor(
         ) : PaginateCommentsAction()
     }
 
-    //sealed class PaginationResult {
-    //    object PaginationLoading : PaginationResult()
-    //    data class PaginationFailure(val error: CommentError, val cachedData: CommentsData) : PaginationResult()
-    //    data class PaginationSuccess(val data: CommentsData) : PaginationResult()
-    //}
+    // sealed class PaginationResult {
+    //     object PaginationLoading : PaginationResult()
+    //     data class PaginationFailure(val error: CommentError, val cachedData: CommentsData) : PaginationResult()
+    //     data class PaginationSuccess(val data: CommentsData) : PaginationResult()
+    // }
 
     sealed class Parameters {
         data class GetPageParameters(
@@ -116,14 +116,12 @@ class PaginateCommentsUseCase @Inject constructor(
             val number: Int,
             val offset: Int,
             val commentFilter: CommentFilter,
-                //val hasMore: Boolean = false
+                // val hasMore: Boolean = false
         ) : Parameters()
 
         data class ReloadFromCacheParameters(
             val pagingParameters: GetPageParameters,
             val hasMore: Boolean
         ) : Parameters()
-
     }
-
 }
