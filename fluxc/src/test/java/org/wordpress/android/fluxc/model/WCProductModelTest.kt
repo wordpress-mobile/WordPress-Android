@@ -65,14 +65,14 @@ class WCProductModelTest {
     }
 
     @Test
-    fun `Product addons with incorrect key should return empty array`() {
+    fun `Product addons with incorrect key should be null`() {
         val productModelUnderTest =
                 "wc/product-with-incorrect-addons-key.json"
                         .jsonFileAs(ProductApiResponse::class.java)
                         ?.asProductModel()
 
         assertThat(productModelUnderTest).isNotNull
-        assertThat(productModelUnderTest?.addons).isNotNull
-        assertThat(productModelUnderTest?.addons).isEmpty()
+        assertThat(productModelUnderTest?.metadata).isNotNull
+        assertThat(productModelUnderTest?.addons).isNull()
     }
 }
