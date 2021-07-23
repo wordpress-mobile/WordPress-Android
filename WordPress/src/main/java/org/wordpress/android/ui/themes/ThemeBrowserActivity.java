@@ -10,6 +10,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -39,6 +40,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +60,11 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     private ThemeModel mCurrentTheme;
     private boolean mIsFetchingInstalledThemes;
     private SiteModel mSite;
+    private ThemesViewModel mViewModel;
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,8 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        initViewModel();
     }
 
     @Override
@@ -151,7 +159,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Override
     public void onActivateSelected(String themeId) {
-        activateTheme(themeId);
+        mViewModel.onActivateMenuItemClicked(themeId);
     }
 
     @Override
@@ -178,6 +186,27 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     public void onSwipeToRefresh() {
         fetchInstalledThemesIfJetpackSite();
         fetchWpComThemesIfSyncTimedOut(true);
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ThemesViewModel.class);
+
+        mViewModel.getBottomSheetAction().observe(this, event -> event.applyIfNotHandled(action -> {
+            FragmentManager fm = getSupportFragmentManager();
+            if (action instanceof Show) {
+                ThemeBottomSheetFragment bottomSheet = new ThemeBottomSheetFragment();
+                bottomSheet.show(fm, ThemeBottomSheetFragment.TAG);
+            } else if (action instanceof Hide) {
+                ThemeBottomSheetFragment bottomSheet =
+                        (ThemeBottomSheetFragment) fm.findFragmentByTag(ThemeBottomSheetFragment.TAG);
+                if (bottomSheet != null) {
+                    bottomSheet.dismiss();
+                }
+            }
+            return null;
+        }));
+
+        mViewModel.start(mSite);
     }
 
     @SuppressWarnings("unused")
@@ -328,10 +357,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     private void activateTheme(String themeId) {
-        ThemeActivationBottomSheetFragment bottomSheet = new ThemeActivationBottomSheetFragment();
-        bottomSheet.show(getSupportFragmentManager(), ThemeActivationBottomSheetFragment.TAG);
-        if (true) return;
-
         if (!mSite.isUsingWpComRestApi()) {
             AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
             return;

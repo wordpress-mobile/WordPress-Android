@@ -67,12 +67,12 @@
             android:id="@+id/use_theme_option_sub_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/use_theme_option_main_text"
+            android:layout_below="@id/use_theme_homepage_option"
             android:text="@string/theme_bottom_sheet_use_theme_layout_sub_text"
             android:textSize="@dimen/theme_bottom_sheet_text_size_small" />
 
         <TextView
-            android:id="@+id/use_theme_option_main_text"
+            android:id="@+id/use_theme_homepage_option"
             style="@style/ThemeActionSheetOptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
