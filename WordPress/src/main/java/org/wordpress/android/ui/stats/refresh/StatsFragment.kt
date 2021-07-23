@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
@@ -86,6 +87,9 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
+        disabledView.statsDisabledView.button.setOnClickListener {
+            viewModel.onEnableStatsModuleClick()
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -146,6 +150,30 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
                 handleSelectedSection(selectedSection)
             }
         })
+
+        viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
+            updateUi(event)
+        })
+    }
+
+    private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {
+        if (statsModuleUiModel.disabledStatsViewVisible) {
+            disabledView.statsDisabledView.visibility = View.VISIBLE
+            tabLayout.visibility = View.GONE
+            pullToRefresh.visibility = View.GONE
+
+            if (statsModuleUiModel.disabledStatsProgressVisible) {
+                disabledView.statsDisabledView.progressBar.visibility = View.VISIBLE
+                disabledView.statsDisabledView.button.visibility = View.GONE
+            } else {
+                disabledView.statsDisabledView.progressBar.visibility = View.GONE
+                disabledView.statsDisabledView.button.visibility = View.VISIBLE
+            }
+        } else {
+            disabledView.statsDisabledView.visibility = View.GONE
+            tabLayout.visibility = View.VISIBLE
+            pullToRefresh.visibility = View.VISIBLE
+        }
     }
 
     private fun StatsFragmentBinding.handleSelectedSection(

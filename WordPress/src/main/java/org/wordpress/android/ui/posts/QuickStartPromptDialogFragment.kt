@@ -36,6 +36,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
         private const val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
         private const val UNDEFINED_RES_ID = -1
+        private const val SITE_IMAGE_CORNER_RADIUS_IN_DP = 4
     }
 
     @DrawableRes private var drawableResId: Int = UNDEFINED_RES_ID
@@ -152,11 +153,11 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     private fun updateDialogImage(view: View) {
         if (!onboardingImprovementsFeatureConfig.isEnabled()) {
-            val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
+            val imageContainer = view.findViewById<LinearLayout>(R.id.quick_start_prompt_dialog_image_container)
             if (drawableResId == UNDEFINED_RES_ID) {
                 imageContainer.visibility = View.GONE
             } else {
-                val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
+                val image = view.findViewById<ImageView>(R.id.quick_start_prompt_dialog_image)
                 image.setImageResource(drawableResId)
                 imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
             }
@@ -172,22 +173,27 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
             txtTitle.text = siteRecord.blogNameOrHomeURL
             txtDomain.text = siteRecord.homeURL
-            imageManager.load(imgBlavatar, siteRecord.blavatarType, siteRecord.blavatarUrl)
+            imageManager.loadImageWithCorners(
+                    imgBlavatar,
+                    siteRecord.blavatarType,
+                    siteRecord.blavatarUrl,
+                    DisplayUtils.dpToPx(requireContext(), SITE_IMAGE_CORNER_RADIUS_IN_DP)
+            )
         }
     }
 
     private fun updateDialogTitle(view: View) {
-        val dialogTitle = view.findViewById<WPTextView>(R.id.promo_dialog_title)
+        val dialogTitle = view.findViewById<WPTextView>(R.id.quick_start_prompt_dialog_title)
         dialogTitle.text = title
     }
 
     private fun updateDialogDescription(view: View) {
-        val description = view.findViewById<WPTextView>(R.id.promo_dialog_description)
+        val description = view.findViewById<WPTextView>(R.id.quick_start_prompt_dialog_description)
         description.text = message
     }
 
     private fun updatePositiveButton(view: View) {
-        val buttonPositive = view.findViewById<Button>(R.id.promo_dialog_button_positive)
+        val buttonPositive = view.findViewById<Button>(R.id.quick_start_prompt_dialog_button_positive)
         buttonPositive.text = positiveButtonLabel
         buttonPositive.setOnClickListener {
             if (activity is QuickStartPromptClickInterface) {
@@ -198,7 +204,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     private fun updateNegativeButton(view: View) {
-        val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
+        val buttonNegative = view.findViewById<Button>(R.id.quick_start_prompt_dialog_button_negative)
         if (negativeButtonLabel.isNotEmpty()) {
             buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
@@ -213,7 +219,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     private fun updateNeutralButton(view: View) {
         if (!onboardingImprovementsFeatureConfig.isEnabled()) {
-            val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
+            val buttonNeutral = view.findViewById<Button>(R.id.quick_start_prompt_dialog_button_neutral)
             if (neutralButtonLabel.isNotEmpty()) {
                 buttonNeutral.visibility = View.VISIBLE
                 buttonNeutral.text = neutralButtonLabel

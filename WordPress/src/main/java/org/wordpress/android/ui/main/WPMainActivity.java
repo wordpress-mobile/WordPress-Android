@@ -141,6 +141,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
+import org.wordpress.android.workers.CreateSiteNotificationScheduler;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -232,6 +233,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -406,6 +408,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
 
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
+
         initViewModel();
     }
 
@@ -522,7 +526,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
-            handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
+            handleNewPageAction(request.getTitle(), "", request.getTemplate(),
                     PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
@@ -1190,9 +1194,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void showQuickStartDialog() {
-        if (AppPrefs.isQuickStartDisabled()
-            || getSelectedSite() == null
-            || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
+        if (
+                (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
+                || getSelectedSite() == null
+                || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())
+        ) {
             return;
         }
 
@@ -1230,9 +1236,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         quickStartPromptDialogFragment.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
-
-        // Set migration dialog flag so it is not shown for new sites.
-        AppPrefs.setQuickStartMigrationDialogShown(true);
     }
 
     private void appLanguageChanged() {

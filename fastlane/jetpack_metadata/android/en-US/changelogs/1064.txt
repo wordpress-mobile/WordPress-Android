@@ -1,5 +1,0 @@
-The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
-
-Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
-
-Finally, we made it clearer that you can’t edit the automatically generated post archives page.

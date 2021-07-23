@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-05 12:21:17+0000
+Translation-Revision-Date: 2021-07-14 11:32:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL e pavlefshme. Ju lutemi, jepni një URL të vlefshme.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Trupëzoni lëndë prej %s, e cila hëpërhë s’mund të shihet te përpunuesi për celular. Ju lutemi, bëni një paraparje të faqes, që të shihni lëndën e trupëzuar.</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">SHTONI LIDHJE</string>
+    <string name="activity_log_visit_our_documentation_page">vizitoni faqen tonë të dokumentimit</string>
+    <string name="gutenberg_native_embed_caption_s">Titull trupëzimi. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Titull trupëzimi. I zbrazët</string>
+    <string name="activity_log_multisite_message">Jetpack Backup për instalim Shumësajtësh furnizon kopjeruajtje të shkarkueshme, jo rikthime me një klikim. Për më tepër hollësi, %1$s.</string>
     <string name="blogging_reminders_tip">Ndihmëz</string>
     <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe.</string>
     <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
@@ -74,10 +81,10 @@ Language: sq_AL
     <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Që të shtoni një lidhje, prekeni dyfish</string>
-    <string name="gutenberg_native_add_link">SHTONI LIDHJE</string>
     <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
     <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
     <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">PËRPUNONI LIDHJE</string>
     <string name="login_empty_view_avatar_content_description">Fotoja e profilit tuaj</string>
     <string name="login_not_a_jetpack_site">Që të përdorni këtë aplikacion për %1$s, do t’ju duhet të keni të instaluar shtojcën Jetpack dhe të lidhur me llogarinë tuaj WordPress.com.</string>
     <string name="gutenberg_native_image_settings">Rregullime figurash</string>
@@ -94,6 +101,7 @@ Language: sq_AL
     <string name="gutenberg_native_post_meta_settings">Rregullime Meta postimi</string>
     <string name="gutenberg_native_post_content_settings">Rregullime lënde postimi</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
+    <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
@@ -112,10 +120,8 @@ Language: sq_AL
     <string name="suggestion">Sugjerim:</string>
     <string name="gutenberg_native_use_icon_button">Përdor buton ikone</string>
     <string name="gutenberg_native_search_input_field">Fushë dhëniesh kërkimi.</string>
-    <string name="gutenberg_native_search_blocks">Kërkon në blloqe</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiketë për kërkoni në blloqe. Teksti i tanishëm është</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Buton kërkimi. Teksti i tanishëm i butonit është</string>
-    <string name="gutenberg_native_search_block">Bllok kërkimesh</string>
     <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
     <string name="gutenberg_native_no_button">Pa buton</string>
     <string name="gutenberg_native_inside">Brenda</string>
@@ -138,6 +144,7 @@ Language: sq_AL
     <string name="comment_status_unreplied">Pa përgjigje</string>
     <string name="get_likes_no_network_error">S’ka rrjet.</string>
     <string name="gutenberg_native_search_settings">Rregullime kërkimi</string>
+    <string name="gutenberg_native_add_link">Shtoni lidhje</string>
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
     <string name="gutenberg_native_add_button_text">Tekst butoni Shtoni</string>
