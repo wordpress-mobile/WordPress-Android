@@ -2,44 +2,47 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.CommentStore.CommentError
-import org.wordpress.android.fluxc.store.comments.CommentsStore
-import org.wordpress.android.fluxc.store.comments.CommentsStore.CommentsData
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
+import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnGetPage
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.ReloadFromCache
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsState.Idle
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationFailure
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationLoading
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationSuccess
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
 import org.wordpress.android.ui.comments.unified.CommentFilter
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
-import org.wordpress.android.ui.comments.unified.UnrepliedCommentsUtils
 import org.wordpress.android.usecase.FlowFSMUseCase
+import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.usecase.UseCaseResult.Failure
+import org.wordpress.android.usecase.UseCaseResult.Loading
+import org.wordpress.android.usecase.UseCaseResult.Success
 import javax.inject.Inject
 
 class PaginateCommentsUseCase @Inject constructor(
-    private val commentsStore: CommentsStore,
-    private val unrepliedCommentsUtils: UnrepliedCommentsUtils
-) : FlowFSMUseCase<Parameters, PaginateCommentsAction, PaginationResult>(initialState = Idle) {
-    override suspend fun runLogic(parameters: Parameters) {
-        manageAction(OnGetPage(parameters, commentsStore, unrepliedCommentsUtils))
+    paginateCommentsResourceProvider: PaginateCommentsResourceProvider
+) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType>(
+        resourceProvider = paginateCommentsResourceProvider,
+        initialState = Idle
+) {
+    override suspend fun runLogic(parameters: GetPageParameters) {
+        manageAction(OnGetPage(parameters))
     }
 
-    sealed class PaginateCommentsState : StateInterface<PaginateCommentsAction, PaginationResult> {
+    sealed class PaginateCommentsState
+        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(
+                resourceProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
-                flowChannel: MutableSharedFlow<PaginationResult>
-            ): StateInterface<PaginateCommentsAction, PaginationResult> {
+                flowChannel: MutableSharedFlow<UseCaseResult<PagingData, CommentsUseCaseType>>
+            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
                 return when (action) {
                     is OnGetPage -> {
                         val parameters = action.parameters
-                        val commentsStore = action.commentsStore
-                        val unrepliedCommentsUtils = action.unrepliedCommentsUtils
-                        if (parameters.offset == 0) flowChannel.emit(PaginationLoading)
+                        val commentsStore = resourceProvider.commentsStore
+                        val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
+                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
 
                         val result = commentsStore.fetchComments(
                                 site = parameters.site,
@@ -49,32 +52,41 @@ class PaginateCommentsUseCase @Inject constructor(
                                 cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
                         )
 
-                        val data = result.data ?: CommentsData.empty()
-                        if (parameters.commentFilter == UNREPLIED) {
-                            data.comments = unrepliedCommentsUtils.getUnrepliedComments(data.comments)
+                        val data = (result.data ?: PagingData.empty()).let {
+                            if (parameters.commentFilter == UNREPLIED) {
+                                it.copy(comments = unrepliedCommentsUtils.getUnrepliedComments(it.comments))
+                            } else it
                         }
 
+
                         if (result.isError) {
-                            flowChannel.emit(PaginationFailure(result.error, data))
+                            flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))
                         } else {
-                            flowChannel.emit(PaginationSuccess(data))
+                            flowChannel.emit(Success(PAGINATE_USE_CASE, data))
                         }
 
                         Idle
                     }
-                    is ReloadFromCache -> {
+                    is OnReloadFromCache -> {
                         val parameters = action.parameters
-                        val commentsStore = action.commentsStore
+                        val commentsStore = resourceProvider.commentsStore
 
                         val result = commentsStore.getCachedComments(
-                                site = parameters.site,
-                                cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
+                                site = parameters.pagingParameters.site,
+                                cacheStatuses = parameters.pagingParameters.commentFilter.toCommentCacheStatuses(),
+                                imposeHasMore = parameters.hasMore
                         )
 
-                        val data = result.data ?: CommentsData.empty()
+                        val data = result.data ?: PagingData.empty()
 
-                        data.hasMore = parameters.hasMore
-                        flowChannel.emit(PaginationSuccess(data))
+                        //data.hasMore = parameters.hasMore
+
+                        if (result.isError) {
+                            flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))
+                        } else {
+                            flowChannel.emit(Success(PAGINATE_USE_CASE, data))
+                        }
+
                         Idle
                     }
                 }
@@ -84,26 +96,34 @@ class PaginateCommentsUseCase @Inject constructor(
 
     sealed class PaginateCommentsAction {
         data class OnGetPage(
-            val parameters: Parameters,
-            val commentsStore: CommentsStore,
-            val unrepliedCommentsUtils: UnrepliedCommentsUtils
+            val parameters: GetPageParameters
         ) : PaginateCommentsAction()
 
-        data class ReloadFromCache(val parameters: Parameters, val commentsStore: CommentsStore) :
-                PaginateCommentsAction()
+        data class OnReloadFromCache(
+            val parameters: ReloadFromCacheParameters
+        ) : PaginateCommentsAction()
     }
 
-    sealed class PaginationResult {
-        object PaginationLoading : PaginationResult()
-        data class PaginationFailure(val error: CommentError, val cachedData: CommentsData) : PaginationResult()
-        data class PaginationSuccess(val data: CommentsData) : PaginationResult()
+    //sealed class PaginationResult {
+    //    object PaginationLoading : PaginationResult()
+    //    data class PaginationFailure(val error: CommentError, val cachedData: CommentsData) : PaginationResult()
+    //    data class PaginationSuccess(val data: CommentsData) : PaginationResult()
+    //}
+
+    sealed class Parameters {
+        data class GetPageParameters(
+            val site: SiteModel,
+            val number: Int,
+            val offset: Int,
+            val commentFilter: CommentFilter,
+                //val hasMore: Boolean = false
+        ) : Parameters()
+
+        data class ReloadFromCacheParameters(
+            val pagingParameters: GetPageParameters,
+            val hasMore: Boolean
+        ) : Parameters()
+
     }
 
-    data class Parameters(
-        val site: SiteModel,
-        val number: Int,
-        val offset: Int,
-        val commentFilter: CommentFilter,
-        val hasMore: Boolean = false
-    )
 }

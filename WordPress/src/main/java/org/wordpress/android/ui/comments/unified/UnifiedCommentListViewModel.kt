@@ -18,14 +18,11 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentParameters
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationFailure
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationLoading
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationSuccess
-import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
+import org.wordpress.android.models.usecases.ModerateCommentsUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
+import org.wordpress.android.models.usecases.PropagateCommentsUpdateHandler
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -46,6 +43,10 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.usecase.UseCaseResult.Failure
+import org.wordpress.android.usecase.UseCaseResult.Loading
+import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -70,6 +71,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
+    private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
@@ -137,7 +139,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun requestsFirstPage() {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.requestPage(
-                    Parameters(
+                    GetPageParameters(
                             site = selectedSiteRepository.getSelectedSite()!!,
                             number = if (commentFilter == UNREPLIED) 100 else 30,
                             offset = 0,
@@ -150,21 +152,26 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun listToLocalCacheUpdateRequests() {
         launch(bgDispatcher) {
             _commentsUpdateListener.collectLatest {
-                unifiedCommentsListHandler.refreshFromCache(
-                        Parameters(
-                                site = selectedSiteRepository.getSelectedSite()!!,
-                                number = if (commentFilter == UNREPLIED) 100 else 30,
-                                offset = 0,
-                                commentFilter = commentFilter,
-                        )
-                )
+                launch(bgDispatcher) {
+                    unifiedCommentsListHandler.refreshFromCache(
+                            ReloadFromCacheParameters(
+                                    pagingParameters = GetPageParameters(
+                                            site = selectedSiteRepository.getSelectedSite()!!,
+                                            number = if (commentFilter == UNREPLIED) 100 else 30,
+                                            offset = 0,
+                                            commentFilter = commentFilter
+                                    ),
+                                    hasMore = false // TODOD: implement real logic here
+                            )
+                    )
+                }
             }
         }
     }
 
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
-            _commentsProvider.filter { it is PaginationFailure }.collectLatest {
+            _commentsProvider.filter { it is Failure<> }.collectLatest {
                 val errorMessage = (it as PaginationFailure).error.message
                 if (!errorMessage.isNullOrEmpty()) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
@@ -190,9 +197,9 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-    private fun clickItem(remoteCommentId: Long, commentStatus: CommentStatus) {
+    private fun clickItem(comment: CommentEntity/*, remoteCommentId: Long, commentStatus: CommentStatus*/) {
         if (_selectedComments.value.isNotEmpty()) {
-            toggleItem(remoteCommentId, commentStatus)
+            toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
         } else {
             // open comment details
         }
@@ -264,17 +271,16 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentsDataResult: PaginationResult,
+        commentsDataResult: UseCaseResult<PagingData>,
         selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
-        var (comments, hasMore) = when (commentsDataResult) {
-            is PaginationFailure -> Pair(
-                    commentsDataResult.cachedData.comments,
-                    commentsDataResult.cachedData.hasMore
-            )
-            PaginationLoading -> Pair(listOf(), false)
-            is PaginationSuccess -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
+        val (comments, hasMore) = when (commentsDataResult) {
+            is Failure<*, PagingData> -> Pair(commentsDataResult.cachedData.comments, commentsDataResult.cachedData.hasMore)
+            Loading -> Pair(listOf(), false)
+            is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
+
+        // TODOD: manage Loading and Failure conditions
 
         val list = ArrayList<UnifiedCommentListItem>()
         comments.forEachIndexed { index, commentModel ->
@@ -286,12 +292,15 @@ class UnifiedCommentListViewModel @Inject constructor(
             }
 
             val toggleAction = ToggleAction(
-                    commentModel.remoteCommentId,
-                    CommentStatus.fromString(commentModel.status), this::toggleItem
+                    commentModel,
+                    //commentModel.remoteCommentId,
+                    //CommentStatus.fromString(commentModel.status),
+                    this::toggleItem
             )
             val clickAction = ClickAction(
-                    commentModel.remoteCommentId,
-                    CommentStatus.fromString(commentModel.status),
+                    commentModel,
+                    //commentModel.remoteCommentId,
+                    //CommentStatus.fromString(commentModel.status),
                     this::clickItem
             )
 
@@ -300,14 +309,15 @@ class UnifiedCommentListViewModel @Inject constructor(
 
             list.add(
                     Comment(
+                            // TODOD: check if forcing orEmpty could cause a null value in Entity to be saved back as empty string (that is not desirable)
                             remoteCommentId = commentModel.remoteCommentId,
-                            postTitle = commentModel.postTitle,
-                            authorName = commentModel.authorName,
-                            authorEmail = commentModel.authorEmail,
-                            content = commentModel.content,
-                            publishedDate = commentModel.datePublished,
+                            postTitle = commentModel.postTitle.orEmpty(),
+                            authorName = commentModel.authorName.orEmpty(),
+                            authorEmail = commentModel.authorEmail.orEmpty(),
+                            content = commentModel.content.orEmpty(),
+                            publishedDate = commentModel.datePublished.orEmpty(),
                             publishedTimestamp = commentModel.publishedTimestamp,
-                            authorAvatarUrl = commentModel.authorProfileImageUrl,
+                            authorAvatarUrl = commentModel.authorProfileImageUrl.orEmpty(),
                             isPending = isPending,
                             isSelected = isSelected ?: false,
                             clickAction = clickAction,
@@ -320,12 +330,12 @@ class UnifiedCommentListViewModel @Inject constructor(
             list.add(NextPageLoader(hasMore && commentsDataResult !is PaginationFailure, -1) {
                 launch(bgDispatcher) {
                     unifiedCommentsListHandler.requestPage(
-                            Parameters(
-                                    site = selectedSiteRepository.getSelectedSite()!!,
-                                    number = 30,
-                                    offset = comments.size,
-                                    commentFilter = commentFilter
-                            )
+                        GetPageParameters(
+                            site = selectedSiteRepository.getSelectedSite()!!,
+                            number = 30,
+                            offset = comments.size,
+                            commentFilter = commentFilter
+                        )
                     )
                 }
             })
