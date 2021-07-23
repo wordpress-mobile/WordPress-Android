@@ -2,6 +2,7 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 class PaginateCommentsUseCase @Inject constructor(
     paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType>(
+) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError>(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -30,19 +31,20 @@ class PaginateCommentsUseCase @Inject constructor(
     }
 
     sealed class PaginateCommentsState
-        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
+        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
-                flowChannel: MutableSharedFlow<UseCaseResult<PagingData, CommentsUseCaseType>>
-            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
+                flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>
+            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
                 return when (action) {
                     is OnGetPage -> {
                         val parameters = action.parameters
                         val commentsStore = resourceProvider.commentsStore
                         val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
-                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
+                        val result2 = Loading(PAGINATE_USE_CASE)
+                        if (parameters.offset == 0) flowChannel.emit(result2)
 
                         val result = commentsStore.fetchComments(
                                 site = parameters.site,

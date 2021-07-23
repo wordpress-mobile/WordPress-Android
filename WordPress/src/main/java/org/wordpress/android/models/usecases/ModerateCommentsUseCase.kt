@@ -3,6 +3,7 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 class ModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DontCare, CommentsUseCaseType>(
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -27,13 +28,13 @@ class ModerateCommentsUseCase @Inject constructor(
     }
 
     sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
+        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
-                flowChannel: MutableSharedFlow<UseCaseResult<DontCare, CommentsUseCaseType>>
-            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
+                flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, DontCare>>
+            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError> {
                 return when (action) {
                     is OnModerateComment -> {
                         val parameters = action.parameters
