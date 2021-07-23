@@ -17,6 +17,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
@@ -74,11 +75,11 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until IDLE state is returned on success`() = test {
         whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
         val scanStateModels = listOf(
                 scanStateScanningModel,
                 scanStateScanningModel,
-                ScanStateModel(state = ScanStateModel.State.IDLE)
+                ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         )
         whenever(scanStore.getScanStateForSite(any()))
                 .thenReturn(scanStateModels[0])
@@ -93,7 +94,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until error is returned on failure`() = test {
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateScanningModel)
         whenever(scanStore.fetchScanState(any())).thenReturn(
@@ -125,8 +126,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given fetch error under retry count, when scan state triggers, then return only success`() = test {
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
-        val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
+        val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.fetchScanState(any()))
                 .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))

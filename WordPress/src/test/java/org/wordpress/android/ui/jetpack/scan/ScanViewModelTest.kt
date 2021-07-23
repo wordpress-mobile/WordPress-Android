@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -80,7 +81,11 @@ class ScanViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: ScanViewModel
 
-    private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
+    private val fakeScanStateModel = ScanStateModel(
+            state = ScanStateModel.State.IDLE,
+            hasCloud = true,
+            reason = Reason.NO_REASON
+    )
     private val fakeUiStringText = UiStringText("")
     private val fakeDetectedAt = UiStringText("")
     private val fakeSubHeaderColor = 1
