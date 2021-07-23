@@ -123,6 +123,8 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt())).thenReturn("")
     }
 
+    /* VM START */
+
     @Test
     fun `when vm starts, then app displays full screen loading scan state`() =
             test {
@@ -149,6 +151,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any())
             }
+
+    /* FETCH SCAN STATE */
 
     @Test
     fun `given no network, when scan state fetch not invoked by user, then app reaches no connection state`() = test {
@@ -279,6 +283,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
 
+    /* THREAT ITEM */
+
     @Test
     fun `when threat item is clicked, then app navigates to threat details`() = test {
         val observers = init()
@@ -287,6 +293,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
+
+    /* START SCAN */
 
     @Test
     fun `when scan button is clicked, then start scan is triggered`() = test {
@@ -462,6 +470,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(threatsFoundMessage)))
             }
 
+    /* FIX THREAT */
+
     @Test
     fun `when fix all threats button is clicked, then fix threats confirmation dialog action is triggered`() =
             test {
@@ -522,6 +532,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg)
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
             }
+
+    /* FETCH FIX STATUS */
 
     @Test
     fun `given threats are fixed, when threats fix status is checked, then pluralised success message is shown`() =
@@ -625,6 +637,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site = site)
             }
 
+    /* ACTIVITY RESULT */
+
     @Test
     fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
             test {
@@ -660,6 +674,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
             }
+
+    /* FETCH FIX STATUS */
 
     @Test
     fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
