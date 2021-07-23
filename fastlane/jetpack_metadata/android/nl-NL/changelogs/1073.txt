@@ -1,2 +1,0 @@
-17.7:
-Blokeditor: Nieuw indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop

@@ -1,1 +1,0 @@
-Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
