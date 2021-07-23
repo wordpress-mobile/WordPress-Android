@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInt
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 
 import java.util.ArrayList;
 
@@ -29,8 +30,6 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     public static final String EXTRA_DO_LOGIN_UPDATE = "EXTRA_DO_LOGIN_UPDATE";
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
-
-    public static final String KEY_LOCAL_ID = "local_id";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -109,7 +108,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void selectSite(int localId) {
-        setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, localId));
+        setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, localId));
         finish();
     }
 
