@@ -3,22 +3,24 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.CommentStore.CommentError
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
+import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsState.Idle
 import org.wordpress.android.usecase.FlowFSMUseCase
+import org.wordpress.android.usecase.FlowFSMUseCase.StateInterface
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
 import org.wordpress.android.usecase.UseCaseResult.Loading
 import org.wordpress.android.usecase.UseCaseResult.Success
-import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComment
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
-import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DontCare, CommentsUseCaseType>(
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -27,13 +29,13 @@ class BatchModerateCommentsUseCase @Inject constructor(
     }
 
     sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
+        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
-                flowChannel: MutableSharedFlow<UseCaseResult<DontCare, CommentsUseCaseType>>
-            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
+                flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, DontCare>>
+            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType, CommentError> {
                 return when (action) {
                     is OnModerateComment -> {
                         val parameters = action.parameters
@@ -90,4 +92,5 @@ class BatchModerateCommentsUseCase @Inject constructor(
             val newStatus: CommentStatus,
         )
     }
+
 }

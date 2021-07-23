@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class PaginateCommentsUseCase @Inject constructor(
     paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType>(
+) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError>(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -30,19 +30,20 @@ class PaginateCommentsUseCase @Inject constructor(
     }
 
     sealed class PaginateCommentsState
-        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
+        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
-                flowChannel: MutableSharedFlow<UseCaseResult<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>>
-            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType> {
+                flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>
+            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
                 return when (action) {
                     is OnGetPage -> {
                         val parameters = action.parameters
                         val commentsStore = resourceProvider.commentsStore
                         val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
-                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
+                        val result2 = Loading(PAGINATE_USE_CASE)
+                        if (parameters.offset == 0) flowChannel.emit(result2)
 
                         val result = commentsStore.fetchComments(
                                 site = parameters.site,
@@ -123,5 +124,7 @@ class PaginateCommentsUseCase @Inject constructor(
             val pagingParameters: GetPageParameters,
             val hasMore: Boolean
         ) : Parameters()
+
     }
+
 }

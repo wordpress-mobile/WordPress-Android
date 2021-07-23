@@ -26,6 +26,7 @@ import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CA
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
+import org.wordpress.android.models.usecases.PropagateCommentsUpdateHandler
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -173,12 +174,12 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
-//            _commentsProvider.filter { it is Failure<> }.collectLatest {
-//                val errorMessage = (it as PaginationFailure).error.message
-//                if (!errorMessage.isNullOrEmpty()) {
-//                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
-//                }
-//            }
+            _commentsProvider.filter { it is Failure }.collectLatest {
+                val errorMessage = (it as Failure).error.message
+                if (!errorMessage.isNullOrEmpty()) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
+                }
+            }
         }
     }
 
