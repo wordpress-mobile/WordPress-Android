@@ -191,7 +191,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ThemesViewModel.class);
 
-        mViewModel.getBottomSheetAction().observe(this, action -> {
+        mViewModel.getBottomSheetAction().observe(this, event -> event.applyIfNotHandled(action -> {
             FragmentManager fm = getSupportFragmentManager();
             if (action instanceof Show) {
                 ThemeBottomSheetFragment bottomSheet = new ThemeBottomSheetFragment();
@@ -203,7 +203,8 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
                     bottomSheet.dismiss();
                 }
             }
-        });
+            return null;
+        }));
 
         mViewModel.start(mSite);
     }

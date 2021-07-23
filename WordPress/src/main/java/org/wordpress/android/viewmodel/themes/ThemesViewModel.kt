@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.THEMES
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
@@ -27,8 +28,8 @@ class ThemesViewModel @Inject constructor(
     private val _bottomSheetUiState = MutableLiveData<BottomSheetUIState>()
     val bottomSheetUiState: LiveData<BottomSheetUIState> = _bottomSheetUiState
 
-    private val _bottomSheetAction = MutableLiveData<BottomSheetAction>()
-    val bottomSheetAction: MutableLiveData<BottomSheetAction> = _bottomSheetAction
+    private val _bottomSheetAction = MutableLiveData<Event<BottomSheetAction>>()
+    val bottomSheetAction: MutableLiveData<Event<BottomSheetAction>> = _bottomSheetAction
 
     fun start(site: SiteModel) {
         if (isStarted) return
@@ -52,7 +53,7 @@ class ThemesViewModel @Inject constructor(
             return
         }
 
-        bottomSheetAction.value = Show
+        bottomSheetAction.value = Event(Show)
         setBottomSheetTexts(theme.name)
     }
 
@@ -62,7 +63,6 @@ class ThemesViewModel @Inject constructor(
                 currentHomepageCheckmarkVisible = false
         )
     }
-
 
     fun onKeepCurrentHomepageSelected() {
         _bottomSheetUiState.value = currentViewState()?.copy(
@@ -80,7 +80,7 @@ class ThemesViewModel @Inject constructor(
     }
 
     fun onDismissButtonClicked() {
-        bottomSheetAction.value = Hide
+        bottomSheetAction.value = Event(Hide)
     }
 
     private fun setBottomSheetTexts(themeName: String) {

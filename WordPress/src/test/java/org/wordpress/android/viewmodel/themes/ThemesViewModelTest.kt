@@ -34,7 +34,7 @@ class ThemesViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ThemesViewModel
 
     val state: BottomSheetUIState get() = viewModel.bottomSheetUiState.value!!
-    val action: BottomSheetAction? get() = viewModel.bottomSheetAction.value
+    val action: BottomSheetAction? get() = viewModel.bottomSheetAction.value?.peekContent()
 
     @Before
     fun setUp() {
@@ -122,7 +122,6 @@ class ThemesViewModelTest : BaseUnitTest() {
         viewModel.onDismissButtonClicked()
 
         // Assert
-        val action = viewModel.bottomSheetAction.value
         assertThat(action).isInstanceOf(Hide::class.java)
     }
 
