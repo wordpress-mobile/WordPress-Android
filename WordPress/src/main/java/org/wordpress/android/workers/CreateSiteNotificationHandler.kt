@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.ActivityLauncher
 import javax.inject.Inject
 
 class CreateSiteNotificationHandler @Inject constructor(
@@ -15,6 +16,6 @@ class CreateSiteNotificationHandler @Inject constructor(
     }
 
     override fun buildIntent(context: Context): Intent {
-        return Intent() // TODO: Replace this with respective intent in ActivityLauncher
+        return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(context)
     }
 }

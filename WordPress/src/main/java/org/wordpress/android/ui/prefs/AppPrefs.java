@@ -157,7 +157,8 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        BLOGGING_REMINDERS_SHOWN
+        BLOGGING_REMINDERS_SHOWN,
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
     }
 
     /**
@@ -1253,6 +1254,14 @@ public class AppPrefs {
 
     @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
         return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
+    }
+
+    public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
+        setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
+    }
+
+    public static boolean shouldScheduleCreateSiteNotification() {
+        return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
     }
 
     /*
