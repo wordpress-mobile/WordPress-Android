@@ -356,8 +356,8 @@ class ScanViewModel @Inject constructor(
             abstract val image: Int
             abstract val title: UiString
             abstract val subtitle: UiString
-            abstract val buttonText: UiString
-            abstract val action: (() -> Unit)
+            open val buttonText: UiString? = null
+            open val action: (() -> Unit)? = null
 
             data class NoConnection(override val action: () -> Unit) : ErrorUiState() {
                 @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp

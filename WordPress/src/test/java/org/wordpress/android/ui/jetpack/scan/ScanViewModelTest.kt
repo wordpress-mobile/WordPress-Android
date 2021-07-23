@@ -249,7 +249,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
         val observers = init()
 
-        (observers.uiStates.last() as ErrorUiState).action.invoke()
+        (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
     }
@@ -261,7 +261,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
                 val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action.invoke()
+                (uiStates.last() as ErrorUiState).action?.invoke()
                 advanceTimeBy(RETRY_DELAY)
 
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
@@ -274,7 +274,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
                 val observers = init()
 
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
@@ -378,7 +378,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 (observers.uiStates.last() as ContentUiState)
                         .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }

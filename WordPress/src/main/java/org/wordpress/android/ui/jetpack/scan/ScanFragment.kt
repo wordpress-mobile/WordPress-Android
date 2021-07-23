@@ -125,9 +125,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun ScanFragmentBinding.updateErrorLayout(state: ErrorUiState) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, state.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, state.subtitle)
-        uiHelpers.setTextOrHide(actionableEmptyView.button, state.buttonText)
         actionableEmptyView.image.setImageResource(state.image)
-        actionableEmptyView.button.setOnClickListener { state.action.invoke() }
+        state.buttonText?.let { uiHelpers.setTextOrHide(actionableEmptyView.button, state.buttonText) }
+        state.action?.let { action -> actionableEmptyView.button.setOnClickListener { action.invoke() } }
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
