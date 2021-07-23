@@ -4,29 +4,29 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-abstract class FlowFSMUseCase<RESOURCE_PROVIDER, in RUN_LOGIC_PARAMETERS, ACTION, DATA, USE_CASE_TYPE>(
-    initialState: StateInterface<RESOURCE_PROVIDER, ACTION, DATA, USE_CASE_TYPE>,
+abstract class FlowFSMUseCase<RESOURCE_PROVIDER, RUN_LOGIC_PARAMETERS, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR>(
+    initialState: StateInterface<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR>,
     val resourceProvider: RESOURCE_PROVIDER
 ) {
-    private val _flowChannel = MutableSharedFlow<UseCaseResult<DATA, USE_CASE_TYPE>>()
-    private var _internalState: StateInterface<RESOURCE_PROVIDER, ACTION, DATA, USE_CASE_TYPE> = initialState
+    private val _flowChannel = MutableSharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, DATA>>()
+    private var _internalState: StateInterface<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR> = initialState
 
 
-    fun subscribe(): SharedFlow<UseCaseResult<DATA, USE_CASE_TYPE>> {
+    fun subscribe(): SharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, DATA>> {
         return _flowChannel.asSharedFlow()
     }
 
     protected abstract suspend fun runLogic(parameters: RUN_LOGIC_PARAMETERS)
 
-    suspend fun manageAction(action: ACTION) {
+    suspend fun manageAction(action: ACTION_TYPE) {
         _internalState = _internalState.runAction(resourceProvider, action, _flowChannel)
     }
 
-    interface StateInterface<RESOURCE_PROVIDER, TRANSITION_ACTION, RESULT, USE_CASE_TYPE> {
+    interface StateInterface<RESOURCE_PROVIDER, TRANSITION_ACTION, RESULT, USE_CASE_TYPE, ERROR> {
         suspend fun runAction(
             utilsProvider: RESOURCE_PROVIDER,
             action: TRANSITION_ACTION,
-            flowChannel: MutableSharedFlow<UseCaseResult<RESULT, USE_CASE_TYPE>>
-        ): StateInterface<RESOURCE_PROVIDER, TRANSITION_ACTION, RESULT, USE_CASE_TYPE>
+            flowChannel: MutableSharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, RESULT>>
+        ): StateInterface<RESOURCE_PROVIDER, TRANSITION_ACTION, RESULT, USE_CASE_TYPE, ERROR>
     }
 }
