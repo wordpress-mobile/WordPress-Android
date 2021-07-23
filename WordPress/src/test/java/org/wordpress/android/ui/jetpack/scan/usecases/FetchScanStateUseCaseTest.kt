@@ -72,6 +72,20 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given multisite, when scan state is fetched, then MultisiteNotSupported is returned`() = test {
+        val scanStateModel = ScanStateModel(
+                state = ScanStateModel.State.UNAVAILABLE,
+                reason = Reason.MULTISITE_NOT_SUPPORTED
+        )
+        whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
+        whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
+
+        val result = useCase.fetchScanState(site).toList(mutableListOf())
+
+        assertThat(result).contains(Failure.MultisiteNotSupported)
+    }
+
+    @Test
     fun `when SCANNING scan state is fetched, then polling occurs until IDLE state is returned on success`() = test {
         whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
         val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
