@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.from
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ThemeActivationBottomSheetBinding
+import org.wordpress.android.databinding.ThemeBottomSheetBinding
 import org.wordpress.android.viewmodel.themes.ThemesViewModel
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.KeepCurrentHomepage
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
@@ -25,7 +25,7 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: ThemesViewModel
 
     companion object {
-        const val TAG = "ThemeActivationBottomSheetFragment"
+        const val TAG = "ThemeBottomSheetFragment"
     }
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.theme_activation_bottom_sheet, container)
+        return inflater.inflate(R.layout.theme_bottom_sheet, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
         // Ensures that bottom sheet always opens in expanded state even in landscape mode
         from(requireView().parent as View).state = STATE_EXPANDED
 
-        with(ThemeActivationBottomSheetBinding.bind(view)) {
+        with(ThemeBottomSheetBinding.bind(view)) {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ThemesViewModel::class.java)
 
             viewModel.bottomSheetUiState.observe(this@ThemeBottomSheetFragment) {
