@@ -1148,11 +1148,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case RequestCodes.LOGIN_EPILOGUE:
                 setSite(data);
-                int thisLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                if (!mQuickStartUtilsWrapper.isQuickStartInProgress(thisLocalId)
-                    && !mQuickStartUtilsWrapper.isQuickStartDone(thisLocalId)) {
-                    showQuickStartDialog();
-                }
+                showQuickStartDialog();
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
