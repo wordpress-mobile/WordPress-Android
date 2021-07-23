@@ -283,6 +283,31 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
 
+    @Test
+    fun `given multisite, when scan state is fetched, then app reaches multisite not supported state`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.MultisiteNotSupported::class.java)
+            }
+
+    @Test
+    fun `given multisite not supported state, when scan state is fetched, then corresponding error ui is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.ic_baseline_security_white_24dp)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
+                }
+            }
+
     /* THREAT ITEM */
 
     @Test
