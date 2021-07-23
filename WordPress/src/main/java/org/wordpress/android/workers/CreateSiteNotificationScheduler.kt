@@ -12,7 +12,7 @@ class CreateSiteNotificationScheduler
     private val createSiteNotificationHandler: CreateSiteNotificationHandler,
     private val appsPrefs: AppPrefsWrapper
 ) {
-    fun scheduleCreateSiteNotification() {
+    fun scheduleCreateSiteNotificationIfNeeded() {
         if (createSiteNotificationHandler.shouldShowNotification() && appsPrefs.shouldScheduleCreateSiteNotification) {
             val firstNotification = LocalNotification(
                     type = CREATE_SITE,

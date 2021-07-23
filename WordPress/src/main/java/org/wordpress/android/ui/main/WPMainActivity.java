@@ -408,7 +408,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
 
-        mCreateSiteNotificationScheduler.scheduleCreateSiteNotification();
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
 
         initViewModel();
     }
