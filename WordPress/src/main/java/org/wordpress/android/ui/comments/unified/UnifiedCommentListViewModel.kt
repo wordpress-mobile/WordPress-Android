@@ -143,8 +143,8 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
-            _commentsProvider.filter { it is Failure<> }.collectLatest {
-                val errorMessage = (it as PaginationFailure).error.message
+            _commentsProvider.filter { it is Failure }.collectLatest {
+                val errorMessage = (it as Failure).error.message
                 if (!errorMessage.isNullOrEmpty()) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
                 }
