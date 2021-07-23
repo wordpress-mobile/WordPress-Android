@@ -21,10 +21,9 @@ class LocalNotificationWorker(
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val id = inputData.getInt(ID, -1)
-        if (id == -1) return Result.failure()
+        val type = Type.fromTag(inputData.getString(TYPE))
 
-        val typeTag = inputData.getString(TYPE)
-        val type = Type.fromTag(typeTag) ?: return Result.failure()
+        if (id == -1 || type == null) return Result.failure()
 
         val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
         if (localNotificationHandler.shouldShowNotification()) {
