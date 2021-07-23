@@ -1305,10 +1305,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 AnalyticsTracker.track(MY_SITE_ICON_REMOVED)
                 updateSiteIconMediaId(0, true)
             }
-            TAG_QUICK_START_DIALOG -> {
-                AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
-                if (onboardingImprovementsFeatureConfig.isEnabled()) skipQuickStart()
-            }
+            TAG_QUICK_START_DIALOG -> AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
             TAG_REMOVE_NEXT_STEPS_DIALOG -> AnalyticsTracker.track(QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
             else -> {
                 AppLog.e(
