@@ -130,6 +130,9 @@ class ScanViewModel @Inject constructor(
                                     ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
                         }
 
+                        is FetchScanState.Failure.MultisiteNotSupported ->
+                            updateUiState(ErrorUiState.MultisiteNotSupported)
+
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
                             scanStateModel?.takeIf { !isInvokedFromInit }
@@ -378,6 +381,12 @@ class ScanViewModel @Inject constructor(
                 override val title = UiStringRes(R.string.scan_start_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
+            }
+
+            object MultisiteNotSupported : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.ic_baseline_security_white_24dp
+                override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
+                override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
             }
         }
     }
