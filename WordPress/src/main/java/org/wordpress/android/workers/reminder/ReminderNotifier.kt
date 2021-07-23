@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ContextProvider
@@ -34,7 +35,12 @@ class ReminderNotifier @Inject constructor(
                     PendingIntent.getActivity(
                             context,
                             REMINDER_NOTIFICATION_ID + siteId,
-                            PostsListActivity.buildIntent(context, site, actionsShownByDefault = true),
+                            PostsListActivity.buildIntent(
+                                    context,
+                                    site,
+                                    PostListType.DRAFTS,
+                                    actionsShownByDefault = true
+                            ),
                             FLAG_CANCEL_CURRENT
                     )
                 },

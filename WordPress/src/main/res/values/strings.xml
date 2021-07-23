@@ -2883,10 +2883,6 @@
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
     <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
 
-    <!-- Quick Start Promo Dialog (Migration) -->
-    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
-    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
@@ -2908,7 +2904,7 @@
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
+    <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
@@ -2918,7 +2914,7 @@
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
+    <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
@@ -2935,17 +2931,17 @@
     <string name="quick_start_list_check_stats_title">Check your stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_list_update_site_title_title">Check your site title</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
-    <string name="quick_start_list_enable_sharing_title">Enable sharing</string>
+    <string name="quick_start_list_enable_sharing_title">Social sharing</string>
     <string name="quick_start_list_explore_plans_subtitle" translatable="false">@string/quick_start_dialog_explore_plans_message</string>
     <string name="quick_start_list_explore_plans_title" translatable="false">@string/quick_start_dialog_explore_plans_title</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
     <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
     <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
     <string name="quick_start_list_view_site_title">Visit your site</string>
@@ -3700,4 +3696,9 @@
     <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
     <string name="stats_disabled_enable_stats_button">Enable site stats</string>
     <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
+
+    <!-- Create Site Notification -->
+    <string name="create_site_notification_title">Create your WordPress website</string>
+    <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
+    <string name="create_site_notification_create_site_action">Create site</string>
 </resources>
