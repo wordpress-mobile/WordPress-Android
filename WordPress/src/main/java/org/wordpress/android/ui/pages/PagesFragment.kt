@@ -128,7 +128,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 }
             }
             initializeViews(nonNullActivity)
-            initializeViewModels(nonNullActivity, savedInstanceState)
+            initializeViewModelObservers(nonNullActivity, savedInstanceState)
         }
     }
 
@@ -283,7 +283,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
     }
 
-    private fun PagesFragmentBinding.initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    private fun PagesFragmentBinding.initializeViewModelObservers(
+        activity: FragmentActivity,
+        savedInstanceState: Bundle?
+    ) {
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
