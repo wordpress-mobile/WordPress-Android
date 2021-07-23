@@ -59,6 +59,10 @@ class FetchScanStateUseCase @Inject constructor(
                 val retryAttemptsExceeded = handleError(retryAttempts++, Failure.RemoteRequestFailure)
                 if (retryAttemptsExceeded) break else continue
             }
+            if (scanStateModel.reason == ScanStateModel.Reason.MULTISITE_NOT_SUPPORTED) {
+                emit(Failure.MultisiteNotSupported)
+                return@flow
+            }
             emit(Success(scanStateModel))
 
             if (scanStateModel.state != ScanStateModel.State.SCANNING) {
