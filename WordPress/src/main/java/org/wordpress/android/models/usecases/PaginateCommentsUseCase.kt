@@ -2,6 +2,7 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction
@@ -124,7 +125,5 @@ class PaginateCommentsUseCase @Inject constructor(
             val pagingParameters: GetPageParameters,
             val hasMore: Boolean
         ) : Parameters()
-
     }
-
 }

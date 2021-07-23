@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
+import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
@@ -26,7 +27,6 @@ import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CA
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateHandler
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -80,7 +80,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
     private val _commentsProvider = unifiedCommentsListHandler.subscribe()
-    private val _batchModerationState = unifiedCommentsListHandler.batchModerationUseCase.subscribe()
+    private val _batchModerationState =_commentsProvider.filter { it.type == MODERATE_USE_CASE }
 
     val _batchModerationUiState = MutableStateFlow<BatchModerationUiState>(BatchModerationUiState.Idle)
 
@@ -95,10 +95,12 @@ class UnifiedCommentListViewModel @Inject constructor(
         combine(
                 _commentsProvider.filter { it.type == PAGINATE_USE_CASE },
                 _selectedComments,
-                _commentsProvider.filter { it.type == MODERATE_USE_CASE },
-        ) { commentData, selectedIds, moderationData ->
+        ) { commentData, selectedIds ->
             CommentsUiModel(
-                    buildCommentList(commentData, selectedIds),
+                    buildCommentList(
+                            commentData as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+                            selectedIds
+                    ),
                     buildCommentsListUiModel(commentData),
                     buildActionModeUiModel(selectedIds, commentFilter)
             )
@@ -122,14 +124,14 @@ class UnifiedCommentListViewModel @Inject constructor(
         launch(bgDispatcher) {
             _batchModerationState.collectLatest {
                 when (it) {
-                    is UseCaseResult.Loading -> {
+                    is Loading -> {
                         _batchModerationUiState.emit(BatchModerationUiState.InProgress)
                     }
-                    is UseCaseResult.Failure<*, *, *> -> {
+                    is Failure<*, *, *> -> {
                         _batchModerationUiState.emit(BatchModerationUiState.Failure)
                     }
 
-                    is UseCaseResult.Success -> {
+                    is Success -> {
                         localCommentCacheUpdateHandler.requestCommentsUpdate()
                         _selectedComments.emit(emptyList())
                         _batchModerationUiState.emit(BatchModerationUiState.Idle)
@@ -274,12 +276,15 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentsDataResult: UseCaseResult<CommentsUseCaseType,Failure,CommentDeta >,
+        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
         selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
         val (comments, hasMore) = when (commentsDataResult) {
-            is Failure<*, PagingData, *> -> Pair(commentsDataResult.cachedData.comments, commentsDataResult.cachedData.hasMore)
-            Loading<*> -> Pair(listOf(), false)
+            is Failure<*, *, PagingData> -> Pair(
+                    (commentsDataResult).cachedData.comments,
+                    commentsDataResult.cachedData.hasMore
+            )
+            is Loading<CommentsUseCaseType> -> Pair(listOf(), false)
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
 
@@ -296,14 +301,14 @@ class UnifiedCommentListViewModel @Inject constructor(
 
             val toggleAction = ToggleAction(
                     commentModel,
-                    //commentModel.remoteCommentId,
-                    //CommentStatus.fromString(commentModel.status),
+                    // commentModel.remoteCommentId,
+                    // CommentStatus.fromString(commentModel.status),
                     this::toggleItem
             )
             val clickAction = ClickAction(
                     commentModel,
-                    //commentModel.remoteCommentId,
-                    //CommentStatus.fromString(commentModel.status),
+                    // commentModel.remoteCommentId,
+                    // CommentStatus.fromString(commentModel.status),
                     this::clickItem
             )
 
@@ -330,15 +335,15 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
 
         if (hasMore && commentFilter != UNREPLIED) {
-            list.add(NextPageLoader(hasMore && commentsDataResult !is PaginationFailure, -1) {
+            list.add(NextPageLoader(hasMore && commentsDataResult !is Failure, -1) {
                 launch(bgDispatcher) {
                     unifiedCommentsListHandler.requestPage(
-                        GetPageParameters(
-                            site = selectedSiteRepository.getSelectedSite()!!,
-                            number = 30,
-                            offset = comments.size,
-                            commentFilter = commentFilter
-                        )
+                            GetPageParameters(
+                                    site = selectedSiteRepository.getSelectedSite()!!,
+                                    number = 30,
+                                    offset = comments.size,
+                                    commentFilter = commentFilter
+                            )
                     )
                 }
             })
@@ -347,10 +352,10 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentsListUiModel(
-        commentsDataResult: PaginationResult,
+        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
     ): CommentsListUiModel {
         return when (commentsDataResult) {
-            is PaginationLoading -> {
+            is Loading -> {
                 val prevState = uiState.replayCache.firstOrNull()
                 if (prevState != null && prevState.commentData.isNotEmpty()) {
                     CommentsListUiModel.Refreshing
@@ -358,7 +363,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                     CommentsListUiModel.Loading
                 }
             }
-            is PaginationSuccess -> {
+            is Success -> {
                 if (commentsDataResult.data.comments.isEmpty()) {
                     CommentsListUiModel.Empty(
                             UiStringRes(string.comments_empty_list),
@@ -368,8 +373,8 @@ class UnifiedCommentListViewModel @Inject constructor(
                     WithData
                 }
             }
-            is PaginationFailure -> {
-                val errorMessage = commentsDataResult.error.message
+            is Failure -> {
+                val errorMessage = commentsDataResult.error.error.message
                 if (commentsDataResult.cachedData.comments.isEmpty()) {
                     val errorString = if (errorMessage.isNullOrEmpty()) {
                         UiStringRes(string.error_refresh_comments)
