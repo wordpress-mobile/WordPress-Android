@@ -289,6 +289,12 @@ REPOSITORY_NAME="WordPress-Android"
       'short-description': File.join(metadata_folder, 'short_description.txt'),
       'app-store-description': File.join(metadata_folder, 'full_description.txt'),
       'app-store-name': File.join(metadata_folder, 'title.txt'),
+       play_store_screenshot_1: File.join(metadata_folder, 'screenshot_1.txt'),
+       play_store_screenshot_2: File.join(metadata_folder, 'screenshot_2.txt'),
+       play_store_screenshot_3: File.join(metadata_folder, 'screenshot_3.txt'),
+       play_store_screenshot_4: File.join(metadata_folder, 'screenshot_4.txt'),
+       play_store_screenshot_5: File.join(metadata_folder, 'screenshot_5.txt'),
+       play_store_screenshot_6: File.join(metadata_folder, 'screenshot_6.txt'),
     }
 
     # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.

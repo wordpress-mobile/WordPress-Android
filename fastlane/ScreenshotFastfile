@@ -18,6 +18,14 @@ RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
 FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
 
+# WordPress
+WP_TRANSLATED_PROMO_STRINGS_DOWNLOAD_PATH = File.join(Dir.pwd, "/playstoreres/metadata")
+WP_TRANSLATE_PROJECT_URL="https://translate.wordpress.org/projects/apps/android/release-notes/"
+
+# Jetpack
+JP_TRANSLATED_PROMO_STRINGS_DOWNLOAD_PATH = File.join(Dir.pwd, "/playstoreres/jetpack_metadata")
+JP_TRANSLATE_PROJECT_URL = "https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/"
+
 default_platform(:android)
 
 platform :android do
@@ -124,33 +132,48 @@ platform :android do
   #####################################################################################
   desc "Downloads translated promo strings from the translation system"
   lane :download_promo_strings do |options|
-    files = {
-      "play_store_screenshot_1" => {desc: "play_store_screenshot_1.txt"},
-      "play_store_screenshot_2" => {desc: "play_store_screenshot_2.txt"},
-      "play_store_screenshot_3" => {desc: "play_store_screenshot_3.txt"},
-      "play_store_screenshot_4" => {desc: "play_store_screenshot_4.txt"},
-      "play_store_screenshot_5" => {desc: "play_store_screenshot_5.txt"},
-      "play_store_screenshot_6" => {desc: "play_store_screenshot_6.txt"},
-      "play_store_screenshot_7" => {desc: "play_store_screenshot_7.txt"},
+    if options[:app].casecmp('jetpack') == 0
+        files = {
+            "screenshot-text-1" => {desc: "screenshot-text-1.txt"},
+            "screenshot-text-2" => {desc: "screenshot-text-2.txt"},
+            "screenshot-text-3" => {desc: "screenshot-text-3.txt"},
+            "screenshot-text-4" => {desc: "screenshot-text-4.txt"},
+            "screenshot-text-5" => {desc: "screenshot-text-5.txt"},
+            "screenshot-text-6" => {desc: "screenshot-text-6.txt"},
+        }
+        project_url = JP_TRANSLATE_PROJECT_URL
+        download_path = JP_TRANSLATED_PROMO_STRINGS_DOWNLOAD_PATH
+    else
+        files = {
+            "play_store_screenshot_1" => {desc: "play_store_screenshot_1.txt"},
+            "play_store_screenshot_2" => {desc: "play_store_screenshot_2.txt"},
+            "play_store_screenshot_3" => {desc: "play_store_screenshot_3.txt"},
+            "play_store_screenshot_4" => {desc: "play_store_screenshot_4.txt"},
+            "play_store_screenshot_5" => {desc: "play_store_screenshot_5.txt"},
+            "play_store_screenshot_6" => {desc: "play_store_screenshot_6.txt"},
+            "play_store_screenshot_7" => {desc: "play_store_screenshot_7.txt"},
 
-      "enhanced_app_store_screenshot_1" => {desc: "play_store_screenshot_1.html"},
-      "enhanced_app_store_screenshot_2" => {desc: "play_store_screenshot_2.html"},
-      "enhanced_app_store_screenshot_3" => {desc: "play_store_screenshot_3.html"},
-      "enhanced_app_store_screenshot_4" => {desc: "play_store_screenshot_4.html"},
-      "enhanced_app_store_screenshot_5" => {desc: "play_store_screenshot_5.html"},
-      "enhanced_app_store_screenshot_6" => {desc: "play_store_screenshot_6.html"},
-      "enhanced_app_store_screenshot_7" => {desc: "play_store_screenshot_7.html"},
-    }
+            "enhanced_app_store_screenshot_1" => {desc: "play_store_screenshot_1.html"},
+            "enhanced_app_store_screenshot_2" => {desc: "play_store_screenshot_2.html"},
+            "enhanced_app_store_screenshot_3" => {desc: "play_store_screenshot_3.html"},
+            "enhanced_app_store_screenshot_4" => {desc: "play_store_screenshot_4.html"},
+            "enhanced_app_store_screenshot_5" => {desc: "play_store_screenshot_5.html"},
+            "enhanced_app_store_screenshot_6" => {desc: "play_store_screenshot_6.html"},
+            "enhanced_app_store_screenshot_7" => {desc: "play_store_screenshot_7.html"},
+        }
+        project_url = WP_TRANSLATE_PROJECT_URL
+        download_path = WP_TRANSLATED_PROMO_STRINGS_DOWNLOAD_PATH
+    end
 
     locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
       .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
 
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+    gp_downloadmetadata(project_url: project_url,
       target_files: files,
       locales: locales,
       source_locale: "en-US",
-      download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
+      download_path: download_path)
   end
 
 
