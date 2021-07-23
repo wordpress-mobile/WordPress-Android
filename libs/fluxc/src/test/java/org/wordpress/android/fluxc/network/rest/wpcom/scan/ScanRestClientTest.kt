@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -104,7 +105,7 @@ class ScanRestClientTest {
                 assertEquals(state, State.fromValue(requireNotNull(scanResponse.state)))
                 assertEquals(hasCloud, requireNotNull(scanResponse.hasCloud))
                 assertEquals(hasValidCredentials, scanResponse.credentials?.firstOrNull()?.stillValid)
-                assertNull(reason)
+                assertEquals(reason, Reason.NO_REASON)
                 assertNotNull(credentials)
                 assertNotNull(threats)
                 mostRecentStatus?.apply {

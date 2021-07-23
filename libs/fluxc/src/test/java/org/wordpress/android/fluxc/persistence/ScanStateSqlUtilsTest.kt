@@ -11,6 +11,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import java.util.Date
 
@@ -64,7 +65,7 @@ class ScanStateSqlUtilsTest {
     private fun getScanStateModel(state: ScanStateModel.State): ScanStateModel {
         var scanStateModel = ScanStateModel(
                 state = state,
-                reason = "reason",
+                reason = Reason.UNKNOWN,
                 hasCloud = true,
                 hasValidCredentials = true
         )
