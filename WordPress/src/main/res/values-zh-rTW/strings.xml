@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-08 09:55:02+0000
+Translation-Revision-Date: 2021-07-23 12:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無效網址。 請輸入正確的網址。</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">目前無法在行動編輯器中查看 %s 的內嵌內容。 請預覽頁面以查看內嵌內容。</string>
+    <string name="gutenberg_native_embed_caption_s">內嵌字幕。 %s</string>
+    <string name="gutenberg_native_embed_caption_empty">內嵌字幕。 清空</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">新增連結</string>
+    <string name="activity_log_visit_our_documentation_page">請造訪我們的文件頁面</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite 安裝提供可下載的備份，無需一鍵還原。 詳情請見 %1$s。</string>
     <string name="blogging_reminders_tip">秘訣</string>
     <string name="blogging_reminders_select_days_message">你可以隨時更新</string>
     <string name="blogging_reminders_epilogue_caption">你可以隨時前往「我的網站」&gt;「設定」&gt;「網誌提醒」更新此設定。</string>
@@ -80,6 +87,7 @@ Language: zh_TW
     <string name="login_empty_view_try_another_account">嘗試其他帳號</string>
     <string name="login_empty_view_see_instructions">查看說明</string>
     <string name="login_no_jetpack_sites_error_message">若你已擁有網站，則需要安裝免費 Jetpack 外掛程式，並連結你的 WordPress.com 帳號。</string>
+    <string name="gutenberg_native_edit_link">編輯連結</string>
     <string name="login_empty_view_avatar_content_description">你的個人檔案照片</string>
     <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
     <string name="gutenberg_native_image_settings">圖片設定</string>
@@ -94,6 +102,7 @@ Language: zh_TW
     <string name="gutenberg_native_post_content_settings">文章內容設定</string>
     <string name="gutenberg_native_post_meta_settings">文章中繼資料設定</string>
     <string name="gutenberg_native_featured">精選內容</string>
+    <string name="gutenberg_native_embed_link">內嵌連結</string>
     <string name="gutenberg_native_display_post_date">顯示內容發佈日期</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
@@ -134,6 +143,7 @@ Language: zh_TW
     <string name="get_likes_no_network_error">沒有可用的網路。</string>
     <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
     <string name="comment_status_unreplied">尚未回覆</string>
+    <string name="gutenberg_native_add_link">新增連結</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>

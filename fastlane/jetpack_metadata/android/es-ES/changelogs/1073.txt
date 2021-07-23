@@ -1,2 +1,0 @@
-17.7:
-Editor de bloques: se ha incorporado una nueva cuadrícula de diseño de bloques, se han introducido cambios en el estilo de las insignias, se ha corregido el hecho de que no se cree un nuevo bloque al pulsar Intro dentro de un bloque de texto y también se ha corregido la vista de tableta para el botón de inserción

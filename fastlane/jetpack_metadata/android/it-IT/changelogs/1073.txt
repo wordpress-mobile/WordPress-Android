@@ -1,2 +1,0 @@
-17.7:
-Editor dei blocchi: nuovo blocco Griglia di layout, modifiche allo stile dei Badge, correzione del problema relativo alla mancata creazione di un nuovo blocco quando viene premuto Invio all'interno del blocco basato su testo, correzioni relative alla visualizzazione su tablet per il pulsante di inserimento

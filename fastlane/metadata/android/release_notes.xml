@@ -1,106 +1,85 @@
-<ar>
-17.7:
-- جديد! الحصول على مطالبات تذكير التدوين في أيام من اختيارك
-- محرِّر المكوِّن: شبكة تخطيط مكوِّن جديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
-- تم إصلاح مشكلة المقالة المكررة للقارئ
-- تمت إضافة القدرة على الاشتراك في المحادثات عن طريق البريد الإلكتروني من القارئ
-</ar>
 <de-DE>
-17.7:
-- Neu! Erhalte Blog-Erinnerungen an Tagen deiner Wahl
-- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
-- Problem mit doppeltem Beitrag im Reader behoben
-- Möglichkeit zum Abonnieren von Unterhaltungen per E-Mail im Reader hinzugefügt
+17.8:
+Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
+Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
 </de-DE>
 <en-US>
-17.7:
-- New! Get blogging reminder prompts on days of your choice
-- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
-- Fixed Reader duplicate post issue
-- Added ability to subscribe to conversations by email from Reader
+17.8:
+We added color/background customization for text blocks.
+It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
 </en-US>
 <es-ES>
-17.7:
-- ¡Nuevo! Obtén avisos de recordatorio de blogueo los días que elijas
-- Editor de bloques: Nuevo bloque de diseño de cuadrícula, retoques del estilo de las acreditaciones, corrección de un nuevo bloque no creado al pulsar Intro dentro del bloque basado en texto, correcciones de la vista en tableta para el botón de inserción
-- Corregido el problema de entradas duplicadas en el lector.
-- Añadida la posibilidad de suscripción a conversaciones por correo electrónico desde el lector
+17.8:
+Hemos añadido la personalización del color/fondo para los bloques de texto.
+No era posible editar bloques no compatibles con cuentas creadas antes de diciembre de 2018. ¡Lo hemos corregido! En paralelo, también actualizamos las pantallas de carga/fallo para el editor de bloques no compatibles.
 </es-ES>
+<fr-CA>
+17.8:
+Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
+Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+</fr-CA>
+<fr-FR>
+17.8:
+Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
+Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+</fr-FR>
 <iw-IL>
-17.7:
-- חדש! הודעות תזכורת להתחיל בכתיבת בלוג בימים שבחרת
-עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
-- תוקנה בעיה של פוסט משוכפל בקורא
-- נוספה היכולת להירשם מהקורא לשיחות באימייל
+17.8:
+הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
+לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
 </iw-IL>
 <id>
-17.7:
-- Baru! Dapatkan pesan pengingat blogging pada hari yang sudah dipilih
-- Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
-- Masalah pos duplikat di Pembaca sudah diperbaiki
-- Fitur berlangganan ke percakapan melalui email dari Pembaca sudah ditambahkan
+17.8:
+Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
+Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
 </id>
+<it-IT>
+17.8:
+Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
+Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
+</it-IT>
 <ja-JP>
-17.7:
-- 新しくなりました ! 指定した日にブログ作成のリマインダーを受け取ることができます
-- ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
-- Reader の重複投稿の問題を修正
-- Reader からメールで会話をフォローする機能の追加
- 
+17.8:
+テキストブロックに色や背景のカスタマイズ機能を追加しました。
+2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
 </ja-JP>
 <ko-KR>
-17.7:
-- 새로운 기능! 선택한 일자의 블로깅 알림 메시지 받기
-- 블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
-- 리더 중복 글 문제를 해결했음
-- 리더에서 이메일로 대화를 구독하는 기능을 추가했음
+17.8:
+텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
+2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
 </ko-KR>
 <nl-NL>
-17.7:
-- Nieuw! Ontvang herinneringen om te bloggen op zelf te kiezen dagen
-- Blokeditor: Nieuwe indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
-- Probleem van dubbel bericht in de lezer verholpen
-- Functie toegevoegd om vanaf de lezer je per e-mail te abonneren op gesprekken
+17.8:
+We hebben kleur-/achtergrond aanpassing toegevoegd voor tekstblokken.
+Het was niet mogelijk om niet ondersteunde blokken te bewerken met accounts die vóór december 2018 zijn gemaakt. Dat hebben we opgelost! Onderweg hebben we ook laad-/mislukte schermen geüpdatet voor de niet ondersteunde blok-editor.
 </nl-NL>
 <pt-BR>
-17.7:
-- Novidade! Receba lembretes para publicar nos dias que você quiser
-- Editor de blocos: Novo bloco de layout em grade, melhorias no estilo dos rótulos, correção de blocos não criados ao pressionar Enter em um bloco de texto. Correções no botão de inserção na visão em tablet
-- Correção de post duplicado no Leitor
-- Adição de possibilidade de inscrever-se a uma conversa por e-mail no Leitor
+17.8:
+Adicionamos personalização de plano de fundo/cor para blocos de texto.
+Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
 </pt-BR>
 <ru-RU>
-17,7:
-- Новое! Получайте напоминания о необходимости ведении блога в выбранные вами дни
-- Редактор блоков: Новая сетка макета, настройки стилей бейджей. Исправление создание нового блока при нажатии Ввода внутри текстового блока. Для кнопки вставки исправлен просмотр для планшета.
-- Исправлены проблемы с дублированием записей в Чтиве.
-- Добавлена возможность подписки на обсуждения по email из Чтива.
+17.8:
+Мы добавили настройку цвета / фона для текстовых блоков.
+Было невозможно редактировать неподдерживаемые блоки с учетными записями, созданными до декабря 2018 года. Мы исправили это! Попутно мы также обновили экраны загрузки / ошибок для неподдерживаемых блоков в редакторе.
 </ru-RU>
 <sv-SE>
-17.7:
-- Nyhet! Nu kan du få bloggningspåminnelser de dagar du själv väljer
-- Blockredigeraren: Nytt rutnät för layout av block, justeringar av knappstilar, rättat ett fel där nya block inte skapades när man tryckte enter inuti ett textbaserat block, korrigeringar av vy i surfplatta för infogningsknapp
-- Rättat fel med duplicerade inlägg i läsaren
-- Lagt till möjlighet att prenumerera på konversationer via e-post inifrån läsaren
+17.8:
+Vi har lagt till anpassning av färg/bakgrund i textblock.
+Block utan stöd kunde tidigare inte redigeras med konton som var skapade före december 2018, men det har vi löst! På samma gång uppdaterade vi även sidorna för laddning/misslyckande för block som inte stöds av blockredigeraren.
 </sv-SE>
 <tr-TR>
-17.7:
-- Yeni! Seçtiğiniz günlerde blog hatırlatıcı istemleri alın
-- Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
-- Okuyucu'da yinelenen gönderi sorunu düzeltildi
-- Okuycu içinden e-posta ile konuşmalara abone olma özelliği eklendi
+17.8:
+Metin blokları için renk/arkaplan özelleştirme ekledik.
+Aralık 2018'den önce oluşturulmuş hesaplarla desteklenmeyen blokların düzenlenmesi mümkün değildi. Bunu düzelttik! Düzeltirken de desteklenmeyen blok düzenlyici için yüklenme/başarısız olma ekranlarını da güncelledik.
 </tr-TR>
 <zh-CN>
-17.7：
-- 新功能！ 在您选定的日期收到博客发布提醒提示
-- 区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
-- 修复了阅读器重复发布文章的问题
-- 增加了通过电子邮件从阅读器订阅对话的功能
+17.8:
+我们为文本块添加了颜色/背景定制功能。
+之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
 </zh-CN>
 <zh-TW>
-17.7：
-- 全新推出！ 您可以選擇要在哪些日子收到網誌提醒
-- 區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
-- 修正閱讀器重複文章問題
-- 新增透過電子郵件收到閱讀器討論的訂閱功能
+17.8:
+我們為文字區塊新增了色彩/背景自訂功能。
+2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
 </zh-TW>
