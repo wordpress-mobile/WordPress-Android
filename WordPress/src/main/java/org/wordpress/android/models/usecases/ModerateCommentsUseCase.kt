@@ -3,37 +3,42 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.CommentStore.CommentError
-import org.wordpress.android.fluxc.store.comments.CommentsStore
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
+import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction.OnModerateComment
 import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsState.Idle
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentParameters
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationFailure
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationInProgress
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationSuccess
+import org.wordpress.android.models.usecases.ModerateCommentsUseCase.Parameters.ModerateCommentParameters
 import org.wordpress.android.usecase.FlowFSMUseCase
+import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.usecase.UseCaseResult.Failure
+import org.wordpress.android.usecase.UseCaseResult.Loading
+import org.wordpress.android.usecase.UseCaseResult.Success
 import javax.inject.Inject
 
 class ModerateCommentsUseCase @Inject constructor(
-    private val commentsStore: CommentsStore
-) : FlowFSMUseCase<ModerateCommentParameters, ModerateCommentsAction, ModerationResult>(initialState = Idle) {
+    moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DontCare, CommentsUseCaseType>(
+        resourceProvider = moderateCommentsResourceProvider,
+        initialState = Idle
+) {
     override suspend fun runLogic(parameters: ModerateCommentParameters) {
-        manageAction(ModerateComment(parameters, commentsStore))
+        manageAction(OnModerateComment(parameters))
     }
 
-    sealed class ModerateCommentsState : StateInterface<ModerateCommentsAction, ModerationResult> {
+    sealed class ModerateCommentsState
+        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
+                resourceProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
-                flowChannel: MutableSharedFlow<ModerationResult>
-            ): StateInterface<ModerateCommentsAction, ModerationResult> {
+                flowChannel: MutableSharedFlow<UseCaseResult<DontCare, CommentsUseCaseType>>
+            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DontCare, CommentsUseCaseType> {
                 return when (action) {
-                    is ModerateComment -> {
-                        val parameters = action.moderateCommentParameters
-                        val commentsStore = action.commentsStore
-                        flowChannel.emit(ModerationInProgress)
+                    is OnModerateComment -> {
+                        val parameters = action.parameters
+                        val commentsStore = resourceProvider.commentsStore
+                        flowChannel.emit(Loading(MODERATE_USE_CASE))
 
                         parameters.remoteCommentIds.forEach {
                             val localModerationResult = commentsStore.moderateCommentLocally(
@@ -43,21 +48,21 @@ class ModerateCommentsUseCase @Inject constructor(
                             )
 
                             if (localModerationResult.isError) {
-                                flowChannel.emit(ModerationFailure(localModerationResult.error))
+                                flowChannel.emit(Failure(MODERATE_USE_CASE, localModerationResult.error, DontCare))
                                 return Idle
                             }
 
-                            val result = commentsStore.pushComment(
+                            val result = commentsStore.pushLocalCommentByRemoteId(
                                     site = parameters.site,
                                     remoteCommentId = it
                             )
 
                             if (result.isError) {
-                                flowChannel.emit(ModerationFailure(result.error))
+                                flowChannel.emit(Failure(MODERATE_USE_CASE, result.error, DontCare))
                                 return Idle
                             }
                         }
-                        flowChannel.emit(ModerationSuccess)
+                        flowChannel.emit(Success(MODERATE_USE_CASE, DontCare))
                         Idle
                     }
                 }
@@ -65,24 +70,25 @@ class ModerateCommentsUseCase @Inject constructor(
         }
     }
 
-    sealed class ModerationResult {
-        object ModerationInProgress : ModerationResult()
-        data class ModerationFailure(val error: CommentError) : ModerationResult()
-        object ModerationSuccess : ModerationResult()
-        object Idle : ModerationResult()
-    }
+    // sealed class ModerationResult {
+    //     object ModerationInProgress : ModerationResult()
+    //     data class ModerationFailure(val error: CommentError) : ModerationResult()
+    //     object ModerationSuccess : ModerationResult()
+    //     object Idle : ModerationResult()
+    // }
 
     sealed class ModerateCommentsAction {
-        data class ModerateComment(
-            val moderateCommentParameters: ModerateCommentParameters,
-            val commentsStore: CommentsStore
-        ) :
-                ModerateCommentsAction()
+        data class OnModerateComment(
+            val parameters: ModerateCommentParameters
+        ) : ModerateCommentsAction()
     }
 
-    data class ModerateCommentParameters(
-        val site: SiteModel,
-        val remoteCommentIds: List<Long>,
-        val newStatus: CommentStatus,
-    )
+    sealed class Parameters {
+        data class ModerateCommentParameters(
+            val site: SiteModel,
+            val remoteCommentIds: List<Long>,
+            val newStatus: CommentStatus,
+        )
+    }
+
 }

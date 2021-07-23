@@ -1,0 +1,6 @@
+package org.wordpress.android.models.usecases
+
+enum class CommentsUseCaseType {
+    PAGINATE_USE_CASE,
+    MODERATE_USE_CASE
+}
