@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -357,6 +358,7 @@ class ScanViewModel @Inject constructor(
 
         sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val image: Int
+            open val imageColorResId: Int? = null
             abstract val title: UiString
             abstract val subtitle: UiString
             open val buttonText: UiString? = null
@@ -385,6 +387,7 @@ class ScanViewModel @Inject constructor(
 
             object MultisiteNotSupported : ErrorUiState() {
                 @DrawableRes override val image = R.drawable.ic_baseline_security_white_24dp
+                @ColorRes override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
                 override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
             }

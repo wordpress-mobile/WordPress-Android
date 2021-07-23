@@ -25,6 +25,7 @@ import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecora
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -127,6 +128,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, state.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, state.subtitle)
         actionableEmptyView.image.setImageResource(state.image)
+        state.imageColorResId?.let {
+            ColorUtils.setImageResourceWithTint(actionableEmptyView.image, state.image, it)
+        } ?: actionableEmptyView.image.setImageResource(state.image)
         state.buttonText?.let { uiHelpers.setTextOrHide(actionableEmptyView.button, state.buttonText) }
         state.action?.let { action -> actionableEmptyView.button.setOnClickListener { action.invoke() } }
     }

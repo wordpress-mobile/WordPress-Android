@@ -303,6 +303,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 val state = observers.uiStates.last() as ErrorUiState
                 with(state) {
                     assertThat(image).isEqualTo(R.drawable.ic_baseline_security_white_24dp)
+                    assertThat(imageColorResId).isEqualTo(R.color.gray)
                     assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
                     assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
                 }
