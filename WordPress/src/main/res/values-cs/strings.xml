@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 10:18:52+0000
+Translation-Revision-Date: 2021-07-23 06:34:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Neplatná URL. Zadejte platnou adresu URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Vložený obsah z %s nelze momentálně zobrazit v mobilním editoru. Chcete-li zobrazit vložený obsah, zobrazte náhled stránky.</string>
+    <string name="gutenberg_native_embed_caption_s">Vložit titulek. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Vložit titulek. Prázdný</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">PŘIDAT ODKAZ</string>
+    <string name="activity_log_visit_our_documentation_page">navštivte naši stránku s dokumentací</string>
+    <string name="activity_log_multisite_message">Jetpack Backup pro instalace na více webů poskytuje zálohy ke stažení, žádné obnovení jediným kliknutím. Další informace %1$s.</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_tip_message">Pravidelné zveřejňování příspěvků může pomoci vašim čtenářům zaujmout a přilákat na váš web nové návštěvníky.</string>
+    <string name="blogging_reminders_select_days_message">Toto můžete kdykoli aktualizovat</string>
+    <string name="blogging_reminders_select_days">Vyberte dny, ve kterých chcete blogovat</string>
+    <string name="blogging_reminders_epilogue_caption">Tuto položku můžete kdykoli aktualizovat na stránce Můj web&gt; Nastavení&gt; Připomenutí blogů.</string>
+    <string name="blogging_reminders_epilogue_title">Vše připraveno!</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Nemáte nastavena žádná připomenutí.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Dostanete připomenutí blogovat &lt;b&gt;každý den&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Dostanete připomenutí blogovat %1$s týdně na %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Připomenutí odstraněny!</string>
+    <string name="blogging_reminders_update">Aktualizace</string>
+    <string name="blogging_reminders_not_set">Žádná sada</string>
+    <string name="blogging_reminders_n_a_week">%s za týden</string>
+    <string name="set_your_blogging_reminders_button">Nastavit připomenutí</string>
+    <string name="set_up_blogging_reminders_message">Nastavte připomenutí blogů na dny, které chcete zveřejnit.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Váš příspěvek se publikuje… mezitím můžete nastavit připomenutí blogů na dny, které chcete zveřejnit.</string>
+    <string name="set_your_blogging_reminders_title">Nastavte si připomenutí blogů</string>
+    <string name="blogging_reminders_notification_text">Toto je vaše připomenutí, abyste dnes něco vytvořili</string>
+    <string name="blogging_reminders_notification_title">Je čas blogovat na %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro iOS podporovány</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro Android podporovány</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativně můžete tyto bloky oddělit a upravit samostatně klepnutím na „Převést na běžné bloky“.</string>
     <string name="blogging_reminders_done">Hotovo</string>
     <string name="blogging_reminders_notify_me">Informujte mě</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Zadejte přihlašovací údaje k serveru&lt;/a&gt; a povolte obnovování stránek jedním kliknutím ze záloh.</string>
@@ -54,6 +83,7 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
+    <string name="gutenberg_native_edit_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
     <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
@@ -74,6 +104,7 @@ Language: cs_CZ
     <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
     <string name="gutenberg_native_post_content_settings">Nastavení obsahu příspěvku</string>
     <string name="gutenberg_native_featured">Doporučené</string>
+    <string name="gutenberg_native_embed_link">Vložit odkaz</string>
     <string name="gutenberg_native_display_post_date">Zobrazit datum příspěvku</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -115,6 +146,7 @@ Language: cs_CZ
     <string name="get_likes_no_network_error">Síť není dostupná.</string>
     <string name="comments_empty_list_filtered_unreplied">Žádné nezodpovězené komentáře</string>
     <string name="comment_status_unreplied">Bez odpovědi</string>
+    <string name="gutenberg_native_add_link">Odkaz štítku</string>
     <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
@@ -2845,4 +2877,13 @@ Language: cs_CZ
     <string name="error">Chyba</string>
     <string name="category_refresh_error">Chyba obnovení rubrik</string>
     <string name="publish_now">Publikovat</string>
+    <string-array name="blogging_reminders_count">
+        <item> Jednou</item>
+        <item>Dvakrát</item>
+        <item>Třikrát</item>
+        <item>Čtyřikrát</item>
+        <item>Pětkrát</item>
+        <item>Šestkrát</item>
+        <item>Sedmkrát</item>
+    </string-array>
 </resources>

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-04 15:17:42+0000
+Translation-Revision-Date: 2021-07-19 14:57:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non válida. Por favor, introduce unha URL válida.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">O contido incrustado de %s non se pode ver neste momento no editor móbil. Por favor, previsualiza a páxina para ver o contido incrustado.</string>
+    <string name="gutenberg_native_embed_caption_s">Lenda incrustada. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Lenda incrustada. Baleira</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ENGALIR LIGAZÓN</string>
+    <string name="activity_log_visit_our_documentation_page">visita a nosa páxina de documentación</string>
+    <string name="activity_log_multisite_message">Jetpack Backup para instalacións multisitio proporciona copias de seguridade descargables, non restauracións cun só clic. Para máis información, %1$s.</string>
     <string name="blogging_reminders_tip_message">Publicar regularmente pode axudar a que os teus lectores permanezan implicados, e a atraer novos visitantes ao teu sitio.</string>
     <string name="blogging_reminders_tip">Consello</string>
     <string name="blogging_reminders_select_days_message">Podes actualizar isto en calquera momento</string>
@@ -77,6 +84,7 @@ Language: gl_ES
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir as ameazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir a ameaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dúas veces para engadir un enlace.</string>
+    <string name="gutenberg_native_edit_link">EDITAR LIGAZÓN</string>
     <string name="login_empty_view_try_another_account">Probar con outra conta</string>
     <string name="login_empty_view_see_instructions">Ver as instrucións</string>
     <string name="login_no_jetpack_sites_error_message">Se xa tes un sitio, terás que instalar o plugin gratuíto de Jetpack e conectalo á túa conta de WordPress.</string>
@@ -96,6 +104,7 @@ Language: gl_ES
     <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
     <string name="gutenberg_native_featured">Destacado</string>
+    <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente o enlace para axudar aos usuarios de lectores de pantalla</string>
     <string name="login_no_jetpack_sites">Non se encontraron sitios de Jetpack</string>
@@ -137,6 +146,7 @@ Language: gl_ES
     <string name="get_likes_no_network_error">Non hai ningunha rede dispoñible.</string>
     <string name="comments_empty_list_filtered_unreplied">Non hai ningún comentario sen responder</string>
     <string name="comment_status_unreplied">Sen responder</string>
+    <string name="gutenberg_native_add_link">Engadir ligazón</string>
     <string name="gutenberg_native_search_settings">Axustes de busca</string>
     <string name="jetpack_brute_force_allowlist_title">Direccións IP permitidas sempre</string>
     <string name="site_settings_denylist_title">Comentarios non permitidos</string>
