@@ -106,6 +106,8 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
+        buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -171,6 +173,11 @@ android {
             applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
+
+        // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
+        def properties = loadPropertiesFromFile(checkGradlePropertiesFile())
+        addBuildConfigFieldsFromPrefixedProperties(wordpress, properties, ['wp'])
+        addBuildConfigFieldsFromPrefixedProperties(jetpack, properties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
     }
 
     buildTypes {
@@ -234,6 +241,30 @@ android {
             output.versionNameOverride = version['versionName']
             output.versionCodeOverride = version['versionCode']?.toInteger()
         }
+    }
+}
+
+/// Dynamically add `buildConfigFields` on a given variant/flavor from prefixed properties
+/// (This is used to e.g. add every property prefixed `wp.` in `gradle.properties` as a BuildConfigField in the `wordpress` flavor)
+///
+/// `prefixes` is an array of prefixes to search for, without their `.` dot (e.g. `["wp", "jp"]`).
+/// Properties found with prefixes first in that array will be overridden by the ones found with prefixes later in the array.
+static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefixes) {
+    // Build a Map of prefixed properties found. Keys in this Map will be lowercased and `.` replaced by `_`
+    def fields_map = [:]
+    prefixes.each { prefix ->
+        properties.each { property ->
+            if (property.key.toLowerCase().startsWith("${prefix.toLowerCase()}.")) {
+                def key = property.key.toLowerCase().replace("${prefix.toLowerCase()}.", "").replace(".", "_")
+                fields_map[key] = property.value
+            }
+        }
+    }
+
+    // Then define the found properties as buildConfigFields
+    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
+    fields_map.each {
+        variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
 
@@ -448,6 +479,11 @@ dependencies {
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
 
+    // Necessary because of the failing android tests
+    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
+
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
@@ -463,36 +499,20 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
-android.buildTypes.all { buildType ->
-    // Add properties named "wp.xxx" to our BuildConfig
-    def inputFile = checkGradlePropertiesFile()
-    def properties = loadPropertiesFromFile(inputFile)
-    properties.any { property ->
-        if (property.key.toLowerCase().startsWith("wp.")) {
-            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
-                    "\"${property.value}\""
-        }
-        if (property.key.toLowerCase().startsWith("wp.res.")) {
-            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
-                    "${property.value}"
-        }
-    }
 
-    // If Google services file doesn't exist...
-    if (!file("google-services.json").exists()) {
-        // ... copy example file.
-        copy {
-            from(".")
-            into(".")
-            include("google-services.json-example")
-            rename('google-services.json-example', 'google-services.json')
-        }
+// If Google services file doesn't exist, copy example file
+if (!file("google-services.json").exists()) {
+    copy {
+        from(".")
+        into(".")
+        include("google-services.json-example")
+        rename('google-services.json-example', 'google-services.json')
     }
+}
 
-    // Print warning message if example Google services file is used.
-    if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
-        println("WARNING: You're using the example google-services.json file. Google login will fail.")
-    }
+// Print warning message if example Google services file is used.
+if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
+    println("WARNING: You're using the example google-services.json file. Google login will fail.")
 }
 
 tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {

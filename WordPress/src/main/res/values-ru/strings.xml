@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 04:11:19+0000
+Translation-Revision-Date: 2021-07-13 11:06:48+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Неверный URL, укажите корректный URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Встроенное содержимое с %s на настоящий момент не может быть просмотрено в мобильном редакторе. Откройте предварительный просмотр страницы для его просмотра.</string>
+    <string name="gutenberg_native_embed_caption_s">Подпись встроенного объекта. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Подпись встроенного объекта. Пустая</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ДОБАВИТЬ ССЫЛКУ</string>
+    <string name="activity_log_visit_our_documentation_page">посетите нашу страницу документации</string>
+    <string name="activity_log_multisite_message">Резервные копии Jetpack для мультисайт установок предоставляют скачиваемые резервные копии, но не восстановление в одно нажатие. Для подробностей %1$s.</string>
     <string name="blogging_reminders_tip_message">Регулярное пополнение блога займёт ваших подписчиков и привлечет новых посетителей на сайт.</string>
     <string name="blogging_reminders_tip">Совет</string>
     <string name="blogging_reminders_select_days_message">Вы можете обновить это в любое время</string>
@@ -77,7 +84,7 @@ Language: ru
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозы.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозу.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Нажмите дважды для добавления ссылки.</string>
-    <string name="gutenberg_native_add_link">ДОБАВИТЬ ССЫЛКУ</string>
+    <string name="gutenberg_native_edit_link">ИЗМЕНИТЬ ССЫЛКУ</string>
     <string name="login_empty_view_try_another_account">Использовать другую учётную запись</string>
     <string name="login_empty_view_see_instructions">См. инструкции</string>
     <string name="login_no_jetpack_sites_error_message">Если у вас уже есть сайт, вам необходимо установить бесплатный плагин Jetpack и подключить его к вашей учетной записи WordPress.com.</string>
@@ -97,6 +104,7 @@ Language: ru
     <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
     <string name="gutenberg_native_post_content_settings">Настройки содержимого записи</string>
     <string name="gutenberg_native_featured">Избранное</string>
+    <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
@@ -116,9 +124,7 @@ Language: ru
     <string name="gutenberg_native_use_icon_button">Использовать кнопку со значком</string>
     <string name="gutenberg_native_search_input_field">Поле ввода для поиска.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Кнопка поиска. Текущий текст кнопки -</string>
-    <string name="gutenberg_native_search_blocks">Блоки поиска</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Ярлык блока поиска. Сейчас -</string>
-    <string name="gutenberg_native_search_block">Блок поиска</string>
     <string name="gutenberg_native_outside">Снаружи</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Пользовательский заполнитель не назначен</string>
     <string name="gutenberg_native_no_button">Нет кнопки</string>
@@ -140,6 +146,7 @@ Language: ru
     <string name="get_likes_no_network_error">Сеть недоступна.</string>
     <string name="comments_empty_list_filtered_unreplied">Нет комментариев без ответа</string>
     <string name="comment_status_unreplied">Без ответов</string>
+    <string name="gutenberg_native_add_link">Добавить ссылку</string>
     <string name="gutenberg_native_search_settings">Настройки поиска</string>
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>

@@ -36,7 +36,8 @@ class BlockProcessorFactory {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(MEDIA_TEXT, new MediaTextBlockProcessor(localId, mediaFile));
-        mMediaBlockTypeBlockProcessorMap.put(GALLERY, new GalleryBlockProcessor(localId, mediaFile, siteUrl));
+        mMediaBlockTypeBlockProcessorMap.put(GALLERY, new GalleryBlockProcessor(localId, mediaFile, siteUrl,
+                mMediaUploadCompletionProcessor));
         mMediaBlockTypeBlockProcessorMap.put(COVER, new CoverBlockProcessor(localId, mediaFile,
                 mMediaUploadCompletionProcessor));
         mMediaBlockTypeBlockProcessorMap.put(FILE, new FileBlockProcessor(localId, mediaFile));

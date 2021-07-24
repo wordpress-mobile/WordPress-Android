@@ -1,5 +1,0 @@
-17.7:
-- ¡Nuevo! Obtén avisos de recordatorio de blogueo los días que elijas
-- Editor de bloques: Nuevo bloque de diseño de cuadrícula, retoques del estilo de las acreditaciones, corrección de un nuevo bloque no creado al pulsar Intro dentro del bloque basado en texto, correcciones de la vista en tableta para el botón de inserción
-- Corregido el problema de entradas duplicadas en el lector.
-- Añadida la posibilidad de suscripción a conversaciones por correo electrónico desde el lector

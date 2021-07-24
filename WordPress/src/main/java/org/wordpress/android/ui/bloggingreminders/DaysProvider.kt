@@ -1,34 +1,18 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SATURDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.THURSDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.TUESDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
-import org.wordpress.android.ui.reader.utils.DateProvider
-import java.util.Calendar
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.time.DayOfWeek
+import java.time.temporal.WeekFields
 import javax.inject.Inject
 
 class DaysProvider
-@Inject constructor(private val dateProvider: DateProvider) {
-    // TODO replace all the calendar references with DayOfWeek interface
-    private val days = listOf(
-            Calendar.SUNDAY to SUNDAY,
-            Calendar.MONDAY to MONDAY,
-            Calendar.TUESDAY to TUESDAY,
-            Calendar.WEDNESDAY to WEDNESDAY,
-            Calendar.THURSDAY to THURSDAY,
-            Calendar.FRIDAY to FRIDAY,
-            Calendar.SATURDAY to SATURDAY
-    )
-
-    fun getDays(): List<Pair<String, Day>> {
-        val offset = dateProvider.getFirstDayOfTheWeek() - 1
-        val shortWeekdays = dateProvider.getShortWeekdays()
-        val orderedDays = days.takeLast(days.size - offset) + days.take(offset)
-        return orderedDays.map { shortWeekdays[it.first] to it.second }
+@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
+    fun getDaysOfWeekByLocale(): List<DayOfWeek> {
+        val firstDayOfTheWeek = WeekFields.of(localeManagerWrapper.getLocale()).firstDayOfWeek
+        return (START_OFFSET..END_OFFSET).map { firstDayOfTheWeek.plus(it) }
+    }
+    companion object {
+        private const val START_OFFSET = 0
+        private const val END_OFFSET = 6L
     }
 }

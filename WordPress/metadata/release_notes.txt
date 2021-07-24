@@ -1,4 +1,2 @@
-- New! Get blogging reminder prompts on days of your choice
-- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
-- Fixed Reader duplicate post issue
-- Added ability to subscribe to conversations by email from Reader
+We added color/background customization for text blocks.
+It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.

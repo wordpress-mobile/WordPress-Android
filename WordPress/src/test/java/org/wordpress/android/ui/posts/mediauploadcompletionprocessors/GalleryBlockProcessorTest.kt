@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -11,6 +12,7 @@ import org.wordpress.android.util.helpers.MediaFile
 
 class GalleryBlockProcessorTest {
     private val mediaFile: MediaFile = mock()
+    private val mediaUploadCompletionProcessor: MediaUploadCompletionProcessor = mock()
     private lateinit var processor: GalleryBlockProcessor
 
     @Before
@@ -18,7 +20,8 @@ class GalleryBlockProcessorTest {
         whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
         whenever(mediaFile.getAttachmentPageURL(any())).thenReturn(TestContent.attachmentPageUrl)
-        processor = GalleryBlockProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
+        processor = GalleryBlockProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl,
+                mediaUploadCompletionProcessor)
     }
 
     @Test
@@ -55,5 +58,11 @@ class GalleryBlockProcessorTest {
     fun `processBlock can handle Link To Attachment Page setting`() {
         val processedBlock = processor.processBlock(TestContent.oldGalleryBlockLinkToAttachmentPage)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newGalleryBlockLinkToAttachmentPage)
+    }
+
+    @Test
+    fun `processBlock defers the refactored gallery to inner blocks recursion`() {
+        processor.processBlock(TestContent.oldRefactoredGalleryBlock)
+        verify(mediaUploadCompletionProcessor).processContent(TestContent.oldRefactoredGalleryBlockInnerBlocks)
     }
 }

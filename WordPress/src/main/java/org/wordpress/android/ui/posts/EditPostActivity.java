@@ -213,6 +213,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSou
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
 import org.wordpress.android.util.config.LayoutGridBlockFeatureConfig;
 import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
+import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -411,6 +412,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
     @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
@@ -453,7 +455,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
-    private void newPageFromLayoutPickerSetup(String title, String content) {
+    private void newPageFromLayoutPickerSetup(String title, String layoutSlug) {
         mIsNewPost = true;
 
         if (mSite == null) {
@@ -464,12 +466,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showErrorAndFinish(R.string.error_blog_hidden);
             return;
         }
-
+        String content = mSiteStore.getBlockLayoutContent(mSite, layoutSlug);
         // Create a new post
         mEditPostRepository.set(() -> {
-            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content, null,
-                    null, null, false);
-            post.setStatus(PostStatus.DRAFT.toString());
+            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content,
+                    PostStatus.DRAFT.toString(), null, null, false);
             return post;
         });
         mEditPostRepository.savePostSnapshot();
@@ -557,7 +558,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
                     newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
-                            extras.getString(EXTRA_PAGE_CONTENT));
+                            extras.getString(EXTRA_PAGE_TEMPLATE));
                 } else {
                     newPostSetup();
                 }
@@ -1206,6 +1207,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
+        MenuItem helpMenuItem = menu.findItem(R.id.menu_editor_help);
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && getSecondaryAction().isVisible());
@@ -1265,6 +1267,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
             });
         } else {
             contentInfo.setVisible(false); // only show the menu item when for Gutenberg
+        }
+
+        if (helpMenuItem != null) {
+            if (mEditorFragment instanceof GutenbergEditorFragment
+                && BuildConfig.DEBUG
+                && showMenuItems
+            ) {
+                helpMenuItem.setVisible(true);
+            } else {
+                helpMenuItem.setVisible(false);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1449,6 +1462,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mViewModel.finish(ActivityFinishState.SAVED_LOCALLY);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
+                }
+            } else if (itemId == R.id.menu_editor_help) {
+                // Display the editor help page -- option should only be available in the GutenbergEditor
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
                 }
             }
         }
@@ -2293,9 +2311,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
         boolean isUnsupportedBlockEditorEnabled =
-                mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
+                mSite.isWPCom() || mIsJetpackSsoEnabled;
 
-        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
+        boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
@@ -3589,7 +3607,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void refreshEditorTheme() {
-        FetchEditorThemePayload payload = new FetchEditorThemePayload(mSite);
+        FetchEditorThemePayload payload =
+                new FetchEditorThemePayload(mSite, mGlobalStyleSupportFeatureConfig.isEnabled());
         mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
     }
 
