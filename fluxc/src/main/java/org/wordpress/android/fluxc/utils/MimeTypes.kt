@@ -71,7 +71,8 @@ class MimeTypes {
     private val imageTypes = listOf(
             MimeType(IMAGE, Subtype.JPEG, listOf("jpg", "jpeg")),
             MimeType(IMAGE, Subtype.PNG, listOf("png")),
-            MimeType(IMAGE, Subtype.GIF, listOf("gif"))
+            MimeType(IMAGE, Subtype.GIF, listOf("gif")),
+            MimeType(IMAGE, Subtype.WEBP, listOf("webp"))
     )
 
     /*
