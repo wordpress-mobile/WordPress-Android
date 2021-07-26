@@ -23,7 +23,7 @@ class LoginEpilogueViewModel @Inject constructor(
     }
 
     fun onCreateNewSite() {
-        // TODO: Post navigation event.
+        _navigationEvents.postValue(Event(LoginNavigationEvents.CreateNewSite))
     }
 
     fun onContinue() {

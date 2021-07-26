@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.CreateNewSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
@@ -68,6 +69,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                 showPostSignupInterstitialScreen();
             } else if (loginEvent instanceof SelectSite) {
                 selectSite(((SelectSite) loginEvent).getLocalId());
+            } else if (loginEvent instanceof CreateNewSite) {
+                createNewSite();
             } else if (loginEvent instanceof CloseWithResultOk) {
                 closeWithResultOk();
             } else if (loginEvent instanceof ShowNoJetpackSites) {
@@ -89,7 +92,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Override
     public void onCreateNewSite() {
-        // TODO: Trigger view model call.
+        mViewModel.onCreateNewSite();
     }
 
     @Override
@@ -115,6 +118,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     private void selectSite(int localId) {
         setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, localId));
         finish();
+    }
+
+    private void createNewSite() {
+        // TODO: Trigger create new site action.
     }
 
     private void closeWithResultOk() {
