@@ -264,6 +264,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
                 @Override
                 public void onSiteClick(SiteRecord site) {
+                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED);
+                    mUnifiedLoginTracker.trackClick(Click.CHOOSE_SITE);
                     mLoginEpilogueListener.onSiteClick(site.getLocalId());
                 }
 
