@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-08 09:55:02+0000
+Translation-Revision-Date: 2021-07-23 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL tidak valid. Silakan masukkan URL yang benar.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Konten yang disematkan dari %s tidak dapat ditampilkan di editor seluler saat ini. Silakan buka pratinjau halaman untuk melihat konten yang disematkan.</string>
+    <string name="gutenberg_native_embed_caption_s">Sematkan keterangan. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Sematkan keterangan. Kosong</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">TAMBAHKAN TAUTAN</string>
+    <string name="activity_log_visit_our_documentation_page">kunjungi halaman dokumentasi kami</string>
+    <string name="activity_log_multisite_message">Pemasangan Jetpack Backup untuk Multisitus memberikan fitur cadangan yang bisa diunduh, tanpa fitur permulihan sekali klik. Untuk informasi lebih lanjut %1$s.</string>
     <string name="blogging_reminders_tip_message">Dengan rutin membuat pos, para pembaca akan tetap tertarik dan pengunjung baru akan mengunjungi situs Anda.</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_select_days_message">Anda dapat memperbaruinya kapan saja</string>
@@ -77,6 +84,7 @@ Language: id
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Ketuk dua kali untuk menambahkan tautan.</string>
+    <string name="gutenberg_native_edit_link">EDIT TAUTAN</string>
     <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
     <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
     <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
@@ -96,6 +104,7 @@ Language: id
     <string name="gutenberg_native_post_meta_settings">Pengaturan meta artikel</string>
     <string name="gutenberg_native_post_content_settings">Pengaturan konten artikel</string>
     <string name="gutenberg_native_featured">Andalan</string>
+    <string name="gutenberg_native_embed_link">Sematkan tautan</string>
     <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
@@ -136,6 +145,7 @@ Language: id
     <string name="get_likes_no_network_error">Tidak ada jaringan.</string>
     <string name="comments_empty_list_filtered_unreplied">Tidak ada komentar belum dibalas</string>
     <string name="comment_status_unreplied">Belum dibalas</string>
+    <string name="gutenberg_native_add_link">Tambahkan tautan</string>
     <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
     <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>
     <string name="reader_title_interests">Ikuti topik</string>
