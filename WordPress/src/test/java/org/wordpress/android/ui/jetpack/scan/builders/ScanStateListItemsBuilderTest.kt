@@ -15,6 +15,7 @@ import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
@@ -73,7 +74,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     )
     private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
     private val threats = listOf(threat)
-    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE)
+    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE, reason = Reason.NO_REASON)
     private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
 
     @Before
