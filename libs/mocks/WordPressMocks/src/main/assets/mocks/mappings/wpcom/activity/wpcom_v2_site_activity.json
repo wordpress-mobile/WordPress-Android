@@ -170,7 +170,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -213,7 +213,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -259,7 +259,7 @@
               "role": "administrator"
             },
             "type": "Update",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -317,7 +317,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -376,7 +376,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -428,7 +428,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -476,7 +476,7 @@
               "role": "administrator"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -531,7 +531,7 @@
               "role": "administrator"
             },
             "type": "Join",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -560,7 +560,7 @@
               "name": "Jetpack"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -590,7 +590,7 @@
               "name": "Jetpack"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{now offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -620,7 +620,7 @@
               "name": "Jetpack"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -673,7 +673,7 @@
               "role": ""
             },
             "type": "Update",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
@@ -706,7 +706,7 @@
               "name": "Jetpack"
             },
             "type": "Announce",
-            "published": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
+            "published": "{{now offset='-1 days' format='yyyy-MM-dd'}}T{{now offset='-1 days' format='HH:mm:ss.SSSZ'}}",
             "generator": {
               "jetpack_version": 9.7,
               "blog_id": 185124945
