@@ -5,7 +5,7 @@ buildscript {
     ext.kotlin_coroutines_version = '1.3.9'
     ext.coroutinesVersion = '1.3.9'
     ext.kotlin_ktx_version = '1.2.0'
-    ext.wordPressUtilsVersion = '89-e65ea63707ba04d7719d35b6f02bd65ad4757994'
+    ext.wordPressUtilsVersion = 'develop-f98c841225fbc61031f32426aaef4e347b34f717'
     ext.wordPressLoginVersion = 'develop-5007ecf737918be639e1d80ff2c6e07fd73f64cf'
     ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'v1.58.0'
@@ -133,7 +133,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '3aacdea9'
+    fluxCVersion = '1.22.0-beta-6'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
