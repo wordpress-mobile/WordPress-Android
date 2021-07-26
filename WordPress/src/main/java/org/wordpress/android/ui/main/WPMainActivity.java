@@ -381,8 +381,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(
+                    this,
+                    getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
+                    mOnboardingImprovementsFeatureConfig.isEnabled()
+            );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.showSignupEpilogue(this,
@@ -1146,6 +1150,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
+            case RequestCodes.LOGIN_EPILOGUE:
+                setSite(data);
+                showQuickStartDialog();
+                break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
@@ -1356,8 +1364,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource,
                                 mSelectedSiteRepository.getSelectedSite());
                     } else {
-                        ActivityLauncher.showLoginEpilogue(this, true,
-                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                        ActivityLauncher.showLoginEpilogue(
+                                this,
+                                true,
+                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
+                                mOnboardingImprovementsFeatureConfig.isEnabled()
+                        );
                     }
                 }
             }
