@@ -28,6 +28,7 @@ data class MimeType(val type: Type, val subtypes: List<Subtype>, val extensions:
         JPEG("jpeg"),
         PNG("png"),
         GIF("gif"),
+        WEBP("webp"),
         PDF("pdf"),
         DOC("doc"),
         MSDOC("ms-doc"),
