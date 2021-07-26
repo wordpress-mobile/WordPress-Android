@@ -211,7 +211,7 @@ class ScanRestClient @Inject constructor(
         }
         val scanStateModel = ScanStateModel(
             state = state,
-            reason = response.reason,
+            reason = ScanStateModel.Reason.fromValue(response.reason),
             threats = threatModels,
             hasCloud = response.hasCloud ?: false,
             credentials = response.credentials?.map {
