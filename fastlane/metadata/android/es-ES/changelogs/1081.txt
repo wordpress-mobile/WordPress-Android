@@ -1,0 +1,3 @@
+17.8:
+Hemos añadido la personalización del color/fondo para los bloques de texto.
+No era posible editar bloques no compatibles con cuentas creadas antes de diciembre de 2018. ¡Lo hemos corregido! En paralelo, también actualizamos las pantallas de carga/fallo para el editor de bloques no compatibles.

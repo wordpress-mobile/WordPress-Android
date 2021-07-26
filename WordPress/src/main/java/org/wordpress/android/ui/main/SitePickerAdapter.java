@@ -30,6 +30,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -44,7 +45,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    interface OnSiteClickListener {
+    public interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
 
         boolean onSiteLongClick(SiteRecord site);
@@ -123,6 +124,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
@@ -280,7 +282,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedCountListener = listener;
     }
 
-    void setOnSiteClickListener(OnSiteClickListener listener) {
+    public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
         notifyDataSetChanged();
     }
@@ -455,7 +457,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        return (position >= 0 && position < mSites.size());
+        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            return (position >= 0 && position <= mSites.size());
+        } else {
+            return (position >= 0 && position < mSites.size());
+        }
     }
 
     /*

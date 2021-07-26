@@ -1,5 +1,0 @@
-17.7:
-- Nieuw! Ontvang herinneringen om te bloggen op zelf te kiezen dagen
-- Blokeditor: Nieuwe indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
-- Probleem van dubbel bericht in de lezer verholpen
-- Functie toegevoegd om vanaf de lezer je per e-mail te abonneren op gesprekken

@@ -1,0 +1,3 @@
+17.8:
+Vi har lagt till färg-/bakgrundsanpassning för textblock.
+Tidigare var det inte möjligt att redigera ostödda block med konton skapade före december 2018. Vi har åtgärdat det! Vi har dessutom uppdaterat hämtar-/misslyckades-skärmarna för den ostödda blockredigeraren.

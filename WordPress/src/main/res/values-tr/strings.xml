@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-08 12:54:09+0000
+Translation-Revision-Date: 2021-07-21 17:19:36+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Geçersiz adres. Lütfen geçerli bir adres girin.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">%s tarafından sağlanan gömülü içerik mobil düzenleyicide şu an görüntülenemiyor. Lütfen gömülü içeriği görmek için sayfaya ön izleme yapın.</string>
+    <string name="gutenberg_native_embed_caption_s">Gömme başlığı. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Gömme başlığı. Boş</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">BAĞLANTI EKLE</string>
+    <string name="activity_log_visit_our_documentation_page">belgeler sayfamızı ziyaret edin</string>
+    <string name="activity_log_multisite_message">Çoklu siteler için Jetpack yedekleri indirilebilir yedek dosyaları sunar, tek tıkla geri yükleme yoktur. Daha fazla bilgi için %1$s.</string>
     <string name="blogging_reminders_tip_message">Düzenli olarak paylaşım yapmak, okuyucularınızın ilgisini ve sitenize de yeni ziyaretçileri çekmenize yardımcı olabilir.</string>
     <string name="blogging_reminders_tip">İpucu</string>
     <string name="blogging_reminders_select_days_message">Bunu istediğiniz zaman güncelleyebilirsiniz</string>
@@ -77,6 +84,7 @@ Language: tr
     <string name="threat_fix_enter_server_creds_msg_plural">Tehditleri gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Tehdidi gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Bağlantı eklemek için iki kez dokunun.</string>
+    <string name="gutenberg_native_edit_link">BAĞLANTIYI DÜZENLE</string>
     <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
     <string name="login_empty_view_see_instructions">Talimatlara bakın</string>
     <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini yüklemeniz ve WordPress.com hesabınıza bağlamanız gerekir.</string>
@@ -96,6 +104,7 @@ Language: tr
     <string name="gutenberg_native_post_meta_settings">Yazı meta ayarları</string>
     <string name="gutenberg_native_post_content_settings">Yazı içeriği ayarları</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
+    <string name="gutenberg_native_embed_link">Gömme bağlantısı</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
@@ -137,6 +146,7 @@ Language: tr
     <string name="get_likes_no_network_error">Kullanılabilir ağ yok.</string>
     <string name="comments_empty_list_filtered_unreplied">Cevaplanmamış yorum yok</string>
     <string name="comment_status_unreplied">Cevaplanmamış</string>
+    <string name="gutenberg_native_add_link">Bağlantı ekle</string>
     <string name="gutenberg_native_search_settings">Arama ayarları</string>
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>

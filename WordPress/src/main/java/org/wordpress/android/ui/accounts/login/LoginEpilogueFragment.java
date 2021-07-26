@@ -28,8 +28,10 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
+import org.wordpress.android.ui.main.SitePickerAdapter.OnSiteClickListener;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
@@ -181,6 +183,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 mOldSitesIds,
                 SitePickerMode.DEFAULT_MODE
         );
+        setOnSiteClickListener();
     }
 
     @NonNull
@@ -253,6 +256,22 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                     bindFooterViewHolder(holder, sites);
                 }
             };
+        }
+    }
+
+    private void setOnSiteClickListener() {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
+                @Override
+                public void onSiteClick(SiteRecord site) {
+                    mLoginEpilogueListener.onSiteClick(site.getLocalId());
+                }
+
+                @Override
+                public boolean onSiteLongClick(SiteRecord site) {
+                    return false;
+                }
+            });
         }
     }
 

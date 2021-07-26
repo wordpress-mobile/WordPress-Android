@@ -1097,6 +1097,8 @@
     <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
     <string name="scan_start_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
+    <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>

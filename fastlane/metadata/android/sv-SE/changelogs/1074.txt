@@ -1,5 +1,0 @@
-17.7:
-- Nyhet! Nu kan du få bloggningspåminnelser de dagar du själv väljer
-- Blockredigeraren: Nytt rutnät för layout av block, justeringar av knappstilar, rättat ett fel där nya block inte skapades när man tryckte enter inuti ett textbaserat block, korrigeringar av vy i surfplatta för infogningsknapp
-- Rättat fel med duplicerade inlägg i läsaren
-- Lagt till möjlighet att prenumerera på konversationer via e-post inifrån läsaren
