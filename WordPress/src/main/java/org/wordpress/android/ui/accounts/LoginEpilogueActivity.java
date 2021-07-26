@@ -88,6 +88,11 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     @Override
+    public void onCreateNewSite() {
+        // TODO: Trigger view model call.
+    }
+
+    @Override
     public void onConnectAnotherSite() {
         if (mAccountStore.hasAccessToken()) {
             ActivityLauncher.addSelfHostedSiteForResult(this);
