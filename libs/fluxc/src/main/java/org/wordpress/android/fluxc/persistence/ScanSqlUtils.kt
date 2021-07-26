@@ -72,7 +72,7 @@ class ScanSqlUtils @Inject constructor() {
             startDate = startDate,
             duration = mostRecentStatus?.duration ?: 0,
             progress = progress,
-            reason = reason?.value,
+            reason = reason.value,
             error = mostRecentStatus?.error ?: false,
             initial = isInitial,
             hasCloud = hasCloud,
