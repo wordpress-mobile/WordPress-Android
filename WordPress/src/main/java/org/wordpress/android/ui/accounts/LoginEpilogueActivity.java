@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CreateNewSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
@@ -121,7 +122,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void createNewSite() {
-        // TODO: Trigger create new site action.
+        ActivityLauncher.newBlogForResult(this);
     }
 
     private void closeWithResultOk() {
@@ -143,5 +144,18 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.CREATE_SITE
+            && resultCode == RESULT_OK
+            && data != null
+        ) {
+            int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, newSiteLocalID));
+            finish();
+        }
     }
 }
