@@ -836,9 +836,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         setFeaturedImageId(mediaId);
 
         if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
-            showNotice(getString(R.string.featured_image_removed_notice));
+            String removedNotice = getString(R.string.featured_image_removed_notice) + " " + getString(
+                    R.string.notice_undo_limitations);
+            showNotice(removedNotice);
         } else {
-            showNotice(getString(R.string.featured_image_confirmation_notice));
+            String confirmationNotice = getString(R.string.featured_image_confirmation_notice) + " " + getString(
+                    R.string.notice_undo_limitations);
+            showNotice(confirmationNotice);
         }
     }
 
