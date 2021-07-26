@@ -175,6 +175,10 @@ REPOSITORY_NAME="WordPress-Android"
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
 
+    code_freeze_localization
+  end
+  
+  lane :code_freeze_localization do
     localize_binary_deps()
     localize_libs()
     send_strings_for_translation()
