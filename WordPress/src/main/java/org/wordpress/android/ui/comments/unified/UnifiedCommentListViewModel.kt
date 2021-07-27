@@ -23,11 +23,13 @@ import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
+import org.wordpress.android.models.usecases.ModerateCommentUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.ModerateCommentUseCase.SingleCommentModerationResult
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
@@ -90,16 +92,6 @@ class UnifiedCommentListViewModel @Inject constructor(
     val onCommentDetailsRequested: SharedFlow<SelectedComment> = _onCommentDetailsRequested
 
     private val _commentsProvider = unifiedCommentsListHandler.subscribe()
-    private val _batchModerationState = _commentsProvider.filter { it.type == MODERATE_USE_CASE }
-
-    val _batchModerationUiState = MutableStateFlow<BatchModerationUiState>(BatchModerationUiState.Idle)
-
-    sealed class BatchModerationUiState {
-        object Idle : BatchModerationUiState()
-        object InProgress : BatchModerationUiState()
-        object Success : BatchModerationUiState()
-        object Failure : BatchModerationUiState()
-    }
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
@@ -132,24 +124,6 @@ class UnifiedCommentListViewModel @Inject constructor(
         listToLocalCacheUpdateRequests()
         listenToSnackBarRequests()
         requestsFirstPage()
-
-        launch(bgDispatcher) {
-            _batchModerationState.collectLatest {
-                when (it) {
-                    is Loading -> {
-                        _batchModerationUiState.emit(BatchModerationUiState.InProgress)
-                    }
-                    is Failure<*, *, *> -> {
-                        _batchModerationUiState.emit(BatchModerationUiState.Failure)
-                    }
-
-                    is Success -> {
-                        localCommentCacheUpdateHandler.requestCommentsUpdate()
-                        _batchModerationUiState.emit(BatchModerationUiState.Idle)
-                    }
-                }
-            }
-        }
     }
 
     // TODOD: selectedSiteRepository.getSelectedSite() can be null...manage all the places where we assert it's not with "!!"
@@ -195,7 +169,53 @@ class UnifiedCommentListViewModel @Inject constructor(
                 }
             }
         }
+
+        launch(bgDispatcher) {
+            _commentsProvider.filter { it is Success && it.type == MODERATE_USE_CASE }.collectLatest {
+                if (it is Success && it.data is SingleCommentModerationResult) {
+                    val message = when (it.data.newStatus) {
+                        CommentStatus.TRASH -> UiStringRes(string.comment_trashed)
+                        CommentStatus.SPAM -> UiStringRes(string.comment_spammed)
+                        else -> UiStringRes(string.comment_deleted_permanently)
+                    }
+                    commentInModeration = it.data.remoteCommentId
+                    _onSnackbarMessage.emit(
+                            SnackbarMessageHolder(
+                                    message = message,
+                                    buttonTitle = UiStringRes(string.undo),
+                                    buttonAction = {
+                                        launch(bgDispatcher) {
+                                            commentInModeration = 0
+                                            unifiedCommentsListHandler.undoCommentModeration(
+                                                    ModerateCommentParameters(
+                                                            selectedSiteRepository.getSelectedSite()!!,
+                                                            it.data.remoteCommentId,
+                                                            it.data.oldStatus
+                                                    )
+                                            )
+                                        }
+                                    },
+                                    onDismissAction = {
+                                        launch(bgDispatcher) {
+                                            if (commentInModeration > 0) {
+                                                unifiedCommentsListHandler.moderateComment(
+                                                        ModerateCommentParameters(
+                                                                selectedSiteRepository.getSelectedSite()!!,
+                                                                it.data.remoteCommentId,
+                                                                it.data.newStatus
+                                                        )
+                                                )
+                                            }
+                                        }
+                                    }
+                            )
+                    )
+                }
+            }
+        }
     }
+
+    private var commentInModeration: Long = 0
 
     fun reload() {
         requestsFirstPage()
@@ -219,7 +239,12 @@ class UnifiedCommentListViewModel @Inject constructor(
             toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
         } else {
             launch {
-            _onCommentDetailsRequested.emit(SelectedComment(comment.remoteCommentId, CommentStatus.fromString(comment.status)))
+                _onCommentDetailsRequested.emit(
+                        SelectedComment(
+                                comment.remoteCommentId,
+                                CommentStatus.fromString(comment.status)
+                        )
+                )
             }
         }
     }
@@ -228,6 +253,30 @@ class UnifiedCommentListViewModel @Inject constructor(
         viewModelScope.launch {
             if (!_selectedComments.value.isNullOrEmpty()) {
                 _selectedComments.emit(listOf())
+            }
+        }
+    }
+
+    fun performSingleCommentModeration(commentId: Long, newStatus: CommentStatus) {
+        launch(bgDispatcher) {
+            if (newStatus == CommentStatus.SPAM || newStatus == TRASH || newStatus == DELETED) {
+                unifiedCommentsListHandler.moderateComment(
+                        ModerateCommentParameters(
+                                selectedSiteRepository.getSelectedSite()!!,
+                                commentId,
+                                newStatus
+                        )
+                )
+            } else {
+                launch(bgDispatcher) {
+                    unifiedCommentsListHandler.moderateComments(
+                            ModerateCommentsParameters(
+                                    selectedSiteRepository.getSelectedSite()!!,
+                                    listOf(commentId),
+                                    newStatus
+                            )
+                    )
+                }
             }
         }
     }
@@ -291,9 +340,9 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun moderateSelectedComments(newStatus: CommentStatus) {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.moderateComments(
-                    ModerateCommentParameters(
+                    ModerateCommentsParameters(
                             selectedSiteRepository.getSelectedSite()!!,
-                            _selectedComments.value,
+                            _selectedComments.value.map { it.remoteCommentId },
                             newStatus
                     )
             )
