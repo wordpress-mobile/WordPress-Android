@@ -238,14 +238,14 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     /* SHOW POST - LOADING */
     @Test
-    fun `when show post is triggered, then loading state is shown`() = test {
-        val observers = init(showPost = false)
-        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(readerPost, false))
+    fun `given local post not found, when show post is triggered, then loading state is shown`() =
+            testWithoutLocalPost {
+                val observers = init(showPost = false)
 
-        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-        assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
-    }
+                assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+            }
 
     /* SHOW POST - GET LOCAL POST */
     @Test
