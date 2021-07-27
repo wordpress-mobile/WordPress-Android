@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -59,6 +60,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+typealias CommentsPagingResult = UseCaseResult<CommentsUseCaseType, CommentError, PagingData>
+
 class UnifiedCommentListViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -93,12 +96,12 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
-                _commentsProvider.filter { it.type == PAGINATE_USE_CASE },
+                _commentsProvider.filter { it.type == PAGINATE_USE_CASE }.filterIsInstance<CommentsPagingResult>(),
                 _selectedComments,
         ) { commentData, selectedIds ->
             CommentsUiModel(
                     buildCommentList(
-                            commentData as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+                            commentData ,// as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
                             selectedIds
                     ),
                     buildCommentsListUiModel(commentData),
@@ -141,6 +144,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
+    // TODOD: selectedSiteRepository.getSelectedSite() can be null...manage all the places where we assert it's not with "!!"
     private fun requestsFirstPage() {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.requestPage(
@@ -276,15 +280,15 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+        commentsDataResult: CommentsPagingResult,
         selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
         val (comments, hasMore) = when (commentsDataResult) {
-            is Failure<*, *, PagingData> -> Pair(
-                    (commentsDataResult).cachedData.comments,
+            is Failure -> Pair(
+                    commentsDataResult.cachedData.comments,
                     commentsDataResult.cachedData.hasMore
             )
-            is Loading<CommentsUseCaseType> -> Pair(listOf(), false)
+            is Loading -> Pair(listOf(), false)
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
 
@@ -352,7 +356,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentsListUiModel(
-        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+        commentsDataResult: CommentsPagingResult,
     ): CommentsListUiModel {
         return when (commentsDataResult) {
             is Loading -> {
@@ -374,7 +378,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                 }
             }
             is Failure -> {
-                val errorMessage = commentsDataResult.error.error.message
+                val errorMessage = commentsDataResult.error.message
                 if (commentsDataResult.cachedData.comments.isEmpty()) {
                     val errorString = if (errorMessage.isNullOrEmpty()) {
                         UiStringRes(string.error_refresh_comments)
