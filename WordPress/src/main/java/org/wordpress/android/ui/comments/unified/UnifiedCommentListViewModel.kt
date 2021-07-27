@@ -85,6 +85,10 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
+    // TODO maybe we can change to some generic Action pattern
+    private val _onCommentDetailsRequested = MutableSharedFlow<SelectedComment>()
+    val onCommentDetailsRequested: SharedFlow<SelectedComment> = _onCommentDetailsRequested
+
     private val _commentsProvider = unifiedCommentsListHandler.subscribe()
     private val _batchModerationState = _commentsProvider.filter { it.type == MODERATE_USE_CASE }
 
@@ -105,7 +109,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         ) { commentData, selectedIds, confirmationDialogUiModel ->
             CommentsUiModel(
                     buildCommentList(
-                            commentData ,// as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+                            commentData,// as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
                             selectedIds
                     ),
                     buildCommentsListUiModel(commentData),
@@ -214,7 +218,9 @@ class UnifiedCommentListViewModel @Inject constructor(
         if (_selectedComments.value.isNotEmpty()) {
             toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
         } else {
-            // open comment details
+            launch {
+            _onCommentDetailsRequested.emit(SelectedComment(comment.remoteCommentId, CommentStatus.fromString(comment.status)))
+            }
         }
     }
 
@@ -229,13 +235,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     fun performBatchModeration(newStatus: CommentStatus) {
         when (newStatus) {
             DELETED -> {
-                val messageResId = if (_selectedComments.value.size > 1) R.string.dlg_sure_to_delete_comments else R.string.dlg_sure_to_delete_comment
+                val messageResId = if (_selectedComments.value.size > 1) string.dlg_sure_to_delete_comments else string.dlg_sure_to_delete_comment
 
                 val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
-                        title = R.string.delete,
+                        title = string.delete,
                         message = messageResId,
-                        positiveButton = R.string.yes,
-                        negativeButton = R.string.no,
+                        positiveButton = string.yes,
+                        negativeButton = string.no,
                         confirmAction = {
                             moderateSelectedComments(newStatus)
                             launch(bgDispatcher) {
@@ -255,10 +261,10 @@ class UnifiedCommentListViewModel @Inject constructor(
             }
             TRASH -> {
                 val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
-                        title = R.string.trash,
-                        message = R.string.dlg_confirm_trash_comments,
-                        positiveButton = R.string.dlg_confirm_action_trash,
-                        negativeButton = R.string.dlg_cancel_action_dont_trash,
+                        title = string.trash,
+                        message = string.dlg_confirm_trash_comments,
+                        positiveButton = string.dlg_confirm_action_trash,
+                        negativeButton = string.dlg_cancel_action_dont_trash,
                         confirmAction = {
                             moderateSelectedComments(newStatus)
                             launch(bgDispatcher) {

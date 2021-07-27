@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -15,11 +16,14 @@ import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
+import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel.Visible
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -33,6 +37,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -127,6 +132,20 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 )
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.onCommentDetailsRequested.collect { selectedComment ->
+                showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)
+            }
+        }
+    }
+
+    fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
+        val detailIntent = Intent(requireActivity(), CommentsDetailActivity::class.java)
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId)
+        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, commentStatus)
+        detailIntent.putExtra(WordPress.SITE, selectedSiteRepository.getSelectedSite())
+        startActivityForResult(detailIntent, 1)
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {

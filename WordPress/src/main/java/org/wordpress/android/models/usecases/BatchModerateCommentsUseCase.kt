@@ -9,20 +9,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsState.Idle
 import org.wordpress.android.usecase.FlowFSMUseCase
-import org.wordpress.android.usecase.FlowFSMUseCase.StateInterface
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
-import org.wordpress.android.usecase.UseCaseResult.Loading
 import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComment
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.SelectedComment
-import org.wordpress.android.usecase.UseCaseResult.Success
 import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
@@ -111,5 +107,4 @@ class BatchModerateCommentsUseCase @Inject constructor(
             val newStatus: CommentStatus
         )
     }
-
 }
