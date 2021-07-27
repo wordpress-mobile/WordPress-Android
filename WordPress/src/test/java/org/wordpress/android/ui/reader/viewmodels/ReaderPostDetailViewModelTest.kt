@@ -247,6 +247,16 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
             }
 
+    @Test
+    fun `given local post found, when show post is triggered, then loading state is not shown`() = test {
+        val observers = init(showPost = false)
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(readerPost, false))
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.first()).isNotInstanceOf(LoadingUiState::class.java)
+    }
+
     /* SHOW POST - GET LOCAL POST */
     @Test
     fun `given local post is found, when show post is triggered, then ui is updated`() = test {
