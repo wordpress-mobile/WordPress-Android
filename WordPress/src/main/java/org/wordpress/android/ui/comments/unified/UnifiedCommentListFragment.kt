@@ -112,7 +112,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onSnackbarMessage.collect { snackbarMessage ->
                 snackbarSequencer.enqueue(
                         SnackbarItem(
@@ -133,7 +133,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.onCommentDetailsRequested.collect { selectedComment ->
                 showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)
             }
