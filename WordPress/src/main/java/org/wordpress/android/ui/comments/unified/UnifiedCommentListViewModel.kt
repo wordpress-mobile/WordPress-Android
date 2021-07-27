@@ -152,7 +152,6 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-    // TODOD: selectedSiteRepository.getSelectedSite() can be null...manage all the places where we assert it's not with "!!"
     private fun requestsFirstPage() {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.requestPage(
