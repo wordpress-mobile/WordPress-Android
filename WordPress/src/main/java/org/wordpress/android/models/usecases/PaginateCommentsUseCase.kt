@@ -26,7 +26,7 @@ class PaginateCommentsUseCase @Inject constructor(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
-    override suspend fun runLogic(parameters: GetPageParameters) {
+    override suspend fun runInitLogic(parameters: GetPageParameters) {
         manageAction(OnGetPage(parameters))
     }
 

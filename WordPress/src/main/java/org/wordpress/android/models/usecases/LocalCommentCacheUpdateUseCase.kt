@@ -16,7 +16,7 @@ class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any,
         initialState = Idle,
         DoNotCare
 ) {
-    override suspend fun runLogic(parameters: Any) {
+    override suspend fun runInitLogic(parameters: Any) {
         manageAction(UpdatedComments)
     }
 

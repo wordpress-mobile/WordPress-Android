@@ -27,7 +27,7 @@ class BatchModerateCommentsUseCase @Inject constructor(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
-    override suspend fun runLogic(parameters: ModerateCommentParameters) {
+    override suspend fun runInitLogic(parameters: ModerateCommentParameters) {
         manageAction(OnModerateComment(parameters))
     }
 
