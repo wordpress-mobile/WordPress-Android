@@ -2,6 +2,7 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -9,26 +10,25 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
-import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
+import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsState.Idle
 import org.wordpress.android.usecase.FlowFSMUseCase
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
 import org.wordpress.android.usecase.UseCaseResult.Success
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComment
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentParameters
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.SelectedComment
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError>(
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsParameters, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
-    override suspend fun runLogic(parameters: ModerateCommentParameters) {
-        manageAction(OnModerateComment(parameters))
+    override suspend fun runLogic(parameters: ModerateCommentsParameters) {
+        manageAction(OnModerateComments(parameters))
     }
 
     sealed class ModerateCommentsState
@@ -39,39 +39,47 @@ class BatchModerateCommentsUseCase @Inject constructor(
                 action: ModerateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>
             ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError> {
+                val commentsStore = resourceProvider.commentsStore
                 return when (action) {
-                    is OnModerateComment -> {
+                    is OnModerateComments -> {
                         val parameters = action.parameters
-                        val commentsStore = resourceProvider.commentsStore
-
                         withContext(resourceProvider.bgDispatcher) {
-                            val deferredList = parameters.selectedComments.map {
+                            val deferredList = parameters.remoteCommentIds.map {
                                 async {
+                                    val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
+                                            parameters.site.id,
+                                            it
+                                    ).first()
+
                                     val localModerationResult = commentsStore.moderateCommentLocally(
                                             site = parameters.site,
-                                            remoteCommentId = it.remoteCommentId,
+                                            remoteCommentId = it,
                                             newStatus = parameters.newStatus
                                     )
 
                                     if (localModerationResult.isError) {
                                         return@async localModerationResult
                                     } else {
-                                        flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
+                                        flowChannel.emit(Success(BATCH_MODERATE_USE_CASE, DoNotCare))
+                                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
 
                                     val result = commentsStore.pushLocalCommentByRemoteId(
                                             site = parameters.site,
-                                            remoteCommentId = it.remoteCommentId
+                                            remoteCommentId = it
                                     )
+
+                                    delay(5000)
 
                                     if (result.isError) {
                                         // revert local moderation
                                         commentsStore.moderateCommentLocally(
                                                 site = parameters.site,
-                                                remoteCommentId = it.remoteCommentId,
-                                                newStatus = it.status
+                                                remoteCommentId = it,
+                                                newStatus = CommentStatus.fromString(commentBeforeModeration.status)
                                         )
-                                        flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
+                                        flowChannel.emit(Success(BATCH_MODERATE_USE_CASE, DoNotCare))
+                                        resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
                                     return@async result
                                 }
@@ -80,7 +88,7 @@ class BatchModerateCommentsUseCase @Inject constructor(
                             if (deferredList.any { it.isError }) {
                                 flowChannel.emit(
                                         Failure(
-                                                MODERATE_USE_CASE,
+                                                BATCH_MODERATE_USE_CASE,
                                                 CommentError(GENERIC_ERROR, "Failed to moderate one or more comments."),
                                                 DoNotCare
                                         )
@@ -95,15 +103,15 @@ class BatchModerateCommentsUseCase @Inject constructor(
     }
 
     sealed class ModerateCommentsAction {
-        data class OnModerateComment(
-            val parameters: ModerateCommentParameters
+        data class OnModerateComments(
+            val parameters: ModerateCommentsParameters
         ) : ModerateCommentsAction()
     }
 
     sealed class Parameters {
-        data class ModerateCommentParameters(
+        data class ModerateCommentsParameters(
             val site: SiteModel,
-            val selectedComments: List<SelectedComment>,
+            val remoteCommentIds: List<Long>,
             val newStatus: CommentStatus
         )
     }

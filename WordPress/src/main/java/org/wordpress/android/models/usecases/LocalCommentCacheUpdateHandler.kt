@@ -1,11 +1,8 @@
 package org.wordpress.android.models.usecases
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.merge
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.PropagateCommentsUpdateAction.UpdatedComments
-import org.wordpress.android.modules.BG_THREAD
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
