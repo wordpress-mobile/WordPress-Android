@@ -246,10 +246,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
-        _uiState.value = LoadingUiState
-
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
+            _uiState.value = LoadingUiState
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
                 FetchReaderPostState.Success -> {
                     getReaderPostFromDb(blogId, postId)
