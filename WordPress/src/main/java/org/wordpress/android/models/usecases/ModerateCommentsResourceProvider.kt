@@ -10,5 +10,6 @@ import javax.inject.Named
 @Reusable
 class ModerateCommentsResourceProvider @Inject constructor(
     val commentsStore: CommentsStore,
+    val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
 )

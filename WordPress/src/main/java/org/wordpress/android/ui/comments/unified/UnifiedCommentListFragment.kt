@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +20,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.comments.CommentsActivity
 import org.wordpress.android.ui.comments.CommentsDetailActivity
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment.CommentDetailsContract.CommentDetailsActivityRequest
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment.CommentDetailsContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
@@ -124,7 +131,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                                 snackbarMessage.buttonTitle?.let {
                                     Action(
                                             textRes = snackbarMessage.buttonTitle,
-                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
+                                            clickListener = { snackbarMessage.buttonAction() }
                                     )
                                 },
                                 dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
@@ -141,11 +148,46 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
-        val detailIntent = Intent(requireActivity(), CommentsDetailActivity::class.java)
-        detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, commentId)
-        detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, commentStatus)
-        detailIntent.putExtra(WordPress.SITE, selectedSiteRepository.getSelectedSite())
-        startActivityForResult(detailIntent, 1)
+        commentDetails.launch(
+                CommentDetailsActivityRequest(
+                        commentId,
+                        commentStatus,
+                        selectedSiteRepository.getSelectedSite()!!
+                )
+        )
+    }
+
+    val commentDetails = registerForActivityResult(CommentDetailsContract()) { response: CommentDetailsActivityResponse? ->
+        if (response != null) {
+            viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
+        }
+    }
+
+    class CommentDetailsContract : ActivityResultContract<CommentDetailsActivityRequest, CommentDetailsActivityResponse?>() {
+        override fun createIntent(context: Context, input: CommentDetailsActivityRequest): Intent {
+            val detailIntent = Intent(context, CommentsDetailActivity::class.java)
+            detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, input.commentId)
+            detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, input.commentStatus)
+            detailIntent.putExtra(WordPress.SITE, input.site)
+            return detailIntent
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): CommentDetailsActivityResponse? = when {
+            resultCode != Activity.RESULT_OK || intent == null -> null      // Return null, if action is cancelled
+            else -> {
+                val commentId = intent.getLongExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, -1)
+                val newStatus = intent.getStringExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA)
+                CommentDetailsActivityResponse(commentId, CommentStatus.fromString(newStatus))
+            }
+        }
+
+        data class CommentDetailsActivityRequest(
+            val commentId: Long,
+            val commentStatus: CommentStatus,
+            val site: SiteModel
+        )
+
+        data class CommentDetailsActivityResponse(val commentId: Long, val commentStatus: CommentStatus)
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
