@@ -5,7 +5,7 @@ import java.util.Date
 
 data class ScanStateModel(
     val state: State,
-    val reason: String? = null,
+    val reason: Reason,
     val threats: List<ThreatModel>? = null,
     val credentials: List<Credentials>? = null,
     val hasCloud: Boolean = false,
@@ -44,4 +44,16 @@ data class ScanStateModel(
         val error: Boolean = false,
         val isInitial: Boolean = false
     )
+
+    enum class Reason(val value: String?) {
+        MULTISITE_NOT_SUPPORTED("multisite_not_supported"),
+        NO_REASON(null),
+        UNKNOWN("unknown");
+
+        companion object {
+            fun fromValue(value: String?): Reason {
+                return values().firstOrNull { it.value == value } ?: UNKNOWN
+            }
+        }
+    }
 }
