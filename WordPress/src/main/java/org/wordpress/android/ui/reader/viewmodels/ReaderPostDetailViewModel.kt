@@ -112,8 +112,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
-        state -> buildLikersUiState(state)
+    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map { state ->
+        buildLikersUiState(state)
     }
 
     /**
@@ -136,6 +136,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             return blogId != post.blogId || postId != post.postId || numLikes != post.numLikes
         }
     }
+
     private var lastRenderedLikesData: RenderedLikesData? = null
 
     private val shouldOfferSignIn: Boolean
@@ -590,19 +591,21 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onLikeFacesClicked() {
         post?.let { readerPost ->
-            _navigationEvents.value = Event(ShowEngagedPeopleList(
-                    readerPost.blogId,
-                    readerPost.postId,
-                    HeaderData(
-                            AuthorNameString(readerPost.authorName),
-                            readerPost.title,
-                            readerPost.postAvatar,
-                            readerPost.authorId,
-                            readerPost.authorBlogId,
-                            readerPost.authorBlogUrl,
-                            lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+            _navigationEvents.value = Event(
+                    ShowEngagedPeopleList(
+                            readerPost.blogId,
+                            readerPost.postId,
+                            HeaderData(
+                                    AuthorNameString(readerPost.authorName),
+                                    readerPost.title,
+                                    readerPost.postAvatar,
+                                    readerPost.authorId,
+                                    readerPost.authorBlogId,
+                                    readerPost.authorBlogUrl,
+                                    lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+                            )
                     )
-            ))
+            )
         }
     }
 
