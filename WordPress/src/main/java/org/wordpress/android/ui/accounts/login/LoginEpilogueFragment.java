@@ -105,7 +105,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @LayoutRes
     private int loginEpilogueScreenResource() {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
             if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD) {
                 return R.layout.login_epilogue_screen_new;
             } else {
@@ -131,7 +131,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         button.setOnClickListener(v -> {
             mUnifiedLoginTracker.trackClick(Click.CONTINUE);
             if (mLoginEpilogueListener != null) {
-                if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
                     mLoginEpilogueListener.onCreateNewSite();
                 } else {
                     mLoginEpilogueListener.onContinue();
@@ -216,7 +216,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             @Override
             public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                                                             boolean attachToRoot) {
-                if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
                     return new LoginHeaderViewHolder(
                             layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
                             true
@@ -238,7 +238,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Nullable
     private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
             return null;
         } else {
             return new ViewHolderHandler<LoginFooterViewHolder>() {
@@ -258,7 +258,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void setOnSiteClickListener() {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
             mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
                 @Override
                 public void onSiteClick(SiteRecord site) {
@@ -315,7 +315,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
 
         if (hasSites) {
-            if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
                 holder.showSitesHeading();
             } else {
                 holder.showSitesHeading(StringUtils.getQuantityString(
