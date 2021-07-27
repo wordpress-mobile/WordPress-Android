@@ -10,12 +10,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
+import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
@@ -75,12 +78,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
+    private val _showCofirmationDialog = MutableStateFlow<ConfirmationDialogUiModel>(ConfirmationDialogUiModel.Hidden)
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
     private val _commentsProvider = unifiedCommentsListHandler.subscribe()
-    private val _batchModerationState =_commentsProvider.filter { it.type == MODERATE_USE_CASE }
+    private val _batchModerationState = _commentsProvider.filter { it.type == MODERATE_USE_CASE }
 
     val _batchModerationUiState = MutableStateFlow<BatchModerationUiState>(BatchModerationUiState.Idle)
 
@@ -93,16 +97,19 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
-                _commentsProvider.filter { it.type == PAGINATE_USE_CASE },
+                _commentsProvider.filter { it.type == PAGINATE_USE_CASE }
+                        .filterIsInstance<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>(),
                 _selectedComments,
-        ) { commentData, selectedIds ->
+                _showCofirmationDialog
+        ) { commentData, selectedIds, confirmationDialogUiModel ->
             CommentsUiModel(
                     buildCommentList(
-                            commentData as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+                            commentData,
                             selectedIds
                     ),
                     buildCommentsListUiModel(commentData),
-                    buildActionModeUiModel(selectedIds, commentFilter)
+                    buildActionModeUiModel(selectedIds, commentFilter),
+                    confirmationDialogUiModel
             )
         }.stateIn(
                 scope = viewModelScope,
@@ -133,7 +140,6 @@ class UnifiedCommentListViewModel @Inject constructor(
 
                     is Success -> {
                         localCommentCacheUpdateHandler.requestCommentsUpdate()
-                        _selectedComments.emit(emptyList())
                         _batchModerationUiState.emit(BatchModerationUiState.Idle)
                     }
                 }
@@ -219,14 +225,73 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     fun performBatchModeration(newStatus: CommentStatus) {
+        when (newStatus) {
+            DELETED -> {
+                val messageResId = if (_selectedComments.value.size > 1) R.string.dlg_sure_to_delete_comments else R.string.dlg_sure_to_delete_comment
+
+                val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
+                        title = R.string.delete,
+                        message = messageResId,
+                        positiveButton = R.string.yes,
+                        negativeButton = R.string.no,
+                        confirmAction = {
+                            moderateSelectedComments(newStatus)
+                            launch(bgDispatcher) {
+                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
+                            }
+                        },
+                        cancelAction = {
+                            launch(bgDispatcher) {
+                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
+                            }
+                        }
+                )
+
+                launch(bgDispatcher) {
+                    _showCofirmationDialog.emit(confirmationDialogUiModel)
+                }
+            }
+            TRASH -> {
+                val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
+                        title = R.string.trash,
+                        message = R.string.dlg_confirm_trash_comments,
+                        positiveButton = R.string.dlg_confirm_action_trash,
+                        negativeButton = R.string.dlg_cancel_action_dont_trash,
+                        confirmAction = {
+                            moderateSelectedComments(newStatus)
+                            launch(bgDispatcher) {
+                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
+                            }
+                        },
+                        cancelAction = {
+                            launch(bgDispatcher) {
+                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
+                            }
+                        }
+                )
+
+                launch(bgDispatcher) {
+                    _showCofirmationDialog.emit(confirmationDialogUiModel)
+                }
+            }
+            else -> {
+                moderateSelectedComments(newStatus)
+            }
+        }
+    }
+
+    private fun moderateSelectedComments(newStatus: CommentStatus) {
         launch(bgDispatcher) {
             unifiedCommentsListHandler.moderateComments(
                     ModerateCommentParameters(
                             selectedSiteRepository.getSelectedSite()!!,
-                            _selectedComments.value.map { it.remoteCommentId },
+                            _selectedComments.value,
                             newStatus
                     )
             )
+        }
+        launch(bgDispatcher) {
+            _selectedComments.emit(emptyList())
         }
     }
 
@@ -276,15 +341,15 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+        commentsDataResult: UseCaseResult<CommentsUseCaseType, CommentError, PagingData>,
         selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
         val (comments, hasMore) = when (commentsDataResult) {
-            is Failure<*, *, PagingData> -> Pair(
+            is Failure -> Pair(
                     (commentsDataResult).cachedData.comments,
                     commentsDataResult.cachedData.hasMore
             )
-            is Loading<CommentsUseCaseType> -> Pair(listOf(), false)
+            is Loading -> Pair(listOf(), false)
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
 
@@ -352,7 +417,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentsListUiModel(
-        commentsDataResult: UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
+        commentsDataResult: UseCaseResult<CommentsUseCaseType, CommentError, PagingData>,
     ): CommentsListUiModel {
         return when (commentsDataResult) {
             is Loading -> {
@@ -374,7 +439,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                 }
             }
             is Failure -> {
-                val errorMessage = commentsDataResult.error.error.message
+                val errorMessage = commentsDataResult.error.message
                 if (commentsDataResult.cachedData.comments.isEmpty()) {
                     val errorString = if (errorMessage.isNullOrEmpty()) {
                         UiStringRes(string.error_refresh_comments)
@@ -395,14 +460,16 @@ class UnifiedCommentListViewModel @Inject constructor(
     data class CommentsUiModel(
         val commentData: List<UnifiedCommentListItem>,
         val commentsListUiModel: CommentsListUiModel,
-        val actionModeUiModel: ActionModeUiModel
+        val actionModeUiModel: ActionModeUiModel,
+        val confirmationDialogUiModel: ConfirmationDialogUiModel
     ) {
         companion object {
             fun buildInitialState(): CommentsUiModel {
                 return CommentsUiModel(
                         commentData = emptyList(),
                         commentsListUiModel = CommentsListUiModel.Loading,
-                        actionModeUiModel = Hidden
+                        actionModeUiModel = Hidden,
+                        confirmationDialogUiModel = ConfirmationDialogUiModel.Hidden
                 )
             }
         }
@@ -442,6 +509,18 @@ class UnifiedCommentListViewModel @Inject constructor(
         object Refreshing : CommentsListUiModel()
 
         object Initial : CommentsListUiModel()
+    }
+
+    sealed class ConfirmationDialogUiModel {
+        object Hidden : ConfirmationDialogUiModel()
+        data class Visible(
+            val title: Int,
+            val message: Int,
+            val positiveButton: Int,
+            val negativeButton: Int,
+            val confirmAction: () -> Unit,
+            val cancelAction: () -> Unit
+        ) : ConfirmationDialogUiModel()
     }
 
     companion object {

@@ -2,11 +2,14 @@ package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
@@ -15,6 +18,8 @@ import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -35,6 +40,8 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private lateinit var commentListFilter: CommentFilter
+
+    var confirmationDialog: AlertDialog? = null
 
     private var binding: UnifiedCommentListFragmentBinding? = null
 
@@ -75,11 +82,16 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
         var isShowingActionMode = false
 
+        viewModel.setup(commentListFilter)
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
+                setupConfirmationDialog(uiState.confirmationDialogUiModel)
                 if (uiState.commentsListUiModel is WithData || uiState.commentsListUiModel is CommentsListUiModel.Empty) {
-                    adapter.submitList(uiState.commentData)
+                    commentsRecyclerView.post {
+                        adapter.submitList(uiState.commentData)
+                    }
                 }
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
@@ -115,8 +127,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 )
             }
         }
-
-        viewModel.setup(commentListFilter)
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
@@ -148,9 +158,26 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         }
     }
 
+    private fun UnifiedCommentListFragmentBinding.setupConfirmationDialog(uiModel: ConfirmationDialogUiModel) {
+        if (uiModel is Visible) {
+            val dialogBuilder: Builder = MaterialAlertDialogBuilder(requireContext())
+            dialogBuilder.setTitle(uiModel.title)
+            dialogBuilder.setMessage(uiModel.message)
+            dialogBuilder.setPositiveButton(uiModel.positiveButton) { _, _ -> uiModel.confirmAction.invoke() }
+            dialogBuilder.setNegativeButton(uiModel.negativeButton) { _, _ -> uiModel.cancelAction.invoke() }
+            dialogBuilder.setCancelable(true)
+            dialogBuilder.setOnDismissListener { uiModel.cancelAction.invoke() }
+            confirmationDialog = dialogBuilder.create()
+            confirmationDialog!!.show()
+        } else {
+            confirmationDialog?.dismiss()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        confirmationDialog?.dismiss()
     }
 
     companion object {

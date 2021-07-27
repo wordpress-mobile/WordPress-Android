@@ -10,9 +10,9 @@ import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.
 import javax.inject.Inject
 
 class UnifiedCommentsListHandler @Inject constructor(
-        //@Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        // @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val paginateCommentsUseCase: PaginateCommentsUseCase,
-     val batchModerationUseCase: BatchModerateCommentsUseCase
+    val batchModerationUseCase: BatchModerateCommentsUseCase
 ) {
     private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase)
 
