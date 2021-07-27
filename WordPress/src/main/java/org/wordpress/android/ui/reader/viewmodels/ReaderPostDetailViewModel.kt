@@ -467,27 +467,31 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                actions = postDetailUiStateBuilder.buildPostActions(
-                        post,
-                        this@ReaderPostDetailViewModel::onButtonClicked
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    actions = postDetailUiStateBuilder.buildPostActions(
+                            post,
+                            this@ReaderPostDetailViewModel::onButtonClicked
+                    )
+            )
+        }
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                localRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.localRelatedPosts,
-                        isGlobal = false
-                ),
-                globalRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.globalRelatedPosts,
-                        isGlobal = true
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    localRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.localRelatedPosts,
+                            isGlobal = false
+                    ),
+                    globalRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.globalRelatedPosts,
+                            isGlobal = true
+                    )
+            )
+        }
     }
 
     private fun trackAndUpdateNotAuthorisedErrorState() {
