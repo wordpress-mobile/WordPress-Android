@@ -2,7 +2,7 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
-import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DontCare
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.CommentsUpdateState.Idle
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.PropagateCommentsUpdateAction
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, Any, PropagateCommentsUpdateAction, Any, CommentsUseCaseType, CommentError>(
         initialState = Idle,
-        DontCare
+        DoNotCare
 ) {
     override suspend fun runLogic(parameters: Any) {
         manageAction(UpdatedComments)
@@ -29,7 +29,7 @@ class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any,
             ): StateInterface<Any, PropagateCommentsUpdateAction, Any, CommentsUseCaseType, CommentError> {
                 return when (action) {
                     is UpdatedComments -> {
-                        flowChannel.emit(Success(PAGINATE_USE_CASE, DontCare))
+                        flowChannel.emit(Success(PAGINATE_USE_CASE, DoNotCare))
                         Idle
                     }
                 }

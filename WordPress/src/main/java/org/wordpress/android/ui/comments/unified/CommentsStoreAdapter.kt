@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.action.CommentAction.UPDATE_COMMENT
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.CommentsActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.comments.CommentsMapper
 import org.wordpress.android.fluxc.store.CommentStore
@@ -63,10 +64,24 @@ class CommentsStoreAdapter @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
 
-    private val shouldUseRoomStore = unifiedCommentsListFeatureConfig.isEnabled()
+    private fun shouldUseRoomStore() = unifiedCommentsListFeatureConfig.isEnabled()
+
+    fun getCommentsForSite(site: SiteModel?, orderByDateAscending: Boolean, limit: Int, vararg statuses: CommentStatus): List<CommentModel> {
+        return if (shouldUseRoomStore()) {
+            runBlocking {
+                withContext(bgDispatcher) {
+                    unifiedStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses).map {
+                        commentsMapper.commentEntityToLegacyModel(it)
+                    }
+                }
+            }
+        } else {
+            legacyStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses)
+        }
+    }
 
     fun getCommentByLocalId(localId: Int): CommentModel? {
-        return if (shouldUseRoomStore) {
+        return if (shouldUseRoomStore()) {
             runBlocking {
                 withContext(bgDispatcher) {
                     unifiedStore.getCommentByLocalId(localId.toLong()).firstOrNull()?.let {
@@ -80,10 +95,10 @@ class CommentsStoreAdapter @Inject constructor(
     }
 
     fun getCommentBySiteAndRemoteId(site: SiteModel, remoteCommentId: Long): CommentModel? {
-        return if (shouldUseRoomStore) {
+        return if (shouldUseRoomStore()) {
             runBlocking {
                 withContext(bgDispatcher) {
-                    unifiedStore.getCommentBySiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.let {
+                    unifiedStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.let {
                         commentsMapper.commentEntityToLegacyModel(it)
                     }
                 }
@@ -101,15 +116,13 @@ class CommentsStoreAdapter @Inject constructor(
         dispatcher.unregister(`object`)
     }
 
-
-
     fun dispatch(action: Action<*>) {
         if (action.type !is CommentAction) {
             dispatcher.dispatch(action)
             return
         }
 
-        val actionToDispatch = if (shouldUseRoomStore) {
+        val actionToDispatch = if (shouldUseRoomStore()) {
             when(action.type as CommentAction) {
                 FETCH_COMMENTS -> CommentsActionBuilder.newFetchCommentsAction(action.payload as FetchCommentsPayload)
                 FETCH_COMMENT -> CommentsActionBuilder.newFetchCommentAction(action.payload as RemoteCommentPayload)
@@ -118,9 +131,6 @@ class CommentsStoreAdapter @Inject constructor(
                 DELETE_COMMENT -> CommentsActionBuilder.newDeleteCommentAction(action.payload as RemoteCommentPayload)
                 LIKE_COMMENT -> CommentsActionBuilder.newLikeCommentAction(action.payload as RemoteCommentPayload)
                 UPDATE_COMMENT -> CommentsActionBuilder.newUpdateCommentAction(action.payload as CommentModel)
-                REMOVE_COMMENTS -> CommentsActionBuilder.newRemoveCommentsAction(action.payload as? SiteModel)
-                REMOVE_COMMENT -> CommentsActionBuilder.newRemoveCommentAction(action.payload as CommentModel)
-                REMOVE_ALL_COMMENTS -> CommentsActionBuilder.newRemoveCommentAction(action.payload as CommentModel)
                 FETCH_COMMENT_LIKES,
                 FETCHED_COMMENTS,
                 FETCHED_COMMENT,
@@ -128,7 +138,10 @@ class CommentsStoreAdapter @Inject constructor(
                 PUSHED_COMMENT,
                 DELETED_COMMENT,
                 LIKED_COMMENT,
-                FETCHED_COMMENT_LIKES -> {
+                FETCHED_COMMENT_LIKES,
+                REMOVE_COMMENTS,
+                REMOVE_COMMENT,
+                REMOVE_ALL_COMMENTS -> {
                     logOrCrash("CommentsStoreAdapter->dispatch: action received ${action.type} was not expected")
                     null
                 }

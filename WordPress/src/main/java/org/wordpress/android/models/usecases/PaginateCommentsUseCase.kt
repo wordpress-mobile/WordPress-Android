@@ -46,7 +46,7 @@ class PaginateCommentsUseCase @Inject constructor(
                         val result2 = Loading(PAGINATE_USE_CASE)
                         if (parameters.offset == 0) flowChannel.emit(result2)
 
-                        val result = commentsStore.fetchComments(
+                        val result = commentsStore.fetchCommentsPage(
                                 site = parameters.site,
                                 number = parameters.number,
                                 offset = parameters.offset,
@@ -81,8 +81,6 @@ class PaginateCommentsUseCase @Inject constructor(
 
                         val data = result.data ?: PagingData.empty()
 
-                        // data.hasMore = parameters.hasMore
-
                         if (result.isError) {
                             flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))
                         } else {
@@ -106,19 +104,12 @@ class PaginateCommentsUseCase @Inject constructor(
         ) : PaginateCommentsAction()
     }
 
-    // sealed class PaginationResult {
-    //     object PaginationLoading : PaginationResult()
-    //     data class PaginationFailure(val error: CommentError, val cachedData: CommentsData) : PaginationResult()
-    //     data class PaginationSuccess(val data: CommentsData) : PaginationResult()
-    // }
-
     sealed class Parameters {
         data class GetPageParameters(
             val site: SiteModel,
             val number: Int,
             val offset: Int,
-            val commentFilter: CommentFilter,
-                // val hasMore: Boolean = false
+            val commentFilter: CommentFilter
         ) : Parameters()
 
         data class ReloadFromCacheParameters(
