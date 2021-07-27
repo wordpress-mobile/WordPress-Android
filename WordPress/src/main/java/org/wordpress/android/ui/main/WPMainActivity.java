@@ -1151,8 +1151,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.LOGIN_EPILOGUE:
-                setSite(data);
-                showQuickStartDialog();
+                if (resultCode == RESULT_OK) {
+                    setSite(data);
+                    showQuickStartDialog();
+                }
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {

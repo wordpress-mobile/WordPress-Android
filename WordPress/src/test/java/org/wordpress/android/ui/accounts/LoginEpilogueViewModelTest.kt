@@ -34,6 +34,15 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         assertThat(navigationEvent.localId).isEqualTo(localId)
     }
 
+    @Test
+    fun `when create new site is triggered, then launch create new site flow`() {
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onCreateNewSite()
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CreateNewSite::class.java)
+    }
+
     /* WordPress app - Post Signup Interstitial Screen */
     @Test
     fun `given wp app with no sites, when continued from epilogue first time, then signup interstitial shown`() {

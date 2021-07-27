@@ -131,7 +131,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         button.setOnClickListener(v -> {
             mUnifiedLoginTracker.trackClick(Click.CONTINUE);
             if (mLoginEpilogueListener != null) {
-                mLoginEpilogueListener.onContinue();
+                if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                    mLoginEpilogueListener.onCreateNewSite();
+                } else {
+                    mLoginEpilogueListener.onContinue();
+                }
             }
         });
     }
