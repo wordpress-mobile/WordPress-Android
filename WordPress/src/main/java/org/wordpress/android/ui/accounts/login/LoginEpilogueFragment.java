@@ -19,6 +19,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
@@ -129,7 +130,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void setupBottomButton(Button button) {
         button.setOnClickListener(v -> {
-            mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+            if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+                AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED);
+                mUnifiedLoginTracker.trackClick(Click.CREATE_NEW_SITE);
+            } else {
+                mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+            }
             if (mLoginEpilogueListener != null) {
                 if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
                     mLoginEpilogueListener.onCreateNewSite();
@@ -262,6 +268,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
                 @Override
                 public void onSiteClick(SiteRecord site) {
+                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED);
+                    mUnifiedLoginTracker.trackClick(Click.CHOOSE_SITE);
                     mLoginEpilogueListener.onSiteClick(site.getLocalId());
                 }
 
