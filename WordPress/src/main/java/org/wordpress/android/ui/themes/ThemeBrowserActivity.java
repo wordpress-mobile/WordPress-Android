@@ -205,7 +205,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
                     bottomSheet.dismiss();
                 }
             } else if (action instanceof Preview) {
-                String themeId = ((Preview) action).getThemeId();
+                final String themeId = ((Preview) action).getThemeId();
                 startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
             }
             return null;

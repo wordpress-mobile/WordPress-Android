@@ -92,8 +92,8 @@ class ThemesViewModel @Inject constructor(
                         )
                 )
             }
+            bottomSheetAction.value = Event(Hide)
         }
-        bottomSheetAction.value = Event(Hide)
     }
 
     fun onDismissButtonClicked() {

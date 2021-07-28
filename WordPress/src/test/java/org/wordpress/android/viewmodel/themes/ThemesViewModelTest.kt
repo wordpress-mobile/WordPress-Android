@@ -1,6 +1,8 @@
 package org.wordpress.android.viewmodel.themes
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -13,12 +15,18 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.ThemeModel
 import org.wordpress.android.fluxc.store.ThemeStore
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Preview
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState
 
@@ -31,6 +39,8 @@ class ThemesViewModelTest : BaseUnitTest() {
     @Mock lateinit var themeStore: ThemeStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var fluxCDispatcher: Dispatcher
+    private val coroutineDispatcher = TEST_DISPATCHER
     private lateinit var viewModel: ThemesViewModel
 
     val state: BottomSheetUIState get() = viewModel.bottomSheetUiState.value!!
@@ -41,7 +51,8 @@ class ThemesViewModelTest : BaseUnitTest() {
         viewModel = ThemesViewModel(
                 themeStore,
                 resourceProvider,
-                TEST_DISPATCHER
+                fluxCDispatcher,
+                coroutineDispatcher
         )
         startViewModel()
         setupResourceProvider()
@@ -125,6 +136,64 @@ class ThemesViewModelTest : BaseUnitTest() {
         assertThat(action).isInstanceOf(Hide::class.java)
     }
 
+    @Test
+    fun `given theme to activate, when preview button clicked, then preview action is fired`() {
+        // Arrange
+        setupTheme()
+        startViewModel()
+        viewModel.onActivateMenuItemClicked(THEME_ID)
+
+        // Act
+        viewModel.onPreviewButtonClicked()
+
+        // Assert
+        assertThat(action).isInstanceOf(Preview::class.java)
+        assertEquals((action as Preview).themeId, THEME_ID)
+    }
+
+    @Test
+    fun `given no theme to activate, when preview button clicked, then do nothing`() {
+        // Act
+        viewModel.onPreviewButtonClicked()
+
+        // Assert
+        assertNull(action)
+    }
+
+    @Test
+    fun `given keep current homepage selected, when activate button clicked, then dispatch true in action`() {
+        // Arrange
+        val activateAction = setupActivateThemeAction(true)
+
+        // Act
+        viewModel.onActivateButtonClicked()
+
+        // Assert
+        verifyActivateThemeAction(activateAction)
+    }
+
+    @Test
+    fun `given use theme homepage selected, when activate button clicked, then dispatch false in action`() {
+        // Arrange
+        val activateAction = setupActivateThemeAction(false)
+
+        // Act
+        viewModel.onActivateButtonClicked()
+
+        // Assert
+        verifyActivateThemeAction(activateAction)
+    }
+
+    @Test
+    fun `given no theme to activate, when activate button clicked, then do nothing`() {
+        // Act
+        viewModel.onActivateButtonClicked()
+
+        // Assert
+        verify(fluxCDispatcher, never()).dispatch(any())
+        assertNull(action)
+    }
+
     private fun startViewModel() {
         viewModel.start(site)
     }
@@ -133,10 +202,38 @@ class ThemesViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(any(), any())).thenReturn(RESOURCE_STRING)
     }
 
-    private fun setupTheme(themeName: String = THEME_NAME) {
+    private fun setupTheme(themeName: String = THEME_NAME): ThemeModel {
         val theme = ThemeModel()
+        theme.themeId = THEME_ID
         theme.name = themeName
         whenever(site.isUsingWpComRestApi).thenReturn(true)
         whenever(themeStore.getInstalledThemeByThemeId(site, THEME_ID)).thenReturn(theme)
+        return theme
+    }
+
+    private fun setupActivateThemeAction(dontChangeHomepage: Boolean): Action<ActivateThemePayload> {
+        val theme = setupTheme()
+        val activateAction = ThemeActionBuilder.newActivateThemeAction(
+                ActivateThemePayload(site, theme, dontChangeHomepage)
+        )
+        startViewModel()
+        viewModel.onActivateMenuItemClicked(THEME_ID)
+        when (dontChangeHomepage) {
+            true -> viewModel.onKeepCurrentHomepageSelected()
+            false -> viewModel.onUseThemeHomepageSelected()
+        }
+
+        return activateAction
+    }
+
+    private fun verifyActivateThemeAction(fluxCAction: Action<ActivateThemePayload>) {
+        verify(fluxCDispatcher).dispatch(check { actionParam: Action<ActivateThemePayload> ->
+            val actual = actionParam.payload
+            val expected = fluxCAction.payload
+            assertThat(actual.dontChangeHomepage).isEqualTo(expected.dontChangeHomepage)
+            assertThat(actual.theme).isEqualTo(expected.theme)
+            assertThat(actual.site).isEqualTo(expected.site)
+        })
+        assertThat(action).isInstanceOf(Hide::class.java)
     }
 }
