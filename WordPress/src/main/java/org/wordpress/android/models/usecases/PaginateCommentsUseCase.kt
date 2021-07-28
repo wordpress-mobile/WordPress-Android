@@ -43,8 +43,7 @@ class PaginateCommentsUseCase @Inject constructor(
                         val parameters = action.parameters
                         val commentsStore = resourceProvider.commentsStore
                         val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
-                        val result2 = Loading(PAGINATE_USE_CASE)
-                        if (parameters.offset == 0) flowChannel.emit(result2)
+                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
 
                         val result = commentsStore.fetchCommentsPage(
                                 site = parameters.site,
@@ -59,7 +58,6 @@ class PaginateCommentsUseCase @Inject constructor(
                                 it.copy(comments = unrepliedCommentsUtils.getUnrepliedComments(it.comments))
                             } else it
                         }
-
 
                         if (result.isError) {
                             flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))

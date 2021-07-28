@@ -2,7 +2,6 @@ package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -69,8 +68,6 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                             remoteCommentId = it
                                     )
 
-                                    delay(5000)
-
                                     if (result.isError) {
                                         // revert local moderation
                                         commentsStore.moderateCommentLocally(
@@ -89,7 +86,7 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                 flowChannel.emit(
                                         Failure(
                                                 BATCH_MODERATE_USE_CASE,
-                                                CommentError(GENERIC_ERROR, "Failed to moderate one or more comments."),
+                                                CommentError(GENERIC_ERROR, ""),
                                                 DoNotCare
                                         )
                                 )

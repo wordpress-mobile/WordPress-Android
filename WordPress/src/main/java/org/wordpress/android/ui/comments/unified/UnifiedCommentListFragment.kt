@@ -23,13 +23,13 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.CommentsActivity
 import org.wordpress.android.ui.comments.CommentsDetailActivity
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment.CommentDetailsContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment.CommentDetailsContract.CommentDetailsActivityResponse
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -102,7 +102,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 setupConfirmationDialog(uiState.confirmationDialogUiModel)
                 if (uiState.commentsListUiModel is WithData || uiState.commentsListUiModel is CommentsListUiModel.Empty) {
                     commentsRecyclerView.post {
-                        adapter.submitList(uiState.commentData)
+                        adapter.submitList(uiState.commentData.comments)
                     }
                 }
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {

@@ -471,6 +471,7 @@
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
     <string name="comment_q_action_copied_url">Link address copied</string>
+    <string name="comment_batch_moderation_error">Failed to moderate one or more comments</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
