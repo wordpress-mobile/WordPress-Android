@@ -4,8 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.ThemeModel
 import org.wordpress.android.fluxc.store.ThemeStore
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.THEMES
@@ -13,6 +17,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Preview
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,10 +25,12 @@ import javax.inject.Named
 class ThemesViewModel @Inject constructor(
     private val themeStore: ThemeStore,
     private val resourceProvider: ResourceProvider,
+    private val dispatcher: Dispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
     private var isStarted = false
+    private var themeToActivate: ThemeModel? = null
 
     private val _bottomSheetUiState = MutableLiveData<BottomSheetUIState>()
     val bottomSheetUiState: LiveData<BottomSheetUIState> = _bottomSheetUiState
@@ -52,6 +59,7 @@ class ThemesViewModel @Inject constructor(
             AppLog.w(THEMES, "Theme unavailable to activate. Fetch it and try again.")
             return
         }
+        themeToActivate = theme
 
         bottomSheetAction.value = Event(Show)
         setBottomSheetTexts(theme.name)
@@ -72,11 +80,20 @@ class ThemesViewModel @Inject constructor(
     }
 
     fun onPreviewButtonClicked() {
-        // todo
+        themeToActivate?.let { bottomSheetAction.value = Event(Preview(it.themeId)) }
     }
 
     fun onActivateButtonClicked() {
-        // todo
+        themeToActivate?.let { theme ->
+            currentViewState()?.currentHomepageCheckmarkVisible?.let { dontChangeHomepage ->
+                dispatcher.dispatch(
+                        ThemeActionBuilder.newActivateThemeAction(
+                                ActivateThemePayload(site, theme, dontChangeHomepage)
+                        )
+                )
+            }
+        }
+        bottomSheetAction.value = Event(Hide)
     }
 
     fun onDismissButtonClicked() {
@@ -95,6 +112,7 @@ class ThemesViewModel @Inject constructor(
     sealed class BottomSheetAction {
         object Show : BottomSheetAction()
         object Hide : BottomSheetAction()
+        data class Preview(val themeId: String) : BottomSheetAction()
     }
 
     data class BottomSheetUIState(

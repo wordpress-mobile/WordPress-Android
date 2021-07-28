@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.OnCurrentThemeFetched;
 import org.wordpress.android.fluxc.store.ThemeStore.OnSiteThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.OnThemeActivated;
@@ -42,6 +43,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.viewmodel.themes.ThemesViewModel;
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Preview;
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show;
 
 import java.util.HashMap;
@@ -202,6 +204,9 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
                 if (bottomSheet != null) {
                     bottomSheet.dismiss();
                 }
+            } else if (action instanceof Preview) {
+                String themeId = ((Preview) action).getThemeId();
+                startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
             }
             return null;
         }));
@@ -377,7 +382,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
             }
         }
 
-        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new SiteThemePayload(mSite, theme)));
+        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new ActivateThemePayload(mSite, theme)));
     }
 
     private void addBrowserFragment() {
