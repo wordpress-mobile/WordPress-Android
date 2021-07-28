@@ -208,6 +208,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                                     onDismissAction = {
                                         launch(bgDispatcher) {
                                             if (commentInModeration.contains(it.data.remoteCommentId)) {
+                                                commentInModeration.remove(it.data.remoteCommentId)
                                                 unifiedCommentsListHandler.moderateAfterUndo(
                                                         ModerateWithFallbackParameters(
                                                                 selectedSiteRepository.getSelectedSite()!!,
@@ -308,6 +309,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun moderateSelectedComments(newStatus: CommentStatus) {
         launch(bgDispatcher) {
+            _batchModerationStatus.emit(BatchModerationStatus.Idle)
             val commentsToModerate = _selectedComments.value.map { it.remoteCommentId }
             _selectedComments.emit(emptyList())
             unifiedCommentsListHandler.moderateComments(
