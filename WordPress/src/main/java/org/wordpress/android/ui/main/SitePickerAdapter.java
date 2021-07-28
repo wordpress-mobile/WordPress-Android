@@ -464,14 +464,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()
-            && !mBuildConfigWrapper.isJetpackApp()
-            && !mShowAndReturn
-        ) {
+        if (isNewLoginEpilogueScreenEnabled()) {
             return (position >= 0 && position <= mSites.size());
         } else {
             return (position >= 0 && position < mSites.size());
         }
+    }
+
+    private boolean isNewLoginEpilogueScreenEnabled() {
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     /*
