@@ -17,9 +17,8 @@ import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
-import org.wordpress.android.fluxc.model.CommentStatus.UNSPAM
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class CommentListActionModeCallback(
@@ -149,7 +148,7 @@ class CommentListActionModeCallback(
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        viewModel.clearSelection()
+        viewModel.clearActionModeSelection()
 
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }

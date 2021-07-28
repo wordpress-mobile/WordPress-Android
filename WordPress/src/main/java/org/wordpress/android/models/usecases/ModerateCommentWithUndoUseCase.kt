@@ -11,14 +11,14 @@ import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
 import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsAction
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsAction.OnModerateComment
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsAction.OnUndoModerateComment
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsState.Idle
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnUndoModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsState.Idle
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateCommentParameters
 import javax.inject.Inject
 
-class ModerateCommentUseCase @Inject constructor(
+class ModerateCommentWithUndoUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 ) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, Any, CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,

@@ -13,53 +13,36 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.CommentStatus
-import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
-import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
+import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.Parameters.ModerateCommentParameters
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.SingleCommentModerationResult
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.SingleCommentModerationResult
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
-import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
-import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ClickAction
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.NextPageLoader
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ToggleAction
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Hidden
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Visible
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.BatchModerationStatus
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsUiModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
-import org.wordpress.android.usecase.UseCaseResult.Loading
 import org.wordpress.android.usecase.UseCaseResult.Success
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,14 +50,12 @@ import javax.inject.Named
 typealias CommentsPagingResult = UseCaseResult<CommentsUseCaseType, CommentError, PagingData>
 
 class UnifiedCommentListViewModel @Inject constructor(
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider,
+    private val commentListUiModelHelper: CommentListUiModelHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
-    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
@@ -82,10 +63,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
-    private val _showCofirmationDialog = MutableStateFlow<ConfirmationDialogUiModel>(ConfirmationDialogUiModel.Hidden)
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
 
+    private val _batchModerationStatus = MutableStateFlow<BatchModerationStatus>(BatchModerationStatus.Idle)
+
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
+
+    private var commentInModeration: Long = 0
 
     // TODO maybe we can change to some generic Action pattern
     private val _onCommentDetailsRequested = MutableSharedFlow<SelectedComment>()
@@ -97,16 +81,19 @@ class UnifiedCommentListViewModel @Inject constructor(
         combine(
                 _commentsProvider.filter { it.type == PAGINATE_USE_CASE }.filterIsInstance<CommentsPagingResult>(),
                 _selectedComments,
-                _showCofirmationDialog
-        ) { commentData, selectedIds, confirmationDialogUiModel ->
-            CommentsUiModel(
-                    buildCommentList(
-                            commentData,// as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
-                            selectedIds
-                    ),
-                    buildCommentsListUiModel(commentData),
-                    buildActionModeUiModel(selectedIds, commentFilter),
-                    confirmationDialogUiModel
+                _batchModerationStatus
+        ) { commentData, selectedCommentIds, batchModerationStatus ->
+            commentListUiModelHelper.buildUiModel(
+                    commentFilter,
+                    commentData,
+                    selectedCommentIds,
+                    batchModerationStatus,
+                    uiState.replayCache.firstOrNull(),
+                    this::toggleItem,
+                    this::clickItem,
+                    this::requestNextPage,
+                    this::moderateSelectedComments,
+                    this::onBatchModerationConfirmationCanceled
             )
         }.stateIn(
                 scope = viewModelScope,
@@ -121,7 +108,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
         commentFilter = commentListFilter
 
-        listToLocalCacheUpdateRequests()
+        listenToLocalCacheUpdateRequests()
         listenToSnackBarRequests()
         requestsFirstPage()
     }
@@ -139,7 +126,20 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-    private fun listToLocalCacheUpdateRequests() {
+    private fun requestNextPage(offset: Int) {
+        launch(bgDispatcher) {
+            unifiedCommentsListHandler.requestPage(
+                    GetPageParameters(
+                            site = selectedSiteRepository.getSelectedSite()!!,
+                            number = 30,
+                            offset = offset,
+                            commentFilter = commentFilter
+                    )
+            )
+        }
+    }
+
+    private fun listenToLocalCacheUpdateRequests() {
         launch(bgDispatcher) {
             _commentsUpdateListener.collectLatest {
                 launch(bgDispatcher) {
@@ -151,7 +151,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                                             offset = 0,
                                             commentFilter = commentFilter
                                     ),
-                                    hasMore = false // TODOD: implement real logic here
+                                    hasMore = uiState.value.commentData.hasMore
                             )
                     )
                 }
@@ -162,9 +162,18 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
             _commentsProvider.filter { it is Failure }.collectLatest {
-                val errorMessage = (it as Failure).error.message
-                if (!errorMessage.isNullOrEmpty()) {
-                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
+                val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
+                    UiStringRes(string.comment_batch_moderation_error)
+                } else {
+                    if ((it as Failure).error.message.isNullOrEmpty()) {
+                        null
+                    } else {
+                        UiStringText(it.error.message)
+                    }
+                }
+
+                if (errorMessage != null) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(errorMessage))
                 }
             }
         }
@@ -173,7 +182,7 @@ class UnifiedCommentListViewModel @Inject constructor(
             _commentsProvider.filter { it is Success && it.type == MODERATE_USE_CASE }.collectLatest {
                 if (it is Success && it.data is SingleCommentModerationResult) {
                     val message = when (it.data.newStatus) {
-                        CommentStatus.TRASH -> UiStringRes(string.comment_trashed)
+                        TRASH -> UiStringRes(string.comment_trashed)
                         CommentStatus.SPAM -> UiStringRes(string.comment_spammed)
                         else -> UiStringRes(string.comment_deleted_permanently)
                     }
@@ -196,8 +205,8 @@ class UnifiedCommentListViewModel @Inject constructor(
                                     },
                                     onDismissAction = {
                                         launch(bgDispatcher) {
-                                            if (commentInModeration > 0) {
-                                                unifiedCommentsListHandler.moderateComment(
+                                            if (commentInModeration > 0 && commentInModeration == it.data.remoteCommentId) {
+                                                unifiedCommentsListHandler.moderateWithUndoSupport(
                                                         ModerateCommentParameters(
                                                                 selectedSiteRepository.getSelectedSite()!!,
                                                                 it.data.remoteCommentId,
@@ -213,8 +222,6 @@ class UnifiedCommentListViewModel @Inject constructor(
             }
         }
     }
-
-    private var commentInModeration: Long = 0
 
     fun reload() {
         requestsFirstPage()
@@ -233,7 +240,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-    private fun clickItem(comment: CommentEntity/*, remoteCommentId: Long, commentStatus: CommentStatus*/) {
+    private fun clickItem(comment: CommentEntity) {
         if (_selectedComments.value.isNotEmpty()) {
             toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
         } else {
@@ -248,7 +255,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-    fun clearSelection() {
+    fun clearActionModeSelection() {
         viewModelScope.launch {
             if (!_selectedComments.value.isNullOrEmpty()) {
                 _selectedComments.emit(listOf())
@@ -259,7 +266,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     fun performSingleCommentModeration(commentId: Long, newStatus: CommentStatus) {
         launch(bgDispatcher) {
             if (newStatus == CommentStatus.SPAM || newStatus == TRASH || newStatus == DELETED) {
-                unifiedCommentsListHandler.moderateComment(
+                unifiedCommentsListHandler.moderateWithUndoSupport(
                         ModerateCommentParameters(
                                 selectedSiteRepository.getSelectedSite()!!,
                                 commentId,
@@ -280,57 +287,17 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
+    fun onBatchModerationConfirmationCanceled() {
+        launch(bgDispatcher) {
+            _batchModerationStatus.emit(BatchModerationStatus.Idle)
+        }
+    }
+
     fun performBatchModeration(newStatus: CommentStatus) {
-        when (newStatus) {
-            DELETED -> {
-                val messageResId = if (_selectedComments.value.size > 1) string.dlg_sure_to_delete_comments else string.dlg_sure_to_delete_comment
-
-                val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
-                        title = string.delete,
-                        message = messageResId,
-                        positiveButton = string.yes,
-                        negativeButton = string.no,
-                        confirmAction = {
-                            moderateSelectedComments(newStatus)
-                            launch(bgDispatcher) {
-                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
-                            }
-                        },
-                        cancelAction = {
-                            launch(bgDispatcher) {
-                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
-                            }
-                        }
-                )
-
-                launch(bgDispatcher) {
-                    _showCofirmationDialog.emit(confirmationDialogUiModel)
-                }
-            }
-            TRASH -> {
-                val confirmationDialogUiModel = ConfirmationDialogUiModel.Visible(
-                        title = string.trash,
-                        message = string.dlg_confirm_trash_comments,
-                        positiveButton = string.dlg_confirm_action_trash,
-                        negativeButton = string.dlg_cancel_action_dont_trash,
-                        confirmAction = {
-                            moderateSelectedComments(newStatus)
-                            launch(bgDispatcher) {
-                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
-                            }
-                        },
-                        cancelAction = {
-                            launch(bgDispatcher) {
-                                _showCofirmationDialog.emit(ConfirmationDialogUiModel.Hidden)
-                            }
-                        }
-                )
-
-                launch(bgDispatcher) {
-                    _showCofirmationDialog.emit(confirmationDialogUiModel)
-                }
-            }
-            else -> {
+        launch(bgDispatcher) {
+            if (newStatus == DELETED || newStatus == TRASH) {
+                _batchModerationStatus.emit(BatchModerationStatus.AskingToModerate(newStatus))
+            } else {
                 moderateSelectedComments(newStatus)
             }
         }
@@ -338,246 +305,19 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun moderateSelectedComments(newStatus: CommentStatus) {
         launch(bgDispatcher) {
+            val commentsToModerate = _selectedComments.value.map { it.remoteCommentId }
+            _selectedComments.emit(emptyList())
             unifiedCommentsListHandler.moderateComments(
                     ModerateCommentsParameters(
                             selectedSiteRepository.getSelectedSite()!!,
-                            _selectedComments.value.map { it.remoteCommentId },
+                            commentsToModerate,
                             newStatus
                     )
             )
         }
-        launch(bgDispatcher) {
-            _selectedComments.emit(emptyList())
-        }
     }
-
-    private fun shouldAddSeparator(before: CommentEntity, after: CommentEntity): Boolean {
-        return getFormattedDate(before) != getFormattedDate(after)
-    }
-
-    private fun getFormattedDate(comment: CommentEntity): String {
-        return dateTimeUtilsWrapper.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(comment.datePublished))
-    }
-
-    private fun buildActionModeUiModel(
-        selectedComments: List<SelectedComment>?,
-        commentListFilter: CommentFilter
-    ): ActionModeUiModel {
-        if (selectedComments.isNullOrEmpty()) {
-            return Hidden
-        }
-        val title: UiString? = when (val numSelected = selectedComments.size) {
-            0 -> null
-            else -> {
-                UiStringText(String.format(resourceProvider.getString(string.cab_selected), numSelected))
-            }
-        }
-
-        val approveActionUiModel = ActionUiModel(true, selectedComments.any { it.status == UNAPPROVED })
-        val unaproveActionUiModel = ActionUiModel(
-                true,
-                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) && selectedComments.any { it.status == APPROVED }
-        )
-        val spamActionUiModel = ActionUiModel(commentListFilter != SPAM, true)
-        val unspamActionUiModel = ActionUiModel(commentListFilter == SPAM, true)
-        val trashActionUiModel = ActionUiModel(commentListFilter != TRASHED, true)
-        val unTrashActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
-        val deleteActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
-
-        return Visible(
-                title,
-                approveActionUiModel,
-                unaproveActionUiModel,
-                spamActionUiModel,
-                unspamActionUiModel,
-                trashActionUiModel,
-                unTrashActionUiModel,
-                deleteActionUiModel
-        )
-    }
-
-    private fun buildCommentList(
-        commentsDataResult: CommentsPagingResult,
-        selectedComments: List<SelectedComment>?
-    ): List<UnifiedCommentListItem> {
-        val (comments, hasMore) = when (commentsDataResult) {
-            is Failure -> Pair(
-                    commentsDataResult.cachedData.comments,
-                    commentsDataResult.cachedData.hasMore
-            )
-            is Loading -> Pair(listOf(), false)
-            is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
-        }
-
-        // TODOD: manage Loading and Failure conditions
-
-        val list = ArrayList<UnifiedCommentListItem>()
-        comments.forEachIndexed { index, commentModel ->
-            val previousItem = comments.getOrNull(index - 1)
-            if (previousItem == null) {
-                list.add(SubHeader(getFormattedDate(commentModel), -1))
-            } else if (shouldAddSeparator(previousItem, commentModel)) {
-                list.add(SubHeader(getFormattedDate(commentModel), -1))
-            }
-
-            val toggleAction = ToggleAction(
-                    commentModel,
-                    // commentModel.remoteCommentId,
-                    // CommentStatus.fromString(commentModel.status),
-                    this::toggleItem
-            )
-            val clickAction = ClickAction(
-                    commentModel,
-                    // commentModel.remoteCommentId,
-                    // CommentStatus.fromString(commentModel.status),
-                    this::clickItem
-            )
-
-            val isSelected = selectedComments?.any { it.remoteCommentId == commentModel.remoteCommentId }
-            val isPending = commentModel.status == UNAPPROVED.toString()
-
-            list.add(
-                    Comment(
-                            // TODOD: check if forcing orEmpty could cause a null value in Entity to be saved back as empty string (that is not desirable)
-                            remoteCommentId = commentModel.remoteCommentId,
-                            postTitle = commentModel.postTitle.orEmpty(),
-                            authorName = commentModel.authorName.orEmpty(),
-                            authorEmail = commentModel.authorEmail.orEmpty(),
-                            content = commentModel.content.orEmpty(),
-                            publishedDate = commentModel.datePublished.orEmpty(),
-                            publishedTimestamp = commentModel.publishedTimestamp,
-                            authorAvatarUrl = commentModel.authorProfileImageUrl.orEmpty(),
-                            isPending = isPending,
-                            isSelected = isSelected ?: false,
-                            clickAction = clickAction,
-                            toggleAction = toggleAction
-                    )
-            )
-        }
-
-        if (hasMore && commentFilter != UNREPLIED) {
-            list.add(NextPageLoader(hasMore && commentsDataResult !is Failure, -1) {
-                launch(bgDispatcher) {
-                    unifiedCommentsListHandler.requestPage(
-                            GetPageParameters(
-                                    site = selectedSiteRepository.getSelectedSite()!!,
-                                    number = 30,
-                                    offset = comments.size,
-                                    commentFilter = commentFilter
-                            )
-                    )
-                }
-            })
-        }
-        return list
-    }
-
-    private fun buildCommentsListUiModel(
-        commentsDataResult: CommentsPagingResult,
-    ): CommentsListUiModel {
-        return when (commentsDataResult) {
-            is Loading -> {
-                val prevState = uiState.replayCache.firstOrNull()
-                if (prevState != null && prevState.commentData.isNotEmpty()) {
-                    CommentsListUiModel.Refreshing
-                } else {
-                    CommentsListUiModel.Loading
-                }
-            }
-            is Success -> {
-                if (commentsDataResult.data.comments.isEmpty()) {
-                    CommentsListUiModel.Empty(
-                            UiStringRes(string.comments_empty_list),
-                            R.drawable.img_illustration_empty_results_216dp
-                    )
-                } else {
-                    WithData
-                }
-            }
-            is Failure -> {
-                val errorMessage = commentsDataResult.error.message
-                if (commentsDataResult.cachedData.comments.isEmpty()) {
-                    val errorString = if (errorMessage.isNullOrEmpty()) {
-                        UiStringRes(string.error_refresh_comments)
-                    } else {
-                        UiStringText(errorMessage)
-                    }
-                    CommentsListUiModel.Empty(
-                            errorString,
-                            R.drawable.img_illustration_empty_results_216dp
-                    )
-                } else {
-                    return WithData
-                }
-            }
-        }
-    }
-
-    data class CommentsUiModel(
-        val commentData: List<UnifiedCommentListItem>,
-        val commentsListUiModel: CommentsListUiModel,
-        val actionModeUiModel: ActionModeUiModel,
-        val confirmationDialogUiModel: ConfirmationDialogUiModel
-    ) {
-        companion object {
-            fun buildInitialState(): CommentsUiModel {
-                return CommentsUiModel(
-                        commentData = emptyList(),
-                        commentsListUiModel = CommentsListUiModel.Loading,
-                        actionModeUiModel = Hidden,
-                        confirmationDialogUiModel = ConfirmationDialogUiModel.Hidden
-                )
-            }
-        }
-    }
-
-    sealed class ActionModeUiModel {
-        data class Visible(
-            val actionModeTitle: UiString? = null,
-            val approveActionUiModel: ActionUiModel,
-            val unparoveActionUiModel: ActionUiModel,
-            val spamActionUiModel: ActionUiModel,
-            val unspamActionUiModel: ActionUiModel,
-            val trashActionUiModel: ActionUiModel,
-            val unTrashActionUiModel: ActionUiModel,
-            val deleteActionUiModel: ActionUiModel
-        ) : ActionModeUiModel()
-
-        object Hidden : ActionModeUiModel()
-    }
-
-    data class ActionUiModel(
-        val isVisible: Boolean = false,
-        val isEnabled: Boolean = false
-    )
 
     data class SelectedComment(val remoteCommentId: Long, val status: CommentStatus)
-
-    sealed class CommentsListUiModel {
-        object WithData : CommentsListUiModel()
-
-        data class Empty(
-            val title: UiString,
-            val image: Int? = null
-        ) : CommentsListUiModel()
-
-        object Loading : CommentsListUiModel()
-        object Refreshing : CommentsListUiModel()
-
-        object Initial : CommentsListUiModel()
-    }
-
-    sealed class ConfirmationDialogUiModel {
-        object Hidden : ConfirmationDialogUiModel()
-        data class Visible(
-            val title: Int,
-            val message: Int,
-            val positiveButton: Int,
-            val negativeButton: Int,
-            val confirmAction: () -> Unit,
-            val cancelAction: () -> Unit
-        ) : ConfirmationDialogUiModel()
-    }
 
     companion object {
         private const val UI_STATE_FLOW_TIMEOUT_MS = 5000L

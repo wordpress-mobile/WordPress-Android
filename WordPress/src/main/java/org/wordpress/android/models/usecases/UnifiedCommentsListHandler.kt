@@ -3,9 +3,9 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.flow.merge
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsAction.OnModerateComment
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.ModerateCommentsAction.OnUndoModerateComment
-import org.wordpress.android.models.usecases.ModerateCommentUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnUndoModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateCommentParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnGetPage
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
@@ -16,9 +16,9 @@ class UnifiedCommentsListHandler @Inject constructor(
         // @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val paginateCommentsUseCase: PaginateCommentsUseCase,
     val batchModerationUseCase: BatchModerateCommentsUseCase,
-    val moderationUseCase: ModerateCommentUseCase
+    val moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
 ) {
-    private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationUseCase)
+    private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationWithUndoUseCase)
 
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
@@ -30,11 +30,11 @@ class UnifiedCommentsListHandler @Inject constructor(
             OnModerateComments(parameters)
     )
 
-    suspend fun moderateComment(parameters: ModerateCommentParameters) = moderationUseCase.manageAction(
+    suspend fun moderateWithUndoSupport(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
             OnModerateComment(parameters)
     )
 
-    suspend fun undoCommentModeration(parameters: ModerateCommentParameters) = moderationUseCase.manageAction(
+    suspend fun undoCommentModeration(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
             OnUndoModerateComment(parameters)
     )
 
