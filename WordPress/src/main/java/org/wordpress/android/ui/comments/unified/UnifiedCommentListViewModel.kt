@@ -70,7 +70,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
-    private var commentInModeration: Long = 0
+    private var commentInModeration =  ArrayList<Long>()
 
     // TODO maybe we can change to some generic Action pattern
     private val _onCommentDetailsRequested = MutableSharedFlow<SelectedComment>()
@@ -187,14 +187,14 @@ class UnifiedCommentListViewModel @Inject constructor(
                         CommentStatus.SPAM -> UiStringRes(string.comment_spammed)
                         else -> UiStringRes(string.comment_deleted_permanently)
                     }
-                    commentInModeration = it.data.remoteCommentId
+                    commentInModeration.add(it.data.remoteCommentId)
                     _onSnackbarMessage.emit(
                             SnackbarMessageHolder(
                                     message = message,
                                     buttonTitle = UiStringRes(string.undo),
                                     buttonAction = {
                                         launch(bgDispatcher) {
-                                            commentInModeration = 0
+                                            commentInModeration.remove(it.data.remoteCommentId)
                                             unifiedCommentsListHandler.undoCommentModeration(
                                                     ModerateWithFallbackParameters(
                                                             selectedSiteRepository.getSelectedSite()!!,
@@ -207,7 +207,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                                     },
                                     onDismissAction = {
                                         launch(bgDispatcher) {
-                                            if (commentInModeration > 0 && commentInModeration == it.data.remoteCommentId) {
+                                            if (commentInModeration.contains(it.data.remoteCommentId)) {
                                                 unifiedCommentsListHandler.moderateAfterUndo(
                                                         ModerateWithFallbackParameters(
                                                                 selectedSiteRepository.getSelectedSite()!!,
