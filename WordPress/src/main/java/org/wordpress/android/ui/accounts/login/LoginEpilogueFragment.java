@@ -134,16 +134,13 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void setupBottomButton(Button button) {
         button.setOnClickListener(v -> {
-            if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
-                AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED);
-                mUnifiedLoginTracker.trackClick(Click.CREATE_NEW_SITE);
-            } else {
-                mUnifiedLoginTracker.trackClick(Click.CONTINUE);
-            }
             if (mLoginEpilogueListener != null) {
                 if (isNewLoginEpilogueScreenEnabled()) {
+                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED);
+                    mUnifiedLoginTracker.trackClick(Click.CREATE_NEW_SITE);
                     mLoginEpilogueListener.onCreateNewSite();
                 } else {
+                    mUnifiedLoginTracker.trackClick(Click.CONTINUE);
                     mLoginEpilogueListener.onContinue();
                 }
             }
