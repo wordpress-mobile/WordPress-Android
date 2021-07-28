@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.CommentsActivity
 import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
@@ -45,6 +46,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -101,8 +103,16 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 setupCommentsList(uiState.commentsListUiModel)
                 setupConfirmationDialog(uiState.confirmationDialogUiModel)
                 if (uiState.commentsListUiModel is WithData || uiState.commentsListUiModel is CommentsListUiModel.Empty) {
+                    val recyclerViewState = commentsRecyclerView?.layoutManager?.onSaveInstanceState()
                     commentsRecyclerView.post {
                         adapter.submitList(uiState.commentData.comments)
+                        (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                            if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                                commentsRecyclerView.post {
+                                    layoutManager.onRestoreInstanceState(recyclerViewState)
+                                }
+                            }
+                        }
                     }
                 }
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
@@ -250,6 +260,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     companion object {
         private const val KEY_COMMENT_LIST_FILTER = "KEY_COMMENT_LIST_FILTER"
+        private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 4
 
         fun newInstance(filter: CommentFilter) = UnifiedCommentListFragment().apply {
             arguments = Bundle().apply {
