@@ -188,7 +188,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 headerHandler(),
                 footerHandler(),
                 mOldSitesIds,
-                SitePickerMode.DEFAULT_MODE
+                SitePickerMode.DEFAULT_MODE,
+                mShowAndReturn
         );
         setOnSiteClickListener();
     }
