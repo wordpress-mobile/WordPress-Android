@@ -4,8 +4,10 @@ import kotlinx.coroutines.flow.merge
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnModerateComment
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnPushComment
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction.OnUndoModerateComment
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateCommentParameters
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateWithFallbackParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnGetPage
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
@@ -30,11 +32,15 @@ class UnifiedCommentsListHandler @Inject constructor(
             OnModerateComments(parameters)
     )
 
-    suspend fun moderateWithUndoSupport(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
+    suspend fun preModerateWithUndo(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
             OnModerateComment(parameters)
     )
 
-    suspend fun undoCommentModeration(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
+    suspend fun moderateAfterUndo(parameters: ModerateWithFallbackParameters) = moderationWithUndoUseCase.manageAction(
+            OnPushComment(parameters)
+    )
+
+    suspend fun undoCommentModeration(parameters: ModerateWithFallbackParameters) = moderationWithUndoUseCase.manageAction(
             OnUndoModerateComment(parameters)
     )
 
