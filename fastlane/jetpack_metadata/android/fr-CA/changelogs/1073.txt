@@ -1,2 +1,0 @@
-17.7 :
-Éditeur de blocs : Nouvelle grille de mise en page de bloc, Modifications du style de badge, Correction d’un nouveau bloc non créé lorsque vous appuyez sur Entrée à l’intérieur d’un bloc textuel, Corrections de la vue tablette pour le bouton de l’outil d’insertion

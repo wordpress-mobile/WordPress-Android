@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-07 13:54:07+0000
+Translation-Revision-Date: 2021-07-23 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ungültige URL. Bitte gib eine gültige URL ein.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Eingebetteter Inhalt von %s kann derzeit nicht im mobilen Editor angezeigt werden. Lass dir eine Vorschau der Seite anzeigen, um den eingebetteten Inhalt zu sehen.</string>
+    <string name="gutenberg_native_embed_caption_s">Beschriftung einbetten %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Beschriftung einbetten Leer</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">LINK HINZUFÜGEN</string>
+    <string name="activity_log_visit_our_documentation_page">besuche unsere Dokumentationsseite</string>
+    <string name="activity_log_multisite_message">Jetpack Backup für Multisite-Installationen bietet Backups zum Herunterladen, keine Ein-Klick-Wiederherstellungen. Für weitere Informationen %1$s.</string>
     <string name="blogging_reminders_tip_message">Durch regelmäßige Beiträge bindest du deine Leser und lockst neue Besucher auf deine Website.</string>
     <string name="blogging_reminders_tip">Tipp</string>
     <string name="blogging_reminders_select_days_message">Du kannst dies jederzeit aktualisieren</string>
@@ -77,6 +84,7 @@ Language: de
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um Bedrohungen zu beheben.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um die Bedrohung zu beheben.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Zum Hinzufügen eines Links zweimal tippen</string>
+    <string name="gutenberg_native_edit_link">Link bearbeiten</string>
     <string name="login_empty_view_try_another_account">Mit einem anderen Konto probieren</string>
     <string name="login_empty_view_see_instructions">Anweisungen anzeigen</string>
     <string name="login_no_jetpack_sites_error_message">Wenn du bereits eine Website hast, musst du das kostenlose Jetpack-Plugin installieren und es mit deinem WordPress.com-Konto verbinden.</string>
@@ -96,6 +104,7 @@ Language: de
     <string name="gutenberg_native_post_meta_settings">Beitrags-Meta-Einstellungen</string>
     <string name="gutenberg_native_post_content_settings">Einstellungen für Beitragsinhalte</string>
     <string name="gutenberg_native_featured">Vorgestellt</string>
+    <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Gib eine kurze Beschreibung des Links für Benutzer von Screenreadern an</string>
     <string name="login_no_jetpack_sites">Keine Jetpack-Websites gefunden</string>
@@ -136,6 +145,7 @@ Language: de
     <string name="get_likes_no_network_error">Kein Netzwerk verfügbar</string>
     <string name="comments_empty_list_filtered_unreplied">Keine unbeantworteten Kommentare</string>
     <string name="comment_status_unreplied">Unbeantwortet</string>
+    <string name="gutenberg_native_add_link">Link hinzufügen</string>
     <string name="gutenberg_native_search_settings">Sucheinstellungen</string>
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>

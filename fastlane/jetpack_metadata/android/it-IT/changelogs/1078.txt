@@ -1,0 +1,3 @@
+17.8:
+Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
+Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.

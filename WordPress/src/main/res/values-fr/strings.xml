@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-07 11:54:07+0000
+Translation-Revision-Date: 2021-07-23 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non valide. Veuillez entrer une URL valide.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Le contenu intégré à partir de %s n’est pas visible dans l’éditeur mobile pour le moment. Prévisualisez la page pour afficher le contenu intégré.</string>
+    <string name="gutenberg_native_embed_caption_s">Légende intégrée. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Légende intégrée. Vide</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">AJOUTER UN LIEN</string>
+    <string name="activity_log_visit_our_documentation_page">visiter notre page de documentation</string>
+    <string name="activity_log_multisite_message">Jetpack Backup pour les installations multisites fournit des sauvegardes téléchargeables, aucune restauration en un clic. Pour plus d’informations %1$s.</string>
     <string name="blogging_reminders_tip_message">Publier régulièrement peut aider à fidéliser vos lecteurs et attirer de nouveaux visiteurs sur votre site.</string>
     <string name="blogging_reminders_tip">Conseil</string>
     <string name="blogging_reminders_select_days_message">Vous pouvez le mettre à jour à tout moment</string>
@@ -77,6 +84,7 @@ Language: fr
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Entrez les identifiants de votre serveur&lt;/a&gt; pour résoudre les menaces.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Entrez les identifiants de votre serveur&lt;/a&gt; pour résoudre la menace.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Appuyez deux fois pour ajouter un lien.</string>
+    <string name="gutenberg_native_edit_link">MODIFIER LE LIEN</string>
     <string name="login_empty_view_try_another_account">Essayer avec un autre compte</string>
     <string name="login_empty_view_see_instructions">Voir les instructions</string>
     <string name="login_no_jetpack_sites_error_message">Si vous possédez déjà un site, vous devrez installer l’extension Jetpack gratuite et la connecter à votre compte WordPress.com.</string>
@@ -93,6 +101,7 @@ Language: fr
     <string name="gutenberg_native_post_meta_settings">Réglages des métas de publication</string>
     <string name="gutenberg_native_post_content_settings">Réglages de contenu de publication</string>
     <string name="gutenberg_native_featured">À la Une</string>
+    <string name="gutenberg_native_embed_link">Lien intégré</string>
     <string name="gutenberg_native_display_post_date">Affiche la date du contenu</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
     <string name="login_no_jetpack_sites">Aucun site Jetpack trouvé</string>
@@ -133,6 +142,7 @@ Language: fr
     <string name="get_likes_no_network_error">Aucun réseau disponible.</string>
     <string name="comments_empty_list_filtered_unreplied">Aucun commentaire sans réponse</string>
     <string name="comment_status_unreplied">Sans réponse</string>
+    <string name="gutenberg_native_add_link">Ajouter le lien</string>
     <string name="jetpack_brute_force_allowlist_title">Adresses IP toujours autorisées</string>
     <string name="site_settings_denylist_title">Commentaires rejetés</string>
     <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>

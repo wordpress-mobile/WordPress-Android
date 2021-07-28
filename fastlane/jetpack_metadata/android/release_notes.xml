@@ -1,67 +1,79 @@
 <en-US>
-Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
+We added color/background customization for text blocks.
+It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
 </en-US>
-<ar>
-17.7:
-محرِّر المكوِّن: شبكة تخطيط المكوِّن الجديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
-</ar>
 <de-DE>
-17.7:
-- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
+17.8:
+Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
+Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
 </de-DE>
 <es-ES>
-17.7:
-Editor de bloques: se ha incorporado una nueva cuadrícula de diseño de bloques, se han introducido cambios en el estilo de las insignias, se ha corregido el hecho de que no se cree un nuevo bloque al pulsar Intro dentro de un bloque de texto y también se ha corregido la vista de tableta para el botón de inserción
+17.8:
+Hemos añadido la personalización del color y del fondo para los bloques de texto.
+No se podían editar los bloques no compatibles con cuentas que se hubiesen creado antes de diciembre del 2018. ¡Ya lo hemos arreglado! Durante el proceso, también hemos actualizado las pantallas de carga y de error en el editor de bloques no compatibles.
 </es-ES>
 <fr-FR>
-17.7 :
-Éditeur de blocs : Nouvelle grille de mise en page de bloc, Modifications du style de badge, Correction d’un nouveau bloc non créé lorsque vous appuyez sur Entrée à l’intérieur d’un bloc textuel, Corrections de la vue tablette pour le bouton de l’outil d’insertion
+17.8:
+Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
+Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
 </fr-FR>
 <iw-IL>
-17.7:
-עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
+17.8:
+הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
+לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
 </iw-IL>
 <id>
-17.7:
-Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
+17.8:
+Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
+Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
 </id>
 <it-IT>
-17.7:
-Editor dei blocchi: nuovo blocco Griglia di layout, modifiche allo stile dei Badge, correzione del problema relativo alla mancata creazione di un nuovo blocco quando viene premuto Invio all'interno del blocco basato su testo, correzioni relative alla visualizzazione su tablet per il pulsante di inserimento
+17.8:
+Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
+Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
 </it-IT>
 <ja-JP>
-17.7:
-ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
+17.8:
+テキストブロックに色や背景のカスタマイズ機能を追加しました。
+2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
 </ja-JP>
 <ko-KR>
-17.7:
-블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
+17.8:
+텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
+2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
 </ko-KR>
 <nl-NL>
-17.7:
-Blokeditor: Nieuw indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
+17.8:
+We hebben aanpassing van kleur/achtergrond toegevoegd aan tekstblokken.
+Het was niet mogelijk om niet-ondersteunde blokken te bewerken met accounts die voor december 2018 waren aangemaakt. Dat is nu verholpen! Daarnaast hebben we de schermen Laden/Mislukt bijgewerkt voor de editor van niet-ondersteunde blokken.
 </nl-NL>
 <pt-BR>
-17.7:
-Editor de blocos: nova grade de layout de blocos, ajustes no estilo de selo, correção do bug que obstruía a criação de bloco ao pressionar Enter em um bloco baseado em texto e correções na visualização do botão de inserção em tablets
+17.8:
+Adicionamos personalização de plano de fundo/cor para blocos de texto.
+Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
 </pt-BR>
 <ru-RU>
-17.7:
-Редактор блоков: новая разметка блоков в виде сетки, слегка измененный стиль эмблем, исправлена ошибка, из-за которой новый блок не создавался при нажатии клавиши ВВОД внутри текстового блока, а также исправлена кнопка вставки в режиме разметки для планшетов
+17.8:
+Добавлена возможность настраивать цвет и фон параграфов.
+Неподдерживаемые блоки невозможно было редактировать в учётных записях, созданных до декабря 2018 года. Мы это исправили! Кроме того, мы обновили экраны загрузки и сбоя для редактора неподдерживаемых блоков.
 </ru-RU>
 <sv-SE>
-17.7:
-Blockredigerare: nytt Layoutrutnät-block, justeringar av märkesstilar, korrigering av att det inte skapades något nytt block när man tryckte på Enter i ett textbaserat block och av infogarknappen i surfplattevy
+17.8:
+Vi har lagt till färg-/bakgrundsanpassning för textblock.
+Tidigare var det inte möjligt att redigera ostödda block med konton skapade före december 2018. Vi har åtgärdat det! Vi har dessutom uppdaterat hämtar-/misslyckades-skärmarna för den ostödda blockredigeraren.
 </sv-SE>
 <tr-TR>
-17.7:
-Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
+17,8:
+Metin blokları için renk/arkaplan özelleştirmeleri ekledik.
+Desteklenmeyen blokların Aralık 2018'den önce oluşturulmuş hesaplar tarafından düzenlenmeleri eskiden mümkün değildi. Bunu düzelttik! Bununla birlikte, desteklenmeyen blok düzenleyicinin yükleme/hata ekranlarını da güncelledik.
 </tr-TR>
 <zh-CN>
-17.7：
-区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
+17.8:
+我们为文本块添加了颜色/背景定制功能。
+之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
 </zh-CN>
 <zh-TW>
-17.7：
-區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
+17.8:
+我們為文字區塊新增了色彩/背景自訂功能。
+2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
 </zh-TW>

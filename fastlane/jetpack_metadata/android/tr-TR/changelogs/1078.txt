@@ -1,0 +1,3 @@
+17,8:
+Metin blokları için renk/arkaplan özelleştirmeleri ekledik.
+Desteklenmeyen blokların Aralık 2018'den önce oluşturulmuş hesaplar tarafından düzenlenmeleri eskiden mümkün değildi. Bunu düzelttik! Bununla birlikte, desteklenmeyen blok düzenleyicinin yükleme/hata ekranlarını da güncelledik.

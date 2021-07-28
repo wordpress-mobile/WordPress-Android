@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-13 20:54:08+0000
+Translation-Revision-Date: 2021-07-23 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">כתובת URL לא תקינה. נא להזין כתובת אינטרנט תקנית</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">כרגע לא ניתן לצפות בתוכן מוטמע מ-%s בעורך הנייד. צפה בעמוד כדי לראות את התוכן המוטמע.</string>
+    <string name="gutenberg_native_embed_caption_s">כיתוב התמונה מוטמע. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">כיתוב התמונה מוטמע. ריק</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">להוסיף קישור</string>
+    <string name="activity_log_visit_our_documentation_page">היכנס לעמוד המסמכים שלנו</string>
+    <string name="activity_log_multisite_message">ההתקנות של השירות Jetpack Backup for Multisite מספקות גיבויים להורדה אך לא שחזורים בלחיצה אחת. למידע נוסף ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">פרסום באופן שגרתי יכול לעזור בשילוב הקוראים שלך, ולמשוך מבקרים חדשים לאתר שלך.</string>
     <string name="blogging_reminders_tip">עצה</string>
     <string name="blogging_reminders_select_days_message">אפשר לעדכן את ההגדרה הזאת בכל עת</string>
@@ -80,6 +87,7 @@ Language: he_IL
     <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
     <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
     <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">ערוך קישור</string>
     <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
     <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="gutenberg_native_image_settings">הגדרות תמונה</string>
@@ -96,6 +104,7 @@ Language: he_IL
     <string name="gutenberg_native_post_content_settings">הגדרות תוכן פוסט</string>
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
+    <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -137,6 +146,7 @@ Language: he_IL
     <string name="comments_empty_list_filtered_unreplied">אין תגובות ללא מענה</string>
     <string name="comment_status_unreplied">ללא מענה</string>
     <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
+    <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
