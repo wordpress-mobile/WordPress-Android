@@ -1319,12 +1319,13 @@ public class ActivityLauncher {
             Activity activity,
             boolean doLoginUpdate,
             ArrayList<Integer> oldSitesIds,
-            boolean isOnboardingImprovementsEnabled
+            boolean isOnboardingImprovementsEnabled,
+            boolean isJetpackApp
     ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        if (isOnboardingImprovementsEnabled) {
+        if (isOnboardingImprovementsEnabled && !isJetpackApp) {
             activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
         } else {
             activity.startActivity(intent);

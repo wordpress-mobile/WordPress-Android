@@ -175,7 +175,8 @@ class UnifiedLoginTracker
         HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
         SELECT_EMAIL_FIELD("select_email_field"),
         PICK_EMAIL_FROM_HINT("pick_email_from_hint"),
-        CREATE_ACCOUNT("create_account")
+        CREATE_ACCOUNT("create_account"),
+        CHOOSE_SITE("choose_site")
     }
 
     companion object {

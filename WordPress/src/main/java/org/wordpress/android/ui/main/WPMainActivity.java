@@ -120,6 +120,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -234,6 +235,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
+
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -385,7 +388,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     this,
                     getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mOnboardingImprovementsFeatureConfig.isEnabled()
+                    mOnboardingImprovementsFeatureConfig.isEnabled(),
+                    mBuildConfigWrapper.isJetpackApp()
             );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
@@ -1151,8 +1155,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.LOGIN_EPILOGUE:
-                setSite(data);
-                showQuickStartDialog();
+                if (resultCode == RESULT_OK) {
+                    setSite(data);
+                    showQuickStartDialog();
+                }
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
@@ -1368,7 +1374,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 this,
                                 true,
                                 getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                                mOnboardingImprovementsFeatureConfig.isEnabled()
+                                mOnboardingImprovementsFeatureConfig.isEnabled(),
+                                mBuildConfigWrapper.isJetpackApp()
                         );
                     }
                 }

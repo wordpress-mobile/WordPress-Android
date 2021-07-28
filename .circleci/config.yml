@@ -372,7 +372,7 @@ jobs:
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
 
-            cp ~/.android/debug_a8c.keystore ~/.android/debug.keystore
+            cp ~/.configure/wordpress-android/secrets/debug_a8c.keystore ~/.android/debug.keystore
             bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
       - android/save-gradle-cache
       - run:

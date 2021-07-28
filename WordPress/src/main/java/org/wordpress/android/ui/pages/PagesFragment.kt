@@ -106,13 +106,18 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        val nonNullActivity = requireActivity()
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+
+        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(PagesViewModel::class.java)
+        mlpViewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
         with(PagesFragmentBinding.bind(view)) {
             binding = this
             with(nonNullActivity as AppCompatActivity) {
@@ -123,7 +128,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 }
             }
             initializeViews(nonNullActivity)
-            initializeViewModels(nonNullActivity, savedInstanceState)
+            initializeViewModelObservers(nonNullActivity, savedInstanceState)
         }
     }
 
@@ -278,10 +283,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
     }
 
-    private fun PagesFragmentBinding.initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
-        mlpViewModel = ViewModelProvider(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
-
+    private fun PagesFragmentBinding.initializeViewModelObservers(
+        activity: FragmentActivity,
+        savedInstanceState: Bundle?
+    ) {
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
