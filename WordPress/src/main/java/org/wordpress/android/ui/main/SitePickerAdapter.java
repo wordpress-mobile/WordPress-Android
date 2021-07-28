@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -125,6 +126,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
@@ -457,7 +459,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
             return (position >= 0 && position <= mSites.size());
         } else {
             return (position >= 0 && position < mSites.size());
