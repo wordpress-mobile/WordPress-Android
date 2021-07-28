@@ -95,6 +95,8 @@ JP_PACKAGE_NAME = "com.jetpack.android"
 JP_PREFIX = "jpandroid"
 JP_APP_NAME = "Jetpack"
 
+UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
+
 # Env file paths to load
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
 
@@ -610,7 +612,7 @@ REPOSITORY_NAME="WordPress-Android"
         skip_upload_changelogs: true,
         skip_upload_images: true,
         skip_upload_screenshots: true,
-        json_key: './google-upload-credentials.json',
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
@@ -659,7 +661,7 @@ REPOSITORY_NAME="WordPress-Android"
       skip_upload_changelogs: true,
       skip_upload_images: true,
       skip_upload_screenshots: false,
-      json_key: './google-upload-credentials.json',
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   end
 
