@@ -134,7 +134,11 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                                             clickListener = { snackbarMessage.buttonAction() }
                                     )
                                 },
-                                dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
+                                dismissCallback = { snackbar, _ ->
+                                    currentSnackbar = null
+                                    snackbarMessage.onDismissAction()
+                                },
+                                showCallback = { snackbar -> currentSnackbar = snackbar }
                         )
                 )
             }
@@ -147,7 +151,10 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         }
     }
 
+    var currentSnackbar: Snackbar? = null
+
     fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
+        currentSnackbar?.dismiss()
         commentDetails.launch(
                 CommentDetailsActivityRequest(
                         commentId,
