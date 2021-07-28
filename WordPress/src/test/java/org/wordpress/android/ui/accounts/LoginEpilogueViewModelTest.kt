@@ -23,6 +23,26 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore)
     }
 
+    @Test
+    fun `when site click is triggered, then select site with local id`() {
+        val navigationEvents = initObservers().navigationEvents
+        val localId = 1
+
+        viewModel.onSiteClick(localId)
+
+        val navigationEvent = navigationEvents.first() as LoginNavigationEvents.SelectSite
+        assertThat(navigationEvent.localId).isEqualTo(localId)
+    }
+
+    @Test
+    fun `when create new site is triggered, then launch create new site flow`() {
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onCreateNewSite()
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CreateNewSite::class.java)
+    }
+
     /* WordPress app - Post Signup Interstitial Screen */
     @Test
     fun `given wp app with no sites, when continued from epilogue first time, then signup interstitial shown`() {

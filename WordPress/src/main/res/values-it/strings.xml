@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-09 09:54:08+0000
+Translation-Revision-Date: 2021-07-23 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non valido. Inserisci un URL valido.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Al momento, i contenuti incorporati di %s non possono essere visualizzati nell\'editor per dispositivi mobili. Visualizza in anteprima la pagina per vedere il contenuto incorporato.</string>
+    <string name="gutenberg_native_embed_caption_s">Incorpora la didascalia. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Incorpora la didascalia. Vuota</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">AGGIUNGI LINK</string>
+    <string name="activity_log_visit_our_documentation_page">visita la pagina della documentazione</string>
+    <string name="activity_log_multisite_message">Jetpack Backup per installazioni multisito offre backup scaricabili, nessun ripristino con un clic. Per maggiori informazioni %1$s.</string>
     <string name="blogging_reminders_tip_message">Pubblicare articoli regolarmente può contribuire a mantenere l\'attenzione dei lettori e attrarre nuovi visitatori sul tuo sito.</string>
     <string name="blogging_reminders_tip">Suggerimento</string>
     <string name="blogging_reminders_select_days_message">Puoi aggiornare questo elemento in qualsiasi momento</string>
@@ -80,6 +87,7 @@ Language: it
     <string name="login_empty_view_try_another_account">Prova con un altro account</string>
     <string name="login_empty_view_see_instructions">Visualizza istruzioni</string>
     <string name="login_no_jetpack_sites_error_message">Se hai già un sito, dovrai installare il plugin Jetpack gratuito e collegarlo al tuo account WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">MODIFICA LINK</string>
     <string name="login_empty_view_avatar_content_description">Foto del profilo</string>
     <string name="login_not_a_jetpack_site">Per usare quest\'app per %1$s, il plugin Jetpack dovrà essere installato e connesso al tuo account WordPress.com.</string>
     <string name="gutenberg_native_image_settings">Impostazioni immagine</string>
@@ -95,6 +103,7 @@ Language: it
     <string name="gutenberg_native_post_content_settings">Impostazioni del contenuto dell\'articolo</string>
     <string name="gutenberg_native_post_meta_settings">Impostazioni dei metadati dell\'articolo</string>
     <string name="gutenberg_native_featured">In evidenza</string>
+    <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>
@@ -136,6 +145,7 @@ Language: it
     <string name="comments_empty_list_filtered_unreplied">Nessun commento senza risposta</string>
     <string name="comment_status_unreplied">Senza risposta</string>
     <string name="gutenberg_native_search_settings">Impostazioni di ricerca</string>
+    <string name="gutenberg_native_add_link">Aggiungi link</string>
     <string name="jetpack_brute_force_allowlist_title">Indirizzi IP sempre consentiti</string>
     <string name="site_settings_denylist_title">Commenti respinti</string>
     <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>

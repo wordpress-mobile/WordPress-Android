@@ -1,5 +1,0 @@
-17.7:
-- Baru! Dapatkan pesan pengingat blogging pada hari yang sudah dipilih
-- Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
-- Masalah pos duplikat di Pembaca sudah diperbaiki
-- Fitur berlangganan ke percakapan melalui email dari Pembaca sudah ditambahkan
