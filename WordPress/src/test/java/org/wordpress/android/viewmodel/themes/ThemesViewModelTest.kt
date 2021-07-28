@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.ThemeModel
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide
