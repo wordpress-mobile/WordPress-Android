@@ -105,7 +105,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @LayoutRes
     private int loginEpilogueScreenResource() {
-        if (newLoginEpilogue()) {
+        if (isNewLoginEpilogueScreenEnabled()) {
             if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD) {
                 return R.layout.login_epilogue_screen_new;
             } else {
@@ -116,7 +116,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private boolean newLoginEpilogue() {
+    private boolean isNewLoginEpilogueScreenEnabled() {
         return mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp();
     }
 
@@ -135,7 +135,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         button.setOnClickListener(v -> {
             mUnifiedLoginTracker.trackClick(Click.CONTINUE);
             if (mLoginEpilogueListener != null) {
-                if (newLoginEpilogue()) {
+                if (isNewLoginEpilogueScreenEnabled()) {
                     mLoginEpilogueListener.onCreateNewSite();
                 } else {
                     mLoginEpilogueListener.onContinue();
@@ -220,7 +220,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             @Override
             public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                                                             boolean attachToRoot) {
-                if (newLoginEpilogue()) {
+                if (isNewLoginEpilogueScreenEnabled()) {
                     return new LoginHeaderViewHolder(
                             layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
                             true
@@ -242,7 +242,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Nullable
     private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
-        if (newLoginEpilogue()) {
+        if (isNewLoginEpilogueScreenEnabled()) {
             return null;
         } else {
             return new ViewHolderHandler<LoginFooterViewHolder>() {
@@ -262,7 +262,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void setOnSiteClickListener() {
-        if (newLoginEpilogue()) {
+        if (isNewLoginEpilogueScreenEnabled()) {
             mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
                 @Override
                 public void onSiteClick(SiteRecord site) {
@@ -319,7 +319,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
 
         if (hasSites) {
-            if (newLoginEpilogue()) {
+            if (isNewLoginEpilogueScreenEnabled()) {
                 holder.showSitesHeading();
             } else {
                 holder.showSitesHeading(StringUtils.getQuantityString(
