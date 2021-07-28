@@ -118,7 +118,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp();
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     @Override
@@ -186,7 +188,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 headerHandler(),
                 footerHandler(),
                 mOldSitesIds,
-                SitePickerMode.DEFAULT_MODE
+                SitePickerMode.DEFAULT_MODE,
+                mShowAndReturn
         );
         setOnSiteClickListener();
     }
