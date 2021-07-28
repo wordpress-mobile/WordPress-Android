@@ -38,11 +38,11 @@ class PaginateCommentsUseCase @Inject constructor(
                 action: PaginateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>
             ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
+                val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
                 return when (action) {
                     is OnGetPage -> {
                         val parameters = action.parameters
                         val commentsStore = resourceProvider.commentsStore
-                        val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
                         if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
 
                         val result = commentsStore.fetchCommentsPage(
@@ -77,7 +77,11 @@ class PaginateCommentsUseCase @Inject constructor(
                                 imposeHasMore = parameters.hasMore
                         )
 
-                        val data = result.data ?: PagingData.empty()
+                        val data = (result.data ?: PagingData.empty()).let {
+                            if (parameters.pagingParameters.commentFilter == UNREPLIED) {
+                                it.copy(comments = unrepliedCommentsUtils.getUnrepliedComments(it.comments))
+                            } else it
+                        }
 
                         if (result.isError) {
                             flowChannel.emit(Failure(PAGINATE_USE_CASE, result.error, data))
