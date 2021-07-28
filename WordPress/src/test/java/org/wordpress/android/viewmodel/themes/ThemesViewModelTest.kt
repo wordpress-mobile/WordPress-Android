@@ -136,7 +136,7 @@ class ThemesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given theme to activate, when preview button clicked, then preview action is fired`() {
+    fun `given theme to activate, when preview button clicked, then preview action is fired with correct theme id`() {
         // Arrange
         setupTheme()
         startViewModel()
@@ -160,7 +160,7 @@ class ThemesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given keep current homepage selected, when activate button clicked, then dispatch true in action`() {
+    fun `given keep current homepage selected, when activate button clicked, then dispatch true in activate action`() {
         // Arrange
         val activateAction = setupActivateThemeAction(true)
 
@@ -172,7 +172,7 @@ class ThemesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given use theme homepage selected, when activate button clicked, then dispatch false in action`() {
+    fun `given use theme homepage selected, when activate button clicked, then dispatch false in activate action`() {
         // Arrange
         val activateAction = setupActivateThemeAction(false)
 
