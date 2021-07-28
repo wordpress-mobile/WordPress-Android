@@ -46,7 +46,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -57,12 +56,13 @@ import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.CommentsStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
@@ -113,12 +113,16 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import kotlinx.coroutines.BuildersKt;
+import kotlinx.coroutines.CoroutineStart;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.GlobalScope;
+
 /**
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  *
- * @deprecated
- * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * @deprecated Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
@@ -189,6 +193,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject ImageManager mImageManager;
     @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
+    @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -998,7 +1003,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         } else {
             // Actual moderation (push the modified comment).
             mComment.setStatus(newStatus.toString());
-            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+            mCommentsStoreAdapter
+                    .dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
         }
     }
 
@@ -1035,9 +1041,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         CommentModel reply = new CommentModel();
         reply.setContent(replyText);
 
-        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
-                mComment,
-                reply)));
+        mCommentsStoreAdapter
+                .dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
+                        mComment,
+                        reply)));
     }
 
     /*
@@ -1377,7 +1384,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         // Self Hosted site does not return a newly created comment, so we need to fetch it manually.
         if (!mSite.isUsingWpComRestApi() && !event.changedCommentsLocalIds.isEmpty()) {
-            CommentModel createdComment = mCommentsStoreAdapter.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
+            CommentModel createdComment =
+                    mCommentsStoreAdapter.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
 
             if (createdComment != null) {
                 mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(
@@ -1409,7 +1417,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
+        // requesting local comment cache refresh
+        BuildersKt.launch(GlobalScope.INSTANCE,
+                Dispatchers.getMain(),
+                CoroutineStart.DEFAULT,
+                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
 
+        );
         // Moderating comment
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             onCommentModerated(event);
