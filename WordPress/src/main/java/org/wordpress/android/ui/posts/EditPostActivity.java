@@ -3444,21 +3444,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
-    @Override public Map<String, Double> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
-        Map<String, Double> newImpressions = new HashMap<>();
-        for (int i = 0; i < newBlockTypes.size(); i++) {
-            newImpressions.put(newBlockTypes.get(i).toString(), 3.0);
-        }
-        Map<String, Double> storedImpressions = AppPrefs.getGutenbergBlockTypeImpressions();
-        newImpressions.putAll(storedImpressions);
-        AppPrefs.setGutenbergBlockTypeImpressions(newImpressions);
-        return newImpressions;
+    @Override public Map<String, Double> onRequestBlockTypeImpressions() {
+        return AppPrefs.getGutenbergBlockTypeImpressions();
     }
 
-    @Override public void onSetBlockTypeImpressionCount(String name, Double count) {
-        Map<String, Double> storedImpressions = AppPrefs.getGutenbergBlockTypeImpressions();
-        storedImpressions.put(name, count);
-        AppPrefs.setGutenbergBlockTypeImpressions(storedImpressions);
+    @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
+        AppPrefs.setGutenbergBlockTypeImpressions(impressions);
     }
 
     // FluxC events

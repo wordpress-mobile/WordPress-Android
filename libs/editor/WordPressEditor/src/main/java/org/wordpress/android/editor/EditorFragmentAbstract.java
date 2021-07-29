@@ -219,8 +219,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
         boolean showPreview();
-        Map<String, Double> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes);
-        void onSetBlockTypeImpressionCount(String name, Double count);
+        Map<String, Double> onRequestBlockTypeImpressions();
+        void onSetBlockTypeImpressions(Map<String, Double> impressions);
     }
 
     /**
