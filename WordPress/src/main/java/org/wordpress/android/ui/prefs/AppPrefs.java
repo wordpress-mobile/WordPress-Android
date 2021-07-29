@@ -130,7 +130,6 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
-        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -264,6 +263,9 @@ public class AppPrefs {
         // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
         // (Internal Ref:p3hLNG-18u)
         SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
     }
 
     private static SharedPreferences prefs() {
@@ -890,11 +892,11 @@ public class AppPrefs {
 
     public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
         String json = GSON.toJson(newImpressions);
-        setString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+        setString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
     }
 
     public static Map<String, Double> getGutenbergBlockTypeImpressions() {
-        String jsonString = getString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        String jsonString = getString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
         Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
         return impressions;
     }
