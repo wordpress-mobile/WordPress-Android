@@ -22,7 +22,8 @@ import javax.inject.Inject
 
 class PaginateCommentsUseCase @Inject constructor(
     paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError>(
+) : FlowFSMUseCase<PaginateCommentsResourceProvider, GetPageParameters, PaginateCommentsAction, PagingData,
+        CommentsUseCaseType, CommentError>(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -31,13 +32,15 @@ class PaginateCommentsUseCase @Inject constructor(
     }
 
     sealed class PaginateCommentsState
-        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
+        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType,
+            CommentError> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>
-            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType, CommentError> {
+            ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType,
+                    CommentError> {
                 val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
                 return when (action) {
                     is OnGetPage -> {

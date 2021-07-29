@@ -40,9 +40,10 @@ class UnifiedCommentsListHandler @Inject constructor(
             OnPushComment(parameters)
     )
 
-    suspend fun undoCommentModeration(parameters: ModerateWithFallbackParameters) = moderationWithUndoUseCase.manageAction(
-            OnUndoModerateComment(parameters)
-    )
+    suspend fun undoCommentModeration(parameters: ModerateWithFallbackParameters) =
+            moderationWithUndoUseCase.manageAction(
+                    OnUndoModerateComment(parameters)
+            )
 
     suspend fun refreshFromCache(parameters: ReloadFromCacheParameters) = paginateCommentsUseCase.manageAction(
             OnReloadFromCache(parameters)

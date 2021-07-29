@@ -22,7 +22,8 @@ import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsParameters, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError>(
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsParameters, ModerateCommentsAction, DoNotCare,
+        CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -31,13 +32,15 @@ class BatchModerateCommentsUseCase @Inject constructor(
     }
 
     sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError> {
+        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType,
+            CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, DoNotCare>>
-            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType, CommentError> {
+            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType,
+                    CommentError> {
                 val commentsStore = resourceProvider.commentsStore
                 return when (action) {
                     is OnModerateComments -> {

@@ -18,7 +18,8 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
+class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem,
+        UnifiedCommentListViewHolder<*>>(
         diffCallback
 ) {
     @Inject lateinit var imageManager: ImageManager

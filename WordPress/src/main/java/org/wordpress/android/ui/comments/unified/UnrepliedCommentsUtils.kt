@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class UnrepliedCommentsUtils @Inject constructor(
     private val accountStore: AccountStore,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) {
     fun getUnrepliedComments(comments: CommentEntityList): CommentEntityList {
         val leveler = UnifiedCommentLeveler(comments)
@@ -22,7 +22,7 @@ class UnrepliedCommentsUtils @Inject constructor(
                 // comment is not mine and has no replies
                 if (!isMyComment(comment) && childrenComments.isEmpty()) {
                     topLevelComments.add(comment)
-                } else if (!isMyComment(comment)) {  // comment is not mine and has replies
+                } else if (!isMyComment(comment)) { // comment is not mine and has replies
                     var hasMyReplies = false
                     for (childrenComment in childrenComments) { // check if any replies are mine
                         if (isMyComment(childrenComment)) {

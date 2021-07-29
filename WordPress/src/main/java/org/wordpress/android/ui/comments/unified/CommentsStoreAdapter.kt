@@ -47,8 +47,10 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
-@Deprecated("This code is a temporary code until all the comments parts are ported to room " +
-        "trying to minimize the changes to existing code not yet ported")
+@Deprecated(
+        "This code is a temporary code until all the comments parts are ported to room " +
+                "trying to minimize the changes to existing code not yet ported"
+)
 @Singleton
 class CommentsStoreAdapter @Inject constructor(
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
@@ -66,7 +68,12 @@ class CommentsStoreAdapter @Inject constructor(
 
     private fun shouldUseRoomStore() = unifiedCommentsListFeatureConfig.isEnabled()
 
-    fun getCommentsForSite(site: SiteModel?, orderByDateAscending: Boolean, limit: Int, vararg statuses: CommentStatus): List<CommentModel> {
+    fun getCommentsForSite(
+        site: SiteModel?,
+        orderByDateAscending: Boolean,
+        limit: Int,
+        vararg statuses: CommentStatus
+    ): List<CommentModel> {
         return if (shouldUseRoomStore()) {
             runBlocking {
                 withContext(bgDispatcher) {
@@ -123,10 +130,12 @@ class CommentsStoreAdapter @Inject constructor(
         }
 
         val actionToDispatch = if (shouldUseRoomStore()) {
-            when(action.type as CommentAction) {
+            when (action.type as CommentAction) {
                 FETCH_COMMENTS -> CommentsActionBuilder.newFetchCommentsAction(action.payload as FetchCommentsPayload)
                 FETCH_COMMENT -> CommentsActionBuilder.newFetchCommentAction(action.payload as RemoteCommentPayload)
-                CREATE_NEW_COMMENT -> CommentsActionBuilder.newCreateNewCommentAction(action.payload as RemoteCreateCommentPayload)
+                CREATE_NEW_COMMENT -> CommentsActionBuilder.newCreateNewCommentAction(
+                        action.payload as RemoteCreateCommentPayload
+                )
                 PUSH_COMMENT -> CommentsActionBuilder.newPushCommentAction(action.payload as RemoteCommentPayload)
                 DELETE_COMMENT -> CommentsActionBuilder.newDeleteCommentAction(action.payload as RemoteCommentPayload)
                 LIKE_COMMENT -> CommentsActionBuilder.newLikeCommentAction(action.payload as RemoteCommentPayload)

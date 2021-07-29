@@ -144,7 +144,8 @@ class CommentListUiModelHelper @Inject constructor(
                 selectedComments.any { it.status == UNAPPROVED || it.status == CommentStatus.SPAM })
         val unaproveActionUiModel = ActionUiModel(
                 true,
-                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) && selectedComments.any { it.status == APPROVED }
+                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) &&
+                        selectedComments.any { it.status == APPROVED }
         )
         val spamActionUiModel = ActionUiModel(commentListFilter != SPAM, true)
         val unspamActionUiModel = ActionUiModel(commentListFilter == SPAM, true)
@@ -175,7 +176,11 @@ class CommentListUiModelHelper @Inject constructor(
         if (batchModerationStatus is AskingToModerate) {
             return when (batchModerationStatus.commentStatus) {
                 DELETED -> {
-                    val messageResId = if (selectedComments.size > 1) string.dlg_sure_to_delete_comments else string.dlg_sure_to_delete_comment
+                    val messageResId = if (selectedComments.size > 1) {
+                        string.dlg_sure_to_delete_comments
+                    } else {
+                        string.dlg_sure_to_delete_comment
+                    }
                     ConfirmationDialogUiModel.Visible(
                             title = string.delete,
                             message = messageResId,
@@ -294,7 +299,7 @@ class CommentListUiModelHelper @Inject constructor(
     internal fun buildCommentsListUiModel(
         commentsDataResult: CommentsPagingResult,
         commentFilter: CommentFilter,
-        previousState: CommentsUiModel?,
+        previousState: CommentsUiModel?
     ): CommentsListUiModel {
         return when (commentsDataResult) {
             is Loading -> {

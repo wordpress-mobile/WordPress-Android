@@ -155,5 +155,3 @@ class CommentListActionModeCallback(
 
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 }
-
-

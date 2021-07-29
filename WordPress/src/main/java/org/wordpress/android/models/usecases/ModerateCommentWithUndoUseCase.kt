@@ -1,5 +1,6 @@
 package org.wordpress.android.models.usecases
 
+import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 class ModerateCommentWithUndoUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, Any, CommentsUseCaseType, CommentError>(
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, Any,
+        CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
@@ -30,17 +32,20 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
     }
 
     sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType, CommentError> {
+        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType,
+            CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
                 resourceProvider: ModerateCommentsResourceProvider,
                 action: ModerateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, Any>>
-            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType, CommentError> {
+            ): StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType,
+                    CommentError> {
                 val commentsStore = resourceProvider.commentsStore
                 return when (action) {
                     is OnModerateComment -> {
                         val parameters = action.parameters
+                        Log.v("MODERATION", "Mod: Start moderating locally: ${parameters.remoteCommentId}")
                         val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
                                 parameters.site.id,
                                 parameters.remoteCommentId
@@ -53,6 +58,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         )
 
                         if (localModerationResult.isError) {
+                            Log.v("MODERATION", "Mod: Failed local moderation:: ${parameters.remoteCommentId}")
                             flowChannel.emit(Failure(MODERATE_USE_CASE, localModerationResult.error, DoNotCare))
                         } else {
                             flowChannel.emit(
@@ -67,10 +73,13 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                             )
                             resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                         }
+                        Log.v("MODERATION", "Mod: Finished moderating locally: ${parameters.remoteCommentId}")
                         Idle
                     }
                     is OnPushComment -> {
                         val parameters = action.parameters
+                        Log.v("MODERATION", "Mod: Start pushing comment: ${parameters.remoteCommentId}")
+
                         // we need to try and moderate comment locally again, since user might have refresh the list
                         // while moderation was not finalized yet
                         commentsStore.moderateCommentLocally(
@@ -96,6 +105,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         }
                         flowChannel.emit(Success(MODERATE_USE_CASE, DoNotCare))
                         resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
+                        Log.v("MODERATION", "Mod: Finished pushing comment: ${parameters.remoteCommentId}")
                         Idle
                     }
                     is OnUndoModerateComment -> {

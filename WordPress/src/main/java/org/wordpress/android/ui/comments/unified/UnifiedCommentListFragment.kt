@@ -102,12 +102,14 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
                 setupConfirmationDialog(uiState.confirmationDialogUiModel)
-                if (uiState.commentsListUiModel is WithData || uiState.commentsListUiModel is CommentsListUiModel.Empty) {
+                if (uiState.commentsListUiModel is WithData ||
+                        uiState.commentsListUiModel is CommentsListUiModel.Empty) {
                     val recyclerViewState = commentsRecyclerView?.layoutManager?.onSaveInstanceState()
                     commentsRecyclerView.post {
                         adapter.submitList(uiState.commentData.comments)
                         (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-                            if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                            if (layoutManager.findFirstVisibleItemPosition() <
+                                    MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
                                 commentsRecyclerView.post {
                                     layoutManager.onRestoreInstanceState(recyclerViewState)
                                 }
@@ -174,13 +176,15 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         )
     }
 
-    val commentDetails = registerForActivityResult(CommentDetailsContract()) { response: CommentDetailsActivityResponse? ->
+    val commentDetails = registerForActivityResult(CommentDetailsContract()) { response:
+    CommentDetailsActivityResponse? ->
         if (response != null) {
             viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
         }
     }
 
-    class CommentDetailsContract : ActivityResultContract<CommentDetailsActivityRequest, CommentDetailsActivityResponse?>() {
+    class CommentDetailsContract : ActivityResultContract<CommentDetailsActivityRequest,
+            CommentDetailsActivityResponse?>() {
         override fun createIntent(context: Context, input: CommentDetailsActivityRequest): Intent {
             val detailIntent = Intent(context, CommentsDetailActivity::class.java)
             detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, input.commentId)
@@ -190,7 +194,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         }
 
         override fun parseResult(resultCode: Int, intent: Intent?): CommentDetailsActivityResponse? = when {
-            resultCode != Activity.RESULT_OK || intent == null -> null      // Return null, if action is cancelled
+            resultCode != Activity.RESULT_OK || intent == null -> null
             else -> {
                 val commentId = intent.getLongExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, -1)
                 val newStatus = intent.getStringExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA)

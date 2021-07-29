@@ -28,10 +28,10 @@ sealed class UnifiedCommentListItem(val type: CommentListItemType) {
             get() = remoteCommentId
     }
 
-
-    data class NextPageLoader(val isLoading: Boolean, override val id: Long, val loadAction: () -> Unit) : UnifiedCommentListItem(
-            NEXT_PAGE_LOADER
-    )
+    data class NextPageLoader(val isLoading: Boolean, override val id: Long, val loadAction: () -> Unit) :
+            UnifiedCommentListItem(
+                    NEXT_PAGE_LOADER
+            )
 
     enum class CommentListItemType {
         SUB_HEADER,
