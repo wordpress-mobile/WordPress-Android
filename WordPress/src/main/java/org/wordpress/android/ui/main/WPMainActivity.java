@@ -120,6 +120,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -141,6 +142,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
+import org.wordpress.android.workers.CreateSiteNotificationScheduler;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -232,6 +234,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
+
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -379,8 +384,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(
+                    this,
+                    getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
+                    mOnboardingImprovementsFeatureConfig.isEnabled(),
+                    mBuildConfigWrapper.isJetpackApp()
+            );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.showSignupEpilogue(this,
@@ -405,6 +415,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
 
         initViewModel();
     }
@@ -1142,6 +1154,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
+            case RequestCodes.LOGIN_EPILOGUE:
+                if (resultCode == RESULT_OK) {
+                    setSite(data);
+                    showQuickStartDialog();
+                }
+                break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
@@ -1352,8 +1370,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource,
                                 mSelectedSiteRepository.getSelectedSite());
                     } else {
-                        ActivityLauncher.showLoginEpilogue(this, true,
-                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                        ActivityLauncher.showLoginEpilogue(
+                                this,
+                                true,
+                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
+                                mOnboardingImprovementsFeatureConfig.isEnabled(),
+                                mBuildConfigWrapper.isJetpackApp()
+                        );
                     }
                 }
             }

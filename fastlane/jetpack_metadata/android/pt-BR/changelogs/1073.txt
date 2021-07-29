@@ -1,2 +1,0 @@
-17.7:
-Editor de blocos: nova grade de layout de blocos, ajustes no estilo de selo, correção do bug que obstruía a criação de bloco ao pressionar Enter em um bloco baseado em texto e correções na visualização do botão de inserção em tablets

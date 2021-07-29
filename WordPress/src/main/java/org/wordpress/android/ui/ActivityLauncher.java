@@ -1275,11 +1275,17 @@ public class ActivityLauncher {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = new Intent(activity, WPMainActivity.class);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity);
+        activity.startActivity(intent);
+    }
+
+    @NonNull
+    public static Intent createMainActivityAndSiteCreationActivityIntent(Context context) {
+        final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
-        activity.startActivity(intent);
+        return intent;
     }
 
     public static void showSignInForResult(Activity activity) {
@@ -1309,18 +1315,28 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showLoginEpilogue(Activity activity, boolean doLoginUpdate, ArrayList<Integer> oldSitesIds) {
+    public static void showLoginEpilogue(
+            Activity activity,
+            boolean doLoginUpdate,
+            ArrayList<Integer> oldSitesIds,
+            boolean isOnboardingImprovementsEnabled,
+            boolean isJetpackApp
+    ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        activity.startActivity(intent);
+        if (isOnboardingImprovementsEnabled && !isJetpackApp) {
+            activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
+        } else {
+            activity.startActivity(intent);
+        }
     }
 
-    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
+    public static void showLoginEpilogueForResult(Activity activity,
                                                   ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
-        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, true);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }

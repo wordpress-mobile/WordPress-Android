@@ -1098,6 +1098,8 @@
     <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
     <string name="scan_start_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
+    <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
@@ -2880,7 +2882,7 @@
 
     <!-- Quick Start Promo Dialog (New) -->
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">We\'ll walk you through the basics of managing your site with the app.</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
     <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
 
@@ -3296,9 +3298,7 @@
     <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources">Border Radius</string>
     <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources">Border Settings</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources">Briefly describe the link to help screen reader user</string>
-    <string name="gutenberg_native_button_inside" tools:ignore="UnusedResources">Button inside</string>
     <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources">Button Link URL</string>
-    <string name="gutenberg_native_button_outside" tools:ignore="UnusedResources">Button outside</string>
     <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Button position</string>
     <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Cancel search</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
@@ -3349,6 +3349,8 @@
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources">Double tap to open Bottom Sheet to add image or video</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Double tap to open Bottom Sheet with available options</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources">Double tap to preview page.</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources">Double tap to preview post.</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Double tap to redo last change</string>
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
     <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Double tap to select a video</string>
@@ -3370,13 +3372,13 @@
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Embed block previews are coming soon</string>
     <!-- translators: accessibility text. Empty Embed caption. -->
     <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Embed caption. Empty</string>
     <!-- translators: accessibility text. %s: Embed caption. -->
     <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Embed caption. %s</string>
     <string name="gutenberg_native_embed_link" tools:ignore="UnusedResources">Embed link</string>
-    <!-- translators: %s: host providing embed content e.g: www.youtube.com -->
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t" tools:ignore="UnusedResources">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available" tools:ignore="UnusedResources">Embed previews not yet available</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3434,7 +3436,7 @@
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
     <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">No application can handle this request.</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
-    <string name="gutenberg_native_no_button" tools:ignore="UnusedResources">No button</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">No blocks found</string>
     <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">No custom placeholder set</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
@@ -3458,6 +3460,8 @@
     <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Post title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the post title. -->
     <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Post title. %s</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources">Preview page</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources">Preview post</string>
     <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem displaying block</string>
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
@@ -3488,6 +3492,7 @@
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
     <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Search block label. Current text is</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Search blocks</string>
     <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Search button. Current button text is</string>
     <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Search input field.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
@@ -3509,7 +3514,9 @@
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Transform block…</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">Transform %s to</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">Try another search term</string>
     <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Type a URL</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">Unable to embed media</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Unsupported</string>
     <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
@@ -3520,6 +3527,9 @@
     <!-- translators: accessibility text. %s: video caption. -->
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">We are working hard to add more blocks with each release.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me" tools:ignore="UnusedResources">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the page.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c" tools:ignore="UnusedResources">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the post.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">What is a block?</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">What is alt text?</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Width Settings</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
@@ -3697,4 +3707,9 @@
     <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
     <string name="stats_disabled_enable_stats_button">Enable site stats</string>
     <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
+
+    <!-- Create Site Notification -->
+    <string name="create_site_notification_title">Create your WordPress website</string>
+    <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
+    <string name="create_site_notification_create_site_action">Create site</string>
 </resources>

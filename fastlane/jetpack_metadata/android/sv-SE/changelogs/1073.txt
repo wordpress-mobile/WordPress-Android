@@ -1,2 +1,0 @@
-17.7:
-Blockredigerare: nytt Layoutrutnät-block, justeringar av märkesstilar, korrigering av att det inte skapades något nytt block när man tryckte på Enter i ett textbaserat block och av infogarknappen i surfplattevy

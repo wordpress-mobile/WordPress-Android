@@ -1,2 +1,0 @@
-17.7:
-Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
