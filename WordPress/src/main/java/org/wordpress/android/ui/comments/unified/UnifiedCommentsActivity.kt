@@ -5,10 +5,13 @@ import android.util.TypedValue
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
 import org.wordpress.android.databinding.UnifiedCommentActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
@@ -17,10 +20,13 @@ import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
 import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.util.HashMap
 import javax.inject.Inject
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: UnifiedCommentActivityViewModel
 
     private val commentListFilters = listOf(ALL, PENDING, UNREPLIED, APPROVED, SPAM, TRASHED)
@@ -52,6 +58,15 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
         pagerAdapter = UnifiedCommentListPagerAdapter(commentListFilters, this@UnifiedCommentsActivity)
         viewPager.adapter = pagerAdapter
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val properties: MutableMap<String, String?> = HashMap()
+                properties["selected_filter"] = getString(commentListFilters[position].toTrackingLabelResId())
+                AnalyticsTracker.track(COMMENT_FILTER_CHANGED, properties)
+                super.onPageSelected(position)
+            }
+        })
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.setText(commentListFilters[position].labelResId)
         }.attach()
@@ -76,7 +91,6 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
                         tabLayout.getTabAt(i)?.view?.alpha = 1F
                     } else {
                         tabLayout.getTabAt(i)?.view?.alpha = disabledTabsOpacity
-
                     }
                 }
             }

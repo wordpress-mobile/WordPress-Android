@@ -31,13 +31,51 @@ import org.wordpress.android.usecase.UseCaseResult.Loading
 import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class CommentListUiModelHelper @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
+    internal fun buildUiModel(
+        commentFilter: CommentFilter,
+        commentsPagingResult: CommentsPagingResult,
+        selectedComments: List<SelectedComment>,
+        batchModerationStatus: BatchModerationStatus,
+        previousUiModelState: CommentsUiModel?,
+        onToggle: (remoteCommentId: Long, commentStatus: CommentStatus) -> Unit,
+        onClick: (comment: CommentEntity) -> Unit,
+        onLoadNextPage: (offset: Int) -> Unit,
+        onBatchModerationConfirmed: (comment: CommentStatus) -> Unit,
+        onBatchModerationCancelled: () -> Unit
+    ): CommentsUiModel {
+        return CommentsUiModel(
+                buildCommentList(
+                        commentsPagingResult,
+                        selectedComments,
+                        commentFilter,
+                        onToggle,
+                        onClick,
+                        onLoadNextPage
+                ),
+                buildCommentsListUiModel(
+                        commentsPagingResult,
+                        commentFilter,
+                        previousUiModelState
+                ),
+                buildActionModeUiModel(selectedComments, commentFilter),
+                buildConfirmationDialogUiState(
+                        batchModerationStatus,
+                        selectedComments,
+                        onBatchModerationConfirmed,
+                        onBatchModerationCancelled
+                )
+        )
+    }
+
     sealed class CommentsListUiModel {
         object WithData : CommentsListUiModel()
 
@@ -127,42 +165,6 @@ class CommentListUiModelHelper @Inject constructor(
     }
 
     data class CommentList(val comments: List<UnifiedCommentListItem>, val hasMore: Boolean)
-
-    internal fun buildUiModel(
-        commentFilter: CommentFilter,
-        commentsPagingResult: CommentsPagingResult,
-        selectedComments: List<SelectedComment>,
-        batchModerationStatus: BatchModerationStatus,
-        previousUiModelState: CommentsUiModel?,
-        onToggle: (remoteCommentId: Long, commentStatus: CommentStatus) -> Unit,
-        onClick: (comment: CommentEntity) -> Unit,
-        onLoadNextPage: (offset: Int) -> Unit,
-        onBatchModerationConfirmed: (comment: CommentStatus) -> Unit,
-        onBatchModerationCancelled: () -> Unit
-    ): CommentsUiModel {
-        return CommentsUiModel(
-                buildCommentList(
-                        commentsPagingResult,// as UseCaseResult<CommentsUseCaseType, Failure<CommentsUseCaseType, CommentError, PagingData>, PagingData>,
-                        selectedComments,
-                        commentFilter,
-                        onToggle,
-                        onClick,
-                        onLoadNextPage
-                ),
-                buildCommentsListUiModel(
-                        commentsPagingResult,
-                        commentFilter,
-                        previousUiModelState
-                ),
-                buildActionModeUiModel(selectedComments, commentFilter),
-                buildConfirmationDialogUiState(
-                        batchModerationStatus,
-                        selectedComments,
-                        onBatchModerationConfirmed,
-                        onBatchModerationCancelled
-                )
-        )
-    }
 
     internal fun buildConfirmationDialogUiState(
         batchModerationStatus: BatchModerationStatus,
@@ -315,7 +317,9 @@ class CommentListUiModelHelper @Inject constructor(
             is Failure -> {
                 val errorMessage = commentsDataResult.error.message
                 if (commentsDataResult.cachedData.comments.isEmpty()) {
-                    val errorString = if (errorMessage.isNullOrEmpty()) {
+                    val errorString = if (!networkUtilsWrapper.isNetworkAvailable()) {
+                        UiStringRes(string.no_network_message)
+                    } else if (errorMessage.isNullOrEmpty()) {
                         UiStringRes(string.error_refresh_comments)
                     } else {
                         UiStringText(errorMessage)

@@ -14,9 +14,17 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_APPROVED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_DELETED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_SPAMMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_TRASHED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_UNAPPROVED
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
+import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
+import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
@@ -44,6 +52,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
 import org.wordpress.android.usecase.UseCaseResult.Success
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,6 +63,8 @@ typealias CommentsPagingResult = UseCaseResult<CommentsUseCaseType, CommentError
 class UnifiedCommentListViewModel @Inject constructor(
     private val commentListUiModelHelper: CommentListUiModelHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
@@ -70,7 +82,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
-    private var commentInModeration =  ArrayList<Long>()
+    private var commentInModeration = ArrayList<Long>()
 
     // TODO maybe we can change to some generic Action pattern
     private val _onCommentDetailsRequested = MutableSharedFlow<SelectedComment>()
@@ -129,6 +141,12 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun requestNextPage(offset: Int) {
         launch(bgDispatcher) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                launch(bgDispatcher) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                }
+                return@launch
+            }
             unifiedCommentsListHandler.requestPage(
                     GetPageParameters(
                             site = selectedSiteRepository.getSelectedSite()!!,
@@ -228,7 +246,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     fun reload() {
-        requestsFirstPage()
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            launch(bgDispatcher) {
+                _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+            }
+        } else {
+            requestsFirstPage()
+        }
     }
 
     private fun toggleItem(remoteCommentId: Long, commentStatus: CommentStatus) {
@@ -299,6 +323,12 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     fun performBatchModeration(newStatus: CommentStatus) {
         launch(bgDispatcher) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                launch(bgDispatcher) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                }
+                return@launch
+            }
             if (newStatus == DELETED || newStatus == TRASH) {
                 _batchModerationStatus.emit(BatchModerationStatus.AskingToModerate(newStatus))
             } else {
@@ -319,6 +349,15 @@ class UnifiedCommentListViewModel @Inject constructor(
                             newStatus
                     )
             )
+            when (newStatus) {
+                APPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_APPROVED)
+                UNAPPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_UNAPPROVED)
+                SPAM -> analyticsTrackerWrapper.track(COMMENT_BATCH_SPAMMED)
+                TRASH -> analyticsTrackerWrapper.track(COMMENT_BATCH_TRASHED)
+                DELETED -> analyticsTrackerWrapper.track(COMMENT_BATCH_DELETED)
+                else -> { // noop
+                }
+            }
         }
     }
 

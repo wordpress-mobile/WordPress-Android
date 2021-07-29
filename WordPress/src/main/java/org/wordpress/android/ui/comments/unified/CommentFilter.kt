@@ -35,4 +35,16 @@ enum class CommentFilter(val labelResId: Int) {
             DELETE -> CommentStatus.DELETED
         }
     }
+
+    fun toTrackingLabelResId(): Int {
+        return when (this) {
+            ALL -> R.string.comment_tracker_label_all
+            PENDING -> R.string.comment_tracker_label_pending
+            APPROVED -> R.string.comment_tracker_label_approved
+            UNREPLIED -> R.string.comment_tracker_label_unreplied
+            TRASHED -> R.string.comment_tracker_label_trashed
+            SPAM -> R.string.comment_tracker_label_spam
+            DELETE -> R.string.comment_tracker_label_trashed
+        }
+    }
 }
