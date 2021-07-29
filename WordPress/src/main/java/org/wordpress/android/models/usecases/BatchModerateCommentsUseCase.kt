@@ -5,6 +5,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
@@ -66,10 +67,18 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                         resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
 
-                                    val result = commentsStore.pushLocalCommentByRemoteId(
-                                            site = parameters.site,
-                                            remoteCommentId = it
-                                    )
+                                    val result = if (parameters.newStatus == DELETED) {
+                                        commentsStore.deleteComment(
+                                                site = parameters.site,
+                                                remoteCommentId = it,
+                                                null
+                                        )
+                                    } else {
+                                        commentsStore.pushLocalCommentByRemoteId(
+                                                site = parameters.site,
+                                                remoteCommentId = it
+                                        )
+                                    }
 
                                     if (result.isError) {
                                         // revert local moderation
