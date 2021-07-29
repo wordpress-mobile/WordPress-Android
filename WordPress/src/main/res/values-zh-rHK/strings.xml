@@ -7,7 +7,6 @@ Language: zh_TW
 -->
 <resources>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無效網址。 請輸入正確的網址。</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">目前無法在行動編輯器中查看 %s 的內嵌內容。 請預覽頁面以查看內嵌內容。</string>
     <string name="gutenberg_native_embed_caption_s">內嵌字幕。 %s</string>
     <string name="gutenberg_native_embed_caption_empty">內嵌字幕。 清空</string>
     <string name="gutenberg_native_add_link_0fcaed3b">新增連結</string>
@@ -122,9 +121,9 @@ Language: zh_TW
     <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
     <string name="gutenberg_native_search_input_field">搜尋意見回饋欄位。</string>
     <string name="gutenberg_native_search_button_current_button_text_is">搜尋按鈕。 目前的按鈕文字是</string>
+    <string name="gutenberg_native_search_blocks">搜尋區塊</string>
     <string name="gutenberg_native_search_block_label_current_text_is">搜尋區塊標籤。 目前的文字是</string>
     <string name="gutenberg_native_no_custom_placeholder_set">未設定自訂預留位置</string>
-    <string name="gutenberg_native_no_button">沒有按鈕</string>
     <string name="gutenberg_native_inside">內部</string>
     <string name="gutenberg_native_hide_search_heading">隱藏搜尋標題</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">按兩下以編輯預留位置文字</string>
@@ -135,8 +134,6 @@ Language: zh_TW
     <string name="gutenberg_native_clear_search">清除搜尋</string>
     <string name="gutenberg_native_cancel_search">取消搜尋</string>
     <string name="gutenberg_native_button_position">按鈕位置</string>
-    <string name="gutenberg_native_button_outside">按鈕外部</string>
-    <string name="gutenberg_native_button_inside">按鈕內部</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s。%2$s 是 %3$s %4$s。</string>
     <string name="get_likes_empty_state_title">取得按讚資料時發生錯誤</string>
     <string name="get_likes_unknown_error">獲得「讚」時發生未知的錯誤。</string>
@@ -188,9 +185,7 @@ Language: zh_TW
     <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
     <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
     <string name="quick_start_list_view_site_title">造訪你的網站</string>
-    <string name="quick_start_list_upload_icon_subtitle">新增網站圖示，讓網站看起來更專業幹練。</string>
     <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
-    <string name="quick_start_list_enable_sharing_title">啟用分享功能</string>
     <string name="quick_start_list_enable_sharing_subtitle">自動將新文章分享到社群媒體。</string>
     <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。</string>
     <string name="quick_start_list_check_stats_title">檢視統計資料</string>
@@ -681,7 +676,6 @@ Language: zh_TW
     <string name="send_link_by_email">以電子郵件傳送連結</string>
     <string name="reset_your_password">重設密碼</string>
     <string name="reader_error_request_failed_title">處理要求時發生問題。 請稍後再試一次。</string>
-    <string name="quick_start_list_update_site_title_title">設定你的網站標題</string>
     <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 以設定新標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
     <string name="gutenberg_native_s_block_options">%s 區塊選項</string>
@@ -1294,15 +1288,11 @@ Language: zh_TW
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受完成的成果！</string>
-    <string name="quick_start_dialog_upload_icon_title">上傳網站圖示</string>
     <string name="quick_start_dialog_upload_icon_message">你的訪客會在他們的瀏覽器上看到你的圖示。新增自訂圖示會讓網站看起來更專業幹練。</string>
     <string name="quick_start_dialog_explore_plans_message_short">點選%1$s方案%2$s以查看你目前的方案和其他可用方案</string>
     <string name="quick_start_dialog_check_stats_message_short">點選%1$s統計資料%2$s以瞭解網站的成效。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
-    <string name="quick_start_dialog_publish_post_message">撰寫並發表你的第一篇文章。</string>
     <string name="quick_start_dialog_need_help_message">我們會逐步說明建立網站以及讓網站成長的基本事項。</string>
-    <string name="quick_start_dialog_migration_title">我們已稍微更動你的檢查清單</string>
-    <string name="quick_start_dialog_migration_message">我們已新增更多任務，協助你拓展你的讀者群。</string>
     <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
     <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
@@ -1488,7 +1478,6 @@ Language: zh_TW
     <string name="quick_start_dialog_need_help_title">需要協助開始使用嗎？</string>
     <string name="quick_start_dialog_need_help_button_positive">接受</string>
     <string name="quick_start_dialog_need_help_button_neutral">從未</string>
-    <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s「搜尋」%2$s以尋找具有相似主題的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
