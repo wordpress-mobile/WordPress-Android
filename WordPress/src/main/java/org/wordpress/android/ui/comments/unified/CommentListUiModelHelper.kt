@@ -281,7 +281,7 @@ class CommentListUiModelHelper @Inject constructor(
             )
         }
 
-        if (hasMore && commentFilter != UNREPLIED) {
+        if (comments.isNotEmpty() && hasMore && commentFilter != UNREPLIED) {
             list.add(NextPageLoader(hasMore && commentsDataResult !is Failure, -1) {
                 onLoadNextPage.invoke(comments.size)
             })
