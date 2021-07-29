@@ -3,6 +3,7 @@ package org.wordpress.android.models.usecases
 import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
@@ -50,7 +51,6 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                 parameters.site.id,
                                 parameters.remoteCommentId
                         ).first()
-
                         val localModerationResult = commentsStore.moderateCommentLocally(
                                 site = parameters.site,
                                 remoteCommentId = parameters.remoteCommentId,
@@ -89,10 +89,18 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         )
                         resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
 
-                        val result = commentsStore.pushLocalCommentByRemoteId(
-                                site = parameters.site,
-                                remoteCommentId = parameters.remoteCommentId
-                        )
+                        val result = if (parameters.newStatus == DELETED) {
+                            commentsStore.deleteComment(
+                                    site = parameters.site,
+                                    remoteCommentId = parameters.remoteCommentId,
+                                    null
+                            )
+                        } else {
+                            commentsStore.pushLocalCommentByRemoteId(
+                                    site = parameters.site,
+                                    remoteCommentId = parameters.remoteCommentId
+                            )
+                        }
 
                         if (result.isError) {
                             // revert local moderation
