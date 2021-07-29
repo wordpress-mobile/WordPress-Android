@@ -95,9 +95,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
         var isShowingActionMode = false
-
-        viewModel.setup(commentListFilter)
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
@@ -161,6 +158,8 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)
             }
         }
+
+        viewModel.start(commentListFilter)
     }
 
     var currentSnackbar: Snackbar? = null

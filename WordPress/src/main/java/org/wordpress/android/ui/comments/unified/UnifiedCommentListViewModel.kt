@@ -115,7 +115,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         )
     }
 
-    fun setup(commentListFilter: CommentFilter) {
+    fun start(commentListFilter: CommentFilter) {
         if (isStarted) return
         isStarted = true
 
@@ -301,7 +301,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     fun performSingleCommentModeration(commentId: Long, newStatus: CommentStatus) {
         launch(bgDispatcher) {
-            if (newStatus == CommentStatus.SPAM || newStatus == TRASH || newStatus == DELETED) {
+            if (newStatus == SPAM || newStatus == TRASH || newStatus == DELETED) {
                 unifiedCommentsListHandler.preModerateWithUndo(
                         ModerateCommentParameters(
                                 selectedSiteRepository.getSelectedSite()!!,
