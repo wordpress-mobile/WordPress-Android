@@ -247,7 +247,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             dialogBuilder.setPositiveButton(uiModel.positiveButton) { _, _ -> uiModel.confirmAction.invoke() }
             dialogBuilder.setNegativeButton(uiModel.negativeButton) { _, _ -> uiModel.cancelAction.invoke() }
             dialogBuilder.setCancelable(true)
-            dialogBuilder.setOnDismissListener { uiModel.cancelAction.invoke() }
+            dialogBuilder.setOnCancelListener { uiModel.cancelAction.invoke() }
             confirmationDialog = dialogBuilder.create()
             confirmationDialog!!.show()
         } else {
