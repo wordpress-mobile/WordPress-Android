@@ -1,8 +1,8 @@
 plugins {
     id "java"
-    id "maven"
     id "org.jetbrains.kotlin.jvm"
     id "org.jetbrains.kotlin.kapt"
+    id "com.automattic.android.publish-to-s3"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -13,4 +13,23 @@ dependencies {
     implementation 'com.google.auto.service:auto-service:1.0-rc4'
     kapt 'com.google.auto.service:auto-service:1.0-rc4'
     implementation 'com.squareup:javapoet:1.7.0'
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            FluxCProcessorPublication(MavenPublication) {
+                from components.java
+
+                groupId "org.wordpress.fluxc"
+                artifactId "fluxc-processor"
+                // version is set by 'publish-to-s3' plugin
+            }
+        }
+   }
+}
+
+publishToS3Plugin {
+    mavenPublishGroupId "org.wordpress.fluxc"
+    mavenPublishArtifactId "fluxc-processor"
 }
