@@ -263,7 +263,8 @@ class CommentListUiModelHelper @Inject constructor(
 
             list.add(
                     Comment(
-                            // TODOD: check if forcing orEmpty could cause a null value in Entity to be saved back as empty string (that is not desirable)
+                            // TODOD: check if forcing orEmpty could cause a null value in Entity to be saved back as
+                            // empty string (that is not desirable)
                             remoteCommentId = commentModel.remoteCommentId,
                             postTitle = commentModel.postTitle.orEmpty(),
                             authorName = commentModel.authorName.orEmpty(),

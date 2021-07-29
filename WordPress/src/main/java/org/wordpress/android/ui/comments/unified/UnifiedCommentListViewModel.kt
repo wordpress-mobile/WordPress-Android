@@ -131,7 +131,7 @@ class UnifiedCommentListViewModel @Inject constructor(
             unifiedCommentsListHandler.requestPage(
                     GetPageParameters(
                             site = selectedSiteRepository.getSelectedSite()!!,
-                            number = if (commentFilter == UNREPLIED) 100 else 30,
+                            number = if (commentFilter == UNREPLIED) UNREPLIED_COMMENT_PAGE_SIZE else COMMENT_PAGE_SIZE,
                             offset = 0,
                             commentFilter = commentFilter
                     )
@@ -150,7 +150,11 @@ class UnifiedCommentListViewModel @Inject constructor(
             unifiedCommentsListHandler.requestPage(
                     GetPageParameters(
                             site = selectedSiteRepository.getSelectedSite()!!,
-                            number = 30,
+                            number = if (commentFilter == UNREPLIED) {
+                                UNREPLIED_COMMENT_PAGE_SIZE
+                            } else {
+                                COMMENT_PAGE_SIZE
+                            },
                             offset = offset,
                             commentFilter = commentFilter
                     )
@@ -166,7 +170,11 @@ class UnifiedCommentListViewModel @Inject constructor(
                             ReloadFromCacheParameters(
                                     pagingParameters = GetPageParameters(
                                             site = selectedSiteRepository.getSelectedSite()!!,
-                                            number = if (commentFilter == UNREPLIED) 100 else 30,
+                                            number = if (commentFilter == UNREPLIED) {
+                                                UNREPLIED_COMMENT_PAGE_SIZE
+                                            } else {
+                                                COMMENT_PAGE_SIZE
+                                            },
                                             offset = 0,
                                             commentFilter = commentFilter
                                     ),
@@ -365,5 +373,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     companion object {
         private const val UI_STATE_FLOW_TIMEOUT_MS = 5000L
+        private const val COMMENT_PAGE_SIZE = 30
+        private const val UNREPLIED_COMMENT_PAGE_SIZE = 100
     }
 }
