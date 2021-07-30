@@ -245,7 +245,10 @@ class CommentsStore
         } else {
             val targetComment = when {
                 site.isUsingWpComRestApi && payload.response == null -> {
-                    return CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
+                    return CommentsActionPayload(CommentError(
+                            INVALID_RESPONSE,
+                            "Network response was valid but empty!"
+                    ))
                 }
                 site.isUsingWpComRestApi && payload.response != null -> {
                     val commentFromEndpoint: CommentEntity = payload.response
