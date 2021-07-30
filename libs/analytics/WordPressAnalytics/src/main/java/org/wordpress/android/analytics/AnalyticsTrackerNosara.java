@@ -2096,6 +2096,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_reminders_cancelled";
             case BLOGGING_REMINDERS_NOTIFICATION_RECEIVED:
                 return "blogging_reminders_notification_received";
+            case LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED:
+                return "login_epilogue_choose_site_tapped";
+            case LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED:
+                return "login_epilogue_create_new_site_tapped";
         }
         return null;
     }

@@ -7,7 +7,6 @@ Language: gl_ES
 -->
 <resources>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non válida. Por favor, introduce unha URL válida.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">O contido incrustado de %s non se pode ver neste momento no editor móbil. Por favor, previsualiza a páxina para ver o contido incrustado.</string>
     <string name="gutenberg_native_embed_caption_s">Lenda incrustada. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Lenda incrustada. Baleira</string>
     <string name="gutenberg_native_add_link_0fcaed3b">ENGALIR LIGAZÓN</string>
@@ -124,10 +123,10 @@ Language: gl_ES
     <string name="gutenberg_native_use_icon_button">Usar botón de icona</string>
     <string name="gutenberg_native_search_input_field">Campo de introdución de busca.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Botón de busca. O texto actual do botón é</string>
+    <string name="gutenberg_native_search_blocks">Bloques de busca</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta do bloque de busca. O texto actual é</string>
     <string name="gutenberg_native_outside">Exterior</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Non se estableceu ningún marcador de posición personalizado</string>
-    <string name="gutenberg_native_no_button">Sen botón</string>
     <string name="gutenberg_native_inside">Dentro</string>
     <string name="gutenberg_native_hide_search_heading">Ocultar o encabezado de busca</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dobre toque para editar o texto do marcador de posición</string>
@@ -138,8 +137,6 @@ Language: gl_ES
     <string name="gutenberg_native_clear_search">Baleirar a busca</string>
     <string name="gutenberg_native_cancel_search">Cancelar a busca</string>
     <string name="gutenberg_native_button_position">Posición do botón</string>
-    <string name="gutenberg_native_button_outside">Botón exterior</string>
-    <string name="gutenberg_native_button_inside">Botón interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s é %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocorreu un erro ao obter os datos dos gústame</string>
     <string name="get_likes_unknown_error">Ocorreu un erro ao obter os gústame.</string>
@@ -192,9 +189,7 @@ Language: gl_ES
     <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa as túas páxinas e fai cambios, ou engade ou elimina páxinas.</string>
     <string name="quick_start_list_view_site_title">Visita o teu sitio</string>
-    <string name="quick_start_list_upload_icon_subtitle">Engade unha icona do sitio para un aspecto pulcro, profesional.</string>
     <string name="quick_start_list_follow_site_subtitle">Descobre e segue sitios que te inspiren.</string>
-    <string name="quick_start_list_enable_sharing_title">Activar compartir</string>
     <string name="quick_start_list_enable_sharing_subtitle">Comparte automaticamente as novas entradas nos teus medios sociais.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dálle un nome ao teu sitio que reflexe a súa personalidade e temática.</string>
     <string name="quick_start_list_check_stats_title">Revisa as túas estatísticas</string>
@@ -686,7 +681,6 @@ Language: gl_ES
     <string name="send_link_by_email">Enviar o enlace por correo electrónico</string>
     <string name="reset_your_password">Restablecer o teu contrasinal</string>
     <string name="reader_error_request_failed_title">Ocorreu un problema ao xestionar a petición. Por favor, inténtao de novo máis tarde.</string>
-    <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
@@ -1301,15 +1295,11 @@ Language: gl_ES
     <string name="quick_start_sites">Seguintes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">Goza do teu produto terminado!</string>
-    <string name="quick_start_dialog_upload_icon_title">Sube un icona do sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver o teu plan actual e outros plans dispoñibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icona do teu sitio %2$s para subir un novo</string>
-    <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica a túa primeira entrada.</string>
     <string name="quick_start_dialog_need_help_message">Levarémoste polas bases sobre como crear e facer crecer o teu sitio.</string>
-    <string name="quick_start_dialog_migration_title">Realizamos algúns cambios na túa lista de comprobación</string>
-    <string name="quick_start_dialog_migration_message">Engadimos máis tarefas para axudarche a facer crecer a túa audiencia.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar plans</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre as ferramentas de marketing e SEO dos nosos plans de pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -1495,7 +1485,6 @@ Language: gl_ES
     <string name="quick_start_dialog_need_help_title">Queres un pouco de axuda para empezar?</string>
     <string name="quick_start_dialog_need_help_button_positive">Aceptar</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
-    <string name="quick_start_dialog_need_help_button_negative">Non, grazas</string>
     <string name="quick_start_dialog_follow_sites_title">Segue outros sitios</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con temáticas similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
