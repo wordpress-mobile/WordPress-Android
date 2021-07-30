@@ -116,7 +116,7 @@ class CommentsMapperTest {
     private fun CommentEntity.toDto(): CommentWPComRestResponse {
         val entity = this
         return CommentWPComRestResponse().apply {
-            ID = entity.remoteCommentId //137
+            ID = entity.remoteCommentId
             URL = entity.url
             author = Author().apply {
                 ID = entity.remoteParentCommentId
@@ -140,7 +140,7 @@ class CommentsMapperTest {
             status = entity.status
         }
     }
-    
+
     private fun CommentEntity.toModel(): CommentModel {
         val entity = this
         return CommentModel().apply {
@@ -211,10 +211,10 @@ class CommentsMapperTest {
     private fun getDefaultCommentList(allowNulls: Boolean): CommentEntityList {
         val comment = getDefaultComment(allowNulls)
         return listOf(
-                comment.copy(id=1, remoteCommentId = 10, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id=2, remoteCommentId = 20, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id=3, remoteCommentId = 30, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id=4, remoteCommentId = 40, datePublished = "2021-07-24T00:51:43+02:00")
+                comment.copy(id = 1, remoteCommentId = 10, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 2, remoteCommentId = 20, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 3, remoteCommentId = 30, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 4, remoteCommentId = 40, datePublished = "2021-07-24T00:51:43+02:00")
         )
     }
 }
