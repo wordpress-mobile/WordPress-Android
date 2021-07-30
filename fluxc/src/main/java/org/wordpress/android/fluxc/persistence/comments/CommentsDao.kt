@@ -112,7 +112,6 @@ abstract class CommentsDao {
         )
     }
 
-
     @Query("SELECT * FROM Comments WHERE id = :localId LIMIT 1")
     abstract suspend fun getCommentById(localId: Long): CommentEntityList
 
@@ -184,7 +183,6 @@ abstract class CommentsDao {
         statuses: List<String>
     ): Int
 
-
     @Query("""
         DELETE FROM Comments 
         WHERE localSiteId = :localSiteId 
@@ -216,7 +214,6 @@ abstract class CommentsDao {
         remoteIds: List<Long>,
         endOfRange: Long
     ): Int
-
 
     @Query("""
         DELETE FROM Comments 
@@ -294,7 +291,7 @@ abstract class CommentsDao {
         val hasParent: Boolean,
         val parentId: Long,
         val iLike: Boolean
-    ){
+    ) {
         @Ignore
         var level: Int = 0
     }
