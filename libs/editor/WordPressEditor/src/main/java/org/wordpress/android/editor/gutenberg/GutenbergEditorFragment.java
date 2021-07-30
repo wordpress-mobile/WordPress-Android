@@ -835,14 +835,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
 
-        String removedNotice = getString(R.string.featured_image_removed_notice);
-        String confirmationNotice = getString(R.string.featured_image_confirmation_notice);
-        String undoLimitationsNotice = getString(R.string.notice_undo_limitations);
-
         if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
-            showNotice(removedNotice + " " + undoLimitationsNotice);
+            showNotice(getString(R.string.featured_image_removed_notice));
         } else {
-            showNotice(confirmationNotice + " " + undoLimitationsNotice);
+            showNotice(getString(R.string.featured_image_confirmation_notice));
         }
     }
 

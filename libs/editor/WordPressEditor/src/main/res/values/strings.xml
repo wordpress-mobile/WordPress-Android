@@ -133,9 +133,7 @@
     <string name="featured_image_replace_dialog_confirm">Replace</string>
     <string name="featured_image_replace_dialog_cancel">Cancel</string>
 
-    <string name="featured_image_confirmation_notice">Set as featured image.</string>
-    <string name="featured_image_removed_notice">Removed as featured image.</string>
-
-    <string name="notice_undo_limitations">(Note, this action can only be undone within the block\'s settings or the Post Settings panel.)</string>
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
 
 </resources>
