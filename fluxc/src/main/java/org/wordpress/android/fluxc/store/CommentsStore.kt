@@ -135,7 +135,7 @@ class CommentsStore
                     commentsDao.insertOrUpdateComment(comment)
                 }
                 CommentsActionPayload(CommentsActionEntityIds(entityIds, entityIds.size))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -158,7 +158,7 @@ class CommentsStore
             payload.response?.let {
                 val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(it)
                 CommentsActionPayload(CommentsActionData(cachedCommentAsList, cachedCommentAsList.size))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -176,7 +176,7 @@ class CommentsStore
                 val commentUpdated = it.copy(id = comment.id)
                 val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentUpdated)
                 CommentsActionPayload(CommentsActionData(cachedCommentAsList, cachedCommentAsList.size))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -198,7 +198,7 @@ class CommentsStore
                 val commentUpdated = it.copy(id = reply.id)
                 val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentUpdated)
                 CommentsActionPayload(CommentsActionData(cachedCommentAsList, cachedCommentAsList.size))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -216,7 +216,7 @@ class CommentsStore
                 val commentUpdated = it.copy(id = comment.id)
                 val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentUpdated)
                 CommentsActionPayload(CommentsActionData(cachedCommentAsList, cachedCommentAsList.size))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -245,7 +245,7 @@ class CommentsStore
         } else {
             val targetComment = when {
                 site.isUsingWpComRestApi && payload.response == null -> {
-                    return CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+                    return CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
                 }
                 site.isUsingWpComRestApi && payload.response != null -> {
                     val commentFromEndpoint: CommentEntity = payload.response
@@ -327,7 +327,7 @@ class CommentsStore
                 } ?: Pair(0, updatedComment.toListOrEmpty())
 
                 CommentsActionPayload(CommentsActionData(likedCommentAsList, rowsAffected))
-            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, ""))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
         }
     }
 
@@ -406,11 +406,10 @@ class CommentsStore
         remoteCommentId: Long,
         newStatus: CommentStatus
     ): CommentsActionPayload<CommentsActionData> {
-        // TODOD: add message to all CommentError to be used in logs (since not localized) in the WPAndroid
         val comment = commentsDao.getCommentsByLocalSiteAndRemoteCommentId(
                 site.id,
                 remoteCommentId
-        ).firstOrNull() ?: return CommentsActionPayload(CommentError(INVALID_INPUT, ""))
+        ).firstOrNull() ?: return CommentsActionPayload(CommentError(INVALID_INPUT, "Comment cannot be null!"))
 
         val commentToModerate = comment.copy(status = newStatus.toString())
         val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentToModerate)
@@ -433,7 +432,7 @@ class CommentsStore
         val comment = commentsDao.getCommentsByLocalSiteAndRemoteCommentId(
                 site.id,
                 remoteCommentId
-        ).firstOrNull() ?: return CommentsActionPayload(CommentError(INVALID_INPUT, ""))
+        ).firstOrNull() ?: return CommentsActionPayload(CommentError(INVALID_INPUT, "Comment cannot be null!"))
 
         return pushComment(site, comment)
     }
