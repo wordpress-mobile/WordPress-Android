@@ -290,9 +290,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
-            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
-                predefinedEventProperties.put("type", "positive");
-                break;
             case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -1750,10 +1747,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
-            case QUICK_START_MIGRATION_DIALOG_VIEWED:
-                return "quick_start_migration_dialog_viewed";
-            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
-                return "quick_start_migration_dialog_button_tapped";
             case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_remove_dialog_button_tapped";
@@ -2103,6 +2096,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_reminders_cancelled";
             case BLOGGING_REMINDERS_NOTIFICATION_RECEIVED:
                 return "blogging_reminders_notification_received";
+            case LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED:
+                return "login_epilogue_choose_site_tapped";
+            case LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED:
+                return "login_epilogue_create_new_site_tapped";
         }
         return null;
     }

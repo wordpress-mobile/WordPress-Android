@@ -2,6 +2,8 @@ package org.wordpress.android.ui.screenshots;
 
 import android.provider.Settings;
 
+import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -20,15 +22,19 @@ import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
+import static org.wordpress.android.support.WPSupportUtils.childAtPosition;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
@@ -113,14 +119,24 @@ public class JPScreenshotTest extends BaseTest {
     private void navigateBackupDownload() {
         moveToBackup();
 
-        onView(withId(R.id.log_list_view))
-                .check(matches(hasDescendant(withText(containsString("plugins"))))).perform(click());
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.action_button), withContentDescription("Activity Log action button"),
+                        childAtPosition(
+                                allOf(withId(R.id.activity_content_container),
+                                        childAtPosition(
+                                                withId(R.id.log_list_view),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.activityDownloadBackupButton);
+        DataInteraction linearLayout = onData(anything())
+                .inAdapterView(childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(1);
+        linearLayout.perform(click());
 
-        if (isElementDisplayed(R.id.activityDownloadBackupButton)) {
-            clickOn(R.id.activityDownloadBackupButton);
-        }
 
         setNightModeAndWait(false);
         takeScreenshot("4-back-up-your-site-at-any-moment");

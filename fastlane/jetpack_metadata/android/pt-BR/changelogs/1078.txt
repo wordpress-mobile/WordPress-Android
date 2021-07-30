@@ -1,0 +1,3 @@
+17.8:
+Adicionamos personalização de plano de fundo/cor para blocos de texto.
+Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.

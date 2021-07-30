@@ -25,11 +25,13 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -44,7 +46,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    interface OnSiteClickListener {
+    public interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
 
         boolean onSiteLongClick(SiteRecord site);
@@ -99,6 +101,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mIsMultiSelectEnabled;
     private final boolean mIsInSearchMode;
     private boolean mShowHiddenSites = false;
+    private final boolean mShowAndReturn;
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
     private SiteList mAllSites;
@@ -123,6 +126,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
@@ -157,7 +162,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              boolean isInEditMode
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                null, null, null, sitePickerMode, isInEditMode);
+                null, null, null, sitePickerMode, isInEditMode, false);
     }
 
     public SitePickerAdapter(Context context,
@@ -170,7 +175,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @Nullable ArrayList<Integer> ignoreSitesIds
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false);
+                headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false, false);
     }
 
     public SitePickerAdapter(Context context,
@@ -182,10 +187,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @NonNull ViewHolderHandler<?> headerHandler,
                              @Nullable ViewHolderHandler<?> footerHandler,
                              ArrayList<Integer> ignoreSitesIds,
-                             SitePickerMode sitePickerMode
+                             SitePickerMode sitePickerMode,
+                             boolean showAndReturn
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, footerHandler, ignoreSitesIds, sitePickerMode, false);
+                headerHandler, footerHandler, ignoreSitesIds, sitePickerMode, false, showAndReturn);
     }
 
     public SitePickerAdapter(Context context,
@@ -198,7 +204,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @Nullable ViewHolderHandler<?> footerHandler,
                              @Nullable ArrayList<Integer> ignoreSitesIds,
                              SitePickerMode sitePickerMode,
-                             boolean isInEditMode
+                             boolean isInEditMode,
+                             boolean showAndReturn
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -232,6 +239,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSitePickerMode = sitePickerMode;
 
         mShowHiddenSites = isInEditMode; // If site picker is in edit mode, show hidden sites.
+
+        mShowAndReturn = showAndReturn;
 
         loadSites();
     }
@@ -280,7 +289,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedCountListener = listener;
     }
 
-    void setOnSiteClickListener(OnSiteClickListener listener) {
+    public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
         notifyDataSetChanged();
     }
@@ -455,7 +464,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        return (position >= 0 && position < mSites.size());
+        if (isNewLoginEpilogueScreenEnabled()) {
+            return (position >= 0 && position <= mSites.size());
+        } else {
+            return (position >= 0 && position < mSites.size());
+        }
+    }
+
+    private boolean isNewLoginEpilogueScreenEnabled() {
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     /*
