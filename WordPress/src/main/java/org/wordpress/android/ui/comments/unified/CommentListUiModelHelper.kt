@@ -4,9 +4,6 @@ import okhttp3.internal.toImmutableList
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.CommentStatus
-import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
-import org.wordpress.android.fluxc.model.CommentStatus.DELETED
-import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
@@ -14,8 +11,6 @@ import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
 import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel.Hidden
-import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel.Visible
-import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.BatchModerationStatus.AskingToModerate
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ClickAction
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
@@ -129,40 +124,42 @@ class CommentListUiModelHelper @Inject constructor(
         selectedComments: List<SelectedComment>?,
         commentListFilter: CommentFilter
     ): ActionModeUiModel {
-        if (selectedComments.isNullOrEmpty()) {
-            return Hidden
-        }
-        val title: UiString? = when (val numSelected = selectedComments.size) {
-            0 -> null
-            else -> {
-                UiStringText(String.format(resourceProvider.getString(string.cab_selected), numSelected))
-            }
-        }
+        return Hidden
 
-        val approveActionUiModel = ActionUiModel(
-                true,
-                selectedComments.any { it.status == UNAPPROVED || it.status == CommentStatus.SPAM })
-        val unaproveActionUiModel = ActionUiModel(
-                true,
-                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) &&
-                        selectedComments.any { it.status == APPROVED }
-        )
-        val spamActionUiModel = ActionUiModel(commentListFilter != SPAM, true)
-        val unspamActionUiModel = ActionUiModel(commentListFilter == SPAM, true)
-        val trashActionUiModel = ActionUiModel(commentListFilter != TRASHED, true)
-        val unTrashActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
-        val deleteActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
-
-        return Visible(
-                title,
-                approveActionUiModel,
-                unaproveActionUiModel,
-                spamActionUiModel,
-                unspamActionUiModel,
-                trashActionUiModel,
-                unTrashActionUiModel,
-                deleteActionUiModel
-        )
+//        if (selectedComments.isNullOrEmpty()) {
+//            return Hidden
+//        }
+//        val title: UiString? = when (val numSelected = selectedComments.size) {
+//            0 -> null
+//            else -> {
+//                UiStringText(String.format(resourceProvider.getString(string.cab_selected), numSelected))
+//            }
+//        }
+//
+//        val approveActionUiModel = ActionUiModel(
+//                true,
+//                selectedComments.any { it.status == UNAPPROVED || it.status == CommentStatus.SPAM })
+//        val unaproveActionUiModel = ActionUiModel(
+//                true,
+//                (commentListFilter != TRASHED && commentListFilter != SPAM && commentListFilter != PENDING) &&
+//                        selectedComments.any { it.status == APPROVED }
+//        )
+//        val spamActionUiModel = ActionUiModel(commentListFilter != SPAM, true)
+//        val unspamActionUiModel = ActionUiModel(commentListFilter == SPAM, true)
+//        val trashActionUiModel = ActionUiModel(commentListFilter != TRASHED, true)
+//        val unTrashActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
+//        val deleteActionUiModel = ActionUiModel(commentListFilter == TRASHED, true)
+//
+//        return Visible(
+//                title,
+//                approveActionUiModel,
+//                unaproveActionUiModel,
+//                spamActionUiModel,
+//                unspamActionUiModel,
+//                trashActionUiModel,
+//                unTrashActionUiModel,
+//                deleteActionUiModel
+//        )
     }
 
     data class CommentList(val comments: List<UnifiedCommentListItem>, val hasMore: Boolean)
@@ -173,48 +170,49 @@ class CommentListUiModelHelper @Inject constructor(
         onModerateComments: (comment: CommentStatus) -> Unit,
         onCancel: () -> Unit
     ): ConfirmationDialogUiModel {
-        if (batchModerationStatus is AskingToModerate) {
-            return when (batchModerationStatus.commentStatus) {
-                DELETED -> {
-                    val messageResId = if (selectedComments.size > 1) {
-                        string.dlg_sure_to_delete_comments
-                    } else {
-                        string.dlg_sure_to_delete_comment
-                    }
-                    ConfirmationDialogUiModel.Visible(
-                            title = string.delete,
-                            message = messageResId,
-                            positiveButton = string.yes,
-                            negativeButton = string.no,
-                            confirmAction = {
-                                onModerateComments.invoke(batchModerationStatus.commentStatus)
-                            },
-                            cancelAction = {
-                                onCancel.invoke()
-                            }
-                    )
-                }
-                TRASH -> {
-                    ConfirmationDialogUiModel.Visible(
-                            title = string.trash,
-                            message = string.dlg_confirm_trash_comments,
-                            positiveButton = string.dlg_confirm_action_trash,
-                            negativeButton = string.dlg_cancel_action_dont_trash,
-                            confirmAction = {
-                                onModerateComments.invoke(batchModerationStatus.commentStatus)
-                            },
-                            cancelAction = {
-                                onCancel.invoke()
-                            }
-                    )
-                }
-                else -> {
-                    ConfirmationDialogUiModel.Hidden
-                }
-            }
-        } else {
-            return ConfirmationDialogUiModel.Hidden
-        }
+        return ConfirmationDialogUiModel.Hidden
+//        if (batchModerationStatus is AskingToModerate) {
+//            return when (batchModerationStatus.commentStatus) {
+//                DELETED -> {
+//                    val messageResId = if (selectedComments.size > 1) {
+//                        string.dlg_sure_to_delete_comments
+//                    } else {
+//                        string.dlg_sure_to_delete_comment
+//                    }
+//                    ConfirmationDialogUiModel.Visible(
+//                            title = string.delete,
+//                            message = messageResId,
+//                            positiveButton = string.yes,
+//                            negativeButton = string.no,
+//                            confirmAction = {
+//                                onModerateComments.invoke(batchModerationStatus.commentStatus)
+//                            },
+//                            cancelAction = {
+//                                onCancel.invoke()
+//                            }
+//                    )
+//                }
+//                TRASH -> {
+//                    ConfirmationDialogUiModel.Visible(
+//                            title = string.trash,
+//                            message = string.dlg_confirm_trash_comments,
+//                            positiveButton = string.dlg_confirm_action_trash,
+//                            negativeButton = string.dlg_cancel_action_dont_trash,
+//                            confirmAction = {
+//                                onModerateComments.invoke(batchModerationStatus.commentStatus)
+//                            },
+//                            cancelAction = {
+//                                onCancel.invoke()
+//                            }
+//                    )
+//                }
+//                else -> {
+//                    ConfirmationDialogUiModel.Hidden
+//                }
+//            }
+//        } else {
+//            return ConfirmationDialogUiModel.Hidden
+//        }
     }
 
     internal fun buildCommentList(
@@ -245,18 +243,8 @@ class CommentListUiModelHelper @Inject constructor(
                 list.add(SubHeader(getFormattedDate(commentModel), -1))
             }
 
-            val toggleAction = ToggleAction(
-                    commentModel,
-                    // commentModel.remoteCommentId,
-                    // CommentStatus.fromString(commentModel.status),
-                    onToggle
-            )
-            val clickAction = ClickAction(
-                    commentModel,
-                    // commentModel.remoteCommentId,
-                    // CommentStatus.fromString(commentModel.status),
-                    onClick
-            )
+            val toggleAction = ToggleAction(commentModel, onToggle)
+            val clickAction = ClickAction(commentModel, onClick)
 
             val isSelected = selectedComments?.any { it.remoteCommentId == commentModel.remoteCommentId }
             val isPending = commentModel.status == UNAPPROVED.toString()
