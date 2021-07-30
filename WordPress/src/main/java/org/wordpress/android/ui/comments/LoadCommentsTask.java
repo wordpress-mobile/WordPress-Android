@@ -23,7 +23,6 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
         void loadingFinished(CommentList commentList);
     }
 
-    //private final CommentStore mCommentStore;
     private final CommentsStoreAdapter mCommentsStoreAdapter;
     private final CommentStatus mStatusFilter;
     private final SiteModel mSite;

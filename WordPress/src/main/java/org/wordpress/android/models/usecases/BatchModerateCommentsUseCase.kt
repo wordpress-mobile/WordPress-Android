@@ -31,8 +31,8 @@ class BatchModerateCommentsUseCase @Inject constructor(
         manageAction(OnModerateComments(parameters))
     }
 
-    sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType,
+    sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
+            DoNotCare, CommentsUseCaseType,
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(

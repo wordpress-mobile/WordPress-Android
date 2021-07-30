@@ -35,6 +35,7 @@ class CommentListUiModelHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
+    @Suppress("LongParameterList")
     internal fun buildUiModel(
         commentFilter: CommentFilter,
         commentsPagingResult: CommentsPagingResult,
@@ -215,6 +216,7 @@ class CommentListUiModelHelper @Inject constructor(
 //        }
     }
 
+    @Suppress("LongParameterList")
     internal fun buildCommentList(
         commentsDataResult: CommentsPagingResult,
         selectedComments: List<SelectedComment>?,

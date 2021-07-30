@@ -11,6 +11,7 @@ class UnrepliedCommentsUtils @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
+    @Suppress("NestedBlockDepth")
     fun getUnrepliedComments(comments: CommentEntityList): CommentEntityList {
         val leveler = UnifiedCommentLeveler(comments)
         val leveledComments = leveler.createLevelList()

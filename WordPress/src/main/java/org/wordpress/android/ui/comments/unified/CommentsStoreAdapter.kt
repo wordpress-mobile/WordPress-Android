@@ -115,10 +115,12 @@ class CommentsStoreAdapter @Inject constructor(
         }
     }
 
+    @Suppress("FunctionParameterNaming")
     fun register(`object`: Any?) {
         dispatcher.register(`object`)
     }
 
+    @Suppress("FunctionParameterNaming")
     fun unregister(`object`: Any?) {
         dispatcher.unregister(`object`)
     }

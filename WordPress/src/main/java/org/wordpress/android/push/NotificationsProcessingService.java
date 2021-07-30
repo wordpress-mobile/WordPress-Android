@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-//import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
@@ -92,10 +91,8 @@ public class NotificationsProcessingService extends Service {
     private QuickActionProcessor mQuickActionProcessor;
     private List<Long> mActionedCommentsRemoteIds = new ArrayList<>();
 
-    //@Inject Dispatcher mDispatcher;
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
-    //@Inject CommentStore mCommentStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
 
@@ -603,7 +600,8 @@ public class NotificationsProcessingService extends Service {
             keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
             // Push the comment
-            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment)));
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder
+                    .newPushCommentAction(new RemoteCommentPayload(site, comment)));
         }
 
         private void replyToComment() {
@@ -615,8 +613,8 @@ public class NotificationsProcessingService extends Service {
             if (!TextUtils.isEmpty(mReplyText)) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
                 if (site == null) {
-                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App. SiteId: "
-                                       + mNote.getSiteId());
+                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
+                                       + " SiteId: " + mNote.getSiteId());
                     requestFailed(ARG_ACTION_APPROVE);
                     return;
                 }

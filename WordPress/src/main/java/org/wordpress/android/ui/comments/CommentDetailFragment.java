@@ -184,9 +184,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private float mNormalOpacity = 1f;
     private float mMediumOpacity;
 
-    //@Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
-    //@Inject CommentStore mCommentStore;
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;

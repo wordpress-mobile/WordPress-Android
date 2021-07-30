@@ -100,7 +100,6 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
         localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
 
-
         runBlocking {
             `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
         }.thenReturn(testCommentsPayload30)

@@ -14,6 +14,7 @@ import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.viewBinding
 import org.wordpress.android.viewmodel.ResourceProvider
 
+@Suppress("LongParameterList")
 class UnifiedCommentViewHolder(
     parent: ViewGroup,
     private val imageManager: ImageManager,

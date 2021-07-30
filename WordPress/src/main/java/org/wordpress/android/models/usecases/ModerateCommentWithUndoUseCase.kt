@@ -31,8 +31,9 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
         manageAction(OnModerateComment(parameters))
     }
 
-    sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType,
+    @Suppress("LongMethod")
+    sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
+            Any, CommentsUseCaseType,
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(

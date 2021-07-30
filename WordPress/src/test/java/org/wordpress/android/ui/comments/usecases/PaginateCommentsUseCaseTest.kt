@@ -54,7 +54,6 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
-
     @Before
     fun setup() {
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
@@ -95,7 +94,6 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 40, 30, PENDING)))
 
-
         verify(commentStore, times(1)).fetchCommentsPage(
                 site,
                 40,
@@ -105,21 +103,15 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         )
     }
 
-
     @Test
     fun `comments are filtered when they are requested with unreplied filter`() = runBlockingTest {
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 0, ALL)))
 
-        verify(unrepliedCommentsUtils, times(0)).getUnrepliedComments(
-                any()
-        )
+        verify(unrepliedCommentsUtils, times(0)).getUnrepliedComments(any())
 
         paginateCommentsUseCase.manageAction(OnGetPage(GetPageParameters(site, 30, 0, UNREPLIED)))
 
-
-        verify(unrepliedCommentsUtils, times(1)).getUnrepliedComments(
-                any()
-        )
+        verify(unrepliedCommentsUtils, times(1)).getUnrepliedComments(any())
     }
 
     @Test

@@ -31,8 +31,8 @@ class PaginateCommentsUseCase @Inject constructor(
         manageAction(OnGetPage(parameters))
     }
 
-    sealed class PaginateCommentsState
-        : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType,
+    sealed class PaginateCommentsState : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction,
+            PagingData, CommentsUseCaseType,
             CommentError> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(

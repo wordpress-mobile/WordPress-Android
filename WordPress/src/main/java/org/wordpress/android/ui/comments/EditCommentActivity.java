@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-//import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -65,10 +64,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
     private AlertDialog mCancelEditCommentDialog;
 
-    //@Inject Dispatcher mDispatcher;
     @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
-    //@Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -233,7 +230,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
         showSaveDialog();
         mComment.setContent(getEditTextStr(R.id.edit_comment_content));
-        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+        mCommentsStoreAdapter.dispatch(CommentActionBuilder
+                .newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
     }
 
     /*
