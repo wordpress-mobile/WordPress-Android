@@ -74,8 +74,8 @@ dependencies {
     kapt "org.wordpress:wellsql-processor:$wellSqlVersion"
 
     // FluxC annotations
-    api project(':fluxc-annotations')
-    kapt project(':fluxc-processor')
+    api fluxcAnnotationsProjectDependency
+    kapt fluxcProcessorProjectDependency
 
     // External libs
     api 'org.greenrobot:eventbus:3.2.0'
@@ -112,12 +112,6 @@ project.afterEvaluate {
                 groupId "org.wordpress"
                 artifactId "fluxc"
                 // version is set by 'publish-to-s3' plugin
-
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
-                    }
-                }
             }
         }
    }
