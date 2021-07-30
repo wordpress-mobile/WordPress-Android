@@ -18,7 +18,6 @@ import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_
 import org.wordpress.android.usecase.FlowFSMUseCase
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
-import org.wordpress.android.usecase.UseCaseResult.Success
 import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
@@ -63,7 +62,6 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                     if (localModerationResult.isError) {
                                         return@async localModerationResult
                                     } else {
-                                        flowChannel.emit(Success(BATCH_MODERATE_USE_CASE, DoNotCare))
                                         resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
 
@@ -87,7 +85,6 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                                 remoteCommentId = it,
                                                 newStatus = CommentStatus.fromString(commentBeforeModeration.status)
                                         )
-                                        flowChannel.emit(Success(BATCH_MODERATE_USE_CASE, DoNotCare))
                                         resourceProvider.localCommentCacheUpdateHandler.requestCommentsUpdate()
                                     }
                                     return@async result

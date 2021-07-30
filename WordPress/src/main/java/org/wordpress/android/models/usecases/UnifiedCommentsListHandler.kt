@@ -17,8 +17,8 @@ import javax.inject.Inject
 class UnifiedCommentsListHandler @Inject constructor(
         // @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val paginateCommentsUseCase: PaginateCommentsUseCase,
-    val batchModerationUseCase: BatchModerateCommentsUseCase,
-    val moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
+    private val batchModerationUseCase: BatchModerateCommentsUseCase,
+    private val moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
 ) {
     private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationWithUndoUseCase)
 

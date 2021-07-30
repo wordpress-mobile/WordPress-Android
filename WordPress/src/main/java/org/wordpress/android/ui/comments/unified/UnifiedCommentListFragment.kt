@@ -104,10 +104,10 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                     val recyclerViewState = commentsRecyclerView?.layoutManager?.onSaveInstanceState()
                     commentsRecyclerView.post {
                         adapter.submitList(uiState.commentData.comments)
-                        (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-                            if (layoutManager.findFirstVisibleItemPosition() <
-                                    MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
-                                commentsRecyclerView.post {
+                        commentsRecyclerView.post {
+                            (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                                if (layoutManager.findFirstVisibleItemPosition() <
+                                        MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
                                     layoutManager.onRestoreInstanceState(recyclerViewState)
                                 }
                             }
