@@ -110,7 +110,7 @@ class CommentsMapper @Inject constructor(
         val datePublished = dateTimeUtilsWrapper.iso8601UTCFromDate(
                 XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", Date())
         )
-        // TODOD: use a wrapper for XMLRPCUtils?
+
         val remoteParentCommentId = XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0L)
 
         return CommentEntity(
