@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -29,7 +28,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Inject lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+//    @Inject lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel

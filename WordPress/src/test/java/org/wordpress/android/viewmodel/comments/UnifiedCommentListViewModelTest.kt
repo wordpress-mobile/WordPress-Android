@@ -27,11 +27,6 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_E
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
-import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase
-import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase
-import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
@@ -69,14 +64,14 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
-    @Mock private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
+//    @Mock private lateinit var moderateCommentsResourceProvider: ModerateCommentsResourceProvider
 
     @Mock private lateinit var commentStore: CommentsStore
-    private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+//    private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
     private lateinit var paginateCommentsUseCase: PaginateCommentsUseCase
-    private lateinit var batchModerateCommentsUseCase: BatchModerateCommentsUseCase
-    private lateinit var moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
-    private lateinit var localCommentCacheUpdateUseCase: LocalCommentCacheUpdateUseCase
+//    private lateinit var batchModerateCommentsUseCase: BatchModerateCommentsUseCase
+//    private lateinit var moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
+//    private lateinit var localCommentCacheUpdateUseCase: LocalCommentCacheUpdateUseCase
 
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
 
@@ -88,17 +83,17 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
-        moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
+//        batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
+//        moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)
         unifiedCommentsListHandler = UnifiedCommentsListHandler(
-                paginateCommentsUseCase,
-                batchModerateCommentsUseCase,
-                moderationWithUndoUseCase
+                paginateCommentsUseCase
+//                batchModerateCommentsUseCase,
+//                moderationWithUndoUseCase
         )
 
-        localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
-        localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
+//        localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
+//        localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
 
         runBlocking {
             `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
@@ -117,8 +112,8 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
-                unifiedCommentsListHandler,
-                localCommentCacheUpdateHandler
+                unifiedCommentsListHandler
+//                localCommentCacheUpdateHandler
         )
     }
 

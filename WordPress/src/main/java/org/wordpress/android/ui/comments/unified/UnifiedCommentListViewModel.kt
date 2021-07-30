@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.CommentsUseCaseType
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
@@ -50,8 +49,8 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
-    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    private val unifiedCommentsListHandler: UnifiedCommentsListHandler
+//    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter

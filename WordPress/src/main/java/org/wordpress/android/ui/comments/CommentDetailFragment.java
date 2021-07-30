@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
-import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
@@ -112,11 +111,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import kotlinx.coroutines.BuildersKt;
-import kotlinx.coroutines.CoroutineStart;
-import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.GlobalScope;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -191,7 +185,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject ImageManager mImageManager;
     @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
-    @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
+//    @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -1416,12 +1410,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
         // requesting local comment cache refresh
-        BuildersKt.launch(GlobalScope.INSTANCE,
-                Dispatchers.getMain(),
-                CoroutineStart.DEFAULT,
-                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
-
-        );
+//        BuildersKt.launch(GlobalScope.INSTANCE,
+//                Dispatchers.getMain(),
+//                CoroutineStart.DEFAULT,
+//                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
+//
+//        );
         // Moderating comment
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             onCommentModerated(event);
