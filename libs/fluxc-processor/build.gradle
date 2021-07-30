@@ -24,6 +24,12 @@ project.afterEvaluate {
                 groupId "org.wordpress.fluxc"
                 artifactId "fluxc-processor"
                 // version is set by 'publish-to-s3' plugin
+
+                versionMapping {
+                    usage(':fluxc-annotations') {
+                        fromResolutionResult()
+                    }
+                }
             }
         }
    }
