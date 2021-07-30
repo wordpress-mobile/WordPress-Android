@@ -114,10 +114,7 @@ project.afterEvaluate {
                 // version is set by 'publish-to-s3' plugin
 
                 versionMapping {
-                    usage('fluxc-annotations') {
-                        fromResolutionResult()
-                    }
-                    usage('fluxc-processor') {
+                    allVariants {
                         fromResolutionResult()
                     }
                 }
