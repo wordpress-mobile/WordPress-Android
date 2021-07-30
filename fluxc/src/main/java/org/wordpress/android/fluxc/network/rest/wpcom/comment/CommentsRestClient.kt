@@ -67,7 +67,6 @@ class CommentsRestClient @Inject constructor(
         }
     }
 
-
     suspend fun pushComment(site: SiteModel, comment: CommentEntity): CommentsApiPayload<CommentEntity> {
         val url = WPCOMREST.sites.site(site.siteId).comments.comment(comment.remoteCommentId).urlV1_1
 
@@ -144,7 +143,7 @@ class CommentsRestClient @Inject constructor(
         val url = WPCOMREST.sites.site(site.siteId).comments.comment(remoteCommentId).replies.new_.urlV1_1
 
         val request = mutableMapOf(
-                "content" to replayContent.orEmpty(),
+                "content" to replayContent.orEmpty()
         )
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -173,7 +172,7 @@ class CommentsRestClient @Inject constructor(
         val url = WPCOMREST.sites.site(site.siteId).posts.post(remotePostId).replies.new_.urlV1_1
 
         val request = mutableMapOf(
-                "content" to content.orEmpty(),
+                "content" to content.orEmpty()
         )
 
         val response = wpComGsonRequestBuilder.syncPostRequest(

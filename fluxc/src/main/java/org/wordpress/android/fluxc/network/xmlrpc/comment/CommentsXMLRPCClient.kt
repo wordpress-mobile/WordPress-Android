@@ -67,7 +67,7 @@ class CommentsXMLRPCClient @Inject constructor(
                 clazz = Array<Any>::class.java
         )
 
-        return when(response) {
+        return when (response) {
             is Success -> {
                 CommentsApiPayload(commentsMapper.commentXmlRpcDTOToEntityList(response.data, site))
             }
@@ -100,7 +100,7 @@ class CommentsXMLRPCClient @Inject constructor(
                 clazz = Any::class.java
         )
 
-        return when(response) {
+        return when (response) {
             is Success -> {
                 CommentsApiPayload(comment)
             }
@@ -126,7 +126,7 @@ class CommentsXMLRPCClient @Inject constructor(
                 clazz = Map::class.java
         )
 
-        return when(response) {
+        return when (response) {
             is Success -> {
                 CommentsApiPayload(commentsMapper.commentXmlRpcDTOToEntity(response.data, site))
             }
@@ -149,10 +149,10 @@ class CommentsXMLRPCClient @Inject constructor(
                 url = site.xmlRpcUrl,
                 method = XMLRPC.DELETE_COMMENT,
                 params = params,
-                clazz = Any::class.java, // TODOD: better check this!
+                clazz = Any::class.java
         )
 
-        return when(response) {
+        return when (response) {
             is Success -> {
                 // This is ugly but the XMLRPC response doesn't contain any info about the updated comment.
                 // TODOD: check in debug that response doesn't contain any info
@@ -171,7 +171,7 @@ class CommentsXMLRPCClient @Inject constructor(
     ): CommentsApiPayload<CommentEntity> {
         val commentParams = mutableMapOf<String, Any?>(
                 "content" to reply.content,
-                "comment_parent" to comment.remoteCommentId,
+                "comment_parent" to comment.remoteCommentId
         )
 
         if (reply.authorName != null) {
@@ -195,7 +195,7 @@ class CommentsXMLRPCClient @Inject constructor(
         comment: CommentEntity
     ): CommentsApiPayload<CommentEntity> {
         val commentParams = mutableMapOf<String, Any?>(
-                "content" to comment.content,
+                "content" to comment.content
         )
 
         // TODOD: check how it is possible (if it is) to create a post comment from the app for a self-hsoted!
@@ -238,7 +238,7 @@ class CommentsXMLRPCClient @Inject constructor(
                 clazz = Any::class.java
         )
 
-        return when(response) {
+        return when (response) {
             is Success -> {
                 if (response.data is Int) {
                     val newComment = comment.copy(
