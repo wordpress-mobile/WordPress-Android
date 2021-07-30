@@ -112,8 +112,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
-        state -> buildLikersUiState(state)
+    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map { state ->
+        buildLikersUiState(state)
     }
 
     /**
@@ -136,6 +136,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             return blogId != post.blogId || postId != post.postId || numLikes != post.numLikes
         }
     }
+
     private var lastRenderedLikesData: RenderedLikesData? = null
 
     private val shouldOfferSignIn: Boolean
@@ -246,10 +247,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
-        _uiState.value = LoadingUiState
-
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
+            _uiState.value = LoadingUiState
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
                 FetchReaderPostState.Success -> {
                     getReaderPostFromDb(blogId, postId)
@@ -468,27 +468,31 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                actions = postDetailUiStateBuilder.buildPostActions(
-                        post,
-                        this@ReaderPostDetailViewModel::onButtonClicked
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    actions = postDetailUiStateBuilder.buildPostActions(
+                            post,
+                            this@ReaderPostDetailViewModel::onButtonClicked
+                    )
+            )
+        }
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                localRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.localRelatedPosts,
-                        isGlobal = false
-                ),
-                globalRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.globalRelatedPosts,
-                        isGlobal = true
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    localRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.localRelatedPosts,
+                            isGlobal = false
+                    ),
+                    globalRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.globalRelatedPosts,
+                            isGlobal = true
+                    )
+            )
+        }
     }
 
     private fun trackAndUpdateNotAuthorisedErrorState() {
@@ -587,19 +591,21 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onLikeFacesClicked() {
         post?.let { readerPost ->
-            _navigationEvents.value = Event(ShowEngagedPeopleList(
-                    readerPost.blogId,
-                    readerPost.postId,
-                    HeaderData(
-                            AuthorNameString(readerPost.authorName),
-                            readerPost.title,
-                            readerPost.postAvatar,
-                            readerPost.authorId,
-                            readerPost.authorBlogId,
-                            readerPost.authorBlogUrl,
-                            lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+            _navigationEvents.value = Event(
+                    ShowEngagedPeopleList(
+                            readerPost.blogId,
+                            readerPost.postId,
+                            HeaderData(
+                                    AuthorNameString(readerPost.authorName),
+                                    readerPost.title,
+                                    readerPost.postAvatar,
+                                    readerPost.authorId,
+                                    readerPost.authorBlogId,
+                                    readerPost.authorBlogUrl,
+                                    lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+                            )
                     )
-            ))
+            )
         }
     }
 
