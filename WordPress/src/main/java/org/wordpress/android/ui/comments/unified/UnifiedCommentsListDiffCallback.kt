@@ -18,10 +18,6 @@ class UnifiedCommentsListDiffCallback : DiffUtil.ItemCallback<UnifiedCommentList
         return oldItem == newItem
     }
 
-    /**
-     * Since we don't currently have a logic for updating only a part of the view, this method sends empty Payload
-     * to avoid view blinking in RecyclerView.
-     */
     override fun getChangePayload(oldItem: UnifiedCommentListItem, newItem: UnifiedCommentListItem): Any {
         val bundle = Bundle()
         if (oldItem is Comment && newItem is Comment) {
