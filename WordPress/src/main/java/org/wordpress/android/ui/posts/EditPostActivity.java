@@ -455,7 +455,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
-    private void newPageFromLayoutPickerSetup(String title, String content) {
+    private void newPageFromLayoutPickerSetup(String title, String layoutSlug) {
         mIsNewPost = true;
 
         if (mSite == null) {
@@ -466,12 +466,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showErrorAndFinish(R.string.error_blog_hidden);
             return;
         }
-
+        String content = mSiteStore.getBlockLayoutContent(mSite, layoutSlug);
         // Create a new post
         mEditPostRepository.set(() -> {
-            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content, null,
-                    null, null, false);
-            post.setStatus(PostStatus.DRAFT.toString());
+            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content,
+                    PostStatus.DRAFT.toString(), null, null, false);
             return post;
         });
         mEditPostRepository.savePostSnapshot();
@@ -559,7 +558,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
                     newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
-                            extras.getString(EXTRA_PAGE_CONTENT));
+                            extras.getString(EXTRA_PAGE_TEMPLATE));
                 } else {
                     newPostSetup();
                 }
@@ -3651,6 +3650,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorThemeSupport editorThemeSupport = editorTheme.getThemeSupport();
         ((EditorThemeUpdateListener) mEditorFragment)
                     .onEditorThemeUpdated(editorThemeSupport.toBundle());
+
+        mPostEditorAnalyticsSession
+                .editorSettingsFetched(editorThemeSupport.isFSETheme(), event.getEndpoint().getValue());
     }
     // EditPostActivityHook methods
 

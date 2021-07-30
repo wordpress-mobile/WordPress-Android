@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-07 16:54:08+0000
+Translation-Revision-Date: 2021-07-26 09:54:57+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">رابط غير صالح. الرجاء إدخال عنوان موقع صالح.</string>
+    <string name="gutenberg_native_embed_caption_s">قم بتضمين تسمية توضيحية. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">قم بتضمين تسمية توضيحية. فارغ</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">إضافة رابط</string>
+    <string name="activity_log_visit_our_documentation_page">زيارة صفحة الوثائق الخاصة بنا</string>
+    <string name="activity_log_multisite_message">يوفِّر Jetpack Backup الخاصة بعمليات تثبيت مواقع متعددة نسخًا احتياطية قابلة للتنزيل، ولا يوفِّر عمليات استعادة من نقرة واحدة. لمزيد من المعلومات ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">يمكن أن يساعد النشر بشكل منتظم على الحفاظ على انشغال القراء وجذب زائرين جدد إلى موقعك.</string>
     <string name="blogging_reminders_tip">نصيحة</string>
     <string name="blogging_reminders_select_days_message">يمكنك تحديث هذا في أي وقت</string>
@@ -76,11 +82,11 @@ Language: ar
     <string name="error_media_unexpected_null_value">كانت الوسائط فارغة</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديدات.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديد.</string>
-    <string name="gutenberg_native_add_link">إضافة رابط</string>
     <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
     <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تنصيب إضافة Jetpack المجانية وربطها بحسابك على WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">تحرير رابط</string>
     <string name="login_empty_view_avatar_content_description">صورة ملفك الشخصي</string>
     <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على WordPress.com.</string>
     <string name="gutenberg_native_image_settings">إعدادات الصورة</string>
@@ -97,6 +103,7 @@ Language: ar
     <string name="gutenberg_native_post_content_settings">إعدادات محتوى المقالة</string>
     <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
     <string name="gutenberg_native_featured">مميز</string>
+    <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
@@ -123,8 +130,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
-    <string name="gutenberg_native_no_button">بدون زر</string>
-    <string name="gutenberg_native_search_block">مكوّن بحث</string>
     <string name="gutenberg_native_inside">داخلي</string>
     <string name="gutenberg_native_outside">خارجي</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">أنقر نقرًا مزدوجًا لتحرير نص الزر</string>
@@ -133,14 +138,13 @@ Language: ar
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
     <string name="gutenberg_native_current_placeholder_text_is">نص العنصر النائب الحالي هو</string>
     <string name="gutenberg_native_button_position">موضع الزر</string>
-    <string name="gutenberg_native_button_outside">زر خارجي</string>
-    <string name="gutenberg_native_button_inside">زر داخلي</string>
     <string name="get_likes_empty_state_title">حدث خطأ أثناء الحصول على بيانات الإعجابات</string>
     <string name="get_likes_unknown_error">حدث خطأ غير معروف أثناء الحصول على الإعجابات.</string>
     <string name="comments_empty_list_filtered_unreplied">لا توجد تعليقات لم يتم الرد عليها</string>
     <string name="comment_status_unreplied">لم يتم الرد عليها</string>
     <string name="get_likes_no_network_error">لا توجد شبكة متاحة.</string>
     <string name="gutenberg_native_search_settings">إعدادات البحث</string>
+    <string name="gutenberg_native_add_link">إضافة رابط</string>
     <string name="site_settings_denylist_title">التعليقات غير المسموح بها</string>
     <string name="jetpack_brute_force_allowlist_title">عناوين IP المسموح بها دائمًا</string>
     <string name="gutenberg_native_add_button_text">إضافة نصّ للزر</string>
@@ -186,9 +190,7 @@ Language: ar
     <string name="quick_start_card_menu_unpin">إلغاء تثبيت هذا</string>
     <string name="quick_start_list_enable_sharing_subtitle">شارك المقالات الجديدة تلقائيًّا على وسائل التواصل الاجتماعي الخاصة بك.</string>
     <string name="quick_start_list_view_site_title">زيارة موقعك</string>
-    <string name="quick_start_list_enable_sharing_title">تمكين المشاركة</string>
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
-    <string name="quick_start_list_upload_icon_subtitle">أضف أيقونة موقع للحصول على مظهر جذاب واحترافي.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
     <string name="quick_start_list_check_stats_title">تحقّق من احصائياتك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
@@ -679,7 +681,6 @@ Language: ar
     <string name="get_started">البدء</string>
     <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
-    <string name="quick_start_list_update_site_title_title">تعيين عنوان موقعك</string>
     <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b&gt;⁦%1$s⁩&lt;/b&gt; لتعيين عنوان جديد</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options">خيارات المكوِّن %s</string>
@@ -1293,19 +1294,15 @@ Language: ar
     <string name="quick_start_sites">الخطوات التالية</string>
     <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
     <string name="quick_start_dialog_view_site_message">استمتع بمنتجك النهائي!</string>
-    <string name="quick_start_dialog_upload_icon_title">رفع أيقونة للموقع</string>
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
-    <string name="quick_start_dialog_migration_title">لقد أجرينا بعض التغييرات على قائمة checklist</string>
     <string name="quick_start_dialog_need_help_message">سنوجهك عبر أساسيات بناء موقعك وتنميته.</string>
-    <string name="quick_start_dialog_publish_post_message">قم بنشر مسودّة مقالتك الأولى.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>
-    <string name="quick_start_dialog_migration_message">لقد أضفنا المزيد من المهام لمساعدتك على تنمية جمهورك.</string>
     <string name="quick_start_dialog_enable_sharing_message">شارك المقالات الجديدة تلقائيًّا على حساباتك على وسائل التواصل الاجتماعي.</string>
     <string name="quick_start_dialog_remove_next_steps_title">إزالة الخطوات التالية</string>
     <string name="quick_start_remove_next_steps_menu_title">إزالة هذا</string>
@@ -1490,7 +1487,6 @@ Language: ar
     <string name="quick_start_dialog_need_help_button_neutral">أبدًا</string>
     <string name="quick_start_dialog_follow_sites_title">متابعة مواقع أخرى</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">انقر على %1$sالقاريء%2$s للمتابعة</string>
-    <string name="quick_start_dialog_need_help_button_negative">لا، شكرًا</string>
     <string name="quick_start_dialog_follow_sites_message">يمكنك العثور على المواقع التي تلهمك، ومتابعتها للحصول على التحديثات عندما تقوم بالنشر.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">أنقر على %1$s بحث %2$s للبحث عن مواقع ذات مواضيع مماثلة</string>
     <string name="quick_start_button_positive">انتقال</string>

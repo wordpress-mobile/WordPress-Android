@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-03 12:06:58+0000
+Translation-Revision-Date: 2021-07-20 23:34:17+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
@@ -77,10 +77,10 @@ Language: pt_BR
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Insira as credenciais do seu servidor&lt;/a&gt; para corrigir ameaças.</string>
     <string name="error_media_unexpected_empty_media_file_path">Campo vazio inesperado para o caminho da mídia</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Clique duas vezes para adicionar um link.</string>
-    <string name="gutenberg_native_add_link">ADICIONAR LINK</string>
     <string name="login_empty_view_try_another_account">Tente com outra conta</string>
     <string name="login_empty_view_see_instructions">Ver instruções</string>
     <string name="login_no_jetpack_sites_error_message">Se você já possui um site, precisará instalar o plugin gratuito do Jetpack e conectá-lo à sua conta do WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">EDITAR LINK</string>
     <string name="login_empty_view_avatar_content_description">Sua foto de perfil</string>
     <string name="login_not_a_jetpack_site">Para utilizar este aplicativo em %1$s você precisa ter o plugin Jetpack instalado e conectado à sua conta do WordPress.com. </string>
     <string name="gutenberg_native_move_image_forward">Mover imagem para frente</string>
@@ -97,6 +97,7 @@ Language: pt_BR
     <string name="gutenberg_native_post_meta_settings">Configurações de metadados do post</string>
     <string name="gutenberg_native_post_content_settings">Configurações do conteúdo do post</string>
     <string name="gutenberg_native_featured">Em destaque</string>
+    <string name="gutenberg_native_embed_link">Link da mídia incorporada</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
@@ -118,10 +119,8 @@ Language: pt_BR
     <string name="gutenberg_native_search_block_label_current_text_is">Rótulo do bloco de pesquisa. O texto atual é</string>
     <string name="gutenberg_native_use_icon_button">Usar ícone de botão</string>
     <string name="gutenberg_native_search_input_field">Campo de pesquisa.</string>
-    <string name="gutenberg_native_search_block">Pesquisar bloco</string>
     <string name="gutenberg_native_double_tap_to_change_unit">toque duas vezes para alterar a unidade</string>
     <string name="gutenberg_native_outside">Externo</string>
-    <string name="gutenberg_native_no_button">Sem botão</string>
     <string name="gutenberg_native_inside">Dentro</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nenhum texto de marcação definido</string>
     <string name="gutenberg_native_hide_search_heading">Ocultar título da pesquisa</string>
@@ -137,10 +136,9 @@ Language: pt_BR
     <string name="comments_empty_list_filtered_unreplied">Nenhum comentário não respondido</string>
     <string name="comment_status_unreplied">Não respondido</string>
     <string name="gutenberg_native_button_position">Posição do botão</string>
-    <string name="gutenberg_native_button_outside">Botão externo</string>
-    <string name="gutenberg_native_button_inside">Botão interno</string>
     <string name="gutenberg_native_current_placeholder_text_is">O texto do marcador de posição atual é</string>
     <string name="gutenberg_native_search_settings">Configurações de pesquisa</string>
+    <string name="gutenberg_native_add_link">Adicionar link</string>
     <string name="jetpack_brute_force_allowlist_title">Endereços IP sempre permitidos</string>
     <string name="site_settings_denylist_title">Comentários não permitidos</string>
     <string name="gutenberg_native_add_button_text">Adicionar texto do botão</string>
@@ -186,9 +184,7 @@ Language: pt_BR
     <string name="quick_start_card_menu_unpin">Desafixar isso</string>
     <string name="quick_start_list_view_site_title">Acesse seu site</string>
     <string name="quick_start_list_follow_site_subtitle">Descubra e siga sites que te inspiram.</string>
-    <string name="quick_start_list_enable_sharing_title">Ativar o compartilhamento</string>
     <string name="quick_start_list_enable_sharing_subtitle">Compartilhe novos posts em suas redes sociais automaticamente.</string>
-    <string name="quick_start_list_upload_icon_subtitle">Adicione um ícone ao site para uma aparência profissional e elegante.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e temática.</string>
     <string name="quick_start_list_check_stats_title">Verifique suas estatísticas</string>
     <string name="backup_download_status_failure_bullet2">Ainda tentaremos criar o arquivo de backup para que possa ser baixado.</string>
@@ -679,7 +675,6 @@ Language: pt_BR
     <string name="send_link_by_email">Enviar link por e-mail</string>
     <string name="reset_your_password">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
-    <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="gutenberg_native_s_block_options">Opções do bloco %s</string>
@@ -1292,17 +1287,13 @@ Language: pt_BR
     <string name="quick_start_sites">Próximos passos</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toque em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>
-    <string name="quick_start_dialog_upload_icon_title">Envie um ícone do site</string>
     <string name="quick_start_dialog_view_site_message">Aproveite seu novo site!</string>
     <string name="quick_start_complete_tasks_header">Concluídas (%d)</string>
     <string name="quick_start_sites_type_grow">Aumente seu número de visitantes</string>
     <string name="quick_start_sites_type_customize">Personalize seu site</string>
-    <string name="quick_start_dialog_publish_post_message">Crie um rascunho e publique seu primeiro post.</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos pelos passos básicos em criar um site.</string>
-    <string name="quick_start_dialog_migration_title">Fizemos algumas alterações em sua lista</string>
     <string name="quick_start_dialog_check_stats_message_short">Toque em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toque em %1$s Ícone do seu site %2$s para enviar um ícone</string>
-    <string name="quick_start_dialog_migration_message">Adicionamos mais tarefas para te ajudar a aumentar sua audiência.</string>
     <string name="quick_start_dialog_explore_plans_message">Aprenda mais sobre as ferramentas de marketing e SEO de nossos planos pagos.</string>
     <string name="quick_start_dialog_enable_sharing_title">Ative o compartilhamento de post</string>
     <string name="quick_start_dialog_explore_plans_title">Explore planos</string>
@@ -1489,7 +1480,6 @@ Language: pt_BR
     <string name="quick_start_dialog_publish_post_title">Publique um post</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_message">Encontre sites com conteúdos de seu interesse e siga-os para receber atualizações assim que forem publicadas.</string>
-    <string name="quick_start_dialog_need_help_button_negative">Não obrigado</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toque em %1$s Leitor %2$s para continuar</string>
     <string name="quick_start_dialog_follow_sites_title">Siga outros sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Toque em %1$s Pesquisar %2$s para procurar por sites com assuntos similares</string>

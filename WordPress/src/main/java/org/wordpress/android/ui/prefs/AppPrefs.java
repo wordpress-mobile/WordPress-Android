@@ -162,7 +162,8 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        BLOGGING_REMINDERS_SHOWN
+        BLOGGING_REMINDERS_SHOWN,
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
     }
 
     /**
@@ -220,9 +221,6 @@ public class AppPrefs {
 
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
-
-        // quick start migration dialog is shown only once for all sites
-        HAS_QUICK_START_MIGRATION_SHOWN,
 
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
@@ -1007,15 +1005,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
-
-    public static void setQuickStartMigrationDialogShown(Boolean shown) {
-        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
-    }
-
-    public static boolean hasQuickStartMigrationDialogShown() {
-        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
-    }
-
     public static void setQuickStartNoticeRequired(Boolean shown) {
         setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
     }
@@ -1284,6 +1273,14 @@ public class AppPrefs {
 
     @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
         return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
+    }
+
+    public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
+        setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
+    }
+
+    public static boolean shouldScheduleCreateSiteNotification() {
+        return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
     }
 
     /*

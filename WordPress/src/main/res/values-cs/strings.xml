@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 10:18:52+0000
+Translation-Revision-Date: 2021-07-27 09:07:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Neplatná URL. Zadejte platnou adresu URL.</string>
+    <string name="gutenberg_native_embed_caption_s">Vložit titulek. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Vložit titulek. Prázdný</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">PŘIDAT ODKAZ</string>
+    <string name="activity_log_visit_our_documentation_page">navštivte naši stránku s dokumentací</string>
+    <string name="activity_log_multisite_message">Jetpack Backup pro instalace na více webů poskytuje zálohy ke stažení, žádné obnovení jediným kliknutím. Další informace %1$s.</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_tip_message">Pravidelné zveřejňování příspěvků může pomoci vašim čtenářům zaujmout a přilákat na váš web nové návštěvníky.</string>
+    <string name="blogging_reminders_select_days_message">Toto můžete kdykoli aktualizovat</string>
+    <string name="blogging_reminders_select_days">Vyberte dny, ve kterých chcete blogovat</string>
+    <string name="blogging_reminders_epilogue_caption">Tuto položku můžete kdykoli aktualizovat na stránce Můj web&gt; Nastavení&gt; Připomenutí blogů.</string>
+    <string name="blogging_reminders_epilogue_title">Vše připraveno!</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Nemáte nastavena žádná připomenutí.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Dostanete připomenutí blogovat &lt;b&gt;každý den&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Dostanete připomenutí blogovat %1$s týdně na %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Připomenutí odstraněny!</string>
+    <string name="blogging_reminders_update">Aktualizace</string>
+    <string name="blogging_reminders_not_set">Žádná sada</string>
+    <string name="blogging_reminders_n_a_week">%s za týden</string>
+    <string name="set_your_blogging_reminders_button">Nastavit připomenutí</string>
+    <string name="set_up_blogging_reminders_message">Nastavte připomenutí blogů na dny, které chcete zveřejnit.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Váš příspěvek se publikuje… mezitím můžete nastavit připomenutí blogů na dny, které chcete zveřejnit.</string>
+    <string name="set_your_blogging_reminders_title">Nastavte si připomenutí blogů</string>
+    <string name="blogging_reminders_notification_text">Toto je vaše připomenutí, abyste dnes něco vytvořili</string>
+    <string name="blogging_reminders_notification_title">Je čas blogovat na %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro iOS podporovány</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Úpravy opakovaně použitelných bloků zatím nejsou na WordPressu pro Android podporovány</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativně můžete tyto bloky oddělit a upravit samostatně klepnutím na „Převést na běžné bloky“.</string>
     <string name="blogging_reminders_done">Hotovo</string>
     <string name="blogging_reminders_notify_me">Informujte mě</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Zadejte přihlašovací údaje k serveru&lt;/a&gt; a povolte obnovování stránek jedním kliknutím ze záloh.</string>
@@ -54,7 +82,7 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
-    <string name="gutenberg_native_add_link">Přidat odkaz</string>
+    <string name="gutenberg_native_edit_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
     <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
@@ -75,6 +103,7 @@ Language: cs_CZ
     <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
     <string name="gutenberg_native_post_content_settings">Nastavení obsahu příspěvku</string>
     <string name="gutenberg_native_featured">Doporučené</string>
+    <string name="gutenberg_native_embed_link">Vložit odkaz</string>
     <string name="gutenberg_native_display_post_date">Zobrazit datum příspěvku</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -96,9 +125,7 @@ Language: cs_CZ
     <string name="gutenberg_native_search_button_current_button_text_is">Tlačítko hledat. Aktuální text tlačítka je</string>
     <string name="gutenberg_native_search_blocks">Hledat bloky</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Vyhledat štítek bloku. Aktuální text je</string>
-    <string name="gutenberg_native_search_block">Hledat blok</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Není nastaven žádný vlastní zástupný symbol</string>
-    <string name="gutenberg_native_no_button">Žádné tlačítko</string>
     <string name="gutenberg_native_inside">Uvnitř</string>
     <string name="gutenberg_native_hide_search_heading">Skrýt nadpis vyhledávání</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dvojitým klepnutím upravíte zástupný text</string>
@@ -111,13 +138,12 @@ Language: cs_CZ
     <string name="gutenberg_native_clear_search">Vymazat vyhledávání</string>
     <string name="gutenberg_native_cancel_search">Zrušit vyhledávání</string>
     <string name="gutenberg_native_button_position">Poloha tlačítka</string>
-    <string name="gutenberg_native_button_outside">Tlačítko venku</string>
-    <string name="gutenberg_native_button_inside">Tlačítko uvnitř</string>
     <string name="get_likes_empty_state_title">Při získávání údajů o lajcích došlo k chybě</string>
     <string name="get_likes_unknown_error">Při získávání lajků došlo k neznámé chybě.</string>
     <string name="get_likes_no_network_error">Síť není dostupná.</string>
     <string name="comments_empty_list_filtered_unreplied">Žádné nezodpovězené komentáře</string>
     <string name="comment_status_unreplied">Bez odpovědi</string>
+    <string name="gutenberg_native_add_link">Odkaz štítku</string>
     <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
@@ -163,7 +189,6 @@ Language: cs_CZ
     <string name="quick_start_card_menu_unpin">Uvolněte to</string>
     <string name="quick_start_list_review_pages_subtitle">Zkontrolujte své stránky a proveďte změny nebo je přidejte nebo odeberte.</string>
     <string name="quick_start_list_view_site_title">Navštívit váš web</string>
-    <string name="quick_start_list_upload_icon_subtitle">Přidejte ikonu webu pro vyleštěný profesionální vzhled.</string>
     <string name="quick_start_list_follow_site_subtitle">Objevujte a sledujte weby, které vás inspirují.</string>
     <string name="quick_start_list_enable_sharing_title">Povolit sdílení</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automaticky sdílejte nové příspěvky na svých sociálních médiích.</string>
@@ -1275,7 +1300,6 @@ Language: cs_CZ
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
     <string name="quick_start_sites_type_subtitle">%1$d z %2$d dokončeno</string>
-    <string name="quick_start_dialog_migration_title">Ve vašem kontrolním seznamu jsme provedli několik změn</string>
     <string name="quick_start_dialog_need_help_message">Provedeme vás základy budování a rozšiřování vašeho webu</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
@@ -1283,7 +1307,6 @@ Language: cs_CZ
     <string name="quick_start_dialog_enable_sharing_title">Povolit sdílení příspěvků</string>
     <string name="quick_start_dialog_explore_plans_message">Zjistěte více o marketingových a SEO nástrojích v našich placených plánech.</string>
     <string name="quick_start_dialog_explore_plans_title">Prozkoumejte plány</string>
-    <string name="quick_start_dialog_migration_message">Přidali jsme další úkoly, abychom vám pomohli rozšířit publikum.</string>
     <string name="quick_start_dialog_enable_sharing_message">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
     <string name="quick_start_complete_view_subtitle">Gratulujeme k dokončení vašeho seznamu. Dobře odvedená práce.</string>
     <string name="quick_start_remove_next_steps_menu_title">Odebrat toto</string>
@@ -1466,11 +1489,11 @@ Language: cs_CZ
     <string name="quick_start_dialog_publish_post_message_short">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
     <string name="quick_start_dialog_need_help_title">Chcete pomoci se základním nastavením?</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
-    <string name="quick_start_dialog_need_help_button_negative">Ne</string>
     <string name="quick_start_dialog_follow_sites_title">Sledujte další stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Klikněte na %1$s Čtečka %2$s</string>
     <string name="quick_start_dialog_follow_sites_message">Přidáním stránky do sledovaných budete vždy vědět o nových příspěvcích.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Klikněte na %1$s Prohledat %2$s pro nalezení stránek s podobnými tématy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Ne, děkuji</string>
     <string name="quick_start_button_negative_short">Zrušit</string>
     <string name="quick_start_button_negative">Né teď</string>
     <string name="content_description_more">Hotovo</string>
@@ -2848,4 +2871,13 @@ Language: cs_CZ
     <string name="error">Chyba</string>
     <string name="category_refresh_error">Chyba obnovení rubrik</string>
     <string name="publish_now">Publikovat</string>
+    <string-array name="blogging_reminders_count">
+        <item> Jednou</item>
+        <item>Dvakrát</item>
+        <item>Třikrát</item>
+        <item>Čtyřikrát</item>
+        <item>Pětkrát</item>
+        <item>Šestkrát</item>
+        <item>Sedmkrát</item>
+    </string-array>
 </resources>

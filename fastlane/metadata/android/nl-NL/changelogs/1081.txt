@@ -1,0 +1,3 @@
+17.8:
+We hebben kleur-/achtergrond aanpassing toegevoegd voor tekstblokken.
+Het was niet mogelijk om niet ondersteunde blokken te bewerken met accounts die vóór december 2018 zijn gemaakt. Dat hebben we opgelost! Onderweg hebben we ook laad-/mislukte schermen geüpdatet voor de niet ondersteunde blok-editor.

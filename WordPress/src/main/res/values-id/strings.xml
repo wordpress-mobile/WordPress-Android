@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-08 09:55:02+0000
+Translation-Revision-Date: 2021-07-26 07:39:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL tidak valid. Silakan masukkan URL yang benar.</string>
+    <string name="gutenberg_native_embed_caption_s">Sematkan keterangan. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Sematkan keterangan. Kosong</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">TAMBAHKAN TAUTAN</string>
+    <string name="activity_log_visit_our_documentation_page">kunjungi halaman dokumentasi kami</string>
+    <string name="activity_log_multisite_message">Pemasangan Jetpack Backup untuk Multisitus memberikan fitur cadangan yang bisa diunduh, tanpa fitur permulihan sekali klik. Untuk informasi lebih lanjut %1$s.</string>
     <string name="blogging_reminders_tip_message">Dengan rutin membuat pos, para pembaca akan tetap tertarik dan pengunjung baru akan mengunjungi situs Anda.</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_select_days_message">Anda dapat memperbaruinya kapan saja</string>
@@ -77,7 +83,7 @@ Language: id
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Ketuk dua kali untuk menambahkan tautan.</string>
-    <string name="gutenberg_native_add_link">TAMBAHKAN TAUTAN</string>
+    <string name="gutenberg_native_edit_link">EDIT TAUTAN</string>
     <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
     <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
     <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
@@ -97,6 +103,7 @@ Language: id
     <string name="gutenberg_native_post_meta_settings">Pengaturan meta artikel</string>
     <string name="gutenberg_native_post_content_settings">Pengaturan konten artikel</string>
     <string name="gutenberg_native_featured">Andalan</string>
+    <string name="gutenberg_native_embed_link">Sematkan tautan</string>
     <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
@@ -118,9 +125,8 @@ Language: id
     <string name="gutenberg_native_search_button_current_button_text_is">Tombol cari. Teks tombol saat ini adalah</string>
     <string name="gutenberg_native_search_blocks">Cari blok</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Cari label blok. Teks saat ini adalah</string>
-    <string name="gutenberg_native_search_block">Cari blok</string>
+    <string name="gutenberg_native_outside">Luar</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Placeholder kustom belum diatur</string>
-    <string name="gutenberg_native_no_button">Tanpa tombol</string>
     <string name="gutenberg_native_inside">Di dalam</string>
     <string name="gutenberg_native_hide_search_heading">Sembunyikan judul pencarian</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Ketuk dua kali untuk mengedit teks placeholder</string>
@@ -131,16 +137,17 @@ Language: id
     <string name="gutenberg_native_clear_search">Hapus pencarian</string>
     <string name="gutenberg_native_cancel_search">Batalkan pencarian</string>
     <string name="gutenberg_native_button_position">Posisi tombol</string>
-    <string name="gutenberg_native_button_outside">Tombol luar</string>
-    <string name="gutenberg_native_button_inside">Tombol dalam</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s adalah %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Terjadi error saat mengumpulkan data suka</string>
     <string name="get_likes_unknown_error">Terjadi error yang tidak diketahui saat mengumpulkan suka.</string>
     <string name="get_likes_no_network_error">Tidak ada jaringan.</string>
     <string name="comments_empty_list_filtered_unreplied">Tidak ada komentar belum dibalas</string>
     <string name="comment_status_unreplied">Belum dibalas</string>
+    <string name="gutenberg_native_add_link">Tambahkan tautan</string>
+    <string name="gutenberg_native_search_settings">Pengaturan pencarian</string>
     <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
     <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>
+    <string name="gutenberg_native_add_button_text">Tambahkan teks tombol</string>
     <string name="reader_title_interests">Ikuti topik</string>
     <string name="stories_intro_main_subtitle">Cara baru untuk membuat dan memposkan konten menarik di situs Anda.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Tutup</string>
@@ -182,9 +189,7 @@ Language: id
     <string name="quick_start_card_menu_unpin">Lepas sematan ini</string>
     <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
     <string name="quick_start_list_view_site_title">Kunjungi situs Anda</string>
-    <string name="quick_start_list_upload_icon_subtitle">Tambahkan ikon situs untuk tampilan yang lebih pro dan elegan.</string>
     <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
-    <string name="quick_start_list_enable_sharing_title">Aktifkan berbagi</string>
     <string name="quick_start_list_enable_sharing_subtitle">Bagikan pos baru secara otomatis ke media sosial Anda.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda.</string>
     <string name="quick_start_list_check_stats_title">Periksa statistik Anda</string>
@@ -256,6 +261,7 @@ Language: id
     <string name="restore_complete_visit_site_action_button">Kunjungi situs</string>
     <string name="restore_complete_description_with_two_parameters">Semua item yang Anda pilih sekarang telah dipulihkan kembali ke %1$s %2$s.</string>
     <string name="restore_complete_header">Situs Anda telah dipulihkan</string>
+    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_footnote">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika situs telah dipulihkan.</string>
     <string name="restore_progress_icon_content_description">Pulihkan ikon situs</string>
     <string name="restore_progress_description_with_two_parameters">Kami memulihkan situs Anda ke %1$s %2$s.</string>
@@ -431,6 +437,7 @@ Language: id
     <string name="gutenberg_native_copy_file_url">Salin URL file</string>
     <string name="gutenberg_native_choose_a_file">PILIH FILE</string>
     <string name="new_site_creation_domain_header_title">Pilih domain</string>
+    <string name="my_site_btn_jetpack_settings">Pengaturan Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Mengikuti percakapan melalui e-mail</string>
     <string name="reader_btn_follow_comments">Ikuti percakapan melalui e-mail</string>
@@ -674,7 +681,6 @@ Language: id
     <string name="send_link_by_email">Kirim tautan lewat email</string>
     <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
-    <string name="quick_start_list_update_site_title_title">Atur judul situs Anda</string>
     <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
@@ -1289,15 +1295,11 @@ Language: id
     <string name="quick_start_sites">Langkah Berikutnya</string>
     <string name="quick_start_complete_tasks_header">Selesai (%d)</string>
     <string name="quick_start_dialog_view_site_message">Nikmati hasil akhir produk Anda!</string>
-    <string name="quick_start_dialog_upload_icon_title">Unggah ikon situs</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ketuk %1$s Paket %2$s untuk melihat paket Anda saat ini dan paket yang tersedia</string>
     <string name="quick_start_dialog_check_stats_message_short">Ketuk %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>
-    <string name="quick_start_dialog_publish_post_message">Buat konsep dan publikasikan pos pertama Anda.</string>
     <string name="quick_start_dialog_need_help_message">Kami akan memandu Anda dalam mempelajari dasar-dasar membangun dan mengembangkan situs Anda.</string>
-    <string name="quick_start_dialog_migration_title">Kami telah membuat beberapa perubahan di daftar periksa Anda</string>
-    <string name="quick_start_dialog_migration_message">Kami telah menambahkan lebih banyak tugas untuk membantu menumbuhkan audiens Anda.</string>
     <string name="quick_start_dialog_explore_plans_title">Pelajari paket</string>
     <string name="quick_start_dialog_explore_plans_message">Pelajari alat pemasaran dan SEO di paket berbayar kami.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktifkan berbagi pos</string>
@@ -1483,7 +1485,6 @@ Language: id
     <string name="quick_start_dialog_need_help_title">Perlu bantuan untuk memulai?</string>
     <string name="quick_start_dialog_need_help_button_positive">Terima</string>
     <string name="quick_start_dialog_need_help_button_neutral">Tidak pernah</string>
-    <string name="quick_start_dialog_need_help_button_negative">Tidak, Terima Kasih</string>
     <string name="quick_start_dialog_follow_sites_title">Ikuti situs lain</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Ketuk %1$sCari%2$s untuk mencari situs dengan topik serupa</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ketuk %1$s Pembaca %2$s untuk melanjutkan</string>

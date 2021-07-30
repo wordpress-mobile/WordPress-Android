@@ -1,8 +1,13 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.0
+-----
+* [*] Need a little help after login? We're here for you. We've made a few changes to the login flow that will make it easier for you to start managing your site or create a new one.
+
 17.9
 -----
-
+* [***] Block editor: New Block: Embed block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3727]
+* [*] Added webp image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/15068]
 
 17.8
 -----

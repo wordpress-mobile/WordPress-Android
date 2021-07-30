@@ -326,7 +326,6 @@ Language: es_MX
     <string name="check_email">Comprobar el correo electrónico</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un nuevo título</string>
-    <string name="quick_start_list_update_site_title_title">Establece el título de tu sitio</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
@@ -930,15 +929,11 @@ Language: es_MX
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_dialog_view_site_message">¡Disfruta tu producto terminado!</string>
-    <string name="quick_start_dialog_upload_icon_title">Carga un icono del sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos por los básicos de la construcción y el crecimiento de tu sitio.</string>
-    <string name="quick_start_dialog_migration_title">Hemos realizado algunos cambios en tu lista de comprobación</string>
-    <string name="quick_start_dialog_publish_post_message">Guarda en borrador y publica tu primera entrada.</string>
-    <string name="quick_start_dialog_migration_message">Hemos agregado más tareas para ayudarte a hacer crecer tu audiencia.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar planes</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de mercadotecnia y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -1126,7 +1121,6 @@ Language: es_MX
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
-    <string name="quick_start_dialog_need_help_button_negative">No, gracias</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>

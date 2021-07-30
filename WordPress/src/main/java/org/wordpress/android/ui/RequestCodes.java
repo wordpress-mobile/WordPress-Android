@@ -23,6 +23,7 @@ public class RequestCodes {
     public static final int SITE_ICON_PICKER = 1205;
     public static final int SHOW_LOGIN_EPILOGUE_AND_RETURN = 1300;
     public static final int SHOW_SIGNUP_EPILOGUE_AND_RETURN = 1301;
+    public static final int LOGIN_EPILOGUE = 1302;
     public static final int SMART_LOCK_SAVE = 1400;
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;

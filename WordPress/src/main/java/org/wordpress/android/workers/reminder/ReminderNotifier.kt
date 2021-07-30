@@ -8,7 +8,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
+import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ContextProvider
@@ -33,8 +35,14 @@ class ReminderNotifier @Inject constructor(
                 contentIntentBuilder = {
                     PendingIntent.getActivity(
                             context,
-                            0,
-                            PostsListActivity.buildIntent(context, site, actionsShownByDefault = true),
+                            REMINDER_NOTIFICATION_ID + siteId,
+                            PostsListActivity.buildIntent(
+                                    context,
+                                    site,
+                                    PostListType.DRAFTS,
+                                    actionsShownByDefault = true,
+                                    notificationType = BLOGGING_REMINDERS
+                            ),
                             FLAG_CANCEL_CURRENT
                     )
                 },
@@ -48,7 +56,7 @@ class ReminderNotifier @Inject constructor(
                 smallIcon = R.drawable.ic_app_white_24dp
         )
 
-        reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID, reminderNotification)
+        reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID + siteId, reminderNotification)
 
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackNotificationReceived()

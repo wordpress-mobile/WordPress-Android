@@ -1,0 +1,3 @@
+17.8:
+Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
+Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
