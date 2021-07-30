@@ -2,17 +2,24 @@ package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -36,7 +43,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private lateinit var commentListFilter: CommentFilter
 
-//    var confirmationDialog: AlertDialog? = null
+    var confirmationDialog: AlertDialog? = null
     var currentSnackbar: Snackbar? = null
 
     private var binding: UnifiedCommentListFragmentBinding? = null
@@ -76,37 +83,37 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
-//        var isShowingActionMode = false
+        var isShowingActionMode = false
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
-//                setupConfirmationDialog(uiState.confirmationDialogUiModel)
+                setupConfirmationDialog(uiState.confirmationDialogUiModel)
                 if (uiState.commentsListUiModel is WithData ||
                         uiState.commentsListUiModel is CommentsListUiModel.Empty) {
                     val recyclerViewState = commentsRecyclerView.layoutManager?.onSaveInstanceState()
                     commentsRecyclerView.post {
                         adapter.submitList(uiState.commentData.comments)
-//                        commentsRecyclerView.post {
-//                            (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-//                                if (layoutManager.findFirstVisibleItemPosition() <
-//                                        MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
-//                                    layoutManager.onRestoreInstanceState(recyclerViewState)
-//                                }
-//                            }
-//                        }
+                        commentsRecyclerView.post {
+                            (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                                if (layoutManager.findFirstVisibleItemPosition() <
+                                        MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                                    layoutManager.onRestoreInstanceState(recyclerViewState)
+                                }
+                            }
+                        }
                     }
                 }
-//                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
-//                    isShowingActionMode = true
-//                    (activity as AppCompatActivity).startSupportActionMode(
-//                            CommentListActionModeCallback(
-//                                    viewModel,
-//                                    activityViewModel
-//                            )
-//                    )
-//                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
-//                    isShowingActionMode = false
-//                }
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                    isShowingActionMode = true
+                    (activity as AppCompatActivity).startSupportActionMode(
+                            CommentListActionModeCallback(
+                                    viewModel,
+                                    activityViewModel
+                            )
+                    )
+                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                    isShowingActionMode = false
+                }
             }
         }
 
@@ -218,31 +225,31 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         }
     }
 
-//    private fun setupConfirmationDialog(uiModel: ConfirmationDialogUiModel) {
-//        if (uiModel is Visible) {
-//            val dialogBuilder: Builder = MaterialAlertDialogBuilder(requireContext())
-//            dialogBuilder.setTitle(uiModel.title)
-//            dialogBuilder.setMessage(uiModel.message)
-//            dialogBuilder.setPositiveButton(uiModel.positiveButton) { _, _ -> uiModel.confirmAction.invoke() }
-//            dialogBuilder.setNegativeButton(uiModel.negativeButton) { _, _ -> uiModel.cancelAction.invoke() }
-//            dialogBuilder.setCancelable(true)
-//            dialogBuilder.setOnCancelListener { uiModel.cancelAction.invoke() }
-//            confirmationDialog = dialogBuilder.create()
-//            confirmationDialog!!.show()
-//        } else {
-//            confirmationDialog?.dismiss()
-//        }
-//    }
+    private fun setupConfirmationDialog(uiModel: ConfirmationDialogUiModel) {
+        if (uiModel is Visible) {
+            val dialogBuilder: Builder = MaterialAlertDialogBuilder(requireContext())
+            dialogBuilder.setTitle(uiModel.title)
+            dialogBuilder.setMessage(uiModel.message)
+            dialogBuilder.setPositiveButton(uiModel.positiveButton) { _, _ -> uiModel.confirmAction.invoke() }
+            dialogBuilder.setNegativeButton(uiModel.negativeButton) { _, _ -> uiModel.cancelAction.invoke() }
+            dialogBuilder.setCancelable(true)
+            dialogBuilder.setOnCancelListener { uiModel.cancelAction.invoke() }
+            confirmationDialog = dialogBuilder.create()
+            confirmationDialog!!.show()
+        } else {
+            confirmationDialog?.dismiss()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-//        confirmationDialog?.dismiss()
+        confirmationDialog?.dismiss()
     }
 
     companion object {
         private const val KEY_COMMENT_LIST_FILTER = "KEY_COMMENT_LIST_FILTER"
-//        private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 4
+        private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 4
 
         fun newInstance(filter: CommentFilter) = UnifiedCommentListFragment().apply {
             arguments = Bundle().apply {
