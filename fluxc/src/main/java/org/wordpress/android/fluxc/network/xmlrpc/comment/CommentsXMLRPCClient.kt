@@ -155,7 +155,6 @@ class CommentsXMLRPCClient @Inject constructor(
         return when (response) {
             is Success -> {
                 // This is ugly but the XMLRPC response doesn't contain any info about the updated comment.
-                // TODOD: check in debug that response doesn't contain any info
                 CommentsApiPayload(null)
             }
             is Error -> {
@@ -198,7 +197,6 @@ class CommentsXMLRPCClient @Inject constructor(
                 "content" to comment.content
         )
 
-        // TODOD: check how it is possible (if it is) to create a post comment from the app for a self-hsoted!
         if (comment.remoteParentCommentId != 0L) {
             commentParams["comment_parent"] = comment.remoteParentCommentId
         }
