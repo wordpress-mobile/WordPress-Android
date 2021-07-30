@@ -185,7 +185,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject ImageManager mImageManager;
     @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
-//    @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;

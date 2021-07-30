@@ -28,7 +28,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-//    @Inject lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel

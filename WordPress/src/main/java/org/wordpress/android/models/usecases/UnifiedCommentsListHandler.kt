@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class UnifiedCommentsListHandler @Inject constructor(
         // @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val paginateCommentsUseCase: PaginateCommentsUseCase,
+    private val paginateCommentsUseCase: PaginateCommentsUseCase
 //    private val batchModerationUseCase: BatchModerateCommentsUseCase,
 //    private val moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
 ) {
@@ -30,7 +30,8 @@ class UnifiedCommentsListHandler @Inject constructor(
 //            OnModerateComment(parameters)
 //    )
 //
-//    suspend fun moderateAfterUndo(parameters: ModerateWithFallbackParameters) = moderationWithUndoUseCase.manageAction(
+//    suspend fun moderateAfterUndo(parameters: ModerateWithFallbackParameters) =
+//    moderationWithUndoUseCase.manageAction(
 //            OnPushComment(parameters)
 //    )
 //
