@@ -858,8 +858,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -876,8 +875,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -894,8 +892,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -912,8 +909,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -930,8 +926,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(true)
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -948,8 +943,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(false)
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -1054,7 +1048,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 
