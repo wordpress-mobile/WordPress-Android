@@ -914,40 +914,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unified comment menu item is visible, when unifiedCommentsListFeatureConfig is enabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(true)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
-    }
-
-    @Test
-    fun `unified comment menu item is NOT visible, when unifiedCommentsListFeatureConfig is disabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(false)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
-    }
-
-    @Test
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
 
