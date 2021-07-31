@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
@@ -31,8 +33,8 @@ class BatchModerateCommentsUseCase @Inject constructor(
         manageAction(OnModerateComments(parameters))
     }
 
-    sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare, CommentsUseCaseType,
+    sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
+            DoNotCare, CommentsUseCaseType,
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
@@ -51,7 +53,12 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                     val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
                                             parameters.site.id,
                                             it
-                                    ).first()
+                                    ).firstOrNull() ?: return@async CommentsActionPayload(
+                                            CommentError(
+                                                    INVALID_RESPONSE,
+                                                    "Comment not found"
+                                            )
+                                    )
 
                                     val localModerationResult = commentsStore.moderateCommentLocally(
                                             site = parameters.site,
