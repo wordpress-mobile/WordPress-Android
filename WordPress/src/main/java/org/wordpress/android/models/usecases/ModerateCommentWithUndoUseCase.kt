@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_INPUT
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.ModerateCommentsAction
@@ -45,7 +46,19 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                         val commentBeforeModeration = commentsStore.getCommentByLocalSiteAndRemoteId(
                                 parameters.site.id,
                                 parameters.remoteCommentId
-                        ).first()
+                        ).firstOrNull()
+
+                        if (commentBeforeModeration == null) {
+                            flowChannel.emit(
+                                    Failure(
+                                            MODERATE_USE_CASE,
+                                            CommentError(INVALID_INPUT, "Comment cannot be null!"),
+                                            DoNotCare
+                                    )
+                            )
+                            Idle
+                        }
+
                         val localModerationResult = commentsStore.moderateCommentLocally(
                                 site = parameters.site,
                                 remoteCommentId = parameters.remoteCommentId,
@@ -61,7 +74,7 @@ class ModerateCommentWithUndoUseCase @Inject constructor(
                                             SingleCommentModerationResult(
                                                     parameters.remoteCommentId,
                                                     parameters.newStatus,
-                                                    CommentStatus.fromString(commentBeforeModeration.status)
+                                                    CommentStatus.fromString(commentBeforeModeration!!.status)
                                             )
                                     )
                             )
