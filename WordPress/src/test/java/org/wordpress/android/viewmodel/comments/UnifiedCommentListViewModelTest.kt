@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase
+import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase
 import org.wordpress.android.models.usecases.ModerateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsResourceProvider
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase
@@ -75,7 +76,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
     private lateinit var paginateCommentsUseCase: PaginateCommentsUseCase
     private lateinit var batchModerateCommentsUseCase: BatchModerateCommentsUseCase
 
-    //    private lateinit var moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
+    private lateinit var moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
     private lateinit var localCommentCacheUpdateUseCase: LocalCommentCacheUpdateUseCase
 
     val site = SiteModel().also { it.id = 5 }.also { it.name = "Test Site" }
@@ -89,12 +90,12 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
-//        moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
+        moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)
         unifiedCommentsListHandler = UnifiedCommentsListHandler(
                 paginateCommentsUseCase,
-                batchModerateCommentsUseCase
-//                moderationWithUndoUseCase
+                batchModerateCommentsUseCase,
+                moderationWithUndoUseCase
         )
 
         localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()

@@ -199,14 +199,16 @@ class UnifiedCommentListViewModel @Inject constructor(
                         UiStringText(it.error.message)
                     }
                 }
-//                }
 
                 if (errorMessage != null) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(errorMessage))
                 }
             }
         }
+        listenToModerateWithUndoSnackbarRequets()
+    }
 
+    fun listenToModerateWithUndoSnackbarRequets() {
         launch(bgDispatcher) {
             _commentsProvider.filter { it is Success && it.type == MODERATE_USE_CASE }.collectLatest {
                 if (it is Success && it.data is SingleCommentModerationResult) {

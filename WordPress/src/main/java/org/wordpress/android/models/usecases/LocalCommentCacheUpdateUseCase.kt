@@ -12,15 +12,11 @@ import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Success
 import javax.inject.Inject
 
-class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, Any, PropagateCommentsUpdateAction,
+class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, PropagateCommentsUpdateAction,
         Any, CommentsUseCaseType, CommentError>(
         initialState = Idle,
         DoNotCare
 ) {
-    override suspend fun runInitLogic(parameters: Any) {
-        manageAction(UpdatedComments)
-    }
-
     sealed class CommentsUpdateState : StateInterface<Any, PropagateCommentsUpdateAction, Any, CommentsUseCaseType,
             CommentError> {
         object Idle : CommentsUpdateState() {

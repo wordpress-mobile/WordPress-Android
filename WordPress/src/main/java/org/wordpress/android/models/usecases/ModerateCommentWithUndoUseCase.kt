@@ -22,17 +22,14 @@ import javax.inject.Inject
 
 class ModerateCommentWithUndoUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentParameters, ModerateCommentsAction, Any,
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsAction, Any,
         CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
-    override suspend fun runInitLogic(parameters: ModerateCommentParameters) {
-        manageAction(OnModerateComment(parameters))
-    }
-
-    sealed class ModerateCommentsState
-        : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction, Any, CommentsUseCaseType,
+    @Suppress("LongMethod") // temporary, until we came up with a different use case layout
+    sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
+            Any, CommentsUseCaseType,
             CommentError> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(

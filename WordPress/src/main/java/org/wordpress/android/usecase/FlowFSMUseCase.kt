@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-abstract class FlowFSMUseCase<RESOURCE_PROVIDER, INIT_LOGIC_PARAMETERS, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR>(
+open class FlowFSMUseCase<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR>(
     initialState: StateInterface<RESOURCE_PROVIDER, ACTION_TYPE, DATA, USE_CASE_TYPE, ERROR>,
     val resourceProvider: RESOURCE_PROVIDER
 ) {
@@ -15,8 +15,6 @@ abstract class FlowFSMUseCase<RESOURCE_PROVIDER, INIT_LOGIC_PARAMETERS, ACTION_T
     fun subscribe(): SharedFlow<UseCaseResult<USE_CASE_TYPE, ERROR, DATA>> {
         return _flowChannel.asSharedFlow()
     }
-
-    protected abstract suspend fun runInitLogic(parameters: INIT_LOGIC_PARAMETERS)
 
     suspend fun manageAction(action: ACTION_TYPE) {
         _internalState = _internalState.runAction(resourceProvider, action, _flowChannel)
