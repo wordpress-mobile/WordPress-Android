@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
+import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
@@ -184,15 +185,15 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
             _commentsProvider.filter { it is Failure }.collectLatest {
-//                val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
-//                    UiStringRes(string.comment_batch_moderation_error)
-//                } else {
-                val errorMessage = if ((it as Failure).error.message.isNullOrEmpty()) {
-                    null
+                val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
+                    UiStringRes(string.comment_batch_moderation_error)
                 } else {
-                    UiStringText(it.error.message)
+                    if ((it as Failure).error.message.isNullOrEmpty()) {
+                        null
+                    } else {
+                        UiStringText(it.error.message)
+                    }
                 }
-//                }
 
                 if (errorMessage != null) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(errorMessage))
