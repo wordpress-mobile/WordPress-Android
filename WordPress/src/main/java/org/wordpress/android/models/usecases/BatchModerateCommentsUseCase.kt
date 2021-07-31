@@ -24,15 +24,12 @@ import javax.inject.Inject
 
 class BatchModerateCommentsUseCase @Inject constructor(
     moderateCommentsResourceProvider: ModerateCommentsResourceProvider
-) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsParameters, ModerateCommentsAction, DoNotCare,
+) : FlowFSMUseCase<ModerateCommentsResourceProvider, ModerateCommentsAction, DoNotCare,
         CommentsUseCaseType, CommentError>(
         resourceProvider = moderateCommentsResourceProvider,
         initialState = Idle
 ) {
-    override suspend fun runInitLogic(parameters: ModerateCommentsParameters) {
-        manageAction(OnModerateComments(parameters))
-    }
-
+    @Suppress("LongMethod") // temporary, until we came up with a different use case layout
     sealed class ModerateCommentsState : StateInterface<ModerateCommentsResourceProvider, ModerateCommentsAction,
             DoNotCare, CommentsUseCaseType,
             CommentError> {
