@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
+import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
+import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
@@ -142,60 +145,32 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
-//        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-//            viewModel.onCommentDetailsRequested.collect { selectedComment ->
-//                showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)
-//            }
-//        }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.onCommentDetailsRequested.collect { selectedComment ->
+                showCommentDetails(selectedComment.remoteCommentId, selectedComment.status)
+            }
+        }
 
         viewModel.start(commentListFilter)
     }
 
-//    private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
-//        currentSnackbar?.dismiss()
-//        commentDetails.launch(
-//                CommentDetailsActivityRequest(
-//                        commentId,
-//                        commentStatus,
-//                        selectedSiteRepository.getSelectedSite()!!
-//                )
-//        )
-//    }
-//
-//    val commentDetails = registerForActivityResult(CommentDetailsContract()) { response:
-//    CommentDetailsActivityResponse? ->
-//        if (response != null) {
-//            viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
-//        }
-//    }
-//
-//    class CommentDetailsContract : ActivityResultContract<CommentDetailsActivityRequest,
-//            CommentDetailsActivityResponse?>() {
-//        override fun createIntent(context: Context, input: CommentDetailsActivityRequest): Intent {
-//            val detailIntent = Intent(context, CommentsDetailActivity::class.java)
-//            detailIntent.putExtra(CommentsDetailActivity.COMMENT_ID_EXTRA, input.commentId)
-//            detailIntent.putExtra(CommentsDetailActivity.COMMENT_STATUS_FILTER_EXTRA, input.commentStatus)
-//            detailIntent.putExtra(WordPress.SITE, input.site)
-//            return detailIntent
-//        }
-//
-//        override fun parseResult(resultCode: Int, intent: Intent?): CommentDetailsActivityResponse? = when {
-//            resultCode != Activity.RESULT_OK || intent == null -> null
-//            else -> {
-//                val commentId = intent.getLongExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, -1)
-//                val newStatus = intent.getStringExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA)
-//                CommentDetailsActivityResponse(commentId, CommentStatus.fromString(newStatus))
-//            }
-//        }
-//
-//        data class CommentDetailsActivityRequest(
-//            val commentId: Long,
-//            val commentStatus: CommentStatus,
-//            val site: SiteModel
-//        )
-//
-//        data class CommentDetailsActivityResponse(val commentId: Long, val commentStatus: CommentStatus)
-//    }
+    private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
+        currentSnackbar?.dismiss()
+        commentDetails.launch(
+                CommentDetailsActivityRequest(
+                        commentId,
+                        commentStatus,
+                        selectedSiteRepository.getSelectedSite()!!
+                )
+        )
+    }
+
+    val commentDetails = registerForActivityResult(CommentDetailsActivityContract()) { response:
+    CommentDetailsActivityResponse? ->
+        if (response != null) {
+            viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
+        }
+    }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
         uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
