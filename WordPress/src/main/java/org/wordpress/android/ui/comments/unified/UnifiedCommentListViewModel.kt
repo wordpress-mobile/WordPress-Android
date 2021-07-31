@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
 import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
-import org.wordpress.android.models.usecases.CommentsUseCaseType.MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.ModerateCommentWithUndoUseCase.Parameters.ModerateCommentParameters
@@ -51,7 +50,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.usecase.UseCaseResult.Failure
-import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -199,6 +197,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                         UiStringText(it.error.message)
                     }
                 }
+//                }
 
                 if (errorMessage != null) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(errorMessage))
@@ -290,6 +289,16 @@ class UnifiedCommentListViewModel @Inject constructor(
                 )
             }
         }
+        //        else {
+//            launch {
+//                _onCommentDetailsRequested.emit(
+//                        SelectedComment(
+//                                comment.remoteCommentId,
+//                                CommentStatus.fromString(comment.status)
+//                        )
+//                )
+//            }
+//        }
     }
 
     fun clearActionModeSelection() {

@@ -235,8 +235,6 @@ class CommentListUiModelHelper @Inject constructor(
             is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
         }
 
-        // TODOD: manage Loading and Failure conditions
-
         val list = ArrayList<UnifiedCommentListItem>()
         comments.forEachIndexed { index, commentModel ->
             val previousItem = comments.getOrNull(index - 1)
@@ -254,8 +252,6 @@ class CommentListUiModelHelper @Inject constructor(
 
             list.add(
                     Comment(
-                            // TODOD: check if forcing orEmpty could cause a null value in Entity to be saved back as
-                            // empty string (that is not desirable)
                             remoteCommentId = commentModel.remoteCommentId,
                             postTitle = commentModel.postTitle.orEmpty(),
                             authorName = commentModel.authorName.orEmpty(),

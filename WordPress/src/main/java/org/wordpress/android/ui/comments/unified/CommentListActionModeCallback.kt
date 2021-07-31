@@ -77,7 +77,7 @@ class CommentListActionModeCallback(
         if (menuItem.icon != null) {
             // must mutate the drawable to avoid affecting other instances of it
             val icon = menuItem.icon.mutate()
-            icon.alpha = if (actionUiModel.isEnabled) 255 else 128
+            icon.alpha = if (actionUiModel.isEnabled) ICON_ALPHA_ENABLED else ICON_ALPHA_DISABLED
             menuItem.icon = icon
         }
     }
@@ -131,4 +131,9 @@ class CommentListActionModeCallback(
     }
 
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
+    companion object {
+        const val ICON_ALPHA_ENABLED = 255
+        const val ICON_ALPHA_DISABLED = 128
+    }
 }

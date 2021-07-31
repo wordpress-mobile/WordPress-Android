@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
+import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentList
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.CommentsListUiModel.WithData
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel
@@ -91,21 +92,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
                 setupConfirmationDialog(uiState.confirmationDialogUiModel)
-                if (uiState.commentsListUiModel is WithData ||
-                        uiState.commentsListUiModel is CommentsListUiModel.Empty) {
-                    val recyclerViewState = commentsRecyclerView.layoutManager?.onSaveInstanceState()
-                    commentsRecyclerView.post {
-                        adapter.submitList(uiState.commentData.comments)
-                        commentsRecyclerView.post {
-                            (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
-                                if (layoutManager.findFirstVisibleItemPosition() <
-                                        MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
-                                    layoutManager.onRestoreInstanceState(recyclerViewState)
-                                }
-                            }
-                        }
-                    }
-                }
+                setupCommentsAdapter(uiState.commentData, uiState.commentsListUiModel)
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
@@ -169,6 +156,26 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     CommentDetailsActivityResponse? ->
         if (response != null) {
             viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
+        }
+    }
+
+    private fun UnifiedCommentListFragmentBinding.setupCommentsAdapter(
+        commentList: CommentList,
+        listUiModel: CommentsListUiModel
+    ) {
+        if (listUiModel is WithData || listUiModel is CommentsListUiModel.Empty) {
+            val recyclerViewState = commentsRecyclerView.layoutManager?.onSaveInstanceState()
+            commentsRecyclerView.post {
+                adapter.submitList(commentList.comments)
+                commentsRecyclerView.post {
+                    (commentsRecyclerView.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+                        if (layoutManager.findFirstVisibleItemPosition() <
+                                MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
+                            layoutManager.onRestoreInstanceState(recyclerViewState)
+                        }
+                    }
+                }
+            }
         }
     }
 
