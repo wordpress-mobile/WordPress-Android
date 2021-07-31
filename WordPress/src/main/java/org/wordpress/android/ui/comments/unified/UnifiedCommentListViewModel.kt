@@ -14,13 +14,27 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_APPROVED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_DELETED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_SPAMMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_TRASHED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_BATCH_UNAPPROVED
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
+import org.wordpress.android.fluxc.model.CommentStatus.SPAM
+import org.wordpress.android.fluxc.model.CommentStatus.TRASH
+import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.CommentsUseCaseType
+import org.wordpress.android.models.usecases.CommentsUseCaseType.BATCH_MODERATE_USE_CASE
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.ReloadFromCacheParameters
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -49,13 +63,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val unifiedCommentsListHandler: UnifiedCommentsListHandler
-//    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
+    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
 
-//    private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
+    private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
@@ -103,7 +117,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 
         commentFilter = commentListFilter
 
-//        listenToLocalCacheUpdateRequests()
+        listenToLocalCacheUpdateRequests()
         listenToSnackBarRequests()
         requestsFirstPage()
     }
@@ -144,42 +158,42 @@ class UnifiedCommentListViewModel @Inject constructor(
         }
     }
 
-//    private fun listenToLocalCacheUpdateRequests() {
-//        launch(bgDispatcher) {
-//            _commentsUpdateListener.collectLatest {
-//                launch(bgDispatcher) {
-//                    unifiedCommentsListHandler.refreshFromCache(
-//                            ReloadFromCacheParameters(
-//                                    pagingParameters = GetPageParameters(
-//                                            site = selectedSiteRepository.getSelectedSite()!!,
-//                                            number = if (commentFilter == UNREPLIED) {
-//                                                UNREPLIED_COMMENT_PAGE_SIZE
-//                                            } else {
-//                                                COMMENT_PAGE_SIZE
-//                                            },
-//                                            offset = 0,
-//                                            commentFilter = commentFilter
-//                                    ),
-//                                    hasMore = uiState.value.commentData.hasMore
-//                            )
-//                    )
-//                }
-//            }
-//        }
-//    }
+    private fun listenToLocalCacheUpdateRequests() {
+        launch(bgDispatcher) {
+            _commentsUpdateListener.collectLatest {
+                launch(bgDispatcher) {
+                    unifiedCommentsListHandler.refreshFromCache(
+                            ReloadFromCacheParameters(
+                                    pagingParameters = GetPageParameters(
+                                            site = selectedSiteRepository.getSelectedSite()!!,
+                                            number = if (commentFilter == UNREPLIED) {
+                                                UNREPLIED_COMMENT_PAGE_SIZE
+                                            } else {
+                                                COMMENT_PAGE_SIZE
+                                            },
+                                            offset = 0,
+                                            commentFilter = commentFilter
+                                    ),
+                                    hasMore = uiState.value.commentData.hasMore
+                            )
+                    )
+                }
+            }
+        }
+    }
 
     private fun listenToSnackBarRequests() {
         launch(bgDispatcher) {
             _commentsProvider.filter { it is Failure }.collectLatest {
-//                val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
-//                    UiStringRes(string.comment_batch_moderation_error)
-//                } else {
-                val errorMessage = if ((it as Failure).error.message.isNullOrEmpty()) {
+                val errorMessage = if (it.type == BATCH_MODERATE_USE_CASE) {
+                    UiStringRes(string.comment_batch_moderation_error)
+                } else {
+                    if ((it as Failure).error.message.isNullOrEmpty()) {
                         null
                     } else {
                         UiStringText(it.error.message)
                     }
-//                }
+                }
 
                 if (errorMessage != null) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(errorMessage))
@@ -246,22 +260,23 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun toggleItem(remoteCommentId: Long, commentStatus: CommentStatus) {
-//        viewModelScope.launch {
-//            val selectedComment = SelectedComment(remoteCommentId, commentStatus)
-//            val selectedComments = _selectedComments.value.toMutableList()
-//            if (selectedComments.contains(selectedComment)) {
-//                selectedComments.remove(selectedComment)
-//            } else {
-//                selectedComments.add(selectedComment)
-//            }
-//            _selectedComments.emit(selectedComments)
-//        }
+        viewModelScope.launch {
+            val selectedComment = SelectedComment(remoteCommentId, commentStatus)
+            val selectedComments = _selectedComments.value.toMutableList()
+            if (selectedComments.contains(selectedComment)) {
+                selectedComments.remove(selectedComment)
+            } else {
+                selectedComments.add(selectedComment)
+            }
+            _selectedComments.emit(selectedComments)
+        }
     }
 
     private fun clickItem(comment: CommentEntity) {
-//        if (_selectedComments.value.isNotEmpty()) {
-//            toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
-//        } else {
+        if (_selectedComments.value.isNotEmpty()) {
+            toggleItem(comment.remoteCommentId, CommentStatus.fromString(comment.status))
+        }
+        //        else {
 //            launch {
 //                _onCommentDetailsRequested.emit(
 //                        SelectedComment(
@@ -273,13 +288,13 @@ class UnifiedCommentListViewModel @Inject constructor(
 //        }
     }
 
-//    fun clearActionModeSelection() {
-//        viewModelScope.launch {
-//            if (!_selectedComments.value.isNullOrEmpty()) {
-//                _selectedComments.emit(listOf())
-//            }
-//        }
-//    }
+    fun clearActionModeSelection() {
+        viewModelScope.launch {
+            if (!_selectedComments.value.isNullOrEmpty()) {
+                _selectedComments.emit(listOf())
+            }
+        }
+    }
 
     fun performSingleCommentModeration(commentId: Long, newStatus: CommentStatus) {
 //        launch(bgDispatcher) {
@@ -306,49 +321,49 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     fun onBatchModerationConfirmationCanceled() {
-//        launch(bgDispatcher) {
-//            _batchModerationStatus.emit(BatchModerationStatus.Idle)
-//        }
+        launch(bgDispatcher) {
+            _batchModerationStatus.emit(BatchModerationStatus.Idle)
+        }
     }
 
     fun performBatchModeration(newStatus: CommentStatus) {
-//        launch(bgDispatcher) {
-//            if (!networkUtilsWrapper.isNetworkAvailable()) {
-//                launch(bgDispatcher) {
-//                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
-//                }
-//                return@launch
-//            }
-//            if (newStatus == DELETED || newStatus == TRASH) {
-//                _batchModerationStatus.emit(BatchModerationStatus.AskingToModerate(newStatus))
-//            } else {
-//                moderateSelectedComments(newStatus)
-//            }
-//        }
+        launch(bgDispatcher) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                launch(bgDispatcher) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                }
+                return@launch
+            }
+            if (newStatus == DELETED || newStatus == TRASH) {
+                _batchModerationStatus.emit(BatchModerationStatus.AskingToModerate(newStatus))
+            } else {
+                moderateSelectedComments(newStatus)
+            }
+        }
     }
 
     private fun moderateSelectedComments(newStatus: CommentStatus) {
-//        launch(bgDispatcher) {
-//            _batchModerationStatus.emit(BatchModerationStatus.Idle)
-//            val commentsToModerate = _selectedComments.value.map { it.remoteCommentId }
-//            _selectedComments.emit(emptyList())
-//            unifiedCommentsListHandler.moderateComments(
-//                    ModerateCommentsParameters(
-//                            selectedSiteRepository.getSelectedSite()!!,
-//                            commentsToModerate,
-//                            newStatus
-//                    )
-//            )
-//            when (newStatus) {
-//                APPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_APPROVED)
-//                UNAPPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_UNAPPROVED)
-//                SPAM -> analyticsTrackerWrapper.track(COMMENT_BATCH_SPAMMED)
-//                TRASH -> analyticsTrackerWrapper.track(COMMENT_BATCH_TRASHED)
-//                DELETED -> analyticsTrackerWrapper.track(COMMENT_BATCH_DELETED)
-//                else -> { // noop
-//                }
-//            }
-//        }
+        launch(bgDispatcher) {
+            _batchModerationStatus.emit(BatchModerationStatus.Idle)
+            val commentsToModerate = _selectedComments.value.map { it.remoteCommentId }
+            _selectedComments.emit(emptyList())
+            unifiedCommentsListHandler.moderateComments(
+                    ModerateCommentsParameters(
+                            selectedSiteRepository.getSelectedSite()!!,
+                            commentsToModerate,
+                            newStatus
+                    )
+            )
+            when (newStatus) {
+                APPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_APPROVED)
+                UNAPPROVED -> analyticsTrackerWrapper.track(COMMENT_BATCH_UNAPPROVED)
+                SPAM -> analyticsTrackerWrapper.track(COMMENT_BATCH_SPAMMED)
+                TRASH -> analyticsTrackerWrapper.track(COMMENT_BATCH_TRASHED)
+                DELETED -> analyticsTrackerWrapper.track(COMMENT_BATCH_DELETED)
+                else -> { // noop
+                }
+            }
+        }
     }
 
     data class SelectedComment(val remoteCommentId: Long, val status: CommentStatus)

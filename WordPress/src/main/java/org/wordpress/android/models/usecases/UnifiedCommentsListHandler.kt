@@ -1,6 +1,8 @@
 package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.merge
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.Parameters.ModerateCommentsParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnGetPage
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters.GetPageParameters
@@ -9,12 +11,12 @@ import javax.inject.Inject
 
 class UnifiedCommentsListHandler @Inject constructor(
         // @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val paginateCommentsUseCase: PaginateCommentsUseCase
-//    private val batchModerationUseCase: BatchModerateCommentsUseCase,
+    private val paginateCommentsUseCase: PaginateCommentsUseCase,
+    private val batchModerationUseCase: BatchModerateCommentsUseCase
 //    private val moderationWithUndoUseCase: ModerateCommentWithUndoUseCase
 ) {
-//    private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationWithUndoUseCase)
-    private val useCases = listOf(paginateCommentsUseCase)
+    //    private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase, moderationWithUndoUseCase)
+    private val useCases = listOf(paginateCommentsUseCase, batchModerationUseCase)
 
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
@@ -22,9 +24,9 @@ class UnifiedCommentsListHandler @Inject constructor(
             OnGetPage(parameters)
     )
 
-//    suspend fun moderateComments(parameters: ModerateCommentsParameters) = batchModerationUseCase.manageAction(
-//            OnModerateComments(parameters)
-//    )
+    suspend fun moderateComments(parameters: ModerateCommentsParameters) = batchModerationUseCase.manageAction(
+            OnModerateComments(parameters)
+    )
 //
 //    suspend fun preModerateWithUndo(parameters: ModerateCommentParameters) = moderationWithUndoUseCase.manageAction(
 //            OnModerateComment(parameters)
