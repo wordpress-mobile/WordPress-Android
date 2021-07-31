@@ -57,9 +57,9 @@ class CommentsRestClient @Inject constructor(
 
         return when (response) {
             is Success -> {
-                CommentsApiPayload(response.data.comments.map { commentDto ->
+                CommentsApiPayload(response.data.comments?.map { commentDto ->
                     commentsMapper.commentDtoToEntity(commentDto, site)
-                })
+                } ?: listOf())
             }
             is Error -> {
                 CommentsApiPayload(commentErrorUtilsWrapper.networkToCommentError(response.error))
