@@ -51,6 +51,7 @@ class MimeTypesTest {
                         "image/jpeg",
                         "image/png",
                         "image/gif",
+                        "image/webp",
                         "application/pdf",
                         "application/msword",
                         "application/doc",
@@ -89,7 +90,8 @@ class MimeTypesTest {
                         "video/3gpp2",
                         "image/jpeg",
                         "image/png",
-                        "image/gif"
+                        "image/gif",
+                        "image/webp"
                 )
         )
     }
@@ -102,7 +104,8 @@ class MimeTypesTest {
                 arrayOf(
                         "image/jpeg",
                         "image/png",
-                        "image/gif"
+                        "image/gif",
+                        "image/webp"
                 )
         )
     }
@@ -180,6 +183,7 @@ class MimeTypesTest {
             "image/jpeg",
             "image/png",
             "image/gif",
+            "image/webp",
             "application/pdf",
             "application/msword",
             "application/doc",
