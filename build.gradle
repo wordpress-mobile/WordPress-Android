@@ -38,16 +38,6 @@ allprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'io.gitlab.arturbosch.detekt'
 
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-
-        flatDir {
-            dirs '../aars'
-        }
-    }
-
     tasks.register("checkstyle", Checkstyle) {
         source 'src'
 
