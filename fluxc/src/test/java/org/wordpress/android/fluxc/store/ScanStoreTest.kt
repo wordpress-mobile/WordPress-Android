@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.generated.ScanActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -159,7 +160,12 @@ class ScanStoreTest {
 
     @Test
     fun `get scan state returns state and threats from the db`() = test {
-        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threatInCurrentState))
+        val scanStateModel = ScanStateModel(
+                state = State.IDLE,
+                hasCloud = true,
+                threats = listOf(threatInCurrentState),
+                reason = Reason.NO_REASON
+        )
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
         whenever(threatSqlUtils.getThreats(siteModel, listOf(CURRENT))).thenReturn(listOf(threatInCurrentState))
 
@@ -173,7 +179,11 @@ class ScanStoreTest {
     @Test
     fun `get valid credentials status returns corresponding status from the db`() = test {
         val expectedHasValidCredentials = true
-        val scanStateModel = ScanStateModel(State.IDLE, hasValidCredentials = expectedHasValidCredentials)
+        val scanStateModel = ScanStateModel(
+                state = State.IDLE,
+                hasValidCredentials = expectedHasValidCredentials,
+                reason = Reason.NO_REASON
+        )
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
 
         val hasValidCredentials = scanStore.hasValidCredentials(siteModel)

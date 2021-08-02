@@ -62,16 +62,18 @@ class MimeTypes {
 
     /*
      * The WordPress supported image types based on https://wordpress.com/support/accepted-filetypes/ are:
-     * .jpg, .jpeg, .png, .gif
+     * .jpg, .jpeg, .png, .gif, .webp
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
      * .jpg, .jpeg - "image/jpeg"
      * .png - "image/png"
      * .gif - "image/gif"
+     * .webp - "image/webp"
      */
     private val imageTypes = listOf(
             MimeType(IMAGE, Subtype.JPEG, listOf("jpg", "jpeg")),
             MimeType(IMAGE, Subtype.PNG, listOf("png")),
-            MimeType(IMAGE, Subtype.GIF, listOf("gif"))
+            MimeType(IMAGE, Subtype.GIF, listOf("gif")),
+            MimeType(IMAGE, Subtype.WEBP, listOf("webp"))
     )
 
     /*
