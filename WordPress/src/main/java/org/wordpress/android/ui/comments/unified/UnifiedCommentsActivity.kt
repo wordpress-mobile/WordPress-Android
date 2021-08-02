@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.MenuItem
@@ -54,7 +55,11 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
         }
     }
 
+    // for some reason lint is not happy about VIEW_PAGER_OFFSCREEN_PAGE_LIMIT, even through it's a valid constant
+    @SuppressLint("WrongConstant")
     private fun UnifiedCommentActivityBinding.setupContent() {
+        viewPager.offscreenPageLimit = VIEW_PAGER_OFFSCREEN_PAGE_LIMIT
+
         pagerAdapter = UnifiedCommentListPagerAdapter(commentListFilters, this@UnifiedCommentsActivity)
         viewPager.adapter = pagerAdapter
 
@@ -103,5 +108,9 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        private const val VIEW_PAGER_OFFSCREEN_PAGE_LIMIT = 1
     }
 }
