@@ -22,10 +22,24 @@ repositories {
         }
     }
     google()
-    jcenter()
     maven { url "https://www.jitpack.io" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
+    mavenCentral()
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.jetbrains.kotlin"
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.facebook.yoga"
+            includeGroup "com.facebook.fbjni"
+            includeGroup "com.yqritc"
+            includeGroup "com.android.volley"
+            includeGroup "org.wordpress"
+            includeGroup "com.andreapivetta.kolor"
+        }
+    }
 }
 
 apply plugin: 'com.android.library'

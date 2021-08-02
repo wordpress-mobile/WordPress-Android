@@ -4,6 +4,23 @@ apply plugin: 'kotlin-kapt'
 ext.kotlinPoetVersion = '1.6.0'
 ext.autoServiceVersion = '1.0'
 
+repositories {
+    mavenCentral()
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.jetbrains"
+            includeGroup "org.jetbrains.intellij.deps"
+            includeGroup "org.jetbrains.kotlin"
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.squareup:kotlinpoet"
+            includeGroup "com.andreapivetta.kolor"
+            includeGroup "com.github.shyiko"
+        }
+    }
+}
+
 dependencies {
     implementation project(':libs:WordPressAnnotations')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"

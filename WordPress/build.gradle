@@ -44,9 +44,29 @@ repositories {
         }
     }
     google()
-    jcenter()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
+    flatDir {
+        dirs '../aars'
+    }
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "com.automattic"
+            includeGroup "com.android.volley"
+            includeGroup "com.google.android"
+            includeGroup "org.wordpress"
+            includeGroup "com.facebook.yoga"
+            includeGroup "com.facebook.fbjni"
+            includeGroup "com.yqritc"
+            includeGroup "com.jraska"
+            includeGroup "org.jetbrains"
+            includeGroup "org.jetbrains.kotlin"
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.andreapivetta.kolor"
+        }
+    }
 }
 
 apply plugin: 'com.android.application'

@@ -1,5 +1,15 @@
 apply plugin: 'kotlin'
 
+repositories {
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.andreapivetta.kolor"
+        }
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }

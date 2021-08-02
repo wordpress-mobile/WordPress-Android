@@ -8,8 +8,21 @@ android {
     }
 }
 
+repositories {
+    google()
+    mavenCentral()
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.andreapivetta.kolor"
+        }
+    }
+}
+
 dependencies {
-    implementation("com.github.tomakehurst:wiremock:2.23.2") {
+    implementation("com.github.tomakehurst:wiremock-jre8:2.29.1") {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'

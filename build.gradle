@@ -69,6 +69,16 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
+
+    repositories {
+        // jcenter is deprecated, so limit its usage until it's completely removed
+        jcenter() {
+            content {
+                includeGroup "org.jetbrains.kotlinx"
+                includeGroup "com.andreapivetta.kolor"
+            }
+        }
+    }
 }
 
 subprojects {

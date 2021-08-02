@@ -9,6 +9,22 @@ android {
     }
 }
 
+repositories {
+    google()
+    mavenCentral()
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "com.automattic"
+            includeGroup "com.android.volley"
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.andreapivetta.kolor"
+        }
+    }
+}
+
 dependencies {
     implementation 'com.android.volley:volley:1.1.1'
 

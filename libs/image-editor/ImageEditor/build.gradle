@@ -44,6 +44,24 @@ android {
     }
 }
 
+repositories {
+    google()
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+
+    // jcenter is deprecated, so limit its usage until it's completely removed
+    jcenter() {
+        content {
+            includeGroup "org.jetbrains"
+            includeGroup "org.jetbrains.intellij.deps"
+            includeGroup "org.jetbrains.kotlin"
+            includeGroup "org.jetbrains.kotlinx"
+            includeGroup "com.andreapivetta.kolor"
+            includeGroup "com.github.shyiko"
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
