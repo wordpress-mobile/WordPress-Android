@@ -165,7 +165,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
-            buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions

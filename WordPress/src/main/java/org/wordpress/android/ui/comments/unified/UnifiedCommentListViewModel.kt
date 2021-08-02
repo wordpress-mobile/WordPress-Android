@@ -293,16 +293,6 @@ class UnifiedCommentListViewModel @Inject constructor(
                 )
             }
         }
-        //        else {
-//            launch {
-//                _onCommentDetailsRequested.emit(
-//                        SelectedComment(
-//                                comment.remoteCommentId,
-//                                CommentStatus.fromString(comment.status)
-//                        )
-//                )
-//            }
-//        }
     }
 
     fun clearActionModeSelection() {
