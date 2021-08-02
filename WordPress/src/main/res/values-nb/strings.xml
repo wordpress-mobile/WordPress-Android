@@ -18,6 +18,7 @@ Language: nb_NO
     <string name="like_title_plural">%d likinger</string>
     <string name="like_title_singular">1 liking</string>
     <string name="suggestion">Forslag:</string>
+    <string name="gutenberg_native_search_blocks">Søk blokker</string>
     <string name="gutenberg_native_clear_search">Rensk søk</string>
     <string name="gutenberg_native_cancel_search">Avbryt søk</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s er %3$s %4$s.</string>
@@ -39,7 +40,6 @@ Language: nb_NO
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
     <string name="disable">Slå av</string>
     <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
-    <string name="quick_start_list_enable_sharing_title">Slå på deling</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -274,7 +274,6 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
-    <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
@@ -843,14 +842,11 @@ Language: nb_NO
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
-    <string name="quick_start_dialog_upload_icon_title">Last opp nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
-    <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
     <string name="quick_start_dialog_need_help_message">Vi vil gå gjennom det grunnleggende for å bygge og utvide ditt nettsted.</string>
-    <string name="quick_start_dialog_migration_title">Vi har gjort noen endringer i sjekklisten din</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
@@ -1035,7 +1031,6 @@ Language: nb_NO
     <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
     <string name="quick_start_dialog_need_help_button_positive">Godta</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nei takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>

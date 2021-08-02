@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-08 09:55:01+0000
+Translation-Revision-Date: 2021-07-26 09:54:56+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無効な URL。 正しい URL を入力してください。</string>
+    <string name="gutenberg_native_embed_caption_s">埋め込みのキャプション。 %s</string>
+    <string name="gutenberg_native_embed_caption_empty">埋め込みのキャプション。 空</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">リンクを追加</string>
+    <string name="activity_log_visit_our_documentation_page">ドキュメントページに移動する</string>
+    <string name="activity_log_multisite_message">Jetpack Backup (Multisite) のインストールには、ダウンロード可能なバックアップは含まれますが、ワンクリックの復元機能は含まれません。 詳細については、%1$s。</string>
     <string name="blogging_reminders_tip_message">定期的に投稿することで、読者の興味を引きつけ、新たなサイト訪問者を獲得できます。</string>
     <string name="blogging_reminders_tip">ヒント</string>
     <string name="blogging_reminders_select_days_message">こちらはいつでも更新できます</string>
@@ -80,6 +86,7 @@ Language: ja_JP
     <string name="login_empty_view_try_another_account">別のアカウントで試行</string>
     <string name="login_empty_view_see_instructions">手順を参照してください</string>
     <string name="login_no_jetpack_sites_error_message">すでにサイトをお持ちの場合は、無料の Jetpack プラグインをインストールし、WordPress.com アカウントに接続する必要があります。</string>
+    <string name="gutenberg_native_edit_link">リンクを編集</string>
     <string name="login_empty_view_avatar_content_description">自分のプロフィール写真</string>
     <string name="login_not_a_jetpack_site">%1$sにこのアプリを使用するには、Jetpack プラグインをインストールし、自身の WordPress アカウントに接続する必要があります。</string>
     <string name="gutenberg_native_image_settings">画像設定</string>
@@ -96,6 +103,7 @@ Language: ja_JP
     <string name="gutenberg_native_post_content_settings">投稿コンテンツ設定</string>
     <string name="gutenberg_native_post_meta_settings">投稿メタ設定</string>
     <string name="gutenberg_native_featured">おすすめ</string>
+    <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
@@ -115,9 +123,9 @@ Language: ja_JP
     <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
     <string name="gutenberg_native_search_input_field">検索入力フィールドです。</string>
     <string name="gutenberg_native_search_button_current_button_text_is">検索ボタンです。 現在のボタンテキストは</string>
+    <string name="gutenberg_native_search_blocks">検索ブロック</string>
     <string name="gutenberg_native_search_block_label_current_text_is">検索ブロックラベルです。 現在のテキストは</string>
     <string name="gutenberg_native_no_custom_placeholder_set">カスタムプレースホルダーの設定なし</string>
-    <string name="gutenberg_native_no_button">ボタンなし</string>
     <string name="gutenberg_native_inside">内側</string>
     <string name="gutenberg_native_hide_search_heading">検索見出しを非表示</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
@@ -129,8 +137,6 @@ Language: ja_JP
     <string name="gutenberg_native_clear_search">検索をクリア</string>
     <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
     <string name="gutenberg_native_button_position">ボタンの位置</string>
-    <string name="gutenberg_native_button_outside">ボタンの外側</string>
-    <string name="gutenberg_native_button_inside">ボタンの内側</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
     <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
     <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
@@ -138,6 +144,7 @@ Language: ja_JP
     <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
     <string name="comment_status_unreplied">未返信</string>
     <string name="gutenberg_native_search_settings">検索設定</string>
+    <string name="gutenberg_native_add_link">リンクを追加</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
@@ -182,9 +189,7 @@ Language: ja_JP
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_card_menu_unpin">これを固定解除</string>
     <string name="quick_start_list_view_site_title">サイトを表示</string>
-    <string name="quick_start_list_upload_icon_subtitle">センスのよいサイトアイコンを追加しましょう。</string>
     <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
-    <string name="quick_start_list_enable_sharing_title">シェアを有効化</string>
     <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
     <string name="quick_start_list_check_stats_title">統計情報を確認</string>
@@ -676,7 +681,6 @@ Language: ja_JP
     <string name="reset_your_password">パスワードをリセット</string>
     <string name="or_type_your_password">またはパスワードを入力</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
-    <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b&gt;%1$s&lt;/b&gt;をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
@@ -1288,7 +1292,6 @@ Language: ja_JP
     <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
     <string name="quick_start_complete_tasks_header">完了 (%d)</string>
-    <string name="quick_start_dialog_upload_icon_title">サイトアイコンをアップロード</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
@@ -1296,11 +1299,8 @@ Language: ja_JP
     <string name="quick_start_dialog_view_site_message">完成しました。お楽しみください !</string>
     <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
-    <string name="quick_start_dialog_publish_post_message">最初の投稿の下書きを作成して公開してください。</string>
     <string name="quick_start_dialog_need_help_message">サイトの構築と訪問者を増やす方法の基本について紹介します。</string>
-    <string name="quick_start_dialog_migration_title">チェックリストにいくつか変更を加えました</string>
     <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
-    <string name="quick_start_dialog_migration_message">訪問者を増やすためにタスクを追加しました。</string>
     <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
     <string name="quick_start_dialog_explore_plans_message">有料プランのマーケティングと SEO ツールについての詳細を読む。</string>
     <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
@@ -1485,7 +1485,6 @@ Language: ja_JP
     <string name="quick_start_dialog_need_help_title">始めるためのサポートが必要ですか ?</string>
     <string name="quick_start_dialog_need_help_button_positive">はい</string>
     <string name="quick_start_dialog_need_help_button_neutral">なし</string>
-    <string name="quick_start_dialog_need_help_button_negative">いいえ</string>
     <string name="quick_start_dialog_follow_sites_title">他のサイトをフォロー</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>
