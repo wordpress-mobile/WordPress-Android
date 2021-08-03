@@ -230,12 +230,12 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
-            if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-                val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
-                    // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
-                    // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
-                    // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
-                    // current solution is good enough for a few sources.
+            val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
+                // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
+                // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
+                // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
+                // current solution is good enough for a few sources.
+                if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
                     list.addAll(quickStartCategories.map { category ->
                         quickStartItemBuilder.build(
                                 category,
@@ -244,11 +244,12 @@ class MySiteViewModel
                                 this::onQuickStartTaskCardClick
                         )
                     })
-                }.associateBy { it.dynamicCardType }
-                siteItems.addAll(
-                        visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
-                )
-            }
+                }
+            }.associateBy { it.dynamicCardType }
+
+            siteItems.addAll(
+                    visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
+            )
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
