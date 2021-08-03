@@ -112,6 +112,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -148,7 +149,8 @@ class MySiteViewModel
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -228,23 +230,25 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
-            val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
-                // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
-                // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
-                // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
-                // current solution is good enough for a few sources.
-                list.addAll(quickStartCategories.map { category ->
-                    quickStartItemBuilder.build(
-                            category,
-                            pinnedDynamicCard,
-                            this::onDynamicCardMoreClick,
-                            this::onQuickStartTaskCardClick
-                    )
-                })
-            }.associateBy { it.dynamicCardType }
-            siteItems.addAll(
-                    visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
-            )
+            if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
+                    // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
+                    // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
+                    // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
+                    // current solution is good enough for a few sources.
+                    list.addAll(quickStartCategories.map { category ->
+                        quickStartItemBuilder.build(
+                                category,
+                                pinnedDynamicCard,
+                                this::onDynamicCardMoreClick,
+                                this::onQuickStartTaskCardClick
+                        )
+                    })
+                }.associateBy { it.dynamicCardType }
+                siteItems.addAll(
+                        visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
+                )
+            }
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
