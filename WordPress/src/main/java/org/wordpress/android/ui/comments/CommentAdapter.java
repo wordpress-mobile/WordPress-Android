@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
@@ -35,6 +36,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> {
     interface OnDataLoadedListener {
         void onDataLoaded(boolean isEmpty);
@@ -301,6 +308,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
      */
     private boolean mIsLoadTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<LoadCommentsTaskParameters, Void, Boolean> {
         private ArrayList<CommentListItem> mTmpComments;
         final CommentStatus mStatusFilter;

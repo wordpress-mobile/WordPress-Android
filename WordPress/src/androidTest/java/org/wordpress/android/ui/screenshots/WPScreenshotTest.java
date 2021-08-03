@@ -13,6 +13,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.e2e.pages.SitePickerPage;
@@ -30,7 +31,6 @@ import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
@@ -60,23 +60,26 @@ public class WPScreenshotTest extends BaseTest {
 
     @Test
     public void wPScreenshotTest() {
-        mActivityTestRule.launchActivity(null);
-        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
+        if (!BuildConfig.IS_JETPACK_APP) {
+            mActivityTestRule.launchActivity(null);
+            Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
-        // Enable Demo Mode
-        mDemoModeEnabler.enable();
-        wpLogin();
+            // Enable Demo Mode
+            mDemoModeEnabler.enable();
 
-        editBlogPost();
-        navigateDiscover();
-        navigateMySite();
-        navigateStats();
-        navigateNotifications();
-        manageMedia();
+            wpLogin();
 
-        // Turn Demo Mode off on the emulator when we're done
-        mDemoModeEnabler.disable();
-        logoutIfNecessary();
+            editBlogPost();
+            navigateDiscover();
+            navigateMySite();
+            navigateStats();
+            navigateNotifications();
+            manageMedia();
+
+            // Turn Demo Mode off on the emulator when we're done
+            mDemoModeEnabler.disable();
+            logoutIfNecessary();
+        }
     }
 
     private void editBlogPost() {
@@ -89,7 +92,7 @@ public class WPScreenshotTest extends BaseTest {
         (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
 
         // Choose "Blog Posts"
-        scrollToThenClickOn(R.id.quick_action_posts_button);
+        clickOn(R.id.quick_action_posts_button);
 
         // Choose "Drafts"
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
@@ -148,7 +151,7 @@ public class WPScreenshotTest extends BaseTest {
         }
 
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
-        
+
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
         idleFor(2000);
@@ -179,7 +182,7 @@ public class WPScreenshotTest extends BaseTest {
     private void moveToStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
-        clickOn(R.id.row_stats);
+        clickOn(R.id.quick_action_stats_button);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
@@ -188,10 +191,13 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateStats() {
-        swipeDownOnView(R.id.scroll_view);
         moveToStats();
 
         swipeToAvoidGrayOverlay(R.id.statsPager);
+
+        if (isElementDisplayed(R.id.button_negative)) {
+            clickOn(R.id.button_negative);
+        }
 
         setNightModeAndWait(true);
 

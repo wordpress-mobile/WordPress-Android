@@ -6,20 +6,25 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason.MULTISITE_NOT_SUPPORTED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.QUEUED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Multisite
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -42,10 +47,17 @@ class GetRestoreStatusUseCase @Inject constructor(
     @Suppress("ComplexMethod", "LoopWithTooManyJumpStatements")
     suspend fun getRestoreStatus(
         site: SiteModel,
-        restoreId: Long? = null
+        restoreId: Long? = null,
+        checkIfAwaitingCredentials: Boolean = false
     ) = flow {
         var retryAttempts = 0
         while (true) {
+            var rewindStatus: RewindStatusModel?
+            if (checkIfAwaitingCredentials) {
+                rewindStatus = activityLogStore.getRewindStatusForSite(site)
+                emitAwaitingCredentials(rewindStatus?.state == State.AWAITING_CREDENTIALS)
+            }
+
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 val retryAttemptsExceeded = handleError(retryAttempts++, NetworkUnavailable)
                 if (retryAttemptsExceeded) break else continue
@@ -56,9 +68,18 @@ class GetRestoreStatusUseCase @Inject constructor(
             }
 
             retryAttempts = 0
-            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+            rewindStatus = activityLogStore.getRewindStatusForSite(site)
+            val rewind = rewindStatus?.rewind
+            if (checkIfAwaitingCredentials) {
+                emitAwaitingCredentials(rewindStatus?.state == State.AWAITING_CREDENTIALS)
+                break
+            }
             if (rewind == null) {
-                emit(Empty)
+                if (rewindStatus?.reason == MULTISITE_NOT_SUPPORTED) {
+                    emit(Multisite)
+                } else {
+                    emit(Empty)
+                }
                 break
             }
             if (restoreId == null || rewind.restoreId == restoreId) {
@@ -94,6 +115,9 @@ class GetRestoreStatusUseCase @Inject constructor(
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.emitFailure() = emit(RemoteRequestFailure)
+
+    private suspend fun FlowCollector<RestoreRequestState>.emitAwaitingCredentials(isAwaitingCredentials: Boolean) =
+            emit(AwaitingCredentials(isAwaitingCredentials))
 
     private suspend fun FlowCollector<RestoreRequestState>.emitProgress(rewind: Rewind) {
         val rewindId = rewind.rewindId as String

@@ -63,7 +63,6 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -508,8 +507,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.GIF_PICKER_SINGLE_SELECT:
             case RequestCodes.GIF_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK
-                    && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                    int[] mediaLocalIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    && data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                    int[] mediaLocalIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
 
                     ArrayList<MediaModel> mediaModels = new ArrayList<>();
                     for (int localId : mediaLocalIds) {
@@ -555,6 +554,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, results, true);
 
@@ -972,7 +972,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 WPMediaUtils.launchVideoCamera(this);
                 break;
             case ITEM_CHOOSE_FILE:
-                mMediaPickerLauncher.showFilePicker(this, true);
+                mMediaPickerLauncher.showFilePicker(this, true, mSite);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 mMediaPickerLauncher.showStockMediaPickerForResult(this,

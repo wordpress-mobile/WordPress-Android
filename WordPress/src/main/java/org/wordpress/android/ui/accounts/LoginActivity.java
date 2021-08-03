@@ -51,16 +51,16 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSitesError;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -219,8 +219,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
             if (loginEvent instanceof ShowSiteAddressError) {
                 showSiteAddressError((ShowSiteAddressError) loginEvent);
-            } else {
-                showNoJetpackSitesError((ShowNoJetpackSitesError) loginEvent);
+            } else if (loginEvent instanceof ShowNoJetpackSites) {
+                showNoJetpackSites();
             }
         });
     }
@@ -324,11 +324,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 finish();
                 break;
             case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
@@ -496,7 +496,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void showMagicLinkRequestScreen(String email, boolean verifyEmail, boolean allowPassword,
                                             boolean forceRequestAtStart) {
-        AuthEmailPayloadScheme scheme = AuthEmailPayloadScheme.WORDPRESS;
+        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
         String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
         LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
                 .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail, allowPassword,
@@ -957,14 +957,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
 
     private void showSiteAddressError(ShowSiteAddressError event) {
-        LoginSiteCheckErrorFragment fragment =
-                LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl(), event.getErrorMessage());
+        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
         slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
     }
 
-    private void showNoJetpackSitesError(ShowNoJetpackSitesError event) {
-        LoginNoSitesErrorFragment fragment =
-                LoginNoSitesErrorFragment.Companion.newInstance(event.getErrorMessage());
-        slideInFragment(fragment, false, LoginNoSitesErrorFragment.TAG);
+    private void showNoJetpackSites() {
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
+        slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }

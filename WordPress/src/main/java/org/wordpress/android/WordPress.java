@@ -36,6 +36,7 @@ import androidx.multidex.MultiDexApplication;
 import androidx.work.WorkManager;
 
 import com.android.volley.RequestQueue;
+import com.automattic.android.tracks.crashlogging.CrashLogging;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -99,7 +100,6 @@ import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EncryptedLogging;
 import org.wordpress.android.util.FluxCUtils;
@@ -110,7 +110,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -119,6 +118,7 @@ import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.workers.WordPressWorkersFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,6 +183,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
     @Inject ExPlat mExPlat;
+    @Inject WordPressWorkersFactory mWordPressWorkerFactory;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -261,8 +262,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mDispatcher.register(this);
         mAppConfig.init();
 
-        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
-        mCrashLogging.start(getContext());
+        // Upload any encrypted logs that were queued but not yet uploaded
         mEncryptedLogging.start();
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
@@ -281,7 +281,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                mCrashLogging.log(sb.toString());
+                mCrashLogging.recordEvent(sb.toString(), null);
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -370,9 +370,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     protected void initWorkManager() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
         androidx.work.Configuration config =
-                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(mWordPressWorkerFactory).build();
         WorkManager.initialize(this, config);
     }
 
@@ -653,8 +652,11 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         for (SiteModel site : mSiteStore.getSites()) {
             mDispatcher.dispatch(ThemeActionBuilder.newRemoveSiteThemesAction(site));
         }
-        // delete wpcom and jetpack sites
-        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+
+        if (!BuildConfig.IS_JETPACK_APP || mSiteStore.hasSite()) {
+            // delete wpcom and jetpack sites
+            mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+        }
         // remove all lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveAllListsAction());
         // remove all posts

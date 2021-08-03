@@ -4,6 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.comments.CommentListItem.Comment
 import org.wordpress.android.ui.comments.CommentListItem.SubHeader
 
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
 class CommentListItemDiffCallback(
     private val oldList: List<CommentListItem>,
     private val newList: List<CommentListItem>
@@ -13,7 +15,7 @@ class CommentListItemDiffCallback(
         val newItem = newList[newItemPosition]
 
         return when {
-            oldItem is SubHeader && newItem is SubHeader -> oldItem.label == newItem.label
+            oldItem is SubHeader && newItem is SubHeader -> oldItem.id == newItem.id
             oldItem is Comment && newItem is Comment -> {
                 oldItem.comment.remoteCommentId == newItem.comment.remoteCommentId
             }

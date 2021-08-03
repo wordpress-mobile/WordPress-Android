@@ -1,21 +1,6 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-    }
-}
-
-repositories {
-    google()
-    jcenter()
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
@@ -53,10 +38,10 @@ android {
             returnDefaultValues = true
         }
     }
-}
 
-ext {
-    viewpager2Version = '1.0.0'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -67,7 +52,7 @@ dependencies {
     // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     // Material
     implementation "com.google.android.material:material:$materialVersion"

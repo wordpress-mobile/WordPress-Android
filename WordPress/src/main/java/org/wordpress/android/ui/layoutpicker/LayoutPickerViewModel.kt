@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -59,7 +58,14 @@ abstract class LayoutPickerViewModel(
     val isLoading: Boolean
         get() = _uiState.value === LayoutPickerUiState.Loading
 
-    abstract fun fetchLayouts()
+    open val selectedLayout: LayoutModel?
+        get() = (uiState.value as? Content)?.let { state ->
+            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
+        }
+
+    abstract val useCachedData: Boolean
+
+    abstract fun fetchLayouts(preferCache: Boolean = false)
 
     open fun onPreviewChooseTapped() = onDismissPreview()
 
@@ -224,11 +230,9 @@ abstract class LayoutPickerViewModel(
 
     fun onPreviewLoading() {
         if (networkUtils.isNetworkAvailable()) {
-            (uiState.value as? Content)?.let { state ->
-                layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                    _previewState.value = PreviewUiState.Loading(layout.demoUrl)
-                    layoutPickerTracker.trackPreviewLoading(layout.slug, selectedPreviewMode().key)
-                }
+            selectedLayout?.let { layout ->
+                _previewState.value = PreviewUiState.Loading(layout.demoUrl)
+                layoutPickerTracker.trackPreviewLoading(layout.slug, selectedPreviewMode().key)
             }
         } else {
             _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
@@ -237,11 +241,9 @@ abstract class LayoutPickerViewModel(
     }
 
     fun onPreviewLoaded() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                _previewState.value = PreviewUiState.Loaded
-                layoutPickerTracker.trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
-            }
+        selectedLayout?.let { layout ->
+            _previewState.value = PreviewUiState.Loaded
+            layoutPickerTracker.trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
         }
     }
 
@@ -256,13 +258,11 @@ abstract class LayoutPickerViewModel(
     }
 
     fun onPreviewTapped() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                val template = layout.slug
-                layoutPickerTracker.trackPreviewViewed(template, selectedPreviewMode().key)
-                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)
-                return
-            }
+        selectedLayout?.let { layout ->
+            val template = layout.slug
+            layoutPickerTracker.trackPreviewViewed(template, selectedPreviewMode().key)
+            _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)
+            return
         }
         layoutPickerTracker.trackErrorShown("Error previewing design")
         updateUiState(Error(toast = string.hpp_choose_error))
@@ -293,26 +293,32 @@ abstract class LayoutPickerViewModel(
         val selectedCategories = (savedInstanceState.getSerializable(SELECTED_CATEGORIES) as? List<*>)
                 ?.filterIsInstance<String>() ?: listOf()
         val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
+        resetState(selected, ArrayList(selectedCategories.toMutableList()), previewMode)
         if (layouts == null || categories == null || layouts.isEmpty()) {
-            fetchLayouts()
+            fetchLayouts(preferCache = useCachedData)
             return
         }
+        handleResponse(layouts, categories)
+    }
+
+    private fun resetState(selected: String?, selectedCategories: ArrayList<String>, previewMode: String) {
         val state = uiState.value as? Content ?: Content()
         updateUiState(
                 state.copy(
                         selectedLayoutSlug = selected,
-                        selectedCategoriesSlugs = ArrayList(selectedCategories.toMutableList())
+                        selectedCategoriesSlugs = selectedCategories
                 )
         )
         _previewMode.value = valueOf(previewMode)
         updateButtonsUiState()
-        handleResponse(layouts, categories)
     }
 
     fun writeToBundle(outState: Bundle) {
         (uiState.value as? Content)?.let {
-            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
-            outState.putParcelableArrayList(FETCHED_CATEGORIES, ArrayList(categories))
+            if (!useCachedData) {
+                outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
+                outState.putParcelableArrayList(FETCHED_CATEGORIES, ArrayList(categories))
+            }
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
             outState.putString(PREVIEW_MODE, selectedPreviewMode().name)

@@ -3,10 +3,14 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
@@ -34,6 +38,7 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -74,8 +79,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
-import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -88,6 +93,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -260,11 +266,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListMainViewModel.class)
     abstract ViewModel postListMainViewModel(PostListMainViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(GifPickerViewModel.class)
-    abstract ViewModel gifPickerViewModel(GifPickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -506,8 +507,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LoginNoSitesErrorViewModel.class)
-    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesErrorViewModel viewModel);
+    @ViewModelKey(LoginNoSitesViewModel.class)
+    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginPrologueViewModel.class)
+    abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -518,4 +529,29 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
     abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginSiteCheckErrorViewModel.class)
+    abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentListViewModel.class)
+    abstract ViewModel unifiedCommentListViewModel(UnifiedCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BloggingRemindersViewModel.class)
+    abstract ViewModel bloggingRemindersViewModel(BloggingRemindersViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoriesListViewModel.class)
+    abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
 }

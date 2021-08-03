@@ -77,6 +77,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldShowStoriesIntro()
         set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
 
+    var shouldScheduleCreateSiteNotification: Boolean
+        get() = AppPrefs.shouldScheduleCreateSiteNotification()
+        set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -173,6 +177,14 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getManualFeatureConfig(featureKey: String): Boolean {
         return AppPrefs.getManualFeatureConfig(featureKey)
+    }
+
+    fun setBloggingRemindersShown(siteId: Int) {
+        AppPrefs.setBloggingRemindersShown(siteId)
+    }
+
+    fun isBloggingRemindersShown(siteId: Int): Boolean {
+        return AppPrefs.isBloggingRemindersShown(siteId)
     }
 
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =

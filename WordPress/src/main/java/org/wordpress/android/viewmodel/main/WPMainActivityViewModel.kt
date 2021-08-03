@@ -126,6 +126,16 @@ class WPMainActivityViewModel @Inject constructor(
                         onClickAction = null
                 )
         )
+        if (SiteUtils.supportsStoriesFeature(site)) {
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_STORY,
+                            iconRes = R.drawable.ic_story_icon_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_story,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
+        }
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_POST,
@@ -140,16 +150,6 @@ class WPMainActivityViewModel @Inject constructor(
                             actionType = CREATE_NEW_PAGE,
                             iconRes = R.drawable.ic_pages_white_24dp,
                             labelRes = R.string.my_site_bottom_sheet_add_page,
-                            onClickAction = ::onCreateActionClicked
-                    )
-            )
-        }
-        if (SiteUtils.supportsStoriesFeature(site)) {
-            actionsList.add(
-                    CreateAction(
-                            actionType = CREATE_NEW_STORY,
-                            iconRes = R.drawable.ic_story_icon_24dp,
-                            labelRes = R.string.my_site_bottom_sheet_add_story,
                             onClickAction = ::onCreateActionClicked
                     )
             )
@@ -216,7 +216,8 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(showFab: Boolean, site: SiteModel?) {
+    fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
+        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
     }
 
@@ -235,21 +236,29 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMySite.value = Event(Unit)
     }
 
-    fun onResume(site: SiteModel?, showFab: Boolean) {
+    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
+        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
 
-        launch {
-            val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-            val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+        checkAndShowFeatureAnnouncementForWordPressApp()
+    }
 
-            // only proceed to feature announcement logic if we are upgrading the app
-            if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
-                if (canShowFeatureAnnouncement()) {
-                    analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
-                    _onFeatureAnnouncementRequested.call()
+    private fun checkAndShowFeatureAnnouncementForWordPressApp() {
+        // Do not proceed with feature announcement check for Jetpack
+        if (!buildConfigWrapper.isJetpackApp) {
+            launch {
+                val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+                val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+
+                // only proceed to feature announcement logic if we are upgrading the app
+                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                    if (canShowFeatureAnnouncement()) {
+                        analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+                        _onFeatureAnnouncementRequested.call()
+                    }
+                } else {
+                    appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 }
-            } else {
-                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
             }
         }
     }

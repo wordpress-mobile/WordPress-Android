@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -32,15 +34,19 @@ class GetLikesHandler @Inject constructor(
         fingerPrint: LikeGroupFingerPrint,
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT,
-        limit: Int = LIKES_RESULT_NO_LIMITS
+        limit: Int = LIKES_RESULT_NO_LIMITS,
+        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0." }
         getLikesUseCase.getLikesForPost(
                 fingerPrint,
                 PaginationParams(
                         requestNextPage,
                         pageLength,
                         limit
-                )
+                ),
+                expectingToBeThere
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
@@ -51,6 +57,8 @@ class GetLikesHandler @Inject constructor(
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0" }
         getLikesUseCase.getLikesForComment(
                 fingerPrint,
                 PaginationParams(
@@ -70,7 +78,9 @@ class GetLikesHandler @Inject constructor(
     private fun manageState(state: GetLikesState) {
         when (state) {
             Loading,
-            is LikesData -> _likesStatusUpdate.postValue(state)
+            is LikesData -> {
+                _likesStatusUpdate.postValue(state)
+            }
             is Failure -> {
                 _likesStatusUpdate.postValue(state)
                 if (state.failureType != NO_NETWORK || !state.emptyStateData.showEmptyState) {

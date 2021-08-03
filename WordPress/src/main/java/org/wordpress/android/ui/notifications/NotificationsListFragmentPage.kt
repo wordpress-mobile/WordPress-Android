@@ -133,13 +133,13 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     override fun onDestroyView() {
-        notesAdapter!!.cancelReloadNotesTask()
+        super.onDestroyView()
+        notesAdapter?.cancelReloadNotesTask()
+        notesAdapter = null
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
-        notesAdapter = null
         binding = null
-        super.onDestroyView()
     }
 
     override fun onDataLoaded(itemsCount: Int) {

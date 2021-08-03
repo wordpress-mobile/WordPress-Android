@@ -99,12 +99,14 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
@@ -129,6 +131,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -197,7 +201,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartRepository,
                 quickStartItemBuilder,
                 currentAvatarSource,
-                dynamicCardsSource
+                dynamicCardsSource,
+                buildConfigWrapper,
+                unifiedCommentsListFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -852,7 +858,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = any()
         )
     }
 
@@ -869,7 +876,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = any()
         )
     }
 
@@ -886,7 +894,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = any()
         )
     }
 
@@ -903,7 +912,44 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = any()
+        )
+    }
+
+    @Test
+    fun `unified comment menu item is visible, when unifiedCommentsListFeatureConfig is enabled`() = test {
+        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = eq(true)
+        )
+    }
+
+    @Test
+    fun `unified comment menu item is NOT visible, when unifiedCommentsListFeatureConfig is disabled`() = test {
+        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(false)
+
+        initSelectedSite()
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any(),
+                isUnifiedCommentsFeatureEnabled = eq(false)
         )
     }
 
@@ -956,6 +1002,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).refresh()
     }
 
+    @Test
+    fun `when build is Jetpack, then quick action block is not built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        initSelectedSite()
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNull()
+    }
+
+    @Test
+    fun `when build is WordPress, then quick action block is built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNotNull
+    }
+
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =
@@ -986,7 +1054,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 

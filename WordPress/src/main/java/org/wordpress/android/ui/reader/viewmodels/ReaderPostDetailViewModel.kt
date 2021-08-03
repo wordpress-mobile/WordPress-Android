@@ -20,6 +20,10 @@ import org.wordpress.android.ui.engagement.EngageItem
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -108,8 +112,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
-        state -> buildLikersUiState(state)
+    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map { state ->
+        buildLikersUiState(state)
     }
 
     /**
@@ -132,6 +136,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             return blogId != post.blogId || postId != post.postId || numLikes != post.numLikes
         }
     }
+
     private var lastRenderedLikesData: RenderedLikesData? = null
 
     private val shouldOfferSignIn: Boolean
@@ -174,7 +179,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
-                        onRefreshLikersData(post)
+                        onRefreshLikersData(
+                                post,
+                                if (post.isLikedByCurrentUser) {
+                                    REQUIRE_TO_BE_THERE
+                                } else {
+                                    REQUIRE_TO_NOT_BE_THERE
+                                }
+                        )
                     }
                     updatePostActions(post)
                 }
@@ -206,8 +218,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshLikersData(post: ReaderPost) {
+    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: CurrentUserInListRequirement = DONT_CARE) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
+        if (readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) return
         val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 
         if (isLikeDataChanged) {
@@ -222,7 +235,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                         ),
                         requestNextPage = false,
                         pageLength = MAX_NUM_LIKES_FACES,
-                        limit = MAX_NUM_LIKES_FACES
+                        limit = MAX_NUM_LIKES_FACES,
+                        expectingToBeThere = expectingToBeThere
                 )
             }
         }
@@ -233,10 +247,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
-        _uiState.value = LoadingUiState
-
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
+            _uiState.value = LoadingUiState
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
                 FetchReaderPostState.Success -> {
                     getReaderPostFromDb(blogId, postId)
@@ -455,27 +468,31 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                actions = postDetailUiStateBuilder.buildPostActions(
-                        post,
-                        this@ReaderPostDetailViewModel::onButtonClicked
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    actions = postDetailUiStateBuilder.buildPostActions(
+                            post,
+                            this@ReaderPostDetailViewModel::onButtonClicked
+                    )
+            )
+        }
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                localRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.localRelatedPosts,
-                        isGlobal = false
-                ),
-                globalRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.globalRelatedPosts,
-                        isGlobal = true
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    localRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.localRelatedPosts,
+                            isGlobal = false
+                    ),
+                    globalRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.globalRelatedPosts,
+                            isGlobal = true
+                    )
+            )
+        }
     }
 
     private fun trackAndUpdateNotAuthorisedErrorState() {
@@ -522,14 +539,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
-        val showLikeFacesTrain = post?.let {
+        val showLikeFacesTrainContainer = post?.let {
             it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = showLikeFacesTrain,
+                showLikeFacesTrainContainer = showLikeFacesTrainContainer,
                 showLoading = showLoading,
-                engageItemsList = if (showLikeFacesTrain) likers else listOf(),
+                engageItemsList = if (showLikeFacesTrainContainer) likers else listOf(),
                 numLikes = post?.let { numLikes } ?: 0,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,
@@ -574,19 +591,21 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onLikeFacesClicked() {
         post?.let { readerPost ->
-            _navigationEvents.value = Event(ShowEngagedPeopleList(
-                    readerPost.blogId,
-                    readerPost.postId,
-                    HeaderData(
-                            AuthorNameString(readerPost.authorName),
-                            readerPost.title,
-                            readerPost.postAvatar,
-                            readerPost.authorId,
-                            readerPost.authorBlogId,
-                            readerPost.authorBlogUrl,
-                            lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+            _navigationEvents.value = Event(
+                    ShowEngagedPeopleList(
+                            readerPost.blogId,
+                            readerPost.postId,
+                            HeaderData(
+                                    AuthorNameString(readerPost.authorName),
+                                    readerPost.title,
+                                    readerPost.postAvatar,
+                                    readerPost.authorId,
+                                    readerPost.authorBlogId,
+                                    readerPost.authorBlogUrl,
+                                    lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+                            )
                     )
-            ))
+            )
         }
     }
 

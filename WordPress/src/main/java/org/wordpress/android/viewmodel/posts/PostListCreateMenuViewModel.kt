@@ -40,7 +40,7 @@ class PostListCreateMenuViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, actionsShownByDefault: Boolean) {
         if (isStarted) return
         isStarted = true
 
@@ -49,6 +49,9 @@ class PostListCreateMenuViewModel @Inject constructor(
         setMainFabUiState()
 
         loadMainActions()
+        if (actionsShownByDefault) {
+            onFabClicked()
+        }
     }
 
     private fun loadMainActions() {
@@ -64,20 +67,19 @@ class PostListCreateMenuViewModel @Inject constructor(
         )
         actionsList.add(
                 CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
-
-        actionsList.add(
-                CreateAction(
                         actionType = CREATE_NEW_STORY,
                         iconRes = R.drawable.ic_story_icon_24dp,
                         labelRes = R.string.my_site_bottom_sheet_add_story,
                         onClickAction = ::onCreateActionClicked
 
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_POST,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
+                        onClickAction = ::onCreateActionClicked
                 )
         )
 

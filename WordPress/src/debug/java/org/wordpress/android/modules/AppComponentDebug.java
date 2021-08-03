@@ -2,7 +2,8 @@ package org.wordpress.android.modules;
 
 import android.app.Application;
 
-import org.wordpress.android.fluxc.module.DebugOkHttpClientModule;
+import org.wordpress.android.fluxc.module.DatabaseModule;
+import org.wordpress.android.fluxc.module.OkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
@@ -20,9 +21,10 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         ApplicationModule.class,
         AppConfigModule.class,
-        DebugOkHttpClientModule.class,
+        OkHttpClientModule.class,
         InterceptorModule.class,
         ReleaseNetworkModule.class,
+        DatabaseModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class,
         AndroidSupportInjectionModule.class,
@@ -30,12 +32,14 @@ import dagger.android.support.AndroidSupportInjectionModule;
         StatsModule.class,
         TrackerModule.class,
         SuggestionSourceModule.class,
+        ExperimentModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
         LoginServiceModule.class,
         SupportModule.class,
-        ThreadModule.class
+        ThreadModule.class,
+        CrashLoggingModule.class
 })
 public interface AppComponentDebug extends AppComponent {
     @Component.Builder

@@ -28,7 +28,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
 import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
@@ -41,6 +44,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -215,8 +219,41 @@ public class WPMediaUtils {
                 return context.getString(R.string.error_media_xmlrpc_not_allowed);
             case XMLRPC_UPLOAD_ERROR:
                 return context.getString(R.string.error_media_xmlrcp_server_error);
+            case MALFORMED_MEDIA_ARG:
+                return getMalformedMediaArgErrorMessage(context, error.mErrorSubType);
         }
         return null;
+    }
+
+    private static @Nullable String getMalformedMediaArgErrorMessage(
+            final Context context,
+            @Nullable final MediaErrorSubType errorSubType
+    ) {
+        if (!(errorSubType instanceof MalformedMediaArgSubType)) return null;
+
+        String errorMessage = null;
+
+        switch (((MalformedMediaArgSubType) errorSubType).getType()) {
+            case MEDIA_WAS_NULL:
+                errorMessage = context.getString(R.string.error_media_unexpected_null_value);
+                break;
+            case UNSUPPORTED_MIME_TYPE:
+                errorMessage = context.getString(R.string.error_media_file_type_not_allowed);
+                break;
+            case NOT_VALID_LOCAL_FILE_PATH:
+                errorMessage = context.getString(R.string.error_media_unexpected_empty_media_file_path);
+                break;
+            case MEDIA_FILE_NOT_FOUND_LOCALLY:
+                errorMessage = context.getString(R.string.error_media_could_not_find_media_in_path);
+                break;
+            case DIRECTORY_PATH_SUPPLIED_FILE_NEEDED:
+                errorMessage = context.getString(R.string.error_media_path_is_directory);
+                break;
+            case NO_ERROR:
+                errorMessage = null;
+                break;
+        }
+        return errorMessage;
     }
 
     private static void showSDCardRequiredDialog(Context context) {
@@ -240,6 +277,22 @@ public class WPMediaUtils {
     public static void launchMediaLibrary(Activity activity, boolean multiSelect) {
         activity.startActivityForResult(prepareMediaLibraryIntent(activity, multiSelect),
                 RequestCodes.MEDIA_LIBRARY);
+    }
+
+    public static Plan getSitePlanForMimeTypes(SiteModel site) {
+        if (site.isWPCom()) {
+            if (SiteUtils.onFreePlan(site)) {
+                return Plan.WP_COM_FREE;
+            } else {
+                return Plan.WP_COM_PAID;
+            }
+        } else {
+            return Plan.SELF_HOSTED;
+        }
+    }
+
+    public static boolean isMimeTypeSupportedBySitePlan(SiteModel site, String mimeType) {
+        return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
     }
 
     public static void launchChooserWithContext(
@@ -306,7 +359,6 @@ public class WPMediaUtils {
                 preparePictureLibraryIntent(activity, multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
-
 
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);

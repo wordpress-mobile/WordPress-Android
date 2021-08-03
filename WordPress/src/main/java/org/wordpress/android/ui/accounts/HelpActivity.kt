@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.R
@@ -28,7 +29,7 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
     @Inject lateinit var zendeskHelper: ZendeskHelper
-    private var binding: HelpActivityBinding? = null
+    private lateinit var binding: HelpActivityBinding
 
     private val originFromExtras by lazy {
         (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
@@ -56,7 +57,7 @@ class HelpActivity : LocaleAwareActivity() {
             }
 
             contactUsButton.setOnClickListener { createNewZendeskTicket() }
-            faqButton.setOnClickListener { showZendeskFaq() }
+            faqButton.setOnClickListener { showFaq() }
             myTicketsButton.setOnClickListener { showZendeskTickets() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
             applicationLogButton.setOnClickListener { v ->
@@ -96,15 +97,10 @@ class HelpActivity : LocaleAwareActivity() {
         }
     }
 
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
-    }
-
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
-        binding?.refreshContactEmailText()
+        binding.refreshContactEmailText()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -133,14 +129,10 @@ class HelpActivity : LocaleAwareActivity() {
         )
     }
 
-    private fun showZendeskFaq() {
-        zendeskHelper
-                .showZendeskHelpCenter(
-                        this,
-                        originFromExtras,
-                        selectedSiteFromExtras,
-                        extraTagsFromExtras
-                )
+    private fun showFaq() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
     private fun HelpActivityBinding.refreshContactEmailText() {

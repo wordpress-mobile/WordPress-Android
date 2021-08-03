@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -262,6 +263,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderBlogList mTmpFollowedBlogs;
 

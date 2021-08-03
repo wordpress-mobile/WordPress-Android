@@ -578,6 +578,24 @@
 
                     </LinearLayout>
 
+                    <!--Unified Comments -->
+                    <LinearLayout
+                        android:id="@+id/row_unified_comments"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_unified_comments_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_comment_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_unified_comments_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/my_site_btn_unified_comments" />
+
+                    </LinearLayout>
+
                     <!--Look and Feel-->
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_look_and_feel_header"

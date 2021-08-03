@@ -52,8 +52,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
@@ -117,8 +115,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PromoDialog
-import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -140,6 +137,7 @@ import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.AppLog.T.EDITOR
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
@@ -159,6 +157,8 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -178,12 +178,13 @@ import javax.inject.Named
         "This class is being refactored, if you implement any change, please also update " +
                 "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}"
 )
+@Suppress("LargeClass", "TooManyFunctions")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface,
-        PromoDialogClickInterface,
+        QuickStartPromptClickInterface,
         OnConfirmListener,
         OnDismissListener,
         TextInputDialogFragment.Callback {
@@ -212,6 +213,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Inject lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -275,9 +279,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 siteInfoContainer.title.isClickable = SiteUtils.isAccessedViaWPComRest(site)
             }
             updateQuickStartContainer()
-            if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
-                showQuickStartDialogMigration()
-            }
             showQuickStartNoticeIfNecessary()
         }
     }
@@ -391,10 +392,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { showSitePicker() }
         rowViewSite.setOnClickListener { viewSite() }
         mySiteRegisterDomainCta.setOnClickListener { registerDomain() }
-        quickActionStatsButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
-            viewStats()
-        }
         rowStats.setOnClickListener { viewStats() }
         mySiteBlavatar.setOnClickListener { updateBlavatar() }
         rowPlan.setOnClickListener {
@@ -402,22 +399,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         rowJetpackSettings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
-        quickActionPostsButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
-            viewPosts()
-        }
         rowBlogPosts.setOnClickListener { viewPosts() }
-        quickActionMediaButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
-            viewMedia()
-        }
         rowMedia.setOnClickListener { viewMedia() }
-        quickActionPagesButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
-            viewPages()
-        }
         rowPages.setOnClickListener { viewPages() }
         rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
+        rowUnifiedComments.setOnClickListener {
+            if (unifiedCommentsListFeatureConfig.isEnabled()) {
+                ActivityLauncher.viewUnifiedComments(activity, selectedSite)
+            }
+        }
         rowThemes.setOnClickListener {
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
@@ -440,6 +430,30 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         quickStartCustomize.setOnClickListener { showQuickStartList(CUSTOMIZE) }
         quickStartGrow.setOnClickListener { showQuickStartList(GROW) }
         quickStartMore.setOnClickListener { showQuickStartCardMenu() }
+    }
+
+    private fun MySiteFragmentBinding.setupQuickActionsIfNecessary() {
+        if (buildConfigWrapper.isJetpackApp) {
+            quickActionButtonsContainer.visibility = View.GONE
+            return
+        }
+
+        quickActionStatsButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
+            viewStats()
+        }
+        quickActionPostsButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
+            viewPosts()
+        }
+        quickActionMediaButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
+            viewMedia()
+        }
+        quickActionPagesButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
+            viewPages()
+        }
     }
 
     private fun registerDomain() {
@@ -561,6 +575,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.onBind() {
+        setupQuickActionsIfNecessary()
         setupClickListeners()
         collapsingToolbar.title = getString(R.string.my_site_section_screen_title)
 
@@ -592,6 +607,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         selectedSiteRepository.showSiteIconProgressBar.observe(viewLifecycleOwner, {
             showSiteIconProgressBar(it == true)
         })
+
+        rowUnifiedComments.visibility = if (unifiedCommentsListFeatureConfig.isEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -980,7 +1001,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowThemes.visibility = themesVisibility
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
-        val sharingVisibility = if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
+        val sharingVisibility = if (site.supportsSharing()) View.VISIBLE else View.GONE
         rowSharing.visibility = sharingVisibility
 
         // show settings for all self-hosted to expose Delete Site
@@ -1234,7 +1255,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 startQuickStart()
                 AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
             }
-            TAG_QUICK_START_MIGRATION_DIALOG -> AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED)
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
                 AnalyticsTracker.track(QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
                 skipQuickStart()
@@ -1298,6 +1318,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onNeutralClicked(instanceTag: String) {
+        if (onboardingImprovementsFeatureConfig.isEnabled()) return
+
         if (TAG_QUICK_START_DIALOG == instanceTag) {
             AppPrefs.setQuickStartDisabled(true)
             AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
@@ -1316,7 +1338,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             TAG_CHANGE_SITE_ICON_DIALOG,
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG,
             TAG_QUICK_START_DIALOG,
-            TAG_QUICK_START_MIGRATION_DIALOG,
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
             }
             else -> {
@@ -1328,8 +1349,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
         }
     }
-
-    override fun onLinkClicked(instanceTag: String) {}
 
     private fun fetchSitePlans(site: SiteModel?) {
         dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
@@ -1509,25 +1528,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         (requireActivity() as WPMainActivity).showQuickStartSnackBar(promptSnackbar)
     }
 
-    private fun showQuickStartDialogMigration() {
-        val promoDialog = PromoDialog()
-        promoDialog.initialize(
-                TAG_QUICK_START_MIGRATION_DIALOG,
-                getString(R.string.quick_start_dialog_migration_title),
-                getString(R.string.quick_start_dialog_migration_message),
-                getString(android.R.string.ok),
-                R.drawable.img_illustration_checkmark_280dp,
-                "",
-                "",
-                ""
-        )
-        if (fragmentManager != null) {
-            promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
-            AppPrefs.setQuickStartMigrationDialogShown(true)
-            AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_VIEWED)
-        }
-    }
-
     private fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
         selectedSiteRepository.updateSiteIconMediaId(mediaId, showProgressBar)
     }
@@ -1543,7 +1543,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        const val TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG"
         const val AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000
         const val KEY_IS_DOMAIN_CREDIT_AVAILABLE = "KEY_IS_DOMAIN_CREDIT_AVAILABLE"
         const val KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED"

@@ -1,1 +1,5 @@
-This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.
+With the new Embed block, embed content from supported services, like YouTube or Instagram.
+
+Don’t have a site yet? You’ll see notifications that prompt you to create one.
+
+Other updates include improvements to the Blogging Reminders feature, tweaks in the Stats and Media sections of your app, and a fix to long post titles in the Reader.

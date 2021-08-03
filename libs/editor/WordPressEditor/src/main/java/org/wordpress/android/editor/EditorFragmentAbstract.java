@@ -47,6 +47,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void removeMedia(String mediaId);
     // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
+    public abstract void showEditorHelp();
 
 
     public enum MediaType {
@@ -178,6 +179,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorFragmentListener extends DialogVisibilityProvider {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
+        void updateFeaturedImage(long mediaId, boolean imagePicked);
         void onAddMediaClicked();
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
@@ -203,7 +205,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddGifClicked(boolean allowMultipleSelection);
         void onAddFileClicked(boolean allowMultipleSelection);
         void onAddAudioFileClicked(boolean allowMultipleSelection);
-        void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
+        void onPerformFetch(String path, boolean enableCaching, Consumer<String> onResult, Consumer<Bundle> onError);
         void showUserSuggestions(Consumer<String> onResult);
         void showXpostSuggestions(Consumer<String> onResult);
         void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown);
@@ -216,6 +218,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
+        boolean showPreview();
     }
 
     /**

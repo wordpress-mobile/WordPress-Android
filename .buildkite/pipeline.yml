@@ -1,0 +1,43 @@
+docker-container: &docker-container
+  plugins:
+    - docker#v3.8.0:
+        image: "public.ecr.aws/automattic/android-build-image:311ab824e9fd33ebb71de83c3fd1c328ea84443b"
+        environment:
+          - "CI=true"
+
+steps:
+  - label: "checkstyle"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew checkstyle
+  - label: "ktlint"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew ciktlint
+  - label: "detekt"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew WordPress:detekt
+  - label: "lint"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew lintWordpressVanillaRelease
+  - label: "Test WordPress"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew testWordpressVanillaRelease
+  - label: "Test WordPressProcessors"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew :libs:WordPressProcessors:test
+  - label: "Test ImageEditor"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew :libs:image-editor:ImageEditor:test

@@ -29,6 +29,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.QuickStartRepository
@@ -116,33 +117,155 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         switchTabTriggered = false
     }
 
+    /* FAB VISIBILITY */
+
     @Test
-    fun `fab visible when asked`() {
+    fun `given wordpress app, when page changed to my site, then fab is visible`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabVisible).isTrue()
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isTrue
     }
 
     @Test
-    fun `fab hidden when asked`() {
+    fun `given wordpress app, when page changed away from my site, then fab is hidden`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = false, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabVisible).isFalse()
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
     }
 
     @Test
-    fun `fab tooltip visible when asked`() {
+    fun `given wordpress app, when my site page is resumed, then fab is visible`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabTooltipVisible).isTrue()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isTrue
     }
 
     @Test
-    fun `fab tooltip hidden when asked`() {
+    fun `given wordpress app, when non my site page is resumed, then fab is hidden`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = false, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
     }
+
+    @Test
+    fun `given jetpack app, when page changed to my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when page changed away from my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when non my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
+    }
+
+    /* FAB TOOLTIP VISIBILITY */
+
+    @Test
+    fun `given wordpress app, when page changed to my site, then fab tooltip is visible`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isTrue
+    }
+
+    @Test
+    fun `given wordpress app, when page changed away from my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    @Test
+    fun `given wordpress app, when my site page is resumed, then fab tooltip is visible`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isTrue
+    }
+
+    @Test
+    fun `given wordpress app, when non my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when page changed to my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when page changed away from my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    @Test
+    fun `given jetpack app, when non my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isJetpackApp = true)
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    /* FAB TOOLTIP DISABLED */
 
     @Test
     fun `fab tooltip disabled when tapped`() {
@@ -182,7 +305,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `fab focus point visible when active task is PUBLISH_POST`() {
         startViewModelWithDefaultParameters()
         activeTask.value = PUBLISH_POST
-        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
         assertThat(fabUiState?.isFocusPointVisible).isTrue()
     }
@@ -191,7 +314,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `fab focus point gone when active task is different`() {
         startViewModelWithDefaultParameters()
         activeTask.value = UPDATE_SITE_TITLE
-        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
         assertThat(fabUiState?.isFocusPointVisible).isFalse()
     }
@@ -200,7 +323,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `fab focus point gone when active task is null`() {
         startViewModelWithDefaultParameters()
         activeTask.value = null
-        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
+        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
         assertThat(fabUiState?.isFocusPointVisible).isFalse()
     }
@@ -365,7 +488,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `onResume set expected content message when user has not full access to content`() {
         startViewModelWithDefaultParameters()
-        viewModel.onResume(site = initSite(hasFullAccessToContent = false), showFab = true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = false), isOnMySitePageWithValidSite = true)
         assertThat(fabUiState!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }
@@ -471,6 +594,28 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given wordpress app, when app is launched, then feature announcement is shown`() = test {
+        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
+        whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                featureAnnouncement
+        )
+
+        startViewModelWithDefaultParameters(false)
+        resumeViewModelWithDefaultParameters()
+
+        verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
+    }
+
+    @Test
+    fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
+        startViewModelWithDefaultParameters(true)
+        resumeViewModelWithDefaultParameters()
+
+        verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
+    }
+
+    @Test
     fun `when the active task needs to show an focus point, emit visible focus point info`() {
         activeTask.value = FOLLOW_SITE
 
@@ -506,7 +651,22 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun startViewModelWithDefaultParameters() {
+    @Test
+    fun `bottom sheet actions are sorted in the correct order`() {
+        startViewModelWithDefaultParameters()
+
+        val expectedOrder = listOf(
+                NO_ACTION,
+                CREATE_NEW_STORY,
+                CREATE_NEW_POST,
+                CREATE_NEW_PAGE
+        )
+
+        assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
+    }
+
+    private fun startViewModelWithDefaultParameters(isJetpackApp: Boolean = false) {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
 
@@ -525,7 +685,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun resumeViewModelWithDefaultParameters() {
-        viewModel.onResume(site = initSite(hasFullAccessToContent = true), showFab = true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true), isOnMySitePageWithValidSite = true)
     }
 
     private fun initSite(hasFullAccessToContent: Boolean = true, supportsStories: Boolean = true): SiteModel {

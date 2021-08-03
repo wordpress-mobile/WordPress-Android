@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.AddContentBottomSheetBinding
+import org.wordpress.android.databinding.RecyclerViewBottomSheetBinding
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
 
@@ -26,13 +26,13 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.add_content_bottom_sheet, container)
+        return inflater.inflate(R.layout.recycler_view_bottom_sheet, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(AddContentBottomSheetBinding.bind(view)) {
+        with(RecyclerViewBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             contentRecyclerView.adapter = AddContentAdapter(requireActivity())
 

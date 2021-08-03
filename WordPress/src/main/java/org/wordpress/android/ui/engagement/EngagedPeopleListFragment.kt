@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.scan_list_threat_item.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
@@ -100,8 +99,8 @@ class EngagedPeopleListFragment : Fragment() {
                     ShowBottomSheet -> {
                         if (bottomSheet == null) {
                             bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
+                            bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                         }
-                        bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                     }
                     HideBottomSheet -> {
                         bottomSheet?.apply { this.dismiss() }

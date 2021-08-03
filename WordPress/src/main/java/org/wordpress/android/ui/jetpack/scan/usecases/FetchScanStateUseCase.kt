@@ -22,6 +22,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.max
 
+const val START_WITH_DELAY_MILLIS = 5000L
 const val FETCH_SCAN_STATE_DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
 
@@ -39,7 +40,7 @@ class FetchScanStateUseCase @Inject constructor(
     ): Flow<FetchScanState> = flow {
         var retryAttempts = 0
         if (startWithDelay) {
-            delay(FETCH_SCAN_STATE_DELAY_MILLIS)
+            delay(START_WITH_DELAY_MILLIS)
         }
 
         while (true) {
@@ -57,6 +58,10 @@ class FetchScanStateUseCase @Inject constructor(
             if (scanStateModel == null) {
                 val retryAttemptsExceeded = handleError(retryAttempts++, Failure.RemoteRequestFailure)
                 if (retryAttemptsExceeded) break else continue
+            }
+            if (scanStateModel.reason == ScanStateModel.Reason.MULTISITE_NOT_SUPPORTED) {
+                emit(Failure.MultisiteNotSupported)
+                return@flow
             }
             emit(Success(scanStateModel))
 
@@ -87,6 +92,7 @@ class FetchScanStateUseCase @Inject constructor(
         sealed class Failure : FetchScanState() {
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
+            object MultisiteNotSupported : Failure()
         }
     }
 }

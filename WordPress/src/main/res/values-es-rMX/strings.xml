@@ -1,11 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-20 13:09:14+0000
+Translation-Revision-Date: 2021-06-05 20:46:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
+    <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
+    <string name="storage_utils_dialog_title">Insuficiente almacenamiento en el dispositivo</string>
+    <string name="gutenberg_native_type_a_url">Escribe una URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Toca para añadir contenido</string>
+    <string name="gutenberg_native_s_has_url_set">%s tiene una URL ya establecida</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL establecida</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
+    <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
+    <string name="gutenberg_native_width_settings">Ajustes de medios</string>
+    <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
+    <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
+    <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
+    <string name="user_profile_site_section_header">Sitio</string>
+    <string name="user_profile_untitled_site">(Sin título)</string>
+    <string name="likes_list_screen_title">Lista de Me gusta %s</string>
+    <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
     <string name="reader_title_interests">Seguir temáticas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
@@ -14,7 +30,7 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Toca dos veces para abrir la hoja inferior y editar, reemplazar o borrar la imagen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Toca dos veces para abrir la hoja de acción y editar, reemplazar o borrar la imagen</string>
     <string name="new_site_creation_search_domain_input_hint">Introduce un nombre para tu sitio</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b>Todas las tareas completadas&lt;/b>&lt;br/> Llegará a más personas. ¡Buen trabajo! </string>
+    <string name="quick_start_completed_type_grow_message">&lt;b&gt;Todas las tareas completadas&lt;/b&gt;&lt;br/&gt; Llegará a más personas. ¡Buen trabajo! </string>
     <string name="backup_download_complete_info">También te hemos enviado por correo electrónico un enlace a tu archivo.</string>
     <string name="jetpack_icon_content_description">icono</string>
     <string name="label_control_upload">Subir</string>
@@ -108,9 +124,9 @@ Language: es_MX
     <string name="reader_discover_no_posts_button_text">Seguir temáticas</string>
     <string name="login_find_your_connected_email">Encuentra tu correo electrónico conectado</string>
     <string name="continue_site_credentials">Continuar con las credenciales de la tienda</string>
-    <string name="login_prologue_third_subtitle_one">A &lt;b>Madison Ruíz&lt;/b> le ha gustado tu entrada</string>
-    <string name="login_prologue_third_subtitle_two">Hoy has recibido &lt;b>50 me gusta&lt;/b> en tu sitio</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b>Juan Gómez&lt;/b> ha respondido en tu entrada</string>
+    <string name="login_prologue_third_subtitle_one">A &lt;b&gt;Madison Ruíz&lt;/b&gt; le ha gustado tu entrada</string>
+    <string name="login_prologue_third_subtitle_two">Hoy has recibido &lt;b&gt;50 me gusta&lt;/b&gt; en tu sitio</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Juan Gómez&lt;/b&gt; ha respondido en tu entrada</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_skip_button">Omitir</string>
@@ -177,7 +193,6 @@ Language: es_MX
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
-    <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
@@ -248,7 +263,7 @@ Language: es_MX
     <string name="dialog_discard_story_message">La entrada de tu historia no se guardará como borrador.</string>
     <string name="dialog_discard_story_ok_button">Descartar</string>
     <string name="story_saving_untitled">Sin título</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Toca crear %1$s. %2$s Después selecciona &lt;b>Entrada del blog&lt;/b></string>
+    <string name="quick_start_dialog_create_new_post_message_short">Toca crear %1$s. %2$s Después selecciona &lt;b&gt;Entrada del blog&lt;/b&gt;</string>
     <string name="prepublishing_nudges_story_title_hint">Pon un título a tu historia</string>
     <string name="mlp_create_blank_page">Crear una página en blanco</string>
     <string name="mlp_create_page">Crear una página</string>
@@ -310,14 +325,12 @@ Language: es_MX
     <string name="get_started">Primeros pasos</string>
     <string name="check_email">Comprobar el correo electrónico</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un nuevo título</string>
-    <string name="quick_start_list_update_site_title_title">Establece el título de tu sitio</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un nuevo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>
-    <string name="gutenberg_native_block_settings">Ajustes del bloque</string>
     <string name="gutenberg_native_block_pasted">Bloque pegado</string>
     <string name="gutenberg_native_block_duplicated">Bloque duplicado</string>
     <string name="gutenberg_native_block_cut">Bloque cortado</string>
@@ -334,7 +347,6 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_list_author">Autor de la página</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
     <string name="menu_content_info">Estructura del contenido</string>
     <string name="everyone">Todos</string>
@@ -370,6 +382,7 @@ Language: es_MX
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
+    <string name="gutenberg_native_insert_mention">Insertar una mención</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">La página de inicio seleccionada y la página de entradas no pueden ser la misma.</string>
     <string name="site_settings_classic_blog">Blog clásico</string>
     <string name="site_settings_static_homepage">Página de inicio estática</string>
@@ -442,7 +455,6 @@ Language: es_MX
     <string name="weekday_tuesday">Martes</string>
     <string name="weekday_monday">Lunes</string>
     <string name="weekday_sunday">Domingo</string>
-    <string name="gif_picker_search_hint">Buscar en Tenor</string>
     <string name="media_accessing_failed">Ha fallado el acceso al contenido de un sitio privado. Algunos medios pueden no estar disponibles</string>
     <string name="media_accessing_progress">Accediendo al contenido de un sitio privado</string>
     <string name="error_failed_to_crop_and_save_image">No se pudo recortar y guardar la imagen, inténtalo de nuevo</string>
@@ -484,7 +496,10 @@ Language: es_MX
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
     <string name="gutenberg_native_excerpt_length_words">Longitud del extracto (palabras)</string>
+    <string name="gutenberg_native_edit_cover_media">Editar el medio de la portada</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
+    <string name="gutenberg_native_button_link_url">URL del enlace del botón</string>
+    <string name="gutenberg_native_border_radius">Radio del borde</string>
     <string name="gutenberg_native_add_paragraph_block">Añadir un bloque de párrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear una entrada</string>
     <string name="post_list_tab_trashed_posts">En la papelera</string>
@@ -524,6 +539,7 @@ Language: es_MX
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del video. %s</string>
     <string name="gutenberg_native_edit_video">Editar video</string>
+    <string name="gutenberg_native_edit_media">Editar medios</string>
     <string name="gutenberg_native_add_a_shortcode">Añadir un shortcode…</string>
     <string name="post_list_author">Autor de la entrada</string>
     <string name="fab_create_desc">Crea una entrada</string>
@@ -538,8 +554,6 @@ Language: es_MX
     <string name="stats_box_type_low">bajas</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
-    <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_gallery_caption_s">Leyenda de la galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
     <string name="content_description_person_building_website">Creador de la web</string>
@@ -560,10 +574,10 @@ Language: es_MX
     <string name="new_site_creation_unavailable_domain">Este dominio no está disponible</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">No hemos podido acceder a tu sitio. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b>certificado SSL&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_http_auth">No hemos podido acceder a tu sitio porque necesita &lt;b>identificación HTTP&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_discovery_error_xmlrpc">No hemos podido acceder en tu sitio al &lt;b>archivo XMLRCP&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
-    <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b>%1$s&lt;/b></string>
+    <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b&gt;certificado SSL&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_discovery_error_http_auth">No hemos podido acceder a tu sitio porque necesita &lt;b&gt;identificación HTTP&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_discovery_error_xmlrpc">No hemos podido acceder en tu sitio al &lt;b&gt;archivo XMLRCP&lt;/b&gt;. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
+    <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Accede con las credenciales del sitio %1$s</string>
     <string name="reader_following_display_name">Siguiendo</string>
     <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
@@ -582,14 +596,12 @@ Language: es_MX
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar el teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para mostrar la ayuda</string>
     <string name="gutenberg_native_take_a_photo">Toma una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
     <string name="gutenberg_native_take_a_video">Toma un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Toma una foto o un video</string>
-    <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_cut_block">Bloque cortado</string>
@@ -606,6 +618,7 @@ Language: es_MX
     <string name="gutenberg_native_move_block_up">Mover el bloque hacia arriba</string>
     <string name="gutenberg_native_navigate_up">Navegar hacia arriba</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque hacia abajo</string>
+    <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar teclado</string>
     <string name="gutenberg_native_help_icon">Icono de ayuda</string>
@@ -620,6 +633,7 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dos veces para mover el bloque hacia abajo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toca dos veces para editar este valor</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dos veces para añadir un bloque</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toca dos veces y mantén para editar</string>
     <string name="gutenberg_native_current_value_is_s">El valor actual es %s</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
@@ -798,7 +812,7 @@ Language: es_MX
     <string name="domain_registration_state_picker_dialog_title">Selecciona el Estado</string>
     <string name="domain_registration_country_picker_dialog_title">Selecciona el País</string>
     <string name="domain_registration_result_continue_button">continuar</string>
-    <string name="domain_registration_result_description">tu nuevo dominio &lt;b>%s&lt;/b> se está configurando. ¡Tu sitio está\n    dando volteretas de emoción!</string>
+    <string name="domain_registration_result_description">tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; se está configurando. ¡Tu sitio está\n    dando volteretas de emoción!</string>
     <string name="domain_registration_result_title">Felicidades</string>
     <string name="domain_contact_information_register_domain_button">Registrar Dominio</string>
     <string name="domain_contact_information_state_hint">Estado</string>
@@ -915,15 +929,11 @@ Language: es_MX
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_dialog_view_site_message">¡Disfruta tu producto terminado!</string>
-    <string name="quick_start_dialog_upload_icon_title">Carga un icono del sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos por los básicos de la construcción y el crecimiento de tu sitio.</string>
-    <string name="quick_start_dialog_migration_title">Hemos realizado algunos cambios en tu lista de comprobación</string>
-    <string name="quick_start_dialog_publish_post_message">Guarda en borrador y publica tu primera entrada.</string>
-    <string name="quick_start_dialog_migration_message">Hemos agregado más tareas para ayudarte a hacer crecer tu audiencia.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar planes</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de mercadotecnia y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -1007,7 +1017,6 @@ Language: es_MX
     <string name="stats_referrer_label">Referente</string>
     <string name="stats_referrers">Referentes</string>
     <string name="stats_posts_and_pages">Entradas y Páginas</string>
-    <string name="gif_picker_endless_scroll_network_error">Algunos medios fallan al cargar debido a un error de red.</string>
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha sido %1$s desde que %2$s fue publicado. Empieza la avalancha y aumenta las vistas de publicaciones compartiendo la publicación.</string>
@@ -1112,7 +1121,6 @@ Language: es_MX
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
-    <string name="quick_start_dialog_need_help_button_negative">No, gracias</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
@@ -1341,7 +1349,7 @@ Language: es_MX
     <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="my_site_section_screen_title">Mi sitio</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
-    <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta funcionalidad.&lt;br/>&lt;br/>Si deseas usarla, edita tus permisos y comprueba que &lt;strong>%s&lt;/strong> se ha habilitado.</string>
+    <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta funcionalidad.&lt;br/&gt;&lt;br/&gt;Si deseas usarla, edita tus permisos y comprueba que &lt;strong&gt;%s&lt;/strong&gt; se ha habilitado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
     <string name="sharing_disabled_description">No puedes acceder a los ajustes compartidos porque el módulo Compartir de Jetpack está deshabilitado.</string>

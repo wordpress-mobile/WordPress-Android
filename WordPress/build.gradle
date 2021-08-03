@@ -1,28 +1,57 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.google.gms:google-services:4.3.8'
         classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
-        classpath 'io.sentry:sentry-android-gradle-plugin:1.7.28'
+        classpath 'io.sentry:sentry-android-gradle-plugin:2.0.0'
     }
 }
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+    def localRNUrl = "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
+    def remoteRNUrl ="https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ? localRNUrl : remoteRNUrl
+    maven {
+        url reactNativeUrl
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    maven {
+        url 'https://zendesk.jfrog.io/zendesk/repo'
+        content {
+            includeGroup "com.zendesk"
+            includeGroup "com.zendesk.belvedere2"
+        }
+    }
     google()
     jcenter()
-    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+    mavenCentral()
     maven { url "https://www.jitpack.io" }
-    maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
@@ -35,8 +64,6 @@ allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
-
-android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
     useLibrary 'android.test.runner'
@@ -55,13 +82,6 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        // Allow versionName to be overridden with property. e.g. -PversionName=1234
-        if (project.hasProperty("versionName")) {
-            versionName project.property("versionName")
-        } else {
-            versionName "alpha-292"
-        }
-        versionCode 1038
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -77,15 +97,26 @@ android {
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
+        buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+        buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
+        buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
+        buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
+        buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
+        buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
+
+        manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
     // Gutenberg's dependency - react-native-video is using
     // Java API 1.8
     compileOptions {
+        // Enables Java 8+ API desugaring support
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -94,32 +125,35 @@ android {
 
     productFlavors {
         wordpress {
+            isDefault true
             dimension "app"
+
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
 
         jetpack {
             dimension "app"
+
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
 
         vanilla { // used for release and beta
             dimension "buildType"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName "17.2-rc-3"
-            }
-            versionCode 1037
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
             buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
+            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -131,13 +165,19 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
-            buildConfigField "boolean", "LIKES_ENHANCEMENTS", "true"
+            buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+            isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
+
+        // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
+        def properties = loadPropertiesFromFile(checkGradlePropertiesFile())
+        addBuildConfigFieldsFromPrefixedProperties(wordpress, properties, ['wp'])
+        addBuildConfigFieldsFromPrefixedProperties(jetpack, properties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
     }
 
     buildTypes {
@@ -165,8 +205,7 @@ android {
     lintOptions{
         checkDependencies = true
         checkGeneratedSources = true
-        lintConfig file('lint.xml')
-        baseline file("lint-baseline.xml")
+        lintConfig file("${project.rootDir}/config/lint.xml")
     }
 
     packagingOptions {
@@ -193,14 +232,67 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    applicationVariants.all { variant ->
+        def app = variant.productFlavors[0].name
+        def buildType = variant.productFlavors[1].name
+        def version = versionForVariant(app, buildType)
+        variant.outputs.each { output ->
+            output.versionNameOverride = version['versionName']
+            output.versionCodeOverride = version['versionCode']?.toInteger()
+        }
+    }
 }
 
-// allows us to use cool things like @Parcelize annotations
-androidExtensions {
-    experimental = true
+/// Dynamically add `buildConfigFields` on a given variant/flavor from prefixed properties
+/// (This is used to e.g. add every property prefixed `wp.` in `gradle.properties` as a BuildConfigField in the `wordpress` flavor)
+///
+/// `prefixes` is an array of prefixes to search for, without their `.` dot (e.g. `["wp", "jp"]`).
+/// Properties found with prefixes first in that array will be overridden by the ones found with prefixes later in the array.
+static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefixes) {
+    // Build a Map of prefixed properties found. Keys in this Map will be lowercased and `.` replaced by `_`
+    def fields_map = [:]
+    prefixes.each { prefix ->
+        properties.each { property ->
+            if (property.key.toLowerCase().startsWith("${prefix.toLowerCase()}.")) {
+                def key = property.key.toLowerCase().replace("${prefix.toLowerCase()}.", "").replace(".", "_")
+                fields_map[key] = property.value
+            }
+        }
+    }
+
+    // Then define the found properties as buildConfigFields
+    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
+    fields_map.each {
+        variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
+    }
+}
+
+// Search for a variant-specific variation of the versionName and versionCode in `version.properties` file, based on the
+// variant's app and buildType flavors.
+//
+// This will search the `version.properties` file for "$app.$buildType.versionName" first, and fallback to "$app.versionName" then just "versionName" (and same for versionCode)
+// Note: If the property is overridden at project level (e.g. '-PversionName'), it will take priority over any value in `version.properties`.
+//
+// Returns a Hash with keys 'versionName' and 'versionCode', with the found values for the app and buildType provided.
+def versionForVariant(app, buildType) {
+    def versionProperties = new Properties()
+    file("../version.properties").withInputStream { versionProperties.load(it) }
+
+    def propertyForVariant = { property ->
+        return project.findProperty(property)
+                ?: versionProperties.getProperty("${app}.${buildType}.${property}")
+                ?: versionProperties.getProperty("${app}.${property}")
+                ?: versionProperties.getProperty(property)
+    }
+
+    def versionName = propertyForVariant('versionName')
+    def versionCode = propertyForVariant('versionCode')
+    return [versionName: versionName, versionCode: versionCode]
 }
 
 dependencies {
+    implementation project(path: ':mp4compose')
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
@@ -260,6 +352,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
+    implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:3.4.0'
@@ -289,7 +382,11 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    testImplementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
+    testImplementation('org.bouncycastle:bcprov-jdk15on') {
+        version {
+            strictly '1.64'
+        }
+    }
 
     androidTestImplementation 'com.squareup.okio:okio:2.8.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
@@ -317,7 +414,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -349,7 +446,8 @@ dependencies {
     implementation (project(path:':libs:editor:WordPressEditor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation (project(path:':libs:login:WordPressLoginFlow')) {
+
+    implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
@@ -363,10 +461,6 @@ dependencies {
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
-
-    // Sentry
-    implementation 'io.sentry:sentry-android:2.1.3'
-    implementation 'org.slf4j:slf4j-nop:1.7.25'
 
     // Firebase
     implementation 'com.google.firebase:firebase-config:19.1.3'
@@ -385,10 +479,18 @@ dependencies {
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
 
+    // Necessary because of the failing android tests
+    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
+
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+
+    // Enables Java 8+ API desugaring support
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 }
 
 configurations.all {
@@ -397,39 +499,23 @@ configurations.all {
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
-android.buildTypes.all { buildType ->
-    // Add properties named "wp.xxx" to our BuildConfig
-    def inputFile = checkGradlePropertiesFile()
-    def properties = loadPropertiesFromFile(inputFile)
-    properties.any { property ->
-        if (property.key.toLowerCase().startsWith("wp.")) {
-            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
-                    "\"${property.value}\""
-        }
-        if (property.key.toLowerCase().startsWith("wp.res.")) {
-            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
-                    "${property.value}"
-        }
-    }
 
-    // If Google services file doesn't exist...
-    if (!file("google-services.json").exists()) {
-        // ... copy example file.
-        copy {
-            from(".")
-            into(".")
-            include("google-services.json-example")
-            rename('google-services.json-example', 'google-services.json')
-        }
-    }
-
-    // Print warning message if example Google services file is used.
-    if ((new File('WordPress/google-services.json').text) == (new File('WordPress/google-services.json-example').text)) {
-        println("WARNING: You're using the example google-services.json file. Google login will fail.")
+// If Google services file doesn't exist, copy example file
+if (!file("google-services.json").exists()) {
+    copy {
+        from(".")
+        into(".")
+        include("google-services.json-example")
+        rename('google-services.json-example', 'google-services.json')
     }
 }
 
-task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
+// Print warning message if example Google services file is used.
+if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
+    println("WARNING: You're using the example google-services.json file. Google login will fail.")
+}
+
+tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
     repositoryOwner = "wordpress-mobile"
     repositoryName = "WordPress-Android"
     pullRequestId = System.properties['GITHUB_PULLREQUESTID']
@@ -455,9 +541,29 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     ]
 }
 
-task printVersionName {
+tasks.register("updateVersionProperties") {
     doLast {
-        println android.productFlavors.vanilla.versionName
+        ant.propertyfile(
+                file: "../version.properties") {
+            entry( key: "$key", value: "$value")
+        }
+    }
+}
+
+tasks.register("printVersionName") {
+    doLast {
+        def app = project.findProperty('productKey') ?: 'wordpress'
+        def buildType = project.findProperty('buildType') ?: ''
+        println versionForVariant(app, buildType)['versionName']
+    }
+}
+
+tasks.register("printAllVersions") {
+    doLast {
+        android.applicationVariants.all { variant ->
+            def apkData = variant.outputs*.apkData
+            println "${variant.name}: ${apkData*.versionName} (${apkData*.versionCode})"
+        }
     }
 }
 

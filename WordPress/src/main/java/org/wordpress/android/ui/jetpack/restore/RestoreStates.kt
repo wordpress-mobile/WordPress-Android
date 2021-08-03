@@ -114,7 +114,12 @@ sealed class RestoreRequestState {
         val published: Date? = null
     ) : RestoreRequestState()
 
+    object Multisite : RestoreRequestState()
+
     object Empty : RestoreRequestState()
+
+    data class AwaitingCredentials(val isAwaitingCredentials: Boolean) : RestoreRequestState()
+
     sealed class Failure : RestoreRequestState() {
         object NetworkUnavailable : Failure()
         object RemoteRequestFailure : Failure()

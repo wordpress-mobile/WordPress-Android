@@ -17,6 +17,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.test
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.utils.getDefaultLikers
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -46,6 +48,10 @@ class GetLikesHandlerTest {
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
     private val noLikesLimit = -1
+    private val pageInfo = PagingInfo(
+            20,
+            1
+    )
 
     @Before
     fun setup() {
@@ -61,10 +67,11 @@ class GetLikesHandlerTest {
         val state = LikesData(
                 likes = likesData,
                 expectedNumLikes = expectedNumLikes,
-                hasMore = false
+                hasMore = false,
+                pageInfo = pageInfo
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
                 flow { emit(state) }
         )
 
@@ -97,10 +104,11 @@ class GetLikesHandlerTest {
                 cachedLikes = likesData,
                 emptyStateData = EmptyStateData(false),
                 expectedNumLikes = expectedNumLikes,
-                hasMore = false
+                hasMore = false,
+                pageInfo = pageInfo
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
                 flow { emit(state) }
         )
 
@@ -131,7 +139,8 @@ class GetLikesHandlerTest {
         val state = LikesData(
                 likes = likesData,
                 expectedNumLikes = expectedNumLikes,
-                hasMore = false
+                hasMore = false,
+                pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForComment(fingerPrint, paginationParams)).thenReturn(
@@ -166,7 +175,8 @@ class GetLikesHandlerTest {
                 cachedLikes = likesData,
                 emptyStateData = EmptyStateData(false),
                 expectedNumLikes = expectedNumLikes,
-                hasMore = false
+                hasMore = false,
+                pageInfo = pageInfo
         )
 
         whenever(getLikesUseCase.getLikesForComment(fingerPrint, paginationParams)).thenReturn(

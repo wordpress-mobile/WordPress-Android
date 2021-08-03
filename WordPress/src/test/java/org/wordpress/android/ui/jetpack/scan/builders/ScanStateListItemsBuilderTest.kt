@@ -11,9 +11,11 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
@@ -43,6 +46,10 @@ private const val DUMMY_CURRENT_TIME = 10000000L
 private const val ONE_MINUTE = 60 * 1000L
 private const val ONE_HOUR = 60 * ONE_MINUTE
 private const val DUMMY_TEXT = "dummy text"
+private const val TEST_SITE_ID = 1L
+private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
+        "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
+                "to fix threat."
 
 @InternalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
@@ -56,7 +63,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
-    @Mock private lateinit var onEnterServerCredsMessageClicked: () -> Unit
+    @Mock private lateinit var onEnterServerCredsIconClicked: () -> Unit
 
     private val baseThreatModel = BaseThreatModel(
             id = 1L,
@@ -67,7 +74,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     )
     private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
     private val threats = listOf(threat)
-    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE)
+    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE, reason = Reason.NO_REASON)
     private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
 
     @Before
@@ -83,6 +90,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
         whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
         whenever(site.name).thenReturn((""))
+        whenever(site.siteId).thenReturn(TEST_SITE_ID)
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
 
@@ -191,7 +199,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 assertThat(
                         scanStateItems.filterIsInstance(DescriptionState::class.java)
                                 .firstOrNull {
-                                    it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular)
+                                    it.text == UiStringRes(R.string.threat_fix_enter_server_creds_msg_singular)
                                 }
                 ).isNull()
             }
@@ -292,21 +300,21 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             test {
                 val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
 
-                val messageResourceId = R.string.threat_fix_enter_server_creds_message_singular
-                assertThat(
-                        scanStateItems.contains(
-                                DescriptionState(
-                                        text = UiStringRes(messageResourceId),
-                                        clickableTextsInfo = listOf(
-                                                ClickableTextInfo(
-                                                        startIndex = 0,
-                                                        endIndex = resourceProvider.getString(messageResourceId).length,
-                                                        onClick = onEnterServerCredsMessageClicked
-                                                )
-                                        )
-                                )
-                        )
-                ).isNotNull
+                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java).first().text)
+                        .isEqualTo(UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK))
+            }
+
+    @Test
+    fun `given server creds msg exists, when items are built, then primary colored plus button exists`() =
+            test {
+                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+
+                val serverCredsMsg = scanStateItems.filterIsInstance(FootnoteState::class.java)
+                        .first { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+                with(serverCredsMsg) {
+                    assertThat(iconResId).isEqualTo(R.drawable.ic_plus_white_24dp)
+                    assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
+                }
             }
 
     @Test
@@ -314,10 +322,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             test {
                 val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
-                        .firstOrNull {
-                            it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular)
-                        })
+                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
+                        .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                         .isNull()
             }
 
@@ -326,10 +332,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             test {
                 val scanStateItems = buildScanStateItems(fixableThreatsPresent = false)
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
-                        .firstOrNull {
-                            it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular)
-                        })
+                assertThat(scanStateItems.filterIsInstance(FootnoteState::class.java)
+                        .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                         .isNull()
             }
 
@@ -631,6 +635,16 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             scanStateModel = scanStateModel.copy(hasValidCredentials = serverCredsPresent)
         }
 
+        if (fixableThreatsPresent && !serverCredsPresent) {
+            whenever(
+                    htmlMessageUtils
+                            .getHtmlMessageFromStringFormatResId(
+                                    R.string.threat_fix_enter_server_creds_msg_singular,
+                                    "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
+                            )
+            ).thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
+        }
+
         return builder.buildScanStateListItems(
                 model = scanStateModel,
                 site = site,
@@ -639,7 +653,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 onFixAllButtonClicked = mock(),
                 onThreatItemClicked = mock(),
                 onHelpClicked = onHelpClickedMock,
-                onEnterServerCredsMessageClicked = onEnterServerCredsMessageClicked
+                onEnterServerCredsIconClicked = onEnterServerCredsIconClicked
         )
     }
 

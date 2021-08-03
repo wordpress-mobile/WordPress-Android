@@ -1,8 +1,0 @@
-17.1:
-Wat is er nieuw?
-
-We hebben de toegankelijkheid in de blokeditor verbeterd voor degenen die een TalkBack-schermlezer gebruiken.
-
-Om je te helpen bij het beheren van reacties op je site, is er nu een filter 'Niet beantwoord', zodat je niet-beantwoorde reacties op één plek kunt bekijken.
-
-Misschien heb je het nieuwe kleurenpalet opgemerkt! We hebben ook je app-pictogram geüpdatet om overeen te komen.

@@ -1,0 +1,79 @@
+<en-US>
+We added color/background customization for text blocks.
+It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
+</en-US>
+<de-DE>
+17.8:
+Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
+Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
+</de-DE>
+<es-ES>
+17.8:
+Hemos añadido la personalización del color y del fondo para los bloques de texto.
+No se podían editar los bloques no compatibles con cuentas que se hubiesen creado antes de diciembre del 2018. ¡Ya lo hemos arreglado! Durante el proceso, también hemos actualizado las pantallas de carga y de error en el editor de bloques no compatibles.
+</es-ES>
+<fr-FR>
+17.8:
+Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
+Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+</fr-FR>
+<iw-IL>
+17.8:
+הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
+לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
+</iw-IL>
+<id>
+17.8:
+Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
+Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
+</id>
+<it-IT>
+17.8:
+Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
+Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
+</it-IT>
+<ja-JP>
+17.8:
+テキストブロックに色や背景のカスタマイズ機能を追加しました。
+2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
+</ja-JP>
+<ko-KR>
+17.8:
+텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
+2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
+</ko-KR>
+<nl-NL>
+17.8:
+We hebben aanpassing van kleur/achtergrond toegevoegd aan tekstblokken.
+Het was niet mogelijk om niet-ondersteunde blokken te bewerken met accounts die voor december 2018 waren aangemaakt. Dat is nu verholpen! Daarnaast hebben we de schermen Laden/Mislukt bijgewerkt voor de editor van niet-ondersteunde blokken.
+</nl-NL>
+<pt-BR>
+17.8:
+Adicionamos personalização de plano de fundo/cor para blocos de texto.
+Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
+</pt-BR>
+<ru-RU>
+17.8:
+Добавлена возможность настраивать цвет и фон параграфов.
+Неподдерживаемые блоки невозможно было редактировать в учётных записях, созданных до декабря 2018 года. Мы это исправили! Кроме того, мы обновили экраны загрузки и сбоя для редактора неподдерживаемых блоков.
+</ru-RU>
+<sv-SE>
+17.8:
+Vi har lagt till färg-/bakgrundsanpassning för textblock.
+Tidigare var det inte möjligt att redigera ostödda block med konton skapade före december 2018. Vi har åtgärdat det! Vi har dessutom uppdaterat hämtar-/misslyckades-skärmarna för den ostödda blockredigeraren.
+</sv-SE>
+<tr-TR>
+17,8:
+Metin blokları için renk/arkaplan özelleştirmeleri ekledik.
+Desteklenmeyen blokların Aralık 2018'den önce oluşturulmuş hesaplar tarafından düzenlenmeleri eskiden mümkün değildi. Bunu düzelttik! Bununla birlikte, desteklenmeyen blok düzenleyicinin yükleme/hata ekranlarını da güncelledik.
+</tr-TR>
+<zh-CN>
+17.8:
+我们为文本块添加了颜色/背景定制功能。
+之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
+</zh-CN>
+<zh-TW>
+17.8:
+我們為文字區塊新增了色彩/背景自訂功能。
+2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
+</zh-TW>

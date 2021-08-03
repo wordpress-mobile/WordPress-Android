@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPostLikes
 import org.wordpress.android.fluxc.model.LikeModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentLikesPayload
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentLikesChanged
@@ -20,6 +21,9 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostLikesPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostLikesChanged
 import org.wordpress.android.fluxc.store.Store.OnChanged
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -48,7 +52,8 @@ class GetLikesUseCase @Inject constructor(
     @SuppressWarnings("Unused")
     val commentStore: CommentStore,
     @SuppressWarnings("Unused")
-    val postStore: PostStore
+    val postStore: PostStore,
+    val accountStore: AccountStore
 ) {
     private var getLikesContinuations = mutableMapOf<String, Continuation<OnChanged<*>>>()
 
@@ -62,9 +67,10 @@ class GetLikesUseCase @Inject constructor(
 
     suspend fun getLikesForPost(
         fingerPrint: LikeGroupFingerPrint,
-        paginationParams: PaginationParams
+        paginationParams: PaginationParams,
+        expectingToBeThere: CurrentUserInListRequirement
     ): Flow<GetLikesState> = flow {
-        getLikes(POST_LIKE, this, fingerPrint, paginationParams)
+        getLikes(POST_LIKE, this, fingerPrint, paginationParams, expectingToBeThere)
     }
 
     suspend fun getLikesForComment(
@@ -74,20 +80,105 @@ class GetLikesUseCase @Inject constructor(
         getLikes(COMMENT_LIKE, this, fingerPrint, paginationParams)
     }
 
+    @SuppressWarnings("ComplexMethod", "NestedBlockDepth", "LoopWithTooManyJumpStatements")
     private suspend fun getLikes(
         category: LikeCategory,
         flow: FlowCollector<GetLikesState>,
         fingerPrint: LikeGroupFingerPrint,
-        paginationParams: PaginationParams
+        paginationParams: PaginationParams,
+        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
     ) {
         if (!paginationParams.requestNextPage) {
             flow.emit(Loading)
             delay(PROGRESS_DELAY_MS)
         }
 
-        val noNetworkDetected = !networkUtilsWrapper.isNetworkAvailable()
+        for (retry in 1..NUM_RETRY) {
+            val noNetworkDetected = !networkUtilsWrapper.isNetworkAvailable()
 
-        val event = suspendCoroutine<OnChanged<*>> {
+            val result = makeRequest(category, fingerPrint, paginationParams)
+
+            val isPostLikeEvent = category == POST_LIKE && result is OnPostLikesChanged
+            val isCommentLikeEvent = category == COMMENT_LIKE && result is OnCommentLikesChanged
+
+            if (isPostLikeEvent || isCommentLikeEvent) {
+                var likes = listOf<LikeModel>()
+                var errorMessage: String? = null
+                var hasMore = false
+
+                if (result is OnPostLikesChanged) {
+                    likes = result.postLikes
+                    if (result.isError) errorMessage = result.error.message
+                    hasMore = result.hasMore
+                }
+
+                if (result is OnCommentLikesChanged) {
+                    likes = result.commentLikes
+                    if (result.isError) errorMessage = result.error.message
+                }
+
+                if (shouldRetry(expectingToBeThere, retry, result, likes)) {
+                    delay(PROGRESS_DELAY_MS)
+                    continue
+                }
+
+                likes = if (paginationParams.limit > 0) {
+                    likes.take(paginationParams.limit)
+                } else {
+                    likes
+                }
+
+                val pageInfo = PagingInfo(
+                        pageLength = paginationParams.pageLength,
+                        page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1
+                )
+                flow.emit(
+                    if (result.isError) {
+                        getFailureState(noNetworkDetected, likes, errorMessage, fingerPrint.expectedNumLikes, pageInfo)
+                    } else {
+                        LikesData(likes, fingerPrint.expectedNumLikes, hasMore, pageInfo)
+                    }
+                )
+
+                break
+            }
+        }
+    }
+
+    private fun shouldRetry(
+        expectingToBeThere: CurrentUserInListRequirement,
+        retry: Int,
+        result: OnChanged<*>,
+        likes: List<LikeModel>
+    ): Boolean {
+        val shouldCheck = expectingToBeThere != DONT_CARE &&
+                retry < NUM_RETRY &&
+                !result.isError &&
+                accountStore.hasAccessToken()
+
+        return if (shouldCheck) {
+            when (expectingToBeThere) {
+                DONT_CARE -> {
+                    false
+                }
+                REQUIRE_TO_BE_THERE -> {
+                    !likes.any { it.likerId == accountStore.account.userId }
+                }
+                REQUIRE_TO_NOT_BE_THERE -> {
+                    likes.any { it.likerId == accountStore.account.userId }
+                }
+            }
+        } else {
+            false
+        }
+    }
+
+    private suspend fun makeRequest(
+        category: LikeCategory,
+        fingerPrint: LikeGroupFingerPrint,
+        paginationParams: PaginationParams
+    ): OnChanged<*> {
+        return suspendCoroutine {
             getLikesContinuations[category.getActionKey(fingerPrint.siteId, fingerPrint.postOrCommentId)] = it
             when (category) {
                 POST_LIKE -> {
@@ -110,47 +201,14 @@ class GetLikesUseCase @Inject constructor(
                 }
             }
         }
-
-        val isPostLikeEvent = category == POST_LIKE && event is OnPostLikesChanged
-        val isCommentLikeEvent = category == COMMENT_LIKE && event is OnCommentLikesChanged
-
-        if (isPostLikeEvent || isCommentLikeEvent) {
-            var likes = listOf<LikeModel>()
-            var errorMessage: String? = null
-            var hasMore = false
-
-            if (event is OnPostLikesChanged) {
-                likes = event.postLikes
-                if (event.isError) errorMessage = event.error.message
-                hasMore = event.hasMore
-            }
-
-            if (event is OnCommentLikesChanged) {
-                likes = event.commentLikes
-                if (event.isError) errorMessage = event.error.message
-            }
-
-            likes = if (paginationParams.limit > 0) {
-                likes.take(paginationParams.limit)
-            } else {
-                likes
-            }
-
-            flow.emit(
-                    if (event.isError) {
-                        getFailureState(noNetworkDetected, likes, errorMessage, fingerPrint.expectedNumLikes)
-                    } else {
-                        LikesData(likes, fingerPrint.expectedNumLikes, hasMore)
-                    }
-            )
-        }
     }
 
     private fun getFailureState(
         noNetworkDetected: Boolean,
         orderedLikes: List<LikeModel>,
         errorMessage: String?,
-        expectedNumLikes: Int
+        expectedNumLikes: Int,
+        pageInfo: PagingInfo
     ): Failure {
         return if (noNetworkDetected) {
             Failure(
@@ -162,7 +220,8 @@ class GetLikesUseCase @Inject constructor(
                             UiStringRes(R.string.no_network_title)
                     ),
                     expectedNumLikes,
-                    orderedLikes.isNotEmpty()
+                    orderedLikes.isNotEmpty(),
+                    pageInfo
             )
         } else {
             Failure(
@@ -178,7 +237,8 @@ class GetLikesUseCase @Inject constructor(
                             UiStringRes(R.string.get_likes_empty_state_title)
                     ),
                     expectedNumLikes,
-                    orderedLikes.isNotEmpty()
+                    orderedLikes.isNotEmpty(),
+                    pageInfo
             )
         }
     }
@@ -219,7 +279,8 @@ class GetLikesUseCase @Inject constructor(
         data class LikesData(
             val likes: List<LikeModel>,
             val expectedNumLikes: Int,
-            val hasMore: Boolean = false
+            val hasMore: Boolean = false,
+            val pageInfo: PagingInfo
         ) : GetLikesState()
 
         data class Failure(
@@ -228,7 +289,8 @@ class GetLikesUseCase @Inject constructor(
             val cachedLikes: List<LikeModel>,
             val emptyStateData: EmptyStateData,
             val expectedNumLikes: Int,
-            val hasMore: Boolean
+            val hasMore: Boolean,
+            val pageInfo: PagingInfo
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
@@ -236,6 +298,8 @@ class GetLikesUseCase @Inject constructor(
             )
         }
     }
+
+    data class PagingInfo(val pageLength: Int, val page: Int)
 
     // Extend error categories if appropriate
     enum class FailureType {
@@ -255,8 +319,17 @@ class GetLikesUseCase @Inject constructor(
     data class LikeGroupFingerPrint(val siteId: Long, val postOrCommentId: Long, val expectedNumLikes: Int)
     data class PaginationParams(val requestNextPage: Boolean, val pageLength: Int, val limit: Int)
 
+    enum class CurrentUserInListRequirement {
+        DONT_CARE,
+        REQUIRE_TO_BE_THERE,
+        REQUIRE_TO_NOT_BE_THERE
+    }
+
     companion object {
         // Pretty arbitrary amount to allow the loading state to appear to the user
         private const val PROGRESS_DELAY_MS = 600L
+
+        // Num of retries for post likes when BeInListRequirement is not DON_T_CARE
+        private const val NUM_RETRY = 6
     }
 }

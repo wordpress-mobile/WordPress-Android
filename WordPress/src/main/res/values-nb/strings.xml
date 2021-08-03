@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2021-04-23 11:24:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -19,14 +19,10 @@ Language: nb_NO
     <string name="like_title_singular">1 liking</string>
     <string name="suggestion">Forslag:</string>
     <string name="gutenberg_native_search_blocks">Søk blokker</string>
-    <string name="gutenberg_native_search_block">Søk blokk</string>
     <string name="gutenberg_native_clear_search">Rensk søk</string>
     <string name="gutenberg_native_cancel_search">Avbryt søk</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s er %3$s %4$s.</string>
     <string name="comment_status_unreplied">Ubesvart</string>
-    <string name="gutenberg_native_table_of_contents">Innholdsfortegnelse</string>
-    <string name="gutenberg_native_summary">sammendrag</string>
-    <string name="gutenberg_native_buttongroup">dokumentomriss</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid er tillatt</string>
     <string name="site_settings_denylist_title">Ikke tillatte kommentarer</string>
     <string name="reader_title_interests">Følg emner</string>
@@ -44,7 +40,6 @@ Language: nb_NO
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
     <string name="disable">Slå av</string>
     <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
-    <string name="quick_start_list_enable_sharing_title">Slå på deling</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -55,7 +50,6 @@ Language: nb_NO
     <string name="gutenberg_native_lock_icon">Låse-ikon</string>
     <string name="gutenberg_native_choose_audio">Velg lyd</string>
     <string name="gutenberg_native_audio_player">Lydavspiller</string>
-    <string name="gutenberg_native_audio_file">lydfil</string>
     <string name="continue_with_wpcom">Logg inn eller registrer deg på WordPress.com</string>
     <string name="photo_picker_use_audio">Bruk denne lyden</string>
     <string name="photo_picker_choose_audio">Velg lyd fra enheten</string>
@@ -178,7 +172,6 @@ Language: nb_NO
     <string name="stats_referrer_popup_menu_mark_as_spam">Merk som spam</string>
     <string name="stats_referrer_popup_menu_open_website">Åpne nettstedet</string>
     <string name="media_uploading_gif_library_photo">Laster opp gif-media</string>
-    <string name="gutenberg_native_select_item">Velg element</string>
     <string name="gutenberg_native_search_or_type_url">Søk eller skriv inn URL</string>
     <string name="gutenberg_native_add_this_telephone_link">Legg til denne telefonlenken</string>
     <string name="gutenberg_native_add_this_link">Legg til denne lenken</string>
@@ -255,7 +248,7 @@ Language: nb_NO
     <string name="prepublishing_nudges_story_title_hint">Gi din fortelling en tittel</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Lag et innlegg eller en fortelling</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Lag et innlegg, en side eller fortelling</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Lag. %2$s Velg så &lt;b>blogginnlegg&lt;/b></string>
+    <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Lag. %2$s Velg så &lt;b&gt;blogginnlegg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Velg fra enheten</string>
     <string name="my_site_bottom_sheet_add_story">Fortelling</string>
     <string name="pick_file">Legg til fil</string>
@@ -281,14 +274,12 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
-    <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b>%1$s&lt;/b> for å angi en ny tittel</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
     <string name="gutenberg_native_duplicate_block">Dupliser blokk</string>
     <string name="gutenberg_native_copy_block">Kopier blokk</string>
     <string name="gutenberg_native_copied_block">Kopiert blokk</string>
-    <string name="gutenberg_native_block_settings">Blokkinnstillinger</string>
     <string name="gutenberg_native_block_pasted">Blokk limt inn</string>
     <string name="gutenberg_native_block_duplicated">Blokk duplisert</string>
     <string name="gutenberg_native_block_cut">Blokk kuttet</string>
@@ -300,7 +291,6 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_list_author">Sideforfatter</string>
-    <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="menu_content_info">Innholdsstruktur</string>
     <string name="everyone">Alle</string>
     <string name="me">Meg</string>
@@ -331,6 +321,7 @@ Language: nb_NO
     <string name="update_now">Oppdater nå</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
     <string name="gutenberg_native_move_to_top">Flytt til toppen</string>
+    <string name="gutenberg_native_insert_mention">Sett inn omtale</string>
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
@@ -384,7 +375,6 @@ Language: nb_NO
     <string name="pages_and_posts_cancel_auto_upload">Avbryt opplastning</string>
     <string name="gif_list_search_returned_unknown_error">Det oppsto et problem med å håndtere forespørselen</string>
     <string name="gif_powered_by_tenor">Drevet av Tenor</string>
-    <string name="gif_picker_search_hint">Søk i Tenor</string>
     <string name="photo_picker_gif">Velg fra Tenor</string>
     <string name="weekday_saturday">Lørdag</string>
     <string name="weekday_friday">Fredag</string>
@@ -467,6 +457,7 @@ Language: nb_NO
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
+    <string name="gutenberg_native_edit_media">Rediger media</string>
     <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
     <string name="post_list_author">Innleggsforfatter</string>
     <string name="fab_create_desc">Lag et innlegg</string>
@@ -479,8 +470,6 @@ Language: nb_NO
     <string name="stats_box_type_low">lav</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  og %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_move_image_forward">Flytt bilde forover</string>
-    <string name="gutenberg_native_move_image_backward">Flytt bilde bakover</string>
     <string name="gutenberg_native_gallery_caption_s">Galleribeskrivelse. %s</string>
     <string name="create_post_page_fab_tooltip">Lag et innlegg eller en side</string>
     <string name="post_signup_interstitial_not_right_now">Ikke akkurat nå</string>
@@ -500,7 +489,7 @@ Language: nb_NO
     <string name="new_site_creation_unavailable_domain">Dette domenet er ikke tilgengelig</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
-    <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b>%1$s&lt;/b></string>
+    <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Logg inn med din innlggingsinformasjon fra nettstedet %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Nettstedsside</string>
     <string name="reader_following_display_name">Følger</string>
@@ -520,14 +509,12 @@ Language: nb_NO
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
     <string name="gutenberg_native_unsupported">Ikke støttet</string>
     <string name="gutenberg_native_ungroup">Fjern fra gruppe</string>
-    <string name="gutenberg_native_translate">Oversett</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Trykk for å skjule tatstaturet</string>
     <string name="gutenberg_native_tap_here_to_show_help">Trykk her for å vise hjelp</string>
     <string name="gutenberg_native_take_a_video">Ta en video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Ta et bilde eller en video</string>
     <string name="gutenberg_native_take_a_photo">Ta et foto</string>
     <string name="gutenberg_native_start_writing">Start å skrive…</string>
-    <string name="gutenberg_native_show_section">Vis seksjon</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_cut_block">Kutt blokk</string>
@@ -544,6 +531,7 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
+    <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
@@ -558,6 +546,7 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dobbelttrykk for å flytte blokken ned</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dobbelttrykk for å redigere denne verdien</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dobbelttrykk for å legge til en blokk</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Dobbelttrykk og hold for å redigere</string>
     <string name="gutenberg_native_current_value_is_s">Nåværende verdi er %s</string>
     <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">En ukjent feil oppstod. Vennligst prøv igjen.</string>
@@ -735,7 +724,7 @@ Language: nb_NO
     <string name="domain_registration_state_picker_dialog_title">Velg delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Velg land</string>
     <string name="domain_registration_result_continue_button">fortsett</string>
-    <string name="domain_registration_result_description">ditt nye domene &lt;b>%s&lt;/b> blir satt opp. Ditt nettsted\n        gjør saltomortaler i begeistring!</string>
+    <string name="domain_registration_result_description">ditt nye domene &lt;b&gt;%s&lt;/b&gt; blir satt opp. Ditt nettsted\n        gjør saltomortaler i begeistring!</string>
     <string name="domain_registration_result_title">Gratulerer</string>
     <string name="domain_contact_information_register_domain_button">Registrer domene</string>
     <string name="domain_contact_information_postal_code_hint">Postnummer</string>
@@ -853,14 +842,11 @@ Language: nb_NO
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
-    <string name="quick_start_dialog_upload_icon_title">Last opp nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
-    <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
     <string name="quick_start_dialog_need_help_message">Vi vil gå gjennom det grunnleggende for å bygge og utvide ditt nettsted.</string>
-    <string name="quick_start_dialog_migration_title">Vi har gjort noen endringer i sjekklisten din</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
@@ -914,7 +900,6 @@ Language: nb_NO
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
-    <string name="gif_picker_endless_scroll_network_error">Noen media kunne ikke lastes på grunn av en nettverksfeil.</string>
     <string name="gif_picker_empty_search_list">Ingen media passet til ditt søk</string>
     <string name="gif_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visninger</string>
@@ -1046,7 +1031,6 @@ Language: nb_NO
     <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
     <string name="quick_start_dialog_need_help_button_positive">Godta</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nei takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
@@ -1902,9 +1886,9 @@ Language: nb_NO
     <string name="approve_manual">Ingen kommentarer</string>
     <string name="site_settings_paging_summary_other">%d kommentarer per side</string>
     <string name="site_settings_paging_summary_one">1 kommentar per side</string>
-    <string name="site_settings_multiple_links_summary_other">Krev godkjennelse ved >%d lenker</string>
-    <string name="site_settings_multiple_links_summary_one">Krev godkjennelse ved >1 lenke</string>
-    <string name="site_settings_multiple_links_summary_zero">Krev godkjennelse ved >0 lenker</string>
+    <string name="site_settings_multiple_links_summary_other">Krev godkjennelse ved &gt;%d lenker</string>
+    <string name="site_settings_multiple_links_summary_one">Krev godkjennelse ved &gt;1 lenke</string>
+    <string name="site_settings_multiple_links_summary_zero">Krev godkjennelse ved &gt;0 lenker</string>
     <string name="detail_approve_auto">Godkjenn automatisk alles beskjeder.</string>
     <string name="detail_approve_auto_if_previously_approved">Godkjenn automatisk dersom brukeren har en tidligere godkjent kommentar</string>
     <string name="detail_approve_manual">Krev manuell godkjennelse av alles kommentarer</string>

@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -30,7 +31,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet action is new post when new post is tapped`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
         val action = getCreateAction(CREATE_NEW_POST)
         action.onClickAction?.invoke(CREATE_NEW_POST)
 
@@ -39,7 +40,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet action is new story when new story is tapped`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
         val action = getCreateAction(CREATE_NEW_STORY)
         action.onClickAction?.invoke(CREATE_NEW_STORY)
 
@@ -48,7 +49,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `bottom sheet showing is triggered with false once an action is tapped`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
         val action = getCreateAction(CREATE_NEW_POST)
         action.onClickAction?.invoke(CREATE_NEW_POST)
 
@@ -57,7 +58,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onFabClicked then bottom sheet showing is true`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         viewModel.onFabClicked()
 
@@ -65,8 +66,16 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `actions shown by default on start`() {
+        viewModel.start(site, true)
+
+        Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
+        verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
+    }
+
+    @Test
     fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         viewModel.onFabClicked()
 
@@ -76,7 +85,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     @Test
     fun `if appPrefsWrapper's isPostListFabTooltipDisabled is false then isFabTooltipVisible is true`() {
         whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(false)
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isTrue()
     }
@@ -84,7 +93,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     @Test
     fun `if appPrefsWrapper's isPostListFabTooltipDisabled is true then isFabTooltipVisible is false`() {
         whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(true)
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isFalse()
     }
@@ -98,7 +107,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when tooltipTapped then isFabTooltipVisible is false`() {
-        viewModel.start(site)
+        viewModel.start(site, false)
         viewModel.onTooltipTapped()
 
         Assertions.assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isFalse()
@@ -108,9 +117,22 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     fun `start set expected content message`() {
         whenever(site.isWPCom).thenReturn(true)
 
-        viewModel.start(site)
+        viewModel.start(site, false)
         Assertions.assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_story_fab_tooltip)
+    }
+
+    @Test
+    fun `bottom sheet actions are sorted in the correct order`() {
+        viewModel.start(site, false)
+
+        val expectedOrder = listOf(
+                NO_ACTION,
+                CREATE_NEW_STORY,
+                CREATE_NEW_POST
+        )
+
+        Assertions.assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
     private fun getCreateAction(actionType: ActionType) =

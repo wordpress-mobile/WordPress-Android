@@ -386,8 +386,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `share item built if is accessed through WPCom REST`() {
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
+    fun `share item built if site supports sharing`() {
+        whenever(siteModel.supportsSharing()).thenReturn(true)
 
         val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
@@ -395,8 +395,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `share item not built if is not accessed through WPCom REST`() {
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(false)
+    fun `share item not built if site does not supports sharing`() {
+        whenever(siteModel.supportsSharing()).thenReturn(false)
 
         val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
@@ -426,6 +426,30 @@ class SiteListItemBuilderTest {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
         val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `unified comments item built if the feature flag is enabled`() {
+        val isUnifiedCommentFeatureAvailable = true
+
+        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
+                SITE_ITEM_ACTION,
+                isUnifiedCommentFeatureAvailable
+        )
+
+        assertThat(item).isEqualTo(UNIFIED_COMMENTS_ITEM)
+    }
+
+    @Test
+    fun `unified comments item not built if the feature flag is not enabled`() {
+        val isUnifiedCommentFeatureAvailable = false
+
+        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
+                SITE_ITEM_ACTION,
+                isUnifiedCommentFeatureAvailable
+        )
 
         assertThat(item).isNull()
     }

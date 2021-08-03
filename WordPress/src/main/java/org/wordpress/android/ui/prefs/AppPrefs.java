@@ -156,7 +156,9 @@ public class AppPrefs {
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
-        PINNED_DYNAMIC_CARD
+        PINNED_DYNAMIC_CARD,
+        BLOGGING_REMINDERS_SHOWN,
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
     }
 
     /**
@@ -215,9 +217,6 @@ public class AppPrefs {
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
-        // quick start migration dialog is shown only once for all sites
-        HAS_QUICK_START_MIGRATION_SHOWN,
-
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -247,6 +246,16 @@ public class AppPrefs {
 
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
+
+        // Used to determine if editor onboarding features should be displayed
+        HAS_LAUNCHED_GUTENBERG_EDITOR,
+
+        // Used to indicate whether or not the device running out of storage warning should be shown
+        SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
     }
 
     private static SharedPreferences prefs() {
@@ -977,15 +986,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
-
-    public static void setQuickStartMigrationDialogShown(Boolean shown) {
-        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
-    }
-
-    public static boolean hasQuickStartMigrationDialogShown() {
-        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
-    }
-
     public static void setQuickStartNoticeRequired(Boolean shown) {
         setBoolean(DeletablePrefKey.IS_QUICK_START_NOTICE_REQUIRED, shown);
     }
@@ -1186,6 +1186,32 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
+    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
+        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
+    }
+
+    public static boolean hasLaunchedGutenbergEditor() {
+        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
+    }
+
+    public static void setShouldShowStorageWarning(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
+    }
+
+    public static boolean shouldShowStorageWarning() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
+    }
+
+    public static void setBookmarkPostsPseudoIdsUpdated() {
+        setBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, false);
+    }
+
+    public static boolean shouldUpdateBookmarkPostsPseudoIds(ReaderTag tag) {
+        return tag != null
+               && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
+               && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
+    }
+
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
@@ -1216,6 +1242,26 @@ public class AppPrefs {
 
     @NonNull private static String getManualFeatureConfigKey(String featureKey) {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
+    }
+
+    public static void setBloggingRemindersShown(int siteId) {
+        prefs().edit().putBoolean(getBloggingRemindersConfigKey(siteId), true).apply();
+    }
+
+    public static boolean isBloggingRemindersShown(int siteId) {
+        return prefs().getBoolean(getBloggingRemindersConfigKey(siteId), false);
+    }
+
+    @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
+        return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
+    }
+
+    public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
+        setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
+    }
+
+    public static boolean shouldScheduleCreateSiteNotification() {
+        return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
     }
 
     /*

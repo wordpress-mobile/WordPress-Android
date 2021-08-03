@@ -71,8 +71,6 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
     private val postId = 1000L
     private val commentId = 10000L
     private val expectedNumLikes = 6
-    private val defaultPageLenght = 20
-    private val noLikesLimit = -1
 
     @Before
     fun setup() {
@@ -194,7 +192,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
 
         requireNotNull(uiState).let {
-            assertThat(it.showLikeFacesTrain).isFalse
+            assertThat(it.showLikeFacesTrainContainer).isFalse
             assertThat(it.showLoading).isFalse
             with(it.engageItemsList) {
                 val likedItem = this.filterIsInstance<LikedItem>()
@@ -218,7 +216,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
 
         requireNotNull(uiState).let {
-            assertThat(it.showLikeFacesTrain).isFalse
+            assertThat(it.showLikeFacesTrainContainer).isFalse
             assertThat(it.showLoading).isFalse
             with(it.engageItemsList) {
                 val likedItem = this.filterIsInstance<LikedItem>()
@@ -244,7 +242,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
 
         requireNotNull(uiState).let {
-            assertThat(it.showLikeFacesTrain).isFalse
+            assertThat(it.showLikeFacesTrainContainer).isFalse
             assertThat(it.showLoading).isFalse
             with(it.engageItemsList) {
                 val likedItem = this.filterIsInstance<LikedItem>()
@@ -270,7 +268,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
 
         requireNotNull(uiState).let {
-            assertThat(it.showLikeFacesTrain).isFalse
+            assertThat(it.showLikeFacesTrainContainer).isFalse
             assertThat(it.showLoading).isFalse
             with(it.engageItemsList) {
                 val likedItem = this.filterIsInstance<LikedItem>()
@@ -294,7 +292,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
 
         requireNotNull(uiState).let {
-            assertThat(it.showLikeFacesTrain).isFalse
+            assertThat(it.showLikeFacesTrainContainer).isFalse
             assertThat(it.showLoading).isFalse
             with(it.engageItemsList) {
                 val likedItem = this.filterIsInstance<LikedItem>()

@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -24,9 +25,9 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
-import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
@@ -224,8 +225,29 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given get status model is null without restoreId, when restore status triggers, then return empty`() = test {
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+    fun `given unavailable multisite without restoreId, when restore status triggers, then return multisite`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE, Reason.MULTISITE_NOT_SUPPORTED))
+
+        val result = useCase.getRestoreStatus(site, null).toList()
+
+        assertThat(result).contains(RestoreRequestState.Multisite)
+    }
+
+    @Test
+    fun `given unavailable multisite with restoreId, when restore status triggers, then return multisite`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE, Reason.MULTISITE_NOT_SUPPORTED))
+
+        val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+        assertThat(result).contains(RestoreRequestState.Multisite)
+    }
+
+    @Test
+    fun `given unavailable without restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE))
 
         val result = useCase.getRestoreStatus(site, null).toList()
 
@@ -233,8 +255,9 @@ class GetRestoreStatusUseCaseTest {
     }
 
     @Test
-    fun `given get status model is null with restoreId, when restore status triggers, then return empty`() = test {
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+    fun `given unavailable with restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE))
 
         val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
@@ -252,7 +275,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).size().isEqualTo(1)
-                assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+                assertThat(result).isEqualTo(listOf(Failure.RemoteRequestFailure))
             }
 
     @Test
@@ -296,6 +319,30 @@ class GetRestoreStatusUseCaseTest {
                         Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
+
+    @Test
+    fun `given awaiting creds state, when awaiting creds is checked, then creds are awaited in result`() =
+            test {
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(rewindId = null, state = State.AWAITING_CREDENTIALS))
+
+                val result = useCase.getRestoreStatus(site, restoreId = null, checkIfAwaitingCredentials = true)
+                        .toList()
+
+                assertThat(result).contains(AwaitingCredentials(true))
+            }
+
+    @Test
+    fun `given non awaiting creds state, when awaiting creds is checked, then creds are not awaited in result`() =
+            test {
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED, state = State.ACTIVE))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID, checkIfAwaitingCredentials = true)
+                        .toList()
+
+                assertThat(result).contains(AwaitingCredentials(false))
+            }
     /* PRIVATE */
 
     private fun activityLogModel() = ActivityLogModel(
@@ -314,14 +361,20 @@ class GetRestoreStatusUseCaseTest {
 
     private fun rewindStatusModel(
         rewindId: String?,
-        status: Rewind.Status
+        status: Rewind.Status? = null,
+        state: State = State.ACTIVE,
+        reason: Reason = Reason.NO_REASON
     ) = RewindStatusModel(
-            state = State.ACTIVE,
-            reason = null,
+            state = state,
+            reason = reason,
             lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
-            rewind = rewind(rewindId, status)
+            rewind = if (state == State.AWAITING_CREDENTIALS || state == State.UNAVAILABLE) {
+                null
+            } else {
+                rewind(rewindId, status as Rewind.Status)
+            }
     )
 
     private fun rewind(

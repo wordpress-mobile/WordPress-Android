@@ -26,6 +26,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
@@ -67,7 +68,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
 
     data class EngagedPeopleListUiState(
-        val showLikeFacesTrain: Boolean,
+        val showLikeFacesTrainContainer: Boolean,
         val numLikes: Int = 0,
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
@@ -195,14 +196,14 @@ class EngagedPeopleListViewModel @Inject constructor(
                         updateLikesState.likes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true, updateLikesState.pageInfo)
             }
             is Failure -> {
                 engagementUtils.likesToEngagedPeople(
                         updateLikesState.cachedLikes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false, updateLikesState.pageInfo)
             }
             Loading, null -> listOf()
         }
@@ -220,7 +221,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = false,
+                showLikeFacesTrainContainer = false,
                 showLoading = updateLikesState is Loading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
@@ -230,10 +231,20 @@ class EngagedPeopleListViewModel @Inject constructor(
         )
     }
 
-    private fun appendNextPageLoaderIfNeeded(hasMore: Boolean, isLoading: Boolean): List<EngageItem> {
+    private fun appendNextPageLoaderIfNeeded(
+        hasMore: Boolean,
+        isLoading: Boolean,
+        pageInfo: PagingInfo
+    ): List<EngageItem> {
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
+                    analyticsUtilsWrapper.trackLikeListFetchedMore(
+                            EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                            ListScenarioType.getSourceDescription(listScenario?.type),
+                            pageInfo.page + 1,
+                            pageInfo.pageLength
+                    )
             })
         } else {
             listOf()
@@ -255,9 +266,9 @@ class EngagedPeopleListViewModel @Inject constructor(
             analyticsUtilsWrapper.trackUserProfileSiteShown()
         }
 
-        if (siteId == 0L && siteUrl.isNotEmpty()) {
+        if (siteId <= 0L && siteUrl.isNotEmpty()) {
             _onNavigationEvent.value = Event(PreviewSiteByUrl(siteUrl, source))
-        } else if (siteId != 0L) {
+        } else if (siteId > 0L) {
             _onNavigationEvent.value = Event(PreviewSiteById(siteId, source))
         }
     }
