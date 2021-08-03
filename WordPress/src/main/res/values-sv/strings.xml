@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-28 15:10:08+0000
+Translation-Revision-Date: 2021-08-02 01:58:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
     <string name="create_site_notification_create_site_action">Skapa webbplats</string>
+    <string name="create_site_notification_text">Kom igång med din egen webbplats i några få steg</string>
     <string name="create_site_notification_title">Skapa din WordPress-webbplats</string>
     <string name="stats_disabled_enable_stats_error_message">Kan inte aktivera webbplatsstatistik</string>
     <string name="stats_disabled_enable_stats_button">Aktivera webbplatsstatistik</string>
@@ -22,6 +23,9 @@ Language: sv_SE
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Förhandsgranskning av inbäddade block kommer snart</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltryck för att förhandsgranska inlägget.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Visa mig en rundtur</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Vi kommer att visa dig grunderna i hur du hanterar din webbplats via appen.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Vill du ha lite hjälp med att hantera den här webbplatsen med appen?</string>
     <string name="login_epilogue_create_new_site_button">Skapa en ny webbplats</string>
     <string name="login_epilogue_mysites_subheading">Du kan byta webbplats när som helst.</string>
