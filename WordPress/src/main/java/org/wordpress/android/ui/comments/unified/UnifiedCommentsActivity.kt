@@ -7,8 +7,10 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collect
+import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -21,13 +23,17 @@ import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
 import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
 import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.util.HashMap
 import javax.inject.Inject
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var snackbarWrapper: WPSnackbarWrapper
     private lateinit var viewModel: UnifiedCommentActivityViewModel
 
     private val commentListFilters = listOf(ALL, PENDING, UNREPLIED, APPROVED, SPAM, TRASHED)
@@ -46,6 +52,15 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
         val disabledAlpha = TypedValue()
         resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
+
+        if (selectedSiteRepository.getSelectedSite() == null) {
+            snackbarWrapper.make(
+                    findViewById(R.id.coordinator_layout),
+                    getString(R.string.blog_not_found),
+                    Snackbar.LENGTH_SHORT
+            ).show()
+            finish()
+        }
 
         binding = UnifiedCommentActivityBinding.inflate(layoutInflater).apply {
             setContentView(root)
