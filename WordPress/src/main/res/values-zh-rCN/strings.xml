@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-18 19:49:24+0000
+Translation-Revision-Date: 2021-07-27 08:19:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">创建站点</string>
+    <string name="stats_disabled_subtitle">启用站点统计以查看有关您的流量、喜欢、评论和订阅者的详情。</string>
+    <string name="stats_disabled_enable_stats_button">启用站点统计</string>
+    <string name="stats_disabled_enable_stats_error_message">无法启用站点统计功能</string>
+    <string name="create_site_notification_title">创建您的 WordPress 网站</string>
+    <string name="create_site_notification_text">简单几步即可启动并运行您的站点</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">我们正在努力增加对嵌入预览的支持。在此期间，您可以预览文章中嵌入的内容。</string>
+    <string name="gutenberg_native_what_is_a_block">什么是区块？</string>
+    <string name="stats_disabled_title">查找统计？</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">我们正在努力增加对嵌入预览的支持。在此期间，您可以预览页面上嵌入的内容。</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入区块预览即将推出</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">嵌入预览尚不可用</string>
+    <string name="gutenberg_native_no_blocks_found">未找到区块</string>
+    <string name="gutenberg_native_try_another_search_term">尝试其他搜索词</string>
+    <string name="gutenberg_native_unable_to_embed_media">无法嵌入媒体</string>
+    <string name="quick_start_list_upload_icon_subtitle">显示在访问者的浏览器选项卡和其他在线位置。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">双击可预览页面。</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">双击可预览文章</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">我们将带您了解使用该应用管理站点的基础知识。</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">带我看看</string>
+    <string name="scan_multisite_not_supported_subtitle">很抱歉，Jetpack Scan 目前不兼容多站点的 WordPress 安装。</string>
+    <string name="login_epilogue_mysites_heading">选择要打开的站点</string>
+    <string name="login_epilogue_mysites_subheading">您可以随时切换站点。</string>
+    <string name="login_epilogue_create_new_site_button">创建新站点</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">需要获取有关使用该应用管理此站点的帮助吗？</string>
+    <string name="scan_multisite_not_supported_title">不支持 WordPress 多站点</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">无效 URL。请输入有效 URL。</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">来自 %s 的嵌入内容目前无法在手机编辑器中查看。请预览该页面以查看嵌入内容。</string>
     <string name="gutenberg_native_add_link_0fcaed3b">添加链接</string>
     <string name="activity_log_visit_our_documentation_page">访问我们的文档页面</string>
     <string name="gutenberg_native_embed_caption_empty">嵌入说明文字。空</string>
@@ -103,6 +128,8 @@ Language: zh_CN
     <string name="gutenberg_native_mention">提及</string>
     <string name="gutenberg_native_post_content_settings">文章内容设置</string>
     <string name="gutenberg_native_post_meta_settings">文章元数据设置</string>
+    <string name="gutenberg_native_preview_page">预览页面</string>
+    <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
@@ -122,6 +149,7 @@ Language: zh_CN
     <string name="suggestion">建议：</string>
     <string name="like_title_singular">1 喜欢</string>
     <string name="gutenberg_native_search_block_label_current_text_is">搜索区块标签。当前文字为</string>
+    <string name="gutenberg_native_search_blocks">搜索区块</string>
     <string name="gutenberg_native_search_button_current_button_text_is">搜索按钮。当前按钮文字为</string>
     <string name="gutenberg_native_search_input_field">搜索输入字段。</string>
     <string name="gutenberg_native_use_icon_button">使用图标按钮</string>
@@ -131,7 +159,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">双击可编辑占位符文字</string>
     <string name="gutenberg_native_hide_search_heading">隐藏搜索标题</string>
     <string name="gutenberg_native_inside">内部</string>
-    <string name="gutenberg_native_no_button">无按钮</string>
     <string name="gutenberg_native_no_custom_placeholder_set">未设置自定义占位符</string>
     <string name="gutenberg_native_outside">外部</string>
     <string name="comment_status_unreplied">未回复</string>
@@ -139,8 +166,6 @@ Language: zh_CN
     <string name="get_likes_no_network_error">无网络可用。</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s是%3$s%4$s。</string>
     <string name="gutenberg_native_button_position">按钮位置</string>
-    <string name="gutenberg_native_button_inside">按钮内部</string>
-    <string name="gutenberg_native_button_outside">按钮外部</string>
     <string name="gutenberg_native_cancel_search">取消搜索</string>
     <string name="gutenberg_native_clear_search">清除搜索</string>
     <string name="gutenberg_native_current_placeholder_text_is">当前占位符文本</string>
@@ -192,11 +217,10 @@ Language: zh_CN
     <string name="quick_start_list_review_pages_subtitle">查看您的页面并进行更改，或者添加或移除页面。</string>
     <string name="quick_start_card_menu_unpin">取消钉选此项</string>
     <string name="quick_start_list_view_site_title">访问您的站点</string>
-    <string name="quick_start_list_upload_icon_subtitle">添加站点图标，打造精美的专业外观。</string>
     <string name="quick_start_list_follow_site_subtitle">发现并关注能激发您灵感的站点。</string>
-    <string name="quick_start_list_enable_sharing_title">启用共享</string>
     <string name="quick_start_list_enable_sharing_subtitle">自动将新文章共享到您的社交媒体</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。</string>
+    <string name="quick_start_list_enable_sharing_title">社交分享</string>
     <string name="quick_start_list_check_stats_title">查看您的统计信息</string>
     <string name="backup_download_status_failure_bullet2">我们仍会尝试创建您的可下载备份文件。</string>
     <string name="backup_download_status_failure_bullet1">我们找不到可说明您的可下载备份所需时长的状态。</string>
@@ -686,8 +710,8 @@ Language: zh_CN
     <string name="reset_your_password">重置密码</string>
     <string name="enter_email_to_continue_wordpress_com">输入您的电子邮箱地址以登录或创建 WordPress.com 帐户。</string>
     <string name="reader_error_request_failed_title">处理请求时出现问题。 请稍后重试。</string>
-    <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
     <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b&gt;%1$s&lt;/b&gt; 以设置新标题</string>
+    <string name="quick_start_list_update_site_title_title">检查您的站点标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
     <string name="gutenberg_native_s_block_options">%s 区块选项</string>
     <string name="gutenberg_native_duplicate_block">复制区块</string>
@@ -1301,15 +1325,13 @@ Language: zh_CN
     <string name="quick_start_sites">后续步骤</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受您的成果吧！</string>
-    <string name="quick_start_dialog_upload_icon_title">上传站点图标</string>
     <string name="quick_start_dialog_upload_icon_message">访客将在其浏览器中看到您的图标。添加自定义图标，打造精美的专业外观。</string>
     <string name="quick_start_dialog_explore_plans_message_short">点击%1$s套餐%2$s查看您的当前套餐和其他可选套餐</string>
+    <string name="quick_start_dialog_upload_icon_title">选择您的唯一站点图标</string>
     <string name="quick_start_dialog_check_stats_message_short">点击%1$s统计信息%2$s查看您站点的效果。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
-    <string name="quick_start_dialog_publish_post_message">撰写并发布您的第一篇文章。</string>
     <string name="quick_start_dialog_need_help_message">我们将带您了解构建和提升站点的基本知识。</string>
-    <string name="quick_start_dialog_migration_title">我们对您的清单进行了一些修改</string>
-    <string name="quick_start_dialog_migration_message">我们添加了更多的任务，以帮助您增加受众。</string>
+    <string name="quick_start_dialog_publish_post_message">起草并发布文章。</string>
     <string name="quick_start_dialog_explore_plans_title">了解各个套餐</string>
     <string name="quick_start_dialog_explore_plans_message">了解付费套餐中的营销和搜索引擎优化工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">启用文章共享</string>
@@ -1496,10 +1518,10 @@ Language: zh_CN
     <string name="quick_start_dialog_publish_post_message_short">轻按%1$s“创建文章”%2$s，撰写一篇新文章</string>
     <string name="quick_start_dialog_need_help_button_neutral">从不</string>
     <string name="quick_start_dialog_follow_sites_title">关注其他站点</string>
-    <string name="quick_start_dialog_need_help_button_negative">不用了，谢谢</string>
     <string name="quick_start_dialog_follow_sites_message">查找并关注您喜爱的站点，在他们发布新内容时可及时获取更新。</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">轻按%1$s“阅读器”%2$s并继续</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">轻按%1$s搜索%2$s，查找具有类似兴趣的站点</string>
+    <string name="quick_start_dialog_need_help_button_negative">不，谢谢</string>
     <string name="quick_start_button_positive">前往</string>
     <string name="quick_start_button_negative_short">取消</string>
     <string name="quick_start_button_negative">现在不行</string>

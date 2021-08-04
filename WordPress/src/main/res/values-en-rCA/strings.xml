@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-13 06:25:08+0000
+Translation-Revision-Date: 2021-07-27 04:27:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Create site</string>
+    <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
+    <string name="create_site_notification_title">Create your WordPress website</string>
+    <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
+    <string name="stats_disabled_enable_stats_button">Enable site stats</string>
+    <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
+    <string name="stats_disabled_title">Looking for stats?</string>
+    <string name="gutenberg_native_what_is_a_block">What is a block?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the post.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the page.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Unable to embed media</string>
+    <string name="gutenberg_native_try_another_search_term">Try another search term</string>
+    <string name="gutenberg_native_no_blocks_found">No blocks found</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Embed previews not yet available</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Embed block previews are coming soon</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Double tap to preview post.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Double tap to preview page.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">We\'ll walk you through the basics of managing your site with the app.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
+    <string name="login_epilogue_create_new_site_button">Create a new site</string>
+    <string name="login_epilogue_mysites_subheading">You can switch sites any time.</string>
+    <string name="login_epilogue_mysites_heading">Choose a site to open</string>
+    <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Invalid URL. Please enter a valid URL.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
     <string name="gutenberg_native_embed_caption_s">Embed caption. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Embed caption. Empty</string>
     <string name="gutenberg_native_add_link_0fcaed3b">ADD LINK</string>
@@ -101,6 +126,8 @@ Language: en_CA
     <string name="gutenberg_native_sorting_and_filtering">Sorting and filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_preview_post">Preview post</string>
+    <string name="gutenberg_native_preview_page">Preview page</string>
     <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
     <string name="gutenberg_native_post_content_settings">Post content settings</string>
     <string name="gutenberg_native_featured">Featured</string>
@@ -124,10 +151,10 @@ Language: en_CA
     <string name="gutenberg_native_use_icon_button">Use icon button</string>
     <string name="gutenberg_native_search_input_field">Search input field.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
+    <string name="gutenberg_native_search_blocks">Search blocks</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
     <string name="gutenberg_native_outside">Outside</string>
     <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
-    <string name="gutenberg_native_no_button">No button</string>
     <string name="gutenberg_native_inside">Inside</string>
     <string name="gutenberg_native_hide_search_heading">Hide search heading</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Double tap to edit placeholder text</string>
@@ -138,8 +165,6 @@ Language: en_CA
     <string name="gutenberg_native_clear_search">Clear search</string>
     <string name="gutenberg_native_cancel_search">Cancel search</string>
     <string name="gutenberg_native_button_position">Button position</string>
-    <string name="gutenberg_native_button_outside">Button outside</string>
-    <string name="gutenberg_native_button_inside">Button inside</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
@@ -192,9 +217,8 @@ Language: en_CA
     <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_view_site_title">Visit your site</string>
-    <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
-    <string name="quick_start_list_enable_sharing_title">Enable sharing</string>
+    <string name="quick_start_list_enable_sharing_title">Social sharing</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_check_stats_title">Check your stats</string>
@@ -686,7 +710,7 @@ Language: en_CA
     <string name="send_link_by_email">Send link by email</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
-    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_list_update_site_title_title">Check your site title</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>
     <string name="gutenberg_native_s_block_options">%s block options</string>
@@ -1301,15 +1325,13 @@ Language: en_CA
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
-    <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
+    <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
+    <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -1495,7 +1517,7 @@ Language: en_CA
     <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
     <string name="quick_start_dialog_need_help_button_positive">Accept</string>
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-    <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
