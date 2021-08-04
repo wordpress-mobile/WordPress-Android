@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -18,6 +19,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
         DOMAIN_REGISTRATION_BLOCK,
+        QUICK_START_BLOCK,
         QUICK_START_DYNAMIC_CARD,
         CATEGORY_HEADER,
         LIST_ITEM
@@ -51,6 +53,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
+
+    object QuickStartBlock : MySiteItem(QUICK_START_BLOCK)
 
     sealed class DynamicCard(
         override val type: Type,
