@@ -52,8 +52,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
@@ -117,7 +115,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -160,6 +157,7 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
@@ -217,6 +215,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
     @Inject lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -280,9 +279,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 siteInfoContainer.title.isClickable = SiteUtils.isAccessedViaWPComRest(site)
             }
             updateQuickStartContainer()
-            if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
-                showQuickStartDialogMigration()
-            }
             showQuickStartNoticeIfNecessary()
         }
     }
@@ -1259,7 +1255,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 startQuickStart()
                 AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
             }
-            TAG_QUICK_START_MIGRATION_DIALOG -> AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED)
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
                 AnalyticsTracker.track(QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
                 skipQuickStart()
@@ -1323,6 +1318,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onNeutralClicked(instanceTag: String) {
+        if (onboardingImprovementsFeatureConfig.isEnabled()) return
+
         if (TAG_QUICK_START_DIALOG == instanceTag) {
             AppPrefs.setQuickStartDisabled(true)
             AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
@@ -1341,7 +1338,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             TAG_CHANGE_SITE_ICON_DIALOG,
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG,
             TAG_QUICK_START_DIALOG,
-            TAG_QUICK_START_MIGRATION_DIALOG,
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
             }
             else -> {
@@ -1532,24 +1528,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         (requireActivity() as WPMainActivity).showQuickStartSnackBar(promptSnackbar)
     }
 
-    private fun showQuickStartDialogMigration() {
-        val promoDialog = QuickStartPromptDialogFragment()
-        promoDialog.initialize(
-                TAG_QUICK_START_MIGRATION_DIALOG,
-                getString(R.string.quick_start_dialog_migration_title),
-                getString(R.string.quick_start_dialog_migration_message),
-                getString(android.R.string.ok),
-                R.drawable.img_illustration_checkmark_280dp,
-                "",
-                ""
-        )
-        if (fragmentManager != null) {
-            promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
-            AppPrefs.setQuickStartMigrationDialogShown(true)
-            AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_VIEWED)
-        }
-    }
-
     private fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
         selectedSiteRepository.updateSiteIconMediaId(mediaId, showProgressBar)
     }
@@ -1565,7 +1543,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        const val TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG"
         const val AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000
         const val KEY_IS_DOMAIN_CREDIT_AVAILABLE = "KEY_IS_DOMAIN_CREDIT_AVAILABLE"
         const val KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED"

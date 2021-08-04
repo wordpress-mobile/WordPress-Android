@@ -1,6 +1,0 @@
-17.6:
-O bloco de áudio permite incluir podcasts, músicas e outros arquivos de som em seus posts e páginas. Agora, ele está disponível também para usuários do plano gratuito!
-
-Transforme qualquer foto em uma imagem *destacada* com o novo botão "Definir como destacada" no bloco de imagem.
-
-Por fim, deixamos mais explícito que não é possível editar a página de arquivos de post, que é criada automaticamente.

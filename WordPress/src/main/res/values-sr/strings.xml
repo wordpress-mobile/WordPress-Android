@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-17 21:48:14+0000
+Translation-Revision-Date: 2021-07-15 23:21:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
@@ -9,8 +9,9 @@ Language: sr_RS
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
+    <string name="gutenberg_native_search_blocks">Блокови претраге</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Натпис блока претраге. Тренутни текст је</string>
-    <string name="gutenberg_native_no_button">Без дугмета</string>
+    <string name="gutenberg_native_outside">Изван</string>
     <string name="gutenberg_native_inside">Унутар</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s је %3$s %4$s.</string>
     <string name="gutenberg_native_add_button_text">Додај текст дугмета</string>
@@ -21,9 +22,7 @@ Language: sr_RS
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
-    <string name="quick_start_list_upload_icon_subtitle">Додајте иконицу веб места за исполиран професионални изглед.</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
-    <string name="quick_start_list_enable_sharing_title">Омогући дељење</string>
     <string name="quick_start_list_check_stats_title">Проверите своју статистику</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
@@ -32,6 +31,7 @@ Language: sr_RS
     <string name="gutenberg_native_open">ОТВОРИ</string>
     <string name="gutenberg_native_lock_icon">Иконица за закључавање</string>
     <string name="gutenberg_native_choose_audio">Одабери звучни запис</string>
+    <string name="gutenberg_native_audio_file">Датотека звучног записа</string>
     <string name="gutenberg_native_add_audio">ДОДАЈ ЗВУЧНИ ЗАПИС</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
@@ -228,7 +228,6 @@ Language: sr_RS
     <string name="or_type_your_password">Или укуцајте своју лозинку</string>
     <string name="send_link_by_email">Пошаљи повезницу електронском поштом</string>
     <string name="reset_your_password">Ресетујте своју лозинку</string>
-    <string name="quick_start_list_update_site_title_title">Поставите наслов свог сајта</string>
     <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
     <string name="gutenberg_native_s_block_options">опције блока %s</string>
     <string name="gutenberg_native_duplicate_block">Дуплирај блок</string>
@@ -411,6 +410,8 @@ Language: sr_RS
     <string name="gutenberg_native_move_block_up">Помери блок горе</string>
     <string name="gutenberg_native_help_icon">Иконица помоћи</string>
     <string name="gutenberg_native_hide_keyboard">Сакриј тастатуру</string>
+    <string name="gutenberg_native_link_text">Текст везе</string>
+    <string name="gutenberg_native_link_inserted">Веза уметнута</string>
     <string name="gutenberg_native_move_block_down">Помери блок доле</string>
     <string name="gutenberg_native_current_value_is_s">Тренутна вредност је %s</string>
     <string name="gutenberg_native_choose_from_device">Одабери свој уређај</string>
@@ -421,6 +422,7 @@ Language: sr_RS
     <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
+    <string name="gutenberg_native_add_alt_text">Додај алтернативни текст</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
     <string name="main_switch_default_title_off">Искључи</string>
     <string name="main_switch_default_title_on">Укључи</string>
@@ -611,9 +613,7 @@ Language: sr_RS
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
-    <string name="quick_start_dialog_upload_icon_title">Отпреми иконицу сајта</string>
     <string name="quick_start_sites_type_subtitle">%1$d од %2$d завршено</string>
-    <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави свој први чланак</string>
     <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
@@ -634,6 +634,7 @@ Language: sr_RS
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
     <string name="new_site_creation_create_site_button">Креирај сајт</string>
+    <string name="new_site_creation_site_preview_content_description">Приказујем преглед сајта</string>
     <string name="site_creation_error_generic_title">Дошло је до проблема</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Дошло је до проблема</string>
     <string name="new_site_creation_preview_title">Ваша страница је креирана!</string>
@@ -774,7 +775,6 @@ Language: sr_RS
     <string name="quick_start_dialog_need_help_button_positive">Прихвати</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_neutral">Никад</string>
-    <string name="quick_start_dialog_need_help_button_negative">Не хвала</string>
     <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
@@ -967,6 +967,7 @@ Language: sr_RS
     <string name="site_settings_quota_space_title">Искоришћен простор</string>
     <string name="site_settings_quota_space_hint">Ако Вам је потребан додатни простор, размислите о надоградњи Вордпрес плана.</string>
     <string name="site_settings_quota_header">Садржај</string>
+    <string name="comment_unliked_talkback">Уклоњено свиђање са коментара</string>
     <string name="notifications_screen_title">Обавештења</string>
     <string name="publicize_buttons_screen_title">Дугмићи за дељење</string>
     <string name="login_epilogue_screen_title">Пријављен као</string>
@@ -1196,6 +1197,7 @@ Language: sr_RS
     <string name="reader_excerpt_link">Посети %s за више</string>
     <string name="add_media_progress">Додавање садржаја</string>
     <string name="upload_failed_param">Отпремање неуспело за \"%s\"</string>
+    <string name="error_media_canceled">Отпремање садржаја је отказано</string>
     <string name="editor_uploading_post">Ваш чланак се отпрема</string>
     <string name="uploading_media">Отпремање садржаја…</string>
     <string name="post_scheduled">Чланак заказан</string>
@@ -1305,6 +1307,7 @@ Language: sr_RS
     <string name="photo_picker_choose_photo">Одабери фотографију са уређаја</string>
     <string name="media_insert_as_gallery">Додај као галерију</string>
     <string name="wp_media_title">Вордпресов садржај</string>
+    <string name="media_insert_individually">Додај индивидуално</string>
     <string name="media_insert_title">Додај више фотографија</string>
     <string name="media_gallery_column_count_multi">%d колоне</string>
     <string name="media_gallery_column_count_single">1 колона</string>
@@ -1446,6 +1449,7 @@ Language: sr_RS
     <string name="export_your_content">Извезите ваш садржај</string>
     <string name="exporting_content_progress">Извозим садржај…</string>
     <string name="show_purchases">Прикажи купљено</string>
+    <string name="checking_purchases">Провера куповина</string>
     <string name="premium_upgrades_title">Премијум унапређења</string>
     <string name="delete_site_progress">Бришем сајт…</string>
     <string name="delete_site_hint">Обриши сајт</string>

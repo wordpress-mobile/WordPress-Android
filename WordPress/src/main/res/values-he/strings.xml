@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-13 20:54:08+0000
+Translation-Revision-Date: 2021-07-23 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">כתובת URL לא תקינה. נא להזין כתובת אינטרנט תקנית</string>
+    <string name="gutenberg_native_embed_caption_s">כיתוב התמונה מוטמע. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">כיתוב התמונה מוטמע. ריק</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">להוסיף קישור</string>
+    <string name="activity_log_visit_our_documentation_page">היכנס לעמוד המסמכים שלנו</string>
+    <string name="activity_log_multisite_message">ההתקנות של השירות Jetpack Backup for Multisite מספקות גיבויים להורדה אך לא שחזורים בלחיצה אחת. למידע נוסף ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">פרסום באופן שגרתי יכול לעזור בשילוב הקוראים שלך, ולמשוך מבקרים חדשים לאתר שלך.</string>
     <string name="blogging_reminders_tip">עצה</string>
     <string name="blogging_reminders_select_days_message">אפשר לעדכן את ההגדרה הזאת בכל עת</string>
@@ -80,6 +86,7 @@ Language: he_IL
     <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
     <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
     <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">ערוך קישור</string>
     <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
     <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="gutenberg_native_image_settings">הגדרות תמונה</string>
@@ -96,6 +103,7 @@ Language: he_IL
     <string name="gutenberg_native_post_content_settings">הגדרות תוכן פוסט</string>
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
+    <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -115,9 +123,9 @@ Language: he_IL
     <string name="gutenberg_native_use_icon_button">הכפתור \'להשתמש בסמל\'</string>
     <string name="gutenberg_native_search_input_field">שדה להזנת חיפוש.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">הכפתור \'חיפוש\'. הטקסט הנוכחי של הכפתור הוא</string>
+    <string name="gutenberg_native_search_blocks">בלוקים של חיפוש</string>
     <string name="gutenberg_native_search_block_label_current_text_is">תווית של בלוק החיפוש. הטקסט הנוכחי הוא</string>
     <string name="gutenberg_native_no_custom_placeholder_set">לא הוגדר מציין מיקום מותאם</string>
-    <string name="gutenberg_native_no_button">ללא כפתור</string>
     <string name="gutenberg_native_inside">פנימי</string>
     <string name="gutenberg_native_hide_search_heading">להסתיר את כותרת החיפוש</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">יש להקיש פעמיים כדי לערוך את הטקסט של מציין המיקום</string>
@@ -128,8 +136,6 @@ Language: he_IL
     <string name="gutenberg_native_clear_search">לנקות את החיפוש</string>
     <string name="gutenberg_native_cancel_search">לבטל חיפוש</string>
     <string name="gutenberg_native_button_position">מיקום הכפתור</string>
-    <string name="gutenberg_native_button_outside">כפתור בחוץ</string>
-    <string name="gutenberg_native_button_inside">כפתור בפנים</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. ⁦%2$s⁩ הוא ⁦%3$s⁩ %4$s.</string>
     <string name="get_likes_empty_state_title">אירעה שגיאה בהבאת הנתונים של הלייקים</string>
     <string name="get_likes_unknown_error">אירעה שגיאה לא ידועה בהבאת הלייקים.</string>
@@ -137,6 +143,7 @@ Language: he_IL
     <string name="comments_empty_list_filtered_unreplied">אין תגובות ללא מענה</string>
     <string name="comment_status_unreplied">ללא מענה</string>
     <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
+    <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
@@ -181,9 +188,7 @@ Language: he_IL
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
     <string name="quick_start_card_menu_unpin">להסיר את הנעץ מהתוכן</string>
     <string name="quick_start_list_view_site_title">מעבר לאתר שלך</string>
-    <string name="quick_start_list_upload_icon_subtitle">להוסיף סמל לאתר למראה נקי ומקצועי.</string>
     <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
-    <string name="quick_start_list_enable_sharing_title">להפעיל את השיתוף</string>
     <string name="quick_start_list_enable_sharing_subtitle">לשתף באופן אוטומטי פוסטים חדשים ברשתות החברתיות.</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו.</string>
     <string name="quick_start_list_check_stats_title">לבדוק את הנתונים הסטטיסטיים שלך</string>
@@ -675,7 +680,6 @@ Language: he_IL
     <string name="send_link_by_email">לשלוח את הקישור באימייל</string>
     <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
     <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
-    <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
     <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b&gt;⁦%1$s⁩&lt;/b&gt; כדי להגדיר שם חדש</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="gutenberg_native_s_block_options">%s אפשרויות הבלוק</string>
@@ -1288,17 +1292,13 @@ Language: he_IL
     <string name="quick_start_sites">לשלב הבא</string>
     <string name="quick_start_complete_tasks_header">הושלם (%d)</string>
     <string name="quick_start_dialog_view_site_message">בהצלחה עם המוצר המוגמר!</string>
-    <string name="quick_start_dialog_upload_icon_title">העלאה של סמל לאתר</string>
     <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
     <string name="quick_start_dialog_explore_plans_message_short">יש להקיש על %1$s התוכנית %2$s כדי להציג את התוכנית הנוכחית שלך ותוכניות אחרות שזמינות</string>
     <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
     <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
     <string name="quick_start_dialog_check_stats_message_short">יש להקיש על %1$s נתונים סטטיסטיים %2$s כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
-    <string name="quick_start_dialog_publish_post_message">אפשר כעת לכתוב טיוטה ולפרסם את הפוסט הראשון שלך.</string>
     <string name="quick_start_dialog_need_help_message">אנחנו נלווה אותך בביצוע הפעולות הבסיסיות לבנייה של האתר שלך ולהגדלתו.</string>
-    <string name="quick_start_dialog_migration_title">ביצענו מספר שינויים לרשימת המשימות שלך</string>
-    <string name="quick_start_dialog_migration_message">הוספנו עוד משימות כדי לעזור לך להגדיל את הקהל.</string>
     <string name="quick_start_dialog_explore_plans_title">עיון בתוכניות</string>
     <string name="quick_start_dialog_explore_plans_message">מידע נוסף על כלי שיווק ו-SEO בתוכניות שלנו בתשלום.</string>
     <string name="quick_start_dialog_enable_sharing_title">הפעלת השיתוף של הפוסטים</string>
@@ -1486,7 +1486,6 @@ Language: he_IL
     <string name="quick_start_dialog_need_help_button_neutral">לעולם לא</string>
     <string name="quick_start_dialog_follow_sites_title">מעקב אחר אתרים אחרים</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
-    <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
     <string name="quick_start_dialog_follow_sites_message">כדאי לחפש אתרים שנותנים לך השראה ולעקוב אחריהם כדי לקבל עדכונים כשהם יפרסמו תוכן חדש.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">להקיש על ⁦%1$s⁩ חיפוש ⁦%2$s⁩ כדי לחפש אתרים בנושאים דומים</string>
     <string name="quick_start_button_positive">מעבר אל</string>

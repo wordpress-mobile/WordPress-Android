@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-15 18:32:00+0000
+Translation-Revision-Date: 2021-07-16 10:59:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -41,12 +41,17 @@ Language: pl
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
     <string name="storage_utils_dialog_title">Niewystarczająca ilość pamięci w urządzeniu</string>
+    <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
+    <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
     <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
     <string name="gutenberg_native_tap_to_add_content">Stuknij aby dodać treści</string>
     <string name="gutenberg_native_s_block">blok %s</string>
     <string name="gutenberg_native_minimum_height">Minimalna wysokość</string>
     <string name="gutenberg_native_media_options">Opcje mediów</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">NIeprawidłowy adres URL. Nie odnaleziono pliku dźwiękowego.</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Przesuń i dostosuj punkt ostrości</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć dolną zakładkę aby dodać zdjęcie lub film</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby dodać zdjęcie lub film</string>
     <string name="gutenberg_native_current_unit_is_s">Bieżącą jednostką jest %s</string>
     <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
     <string name="gutenberg_native_add_link_to_s">Dodaj odnośnik do %s</string>
@@ -85,7 +90,6 @@ Language: pl
     <string name="suggestion">Sugestia:</string>
     <string name="gutenberg_native_use_icon_button">Użyj ikony przycisku</string>
     <string name="gutenberg_native_search_input_field">Przeszukaj pole wpisu.</string>
-    <string name="gutenberg_native_no_button">Brak przycisku</string>
     <string name="gutenberg_native_inside">Wewnątrz</string>
     <string name="gutenberg_native_clear_search">Usuń wyszukiwanie</string>
     <string name="gutenberg_native_cancel_search">Anuluj wyszukiwanie</string>
@@ -127,9 +131,7 @@ Language: pl
     <string name="quick_start_card_menu_unpin">Odepnij to</string>
     <string name="quick_start_list_review_pages_subtitle">Sprawdź swoje strony aby dokonywać zmian, lub dodawać lub usuwać strony.</string>
     <string name="quick_start_list_follow_site_subtitle">Odkrywaj i obserwuj witryny, które ciebie inspirują.</string>
-    <string name="quick_start_list_enable_sharing_title">Uaktywnij udostępnianie</string>
     <string name="quick_start_list_view_site_title">Przejdź do swojej witryny</string>
-    <string name="quick_start_list_upload_icon_subtitle">Dodaj ikonę witryny aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatycznie udostępniaj nowe wpisy na swoich mediach społecznościowych.</string>
     <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedl jej osobowość i tematykę.</string>
     <string name="quick_start_list_check_stats_title">Sprawdź statystyki swojej witryny</string>
@@ -504,7 +506,6 @@ Language: pl
     <string name="send_link_by_email">Wyślij odnośnik przez email</string>
     <string name="reset_your_password">Zresetuj hasło</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
-    <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
     <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby nadać nowy tytuł</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
@@ -1116,16 +1117,12 @@ Language: pl
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>
-    <string name="quick_start_dialog_upload_icon_title">Wczytaj ikonę witryny</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
     <string name="quick_start_sites">Następne kroki</string>
-    <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
     <string name="quick_start_dialog_need_help_message">Przeprowadzimy cię przez podstawy budowy i rozwijania swojej witryny.</string>
-    <string name="quick_start_dialog_migration_title">Dokonaliśmy kilku zmian na twojej liście</string>
     <string name="quick_start_dialog_check_stats_message_short">Stuknij%1$s Statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
-    <string name="quick_start_dialog_migration_message">Dodaliśmy więcej zadań aby rozwinąć twoją społeczność.</string>
     <string name="quick_start_dialog_explore_plans_title">Eksploruj plany subskrypcji</string>
     <string name="quick_start_dialog_explore_plans_message">Dowiedz się więcej o narzędziach SEO w naszych płatnych planach subskrypcji.</string>
     <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
@@ -1313,7 +1310,6 @@ Language: pl
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
     <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które ciebie inspirują i obserwuj je aby otrzymywać aktualizacje kiedy te coś opublikują.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny o podobnych zainteresowaniach</string>
     <string name="quick_start_button_positive">Dalej</string>

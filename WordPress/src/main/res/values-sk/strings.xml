@@ -174,7 +174,6 @@ Language: sk
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>

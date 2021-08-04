@@ -1,5 +1,0 @@
-17.7:
-- Novidade! Receba lembretes para publicar nos dias que você quiser
-- Editor de blocos: Novo bloco de layout em grade, melhorias no estilo dos rótulos, correção de blocos não criados ao pressionar Enter em um bloco de texto. Correções no botão de inserção na visão em tablet
-- Correção de post duplicado no Leitor
-- Adição de possibilidade de inscrever-se a uma conversa por e-mail no Leitor
