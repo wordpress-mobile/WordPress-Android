@@ -15,7 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -38,7 +38,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(
+            QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
                     parent,
                     quickStartViewPool,
                     nestedScrollStates,
