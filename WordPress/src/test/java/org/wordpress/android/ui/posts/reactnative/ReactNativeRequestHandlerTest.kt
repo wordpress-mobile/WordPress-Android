@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.store.ReactNativeStore
 import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
-@Config(application = TestApplication::class, sdk = [VERSION_CODES.LOLLIPOP])
+@Config(application = TestApplication::class, sdk = [VERSION_CODES.N])
 @RunWith(RobolectricTestRunner::class)
 class ReactNativeRequestHandlerTest {
     private val reactNativeStore = mock<ReactNativeStore>()
