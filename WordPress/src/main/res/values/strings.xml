@@ -3700,6 +3700,7 @@
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+    <string name="blogging_reminders_notification_time">Notification time</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>

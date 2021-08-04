@@ -15,6 +15,7 @@ import javax.inject.Inject
 class BloggingRemindersModelMapper
 @Inject constructor() {
     fun toDomainModel(uiModel: BloggingRemindersUiModel): BloggingRemindersModel {
+        // TODO: Save selected time in next iteration
         return BloggingRemindersModel(uiModel.siteId, uiModel.enabledDays.map {
             when (it) {
                 SATURDAY -> Day.SATURDAY
@@ -31,7 +32,9 @@ class BloggingRemindersModelMapper
     fun toUiModel(domainModel: BloggingRemindersModel): BloggingRemindersUiModel {
         return BloggingRemindersUiModel(
                 domainModel.siteId,
-                domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet()
+                domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
+                10, // TODO: read selected time in next iteration
+                0
         )
     }
 }

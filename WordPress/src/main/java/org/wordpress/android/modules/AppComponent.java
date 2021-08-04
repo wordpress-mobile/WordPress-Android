@@ -37,6 +37,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -690,6 +691,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(LayoutPreviewFragment object);
 
     void inject(QuickStartPromptDialogFragment object);
+
+    void inject(BloggingReminderTimePicker object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

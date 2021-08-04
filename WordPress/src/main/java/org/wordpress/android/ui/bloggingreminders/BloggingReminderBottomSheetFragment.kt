@@ -65,6 +65,11 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 } else {
                     primaryButton.visibility = View.GONE
                 }
+
+                if (uiState?.timePicker == true) {
+                    val fragment = BloggingReminderTimePicker.newInstance(0,0)
+                    fragment.show(requireActivity().supportFragmentManager, BloggingReminderTimePicker.TAG)
+                }
             }
 
             savedInstanceState?.let { viewModel.restoreState(it) }
