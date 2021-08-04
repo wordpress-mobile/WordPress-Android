@@ -3305,7 +3305,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding());
+            EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+            Boolean supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
+            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
         }
     }
 
@@ -3318,7 +3320,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        mPostEditorAnalyticsSession.start(unsupportedBlocksList, canViewEditorOnboarding());
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        Boolean supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
+        mPostEditorAnalyticsSession
+                .start(unsupportedBlocksList, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
