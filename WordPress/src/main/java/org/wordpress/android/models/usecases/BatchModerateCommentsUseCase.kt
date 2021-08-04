@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
-import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.DoNotCare
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
 import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.OnModerateComments
@@ -57,12 +56,6 @@ class BatchModerateCommentsUseCase @Inject constructor(
                                                     "Comment not found"
                                             )
                                     )
-
-                                    // emit success if the comment already have desired state
-                                    if (commentBeforeModeration.status == parameters.newStatus.toString()) {
-                                        val result = listOf(commentBeforeModeration)
-                                        return@async CommentsActionPayload(CommentsActionData(result, result.size))
-                                    }
 
                                     val localModerationResult = commentsStore.moderateCommentLocally(
                                             site = parameters.site,
