@@ -64,18 +64,8 @@ class QuickStartCardViewHolder(
 
         val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
-            quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
-        } else {
-            // Workaround for Lollipop
-            val progressDrawable = quickStartCardProgress.progressDrawable.mutate() as LayerDrawable
-            val backgroundLayer = progressDrawable.findDrawableByLayerId(android.R.id.background)
-            val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress)
-            backgroundLayer.colorFilter = createBlendModeColorFilterCompat(progressTrackColor, SRC_IN)
-            progressLayer.colorFilter = createBlendModeColorFilterCompat(progressIndicatorColor, SRC_IN)
-            quickStartCardProgress.progressDrawable = progressDrawable
-        }
+        quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
+        quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
 
         quickStartCardTitle.text = uiHelpers.getTextOfUiString(root.context, item.title)
         (quickStartCardRecyclerView.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
