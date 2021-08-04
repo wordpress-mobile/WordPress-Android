@@ -2,16 +2,12 @@ package org.wordpress.android.ui.mysite
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
