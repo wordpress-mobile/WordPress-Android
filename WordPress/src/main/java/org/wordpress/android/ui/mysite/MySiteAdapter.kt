@@ -5,22 +5,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
+class MySiteAdapter(
+    val imageManager: ImageManager,
+    val uiHelpers: UiHelpers,
+    val quickStartStore: QuickStartStore
+) : Adapter<MySiteItemViewHolder<*>>() {
     private var items = listOf<MySiteItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
@@ -38,6 +46,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
+            QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, quickStartStore)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
                     parent,
                     quickStartViewPool,
@@ -55,6 +64,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoBlock)
             is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsBlock)
             is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationBlock)
+            is QuickStartBlockViewHolder -> holder.bind(items[position] as QuickStartBlock)
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
             is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)

@@ -60,6 +60,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -246,6 +247,10 @@ class MySiteViewModel
                     })
                 }
             }.associateBy { it.dynamicCardType }
+
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                siteItems.add(QuickStartBlock)
+            }
 
             siteItems.addAll(
                     visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
