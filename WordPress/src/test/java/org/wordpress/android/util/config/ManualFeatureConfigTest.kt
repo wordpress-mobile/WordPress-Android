@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -11,8 +11,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.AppConfig
-import org.wordpress.android.util.config.FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class ManualFeatureConfigTest {

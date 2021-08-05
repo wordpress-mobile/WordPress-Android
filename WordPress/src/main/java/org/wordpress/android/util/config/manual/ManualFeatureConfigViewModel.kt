@@ -3,10 +3,10 @@ package org.wordpress.android.util.config.manual
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.config.FeaturesInDevelopment
+import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
 import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button

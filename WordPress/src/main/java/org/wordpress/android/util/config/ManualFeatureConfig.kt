@@ -1,8 +1,7 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.util.config
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
 class ManualFeatureConfig
