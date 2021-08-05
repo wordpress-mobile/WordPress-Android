@@ -125,6 +125,20 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .isEqualTo(UiStringRes(R.string.quick_start_sites_type_grow))
     }
 
+    @Test
+    fun `given uncompleted tasks exist, when block is built, then title is not struck through`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).strikeThroughTitle).isFalse
+    }
+
+    @Test
+    fun `given uncompleted tasks do not exist, when block is built, then title is struck through`() {
+        val quickStartBlock = buildQuickStartBlock(uncompletedTasks = emptyList())
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).strikeThroughTitle).isTrue
+    }
+
     /* SUBTITLE */
 
     @Test
