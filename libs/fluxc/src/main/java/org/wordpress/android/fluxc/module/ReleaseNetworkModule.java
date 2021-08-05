@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalse;
 import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalseDeserializer;
 
 import java.io.File;
+import java.net.CookieHandler;
 import java.net.CookieManager;
 
 import javax.inject.Named;
@@ -86,7 +87,9 @@ public class ReleaseNetworkModule {
     @Provides
     @Singleton
     public CookieManager provideCookieManager() {
-        return new CookieManager();
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+        return cookieManager;
     }
 
     @Provides
