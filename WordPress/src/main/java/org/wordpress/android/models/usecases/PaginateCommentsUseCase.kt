@@ -1,5 +1,6 @@
 package org.wordpress.android.models.usecases
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -30,6 +31,7 @@ class PaginateCommentsUseCase @Inject constructor(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
+    @Suppress("LongMethod") // temporary suppress until we come up with better architecture for use cases
     sealed class PaginateCommentsState : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction,
             PagingData, CommentsUseCaseType,
             CommentError> {
@@ -46,7 +48,7 @@ class PaginateCommentsUseCase @Inject constructor(
                         val parameters = action.parameters
                         val commentsStore = utilsProvider.commentsStore
                         if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
-
+                        delay(LOADING_STATE_DELAY)
                         val result = if (!utilsProvider.networkUtilsWrapper.isNetworkAvailable()) {
                             val cachedComments = if (parameters.offset > 0) {
                                 commentsStore.getCommentsForSite(
@@ -142,5 +144,9 @@ class PaginateCommentsUseCase @Inject constructor(
             val pagingParameters: GetPageParameters,
             val hasMore: Boolean
         ) : Parameters()
+    }
+
+    companion object {
+        const val LOADING_STATE_DELAY = 500L
     }
 }
