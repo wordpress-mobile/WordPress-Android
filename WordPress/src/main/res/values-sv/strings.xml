@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-12 22:04:01+0000
+Translation-Revision-Date: 2021-08-02 01:58:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Skapa webbplats</string>
+    <string name="create_site_notification_text">Kom igång med din egen webbplats i några få steg</string>
+    <string name="create_site_notification_title">Skapa din WordPress-webbplats</string>
+    <string name="stats_disabled_enable_stats_error_message">Kan inte aktivera webbplatsstatistik</string>
+    <string name="stats_disabled_enable_stats_button">Aktivera webbplatsstatistik</string>
+    <string name="stats_disabled_subtitle">Aktivera webbplatsstatistik för att se detaljerad information om din trafik, gillamarkeringar, kommentarer och prenumeranter.</string>
+    <string name="stats_disabled_title">Letar du efter statistik?</string>
+    <string name="gutenberg_native_what_is_a_block">Vad är ett block?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Kan inte bädda in media</string>
+    <string name="gutenberg_native_try_another_search_term"> Prova en annan sökterm</string>
+    <string name="gutenberg_native_no_blocks_found">Inga block hittades.</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Förhandsgranskning av inbäddningar är inte tillgängligt ännu</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Förhandsgranskning av inbäddade block kommer snart</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltryck för att förhandsgranska inlägget.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Visa mig en rundtur</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Vi kommer att visa dig grunderna i hur du hanterar din webbplats via appen.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Vill du ha lite hjälp med att hantera den här webbplatsen med appen?</string>
+    <string name="login_epilogue_create_new_site_button">Skapa en ny webbplats</string>
+    <string name="login_epilogue_mysites_subheading">Du kan byta webbplats när som helst.</string>
+    <string name="login_epilogue_mysites_heading">Välj en webbplats att öppna</string>
+    <string name="scan_multisite_not_supported_subtitle">Jetpack Scan är inte kompatibelt med multisite WordPress-installationer för tillfället.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisite stöds inte</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ogiltig URL. Ange en giltig URL.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Inbäddat innehåll från %s kan för närvarande inte visas i den mobila redigeraren. Förhandsvisa sidan för att se det inbäddade innehållet.</string>
     <string name="gutenberg_native_embed_caption_s">Bädda in bildtext. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Beskrivning för inbäddning. Tom</string>
     <string name="gutenberg_native_add_link_0fcaed3b">LÄGG TILL LÄNK</string>
@@ -101,6 +126,8 @@ Language: sv_SE
     <string name="gutenberg_native_sorting_and_filtering">Sortering och filtrering</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
+    <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
+    <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_post_meta_settings">Inställningar för metainformation om inlägg</string>
     <string name="gutenberg_native_post_content_settings">Inställningar för inläggsinnehåll</string>
     <string name="gutenberg_native_featured">Utvalda</string>
@@ -124,10 +151,10 @@ Language: sv_SE
     <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
     <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
+    <string name="gutenberg_native_search_blocks">Sök block</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
     <string name="gutenberg_native_outside">Utsida</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Ingen anpassad platshållare angiven</string>
-    <string name="gutenberg_native_no_button">Ingen knapp</string>
     <string name="gutenberg_native_inside">Inuti</string>
     <string name="gutenberg_native_hide_search_heading">Dölj sökrubrik</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbeltryck för att redigera platshållartexten</string>
@@ -138,8 +165,6 @@ Language: sv_SE
     <string name="gutenberg_native_clear_search">Rensa sökning</string>
     <string name="gutenberg_native_cancel_search">Avbryt sök</string>
     <string name="gutenberg_native_button_position">Knapposition</string>
-    <string name="gutenberg_native_button_outside">Knapp utanför</string>
-    <string name="gutenberg_native_button_inside">Knapp inuti</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s är %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ett fel uppstod vid hämtningen av data för gilla-markeringar</string>
     <string name="get_likes_unknown_error">Ett okänt fel uppstod vid hämtningen av gilla-markeringar</string>
@@ -192,9 +217,8 @@ Language: sv_SE
     <string name="quick_start_card_menu_unpin">Avklistra detta</string>
     <string name="quick_start_list_review_pages_subtitle">Kontrollera dina sidor och gör ändringar, lägg till eller ta bort sidor.</string>
     <string name="quick_start_list_view_site_title">Besök din webbplats</string>
-    <string name="quick_start_list_upload_icon_subtitle">Lägg till en webbplatsikon för ett genomarbetat och proffsigt utseende.</string>
     <string name="quick_start_list_follow_site_subtitle">Hitta och följ webbplatser som inspirerar dig.</string>
-    <string name="quick_start_list_enable_sharing_title">Aktivera delning</string>
+    <string name="quick_start_list_enable_sharing_title">Social delning</string>
     <string name="quick_start_list_enable_sharing_subtitle">Dela automatiskt dina nya inlägg i dina sociala media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämnesområde.</string>
     <string name="quick_start_list_check_stats_title">Kolla din statistik</string>
@@ -686,7 +710,7 @@ Language: sv_SE
     <string name="send_link_by_email">Skicka länk via e-post</string>
     <string name="reset_your_password">Återställ ditt lösenord</string>
     <string name="reader_error_request_failed_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
-    <string name="quick_start_list_update_site_title_title">Ange webbplatsens rubrik</string>
+    <string name="quick_start_list_update_site_title_title">Kontrollera din webbplatsrubrik</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att ange en ny rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
     <string name="gutenberg_native_s_block_options">Inställningar för blocket %s</string>
@@ -1301,15 +1325,13 @@ Language: sv_SE
     <string name="quick_start_sites">Gå vidare</string>
     <string name="quick_start_complete_tasks_header">Klart (%d)</string>
     <string name="quick_start_dialog_view_site_message">Njut av din färdiga produkt!</string>
-    <string name="quick_start_dialog_upload_icon_title">Ladda upp en webbplats-ikon</string>
+    <string name="quick_start_dialog_upload_icon_title">Välj en unik webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
     <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
-    <string name="quick_start_dialog_publish_post_message">Skriv och publicera ditt första inlägg.</string>
+    <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
     <string name="quick_start_dialog_need_help_message">Vi hjälper dig att gå igenom grunderna för hur du bygger din webbplats och får den att växa.</string>
-    <string name="quick_start_dialog_migration_title">Vi har gjort några ändringar i din checklista.</string>
-    <string name="quick_start_dialog_migration_message">Vi har lagt till nya åtgärder för att hjälpa dig vidga din läsekrets.</string>
     <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
     <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
@@ -1495,7 +1517,7 @@ Language: sv_SE
     <string name="quick_start_dialog_need_help_title">Vill du ha lite hjälp att komma igång?</string>
     <string name="quick_start_dialog_need_help_button_positive">Ja</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nej</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nej tack</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>

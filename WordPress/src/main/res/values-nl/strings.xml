@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-15 17:42:46+0000
+Translation-Revision-Date: 2021-07-27 07:57:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Site maken</string>
+    <string name="create_site_notification_text">Krijg je site in slechts een paar snelle stappen aan de slag</string>
+    <string name="create_site_notification_title">Maak je WordPress site</string>
+    <string name="stats_disabled_enable_stats_error_message">Kan sitestatistieken niet activeren</string>
+    <string name="stats_disabled_enable_stats_button">Sitestatistieken inschakelen</string>
+    <string name="stats_disabled_subtitle">Schakel sitestatistieken in om gedetailleerde informatie te zien over je verkeer, vind-ik-leuks, reacties en abonnees.</string>
+    <string name="stats_disabled_title">Op zoek naar statistieken?</string>
+    <string name="gutenberg_native_what_is_a_block">Wat is een blok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">We werken hard aan het toevoegen van ondersteuning voor insluit voorbeelden. In de tussentijd kun je een voorbeeld van de ingesloten inhoud op het bericht bekijken.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">We werken hard aan het toevoegen van ondersteuning voor insluit voorbeelden. In de tussentijd kun je een voorbeeld van de ingesloten inhoud op de pagina bekijken.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Kan media niet insluiten</string>
+    <string name="gutenberg_native_try_another_search_term">Probeer een andere zoekterm</string>
+    <string name="gutenberg_native_no_blocks_found">Geen blokken gevonden</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Insluit voorbeelden nog niet beschikbaar</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Insluit blok voorbeelden komen binnenkort</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltik om een voorbeeld van het bericht te bekijken.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltik om de voorbeeldpagina te bekijken.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Getoond in de browser tab van je bezoeker en andere plaatsen online.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Laat me rondleiden</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">We zullen je door de basis van het beheren van je site leiden met de app.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Wil je een beetje hulp bij het beheren van deze site met de app?</string>
+    <string name="login_epilogue_create_new_site_button">Maak een nieuwe site</string>
+    <string name="login_epilogue_mysites_subheading">Je kunt op elk moment sites wisselen.</string>
+    <string name="login_epilogue_mysites_heading">Kies een site om te openen</string>
+    <string name="scan_multisite_not_supported_subtitle">Jetpack Scan is op dit moment niet compatibel met WordPress multisite installaties.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisites worden niet ondersteund</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ongeldige URL. Geef een geldige URL in.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Ingesloten inhoud van %s kan momenteel niet worden bekeken in de mobiele editor. Bekijk een voorbeeld van de pagina om de ingesloten inhoud weer te geven.</string>
     <string name="gutenberg_native_embed_caption_s">Bijschrift insluiten. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Bijschrift insluiten. leeg</string>
     <string name="gutenberg_native_add_link_0fcaed3b">LINK TOEVOEGEN</string>
@@ -101,6 +126,8 @@ Language: nl
     <string name="gutenberg_native_sorting_and_filtering">Sortering en filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
+    <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
+    <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
     <string name="gutenberg_native_post_meta_settings">Bericht meta-instellingen</string>
     <string name="gutenberg_native_post_content_settings">Berichtinhoud instellingen</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
@@ -124,10 +151,10 @@ Language: nl
     <string name="gutenberg_native_use_icon_button">Gebruik pictogram knop</string>
     <string name="gutenberg_native_search_input_field">Zoeken invoerveld.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Zoekknop. Huidige knoptekst is.</string>
+    <string name="gutenberg_native_search_blocks">Blokken zoeken</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Zoekblok label. Huidige tekst is</string>
     <string name="gutenberg_native_outside">Buitenkant</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Geen aangepaste plaatshouder set</string>
-    <string name="gutenberg_native_no_button">Geen knop</string>
     <string name="gutenberg_native_inside">Binnen</string>
     <string name="gutenberg_native_hide_search_heading">Verberg zoek heading</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbel tikken om de plaatshouder tekst te bewerken</string>
@@ -138,8 +165,6 @@ Language: nl
     <string name="gutenberg_native_clear_search">Zoekopdracht wissen</string>
     <string name="gutenberg_native_cancel_search">Zoekopdracht annuleren</string>
     <string name="gutenberg_native_button_position">Knop positie</string>
-    <string name="gutenberg_native_button_outside">Knop buiten</string>
-    <string name="gutenberg_native_button_inside">Knop binnen</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Er is een fout opgetreden tijdens het ophalen van likes gegevens</string>
     <string name="get_likes_unknown_error">Een onbekende fout vond plaats tijdens het ophalen van likes.</string>
@@ -192,9 +217,8 @@ Language: nl
     <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
     <string name="quick_start_list_view_site_title">Bezoek je site</string>
-    <string name="quick_start_list_upload_icon_subtitle">Voeg een site pictogram toe voor een gepolijst pro uiterlijk.</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
-    <string name="quick_start_list_enable_sharing_title">Schakel delen in</string>
+    <string name="quick_start_list_enable_sharing_title">Sociaal delen</string>
     <string name="quick_start_list_enable_sharing_subtitle">Deel automatisch nieuwe berichten op je social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die de persoonlijkheid en het onderwerp weerspiegelt.</string>
     <string name="quick_start_list_check_stats_title">Bekijk je statistieken</string>
@@ -686,7 +710,7 @@ Language: nl
     <string name="send_link_by_email">Link per e-mail verzenden</string>
     <string name="reset_your_password">Stel je wachtwoord opnieuw in</string>
     <string name="reader_error_request_failed_title">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
-    <string name="quick_start_list_update_site_title_title">Stel je site titel in</string>
+    <string name="quick_start_list_update_site_title_title">Bekijk je site titel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tik &lt;b&gt;%1$s&lt;/b&gt; om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options">%s blok opties</string>
@@ -1301,15 +1325,13 @@ Language: nl
     <string name="quick_start_sites">Volgende stappen</string>
     <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
     <string name="quick_start_dialog_view_site_message">Veel plezier met je voltooide product!</string>
-    <string name="quick_start_dialog_upload_icon_title">Upload een favicon</string>
+    <string name="quick_start_dialog_upload_icon_title">Kies een unieke site pictogram</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
     <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
-    <string name="quick_start_dialog_publish_post_message">Stel je eerste bericht op en publiceer het.</string>
+    <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
     <string name="quick_start_dialog_need_help_message">Wij brengen je de basis bij voor het bouwen en laten groeien van je site.</string>
-    <string name="quick_start_dialog_migration_title">We hebben wat wijzigingen aangebracht aan je checklist</string>
-    <string name="quick_start_dialog_migration_message">We hebben wat taken toegevoegd om je te helpen je bezoekersaantallen te vergroten.</string>
     <string name="quick_start_dialog_explore_plans_title">Abonnementen verkennen</string>
     <string name="quick_start_dialog_explore_plans_message">Bekijk meer informatie over de marketing- en SEO-tools van onze betaalde abonnementen.</string>
     <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
@@ -1495,7 +1517,7 @@ Language: nl
     <string name="quick_start_dialog_need_help_title">Heb je hulp nodig om aan de slag te kunnen gaan?</string>
     <string name="quick_start_dialog_need_help_button_positive">Accepteer</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nooit</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nee dank je</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
     <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde onderwerpen</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tik op %1$s Reader %2$s om door te gaan</string>

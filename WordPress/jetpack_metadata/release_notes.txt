@@ -1,3 +1,5 @@
-* [***] Block editor: New Block: Embed block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3727]
-* [*] Added webp image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/15068]
+With the new Embed block, embed content from supported services like YouTube or Instagram.
 
+Don’t have a site yet? You’ll see notifications that prompt you to create one.
+
+Other updates include improvements to the Blogging Reminders feature and tweaks in the Stats and Media sections of your app.

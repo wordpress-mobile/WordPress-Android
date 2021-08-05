@@ -61,6 +61,7 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
@@ -492,6 +493,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void gutenbergDidRequestPreview() {
                         mEditorFragmentListener.showPreview();
+                    }
+                },
+                new OnBlockTypeImpressionsEventListener() {
+                    @Override
+                    public Map<String, Double> onRequestBlockTypeImpressions() {
+                        return mEditorFragmentListener.onRequestBlockTypeImpressions();
+                    }
+
+                    @Override
+                    public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
+                        mEditorFragmentListener.onSetBlockTypeImpressions(impressions);
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));

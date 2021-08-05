@@ -2,7 +2,7 @@
 
 18.0
 -----
-
+* [*] Need a little help after login? We're here for you. We've made a few changes to the login flow that will make it easier for you to start managing your site or create a new one.
 
 17.9
 -----

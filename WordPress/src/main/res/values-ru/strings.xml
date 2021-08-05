@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-13 11:06:48+0000
+Translation-Revision-Date: 2021-07-27 09:14:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Создание сайта</string>
+    <string name="create_site_notification_text">Получите работающий сайт всего за пару шагов</string>
+    <string name="create_site_notification_title">Создайте свой сайт на WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">Не удалось активировать статистику сайта</string>
+    <string name="stats_disabled_enable_stats_button">Включить статистику сайта</string>
+    <string name="stats_disabled_subtitle">Включите статистику сайта, чтобы посмотреть подробные данные о посещаемости, пользовательских оценках, комментариях и о подписчиках.</string>
+    <string name="stats_disabled_title">Ищите статистику?</string>
+    <string name="gutenberg_native_what_is_a_block">Что такое блок?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Мы усердно работаем над добавлением поддержки для просмотра встраиваемых объектов. А пока вы можете предварительно просмотреть встроенное содержимое в записи.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Мы усердно работаем над добавлением поддержки для просмотра встраиваемых объектов. А пока вы можете предварительно просмотреть встроенное содержимое на странице.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Невозможно встроить медиасодержимое</string>
+    <string name="gutenberg_native_try_another_search_term">Попробуйте другие условия поиска</string>
+    <string name="gutenberg_native_no_blocks_found">Блоков не найдено.</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Просмотр встроенных объектов пока не доступен</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Просмотр блоков встроенных объектов пока не доступен</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Нажмите дважды для предварительного просмотра записи.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Нажмите дважды для предварительного просмотра страницы.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Показывается посетителям на вкладках браузера и некоторых других местах онлайн.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Покажите мне</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Начнём с основ управления сайтом через приложение.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Нужна помощь по управлению сайтом через приложение?</string>
+    <string name="login_epilogue_create_new_site_button">Создать новый сайт</string>
+    <string name="login_epilogue_mysites_subheading">Вы можете переключить сайт в любое время.</string>
+    <string name="login_epilogue_mysites_heading">Выберите сайт, чтобы открыть его</string>
+    <string name="scan_multisite_not_supported_subtitle">К сожалению, на данный момент система Jetpack Scan несовместима с мультисайтовыми установками WordPress.</string>
+    <string name="scan_multisite_not_supported_title">Мультисайтовые установки WordPress не поддерживаются</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Неверный URL, укажите корректный URL.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Встроенное содержимое с %s на настоящий момент не может быть просмотрено в мобильном редакторе. Откройте предварительный просмотр страницы для его просмотра.</string>
     <string name="gutenberg_native_embed_caption_s">Подпись встроенного объекта. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Подпись встроенного объекта. Пустая</string>
     <string name="gutenberg_native_add_link_0fcaed3b">ДОБАВИТЬ ССЫЛКУ</string>
@@ -101,6 +126,8 @@ Language: ru
     <string name="gutenberg_native_sorting_and_filtering">Сортировка и фильтрация</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
+    <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
+    <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
     <string name="gutenberg_native_post_content_settings">Настройки содержимого записи</string>
     <string name="gutenberg_native_featured">Избранное</string>
@@ -124,10 +151,10 @@ Language: ru
     <string name="gutenberg_native_use_icon_button">Использовать кнопку со значком</string>
     <string name="gutenberg_native_search_input_field">Поле ввода для поиска.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Кнопка поиска. Текущий текст кнопки -</string>
+    <string name="gutenberg_native_search_blocks">Блоки поиска</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Ярлык блока поиска. Сейчас -</string>
     <string name="gutenberg_native_outside">Снаружи</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Пользовательский заполнитель не назначен</string>
-    <string name="gutenberg_native_no_button">Нет кнопки</string>
     <string name="gutenberg_native_inside">Внутри</string>
     <string name="gutenberg_native_hide_search_heading">Скрыть заголовок поиска</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Нажмите дважды для редактирования текста заполнителя</string>
@@ -138,8 +165,6 @@ Language: ru
     <string name="gutenberg_native_clear_search">Очистить поиск</string>
     <string name="gutenberg_native_cancel_search">Отменить поиск</string>
     <string name="gutenberg_native_button_position">Положение кнопки</string>
-    <string name="gutenberg_native_button_outside">Кнопка снаружи</string>
-    <string name="gutenberg_native_button_inside">Кнопка внутри</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">При получении данных отметок \"нравится\" произошла ошибка.</string>
     <string name="get_likes_unknown_error">При получении отметок \"нравится\" произошла неизвестная ошибка. </string>
@@ -192,9 +217,8 @@ Language: ru
     <string name="quick_start_card_menu_unpin">Открепить</string>
     <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
     <string name="quick_start_list_view_site_title">Перейдите на свой сайт</string>
-    <string name="quick_start_list_upload_icon_subtitle">Добавьте значок сайта, чтобы сайт выглядел качественно и профессионально.</string>
     <string name="quick_start_list_follow_site_subtitle">Находите и подписывайтесь на сайты вдохновляющие вас.</string>
-    <string name="quick_start_list_enable_sharing_title">Включить возможности поделиться</string>
+    <string name="quick_start_list_enable_sharing_title">Поделиться в социальных сетях</string>
     <string name="quick_start_list_enable_sharing_subtitle">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
     <string name="quick_start_list_update_site_title_subtitle">Задайте вашему сайту название отражающее его суть и тематику.</string>
     <string name="quick_start_list_check_stats_title">Посмотрите статистику сайта</string>
@@ -686,7 +710,7 @@ Language: ru
     <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
     <string name="reset_your_password">Сбросить пароль</string>
     <string name="reader_error_request_failed_title">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
-    <string name="quick_start_list_update_site_title_title">Задайте название сайта</string>
+    <string name="quick_start_list_update_site_title_title">Проверьте название сайта</string>
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
@@ -1301,15 +1325,13 @@ Language: ru
     <string name="quick_start_sites">Следующие шаги</string>
     <string name="quick_start_complete_tasks_header">Готово (%d)</string>
     <string name="quick_start_dialog_view_site_message">Получайте удовольствие от завершенной работы!</string>
-    <string name="quick_start_dialog_upload_icon_title">Загрузить значок сайта</string>
+    <string name="quick_start_dialog_upload_icon_title">Выберите уникальный значок сайта</string>
     <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Нажмите %1$s Тариф %2$s для просмотра вашего и других доступных тарифов</string>
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
     <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
     <string name="quick_start_dialog_need_help_message">Мы проведем вас по основам создания и роста вашего сайта.</string>
-    <string name="quick_start_dialog_migration_title">Мы внесли некоторые изменения в ваш список проверки</string>
-    <string name="quick_start_dialog_migration_message">Мы добавили пару задач для того, чтобы помочь вам привлечь аудиторию.</string>
     <string name="quick_start_dialog_explore_plans_title">Посмотреть тарифы</string>
     <string name="quick_start_dialog_explore_plans_message">Узнайте больше о маркетинге и SEO инструментах на наших платных тарифах.</string>
     <string name="quick_start_dialog_enable_sharing_title">Включить возможность делиться записями</string>
