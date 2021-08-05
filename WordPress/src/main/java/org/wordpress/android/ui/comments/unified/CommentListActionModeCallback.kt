@@ -34,7 +34,7 @@ class CommentListActionModeCallback(
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         val inflater = actionMode.menuInflater
-        inflater.inflate(R.menu.menu_comments_cab, menu)
+        inflater.inflate(R.menu.menu_unified_comments_list, menu)
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
