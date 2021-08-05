@@ -41,6 +41,7 @@ import org.wordpress.android.ui.comments.utils.testCommentsPayload30
 import org.wordpress.android.ui.comments.utils.testCommentsPayload60
 import org.wordpress.android.ui.comments.utils.testCommentsPayloadLastPage
 import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
 class PaginateCommentsUseCaseTest : BaseUnitTest() {
@@ -49,6 +50,7 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var commentStore: CommentsStore
     @Mock private lateinit var paginateCommentsResourceProvider: PaginateCommentsResourceProvider
     @Mock private lateinit var unrepliedCommentsUtils: UnrepliedCommentsUtils
+    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var paginateCommentsUseCase: PaginateCommentsUseCase
 
@@ -56,8 +58,10 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
         whenever(paginateCommentsResourceProvider.unrepliedCommentsUtils).thenReturn(unrepliedCommentsUtils)
+        whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
 
         runBlocking {
             Mockito.`when`(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
