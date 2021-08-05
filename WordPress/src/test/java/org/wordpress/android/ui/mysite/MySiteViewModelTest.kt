@@ -106,6 +106,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
@@ -133,6 +134,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -203,7 +205,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
-                unifiedCommentsListFeatureConfig
+                unifiedCommentsListFeatureConfig,
+                quickStartDynamicCardsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

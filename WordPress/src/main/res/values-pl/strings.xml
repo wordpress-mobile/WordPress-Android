@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-16 10:59:24+0000
+Translation-Revision-Date: 2021-08-05 12:01:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -446,7 +446,6 @@ Language: pl
     <string name="dialog_discard_page_title">Czy usunąć slajd z relacji?</string>
     <string name="label_frame_image">Slajd</string>
     <string name="label_retry_icon">Ponów</string>
-    <string name="label_saved_icon">Zapisana</string>
     <string name="label_close_button">Zamknij</string>
     <string name="label_snackbar_share">UDOSTĘPNIJ</string>
     <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
@@ -471,6 +470,7 @@ Language: pl
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
     <string name="label_control_saving">Zapisywanie</string>
+    <string name="label_saved_icon">Zapisano</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -1902,8 +1902,8 @@ Language: pl
     <string name="permission_camera">Aparat</string>
     <string name="permission_storage">Pamięć</string>
     <string name="button_edit_permissions">Edytuj uprawnienia</string>
-    <string name="photo_picker_soft_ask_allow">Zezwalaj</string>
     <string name="photo_picker_soft_ask_label">%s potrzebuje uprawnień dostępu do twoich zdjęć</string>
+    <string name="photo_picker_soft_ask_allow">Zezwól</string>
     <string name="sharing_twitter_message">Będzie to zawarte w tweetach kiedy ludzie udostępniają treści używając  przycisku Twitter</string>
     <string name="sharing_label_message">Zmień opis dla przycisków udostępniania. Opis pojawi się dopiero gdy dodasz przynajmniej jeden przycisk udostępniania.</string>
     <string name="connecting_account">Łączenie konta</string>
@@ -1990,7 +1990,7 @@ Language: pl
     <string name="media_encoder_quality_90">Wysoka</string>
     <string name="media_encoder_quality_85">Średnia</string>
     <string name="media_encoder_quality_80">Niska</string>
-    <string name="media_upload_state_uploaded">Przesłano</string>
+    <string name="media_upload_state_uploaded">Wysłano</string>
     <string name="media_upload_state_deleted">Usunięto</string>
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>
@@ -2421,8 +2421,8 @@ Language: pl
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="show">Pokaż</string>
     <string name="hide">Ukryj</string>
-    <string name="select_all">Wybierz wszystko</string>
     <string name="deselect_all">Odznacz wszystko</string>
+    <string name="select_all">Zaznacz wszystko</string>
     <string name="language">Język</string>
     <string name="verification_code">Kod weryfikacyjny</string>
     <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
@@ -2673,7 +2673,7 @@ Language: pl
     <string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
     <string name="dlg_deleting_comments">Usuwanie komentarzy</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
-    <string name="media">Multimedia</string>
+    <string name="media">Media</string>
     <string name="delete">Usuń</string>
     <string name="approve">Zatwierdź</string>
     <string name="none">Brak</string>
