@@ -324,11 +324,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 finish();
                 break;
             case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
