@@ -32,6 +32,8 @@ abstract class BloggingRemindersDao {
         var thursday: Boolean = false,
         var friday: Boolean = false,
         var saturday: Boolean = false,
-        var sunday: Boolean = false
+        var sunday: Boolean = false,
+        val hour: Int,
+        var minute: Int
     )
 }
