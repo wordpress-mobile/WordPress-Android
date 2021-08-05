@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-23 12:54:07+0000
+Translation-Revision-Date: 2021-08-05 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">建立網站</string>
+    <string name="create_site_notification_text">只要幾個快速步驟，即可讓你的網站上線運作</string>
+    <string name="create_site_notification_title">建立你的 WordPress 網站</string>
+    <string name="stats_disabled_enable_stats_error_message">無法啟用網站統計資料</string>
+    <string name="stats_disabled_enable_stats_button">啟用網站統計資料</string>
+    <string name="stats_disabled_subtitle">啟用網站統計資料即可查看網站詳細資訊，包括流量、按讚數、留言數和訂閱人數。</string>
+    <string name="stats_disabled_title">在尋找統計資料嗎？</string>
+    <string name="gutenberg_native_what_is_a_block">什麼是區塊？</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">我們正努力為嵌入內容預覽提供支援。 你可以在此期間預覽文章的嵌入內容。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">我們正努力為嵌入內容預覽提供支援。 你可以在此期間預覽頁面的嵌入內容。</string>
+    <string name="gutenberg_native_unable_to_embed_media">無法內嵌媒體</string>
+    <string name="gutenberg_native_try_another_search_term">嘗試其他搜尋字詞</string>
+    <string name="gutenberg_native_no_blocks_found">找不到區塊</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">嵌入內容預覽尚無法使用</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入內容區塊預覽功能即將推出</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">點兩下可預覽文章。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
+    <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">逐步說明</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">我們會逐步說明透過應用程式管理網站的基本須知。</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">需要協助你透過應用程式管理此網站嗎？</string>
+    <string name="login_epilogue_create_new_site_button">建立一個新網站</string>
+    <string name="login_epilogue_mysites_subheading">你可以隨時切換網站。</string>
+    <string name="login_epilogue_mysites_heading">選擇要開啟的網站</string>
+    <string name="scan_multisite_not_supported_subtitle">不好意思，Jetpack Scan 目前與多站台 WordPress 安裝不相容。</string>
+    <string name="scan_multisite_not_supported_title">不支援 WordPress 多站台</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無效網址。 請輸入正確的網址。</string>
     <string name="gutenberg_native_embed_caption_s">內嵌字幕。 %s</string>
     <string name="gutenberg_native_embed_caption_empty">內嵌字幕。 清空</string>
@@ -100,6 +126,8 @@ Language: zh_TW
     <string name="gutenberg_native_mention">標記</string>
     <string name="gutenberg_native_post_content_settings">文章內容設定</string>
     <string name="gutenberg_native_post_meta_settings">文章中繼資料設定</string>
+    <string name="gutenberg_native_preview_page">閱覽頁面</string>
+    <string name="gutenberg_native_preview_post">預覽文章</string>
     <string name="gutenberg_native_featured">精選內容</string>
     <string name="gutenberg_native_embed_link">內嵌連結</string>
     <string name="gutenberg_native_display_post_date">顯示內容發佈日期</string>
@@ -188,6 +216,7 @@ Language: zh_TW
     <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
     <string name="quick_start_list_enable_sharing_subtitle">自動將新文章分享到社群媒體。</string>
     <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。</string>
+    <string name="quick_start_list_enable_sharing_title">社群分享</string>
     <string name="quick_start_list_check_stats_title">檢視統計資料</string>
     <string name="backup_download_status_failure_bullet2">我們仍會嘗試為你建立可下載的備份檔案。</string>
     <string name="backup_download_status_failure_bullet1">我們擷取不到狀態，無法判斷需要花多久時間建立可下載的備份。</string>
@@ -677,6 +706,7 @@ Language: zh_TW
     <string name="reset_your_password">重設密碼</string>
     <string name="reader_error_request_failed_title">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 以設定新標題</string>
+    <string name="quick_start_list_update_site_title_title">確認網站標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
     <string name="gutenberg_native_s_block_options">%s 區塊選項</string>
     <string name="gutenberg_native_duplicate_block">重複區塊</string>
@@ -1290,9 +1320,11 @@ Language: zh_TW
     <string name="quick_start_dialog_explore_plans_message_short">點選%1$s方案%2$s以查看你目前的方案和其他可用方案</string>
     <string name="quick_start_sites_type_grow">讀者持續成長</string>
     <string name="quick_start_sites_type_customize">自訂你的網站</string>
+    <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_check_stats_message_short">點選%1$s統計資料%2$s以瞭解網站的成效。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
     <string name="quick_start_dialog_need_help_message">我們會逐步說明建立網站以及讓網站成長的基本事項。</string>
+    <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
     <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
     <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
