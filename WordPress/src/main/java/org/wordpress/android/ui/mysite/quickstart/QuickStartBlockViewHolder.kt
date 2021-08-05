@@ -44,7 +44,7 @@ class QuickStartBlockViewHolder(
     }
 
     private fun MaterialTextView.paintFlags(item: QuickStartTaskTypeItem) {
-        paintFlags = if (item.isCompleted) {
+        paintFlags = if (item.strikeThroughTitle) {
             paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         } else {
             paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()

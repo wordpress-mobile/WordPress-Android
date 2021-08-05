@@ -46,7 +46,7 @@ class QuickStartBlockBuilder
                                 UiStringText("${countCompleted + countUncompleted}")
                         )
                 ),
-                isCompleted = countUncompleted == 0
+                strikeThroughTitle = countUncompleted == 0
         )
     }
 
