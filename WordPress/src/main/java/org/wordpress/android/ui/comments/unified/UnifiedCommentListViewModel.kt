@@ -142,6 +142,11 @@ class UnifiedCommentListViewModel @Inject constructor(
 
     private fun requestNextPage(offset: Int) {
         launch(bgDispatcher) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                launch(bgDispatcher) {
+                    _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                }
+            }
             unifiedCommentsListHandler.requestPage(
                     GetPageParameters(
                             site = selectedSiteRepository.getSelectedSite()!!,
