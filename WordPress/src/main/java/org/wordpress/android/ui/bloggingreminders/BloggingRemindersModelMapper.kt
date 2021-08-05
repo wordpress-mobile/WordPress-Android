@@ -3,7 +3,6 @@ package org.wordpress.android.ui.bloggingreminders
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.workers.reminder.ReminderScheduler
-import org.wordpress.android.workers.reminder.ReminderScheduler.Companion
 import java.time.DayOfWeek
 import java.time.DayOfWeek.FRIDAY
 import java.time.DayOfWeek.MONDAY
@@ -36,7 +35,7 @@ class BloggingRemindersModelMapper
                 domainModel.siteId,
                 domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
                 ReminderScheduler.DEFAUlT_START_HOUR, // TODO: read selected time in next iteration
-                Companion.DEFAUlT_START_HOUR
+                ReminderScheduler.DEFAULT_START_MINUTE
         )
     }
 }

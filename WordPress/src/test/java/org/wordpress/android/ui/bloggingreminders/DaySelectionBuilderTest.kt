@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -41,6 +40,7 @@ class DaySelectionBuilderTest {
     private val onSelectDay: (DayOfWeek) -> Unit = {
         daySelected = it
     }
+    private val onSelectTime: () -> Unit = {}
     private val onConfirm: (BloggingRemindersUiModel?) -> Unit = {
         confirmed = true
     }
@@ -61,7 +61,7 @@ class DaySelectionBuilderTest {
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
 
-        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, any())
+        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, onSelectTime)
 
         assertModel(uiModel, setOf(), dayLabel)
     }
@@ -76,7 +76,7 @@ class DaySelectionBuilderTest {
         val uiModel = daySelectionBuilder.buildSelection(
                 bloggingRemindersModel,
                 onSelectDay,
-                any()
+                onSelectTime
         )
 
         assertModel(uiModel, setOf(WEDNESDAY, SUNDAY), dayLabel)
@@ -87,7 +87,7 @@ class DaySelectionBuilderTest {
         val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)).thenReturn(UiStringText("Once a week"))
 
-        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, any())
+        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, onSelectTime)
 
         DayOfWeek.values().forEachIndexed { index, day ->
             uiModel.clickOnDayItem(index)
