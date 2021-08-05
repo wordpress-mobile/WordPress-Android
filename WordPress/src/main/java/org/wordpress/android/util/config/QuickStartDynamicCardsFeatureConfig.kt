@@ -15,4 +15,3 @@ class QuickStartDynamicCardsFeatureConfig
         appConfig,
         BuildConfig.QUICK_START_DYNAMIC_CARDS
 )
-

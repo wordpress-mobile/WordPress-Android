@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 12:13:24+0000
+Translation-Revision-Date: 2021-08-03 10:40:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
@@ -14,6 +14,8 @@ Language: sq_AL
     <string name="stats_disabled_subtitle">Që të shihni të dhëna të hollësishme mbi trafikun tuaj, pëlqimet, komentet dhe pajtimtarët, aktivizoni statistika sajti.</string>
     <string name="stats_disabled_title">Po shihni për statistika?</string>
     <string name="gutenberg_native_what_is_a_block">Ç’është një bllok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga postimi.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga faqja.</string>
     <string name="gutenberg_native_unable_to_embed_media">S’arrihet të trupëzohet media</string>
     <string name="gutenberg_native_try_another_search_term">Provoni një tjetër term kërkimi</string>
     <string name="gutenberg_native_no_blocks_found">S’u gjetën blloqe</string>
@@ -21,6 +23,9 @@ Language: sq_AL
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Që të parashihni postimin, prekeni dy herë.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Që të parashihni faqen, prekeni dy herë.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Tregomani ca</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Do t’ju heqim udhën përmes hapave elementarë të administrimit të sajtit tuaj me aplikacionin.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Doni pakëz ndihmë me administrimin e këtij sajti përmes aplikacionit?</string>
     <string name="login_epilogue_create_new_site_button">Krijoni një sajt të ri</string>
     <string name="login_epilogue_mysites_subheading">Mund të ndërroni sajte në çfarëdo kohe.</string>
