@@ -55,7 +55,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.manual.ManualFeatureConfigActivity;
+import org.wordpress.android.ui.manual.ManualFeatureConfigActivity;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;

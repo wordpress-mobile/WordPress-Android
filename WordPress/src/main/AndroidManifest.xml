@@ -626,7 +626,7 @@
             android:label=""
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".util.config.manual.ManualFeatureConfigActivity"
+            android:name="org.wordpress.android.ui.manual.ManualFeatureConfigActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar" />
 
