@@ -85,8 +85,14 @@ public class ReleaseNetworkModule {
 
     @Provides
     @Singleton
-    public CookieJar provideCookieJar() {
-        return new JavaNetCookieJar(new CookieManager());
+    public CookieManager provideCookieManager() {
+        return new CookieManager();
+    }
+
+    @Provides
+    @Singleton
+    public CookieJar provideCookieJar(CookieManager cookieManager) {
+        return new JavaNetCookieJar(cookieManager);
     }
 
     @Singleton
