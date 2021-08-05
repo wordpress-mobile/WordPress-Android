@@ -924,6 +924,10 @@ class SiteRestClient @Inject constructor(
             site.showOnFront = from.options.show_on_front
             site.pageOnFront = from.options.page_on_front
             site.pageForPosts = from.options.page_for_posts
+            site.setIsPublicizePermanentlyDisabled(from.options.publicize_permanently_disabled)
+            if (from.options.active_modules != null) {
+                site.activeModules = from.options.active_modules.joinToString(",")
+            }
             try {
                 site.maxUploadSize = java.lang.Long.valueOf(from.options.max_upload_size)
             } catch (e: NumberFormatException) {
@@ -988,6 +992,11 @@ class SiteRestClient @Inject constructor(
             if (from.meta.links != null) {
                 site.xmlRpcUrl = from.meta.links.xmlrpc
             }
+        }
+        if (from.zendesk_site_meta != null) {
+            site.zendeskPlan = from.zendesk_site_meta.plan
+            site.zendeskAddOns = from.zendesk_site_meta.addon
+                    ?.let { TextUtils.join(",", from.zendesk_site_meta.addon) } ?: ""
         }
         // Only set the isWPCom flag for "pure" WPCom sites
         if (!from.jetpack) {
@@ -1054,7 +1063,7 @@ class SiteRestClient @Inject constructor(
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta")
+                "capabilities,quota,icon,meta,zendesk_site_meta")
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }

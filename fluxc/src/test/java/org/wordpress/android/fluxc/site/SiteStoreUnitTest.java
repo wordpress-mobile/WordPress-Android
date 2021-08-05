@@ -47,6 +47,7 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOver
 import static org.wordpress.android.fluxc.site.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedSiteFutureJetpack;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateSiteWithZendeskMetaData;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateTestSite;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
@@ -864,5 +865,43 @@ public class SiteStoreUnitTest {
         for (SiteModel site : sitesToKeep) {
             assertTrue(mSiteStore.getSiteBySiteId(site.getSiteId()) != null);
         }
+    }
+
+    @Test
+    public void testInsertAndRetrieveForActiveModules() throws DuplicateSiteException {
+        WellSqlTestUtils.setupWordPressComAccount();
+        SiteModel site = generateWPComSite();
+        String activeModules = SiteModel.ACTIVE_MODULES_KEY_PUBLICIZE
+                               + ","
+                               + SiteModel.ACTIVE_MODULES_KEY_SHARING_BUTTONS;
+        site.setActiveModules(activeModules);
+
+        mSiteSqlUtils.insertOrUpdateSite(site);
+
+        SiteModel siteFromDb = mSiteSqlUtils.getSites().get(0);
+        assertTrue(siteFromDb.isActiveModuleEnabled(SiteModel.ACTIVE_MODULES_KEY_PUBLICIZE));
+        assertTrue(siteFromDb.isActiveModuleEnabled(SiteModel.ACTIVE_MODULES_KEY_SHARING_BUTTONS));
+    }
+
+    @Test
+    public void testInsertAndRetrieveForPublicizePermanentlyDisabled() throws DuplicateSiteException {
+        WellSqlTestUtils.setupWordPressComAccount();
+        SiteModel site = generateWPComSite();
+        site.setIsPublicizePermanentlyDisabled(true);
+
+        mSiteSqlUtils.insertOrUpdateSite(site);
+
+        SiteModel siteFromDb = mSiteSqlUtils.getSites().get(0);
+        assertTrue(siteFromDb.isPublicizePermanentlyDisabled());
+    }
+
+    @Test
+    public void testZendeskPlanAndAddonsInsertionAndRetrieval() {
+        SiteModel siteModel = generateSiteWithZendeskMetaData();
+        WellSql.insert(siteModel).execute();
+
+        SiteModel siteFromDb = mSiteStore.getSites().get(0);
+        assertEquals(siteModel.getZendeskPlan(), siteFromDb.getZendeskPlan());
+        assertEquals(siteModel.getZendeskAddOns(), siteFromDb.getZendeskAddOns());
     }
 }
