@@ -20,7 +20,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
@@ -100,7 +99,6 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
-    @Inject lateinit var quickStartStore: QuickStartStore
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -168,7 +166,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
         recyclerView.layoutManager = layoutManager
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers, quickStartStore)
+        val adapter = MySiteAdapter(imageManager, uiHelpers)
 
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)

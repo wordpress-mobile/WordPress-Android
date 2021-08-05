@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -54,7 +55,17 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
-    object QuickStartBlock : MySiteItem(QUICK_START_BLOCK)
+    data class QuickStartBlock(val taskTypeItems: List<QuickStartTaskTypeItem>) : MySiteItem(QUICK_START_BLOCK) {
+        data class QuickStartTaskTypeItem(
+            val quickStartTaskType: QuickStartTaskType,
+            @DrawableRes val icon: Int,
+            val iconEnabled: Boolean,
+            val title: UiString,
+            val titleEnabled: Boolean,
+            val subtitle: UiString,
+            val isCompleted: Boolean
+        )
+    }
 
     sealed class DynamicCard(
         override val type: Type,

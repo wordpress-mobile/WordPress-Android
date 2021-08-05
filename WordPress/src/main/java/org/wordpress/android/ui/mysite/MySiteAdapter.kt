@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
@@ -24,11 +23,7 @@ import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class MySiteAdapter(
-    val imageManager: ImageManager,
-    val uiHelpers: UiHelpers,
-    val quickStartStore: QuickStartStore
-) : Adapter<MySiteItemViewHolder<*>>() {
+class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
     private var items = listOf<MySiteItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
@@ -46,7 +41,7 @@ class MySiteAdapter(
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, quickStartStore)
+            QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
                     parent,
                     quickStartViewPool,

@@ -60,7 +60,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -95,6 +94,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -148,6 +148,7 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
+    private val quickStartBlockBuilder: QuickStartBlockBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -252,7 +253,7 @@ class MySiteViewModel
 
             if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
                     quickStartUtilsWrapper.isQuickStartInProgress(site.siteId.toInt())) {
-                siteItems.add(QuickStartBlock)
+                siteItems.add(quickStartBlockBuilder.build())
             }
 
             siteItems.addAll(
