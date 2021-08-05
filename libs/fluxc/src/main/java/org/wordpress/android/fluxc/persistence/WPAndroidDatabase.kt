@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 
 @Database(
-        version = 2,
+        version = 3,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
