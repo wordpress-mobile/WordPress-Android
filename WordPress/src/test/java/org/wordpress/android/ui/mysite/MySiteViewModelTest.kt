@@ -55,6 +55,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -94,6 +95,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -104,6 +106,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -129,12 +132,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
+    @Mock lateinit var quickStartBlockBuilder: QuickStartBlockBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -202,11 +207,13 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartItemBuilder,
+                quickStartBlockBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
                 unifiedCommentsListFeatureConfig,
-                quickStartDynamicCardsFeatureConfig
+                quickStartDynamicCardsFeatureConfig,
+                quickStartUtilsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -243,6 +250,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.url = siteUrl
         site.name = siteName
         site.iconUrl = siteIcon
+        site.siteId = siteId.toLong()
 
         siteInfoBlock = SiteInfoBlock(
                 title = siteName,
@@ -1006,6 +1014,27 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given quick start dynamic card is enabled, when site is selected, then quick start block not built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        assertThat(findQuickStartBlock()).isNull()
+    }
+
+    @Test
+    fun `given quick start is not in progress, when site is selected, then quick start block not built`() {
+        initSelectedSite(isQuickStartInProgress = false)
+
+        assertThat(findQuickStartBlock()).isNull()
+    }
+
+    @Test
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then quick start block built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartBlock()).isNotNull
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
@@ -1028,6 +1057,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
+
+    private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
 
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
@@ -1065,7 +1096,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         clickAction!!.invoke(action)
     }
 
-    private fun initSelectedSite() {
+    private fun initSelectedSite(
+        isQuickStartDynamicCardEnabled: Boolean = false,
+        isQuickStartInProgress: Boolean = false
+    ) {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
+        if (isQuickStartInProgress) {
+            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
+            whenever(quickStartBlockBuilder.build()).thenReturn(mock())
+        } else {
+            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
+        }
         onSiteSelected.value = siteId
         onSiteChange.value = site
     }
