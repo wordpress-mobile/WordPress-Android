@@ -37,4 +37,17 @@
         android:title="@string/mnu_comment_trash"
         app:iconTint="?attr/wpColorActionModeIcon"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_untrash"
+        android:icon="@drawable/ic_trash_white_24dp"
+        android:title="@string/mnu_comment_untrash"
+        app:iconTint="?attr/wpColorActionModeIcon"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_trash_white_24dp"
+        android:title="@string/mnu_comment_delete_permanently"
+        app:iconTint="?attr/wpColorActionModeIcon"
+        app:showAsAction="ifRoom" />
+
 </menu>

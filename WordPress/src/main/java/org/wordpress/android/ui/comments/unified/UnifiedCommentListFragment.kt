@@ -26,6 +26,7 @@ import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.Confir
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -39,6 +40,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -83,6 +85,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
             viewModel.reload()
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                ptrLayout.isRefreshing = false
+            }
         }
     }
 
