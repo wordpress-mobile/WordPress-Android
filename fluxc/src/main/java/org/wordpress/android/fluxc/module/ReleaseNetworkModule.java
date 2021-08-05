@@ -84,6 +84,10 @@ public class ReleaseNetworkModule {
         return new MemorizingTrustManager();
     }
 
+    /**
+     * This sets a {@link CookieManager} as the system-wide {@link CookieHandler} and exposes it to the Dagger graph,
+     * allowing it to be shared with {@link OkHttpClient} via its {@link CookieJar}.
+     */
     @Provides
     @Singleton
     public CookieManager provideCookieManager() {
