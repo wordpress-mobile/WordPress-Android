@@ -67,7 +67,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 }
 
                 if (uiState?.timePicker == true) {
-                    val fragment = BloggingReminderTimePicker.newInstance(0,0)
+                    val fragment = BloggingReminderTimePicker.newInstance(0, 0)
                     fragment.show(requireActivity().supportFragmentManager, BloggingReminderTimePicker.TAG)
                 }
             }

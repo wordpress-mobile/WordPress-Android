@@ -234,7 +234,11 @@ class BloggingRemindersViewModel @Inject constructor(
         EPILOGUE("all_set")
     }
 
-    data class UiState(val uiItems: List<BloggingRemindersItem>, val timePicker: Boolean = false, val primaryButton: PrimaryButton? = null) {
+    data class UiState(
+        val uiItems: List<BloggingRemindersItem>,
+        val timePicker: Boolean = false,
+        val primaryButton: PrimaryButton? = null
+    ) {
         data class PrimaryButton(val text: UiString, val enabled: Boolean, val onClick: ListItemInteraction)
     }
 
