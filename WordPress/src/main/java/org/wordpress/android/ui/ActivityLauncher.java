@@ -1315,18 +1315,28 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showLoginEpilogue(Activity activity, boolean doLoginUpdate, ArrayList<Integer> oldSitesIds) {
+    public static void showLoginEpilogue(
+            Activity activity,
+            boolean doLoginUpdate,
+            ArrayList<Integer> oldSitesIds,
+            boolean isOnboardingImprovementsEnabled,
+            boolean isJetpackApp
+    ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        activity.startActivity(intent);
+        if (isOnboardingImprovementsEnabled && !isJetpackApp) {
+            activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
+        } else {
+            activity.startActivity(intent);
+        }
     }
 
-    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
+    public static void showLoginEpilogueForResult(Activity activity,
                                                   ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
-        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, true);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }

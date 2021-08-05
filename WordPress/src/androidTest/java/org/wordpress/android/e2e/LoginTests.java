@@ -36,7 +36,7 @@ public class LoginTests extends BaseTest {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class LoginTests extends BaseTest {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
                        .openMagicLink(mMagicLinkActivityTestRule)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class LoginTests extends BaseTest {
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class LoginTests extends BaseTest {
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .chooseMagicLink()
                        .openMagicLink(mMagicLinkActivityTestRule)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class LoginTests extends BaseTest {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_SELF_HOSTED_USER_SITE_ADDRESS)
                        .enterUsernameAndPassword(E2E_SELF_HOSTED_USER_USERNAME, E2E_SELF_HOSTED_USER_PASSWORD)
-                       .confirmLogin();
+                       .confirmLogin(true);
     }
 
     @After

@@ -112,6 +112,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -148,7 +149,8 @@ class MySiteViewModel
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -233,15 +235,18 @@ class MySiteViewModel
                 // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
                 // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
                 // current solution is good enough for a few sources.
-                list.addAll(quickStartCategories.map { category ->
-                    quickStartItemBuilder.build(
-                            category,
-                            pinnedDynamicCard,
-                            this::onDynamicCardMoreClick,
-                            this::onQuickStartTaskCardClick
-                    )
-                })
+                if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                    list.addAll(quickStartCategories.map { category ->
+                        quickStartItemBuilder.build(
+                                category,
+                                pinnedDynamicCard,
+                                this::onDynamicCardMoreClick,
+                                this::onQuickStartTaskCardClick
+                        )
+                    })
+                }
             }.associateBy { it.dynamicCardType }
+
             siteItems.addAll(
                     visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
             )

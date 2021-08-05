@@ -1,2 +1,0 @@
-17.7:
-Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler

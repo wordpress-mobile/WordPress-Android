@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,12 +13,16 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.CreateNewSite;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 
 import java.util.ArrayList;
 
@@ -63,6 +68,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
             LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
             if (loginEvent instanceof ShowPostSignupInterstitialScreen) {
                 showPostSignupInterstitialScreen();
+            } else if (loginEvent instanceof SelectSite) {
+                selectSite(((SelectSite) loginEvent).getLocalId());
+            } else if (loginEvent instanceof CreateNewSite) {
+                createNewSite();
             } else if (loginEvent instanceof CloseWithResultOk) {
                 closeWithResultOk();
             } else if (loginEvent instanceof ShowNoJetpackSites) {
@@ -75,6 +84,16 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(doLoginUpdate, showAndReturn,
                 oldSitesIds);
         showFragment(loginEpilogueFragment, LoginEpilogueFragment.TAG, false);
+    }
+
+    @Override
+    public void onSiteClick(int localId) {
+        mViewModel.onSiteClick(localId);
+    }
+
+    @Override
+    public void onCreateNewSite() {
+        mViewModel.onCreateNewSite();
     }
 
     @Override
@@ -97,6 +116,15 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         ActivityLauncher.showPostSignupInterstitial(this);
     }
 
+    private void selectSite(int localId) {
+        setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, localId));
+        finish();
+    }
+
+    private void createNewSite() {
+        ActivityLauncher.newBlogForResult(this);
+    }
+
     private void closeWithResultOk() {
         setResult(RESULT_OK);
         finish();
@@ -116,5 +144,18 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.CREATE_SITE
+            && resultCode == RESULT_OK
+            && data != null
+        ) {
+            int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, newSiteLocalID));
+            finish();
+        }
     }
 }

@@ -1,0 +1,2 @@
+We added color/background customization for text blocks.
+It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.

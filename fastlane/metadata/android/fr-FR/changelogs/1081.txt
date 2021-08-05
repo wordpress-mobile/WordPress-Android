@@ -1,0 +1,3 @@
+17.8:
+Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
+Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.

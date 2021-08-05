@@ -1,2 +1,0 @@
-17.7:
-- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste

@@ -1,5 +1,0 @@
-17.7:
-- New! Get blogging reminder prompts on days of your choice
-- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
-- Fixed Reader duplicate post issue
-- Added ability to subscribe to conversations by email from Reader
