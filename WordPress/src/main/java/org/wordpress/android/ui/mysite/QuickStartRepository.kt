@@ -39,6 +39,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -59,7 +60,8 @@ class QuickStartRepository
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
     private val htmlCompat: HtmlCompatWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
+    private val contextProvider: ContextProvider
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -146,7 +148,7 @@ class QuickStartRepository
             _activeTask.value = null
             pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
-            // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
+            quickStartUtils.completeTaskAndRemindNextOne(task, site, null, contextProvider.getContext())
             setTaskDoneAndTrack(task, site.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
