@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
+    private static final String ZENDESK_PLAN_BUSINESS_PROFESSIONAL = "business_professional";
+    private static final String ZENDESK_ADDON_BACKUP_DAILY = "jetpack_addon_backup_daily";
+    private static final String ZENDESK_ADDON_SCAN_DAILY = "jetpack_addon_scan_daily";
+
     public static SiteModel generateWPComSite() {
         return generateTestSite(556, "", "", true, true);
     }
@@ -91,5 +95,12 @@ public class SiteUtils {
             res.add(postFormat);
         }
         return res;
+    }
+
+    public static SiteModel generateSiteWithZendeskMetaData() {
+        SiteModel site = generateJetpackSiteOverRestOnly();
+        site.setZendeskPlan(ZENDESK_PLAN_BUSINESS_PROFESSIONAL);
+        site.setZendeskAddOns(ZENDESK_ADDON_BACKUP_DAILY + "," + ZENDESK_ADDON_SCAN_DAILY);
+        return site;
     }
 }

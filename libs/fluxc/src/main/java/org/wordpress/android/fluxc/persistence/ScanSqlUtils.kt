@@ -8,6 +8,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
@@ -71,7 +72,7 @@ class ScanSqlUtils @Inject constructor() {
             startDate = startDate,
             duration = mostRecentStatus?.duration ?: 0,
             progress = progress,
-            reason = reason,
+            reason = reason.value,
             error = mostRecentStatus?.error ?: false,
             initial = isInitial,
             hasCloud = hasCloud,
@@ -135,7 +136,7 @@ class ScanSqlUtils @Inject constructor() {
                 hasCloud = hasCloud,
                 mostRecentStatus = mostRecentStatus,
                 currentStatus = currentStatus,
-                reason = reason,
+                reason = Reason.fromValue(reason),
                 hasValidCredentials = hasValidCredentials
             )
         }
