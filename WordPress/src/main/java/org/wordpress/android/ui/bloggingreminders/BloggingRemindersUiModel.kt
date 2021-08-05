@@ -6,7 +6,7 @@ data class BloggingRemindersUiModel(
     val siteId: Int,
     val enabledDays: Set<DayOfWeek> = setOf(),
     val hour: Int,
-    val minute: Int,
+    val minute: Int
 ) {
     fun getNotificationTime(): CharSequence {
         val period = if (hour >= HOUR_12) "PM" else "AM"

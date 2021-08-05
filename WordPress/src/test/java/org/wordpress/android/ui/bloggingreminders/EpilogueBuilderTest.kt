@@ -54,7 +54,12 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(
+                1,
+                setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY),
+                hour,
+                minute
+        )
         val dayLabel = "twice"
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
