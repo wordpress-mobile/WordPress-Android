@@ -109,6 +109,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
@@ -151,7 +152,8 @@ class MySiteViewModel
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
-    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -248,7 +250,8 @@ class MySiteViewModel
                 }
             }.associateBy { it.dynamicCardType }
 
-            if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
+                    quickStartUtilsWrapper.isQuickStartInProgress(site.siteId.toInt())) {
                 siteItems.add(QuickStartBlock)
             }
 
