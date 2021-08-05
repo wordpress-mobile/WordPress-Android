@@ -30,6 +30,8 @@ public class SiteWPComRestResponse implements Response {
         public String show_on_front;
         public long page_on_front;
         public long page_for_posts;
+        public boolean publicize_permanently_disabled;
+        public List<String> active_modules;
     }
 
     public static class Plan {
@@ -79,6 +81,11 @@ public class SiteWPComRestResponse implements Response {
         public Links links;
     }
 
+    public class ZendeskSiteMeta {
+        public String plan;
+        public List<String> addon;
+    }
+
     public long ID;
     public String URL;
     public String name;
@@ -93,4 +100,5 @@ public class SiteWPComRestResponse implements Response {
     public Icon icon;
     public Meta meta;
     public Quota quota;
+    public ZendeskSiteMeta zendesk_site_meta;
 }

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
@@ -273,6 +274,11 @@ public class PluginStore extends Store {
             this.type = ConfigureSitePluginErrorType.fromString(type);
             this.message = message;
         }
+
+        public ConfigureSitePluginError(GenericErrorType type, @Nullable String message, boolean isActivating) {
+            this.type = ConfigureSitePluginErrorType.fromGenericErrorType(type, isActivating);
+            this.message = message;
+        }
     }
 
     public static class DeleteSitePluginError implements OnChangedError {
@@ -285,6 +291,11 @@ public class PluginStore extends Store {
 
         public DeleteSitePluginError(String type, @Nullable String message) {
             this.type = DeleteSitePluginErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public DeleteSitePluginError(GenericErrorType type, @Nullable String message) {
+            this.type = DeleteSitePluginErrorType.fromGenericErrorType(type);
             this.message = message;
         }
     }
@@ -300,6 +311,11 @@ public class PluginStore extends Store {
 
         public PluginDirectoryError(String type, @Nullable String message) {
             this.type = PluginDirectoryErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public PluginDirectoryError(GenericErrorType type, @Nullable String message) {
+            this.type = PluginDirectoryErrorType.fromGenericErrorType(type);
             this.message = message;
         }
     }
@@ -324,6 +340,11 @@ public class PluginStore extends Store {
             this.type = InstallSitePluginErrorType.fromString(type);
             this.message = message;
         }
+
+        public InstallSitePluginError(GenericErrorType type, @Nullable String message) {
+            this.type = InstallSitePluginErrorType.fromGenericErrorType(type);
+            this.message = message;
+        }
     }
 
     public static class UpdateSitePluginError implements OnChangedError {
@@ -340,7 +361,8 @@ public class PluginStore extends Store {
         }
     }
 
-    static class RemoveSitePluginsError implements OnChangedError {}
+    static class RemoveSitePluginsError implements OnChangedError {
+    }
 
     // Error types
 
@@ -358,6 +380,36 @@ public class PluginStore extends Store {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+
+        public static ConfigureSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType,
+                                                                        boolean isActivating) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case TIMEOUT:
+                    case NO_CONNECTION:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                        if (isActivating) {
+                            return ACTIVATION_ERROR;
+                        } else {
+                            return DEACTIVATION_ERROR;
+                        }
+                    case NOT_FOUND:
+                    case CENSORED:
+                        return UNKNOWN_PLUGIN;
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return UNAUTHORIZED;
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
                 }
             }
             return GENERIC_ERROR;
@@ -381,6 +433,31 @@ public class PluginStore extends Store {
             }
             return GENERIC_ERROR;
         }
+
+        public static DeleteSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case TIMEOUT:
+                    case NO_CONNECTION:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                        return DELETE_PLUGIN_ERROR;
+                    case NOT_FOUND:
+                    case CENSORED:
+                        return UNKNOWN_PLUGIN;
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return DeleteSitePluginErrorType.UNAUTHORIZED;
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum PluginDirectoryErrorType {
@@ -395,6 +472,29 @@ public class PluginStore extends Store {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+
+        public static PluginDirectoryErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return UNAUTHORIZED;
+                    case NO_CONNECTION:
+                    case TIMEOUT:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                    case NOT_FOUND:
+                    case CENSORED:
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
                 }
             }
             return GENERIC_ERROR;
@@ -426,6 +526,31 @@ public class PluginStore extends Store {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+
+        public static InstallSitePluginErrorType fromGenericErrorType(GenericErrorType genericErrorType) {
+            if (genericErrorType != null) {
+                switch (genericErrorType) {
+                    case TIMEOUT:
+                    case NO_CONNECTION:
+                    case NETWORK_ERROR:
+                    case SERVER_ERROR:
+                        return INSTALL_FAILURE;
+                    case NOT_FOUND:
+                    case CENSORED:
+                        return NO_PLUGIN_INSTALLED;
+                    case INVALID_SSL_CERTIFICATE:
+                    case HTTP_AUTH_ERROR:
+                    case AUTHORIZATION_REQUIRED:
+                    case NOT_AUTHENTICATED:
+                        return UNAUTHORIZED;
+                    case INVALID_RESPONSE:
+                    case PARSE_ERROR:
+                    case UNKNOWN:
+                        return GENERIC_ERROR;
                 }
             }
             return GENERIC_ERROR;
@@ -483,6 +608,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginConfigured(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -495,6 +621,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginDeleted(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -506,6 +633,7 @@ public class PluginStore extends Store {
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
         public String slug;
+
         public OnSitePluginInstalled(SiteModel site, String slug) {
             this.site = site;
             this.slug = slug;
@@ -517,6 +645,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginUpdated(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -537,6 +666,7 @@ public class PluginStore extends Store {
     public static class OnSitePluginsRemoved extends OnChanged<RemoveSitePluginsError> {
         public SiteModel site;
         public int rowsAffected;
+
         public OnSitePluginsRemoved(SiteModel site, int rowsAffected) {
             this.site = site;
             this.rowsAffected = rowsAffected;
@@ -545,13 +675,16 @@ public class PluginStore extends Store {
 
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
+    private final PluginCoroutineStore mPluginCoroutineStore;
 
     @Inject public PluginStore(Dispatcher dispatcher,
                                PluginRestClient pluginRestClient,
-                               PluginWPOrgClient pluginWPOrgClient) {
+                               PluginWPOrgClient pluginWPOrgClient,
+                               PluginCoroutineStore pluginCoroutineStore) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
         mPluginWPOrgClient = pluginWPOrgClient;
+        mPluginCoroutineStore = pluginCoroutineStore;
     }
 
     @Override
@@ -659,6 +792,8 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive,
                     payload.isAutoUpdateEnabled);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, payload.slug,
@@ -670,6 +805,8 @@ public class PluginStore extends Store {
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.pluginName, payload.slug);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.deleteSitePlugin(payload.site, payload.pluginName, payload.slug);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.slug,
@@ -696,6 +833,8 @@ public class PluginStore extends Store {
     private void fetchSitePlugins(@Nullable SiteModel site) {
         if (site != null && site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchSitePlugins(site);
+        } else if (site != null && !site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.fetchWPApiPlugins(site);
         } else {
             PluginDirectoryError error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
             FetchedPluginDirectoryPayload errorPayload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE,
@@ -711,6 +850,8 @@ public class PluginStore extends Store {
     private void installSitePlugin(InstallSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.installSitePlugin(payload.site, payload.slug);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.installSitePlugin(payload.site, payload.slug);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
