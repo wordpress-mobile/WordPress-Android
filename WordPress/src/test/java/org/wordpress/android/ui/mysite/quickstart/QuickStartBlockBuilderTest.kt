@@ -10,12 +10,11 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -24,19 +23,17 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 class QuickStartBlockBuilderTest : BaseUnitTest() {
     private lateinit var builder: QuickStartBlockBuilder
 
-    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var quickStartStore: QuickStartStore
-    @Mock lateinit var site: SiteModel
 
-    private val siteId = 1L
+    private val siteId = 1
     private val completedTasks: List<QuickStartTask> = listOf(QuickStartTask.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTask> = listOf(QuickStartTask.VIEW_SITE)
 
     @Before
     fun setUp() {
-        builder = QuickStartBlockBuilder(selectedSiteRepository, quickStartStore)
-        site.siteId = siteId
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        builder = QuickStartBlockBuilder(appPrefsWrapper, quickStartStore)
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
     }
 
     @Test

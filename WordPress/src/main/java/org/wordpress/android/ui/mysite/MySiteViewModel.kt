@@ -102,6 +102,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -154,7 +155,8 @@ class MySiteViewModel
     private val buildConfigWrapper: BuildConfigWrapper,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
-    private val quickStartUtilsWrapper: QuickStartUtilsWrapper
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -252,7 +254,7 @@ class MySiteViewModel
             }.associateBy { it.dynamicCardType }
 
             if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
-                    quickStartUtilsWrapper.isQuickStartInProgress(site.siteId.toInt())) {
+                    quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
                 siteItems.add(quickStartBlockBuilder.build())
             }
 

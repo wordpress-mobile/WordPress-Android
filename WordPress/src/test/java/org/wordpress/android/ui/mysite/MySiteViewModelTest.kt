@@ -97,6 +97,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -140,6 +141,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -213,7 +215,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 unifiedCommentsListFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
-                quickStartUtilsWrapper
+                quickStartUtilsWrapper,
+                appPrefsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1101,6 +1104,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
             whenever(quickStartBlockBuilder.build()).thenReturn(mock())

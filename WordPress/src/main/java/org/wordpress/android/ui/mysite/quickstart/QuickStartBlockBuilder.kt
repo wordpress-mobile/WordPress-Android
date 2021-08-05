@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -13,11 +13,11 @@ import javax.inject.Inject
 
 class QuickStartBlockBuilder
 @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartStore: QuickStartStore
 ) {
     fun build(): QuickStartBlock {
-        val localSiteId = requireNotNull(selectedSiteRepository.getSelectedSite()).siteId
+        val localSiteId = appPrefsWrapper.getSelectedSite().toLong()
 
         val taskTypeItems = mutableListOf<QuickStartTaskTypeItem>()
         taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.CUSTOMIZE))
