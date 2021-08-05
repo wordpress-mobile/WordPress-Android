@@ -382,6 +382,8 @@
 
     <style name="WordPress.NoActionBar.TranslucentStatus" parent="WordPress.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="MediaSettings.Divider">
