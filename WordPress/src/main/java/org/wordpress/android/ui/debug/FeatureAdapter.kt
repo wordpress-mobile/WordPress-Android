@@ -1,19 +1,19 @@
-package org.wordpress.android.ui.manual
+package org.wordpress.android.ui.debug
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.manual.FeatureItemViewHolder.ButtonViewHolder
-import org.wordpress.android.ui.manual.FeatureItemViewHolder.FeatureViewHolder
-import org.wordpress.android.ui.manual.FeatureItemViewHolder.HeaderViewHolder
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.ui.debug.FeatureItemViewHolder.ButtonViewHolder
+import org.wordpress.android.ui.debug.FeatureItemViewHolder.FeatureViewHolder
+import org.wordpress.android.ui.debug.FeatureItemViewHolder.HeaderViewHolder
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Button
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
 
 class FeatureAdapter : Adapter<FeatureItemViewHolder>() {
     private var items: List<FeatureUiItem> = listOf()

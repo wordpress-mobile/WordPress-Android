@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.manual
+package org.wordpress.android.ui.debug
 
 import android.os.Bundle
 import android.view.View

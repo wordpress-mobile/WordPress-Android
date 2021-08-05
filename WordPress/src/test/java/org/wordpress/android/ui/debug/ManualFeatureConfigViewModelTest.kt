@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.manual
+package org.wordpress.android.ui.debug
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -13,13 +13,13 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.manual.ManualFeatureConfigViewModel.UiState
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Button
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.UiState
 import org.wordpress.android.viewmodel.Event
 
 class ManualFeatureConfigViewModelTest : BaseUnitTest() {
