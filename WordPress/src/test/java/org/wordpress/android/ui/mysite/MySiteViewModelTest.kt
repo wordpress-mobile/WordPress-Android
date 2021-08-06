@@ -861,8 +861,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -879,8 +878,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -897,8 +895,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -915,44 +912,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
-        )
-    }
-
-    @Test
-    fun `unified comment menu item is visible, when unifiedCommentsListFeatureConfig is enabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(true)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(true)
-        )
-    }
-
-    @Test
-    fun `unified comment menu item is NOT visible, when unifiedCommentsListFeatureConfig is disabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(false)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(false)
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -1057,7 +1017,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 

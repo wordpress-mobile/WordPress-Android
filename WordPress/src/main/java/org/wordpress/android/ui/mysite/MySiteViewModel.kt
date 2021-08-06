@@ -55,7 +55,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.ListItemAction.UNIFIED_COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
@@ -259,8 +258,7 @@ class MySiteViewModel
                             scanAvailable,
                             activeTask == QuickStartTask.VIEW_SITE,
                             activeTask == ENABLE_POST_SHARING,
-                            activeTask == EXPLORE_PLANS,
-                            unifiedCommentsListFeatureConfig.isEnabled()
+                            activeTask == EXPLORE_PLANS
                     )
             )
             scrollToQuickStartTaskIfNecessary(
@@ -315,8 +313,13 @@ class MySiteViewModel
                     getStatsNavigationActionForSite(site)
                 }
                 MEDIA -> OpenMedia(site)
-                COMMENTS -> OpenComments(site)
-                UNIFIED_COMMENTS -> OpenUnifiedComments(site)
+                COMMENTS -> {
+                    if (unifiedCommentsListFeatureConfig.isEnabled()) {
+                        OpenUnifiedComments(site)
+                    } else {
+                        OpenComments(site)
+                    }
+                }
                 VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     OpenSite(site)
