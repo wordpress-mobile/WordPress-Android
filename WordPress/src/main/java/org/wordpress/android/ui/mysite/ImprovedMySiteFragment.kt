@@ -21,6 +21,10 @@ import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.FullScreenDialogFragment
+import org.wordpress.android.ui.FullScreenDialogFragment.Builder
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -69,6 +73,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -91,7 +96,9 @@ import java.io.File
 import javax.inject.Inject
 
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
-        TextInputDialogFragment.Callback {
+        TextInputDialogFragment.Callback,
+        OnConfirmListener,
+        OnDismissListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -286,7 +293,14 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
-        TODO("Not yet implemented")
+        val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
+        Builder(requireContext())
+                .setTitle(action.title)
+                .setOnConfirmListener(this)
+                .setOnDismissListener(this)
+                .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
+                .build()
+                .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
@@ -481,5 +495,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
         viewModel.onSiteNameChooserDismissed()
+    }
+
+    override fun onConfirm(result: Bundle?) {
+    }
+
+    override fun onDismiss() {
     }
 }
