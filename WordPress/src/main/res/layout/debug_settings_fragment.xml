@@ -31,7 +31,7 @@
                 app:layout_scrollFlags="noScroll"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/WordPress.ActionBar"
-                app:title="@string/preference_open_feature_config" />
+                app:title="@string/preference_open_debug_settings" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

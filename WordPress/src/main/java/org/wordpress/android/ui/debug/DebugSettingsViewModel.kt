@@ -46,17 +46,17 @@ class DebugSettingsViewModel
         val uiItems = mutableListOf<UiItem>()
         val remoteFeatures = buildRemoteFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.manual_config_remote_features))
+            uiItems.add(Header(R.string.debug_settings_remote_features))
             uiItems.addAll(remoteFeatures)
         }
         val developedFeatures = buildDevelopedFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.manual_config_features_in_development))
+            uiItems.add(Header(R.string.debug_settings_features_in_development))
             uiItems.addAll(developedFeatures)
         }
-        uiItems.add(Header(R.string.missing_developed_feature))
+        uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
         if (hasChange) {
-            uiItems.add(Button(R.string.manual_config_restart_app, this::restart))
+            uiItems.add(Button(R.string.debug_settings_restart_app, this::restart))
         }
         _uiState.value = UiState(uiItems)
     }

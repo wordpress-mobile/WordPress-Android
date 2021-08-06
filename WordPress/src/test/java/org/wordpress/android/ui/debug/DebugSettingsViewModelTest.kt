@@ -138,9 +138,9 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                 }
             }
             assertThat(headers).hasSize(3)
-            assertThat(headers[0].header).isEqualTo(R.string.manual_config_remote_features)
-            assertThat(headers[1].header).isEqualTo(R.string.manual_config_features_in_development)
-            assertThat(headers[2].header).isEqualTo(R.string.missing_developed_feature)
+            assertThat(headers[0].header).isEqualTo(R.string.debug_settings_remote_features)
+            assertThat(headers[1].header).isEqualTo(R.string.debug_settings_features_in_development)
+            assertThat(headers[2].header).isEqualTo(R.string.debug_settings_missing_developed_feature)
             remoteItems.filter { it.title != enabledFeature }
                     .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
             developedItems.filter { it.title != enabledFeature }

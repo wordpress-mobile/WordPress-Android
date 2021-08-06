@@ -131,7 +131,7 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_feature_config))
+        findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
@@ -192,7 +192,7 @@ public class AppSettingsFragment extends PreferenceFragment
         }
 
         if (!BuildConfig.ENABLE_FEATURE_CONFIGURATION) {
-            removeFeatureConfigCategory();
+            removeDebugSettingsCategory();
         }
     }
 
@@ -216,9 +216,9 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
-    private void removeFeatureConfigCategory() {
+    private void removeDebugSettingsCategory() {
         Preference experimentalPreference =
-                findPreference(getString(R.string.pref_key_feature_config));
+                findPreference(getString(R.string.pref_key_debug_settings));
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreference);
@@ -332,8 +332,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_feature_config))) {
-            return handleFeatureConfigPreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
+            return handleDebugSettingsPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -471,7 +471,7 @@ public class AppSettingsFragment extends PreferenceFragment
         return true;
     }
 
-    private boolean handleFeatureConfigPreferenceClick() {
+    private boolean handleDebugSettingsPreferenceClick() {
         startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
     }
