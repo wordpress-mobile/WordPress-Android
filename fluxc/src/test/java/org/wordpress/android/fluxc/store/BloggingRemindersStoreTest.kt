@@ -24,6 +24,8 @@ class BloggingRemindersStoreTest {
     @Mock lateinit var mapper: BloggingRemindersMapper
     private lateinit var store: BloggingRemindersStore
     private val siteId = 1
+    private val testHour = 10
+    private val testMinute = 0
 
     @Before
     fun setUp() {
@@ -32,7 +34,7 @@ class BloggingRemindersStoreTest {
 
     @Test
     fun `maps items emitted from dao`() = test {
-        val dbEntity = BloggingReminders(siteId, monday = true)
+        val dbEntity = BloggingReminders(siteId, monday = true, hour = testHour, minute = testMinute)
         val domainModel = BloggingRemindersModel(siteId, setOf(MONDAY))
         whenever(bloggingRemindersDao.liveGetBySiteId(siteId)).thenReturn(flowOf(dbEntity))
         whenever(mapper.toDomainModel(dbEntity)).thenReturn(domainModel)
@@ -49,7 +51,7 @@ class BloggingRemindersStoreTest {
 
     @Test
     fun `maps items stored to dao`() = test {
-        val dbEntity = BloggingReminders(siteId, monday = true)
+        val dbEntity = BloggingReminders(siteId, monday = true, hour = testHour, minute = testMinute)
         val domainModel = BloggingRemindersModel(siteId, setOf(MONDAY))
         whenever(mapper.toDatabaseModel(domainModel)).thenReturn(dbEntity)
 
@@ -60,7 +62,7 @@ class BloggingRemindersStoreTest {
 
     @Test
     fun `has modified blogging reminders when DAO returns data`() = test {
-        val dbEntity = BloggingReminders(siteId, monday = true)
+        val dbEntity = BloggingReminders(siteId, monday = true, hour = testHour, minute = testMinute)
         whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(listOf(dbEntity))
 
         assertThat(store.hasModifiedBloggingReminders(siteId)).isTrue()
