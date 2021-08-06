@@ -8,20 +8,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
-import org.wordpress.android.databinding.ManualFeatureConfigFragmentBinding
+import org.wordpress.android.databinding.DebugSettingsFragmentBinding
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-class DebugSettingsFragment : DaggerFragment(R.layout.manual_feature_config_fragment) {
+class DebugSettingsFragment : DaggerFragment(R.layout.debug_settings_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DebugSettingsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(ManualFeatureConfigFragmentBinding.bind(view)) {
+        with(DebugSettingsFragmentBinding.bind(view)) {
             with(requireActivity() as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {

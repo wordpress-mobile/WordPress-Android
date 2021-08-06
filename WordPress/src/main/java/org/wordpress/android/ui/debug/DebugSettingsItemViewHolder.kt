@@ -19,14 +19,14 @@ sealed class DebugSettingsItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class HeaderViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_header) {
+    class HeaderViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_header) {
         private val header = itemView.findViewById<TextView>(R.id.header)
         fun bind(item: UiItem.Header) {
             header.setText(item.header)
         }
     }
 
-    class ButtonViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_button) {
+    class ButtonViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_button) {
         private val button = itemView.findViewById<Button>(R.id.button)
         fun bind(item: UiItem.Button) {
             button.setText(item.text)
@@ -34,7 +34,7 @@ sealed class DebugSettingsItemViewHolder(
         }
     }
 
-    class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_item) {
+    class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
         private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)
