@@ -9,7 +9,6 @@ class DebugSettingsDiffCallback(
     private val oldList: List<UiItem>,
     private val newList: List<UiItem>
 ) : Callback() {
-    object Payload
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
