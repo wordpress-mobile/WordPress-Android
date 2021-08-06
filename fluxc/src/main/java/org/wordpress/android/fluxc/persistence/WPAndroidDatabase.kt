@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 
 @Database(
-        version = 3,
+        version = 4,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -41,6 +41,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -109,6 +110,27 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                                     "`hasParent` INTEGER NOT NULL, " +
                                     "`parentId` INTEGER NOT NULL, " +
                                     "`iLike` INTEGER NOT NULL)"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                            "CREATE TABLE IF NOT EXISTS `BloggingReminders` (" +
+                                    "`localSiteId` INTEGER NOT NULL, " +
+                                    "`monday` INTEGER NOT NULL, " +
+                                    "`tuesday` INTEGER NOT NULL, " +
+                                    "`wednesday` INTEGER NOT NULL, " +
+                                    "`thursday` INTEGER NOT NULL, " +
+                                    "`friday` INTEGER NOT NULL, " +
+                                    "`saturday` INTEGER NOT NULL, " +
+                                    "`sunday` INTEGER NOT NULL, " +
+                                    "`hour` INTEGER NOT NULL, " +
+                                    "`minute` INTEGER NOT NULL, " +
+                                    "PRIMARY KEY(`localSiteId`))"
                     )
                 }
             }
