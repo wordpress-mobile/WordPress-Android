@@ -71,7 +71,7 @@ import org.wordpress.android.ui.stories.StoryComposerViewModel;
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
 import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel;
+import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
@@ -414,8 +414,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ManualFeatureConfigViewModel.class)
-    abstract ViewModel manualFeatureConfigViewModel(ManualFeatureConfigViewModel viewModel);
+    @ViewModelKey(DebugSettingsViewModel.class)
+    abstract ViewModel debugSettingsViewModel(DebugSettingsViewModel viewModel);
 
     @Binds
     @IntoMap

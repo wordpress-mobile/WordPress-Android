@@ -55,7 +55,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.ui.debug.ManualFeatureConfigActivity;
+import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -472,7 +472,7 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleFeatureConfigPreferenceClick() {
-        startActivity(new Intent(getActivity(), ManualFeatureConfigActivity.class));
+        startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
     }
 

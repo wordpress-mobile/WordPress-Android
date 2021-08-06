@@ -5,7 +5,7 @@ import android.view.MenuItem
 import org.wordpress.android.databinding.ManualFeatureConfigActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
-class ManualFeatureConfigActivity : LocaleAwareActivity() {
+class DebugSettingsActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ManualFeatureConfigActivityBinding.inflate(layoutInflater).root)

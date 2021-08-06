@@ -10,23 +10,23 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.UNKNOWN
 
-sealed class FeatureItemViewHolder(
+sealed class DebugSettingsItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class HeaderViewHolder(parent: ViewGroup) : FeatureItemViewHolder(parent, R.layout.manual_feature_header) {
+    class HeaderViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_header) {
         private val header = itemView.findViewById<TextView>(R.id.header)
         fun bind(item: FeatureUiItem.Header) {
             header.setText(item.header)
         }
     }
 
-    class ButtonViewHolder(parent: ViewGroup) : FeatureItemViewHolder(parent, R.layout.manual_feature_button) {
+    class ButtonViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_button) {
         private val button = itemView.findViewById<Button>(R.id.button)
         fun bind(item: FeatureUiItem.Button) {
             button.setText(item.text)
@@ -34,7 +34,7 @@ sealed class FeatureItemViewHolder(
         }
     }
 
-    class FeatureViewHolder(parent: ViewGroup) : FeatureItemViewHolder(parent, R.layout.manual_feature_item) {
+    class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.manual_feature_item) {
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
         private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)

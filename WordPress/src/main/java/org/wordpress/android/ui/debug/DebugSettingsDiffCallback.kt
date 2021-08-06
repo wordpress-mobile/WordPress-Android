@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.debug
 
 import androidx.recyclerview.widget.DiffUtil.Callback
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
 
-class FeatureDiffCallback(
+class DebugSettingsDiffCallback(
     private val oldList: List<FeatureUiItem>,
     private val newList: List<FeatureUiItem>
 ) : Callback() {

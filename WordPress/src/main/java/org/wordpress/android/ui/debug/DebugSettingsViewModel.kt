@@ -9,22 +9,22 @@ import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.ToggleAction
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.ToggleAction
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.BUTTON
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.FEATURE
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.HEADER
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class ManualFeatureConfigViewModel
+class DebugSettingsViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,

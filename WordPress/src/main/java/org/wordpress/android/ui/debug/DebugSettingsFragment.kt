@@ -15,9 +15,9 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-class ManualFeatureConfigFragment : DaggerFragment(R.layout.manual_feature_config_fragment) {
+class DebugSettingsFragment : DaggerFragment(R.layout.manual_feature_config_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ManualFeatureConfigViewModel
+    private lateinit var viewModel: DebugSettingsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,16 +32,16 @@ class ManualFeatureConfigFragment : DaggerFragment(R.layout.manual_feature_confi
             recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
-            viewModel = ViewModelProvider(this@ManualFeatureConfigFragment, viewModelFactory)
-                    .get(ManualFeatureConfigViewModel::class.java)
+            viewModel = ViewModelProvider(this@DebugSettingsFragment, viewModelFactory)
+                    .get(DebugSettingsViewModel::class.java)
             viewModel.uiState.observe(viewLifecycleOwner, {
                 it?.let { uiState ->
-                    val adapter: FeatureAdapter
+                    val adapter: DebugSettingsAdapter
                     if (recyclerView.adapter == null) {
-                        adapter = FeatureAdapter()
+                        adapter = DebugSettingsAdapter()
                         recyclerView.adapter = adapter
                     } else {
-                        adapter = recyclerView.adapter as FeatureAdapter
+                        adapter = recyclerView.adapter as DebugSettingsAdapter
                     }
 
                     val layoutManager = recyclerView.layoutManager

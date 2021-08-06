@@ -13,26 +13,26 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.debug.ManualFeatureConfigViewModel.UiState
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.viewmodel.Event
 
-class ManualFeatureConfigViewModelTest : BaseUnitTest() {
+class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     @Mock lateinit var remoteConfig: RemoteConfig
-    private lateinit var viewModel: ManualFeatureConfigViewModel
+    private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
     private val restartActions = mutableListOf<Event<Unit>>()
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = ManualFeatureConfigViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig)
+        viewModel = DebugSettingsViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig)
     }
 
     @Test
