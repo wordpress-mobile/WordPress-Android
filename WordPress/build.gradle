@@ -17,6 +17,7 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
+            includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
@@ -427,7 +428,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    implementation("$gradle.ext.fluxCBinaryPath:fluxc:$fluxCVersion") {
+    implementation("$gradle.ext.fluxCBinaryPath:$fluxCVersion") {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }
@@ -450,6 +451,9 @@ dependencies {
 
     implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
+        exclude group: "org.wordpress", module: "fluxc"
+        exclude group: "org.wordpress.fluxc"
+        exclude group: "org.wordpress.fluxc.plugins"
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
