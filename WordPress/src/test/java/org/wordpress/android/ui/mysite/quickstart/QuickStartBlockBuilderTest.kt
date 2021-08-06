@@ -145,7 +145,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(getQuickStartTaskTypeItem(quickStartBlock).subtitle)
                 .isEqualTo(
                         UiStringResWithParams(
-                                R.string.quick_start_sites_type_subtitle,
+                                R.string.quick_start_sites_type_tasks_completed,
                                 listOf(
                                         UiStringText("${completedTasks.size}"),
                                         UiStringText("${completedTasks.size + uncompletedTasks.size}")
