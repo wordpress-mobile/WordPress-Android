@@ -47,8 +47,10 @@ class PaginateCommentsUseCase @Inject constructor(
                     is OnGetPage -> {
                         val parameters = action.parameters
                         val commentsStore = utilsProvider.commentsStore
-                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
-                        delay(LOADING_STATE_DELAY)
+                        if (parameters.offset == 0) {
+                            flowChannel.emit(Loading(PAGINATE_USE_CASE))
+                            delay(LOADING_STATE_DELAY)
+                        }
                         val result = if (!utilsProvider.networkUtilsWrapper.isNetworkAvailable()) {
                             val cachedComments = if (parameters.offset > 0) {
                                 commentsStore.getCommentsForSite(
