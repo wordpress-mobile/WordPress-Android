@@ -28,7 +28,7 @@ class ManualFeatureConfigTest {
         manualFeatureConfig = ManualFeatureConfig(appPrefsWrapper, buildConfigWrapper)
         localFeatureConfig = LocalFeatureConfig(appConfig)
         remoteFeatureConfig = object : FeatureConfig(appConfig, true, remoteField) {}
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(true)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(true)
     }
 
     @Test
@@ -40,7 +40,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `does not set manual config value from feature key when flag disabled`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         manualFeatureConfig.setManuallyEnabled(featureKey, true)
 
@@ -76,7 +76,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `hasManualSetup does not call appPrefsWrapper when flag is turned off`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         val hasManualSetup = manualFeatureConfig.hasManualSetup(featureKey)
 
@@ -113,7 +113,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `isManuallyEnabled does not call appPrefsWrapper when flag is turned off`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         val isManuallyEnabled = manualFeatureConfig.isManuallyEnabled(featureKey)
 

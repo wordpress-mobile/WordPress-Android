@@ -24,7 +24,7 @@ class ManualFeatureConfig
         }
     }
 
-    private fun isConfigEnabled() = buildConfigWrapper.isManualFeatureConfigEnabled()
+    private fun isConfigEnabled() = buildConfigWrapper.isDebugSettingsEnabled()
 
     private fun FeatureConfig.toFeatureKey() = this.remoteField ?: this.javaClass.toString().split(".").last()
 }

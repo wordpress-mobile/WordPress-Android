@@ -191,7 +191,7 @@ public class AppSettingsFragment extends PreferenceFragment
             removeExperimentalCategory();
         }
 
-        if (!BuildConfig.ENABLE_FEATURE_CONFIGURATION) {
+        if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
             removeDebugSettingsCategory();
         }
     }
