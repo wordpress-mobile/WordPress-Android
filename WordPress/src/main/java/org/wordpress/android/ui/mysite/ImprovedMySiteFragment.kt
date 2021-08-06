@@ -59,6 +59,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
@@ -281,6 +283,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is ShowQuickStartDialogOld -> TODO("Show old quick start dialog.")
+        is ShowQuickStartDialogNew -> TODO("Show new quick start dialog.")
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
