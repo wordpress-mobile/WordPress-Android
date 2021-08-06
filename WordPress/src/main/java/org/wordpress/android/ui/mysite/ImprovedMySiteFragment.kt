@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
@@ -72,6 +73,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMedia
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -94,7 +96,8 @@ import java.io.File
 import javax.inject.Inject
 
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
-        TextInputDialogFragment.Callback {
+        TextInputDialogFragment.Callback,
+        QuickStartPromptClickInterface {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -515,5 +518,17 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
         viewModel.onSiteNameChooserDismissed()
+    }
+
+    override fun onPositiveClicked(instanceTag: String) {
+        Toast.makeText(context, "QS - Positive Clicked", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+        Toast.makeText(context, "QS - Negative Clicked", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onNeutralClicked(instanceTag: String) {
+        Toast.makeText(context, "QS - Neutral Clicked", Toast.LENGTH_LONG).show()
     }
 }
