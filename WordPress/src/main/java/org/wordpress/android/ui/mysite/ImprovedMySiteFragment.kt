@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,7 @@ import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -69,6 +71,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -282,8 +285,19 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-        is ShowQuickStartDialogOld -> TODO("Show old quick start dialog.")
-        is ShowQuickStartDialogNew -> TODO("Show new quick start dialog.")
+        is ShowQuickStartDialogOld -> showQuickStartDialog(
+                R.string.quick_start_dialog_need_help_title,
+                R.string.quick_start_dialog_need_help_message,
+                R.string.quick_start_dialog_need_help_button_positive,
+                R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                R.string.quick_start_dialog_need_help_button_neutral
+        )
+        is ShowQuickStartDialogNew -> showQuickStartDialog(
+                R.string.quick_start_dialog_need_help_manage_site_title,
+                R.string.quick_start_dialog_need_help_manage_site_message,
+                R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                R.string.quick_start_dialog_need_help_button_negative
+        )
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
@@ -431,6 +445,28 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         }
     }
 
+    private fun showQuickStartDialog(
+        @StringRes title: Int,
+        @StringRes message: Int,
+        @StringRes positiveButtonLabel: Int,
+        @StringRes negativeButtonLabel: Int,
+        @StringRes neutralButtonLabel: Int? = null
+    ) {
+        val tag = TAG_QUICK_START_DIALOG
+        val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
+        quickStartPromptDialogFragment.initialize(
+                tag,
+                getString(title),
+                getString(message),
+                getString(positiveButtonLabel),
+                R.drawable.img_illustration_site_about_280dp,
+                getString(negativeButtonLabel),
+                neutralButtonLabel?.let { getString(it) } ?: ""
+        )
+        quickStartPromptDialogFragment.show(parentFragmentManager, tag)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
+    }
+
     private fun NewMySiteFragmentBinding.loadData(items: List<MySiteItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
@@ -467,6 +503,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
+        private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }
