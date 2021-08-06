@@ -53,7 +53,7 @@ class QuickStartBlockBuilder
         )
     }
 
-    private fun getTitle(taskType: QuickStartTaskType): Int {
+    fun getTitle(taskType: QuickStartTaskType): Int {
         return when (taskType) {
             QuickStartTaskType.CUSTOMIZE -> R.string.quick_start_sites_type_customize
             QuickStartTaskType.GROW -> R.string.quick_start_sites_type_grow

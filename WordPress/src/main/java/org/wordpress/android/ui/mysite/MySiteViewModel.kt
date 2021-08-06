@@ -80,6 +80,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -344,6 +345,8 @@ class MySiteViewModel
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
+        quickStartRepository.clearActiveTask()
+        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
     private fun onQuickStartTaskCardClick(task: QuickStartTask) {

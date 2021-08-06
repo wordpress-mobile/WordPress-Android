@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.annotation.StringRes
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.util.UriWrapper
 
@@ -49,4 +51,8 @@ sealed class SiteNavigationAction {
     ) : SiteNavigationAction()
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
+    data class OpenQuickStartFullScreenDialog(
+        val type: QuickStartTaskType,
+        @StringRes val title: Int
+    ) : SiteNavigationAction()
 }

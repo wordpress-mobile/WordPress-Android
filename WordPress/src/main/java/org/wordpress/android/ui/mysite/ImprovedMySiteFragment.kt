@@ -50,6 +50,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -281,6 +282,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+    }
+
+    private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
+        TODO("Not yet implemented")
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
