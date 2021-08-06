@@ -437,6 +437,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
+            RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
                 viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
             }

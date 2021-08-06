@@ -1158,7 +1158,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.LOGIN_EPILOGUE:
                 if (resultCode == RESULT_OK) {
                     setSite(data);
-                    showQuickStartDialog();
+                    if (getMySiteFragment() != null) {
+                        showQuickStartDialog();
+                    } else {
+                        passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
+                    }
                 }
                 break;
             case RequestCodes.SITE_PICKER:
