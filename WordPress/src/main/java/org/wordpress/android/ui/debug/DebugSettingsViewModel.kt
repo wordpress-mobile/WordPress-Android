@@ -5,10 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.util.config.FeaturesInDevelopment
-import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
-import org.wordpress.android.util.config.RemoteConfigDefaults
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
@@ -19,7 +15,11 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
-import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.util.config.FeaturesInDevelopment
+import org.wordpress.android.util.config.ManualFeatureConfig
+import org.wordpress.android.util.config.RemoteConfig
+import org.wordpress.android.util.config.RemoteConfigDefaults
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,12 +28,11 @@ class DebugSettingsViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: RemoteConfig
+    private val remoteConfig: RemoteConfig,
+    private val debugUtils: DebugUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
-    private val _restartAction = MutableLiveData<Event<Unit>>()
-    val restartAction: LiveData<Event<Unit>> = _restartAction
     private var hasChange: Boolean = false
 
     fun start() {
@@ -56,13 +55,9 @@ class DebugSettingsViewModel
         }
         uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
         if (hasChange) {
-            uiItems.add(Button(R.string.debug_settings_restart_app, this::restart))
+            uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
         }
         _uiState.value = UiState(uiItems)
-    }
-
-    private fun restart() {
-        _restartAction.value = Event(Unit)
     }
 
     private fun buildDevelopedFeatures(): List<Feature> {

@@ -11,8 +11,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.util.config.ManualFeatureConfig
-import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
@@ -20,19 +18,21 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.Stat
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
-import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.util.config.ManualFeatureConfig
+import org.wordpress.android.util.config.RemoteConfig
 
 class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     @Mock lateinit var remoteConfig: RemoteConfig
+    @Mock lateinit var debugUtils: DebugUtils
     private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
-    private val restartActions = mutableListOf<Event<Unit>>()
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = DebugSettingsViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig)
+        viewModel = DebugSettingsViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig, debugUtils)
     }
 
     @Test
@@ -100,15 +100,12 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
 
         restartButton.clickAction()
 
-        assertThat(restartActions).hasSize(1)
+        verify(debugUtils).restartApp()
     }
 
     private fun setup() {
         viewModel.uiState.observeForever {
             it?.let { uiStates.add(it) }
-        }
-        viewModel.restartAction.observeForever {
-            it?.let { restartActions.add(it) }
         }
     }
 
