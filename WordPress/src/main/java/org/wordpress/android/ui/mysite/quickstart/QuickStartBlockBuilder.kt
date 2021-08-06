@@ -42,7 +42,7 @@ class QuickStartBlockBuilder
                 title = UiStringRes(getTitle(quickStartTaskType)),
                 titleEnabled = countUncompleted > 0,
                 subtitle = UiStringResWithParams(
-                        R.string.quick_start_sites_type_subtitle,
+                        R.string.quick_start_sites_type_tasks_completed,
                         listOf(
                                 UiStringText("$countCompleted"),
                                 UiStringText("${countCompleted + countUncompleted}")

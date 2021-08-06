@@ -107,7 +107,7 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
-        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
 
@@ -167,7 +167,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
-            buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
