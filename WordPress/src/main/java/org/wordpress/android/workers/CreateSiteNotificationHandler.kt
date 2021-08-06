@@ -18,4 +18,8 @@ class CreateSiteNotificationHandler @Inject constructor(
     override fun buildIntent(context: Context): Intent {
         return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(context)
     }
+
+    override fun onNotificationShown() {
+        TODO()
+    }
 }
