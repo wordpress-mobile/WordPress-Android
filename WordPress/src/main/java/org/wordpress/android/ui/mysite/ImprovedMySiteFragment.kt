@@ -95,6 +95,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         TextInputDialogFragment.Callback,
         QuickStartPromptClickInterface {
