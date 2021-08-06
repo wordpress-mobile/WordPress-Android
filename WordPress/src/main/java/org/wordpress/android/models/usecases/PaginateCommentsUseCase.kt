@@ -1,8 +1,12 @@
 package org.wordpress.android.models.usecases
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.PagingData
 import org.wordpress.android.models.usecases.CommentsUseCaseType.PAGINATE_USE_CASE
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction
@@ -27,30 +31,55 @@ class PaginateCommentsUseCase @Inject constructor(
         resourceProvider = paginateCommentsResourceProvider,
         initialState = Idle
 ) {
+    @Suppress("LongMethod") // temporary suppress until we come up with better architecture for use cases
     sealed class PaginateCommentsState : StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction,
             PagingData, CommentsUseCaseType,
             CommentError> {
         object Idle : PaginateCommentsState() {
             override suspend fun runAction(
-                resourceProvider: PaginateCommentsResourceProvider,
+                utilsProvider: PaginateCommentsResourceProvider,
                 action: PaginateCommentsAction,
                 flowChannel: MutableSharedFlow<UseCaseResult<CommentsUseCaseType, CommentError, PagingData>>
             ): StateInterface<PaginateCommentsResourceProvider, PaginateCommentsAction, PagingData, CommentsUseCaseType,
                     CommentError> {
-                val unrepliedCommentsUtils = resourceProvider.unrepliedCommentsUtils
+                val unrepliedCommentsUtils = utilsProvider.unrepliedCommentsUtils
                 return when (action) {
                     is OnGetPage -> {
                         val parameters = action.parameters
-                        val commentsStore = resourceProvider.commentsStore
-                        if (parameters.offset == 0) flowChannel.emit(Loading(PAGINATE_USE_CASE))
-
-                        val result = commentsStore.fetchCommentsPage(
-                                site = parameters.site,
-                                number = parameters.number,
-                                offset = parameters.offset,
-                                networkStatusFilter = parameters.commentFilter.toCommentStatus(),
-                                cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
-                        )
+                        val commentsStore = utilsProvider.commentsStore
+                        if (parameters.offset == 0) {
+                            flowChannel.emit(Loading(PAGINATE_USE_CASE))
+                            delay(LOADING_STATE_DELAY)
+                        }
+                        val result = if (!utilsProvider.networkUtilsWrapper.isNetworkAvailable()) {
+                            val cachedComments = if (parameters.offset > 0) {
+                                commentsStore.getCommentsForSite(
+                                        site = parameters.site,
+                                        orderByDateAscending = false,
+                                        limit = parameters.offset,
+                                        statuses = parameters.commentFilter.toCommentCacheStatuses().toTypedArray()
+                                )
+                            } else {
+                                listOf()
+                            }
+                            CommentsActionPayload(
+                                    CommentError(
+                                            GENERIC_ERROR,
+                                            utilsProvider.resourceProvider.getString(R.string.no_network_message)
+                                    ), PagingData(
+                                    comments = cachedComments,
+                                    hasMore = cachedComments.isNotEmpty()
+                            )
+                            )
+                        } else {
+                            commentsStore.fetchCommentsPage(
+                                    site = parameters.site,
+                                    number = parameters.number,
+                                    offset = parameters.offset,
+                                    networkStatusFilter = parameters.commentFilter.toCommentStatus(),
+                                    cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
+                            )
+                        }
 
                         val data = (result.data ?: PagingData.empty()).let {
                             if (parameters.commentFilter == UNREPLIED) {
@@ -68,7 +97,7 @@ class PaginateCommentsUseCase @Inject constructor(
                     }
                     is OnReloadFromCache -> {
                         val parameters = action.parameters
-                        val commentsStore = resourceProvider.commentsStore
+                        val commentsStore = utilsProvider.commentsStore
 
                         val result = commentsStore.getCachedComments(
                                 site = parameters.pagingParameters.site,
@@ -117,5 +146,9 @@ class PaginateCommentsUseCase @Inject constructor(
             val pagingParameters: GetPageParameters,
             val hasMore: Boolean
         ) : Parameters()
+    }
+
+    companion object {
+        const val LOADING_STATE_DELAY = 500L
     }
 }

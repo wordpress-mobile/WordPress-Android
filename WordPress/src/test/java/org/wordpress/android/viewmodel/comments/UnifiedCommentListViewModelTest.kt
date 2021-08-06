@@ -87,7 +87,10 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("Apr 19")
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(paginateCommentsResourceProvider.commentsStore).thenReturn(commentStore)
+        whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
+        whenever(paginateCommentsResourceProvider.resourceProvider).thenReturn(resourceProvider)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(resourceProvider.getString(string.no_network_message)).thenReturn("No network")
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
         moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
@@ -315,6 +318,9 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `tapping retry button in footer shows error snackbar when there is no internet`() = runBlockingTest {
+        whenever(commentStore.getCommentsForSite(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(testComments.take(30))
+
         val result = mutableListOf<CommentsUiModel>()
         val job = launch {
             viewModel.uiState.collectLatest {
@@ -360,7 +366,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
         val noInternetSnackbar = snackbarResults[1] // first one is test error snackabr
 
-        assertThat(noInternetSnackbar.message).isEqualTo(UiStringRes(string.no_network_message))
+        assertThat(noInternetSnackbar.message).isEqualTo(UiStringText("No network"))
 
         job.cancel()
         snackbarJob.cancel()
