@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -16,19 +17,20 @@ class QuickStartBlockBuilder
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartStore: QuickStartStore
 ) {
-    fun build(): QuickStartBlock {
+    fun build(onItemClick: (QuickStartTaskType) -> Unit): QuickStartBlock {
         val localSiteId = appPrefsWrapper.getSelectedSite().toLong()
 
         val taskTypeItems = mutableListOf<QuickStartTaskTypeItem>()
-        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.CUSTOMIZE))
-        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.GROW))
+        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.CUSTOMIZE, onItemClick))
+        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.GROW, onItemClick))
 
         return QuickStartBlock(taskTypeItems = taskTypeItems)
     }
 
     private fun buildQuickStartTaskTypeItem(
         localSiteId: Long,
-        quickStartTaskType: QuickStartTaskType
+        quickStartTaskType: QuickStartTaskType,
+        onItemClick: (QuickStartTaskType) -> Unit
     ): QuickStartTaskTypeItem {
         val countCompleted = quickStartStore.getCompletedTasksByType(localSiteId, quickStartTaskType).size
         val countUncompleted = quickStartStore.getUncompletedTasksByType(localSiteId, quickStartTaskType).size
@@ -46,7 +48,8 @@ class QuickStartBlockBuilder
                                 UiStringText("${countCompleted + countUncompleted}")
                         )
                 ),
-                strikeThroughTitle = countUncompleted == 0
+                strikeThroughTitle = countUncompleted == 0,
+                onClick = ListItemInteraction.create(quickStartTaskType, onItemClick)
         )
     }
 

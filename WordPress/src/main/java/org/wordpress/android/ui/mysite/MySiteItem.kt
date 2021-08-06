@@ -63,7 +63,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
             val title: UiString,
             val titleEnabled: Boolean,
             val subtitle: UiString,
-            val strikeThroughTitle: Boolean
+            val strikeThroughTitle: Boolean,
+            val onClick: ListItemInteraction
         )
     }
 

@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -255,7 +256,7 @@ class MySiteViewModel
 
             if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
                     quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
-                siteItems.add(quickStartBlockBuilder.build())
+                siteItems.add(quickStartBlockBuilder.build(this::onQuickStartTaskTypeItemClick))
             }
 
             siteItems.addAll(
@@ -340,6 +341,9 @@ class MySiteViewModel
 
     private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
         _onDynamicCardMenuShown.postValue(Event(model))
+    }
+
+    private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
     }
 
     private fun onQuickStartTaskCardClick(task: QuickStartTask) {
