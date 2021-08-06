@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-23 11:54:08+0000
+Translation-Revision-Date: 2021-08-04 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Crea il sito</string>
+    <string name="create_site_notification_text">Rendi operativo il tuo sito in pochi passaggi</string>
+    <string name="create_site_notification_title">Crea il tuo sito WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">Impossibile attivare le statistiche del sito</string>
+    <string name="stats_disabled_enable_stats_button">Attiva statistiche del sito</string>
+    <string name="stats_disabled_subtitle">Attiva le statistiche del sito per vedere le informazioni dettagliate su traffico, Mi piace, commenti e abbonati.</string>
+    <string name="stats_disabled_title">Cerchi le statistiche?</string>
+    <string name="gutenberg_native_what_is_a_block">Che cos\'è un blocco?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Non è possibile incorporare il media</string>
+    <string name="gutenberg_native_try_another_search_term">Prova un altro termine di ricerca</string>
+    <string name="gutenberg_native_no_blocks_found">Nessun blocco trovato</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Anteprime incorporate non ancora disponibili</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Le anteprime dei blocchi incorporate saranno presto disponibili</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Tocca due volte per visualizzare l\'anteprima dell\'articolo.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Mostra una panoramica</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Ti guideremo attraverso le basi della gestione del tuo sito tramite l\'app.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Ti serve aiuto per gestire il sito tramite l\'app?</string>
+    <string name="login_epilogue_create_new_site_button">Crea un nuovo sito</string>
+    <string name="login_epilogue_mysites_subheading">Puoi passare da un sito all\'altro in qualsiasi momento.</string>
+    <string name="login_epilogue_mysites_heading">Scegli un sito da aprire</string>
+    <string name="scan_multisite_not_supported_subtitle">Al momento, Jetpack Scan non è compatibile con installazioni WordPress multisito.</string>
+    <string name="scan_multisite_not_supported_title">Multisiti WordPress non supportati</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non valido. Inserisci un URL valido.</string>
     <string name="gutenberg_native_embed_caption_s">Incorpora la didascalia. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Incorpora la didascalia. Vuota</string>
@@ -101,6 +127,8 @@ Language: it
     <string name="gutenberg_native_mention">Riferimento</string>
     <string name="gutenberg_native_post_content_settings">Impostazioni del contenuto dell\'articolo</string>
     <string name="gutenberg_native_post_meta_settings">Impostazioni dei metadati dell\'articolo</string>
+    <string name="gutenberg_native_preview_page">Pagina di anteprima</string>
+    <string name="gutenberg_native_preview_post">Anteprima articolo</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
@@ -190,6 +218,7 @@ Language: it
     <string name="quick_start_list_follow_site_subtitle">Scopri e segui i siti che ti ispirano.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Condividi automaticamente nuovi articoli sui tuoi social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento.</string>
+    <string name="quick_start_list_enable_sharing_title">Condivisione sui social</string>
     <string name="quick_start_list_check_stats_title">Controlla le statistiche</string>
     <string name="backup_download_status_failure_bullet2">Tenteremo ancora la creazione del tuo file di backup scaricabile.</string>
     <string name="backup_download_status_failure_bullet1">Non è stato possibile trovare lo stato che indica quanto tempo richiederà il backup scaricabile.</string>
@@ -680,6 +709,7 @@ Language: it
     <string name="send_link_by_email">Invia link tramite email</string>
     <string name="reader_error_request_failed_title">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per impostare un nuovo titolo</string>
+    <string name="quick_start_list_update_site_title_title">Controlla il titolo del sito</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>
     <string name="gutenberg_native_s_block_options">%s opzioni blocco</string>
     <string name="gutenberg_native_duplicate_block">Duplica il blocco</string>
@@ -1295,9 +1325,11 @@ Language: it
     <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
     <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
+    <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
     <string name="quick_start_dialog_need_help_message">Ti guideremo attraverso le basi per costruire e far crescere il tuo sito.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
+    <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
     <string name="quick_start_dialog_explore_plans_title">Scopri i piani</string>
     <string name="quick_start_dialog_explore_plans_message">Scopri gli strumenti SEO e di marketing nei nostri piani a pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Abilita la condivisione dell\'articolo</string>
@@ -1487,6 +1519,7 @@ Language: it
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
     <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti interessano e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tocca %1$s Cerca %2$s per guardare altri siti con argomenti simili</string>
+    <string name="quick_start_dialog_need_help_button_negative">No, grazie</string>
     <string name="quick_start_button_positive">Vai</string>
     <string name="quick_start_button_negative_short">Annulla</string>
     <string name="quick_start_button_negative">Non ora</string>

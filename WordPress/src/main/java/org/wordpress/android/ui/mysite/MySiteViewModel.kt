@@ -55,7 +55,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.ListItemAction.UNIFIED_COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
@@ -94,6 +93,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -101,6 +101,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -108,10 +109,12 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -145,10 +148,14 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
+    private val quickStartBlockBuilder: QuickStartBlockBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -233,15 +240,23 @@ class MySiteViewModel
                 // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
                 // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
                 // current solution is good enough for a few sources.
-                list.addAll(quickStartCategories.map { category ->
-                    quickStartItemBuilder.build(
-                            category,
-                            pinnedDynamicCard,
-                            this::onDynamicCardMoreClick,
-                            this::onQuickStartTaskCardClick
-                    )
-                })
+                if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                    list.addAll(quickStartCategories.map { category ->
+                        quickStartItemBuilder.build(
+                                category,
+                                pinnedDynamicCard,
+                                this::onDynamicCardMoreClick,
+                                this::onQuickStartTaskCardClick
+                        )
+                    })
+                }
             }.associateBy { it.dynamicCardType }
+
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
+                    quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
+                siteItems.add(quickStartBlockBuilder.build())
+            }
+
             siteItems.addAll(
                     visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
             )
@@ -254,8 +269,7 @@ class MySiteViewModel
                             scanAvailable,
                             activeTask == QuickStartTask.VIEW_SITE,
                             activeTask == ENABLE_POST_SHARING,
-                            activeTask == EXPLORE_PLANS,
-                            unifiedCommentsListFeatureConfig.isEnabled()
+                            activeTask == EXPLORE_PLANS
                     )
             )
             scrollToQuickStartTaskIfNecessary(
@@ -310,8 +324,13 @@ class MySiteViewModel
                     getStatsNavigationActionForSite(site)
                 }
                 MEDIA -> OpenMedia(site)
-                COMMENTS -> OpenComments(site)
-                UNIFIED_COMMENTS -> OpenUnifiedComments(site)
+                COMMENTS -> {
+                    if (unifiedCommentsListFeatureConfig.isEnabled()) {
+                        OpenUnifiedComments(site)
+                    } else {
+                        OpenComments(site)
+                    }
+                }
                 VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     OpenSite(site)

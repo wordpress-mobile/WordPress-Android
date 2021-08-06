@@ -44,7 +44,7 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
             val viewHolder = parent.getChildViewHolder(child)
-            if (viewHolder !is UnifiedCommentSubHeaderViewHolder) {
+            if (viewHolder !is UnifiedCommentSubHeaderViewHolder && viewHolder !is LoadStateViewHolder) {
                 parent.getDecoratedBoundsWithMargins(child, bounds)
                 val bottom = bounds.bottom + child.translationY.roundToInt()
                 val top = bottom - divider.intrinsicHeight

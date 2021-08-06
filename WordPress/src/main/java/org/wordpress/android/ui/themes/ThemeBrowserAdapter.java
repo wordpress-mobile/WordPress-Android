@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
-    private static final String THEME_IMAGE_PARAMETER = "?w=";
+    private static final String THEME_IMAGE_PARAMETER = "w=";
 
     private final Context mContext;
     private final long mSitePlanId;
@@ -197,9 +197,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
                                     final boolean isCurrent) {
-        mImageManager
-                .load(themeViewHolder.mImageView, ImageType.THEME, screenshotURL + THEME_IMAGE_PARAMETER + mViewWidth,
-                        ScaleType.FIT_CENTER);
+        mImageManager.load(themeViewHolder.mImageView, ImageType.THEME, getUrlWithWidth(screenshotURL),
+                ScaleType.FIT_CENTER);
 
         themeViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +210,14 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                 }
             }
         });
+    }
+
+    private String getUrlWithWidth(String screenshotURL) {
+        if (screenshotURL.contains("?")) {
+            return screenshotURL + "&" + THEME_IMAGE_PARAMETER + mViewWidth;
+        } else {
+            return screenshotURL + "?" + THEME_IMAGE_PARAMETER + mViewWidth;
+        }
     }
 
     private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium,

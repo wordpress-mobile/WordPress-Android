@@ -2,8 +2,6 @@ package org.wordpress.android.util
 
 import android.content.Context
 import android.graphics.Rect
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewTreeObserver
@@ -17,9 +15,7 @@ fun View.setVisible(visible: Boolean) {
 }
 
 fun View.redirectContextClickToLongPressListener() {
-    if (VERSION.SDK_INT >= VERSION_CODES.M) {
-        this.setOnContextClickListener { it.performLongClick() }
-    }
+    this.setOnContextClickListener { it.performLongClick() }
 }
 
 fun View.expandTouchTargetArea(@DimenRes dimenRes: Int, heightOnly: Boolean = false) {

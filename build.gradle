@@ -126,14 +126,14 @@ ext {
     compileSdkVersion = 29
     buildToolVersion = '29.0.2'
 
-    minSdkVersion = 21
+    minSdkVersion = 24
     targetSdkVersion = 29
 
     coroutinesVersion = '1.3.9'
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.22.0'
+    fluxCVersion = 'develop-5e9c708dcc9e766732913afce54a25bfe9b57f5f'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
