@@ -86,6 +86,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -606,7 +608,11 @@ class MySiteViewModel
     }
 
     fun startQuickStart(newSiteLocalID: Int) {
-        quickStartRepository.startQuickStart(newSiteLocalID)
+        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            quickStartRepository.startQuickStart(newSiteLocalID)
+        } else {
+            showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        }
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
@@ -623,6 +629,18 @@ class MySiteViewModel
                     analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
                     dynamicCardsSource.hideItem(interaction.cardType)
                     quickStartRepository.refresh()
+                }
+            }
+        }
+    }
+
+    private fun showQuickStartDialog(siteModel: SiteModel?) {
+        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
+            if (onboardingImprovementsFeatureConfig.isEnabled()) {
+                _onNavigation.postValue(Event(ShowQuickStartDialogNew))
+            } else {
+                if (appPrefsWrapper.isQuickStartEnabled()) {
+                    _onNavigation.postValue(Event(ShowQuickStartDialogOld))
                 }
             }
         }
