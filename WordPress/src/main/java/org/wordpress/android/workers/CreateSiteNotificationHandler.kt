@@ -5,11 +5,13 @@ import android.content.Intent
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import javax.inject.Inject
 
 class CreateSiteNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
+    private val notificationsTracker: SystemNotificationsTracker
 ) : LocalNotificationHandler {
     override fun shouldShowNotification(): Boolean {
         return accountStore.hasAccessToken() && !siteStore.hasSite()
@@ -20,6 +22,6 @@ class CreateSiteNotificationHandler @Inject constructor(
     }
 
     override fun onNotificationShown() {
-        TODO()
+        notificationsTracker.trackShownNotification(CREATE_SITE)
     }
 }
