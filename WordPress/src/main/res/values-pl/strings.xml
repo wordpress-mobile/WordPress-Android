@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 12:01:41+0000
+Translation-Revision-Date: 2021-08-05 12:30:14+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -445,11 +445,9 @@ Language: pl
     <string name="dialog_discard_page_message">Ten slajd zostanie usunięty z twojej relacji.</string>
     <string name="dialog_discard_page_title">Czy usunąć slajd z relacji?</string>
     <string name="label_frame_image">Slajd</string>
-    <string name="label_retry_icon">Ponów</string>
     <string name="label_close_button">Zamknij</string>
     <string name="label_snackbar_share">UDOSTĘPNIJ</string>
     <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
-    <string name="label_control_retry">Ponów</string>
     <string name="label_control_saved">Zapisano</string>
     <string name="label_control_flash">Flash</string>
     <string name="label_control_flip_camera">Odwróć</string>
@@ -471,6 +469,8 @@ Language: pl
     <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
     <string name="label_control_saving">Zapisywanie</string>
     <string name="label_saved_icon">Zapisano</string>
+    <string name="label_control_retry">Spróbuj ponownie</string>
+    <string name="label_retry_icon">Spróbuj ponownie</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -1321,7 +1321,6 @@ Language: pl
     <string name="reader_empty_followed_tags_subtitle">Dodaj tematy aby odnaleźć wpisy dotyczące tych które ciebie interesują</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
     <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
-    <string name="install_jetpack_retry">Ponów</string>
     <string name="jetpack_installation_problem_message">Nie można było zainstalować  Jetpacka</string>
     <string name="jetpack_installation_problem">Wystąpił problem</string>
     <string name="jetpack_installed">Jetpack zainstalowany</string>
@@ -1331,6 +1330,7 @@ Language: pl
     <string name="install_jetpack_continue">Utwórz</string>
     <string name="install_jetpack_message">Dane logowania do witryny nie będą przechowywane i są użyte jedynie do celów instalacji Jetpacka.</string>
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
+    <string name="install_jetpack_retry">Spróbuj ponownie</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -1600,17 +1600,17 @@ Language: pl
     <string name="signup_user_exists">Email już istnieje na WordPress.com.\nKontynuowanie logowania.</string>
     <string name="signup_updating_account">Aktualizacja konta…</string>
     <string name="signup_magic_link_progress">Wysyłanie emaila</string>
-    <string name="signup_magic_link_error_button_positive">Ponów próbę</string>
     <string name="signup_magic_link_error_button_negative">Zamknij</string>
     <string name="signup_epilogue_hint_username">Nazwa użytkownika</string>
     <string name="signup_epilogue_hint_password_detail">Możesz zawsze zalogować się za pomocą odnośnika którego właśnie użyłeś, ale możesz również założyć hasło jeśli wolisz.</string>
     <string name="signup_epilogue_hint_password">Hasło (opcjonalnie)</string>
     <string name="signup_epilogue_hint_display">Nazwa wyświetlana</string>
-    <string name="signup_epilogue_error_button_positive">Ponów próbę</string>
     <string name="signup_epilogue_error_button_negative">Cofnij</string>
     <string name="signup_epilogue_error_generic">Wystąpił problem podczas aktualizacji twojego konta. Możesz spróbować ponownie lub cofnąć zmianę użytkownika aby kontynuować.</string>
     <string name="signup_epilogue_error_avatar">Wystąpił błąd przesyłania swojego zdjęcia profilowego.</string>
     <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
+    <string name="signup_magic_link_error_button_positive">Spróbuj ponownie</string>
+    <string name="signup_epilogue_error_button_positive">Spróbuj ponownie</string>
     <string name="plugin_needs_update">Wymaga aktualizacji/subskrypcji</string>
     <string name="plugin_caption_search">Szukaj wtyczek</string>
     <string name="plugin_caption_new">Nowe</string>
