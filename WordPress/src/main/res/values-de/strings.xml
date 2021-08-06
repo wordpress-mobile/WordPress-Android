@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 20:31:47+0000
+Translation-Revision-Date: 2021-08-05 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
     <string name="create_site_notification_create_site_action">Website erstellen</string>
+    <string name="create_site_notification_text">Richte deine Website mit wenigen schnellen Schritten ein</string>
     <string name="create_site_notification_title">Erstelle deine WordPress-Website</string>
+    <string name="stats_disabled_enable_stats_error_message">Website-Statistiken können nicht aktiviert werden</string>
     <string name="stats_disabled_enable_stats_button">Website-Statistiken aktivieren</string>
+    <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
+    <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Eingebettete Vorschau noch nicht verfügbar</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Eingebettete Block-Vorschau demnächst verfügbar</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
+    <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Zeig mir alles</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Wir zeigen dir die wichtigsten Schritte zur Verwaltung deiner Website mit der App.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Brauchst du ein wenig Hilfe dabei, diese Website mit der App zu verwalten?</string>
+    <string name="login_epilogue_create_new_site_button">Eine neue Website erstellen</string>
     <string name="login_epilogue_mysites_subheading">Du kannst die Websites jederzeit wechseln.</string>
     <string name="login_epilogue_mysites_heading">Wähle eine Website aus, die geöffnet werden soll</string>
     <string name="scan_multisite_not_supported_subtitle">Es tut uns leid, aber Jetpack Scan ist derzeit nicht mit WordPress-Multisite-Installationen kompatibel.</string>
@@ -201,6 +217,7 @@ Language: de
     <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
     <string name="quick_start_list_view_site_title">Besuche deine Website</string>
     <string name="quick_start_list_follow_site_subtitle">Entdecke und folge Websites, die dich inspirieren.</string>
+    <string name="quick_start_list_enable_sharing_title">Teilen über soziale Netzwerke</string>
     <string name="quick_start_list_enable_sharing_subtitle">Neue Beiträge automatisch in deinen sozialen Medien teilen.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt.</string>
     <string name="quick_start_list_check_stats_title">Deine Statistiken prüfen</string>

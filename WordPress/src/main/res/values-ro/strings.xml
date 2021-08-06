@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 10:23:31+0000
+Translation-Revision-Date: 2021-08-04 12:15:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -1726,7 +1726,6 @@ Language: ro
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
     <string name="site_settings_quota_space_title">Spațiu folosit</string>
-    <string name="site_settings_quota_header">Medie</string>
     <string name="comment_spam_talkback">Comentariu marcat ca spam</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
     <string name="comment_delete_talkback">Comentariu șters</string>
@@ -1740,6 +1739,7 @@ Language: ro
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
     <string name="share_intent_screen_title">Alege site-ul</string>
+    <string name="site_settings_quota_header">Media</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>

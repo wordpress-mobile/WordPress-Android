@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-23 12:54:07+0000
+Translation-Revision-Date: 2021-08-05 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">יצירת אתר</string>
+    <string name="create_site_notification_text">הפעלת האתר שלך במספר מועט של שלבים מהירים</string>
+    <string name="create_site_notification_title">יצירת אתר אינטרנט WordPress שלך</string>
+    <string name="stats_disabled_enable_stats_error_message">לא ניתן להפעיל נתונים סטטיסטיים של האתר</string>
+    <string name="stats_disabled_enable_stats_button">הפעלת הנתונים הסטטיסטיים של האתר</string>
+    <string name="stats_disabled_subtitle">יש להפעיל את הנתונים הסטטיסטיים כדי להציג מידע מפורט אודות התעבורה, הלייקים, התגובות והמינויים שלך.</string>
+    <string name="stats_disabled_title">רוצה להציג את הנתונים הסטטיסטיים?</string>
+    <string name="gutenberg_native_what_is_a_block">מהו בלוק?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">אנחנו עובדים קשה כדי להוסיף תמיכה לתצוגות מקדימות מוטמעות. בינתיים, תוכל לראות את התוכן המוטמע בפוסט.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">אנחנו עובדים קשה כדי להוסיף תמיכה לתצוגות מקדימות מוטמעות. בינתיים, תוכל לראות את התוכן המוטמע בעמוד.</string>
+    <string name="gutenberg_native_unable_to_embed_media">לא ניתן להטמיע מדיה</string>
+    <string name="gutenberg_native_try_another_search_term">נסה מונח חיפוש אחר</string>
+    <string name="gutenberg_native_no_blocks_found">לא נמצאו בלוקים</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">תצוגות מקדימות מוטמעות עדיין לא זמינות</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">תצוגות מקדימות של בלוק מוטמע יהיו אפשריות בקרוב</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">הקש פעמיים לתצוגה מקדימה של הפוסט.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">הקש פעמיים לתצוגה מקדימה של העמוד.</string>
+    <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">הראו לי את הסביבה</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">אנחנו נלווה אותך בביצוע הפעולות הבסיסיות של ניהול האתר שלך באמצעות האפליקציה.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">נדרשת לך עזרה בניהול האתר עם האפליקציה?</string>
+    <string name="login_epilogue_create_new_site_button">ליצור אתר חדש</string>
+    <string name="login_epilogue_mysites_subheading">אפשר להחליף בין אתרים בכל עת.</string>
+    <string name="login_epilogue_mysites_heading">בחירת אתר לפתיחה</string>
+    <string name="scan_multisite_not_supported_subtitle">מצטערים, Jetpack Scan לא תואמת להתקנות WordPress של ריבוי אתרים נכון לעכשיו.</string>
+    <string name="scan_multisite_not_supported_title">ריבוי אתרי WordPress אינו נתמך</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">כתובת URL לא תקינה. נא להזין כתובת אינטרנט תקנית</string>
     <string name="gutenberg_native_embed_caption_s">כיתוב התמונה מוטמע. %s</string>
     <string name="gutenberg_native_embed_caption_empty">כיתוב התמונה מוטמע. ריק</string>
@@ -102,6 +128,8 @@ Language: he_IL
     <string name="gutenberg_native_mention">אזכור</string>
     <string name="gutenberg_native_post_content_settings">הגדרות תוכן פוסט</string>
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
+    <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
+    <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
@@ -191,6 +219,7 @@ Language: he_IL
     <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
     <string name="quick_start_list_enable_sharing_subtitle">לשתף באופן אוטומטי פוסטים חדשים ברשתות החברתיות.</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו.</string>
+    <string name="quick_start_list_enable_sharing_title">שיתוף ברשתות חברתיות</string>
     <string name="quick_start_list_check_stats_title">לבדוק את הנתונים הסטטיסטיים שלך</string>
     <string name="backup_download_status_failure_bullet2">אנחנו נמשיך לנסות ליצור את קובץ הגיבוי שלך להורדה.</string>
     <string name="backup_download_status_failure_bullet1">לא הצלחנו למצוא את הסטטוס כדי לציין כמה זמן צפויה להימשך היצירה של הגיבוי להורדה.</string>
@@ -681,6 +710,7 @@ Language: he_IL
     <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
     <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b&gt;⁦%1$s⁩&lt;/b&gt; כדי להגדיר שם חדש</string>
+    <string name="quick_start_list_update_site_title_title">בדיקת כותרת האתר שלך</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="gutenberg_native_s_block_options">%s אפשרויות הבלוק</string>
     <string name="gutenberg_native_duplicate_block">לשכפל בלוק</string>
@@ -1296,9 +1326,11 @@ Language: he_IL
     <string name="quick_start_dialog_explore_plans_message_short">יש להקיש על %1$s התוכנית %2$s כדי להציג את התוכנית הנוכחית שלך ותוכניות אחרות שזמינות</string>
     <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
     <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
+    <string name="quick_start_dialog_upload_icon_title">בחירת סמל אתר ייחודי</string>
     <string name="quick_start_dialog_check_stats_message_short">יש להקיש על %1$s נתונים סטטיסטיים %2$s כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
     <string name="quick_start_dialog_need_help_message">אנחנו נלווה אותך בביצוע הפעולות הבסיסיות לבנייה של האתר שלך ולהגדלתו.</string>
+    <string name="quick_start_dialog_publish_post_message">רישום טיוטה ופרסום פוסט.</string>
     <string name="quick_start_dialog_explore_plans_title">עיון בתוכניות</string>
     <string name="quick_start_dialog_explore_plans_message">מידע נוסף על כלי שיווק ו-SEO בתוכניות שלנו בתשלום.</string>
     <string name="quick_start_dialog_enable_sharing_title">הפעלת השיתוף של הפוסטים</string>
