@@ -11,6 +11,8 @@ public class WCWPAPIEndpoint {
 
     private static final String WC_PREFIX_V4_ANALYTICS = "wc-analytics";
 
+    private static final String WC_PREFIX_V1_ADDONS = "wc-product-add-ons/v1";
+
     private final String mEndpoint;
 
     public WCWPAPIEndpoint(String endpoint) {
@@ -47,5 +49,9 @@ public class WCWPAPIEndpoint {
 
     public String getPathV4Analytics() {
         return "/" + WC_PREFIX_V4_ANALYTICS + mEndpoint;
+    }
+
+    public String getPathV1Addons() {
+        return "/" + WC_PREFIX_V1_ADDONS + mEndpoint;
     }
 }

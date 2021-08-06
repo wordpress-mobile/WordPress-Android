@@ -26,6 +26,8 @@
 /products/tags/<id>/
 /products/tags/batch/
 
+/product-add-ons/
+
 /customers/<id>
 /customers/
 /customers/<id>/downloads
