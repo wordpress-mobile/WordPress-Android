@@ -1107,7 +1107,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
-            whenever(quickStartBlockBuilder.build()).thenReturn(mock())
+            whenever(quickStartBlockBuilder.build(any())).thenReturn(mock())
         } else {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }

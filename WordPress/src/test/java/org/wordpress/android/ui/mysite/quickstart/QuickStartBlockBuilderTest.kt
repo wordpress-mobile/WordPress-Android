@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -29,6 +30,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
     private val siteId = 1
     private val completedTasks: List<QuickStartTask> = listOf(QuickStartTask.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTask> = listOf(QuickStartTask.VIEW_SITE)
+    private val onItemClick: (QuickStartTaskType) -> Unit = {}
 
     @Before
     fun setUp() {
@@ -154,6 +156,17 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 )
     }
 
+    /* ITEM CLICK */
+
+    @Test
+    fun `when block is built, then on click action is set on the task type item`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        val taskTypeItem = getQuickStartTaskTypeItem(quickStartBlock)
+        assertThat(taskTypeItem.onClick)
+                .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
+    }
+
     private fun buildQuickStartBlock(
         completedTasks: List<QuickStartTask>? = null,
         uncompletedTasks: List<QuickStartTask>? = null
@@ -162,7 +175,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .thenReturn(completedTasks ?: this.completedTasks)
         whenever(quickStartStore.getUncompletedTasksByType(anyLong(), any()))
                 .thenReturn(uncompletedTasks ?: this.uncompletedTasks)
-        return builder.build()
+        return builder.build(onItemClick)
     }
 
     private fun getQuickStartTaskTypeItem(
