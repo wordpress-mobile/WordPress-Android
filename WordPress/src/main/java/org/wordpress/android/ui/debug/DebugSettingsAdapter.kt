@@ -6,19 +6,19 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.ButtonViewHolder
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.FeatureViewHolder
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.HeaderViewHolder
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 
 class DebugSettingsAdapter : Adapter<DebugSettingsItemViewHolder>() {
-    private var items: List<FeatureUiItem> = listOf()
+    private var items: List<UiItem> = listOf()
 
-    fun update(newItems: List<FeatureUiItem>) {
+    fun update(newItems: List<UiItem>) {
         val diffResult = DiffUtil.calculateDiff(
                 DebugSettingsDiffCallback(
                         items,

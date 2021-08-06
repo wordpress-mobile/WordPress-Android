@@ -9,16 +9,16 @@ import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Button
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.ToggleAction
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class DebugSettingsViewModel
     }
 
     private fun refresh() {
-        val uiItems = mutableListOf<FeatureUiItem>()
+        val uiItems = mutableListOf<UiItem>()
         val remoteFeatures = buildRemoteFeatures()
         if (remoteFeatures.isNotEmpty()) {
             uiItems.add(Header(R.string.manual_config_remote_features))
@@ -102,11 +102,11 @@ class DebugSettingsViewModel
         }
     }
 
-    data class UiState(val uiItems: List<FeatureUiItem>)
-    sealed class FeatureUiItem(val type: Type) {
-        data class Header(val header: Int) : FeatureUiItem(HEADER)
-        data class Button(val text: Int, val clickAction: () -> Unit) : FeatureUiItem(BUTTON)
-        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : FeatureUiItem(
+    data class UiState(val uiItems: List<UiItem>)
+    sealed class UiItem(val type: Type) {
+        data class Header(val header: Int) : UiItem(HEADER)
+        data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
+        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(
                 FEATURE
         ) {
             constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(

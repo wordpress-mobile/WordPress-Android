@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.debug
 
 import androidx.recyclerview.widget.DiffUtil.Callback
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.FeatureUiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
 
 class DebugSettingsDiffCallback(
-    private val oldList: List<FeatureUiItem>,
-    private val newList: List<FeatureUiItem>
+    private val oldList: List<UiItem>,
+    private val newList: List<UiItem>
 ) : Callback() {
     object Payload
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
