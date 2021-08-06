@@ -92,6 +92,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
@@ -110,6 +112,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -140,6 +143,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: MySiteViewModel
@@ -215,6 +219,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 unifiedCommentsListFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
+                onboardingImprovementsFeatureConfig,
                 quickStartUtilsWrapper,
                 appPrefsWrapper
         )
@@ -492,7 +497,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         quickStartUpdate.value = QuickStartUpdate(UPDATE_SITE_TITLE, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
+        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue
     }
 
     @Test
@@ -516,7 +521,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         quickStartUpdate.value = QuickStartUpdate(UPLOAD_SITE_ICON, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue()
+        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue
     }
 
     @Test
@@ -1017,6 +1022,74 @@ class MySiteViewModelTest : BaseUnitTest() {
         val quickActionsBlock = findQuickActionsBlock()
 
         assertThat(quickActionsBlock).isNotNull
+    }
+
+    @Test
+    fun `given QS dynamic cards cards feature is on, when start quick start is triggered, then QS starts`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.startQuickStart(siteId)
+
+        verify(quickStartRepository).startQuickStart(siteId)
+    }
+
+    @Test
+    fun `given no selected site, when start quick start is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        viewModel.startQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given QS is not available for the site, when quick start start is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+
+        viewModel.startQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given onboarding improvements feature is on, when quick start start is triggered, then new QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.startQuickStart(siteId)
+
+        assertThat(navigationActions).containsExactly(ShowQuickStartDialogNew)
+    }
+
+    @Test
+    fun `given QS is disabled, when start quick start is triggered, then old QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
+
+        viewModel.startQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given QS is enabled, when start quick start is triggered, then old QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
+
+        viewModel.startQuickStart(siteId)
+
+        assertThat(navigationActions).containsExactly(ShowQuickStartDialogOld)
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
