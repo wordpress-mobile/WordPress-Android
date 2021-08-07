@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
+import org.wordpress.android.databinding.DebugSettingsRowBinding
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
@@ -58,6 +59,13 @@ sealed class DebugSettingsItemViewHolder(
             }
             enabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
             itemView.setOnClickListener { item.toggleAction.toggle() }
+        }
+    }
+
+    class RowViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_row) {
+        fun bind(item: UiItem.Row) = with(DebugSettingsRowBinding.bind(itemView)) {
+            title.setText(item.title)
+            root.setOnClickListener { item.onClick.click() }
         }
     }
 }

@@ -6,14 +6,17 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.ButtonViewHolder
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.FeatureViewHolder
 import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.HeaderViewHolder
+import org.wordpress.android.ui.debug.DebugSettingsItemViewHolder.RowViewHolder
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
 
 class DebugSettingsAdapter : Adapter<DebugSettingsItemViewHolder>() {
     private var items: List<UiItem> = listOf()
@@ -34,6 +37,7 @@ class DebugSettingsAdapter : Adapter<DebugSettingsItemViewHolder>() {
             HEADER -> HeaderViewHolder(parent)
             FEATURE -> FeatureViewHolder(parent)
             BUTTON -> ButtonViewHolder(parent)
+            ROW -> RowViewHolder(parent)
         }
     }
 
@@ -48,6 +52,7 @@ class DebugSettingsAdapter : Adapter<DebugSettingsItemViewHolder>() {
             is HeaderViewHolder -> holder.bind(items[position] as Header)
             is FeatureViewHolder -> holder.bind(items[position] as Feature)
             is ButtonViewHolder -> holder.bind(items[position] as Button)
+            is RowViewHolder -> holder.bind(items[position] as Row)
         }
     }
 }
