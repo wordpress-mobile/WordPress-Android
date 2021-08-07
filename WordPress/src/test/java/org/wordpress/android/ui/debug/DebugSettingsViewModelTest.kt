@@ -17,6 +17,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.Stat
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
 import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.ManualFeatureConfig
@@ -119,6 +120,7 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
             val remoteItems = mutableListOf<Feature>()
             val developedItems = mutableListOf<Feature>()
             val buttons = mutableListOf<Button>()
+            val rows = mutableListOf<Row>()
             for (uiItem in this.uiItems) {
                 when (uiItem) {
                     is Header -> headers.add(uiItem)
@@ -132,12 +134,16 @@ class DebugSettingsViewModelTest : BaseUnitTest() {
                     is Button -> {
                         buttons.add(uiItem)
                     }
+                    is Row -> {
+                        rows.add(uiItem)
+                    }
                 }
             }
-            assertThat(headers).hasSize(3)
+            assertThat(headers).hasSize(4)
             assertThat(headers[0].header).isEqualTo(R.string.debug_settings_remote_features)
             assertThat(headers[1].header).isEqualTo(R.string.debug_settings_features_in_development)
             assertThat(headers[2].header).isEqualTo(R.string.debug_settings_missing_developed_feature)
+            assertThat(headers[3].header).isEqualTo(R.string.debug_settings_tools)
             remoteItems.filter { it.title != enabledFeature }
                     .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
             developedItems.filter { it.title != enabledFeature }
