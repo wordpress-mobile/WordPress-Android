@@ -2,6 +2,7 @@ package org.wordpress.android.ui.debug.cookies
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ class DebugCookiesFragment : DaggerFragment(R.layout.debug_cookies_fragment) {
         with(DebugCookiesFragmentBinding.bind(view)) {
             setupToolbar()
             setupViews()
+            setupObservers()
         }
     }
 
@@ -39,6 +41,28 @@ class DebugCookiesFragment : DaggerFragment(R.layout.debug_cookies_fragment) {
             layoutManager = LinearLayoutManager(context)
             adapter = DebugCookiesAdapter()
         }
+
+        setCookieButton.setOnClickListener {
+            viewModel.setCookie(
+                    domainInput.text.toString(),
+                    nameInput.text.toString(),
+                    valueInput.text.toString()
+            )
+        }
+    }
+
+    private fun DebugCookiesFragmentBinding.setupObservers() {
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            (recyclerView.adapter as? DebugCookiesAdapter)?.update(uiState.items)
+            uiState.domainInputText?.let { domainInput.setTextAndMoveCursor(it) }
+            uiState.nameInputText?.let { nameInput.setTextAndMoveCursor(it) }
+            uiState.valueInputText?.let { valueInput.setTextAndMoveCursor(it) }
+        }
+    }
+
+    private fun EditText.setTextAndMoveCursor(text: String) {
+        this.setText(text)
+        this.setSelection(text.length)
     }
 
     companion object {
