@@ -59,6 +59,7 @@ class DebugSettingsViewModel
         if (hasChange) {
             uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
         }
+        uiItems.add(Header(R.string.debug_settings_tools))
         _uiState.value = UiState(uiItems)
     }
 
