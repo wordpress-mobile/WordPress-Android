@@ -2,7 +2,6 @@ package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
-import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
 import java.time.DayOfWeek.FRIDAY
 import java.time.DayOfWeek.MONDAY
@@ -16,26 +15,30 @@ import javax.inject.Inject
 class BloggingRemindersModelMapper
 @Inject constructor() {
     fun toDomainModel(uiModel: BloggingRemindersUiModel): BloggingRemindersModel {
-        // TODO: Save selected time in next iteration
-        return BloggingRemindersModel(uiModel.siteId, uiModel.enabledDays.map {
-            when (it) {
-                SATURDAY -> Day.SATURDAY
-                MONDAY -> Day.MONDAY
-                TUESDAY -> Day.TUESDAY
-                WEDNESDAY -> Day.WEDNESDAY
-                THURSDAY -> Day.THURSDAY
-                FRIDAY -> Day.FRIDAY
-                SUNDAY -> Day.SUNDAY
-            }
-        }.toSet())
+        return BloggingRemindersModel(
+                uiModel.siteId,
+                uiModel.enabledDays.map {
+                    when (it) {
+                        SATURDAY -> Day.SATURDAY
+                        MONDAY -> Day.MONDAY
+                        TUESDAY -> Day.TUESDAY
+                        WEDNESDAY -> Day.WEDNESDAY
+                        THURSDAY -> Day.THURSDAY
+                        FRIDAY -> Day.FRIDAY
+                        SUNDAY -> Day.SUNDAY
+                    }
+                }.toSet(),
+                uiModel.hour,
+                uiModel.minute
+        )
     }
 
     fun toUiModel(domainModel: BloggingRemindersModel): BloggingRemindersUiModel {
         return BloggingRemindersUiModel(
                 domainModel.siteId,
                 domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
-                ReminderScheduler.DEFAUlT_START_HOUR, // TODO: read selected time in next iteration
-                ReminderScheduler.DEFAULT_START_MINUTE
+                domainModel.hour,
+                domainModel.minute
         )
     }
 }
