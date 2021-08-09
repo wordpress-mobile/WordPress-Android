@@ -195,6 +195,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
 
+    fun isQuickStartEnabled() = !AppPrefs.isQuickStartDisabled()
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

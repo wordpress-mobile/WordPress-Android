@@ -88,6 +88,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -116,6 +117,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
@@ -156,6 +158,7 @@ class MySiteViewModel
     private val buildConfigWrapper: BuildConfigWrapper,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
+    private val onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
@@ -611,7 +614,11 @@ class MySiteViewModel
     }
 
     fun startQuickStart(newSiteLocalID: Int) {
-        quickStartRepository.startQuickStart(newSiteLocalID)
+        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            quickStartRepository.startQuickStart(newSiteLocalID)
+        } else {
+            showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        }
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
@@ -628,6 +635,37 @@ class MySiteViewModel
                     analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
                     dynamicCardsSource.hideItem(interaction.cardType)
                     quickStartRepository.refresh()
+                }
+            }
+        }
+    }
+
+    private fun showQuickStartDialog(siteModel: SiteModel?) {
+        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
+            if (onboardingImprovementsFeatureConfig.isEnabled()) {
+                _onNavigation.postValue(
+                        Event(
+                                ShowQuickStartDialog(
+                                        R.string.quick_start_dialog_need_help_manage_site_title,
+                                        R.string.quick_start_dialog_need_help_manage_site_message,
+                                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                                        R.string.quick_start_dialog_need_help_button_negative
+                                )
+                        )
+                )
+            } else {
+                if (appPrefsWrapper.isQuickStartEnabled()) {
+                    _onNavigation.postValue(
+                            Event(
+                                    ShowQuickStartDialog(
+                                            R.string.quick_start_dialog_need_help_title,
+                                            R.string.quick_start_dialog_need_help_message,
+                                            R.string.quick_start_dialog_need_help_button_positive,
+                                            R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                                            R.string.quick_start_dialog_need_help_button_neutral
+                                    )
+                            )
+                    )
                 }
             }
         }

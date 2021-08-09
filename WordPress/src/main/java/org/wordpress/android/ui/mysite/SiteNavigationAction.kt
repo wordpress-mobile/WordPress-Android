@@ -49,8 +49,16 @@ sealed class SiteNavigationAction {
         val source: PagePostCreationSourcesDetail,
         val mediaUris: List<String>
     ) : SiteNavigationAction()
+
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
+    data class ShowQuickStartDialog(
+        @StringRes val title: Int,
+        @StringRes val message: Int,
+        @StringRes val positiveButtonLabel: Int,
+        @StringRes val negativeButtonLabel: Int,
+        @StringRes val neutralButtonLabel: Int? = null
+    ) : SiteNavigationAction()
     data class OpenQuickStartFullScreenDialog(
         val type: QuickStartTaskType,
         @StringRes val title: Int

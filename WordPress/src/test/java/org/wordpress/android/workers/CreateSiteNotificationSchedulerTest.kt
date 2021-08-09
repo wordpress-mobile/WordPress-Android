@@ -13,7 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.CREATE_SITE_NOTIFICATION_SCHEDULED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.workers.LocalNotification.Type.CREATE_SITE
 
 @RunWith(MockitoJUnitRunner::class)
@@ -23,13 +25,15 @@ class CreateSiteNotificationSchedulerTest {
     private val localNotificationScheduler: LocalNotificationScheduler = mock()
     private val createSiteNotificationHandler: CreateSiteNotificationHandler = mock()
     private val appsPrefs: AppPrefsWrapper = mock()
+    private val analyticsTracker: AnalyticsTrackerWrapper = mock()
 
     @Before
     fun setUp() {
         createSiteNotificationScheduler = CreateSiteNotificationScheduler(
                 localNotificationScheduler,
                 createSiteNotificationHandler,
-                appsPrefs
+                appsPrefs,
+                analyticsTracker
         )
     }
 
@@ -75,5 +79,15 @@ class CreateSiteNotificationSchedulerTest {
     fun `cancel calls LocalNotificationScheduler with correct type`() {
         createSiteNotificationScheduler.cancelCreateSiteNotification()
         verify(localNotificationScheduler).cancelScheduledNotification(argThat { this == CREATE_SITE })
+    }
+
+    @Test
+    fun `notification scheduled event is tracked after notifications are scheduled`() {
+        whenever(createSiteNotificationHandler.shouldShowNotification()).thenReturn(true)
+        whenever(appsPrefs.shouldScheduleCreateSiteNotification).thenReturn(true)
+
+        createSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded()
+
+        verify(analyticsTracker).track(CREATE_SITE_NOTIFICATION_SCHEDULED)
     }
 }
