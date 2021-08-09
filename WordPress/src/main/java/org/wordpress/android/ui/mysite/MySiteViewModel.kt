@@ -671,6 +671,10 @@ class MySiteViewModel
         }
     }
 
+    fun startQuickStart() {
+        // TODO: Start quick start.
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
