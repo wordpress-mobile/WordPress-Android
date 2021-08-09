@@ -92,8 +92,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
@@ -1063,7 +1062,14 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart(siteId)
 
-        assertThat(navigationActions).containsExactly(ShowQuickStartDialogNew)
+        assertThat(navigationActions).containsExactly(
+                ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
+                )
+        )
     }
 
     @Test
@@ -1089,7 +1095,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart(siteId)
 
-        assertThat(navigationActions).containsExactly(ShowQuickStartDialogOld)
+        assertThat(navigationActions).containsExactly(
+                ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_title,
+                        R.string.quick_start_dialog_need_help_message,
+                        R.string.quick_start_dialog_need_help_button_positive,
+                        R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                        R.string.quick_start_dialog_need_help_button_neutral
+                )
+        )
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?

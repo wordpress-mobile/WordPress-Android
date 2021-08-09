@@ -86,8 +86,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -637,10 +636,29 @@ class MySiteViewModel
     private fun showQuickStartDialog(siteModel: SiteModel?) {
         if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
             if (onboardingImprovementsFeatureConfig.isEnabled()) {
-                _onNavigation.postValue(Event(ShowQuickStartDialogNew))
+                _onNavigation.postValue(
+                        Event(
+                                ShowQuickStartDialog(
+                                        R.string.quick_start_dialog_need_help_manage_site_title,
+                                        R.string.quick_start_dialog_need_help_manage_site_message,
+                                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                                        R.string.quick_start_dialog_need_help_button_negative
+                                )
+                        )
+                )
             } else {
                 if (appPrefsWrapper.isQuickStartEnabled()) {
-                    _onNavigation.postValue(Event(ShowQuickStartDialogOld))
+                    _onNavigation.postValue(
+                            Event(
+                                    ShowQuickStartDialog(
+                                            R.string.quick_start_dialog_need_help_title,
+                                            R.string.quick_start_dialog_need_help_message,
+                                            R.string.quick_start_dialog_need_help_button_positive,
+                                            R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                                            R.string.quick_start_dialog_need_help_button_neutral
+                                    )
+                            )
+                    )
                 }
             }
         }

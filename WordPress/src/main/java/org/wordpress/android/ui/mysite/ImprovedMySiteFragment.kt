@@ -61,8 +61,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogNew
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialogOld
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
@@ -289,18 +288,12 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-        is ShowQuickStartDialogOld -> showQuickStartDialog(
-                R.string.quick_start_dialog_need_help_title,
-                R.string.quick_start_dialog_need_help_message,
-                R.string.quick_start_dialog_need_help_button_positive,
-                R.string.quick_start_dialog_need_help_manage_site_button_negative,
-                R.string.quick_start_dialog_need_help_button_neutral
-        )
-        is ShowQuickStartDialogNew -> showQuickStartDialog(
-                R.string.quick_start_dialog_need_help_manage_site_title,
-                R.string.quick_start_dialog_need_help_manage_site_message,
-                R.string.quick_start_dialog_need_help_manage_site_button_positive,
-                R.string.quick_start_dialog_need_help_button_negative
+        is ShowQuickStartDialog -> showQuickStartDialog(
+                action.title,
+                action.message,
+                action.positiveButtonLabel,
+                action.negativeButtonLabel,
+                action.neutralButtonLabel
         )
     }
 

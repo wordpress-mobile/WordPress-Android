@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.annotation.StringRes
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
@@ -50,6 +51,11 @@ sealed class SiteNavigationAction {
 
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
-    object ShowQuickStartDialogOld : SiteNavigationAction()
-    object ShowQuickStartDialogNew : SiteNavigationAction()
+    data class ShowQuickStartDialog(
+        @StringRes val title: Int,
+        @StringRes val message: Int,
+        @StringRes val positiveButtonLabel: Int,
+        @StringRes val negativeButtonLabel: Int,
+        @StringRes val neutralButtonLabel: Int? = null
+    ) : SiteNavigationAction()
 }
