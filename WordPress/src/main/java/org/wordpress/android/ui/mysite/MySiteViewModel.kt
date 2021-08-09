@@ -677,6 +677,10 @@ class MySiteViewModel
         selectedSiteRepository.getSelectedSite()?.id?.let { quickStartRepository.startQuickStart(it) }
     }
 
+    fun ignoreQuickStart() {
+        // TODO: Ignore quick start.
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
