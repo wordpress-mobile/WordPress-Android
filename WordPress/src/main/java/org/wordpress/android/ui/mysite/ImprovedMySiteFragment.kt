@@ -534,7 +534,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Negative Clicked", Toast.LENGTH_LONG).show()
+        viewModel.ignoreQuickStart()
     }
 
     override fun onNeutralClicked(instanceTag: String) {
