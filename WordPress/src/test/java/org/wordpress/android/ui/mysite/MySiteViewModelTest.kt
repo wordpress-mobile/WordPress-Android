@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
@@ -56,6 +57,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -85,6 +87,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -175,6 +178,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
 
     @InternalCoroutinesApi
     @Before
@@ -1002,6 +1006,28 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
+    }
+
+    @Test
+    fun `when quick start task type item is clicked, then quick start active task is cleared`() {
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
@@ -1154,7 +1180,26 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
-            whenever(quickStartBlockBuilder.build()).thenReturn(mock())
+            doAnswer {
+                quickStartTaskTypeItemClickAction = (it.getArgument(0) as (QuickStartTaskType) -> Unit)
+                QuickStartBlock(
+                        taskTypeItems = listOf(
+                                QuickStartTaskTypeItem(
+                                        quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
+                                        icon = 0,
+                                        iconEnabled = true,
+                                        title = UiStringText(""),
+                                        titleEnabled = true,
+                                        subtitle = UiStringText(""),
+                                        strikeThroughTitle = false,
+                                        onClick = ListItemInteraction.create(
+                                                QuickStartTaskType.CUSTOMIZE,
+                                                { quickStartTaskTypeItemClickAction }
+                                        )
+                                )
+                        )
+                )
+            }.whenever(quickStartBlockBuilder).build(any())
         } else {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }

@@ -30,6 +30,8 @@ class QuickStartBlockViewHolder(
         quickStartCustomizeTitle.paintFlags(item)
 
         quickStartCustomizeSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+
+        quickStartCustomize.setOnClickListener { item.onClick.click() }
     }
 
     private fun QuickStartBlockBinding.updateQuickStartGrowContainer(item: QuickStartTaskTypeItem) {
@@ -41,6 +43,8 @@ class QuickStartBlockViewHolder(
         quickStartGrowTitle.paintFlags(item)
 
         quickStartGrowSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+
+        quickStartGrow.setOnClickListener { item.onClick.click() }
     }
 
     private fun MaterialTextView.paintFlags(item: QuickStartTaskTypeItem) {

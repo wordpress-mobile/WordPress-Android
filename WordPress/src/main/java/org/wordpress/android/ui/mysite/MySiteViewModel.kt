@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -78,6 +79,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -257,7 +259,7 @@ class MySiteViewModel
 
             if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
                     quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
-                siteItems.add(quickStartBlockBuilder.build())
+                siteItems.add(quickStartBlockBuilder.build(this::onQuickStartTaskTypeItemClick))
             }
 
             siteItems.addAll(
@@ -346,6 +348,11 @@ class MySiteViewModel
 
     private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
         _onDynamicCardMenuShown.postValue(Event(model))
+    }
+
+    private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
+        clearActiveQuickStartTask()
+        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
     private fun onQuickStartTaskCardClick(task: QuickStartTask) {

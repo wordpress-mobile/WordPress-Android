@@ -23,6 +23,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.FullScreenDialogFragment
+import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -52,6 +54,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -73,6 +76,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -295,6 +299,16 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 action.negativeButtonLabel,
                 action.neutralButtonLabel
         )
+        is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+    }
+
+    private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
+        val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
+        Builder(requireContext())
+                .setTitle(action.title)
+                .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
+                .build()
+                .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
