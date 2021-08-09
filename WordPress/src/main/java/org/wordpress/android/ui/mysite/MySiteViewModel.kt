@@ -366,6 +366,10 @@ class MySiteViewModel
         quickStartRepository.setActiveTask(task)
     }
 
+    fun onQuickStartFullScreenDialogConfirm(task: QuickStartTask?) {
+        task?.let { onQuickStartTaskCardClick(it) }
+    }
+
     fun onQuickStartFullScreenDialogDismiss() {
         quickStartRepository.refresh()
     }

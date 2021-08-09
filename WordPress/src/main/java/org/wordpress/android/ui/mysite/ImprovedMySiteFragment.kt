@@ -22,9 +22,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
@@ -103,6 +105,7 @@ import javax.inject.Inject
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         TextInputDialogFragment.Callback,
         QuickStartPromptClickInterface,
+        OnConfirmListener,
         OnDismissListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
@@ -308,6 +311,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
                 .setTitle(action.title)
+                .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
                 .build()
@@ -542,6 +546,13 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onNeutralClicked(instanceTag: String) {
         Toast.makeText(context, "QS - Neutral Clicked", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onConfirm(result: Bundle?) {
+        if (result != null) {
+            val task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+            viewModel.onQuickStartFullScreenDialogConfirm(task)
+        }
     }
 
     override fun onDismiss() {
