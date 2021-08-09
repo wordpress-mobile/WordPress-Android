@@ -36,6 +36,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesDa
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.utils.getDefaultLikers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -57,6 +58,10 @@ class GetLikesUseCaseTest {
     private val defaultPageLenght = 20
     private val defaultLikesLimit = 5
     private val noLikesLimit = -1
+    private val pageInfo = PagingInfo(
+            20,
+            1
+    )
 
     @Before
     fun setup() {
@@ -162,7 +167,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.no_network_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -203,7 +209,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -244,7 +251,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -280,7 +288,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData,
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -316,7 +325,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData.take(defaultLikesLimit),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -359,7 +369,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.no_network_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -402,7 +413,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -445,7 +457,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -480,7 +493,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData,
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -515,7 +529,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData.take(defaultLikesLimit),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )

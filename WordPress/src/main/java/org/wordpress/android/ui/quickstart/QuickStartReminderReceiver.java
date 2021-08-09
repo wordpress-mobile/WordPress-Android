@@ -23,6 +23,7 @@ import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -50,10 +52,14 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .getSerializable(QuickStartTaskDetails.KEY);
 
         // Failsafes
-        if (quickStartTaskDetails == null || siteLocalId == -1 || AppPrefs.isQuickStartDisabled()
-            || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
-            || mQuickStartStore.getQuickStartCompleted(siteLocalId)
-            || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())) {
+        if (
+                quickStartTaskDetails == null
+                || siteLocalId == -1
+                || (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
+                || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
+                || mQuickStartStore.getQuickStartCompleted(siteLocalId)
+                || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())
+        ) {
             return;
         }
 

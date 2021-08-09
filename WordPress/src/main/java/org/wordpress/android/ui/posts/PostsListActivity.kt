@@ -166,12 +166,13 @@ class PostsListActivity : LocaleAwareActivity(),
             }
 
             val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
+            val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
 
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel(actionsShownByDefault)
+            initCreateMenuViewModel(tabIndex, actionsShownByDefault)
             loadIntentData(intent)
         }
     }
@@ -222,7 +223,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel(actionsShownByDefault: Boolean) {
+    private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
@@ -263,6 +264,9 @@ class PostsListActivity : LocaleAwareActivity(),
                 null -> Unit
             }
         })
+
+        // Notification opens in Drafts tab
+        tabLayout.getTabAt(tabIndex)?.select()
 
         postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
@@ -648,19 +652,30 @@ class PostsListActivity : LocaleAwareActivity(),
     companion object {
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
         private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
+        private const val TAB_INDEX = "tab_index"
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
-            return buildIntent(context, site, false)
+            return buildIntent(context, site, PostListType.PUBLISHED, false)
         }
 
         @JvmStatic
-        fun buildIntent(context: Context, site: SiteModel, actionsShownByDefault: Boolean): Intent {
+        fun buildIntent(
+            context: Context,
+            site: SiteModel,
+            postListType: PostListType,
+            actionsShownByDefault: Boolean,
+            notificationType: NotificationType? = null
+        ): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
             intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
+            intent.putExtra(TAB_INDEX, postListType.ordinal)
+            if (notificationType != null) {
+                intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+            }
             return intent
         }
     }

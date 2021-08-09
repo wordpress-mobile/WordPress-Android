@@ -18,6 +18,10 @@ class LoginEpilogueViewModel @Inject constructor(
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
 
+    fun onSiteClick(localId: Int) {
+        _navigationEvents.postValue(Event(LoginNavigationEvents.SelectSite(localId)))
+    }
+
     fun onContinue() {
         if (!siteStore.hasSite()) handleNoSitesFound() else handleSitesFound()
     }

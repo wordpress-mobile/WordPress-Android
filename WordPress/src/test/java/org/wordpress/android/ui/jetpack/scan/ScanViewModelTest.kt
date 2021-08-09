@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -80,7 +81,11 @@ class ScanViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: ScanViewModel
 
-    private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
+    private val fakeScanStateModel = ScanStateModel(
+            state = ScanStateModel.State.IDLE,
+            hasCloud = true,
+            reason = Reason.NO_REASON
+    )
     private val fakeUiStringText = UiStringText("")
     private val fakeDetectedAt = UiStringText("")
     private val fakeSubHeaderColor = 1
@@ -118,6 +123,8 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt())).thenReturn("")
     }
 
+    /* VM START */
+
     @Test
     fun `when vm starts, then app displays full screen loading scan state`() =
             test {
@@ -144,6 +151,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any())
             }
+
+    /* FETCH SCAN STATE */
 
     @Test
     fun `given no network, when scan state fetch not invoked by user, then app reaches no connection state`() = test {
@@ -244,7 +253,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
         val observers = init()
 
-        (observers.uiStates.last() as ErrorUiState).action.invoke()
+        (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
     }
@@ -256,7 +265,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
                 val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action.invoke()
+                (uiStates.last() as ErrorUiState).action?.invoke()
                 advanceTimeBy(RETRY_DELAY)
 
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
@@ -269,10 +278,38 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
                 val observers = init()
 
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
+
+    @Test
+    fun `given multisite, when scan state is fetched, then app reaches multisite not supported state`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.MultisiteNotSupported::class.java)
+            }
+
+    @Test
+    fun `given multisite not supported state, when scan state is fetched, then corresponding error ui is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.ic_baseline_security_white_24dp)
+                    assertThat(imageColorResId).isEqualTo(R.color.gray)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
+                }
+            }
+
+    /* THREAT ITEM */
 
     @Test
     fun `when threat item is clicked, then app navigates to threat details`() = test {
@@ -282,6 +319,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
+
+    /* START SCAN */
 
     @Test
     fun `when scan button is clicked, then start scan is triggered`() = test {
@@ -373,7 +412,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 (observers.uiStates.last() as ContentUiState)
                         .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
@@ -457,6 +496,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(threatsFoundMessage)))
             }
 
+    /* FIX THREAT */
+
     @Test
     fun `when fix all threats button is clicked, then fix threats confirmation dialog action is triggered`() =
             test {
@@ -517,6 +558,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg)
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
             }
+
+    /* FETCH FIX STATUS */
 
     @Test
     fun `given threats are fixed, when threats fix status is checked, then pluralised success message is shown`() =
@@ -618,42 +661,6 @@ class ScanViewModelTest : BaseUnitTest() {
                 triggerFixThreatsAction(observers)
 
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site = site)
-            }
-
-    @Test
-    fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
-            test {
-                whenever(site.siteId).thenReturn(1L)
-                viewModel.start(site)
-
-                viewModel.onFixStateRequested(threatId = 11L)
-
-                verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(
-                        remoteSiteId = 1L,
-                        fixableThreatIds = listOf(11L)
-                )
-            }
-
-    @Test
-    fun `given activity result request scan state data, when scan state is requested, then snackbar msg is shown`() =
-            test {
-                val observers = init()
-
-                viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
-
-                val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-                assertThat(snackBarMsg)
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
-            }
-
-    @Test
-    fun `given activity result request scan state data, when scan state is requested, then scan state is fetched`() =
-            test {
-                viewModel.start(site)
-
-                viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
-
-                verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
             }
 
     @Test
@@ -772,6 +779,44 @@ class ScanViewModelTest : BaseUnitTest() {
 
         assertThat(observers.uiStates.filterIsInstance(ContentUiState::class.java)).isEmpty()
     }
+
+    /* ACTIVITY RESULT */
+
+    @Test
+    fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
+            test {
+                whenever(site.siteId).thenReturn(1L)
+                viewModel.start(site)
+
+                viewModel.onFixStateRequested(threatId = 11L)
+
+                verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(
+                        remoteSiteId = 1L,
+                        fixableThreatIds = listOf(11L)
+                )
+            }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then snackbar msg is shown`() =
+            test {
+                val observers = init()
+
+                viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+                val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+                assertThat(snackBarMsg)
+                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
+            }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then scan state is fetched`() =
+            test {
+                viewModel.start(site)
+
+                viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+                verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+            }
 
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as ContentUiState)

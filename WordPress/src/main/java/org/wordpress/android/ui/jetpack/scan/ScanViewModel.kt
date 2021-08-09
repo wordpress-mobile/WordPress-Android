@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -129,6 +130,9 @@ class ScanViewModel @Inject constructor(
                                     }
                                     ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
                         }
+
+                        is FetchScanState.Failure.MultisiteNotSupported ->
+                            updateUiState(ErrorUiState.MultisiteNotSupported)
 
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
@@ -354,10 +358,11 @@ class ScanViewModel @Inject constructor(
 
         sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val image: Int
+            open val imageColorResId: Int? = null
             abstract val title: UiString
             abstract val subtitle: UiString
-            abstract val buttonText: UiString
-            abstract val action: (() -> Unit)
+            open val buttonText: UiString? = null
+            open val action: (() -> Unit)? = null
 
             data class NoConnection(override val action: () -> Unit) : ErrorUiState() {
                 @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
@@ -378,6 +383,13 @@ class ScanViewModel @Inject constructor(
                 override val title = UiStringRes(R.string.scan_start_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
+            }
+
+            object MultisiteNotSupported : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.ic_baseline_security_white_24dp
+                @ColorRes override val imageColorResId = R.color.gray
+                override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
+                override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
             }
         }
     }
