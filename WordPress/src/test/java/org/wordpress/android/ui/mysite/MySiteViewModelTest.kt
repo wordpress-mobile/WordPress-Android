@@ -1050,43 +1050,43 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given QS dynamic cards cards feature is on, when start quick start is triggered, then QS starts`() {
+    fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         verify(quickStartRepository).startQuickStart(siteId)
     }
 
     @Test
-    fun `given no selected site, when start quick start is triggered, then QSP is not shown`() {
+    fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is not available for the site, when start quick start is triggered, then QSP is not shown`() {
+    fun `given QS is not available for the site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given onboarding improvements feature is on, when start quick start is triggered, then new QSP is shown`() {
+    fun `given onboarding improvements feature is on, when check and start QS is triggered, then new QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(
@@ -1099,27 +1099,27 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given QS is disabled, when start quick start is triggered, then old QSP is not shown`() {
+    fun `given QS is disabled, when check and start QS is triggered, then old QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is enabled, when start quick start is triggered, then old QSP is shown`() {
+    fun `given QS is enabled, when check and start QS is triggered, then old QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(

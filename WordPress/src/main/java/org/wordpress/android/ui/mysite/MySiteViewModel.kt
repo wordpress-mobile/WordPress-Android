@@ -613,7 +613,7 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart(newSiteLocalID: Int) {
+    fun checkAndStartQuickStart(newSiteLocalID: Int) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartRepository.startQuickStart(newSiteLocalID)
         } else {
