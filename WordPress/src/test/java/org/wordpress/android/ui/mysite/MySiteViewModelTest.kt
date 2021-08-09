@@ -1043,7 +1043,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given QS is not available for the site, when quick start start is triggered, then QSP is not shown`() {
+    fun `given QS is not available for the site, when start quick start is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
@@ -1054,7 +1054,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given onboarding improvements feature is on, when quick start start is triggered, then new QSP is shown`() {
+    fun `given onboarding improvements feature is on, when start quick start is triggered, then new QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
