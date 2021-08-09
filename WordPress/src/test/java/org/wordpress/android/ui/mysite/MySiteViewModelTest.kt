@@ -1199,7 +1199,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 )
                         )
                 )
-            }.whenever(quickStartBlockBuilder).build(any())
+            }.whenever(quickStartBlockBuilder).build(any(), any())
         } else {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }
