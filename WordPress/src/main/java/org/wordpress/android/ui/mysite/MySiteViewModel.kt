@@ -682,6 +682,10 @@ class MySiteViewModel
         analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
+    fun disableQuickStart() {
+        // TODO: Disable quick start.
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State

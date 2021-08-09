@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMP
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
@@ -1155,6 +1157,34 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.ignoreQuickStart()
 
         verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    @Test
+    fun `given onboarding improvements feature is on, when disable QS is triggered, then do nothing`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.disableQuickStart()
+
+        verifyZeroInteractions(analyticsTrackerWrapper)
+        verifyZeroInteractions(appPrefsWrapper)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then QS request dialog neutral tapped is tracked`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then disable QS`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(appPrefsWrapper).setQuickStartDisabled(true)
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
