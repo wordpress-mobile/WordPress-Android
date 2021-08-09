@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtils
@@ -34,6 +36,9 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
+import org.wordpress.android.workers.weeklystatsroundup.WeeklyStatsRoundupNotificationManager
+import java.time.DayOfWeek.MONDAY
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,6 +52,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartRepository: QuickStartRepository,
+    private val weeklyStatsRoundupNotificationManager: WeeklyStatsRoundupNotificationManager,
+    private val statsSiteProvider: StatsSiteProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -113,6 +120,8 @@ class WPMainActivityViewModel @Inject constructor(
         loadMainActions(site)
 
         updateFeatureAnnouncements()
+
+        scheduleWeeklyStatsRoundup()
     }
 
     private fun loadMainActions(site: SiteModel?) {
@@ -301,6 +310,17 @@ class WPMainActivityViewModel @Inject constructor(
     private fun updateFeatureAnnouncements() {
         launch {
             featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
+        }
+    }
+
+    private fun scheduleWeeklyStatsRoundup() {
+        launch {
+            weeklyStatsRoundupNotificationManager.scheduleNotificationIfNeeded(
+                    137210602, // 189860817 // 195922409 // 195052094 // 154148478 // 137210602
+                    WeeklyReminder(setOf(MONDAY)),
+                    WEEKS,
+                    statsSiteProvider
+            )
         }
     }
 
