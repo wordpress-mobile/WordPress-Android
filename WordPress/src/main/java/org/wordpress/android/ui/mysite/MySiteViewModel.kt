@@ -366,6 +366,10 @@ class MySiteViewModel
         quickStartRepository.setActiveTask(task)
     }
 
+    fun onQuickStartFullScreenDialogDismiss() {
+        quickStartRepository.refresh()
+    }
+
     private fun titleClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         if (!networkUtilsWrapper.isNetworkAvailable()) {
