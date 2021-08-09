@@ -348,7 +348,7 @@ class MySiteViewModel
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
-        quickStartRepository.clearActiveTask()
+        clearActiveQuickStartTask()
         _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
