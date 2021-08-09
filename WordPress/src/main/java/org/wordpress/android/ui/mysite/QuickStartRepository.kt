@@ -37,6 +37,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -59,7 +60,8 @@ class QuickStartRepository
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
     private val htmlCompat: HtmlCompatWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -93,7 +95,8 @@ class QuickStartRepository
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }.onEach { taskType ->
+            val quickStartTaskTypes = getQuickStartTaskTypes(siteId)
+            quickStartTaskTypes.onEach { taskType ->
                 if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
                     onCategoryCompleted(siteId, taskType)
                 }
@@ -106,6 +109,14 @@ class QuickStartRepository
                 listOf()
             }
             QuickStartUpdate(activeTask, categories)
+        }
+    }
+
+    private suspend fun getQuickStartTaskTypes(siteId: Int): List<QuickStartTaskType> {
+        return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }
+        } else {
+            listOf(CUSTOMIZE, GROW)
         }
     }
 
@@ -183,7 +194,9 @@ class QuickStartRepository
     private suspend fun onCategoryCompleted(siteId: Int, categoryType: QuickStartTaskType) {
         val completionMessage = getCategoryCompletionMessage(categoryType)
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
-        dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
+        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
+        }
     }
 
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {

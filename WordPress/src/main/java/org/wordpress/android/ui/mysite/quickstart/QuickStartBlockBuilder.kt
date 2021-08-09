@@ -1,39 +1,36 @@
 package org.wordpress.android.ui.mysite.quickstart
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
-class QuickStartBlockBuilder
-@Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val quickStartStore: QuickStartStore
-) {
-    fun build(onItemClick: (QuickStartTaskType) -> Unit): QuickStartBlock {
-        val localSiteId = appPrefsWrapper.getSelectedSite().toLong()
-
+class QuickStartBlockBuilder @Inject constructor() {
+    fun build(
+        categories: List<QuickStartCategory>,
+        onItemClick: (QuickStartTaskType) -> Unit
+    ): QuickStartBlock {
         val taskTypeItems = mutableListOf<QuickStartTaskTypeItem>()
-        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.CUSTOMIZE, onItemClick))
-        taskTypeItems.add(buildQuickStartTaskTypeItem(localSiteId, QuickStartTaskType.GROW, onItemClick))
+        categories.forEach { category ->
+            taskTypeItems.add(buildQuickStartTaskTypeItem(category, onItemClick))
+        }
 
         return QuickStartBlock(taskTypeItems = taskTypeItems)
     }
 
     private fun buildQuickStartTaskTypeItem(
-        localSiteId: Long,
-        quickStartTaskType: QuickStartTaskType,
+        category: QuickStartCategory,
         onItemClick: (QuickStartTaskType) -> Unit
     ): QuickStartTaskTypeItem {
-        val countCompleted = quickStartStore.getCompletedTasksByType(localSiteId, quickStartTaskType).size
-        val countUncompleted = quickStartStore.getUncompletedTasksByType(localSiteId, quickStartTaskType).size
+        val quickStartTaskType = category.taskType
+        val countCompleted = category.completedTasks.size
+        val countUncompleted = category.uncompletedTasks.size
 
         return QuickStartTaskTypeItem(
                 quickStartTaskType = quickStartTaskType,
