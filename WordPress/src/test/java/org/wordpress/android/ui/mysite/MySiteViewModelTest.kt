@@ -1030,6 +1030,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        viewModel.onQuickStartFullScreenDialogDismiss()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
