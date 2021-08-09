@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
@@ -538,6 +537,6 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onNeutralClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Neutral Clicked", Toast.LENGTH_LONG).show()
+        viewModel.disableQuickStart()
     }
 }

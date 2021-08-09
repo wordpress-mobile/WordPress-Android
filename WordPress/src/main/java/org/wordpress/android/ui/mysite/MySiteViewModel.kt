@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
@@ -683,7 +684,10 @@ class MySiteViewModel
     }
 
     fun disableQuickStart() {
-        // TODO: Disable quick start.
+        if (!onboardingImprovementsFeatureConfig.isEnabled()) {
+            analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
+            appPrefsWrapper.setQuickStartDisabled(true)
+        }
     }
 
     data class UiModel(
