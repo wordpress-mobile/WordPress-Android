@@ -1041,6 +1041,18 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
+        val task = QuickStartTask.VIEW_SITE
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        viewModel.onQuickStartFullScreenDialogConfirm(task)
+
+        verify(quickStartRepository).setActiveTask(task)
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
