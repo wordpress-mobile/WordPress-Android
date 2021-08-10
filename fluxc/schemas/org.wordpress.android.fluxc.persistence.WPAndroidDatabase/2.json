@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "6b3700fe5a894125074141436079c009",
+    "identityHash": "b096a48b9e2f42699f423e61fe4eb9ae",
     "entities": [
       {
         "tableName": "BloggingReminders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localSiteId` INTEGER NOT NULL, `monday` INTEGER NOT NULL, `tuesday` INTEGER NOT NULL, `wednesday` INTEGER NOT NULL, `thursday` INTEGER NOT NULL, `friday` INTEGER NOT NULL, `saturday` INTEGER NOT NULL, `sunday` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, PRIMARY KEY(`localSiteId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localSiteId` INTEGER NOT NULL, `monday` INTEGER NOT NULL, `tuesday` INTEGER NOT NULL, `wednesday` INTEGER NOT NULL, `thursday` INTEGER NOT NULL, `friday` INTEGER NOT NULL, `saturday` INTEGER NOT NULL, `sunday` INTEGER NOT NULL, PRIMARY KEY(`localSiteId`))",
         "fields": [
           {
             "fieldPath": "localSiteId",
@@ -53,18 +53,6 @@
           {
             "fieldPath": "sunday",
             "columnName": "sunday",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hour",
-            "columnName": "hour",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "minute",
-            "columnName": "minute",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -247,7 +235,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6b3700fe5a894125074141436079c009')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b096a48b9e2f42699f423e61fe4eb9ae')"
     ]
   }
 }
