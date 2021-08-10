@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalse;
 import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalseDeserializer;
 
 import java.io.File;
+import java.net.CookieHandler;
 import java.net.CookieManager;
 
 import javax.inject.Named;
@@ -83,10 +84,22 @@ public class ReleaseNetworkModule {
         return new MemorizingTrustManager();
     }
 
+    /**
+     * This sets a {@link CookieManager} as the system-wide {@link CookieHandler} and exposes it to the Dagger graph,
+     * allowing it to be shared with {@link OkHttpClient} via its {@link CookieJar}.
+     */
     @Provides
     @Singleton
-    public CookieJar provideCookieJar() {
-        return new JavaNetCookieJar(new CookieManager());
+    public CookieManager provideCookieManager() {
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+        return cookieManager;
+    }
+
+    @Provides
+    @Singleton
+    public CookieJar provideCookieJar(CookieManager cookieManager) {
+        return new JavaNetCookieJar(cookieManager);
     }
 
     @Singleton
