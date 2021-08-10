@@ -110,13 +110,25 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given same type tasks done, when refresh started, then completion message shown `() = test {
-        initStore()
+    fun `given dynamic card enabled + same type tasks done, when refresh started, then completion msg shown`() =
+            test {
+                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+                initStore()
 
-        triggerQSRefreshAfterSameTypeTasksAreComplete()
+                triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
-    }
+                assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
+            }
+
+    @Test
+    fun `given dynamic card disabled + same type tasks done, when refresh started, then completion msg not shown`() =
+            test {
+                initStore()
+
+                triggerQSRefreshAfterSameTypeTasksAreComplete()
+
+                assertThat(snackbars).doesNotContain(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
+            }
 
     @Test
     fun `given dynamic card enabled + same type tasks done, when refresh started, then dynamic card removed`() = test {

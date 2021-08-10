@@ -192,9 +192,9 @@ class QuickStartRepository
     }
 
     private suspend fun onCategoryCompleted(siteId: Int, categoryType: QuickStartTaskType) {
-        val completionMessage = getCategoryCompletionMessage(categoryType)
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            val completionMessage = getCategoryCompletionMessage(categoryType)
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
             dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
         }
     }
