@@ -2100,6 +2100,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_epilogue_choose_site_tapped";
             case LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED:
                 return "login_epilogue_create_new_site_tapped";
+            case CREATE_SITE_NOTIFICATION_SCHEDULED:
+                return "create_site_notification_scheduled";
         }
         return null;
     }

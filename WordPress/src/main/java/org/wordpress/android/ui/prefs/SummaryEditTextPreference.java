@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.text.TextUtils;
@@ -167,11 +166,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) message.getLayoutParams();
         int leftMargin = 0;
         int bottomMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_small);
-        // Different versions handle the message view's margin differently
-        // This is a small hack to try to make it align with the input for earlier versions
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
-            leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_small);
-        }
         layoutParams.setMargins(0, layoutParams.topMargin, 0, bottomMargin);
         MarginLayoutParamsCompat.setMarginStart(layoutParams, leftMargin);
         MarginLayoutParamsCompat.setMarginEnd(layoutParams, layoutParams.rightMargin);

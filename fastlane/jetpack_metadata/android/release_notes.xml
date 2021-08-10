@@ -1,79 +1,135 @@
 <en-US>
-We added color/background customization for text blocks.
-It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
+With the new Embed block, embed content from supported services like YouTube or Instagram.
+
+Don’t have a site yet? You’ll see notifications that prompt you to create one.
+
+Other updates include improvements to the Blogging Reminders feature and tweaks in the Stats and Media sections of your app.
 </en-US>
+<ar>
+17.9:
+بفضل مكوِّن التضمين الجديد، يمكنك تضمين محتوى من الخدمات المدعومة، مثل يوتيوب وإنستغرام.
+
+أليس لديك موقع بعد؟ سترى تنبيهًا يطالبك بإنشاء واحد.
+
+تتضمن التحديثات الأخرى تحسينات على ميزة تذكيرات التدوين والتعديلات في أقسام الإحصاءات والوسائط من تطبيقك.
+</ar>
 <de-DE>
-17.8:
-Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
-Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
+17.9:
+Mit dem neuen Embed-Block kannst du Inhalte aus unterstützten Diensten wie YouTube oder Instagram einbetten. 
+
+Du hast noch keine Website? Du wirst über Benachrichtigungen zur Erstellung einer Website aufgefordert.
+
+Außerdem haben wir das Feature für Blog-Erinnerungen verbessert und in den Abschnitten „Statistiken“ und „Medien“ deiner App Änderungen vorgenommen.
 </de-DE>
 <es-ES>
-17.8:
-Hemos añadido la personalización del color y del fondo para los bloques de texto.
-No se podían editar los bloques no compatibles con cuentas que se hubiesen creado antes de diciembre del 2018. ¡Ya lo hemos arreglado! Durante el proceso, también hemos actualizado las pantallas de carga y de error en el editor de bloques no compatibles.
+17.9:
+Con el nuevo bloque de incrustación, incrusta contenido de servicios compatibles, como YouTube o Instagram.
+
+¿Aún no tienes un sitio? Verás avisos que te invitan a crear uno.
+
+Otras actualizaciones incluyen mejoras en la característica de recordatorios de blogueo, retoques en las secciones de estadísticas y de medios de tu aplicación.
 </es-ES>
 <fr-FR>
-17.8:
-Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
-Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+17.9 :
+Grâce au nouveau bloc de contenu embarqué, intégrez des contenus issus de services pris en charges, tels que YouTube ou Instagram.
+
+Vous n’avez pas encore de site ? Des notifications vous inviteront à en créer un.
+
+Les autres mises à jour comprennent des améliorations de la fonctionnalité Rappels de blog ainsi que des ajustements apportés aux sections Statistiques et Médias de votre application.
 </fr-FR>
 <iw-IL>
-17.8:
-הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
-לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
+17.9:
+בעזרת בלוק 'הטמעה' החדש, ניתן להטמיע תוכן משירותים נתמכים כמו YouTube או אינסטגרם.
+
+עדיין אין לך חשבון באתר? ניתן לראות הודעות שמנחות אותך ליצור חשבון.
+
+עדכונים אחרים כוללים שיפורים באפשרות 'תזכורת לכתיבת בלוג' ותיקונים קלים במקטעים 'נתונים סטטיסטיים' ו'מדיה' של האפליקציה שלך.
 </iw-IL>
 <id>
-17.8:
-Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
-Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
+17.9:
+Sematkan konten dari layanan yang didukung seperti YouTube atau Instagram menggunakan blok Sematan yang baru.
+
+Belum punya situs? Anda akan melihat notifikasi yang mengarahkan Anda untuk membuat situs.
+
+Pembaruan lainnya mencakup peningkatan fitur Pengingat Blogging serta penyesuaian pada bagian Statistik dan Media di aplikasi Anda.
 </id>
 <it-IT>
-17.8:
-Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
-Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
+17.9:
+Con il nuovo blocco Incorporamenti, puoi incorporare contenuti dai servizi supportati, come YouTube o Instagram.
+
+Non hai ancora un sito? Visualizzerai delle notifiche che ti invitano a crearne uno.
+
+Tra gli altri aggiornamenti, sono inclusi la funzionalità Promemoria relativi al blog e correzioni delle sezioni Statistiche e Media dell'app.
 </it-IT>
 <ja-JP>
-17.8:
-テキストブロックに色や背景のカスタマイズ機能を追加しました。
-2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
+17.9:
+新しい埋め込みブロックを使用すると、YouTube や Instagram などの対応サービスからコンテンツを埋め込むことができます。
+
+サイトがまだない場合は、 サイトの作成を促す通知が表示されます。
+
+その他のアップデートとして、ブログ投稿のリマインダー機能が改善されたほか、アプリの「統計情報」セクションと「メディア」セクションが調整されました。
 </ja-JP>
 <ko-KR>
-17.8:
-텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
-2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
+17.9:
+지원되는 서비스(예: YouTube 또는 Instagram)에서 새로운 임베드 블록으로 콘텐츠를 임베드하세요.
+
+아직 사이트가 없나요? 하나를 생성하라는 알림이 표시됩니다.
+
+기타 업데이트에는 블로깅 알림 개선, 앱의 통계와 미디어 섹션 조정이 포함되어 있습니다.
 </ko-KR>
 <nl-NL>
-17.8:
-We hebben aanpassing van kleur/achtergrond toegevoegd aan tekstblokken.
-Het was niet mogelijk om niet-ondersteunde blokken te bewerken met accounts die voor december 2018 waren aangemaakt. Dat is nu verholpen! Daarnaast hebben we de schermen Laden/Mislukt bijgewerkt voor de editor van niet-ondersteunde blokken.
+17.9:
+Sluit content van ondersteunde diensten als YouTube en Instagram in met het nieuwe Insluitblok.
+
+Heb je nog geen site? Dan wordt je gevraagd er een aan te maken.
+
+Andere updates omvatten verbeteringen aan de functie Blog-herinneringen en kleine verbeteringen van de gedeeltes Statistieken en Media op je app.
 </nl-NL>
 <pt-BR>
-17.8:
-Adicionamos personalização de plano de fundo/cor para blocos de texto.
-Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
+17.9:
+Com o novo bloco de mídia incorporada, você insere conteúdos de serviços compatíveis, como YouTube e Instagram.
+
+Ainda não tem um site? Você receberá notificações para criar um.
+
+As outras novidades incluem melhorias nos lembretes de publicação no blog e correções nas seções de estatísticas e mídias do aplicativo.
 </pt-BR>
 <ru-RU>
-17.8:
-Добавлена возможность настраивать цвет и фон параграфов.
-Неподдерживаемые блоки невозможно было редактировать в учётных записях, созданных до декабря 2018 года. Мы это исправили! Кроме того, мы обновили экраны загрузки и сбоя для редактора неподдерживаемых блоков.
+17.9:
+Новый блок "Вставка" позволяет вставлять содержимое из поддерживаемых служб, например YouTube или Instagram.
+
+Ещё нет сайта? Вы увидите уведомления, предлагающие вам создать сайт.
+
+Другие обновления позволяют усовершенствовать функцию "Советы по ведению блога", а также включают новые возможности в разделах "Статистика" и "Медиафайлы" вашего приложения.
 </ru-RU>
 <sv-SE>
-17.8:
-Vi har lagt till färg-/bakgrundsanpassning för textblock.
-Tidigare var det inte möjligt att redigera ostödda block med konton skapade före december 2018. Vi har åtgärdat det! Vi har dessutom uppdaterat hämtar-/misslyckades-skärmarna för den ostödda blockredigeraren.
+17.9:
+Med det nya inbäddningsblocket kan du bädda in innehåll från tjänster som YouTube eller Instagram.
+
+Har du inte någon webbplats än? Du kommer att få notiser som uppmanar dig att skapa en.
+
+Andra uppdateringar inkluderar förbättringar av funktionen Bloggningspåminnelser och av sektionerna Statistik och Media i din app.
 </sv-SE>
 <tr-TR>
-17,8:
-Metin blokları için renk/arkaplan özelleştirmeleri ekledik.
-Desteklenmeyen blokların Aralık 2018'den önce oluşturulmuş hesaplar tarafından düzenlenmeleri eskiden mümkün değildi. Bunu düzelttik! Bununla birlikte, desteklenmeyen blok düzenleyicinin yükleme/hata ekranlarını da güncelledik.
+17.9:
+Yeni Gömme bloku ile, YouTube veya Instagram gibi desteklenen hizmetlerden içerik gömün.
+
+Henüz bir siteniz yok mu? Bir site oluşturmanızı isteyen bildirimler göreceksiniz.
+
+Diğer güncellemeler, Blog Hatırlatıcıları özelliğindeki iyileştirmeleri ve uygulamanızın İstatistikler ve Medya bölümlerindeki ince ayarları içerir.
 </tr-TR>
 <zh-CN>
-17.8:
-我们为文本块添加了颜色/背景定制功能。
-之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
+17.9：
+借助新的嵌入区块，嵌入来自 YouTube 或 Instagram 等受支持服务的内容。
+
+还没有站点？ 您会看到提示您创建站点的通知。
+
+其他更新包括对“博客发布提醒”功能的改进以及对应用程序中“统计”和“媒体”部分的调整。
 </zh-CN>
 <zh-TW>
-17.8:
-我們為文字區塊新增了色彩/背景自訂功能。
-2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
+17.9：
+全新的嵌入內容區塊可從支援服務嵌入內容，例如 YouTube 或 Instagram。
+
+還沒有網站嗎？ 你會看到提示你建立網站的通知。
+
+其他更新內容包括改善「網誌提醒」功能，以及調整應用程式的「統計資料和媒體」區段。
 </zh-TW>
