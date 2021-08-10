@@ -3,7 +3,7 @@ plugins {
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.android.extensions"
     id "org.jetbrains.kotlin.kapt"
-    id "com.github.dcendents.android-maven"
+    id "com.automattic.android.publish-to-s3"
 }
 
 android {
@@ -12,8 +12,6 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        versionCode 4
-        versionName "0.1"
         minSdkVersion 18
         targetSdkVersion 29
         javaCompileOptions {
@@ -76,8 +74,8 @@ dependencies {
     kapt "org.wordpress:wellsql-processor:$wellSqlVersion"
 
     // FluxC annotations
-    api project(':fluxc-annotations')
-    kapt project(':fluxc-processor')
+    api fluxcAnnotationsProjectDependency
+    kapt fluxcProcessorProjectDependency
 
     // External libs
     api 'org.greenrobot:eventbus:3.2.0'
@@ -105,5 +103,21 @@ dependencies {
     api "net.java.dev.jna:jna:5.5.0@aar"
 }
 
-version = android.defaultConfig.versionName
-group = "org.wordpress"
+project.afterEvaluate {
+    publishing {
+        publications {
+            FluxCPublication(MavenPublication) {
+                from components.release
+
+                groupId "org.wordpress"
+                artifactId "fluxc"
+                // version is set by 'publish-to-s3' plugin
+            }
+        }
+   }
+}
+
+publishToS3Plugin {
+    mavenPublishGroupId "org.wordpress"
+    mavenPublishArtifactId "fluxc"
+}
