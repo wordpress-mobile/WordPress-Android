@@ -129,6 +129,29 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given dynamic card disabled + same type tasks done, when refresh started, then dynamic card not removed`() =
+            test {
+                initStore()
+
+                triggerQSRefreshAfterSameTypeTasksAreComplete()
+
+                verify(dynamicCardStore, never()).removeCard(siteId, GROW_QUICK_START)
+            }
+
+    @Test
+    fun `given dynamic card disabled + same type tasks done, when refresh started, then both task types exists`() =
+            test {
+                whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+                initStore()
+
+                triggerQSRefreshAfterSameTypeTasksAreComplete()
+                var result: QuickStartUpdate? = null
+                quickStartRepository.buildSource(testScope(), siteId).observeForever { result = it }
+
+                assertThat(result?.categories?.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
+            }
+
+    @Test
     fun `refresh does not show completion message if not all tasks of a same type have been completed`() = test {
         initStore()
 
