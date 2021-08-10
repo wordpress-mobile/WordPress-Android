@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -55,7 +56,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.ListItemAction.UNIFIED_COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
@@ -79,6 +79,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -87,6 +88,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -94,6 +96,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -101,6 +104,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -108,10 +112,13 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -145,10 +152,15 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
+    private val quickStartBlockBuilder: QuickStartBlockBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
+    private val onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig,
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -233,15 +245,23 @@ class MySiteViewModel
                 // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
                 // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
                 // current solution is good enough for a few sources.
-                list.addAll(quickStartCategories.map { category ->
-                    quickStartItemBuilder.build(
-                            category,
-                            pinnedDynamicCard,
-                            this::onDynamicCardMoreClick,
-                            this::onQuickStartTaskCardClick
-                    )
-                })
+                if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                    list.addAll(quickStartCategories.map { category ->
+                        quickStartItemBuilder.build(
+                                category,
+                                pinnedDynamicCard,
+                                this::onDynamicCardMoreClick,
+                                this::onQuickStartTaskCardClick
+                        )
+                    })
+                }
             }.associateBy { it.dynamicCardType }
+
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
+                    quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
+                siteItems.add(quickStartBlockBuilder.build(this::onQuickStartTaskTypeItemClick))
+            }
+
             siteItems.addAll(
                     visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
             )
@@ -254,8 +274,7 @@ class MySiteViewModel
                             scanAvailable,
                             activeTask == QuickStartTask.VIEW_SITE,
                             activeTask == ENABLE_POST_SHARING,
-                            activeTask == EXPLORE_PLANS,
-                            unifiedCommentsListFeatureConfig.isEnabled()
+                            activeTask == EXPLORE_PLANS
                     )
             )
             scrollToQuickStartTaskIfNecessary(
@@ -310,8 +329,13 @@ class MySiteViewModel
                     getStatsNavigationActionForSite(site)
                 }
                 MEDIA -> OpenMedia(site)
-                COMMENTS -> OpenComments(site)
-                UNIFIED_COMMENTS -> OpenUnifiedComments(site)
+                COMMENTS -> {
+                    if (unifiedCommentsListFeatureConfig.isEnabled()) {
+                        OpenUnifiedComments(site)
+                    } else {
+                        OpenComments(site)
+                    }
+                }
                 VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     OpenSite(site)
@@ -324,6 +348,11 @@ class MySiteViewModel
 
     private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
         _onDynamicCardMenuShown.postValue(Event(model))
+    }
+
+    private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
+        clearActiveQuickStartTask()
+        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
     private fun onQuickStartTaskCardClick(task: QuickStartTask) {
@@ -585,7 +614,11 @@ class MySiteViewModel
     }
 
     fun startQuickStart(newSiteLocalID: Int) {
-        quickStartRepository.startQuickStart(newSiteLocalID)
+        if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            quickStartRepository.startQuickStart(newSiteLocalID)
+        } else {
+            showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        }
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
@@ -602,6 +635,37 @@ class MySiteViewModel
                     analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
                     dynamicCardsSource.hideItem(interaction.cardType)
                     quickStartRepository.refresh()
+                }
+            }
+        }
+    }
+
+    private fun showQuickStartDialog(siteModel: SiteModel?) {
+        if (siteModel != null && quickStartUtilsWrapper.isQuickStartAvailableForTheSite(siteModel)) {
+            if (onboardingImprovementsFeatureConfig.isEnabled()) {
+                _onNavigation.postValue(
+                        Event(
+                                ShowQuickStartDialog(
+                                        R.string.quick_start_dialog_need_help_manage_site_title,
+                                        R.string.quick_start_dialog_need_help_manage_site_message,
+                                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                                        R.string.quick_start_dialog_need_help_button_negative
+                                )
+                        )
+                )
+            } else {
+                if (appPrefsWrapper.isQuickStartEnabled()) {
+                    _onNavigation.postValue(
+                            Event(
+                                    ShowQuickStartDialog(
+                                            R.string.quick_start_dialog_need_help_title,
+                                            R.string.quick_start_dialog_need_help_message,
+                                            R.string.quick_start_dialog_need_help_button_positive,
+                                            R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                                            R.string.quick_start_dialog_need_help_button_neutral
+                                    )
+                            )
+                    )
                 }
             }
         }
