@@ -47,6 +47,8 @@ import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
+private const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
+
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtils: QuickStartUtilsWrapper
@@ -108,22 +110,20 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `refresh shows completion message and removes card if all tasks of a same type have been completed`() = test {
+    fun `given same type tasks done, when refresh started, then completion message shown `() = test {
         initStore()
 
-        val completionMessage = "All tasks completed!"
+        triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
-        whenever(resourceProvider.getString(any())).thenReturn(completionMessage)
-        whenever(htmlCompat.fromHtml(completionMessage)).thenReturn(completionMessage)
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
+    }
 
-        val task = PUBLISH_POST
-        quickStartRepository.setActiveTask(task)
-        quickStartRepository.completeTask(task)
-        quickStartRepository.refresh()
+    @Test
+    fun `given dynamic card enabled + same type tasks done, when refresh started, then dynamic card removed`() = test {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+        initStore()
 
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(completionMessage)))
+        triggerQSRefreshAfterSameTypeTasksAreComplete()
 
         verify(dynamicCardStore).removeCard(siteId, GROW_QUICK_START)
     }
@@ -281,6 +281,18 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.buildSource(testScope(), updatedSiteId)
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
+    }
+
+    private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
+        whenever(resourceProvider.getString(any())).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
+        whenever(htmlCompat.fromHtml(ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
+
+        val task = PUBLISH_POST
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.completeTask(task)
+        quickStartRepository.refresh()
     }
 
     private suspend fun initQuickStartInProgress() {
