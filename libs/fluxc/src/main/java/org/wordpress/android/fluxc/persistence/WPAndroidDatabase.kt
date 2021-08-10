@@ -118,20 +118,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
-                    execSQL(
-                            "CREATE TABLE IF NOT EXISTS `BloggingReminders` (" +
-                                    "`localSiteId` INTEGER NOT NULL, " +
-                                    "`monday` INTEGER NOT NULL, " +
-                                    "`tuesday` INTEGER NOT NULL, " +
-                                    "`wednesday` INTEGER NOT NULL, " +
-                                    "`thursday` INTEGER NOT NULL, " +
-                                    "`friday` INTEGER NOT NULL, " +
-                                    "`saturday` INTEGER NOT NULL, " +
-                                    "`sunday` INTEGER NOT NULL, " +
-                                    "`hour` INTEGER NOT NULL, " +
-                                    "`minute` INTEGER NOT NULL, " +
-                                    "PRIMARY KEY(`localSiteId`))"
-                    )
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN hour INTEGER DEFAULT 10 NOT NULL")
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN minute INTEGER DEFAULT 0 NOT NULL")
                 }
             }
         }
