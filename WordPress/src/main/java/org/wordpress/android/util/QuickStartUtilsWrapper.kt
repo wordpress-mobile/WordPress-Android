@@ -30,6 +30,10 @@ class QuickStartUtilsWrapper
         return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteId)
     }
 
+    fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
+        return QuickStartUtils.isQuickStartAvailableForTheSite(siteModel)
+    }
+
     @JvmOverloads
     fun stylizeQuickStartPrompt(
         activityContext: Context,

@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-14 11:32:11+0000
+Translation-Revision-Date: 2021-08-03 10:40:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Krijoje sajtin</string>
+    <string name="create_site_notification_text">Ndërtojeni dhe vëreni në punë sajtin tua vetëm me pak hapa të thjeshtë</string>
+    <string name="create_site_notification_title">Krijoni sajtin tuaj WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">S’arrihen të aktivizohen statistika sajti</string>
+    <string name="stats_disabled_enable_stats_button">Aktivizoni statistika sajti</string>
+    <string name="stats_disabled_subtitle">Që të shihni të dhëna të hollësishme mbi trafikun tuaj, pëlqimet, komentet dhe pajtimtarët, aktivizoni statistika sajti.</string>
+    <string name="stats_disabled_title">Po shihni për statistika?</string>
+    <string name="gutenberg_native_what_is_a_block">Ç’është një bllok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga postimi.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga faqja.</string>
+    <string name="gutenberg_native_unable_to_embed_media">S’arrihet të trupëzohet media</string>
+    <string name="gutenberg_native_try_another_search_term">Provoni një tjetër term kërkimi</string>
+    <string name="gutenberg_native_no_blocks_found">S’u gjetën blloqe</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Paraparje trupëzimesh ende jo gati</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Që të parashihni postimin, prekeni dy herë.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Që të parashihni faqen, prekeni dy herë.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Tregomani ca</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Do t’ju heqim udhën përmes hapave elementarë të administrimit të sajtit tuaj me aplikacionin.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Doni pakëz ndihmë me administrimin e këtij sajti përmes aplikacionit?</string>
+    <string name="login_epilogue_create_new_site_button">Krijoni një sajt të ri</string>
+    <string name="login_epilogue_mysites_subheading">Mund të ndërroni sajte në çfarëdo kohe.</string>
+    <string name="login_epilogue_mysites_heading">Zgjidhni një sajt për hapje</string>
+    <string name="scan_multisite_not_supported_subtitle">Na ndjeni, Jetpack Scan s’është i përputhshëm me instalime shumësajtëshe WordPress hëpërhë.</string>
+    <string name="scan_multisite_not_supported_title">Instalimet shumësajtëshe WordPress nuk mbulohen</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL e pavlefshme. Ju lutemi, jepni një URL të vlefshme.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Trupëzoni lëndë prej %s, e cila hëpërhë s’mund të shihet te përpunuesi për celular. Ju lutemi, bëni një paraparje të faqes, që të shihni lëndën e trupëzuar.</string>
     <string name="gutenberg_native_embed_caption_s">Titull trupëzimi. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Titull trupëzimi. I zbrazët</string>
     <string name="gutenberg_native_add_link_0fcaed3b">SHTONI LIDHJE</string>
@@ -98,6 +123,8 @@ Language: sq_AL
     <string name="gutenberg_native_sorting_and_filtering">Renditje dhe filtrim</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
+    <string name="gutenberg_native_preview_post">Parashiheni postimin</string>
+    <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_post_meta_settings">Rregullime Meta postimi</string>
     <string name="gutenberg_native_post_content_settings">Rregullime lënde postimi</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
@@ -121,10 +148,10 @@ Language: sq_AL
     <string name="gutenberg_native_use_icon_button">Përdor buton ikone</string>
     <string name="gutenberg_native_search_input_field">Fushë dhëniesh kërkimi.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Buton kërkimi. Teksti i tanishëm i butonit është</string>
+    <string name="gutenberg_native_search_blocks">Kërkon në blloqe</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiketë për kërkoni në blloqe. Teksti i tanishëm është</string>
     <string name="gutenberg_native_outside">Jashtë</string>
     <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
-    <string name="gutenberg_native_no_button">Pa buton</string>
     <string name="gutenberg_native_inside">Brenda</string>
     <string name="gutenberg_native_hide_search_heading">Fshih kryet e kërkimit</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dy herë </string>
@@ -135,8 +162,6 @@ Language: sq_AL
     <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
     <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
     <string name="gutenberg_native_button_position">Pozicion butoni</string>
-    <string name="gutenberg_native_button_outside">Buton jashtë</string>
-    <string name="gutenberg_native_button_inside">Buton brenda</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s është %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ndodhi një gabim teksa merreshin të dhëna pëlqimesh</string>
     <string name="get_likes_unknown_error">Ndodhi një gabim i panjohur teksa merreshin pëlqimet.</string>
@@ -189,9 +214,8 @@ Language: sq_AL
     <string name="quick_start_card_menu_unpin">Shfiksoje këtë</string>
     <string name="quick_start_list_review_pages_subtitle">Shihni faqe dhe bëni ndryshime, ose shtoni dhe hiqni faqe.</string>
     <string name="quick_start_list_view_site_title">Vizitoni sajtin tuaj</string>
-    <string name="quick_start_list_upload_icon_subtitle">Shtoni një ikonë sajti, për një pamje të rafinuar, profesionale.</string>
     <string name="quick_start_list_follow_site_subtitle">Zbuloni dhe ndiqni sajte që ju frymëzojnë.</string>
-    <string name="quick_start_list_enable_sharing_title">Aktivizo ndarje me të tjerë</string>
+    <string name="quick_start_list_enable_sharing_title">Ndarje me të tjerë në shoqërorë</string>
     <string name="quick_start_list_enable_sharing_subtitle">Ndani vetvetiu me të tjerët në rrjetet tuaja shoqërore postime të reja.</string>
     <string name="quick_start_list_update_site_title_subtitle">Jepini sajtit tuaj një emër që pasqyron personalitetin dhe subjektin e tij.</string>
     <string name="quick_start_list_check_stats_title">Shihni statistikat tuaja</string>
@@ -682,7 +706,7 @@ Language: sq_AL
     <string name="send_link_by_email">Dërgoje lidhjen me email</string>
     <string name="reset_your_password">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
-    <string name="quick_start_list_update_site_title_title">Caktoni titullin e sajtit tuaj</string>
+    <string name="quick_start_list_update_site_title_title">Kontrolloni titullin e sajtit tuaj</string>
     <string name="quick_start_dialog_update_site_title_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të caktoni një titull të ri</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="gutenberg_native_s_block_options">Mundësi blloku %s</string>
@@ -1297,15 +1321,13 @@ Language: sq_AL
     <string name="quick_start_sites">Hapat Pasues</string>
     <string name="quick_start_complete_tasks_header">Të plotësuar (%d)</string>
     <string name="quick_start_dialog_view_site_message">Kënaquni me produktin tuaj të përfunduar!</string>
-    <string name="quick_start_dialog_upload_icon_title">Ngarkoni një ikonë sajti</string>
+    <string name="quick_start_dialog_upload_icon_title">Zgjidhni një ikonë sajti unike</string>
     <string name="quick_start_dialog_upload_icon_message">Vizitorët tuaj do ta shohin në shfletuesin e tyre ikonën tuaj. Shtoni një ikonë vetjake, për një pamje të rafinuar, profesionale.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Prekni %1$s Plan %2$s që të shihni planin tuaj të tanishëm dhe të tjerë plane të mundshëm</string>
     <string name="quick_start_dialog_check_stats_message_short">Prekni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
-    <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni postimin tuaj të parë fare.</string>
+    <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
     <string name="quick_start_dialog_need_help_message">Do t’ju udhëheqim përmes gjërave elementare të krijimit dhe fuqizimit të sajtit tuaj.</string>
-    <string name="quick_start_dialog_migration_title">Kemi bërë ca ndryshime te lista juaj e punëve</string>
-    <string name="quick_start_dialog_migration_message">Shtuam më tepër punë, për t’ju ndihmuar të shtoni publikun tuaj.</string>
     <string name="quick_start_dialog_explore_plans_title">Eksploroni plane</string>
     <string name="quick_start_dialog_explore_plans_message">Mësoni rreth mjetesh marketingu dhe SEO në planet tona me pagesë.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivizo ndarje postimesh me të tjerët</string>
@@ -1491,7 +1513,7 @@ Language: sq_AL
     <string name="quick_start_dialog_need_help_title">Doni pakëz ndihmë për t’ia filluar?</string>
     <string name="quick_start_dialog_need_help_button_positive">Pranoj</string>
     <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
-    <string name="quick_start_dialog_need_help_button_negative">Jo, Faleminderit</string>
+    <string name="quick_start_dialog_need_help_button_negative">Jo, faleminderit</string>
     <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me tema të ngjashme</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Prekni %1$s Lexues %2$s që të vazhdohet</string>

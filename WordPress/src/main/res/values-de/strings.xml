@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-23 12:54:07+0000
+Translation-Revision-Date: 2021-08-06 13:27:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Website erstellen</string>
+    <string name="create_site_notification_text">Richte deine Website mit wenigen schnellen Schritten ein</string>
+    <string name="create_site_notification_title">Erstelle deine WordPress-Website</string>
+    <string name="stats_disabled_enable_stats_error_message">Website-Statistiken können nicht aktiviert werden</string>
+    <string name="stats_disabled_enable_stats_button">Website-Statistiken aktivieren</string>
+    <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
+    <string name="stats_disabled_title">Du suchst die Statistiken?</string>
+    <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
+    <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
+    <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Eingebettete Vorschau noch nicht verfügbar</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Eingebettete Block-Vorschau demnächst verfügbar</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
+    <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Zeig mir alles</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Wir zeigen dir die wichtigsten Schritte zur Verwaltung deiner Website mit der App.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Brauchst du ein wenig Hilfe dabei, diese Website mit der App zu verwalten?</string>
+    <string name="login_epilogue_create_new_site_button">Eine neue Website erstellen</string>
+    <string name="login_epilogue_mysites_subheading">Du kannst die Websites jederzeit wechseln.</string>
+    <string name="login_epilogue_mysites_heading">Wähle eine Website aus, die geöffnet werden soll</string>
+    <string name="scan_multisite_not_supported_subtitle">Es tut uns leid, aber Jetpack Scan ist derzeit nicht mit WordPress-Multisite-Installationen kompatibel.</string>
+    <string name="scan_multisite_not_supported_title">WordPress-Multisites werden nicht unterstützt</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ungültige URL. Bitte gib eine gültige URL ein.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Eingebetteter Inhalt von %s kann derzeit nicht im mobilen Editor angezeigt werden. Lass dir eine Vorschau der Seite anzeigen, um den eingebetteten Inhalt zu sehen.</string>
     <string name="gutenberg_native_embed_caption_s">Beschriftung einbetten %s</string>
     <string name="gutenberg_native_embed_caption_empty">Beschriftung einbetten Leer</string>
     <string name="gutenberg_native_add_link_0fcaed3b">LINK HINZUFÜGEN</string>
@@ -101,6 +126,8 @@ Language: de
     <string name="gutenberg_native_sorting_and_filtering">Sortieren und filtern</string>
     <string name="gutenberg_native_s_social_icon">Social-Media-Symbol für %s</string>
     <string name="gutenberg_native_mention">Erwähnung</string>
+    <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
+    <string name="gutenberg_native_preview_page">Seitenvorschau</string>
     <string name="gutenberg_native_post_meta_settings">Beitrags-Meta-Einstellungen</string>
     <string name="gutenberg_native_post_content_settings">Einstellungen für Beitragsinhalte</string>
     <string name="gutenberg_native_featured">Vorgestellt</string>
@@ -124,9 +151,10 @@ Language: de
     <string name="gutenberg_native_use_icon_button">Icon-Button verwenden</string>
     <string name="gutenberg_native_search_input_field">Eingabefelder suchen</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Button suchen Aktueller Button-Text ist</string>
+    <string name="gutenberg_native_search_blocks">Blöcke suchen</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Blocklabel suchen Aktueller Text ist</string>
+    <string name="gutenberg_native_outside">Außen</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Kein individueller Platzhalter eingestellt</string>
-    <string name="gutenberg_native_no_button">Kein Button</string>
     <string name="gutenberg_native_inside">Innen</string>
     <string name="gutenberg_native_hide_search_heading">Suchüberschriften ausblenden</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Zum Bearbeiten des Platzhaltertexts zweimal tippen</string>
@@ -137,8 +165,6 @@ Language: de
     <string name="gutenberg_native_clear_search">Suche löschen</string>
     <string name="gutenberg_native_cancel_search">Suche abbrechen</string>
     <string name="gutenberg_native_button_position">Button-Position</string>
-    <string name="gutenberg_native_button_outside">Button außen</string>
-    <string name="gutenberg_native_button_inside">Button innen</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s ist %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Beim Abrufen der „Gefällt mir“-Daten ist ein Fehler aufgetreten.</string>
     <string name="get_likes_unknown_error">Beim Abrufen der „Gefällt mir“-Angaben ist ein unbekannter Fehler aufgetreten.</string>
@@ -191,9 +217,8 @@ Language: de
     <string name="quick_start_card_menu_unpin">Dies lösen</string>
     <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
     <string name="quick_start_list_view_site_title">Besuche deine Website</string>
-    <string name="quick_start_list_upload_icon_subtitle">Füge ein Website-Icon hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_list_follow_site_subtitle">Entdecke und folge Websites, die dich inspirieren.</string>
-    <string name="quick_start_list_enable_sharing_title">Teilen aktivieren</string>
+    <string name="quick_start_list_enable_sharing_title">Teilen über soziale Netzwerke</string>
     <string name="quick_start_list_enable_sharing_subtitle">Neue Beiträge automatisch in deinen sozialen Medien teilen.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt.</string>
     <string name="quick_start_list_check_stats_title">Deine Statistiken prüfen</string>
@@ -685,7 +710,7 @@ Language: de
     <string name="send_link_by_email">Link per E-Mail senden</string>
     <string name="reset_your_password">Dein Passwort zurücksetzen</string>
     <string name="reader_error_request_failed_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
-    <string name="quick_start_list_update_site_title_title">Lege deinen Website-Titel fest</string>
+    <string name="quick_start_list_update_site_title_title">Prüfe deinen Website-Titel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b&gt;%1$s&lt;/b&gt;, um einen neuen Titel festzulegen.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
     <string name="gutenberg_native_s_block_options">%s Blockoptionen</string>
@@ -1300,15 +1325,13 @@ Language: de
     <string name="quick_start_sites">Nächste Schritte</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_view_site_message">Genieße dein fertiges Produkt!</string>
-    <string name="quick_start_dialog_upload_icon_title">Hochladen eines Website-Icons</string>
+    <string name="quick_start_dialog_upload_icon_title">Wähle ein einzigartiges Website-Icon aus</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tippe auf %1$s Plan %2$s, um deinen aktuellen Plan und andere verfügbare Pläne anzuzeigen</string>
     <string name="quick_start_dialog_check_stats_message_short">Tippe auf %1$s Statistiken %2$s, um zu sehen, wie deine Website funktioniert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tippe auf %1$s Dein Website-Icon %2$s, um ein neues hochzuladen.</string>
-    <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche deinen ersten Beitrag.</string>
+    <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche einen Beitrag.</string>
     <string name="quick_start_dialog_need_help_message">Wir werden dich durch die Grundlagen des Aufbaus und der Erweiterung deiner Website führen.</string>
-    <string name="quick_start_dialog_migration_title">Wir haben einige Änderungen an deiner Checkliste vorgenommen.</string>
-    <string name="quick_start_dialog_migration_message">Wir haben weitere Aufgaben hinzugefügt, um dir zu helfen, deinen Leserkreis zu erweitern.</string>
     <string name="quick_start_dialog_explore_plans_title">Tarife erkunden</string>
     <string name="quick_start_dialog_explore_plans_message">Erfahre mehr über die Marketing- und SEO-Tools in unseren kostenpflichtigen Tarifen.</string>
     <string name="quick_start_dialog_enable_sharing_title">Teilen der Beiträge aktivieren</string>
@@ -1494,7 +1517,7 @@ Language: de
     <string name="quick_start_dialog_need_help_title">Benötigst du ein wenig Hilfe beim Start?</string>
     <string name="quick_start_dialog_need_help_button_positive">Akzeptieren</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nie</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nein, Danke</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nein, danke</string>
     <string name="quick_start_dialog_follow_sites_title">Anderen Websites folgen</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tippe auf  %1$sSuche%2$s, um Websites zu ähnlichen Themen zu finden</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tippe auf %1$s Reader %2$s, um fortzufahren</string>
@@ -2827,7 +2850,7 @@ Language: de
     <string name="follows">Folgt</string>
     <string name="note_reply_successful">Antwort veröffentlicht</string>
     <string name="sign_in">Anmelden</string>
-    <string name="loading">Lädt…</string>
+    <string name="loading">Wird geladen …</string>
     <string name="httppassword">HTTP-Passwort</string>
     <string name="httpuser">HTTP-Benutzername</string>
     <string name="error_media_upload">Beim Hochladen von Medien ist ein Fehler aufgetreten</string>

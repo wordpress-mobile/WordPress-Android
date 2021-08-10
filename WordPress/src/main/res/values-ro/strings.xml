@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-15 15:08:08+0000
+Translation-Revision-Date: 2021-08-04 12:15:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Creează un site</string>
+    <string name="stats_disabled_subtitle">Activează statistici site pentru a vedea informații detaliate despre trafic, aprecieri, comentarii și abonați.</string>
+    <string name="stats_disabled_enable_stats_button">Activează statistici site</string>
+    <string name="stats_disabled_enable_stats_error_message">Nu pot să activez statisticile site-ului</string>
+    <string name="create_site_notification_title">Creează-ți site-ul WordPress</string>
+    <string name="create_site_notification_text">Cu doar câțiva pași rapizi, ai un site care rulează și funcționează</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Lucrăm din greu ca să adăugăm suport pentru previzualizarea înglobărilor. Între timp, poți previzualiza conținutul înglobat în articol.</string>
+    <string name="gutenberg_native_what_is_a_block">Ce este un bloc?</string>
+    <string name="stats_disabled_title">Cauți statisticile?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Lucrăm din greu ca să adăugăm suport pentru previzualizarea înglobărilor. Între timp, poți previzualiza conținutul înglobat în pagină.</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Previzualizările înglobărilor nu sunt încă disponibile</string>
+    <string name="gutenberg_native_no_blocks_found">Niciun bloc găsit</string>
+    <string name="gutenberg_native_try_another_search_term">Încearcă un alt termen de căutare</string>
+    <string name="gutenberg_native_unable_to_embed_media">Nu pot să înglobez elemente media</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">În curând, previzualizări pentru blocurile înglobate</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Atinge de două ori pentru a previzualiza pagina.</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Atinge de două ori pentru a previzualiza articolul.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Este afișat în fila navigatoarelor vizitatorilor tăi și în alte locuri online.</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Vom parcurge elementele de bază pentru administrarea site-ului tău cu aplicația.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Arată-mi ce să fac</string>
+    <string name="login_epilogue_create_new_site_button">Creează un site nou</string>
+    <string name="login_epilogue_mysites_subheading">Poți comuta între site-uri oricând.</string>
+    <string name="login_epilogue_mysites_heading">Alege un site pentru a-l deschide</string>
+    <string name="scan_multisite_not_supported_subtitle">Regretăm, Scanarea Jetpack nu este compatibilă cu instalările WordPress multi-site în acest moment.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Vrei puțin ajutor ca să-ți administrezi site-ul cu aplicația?</string>
+    <string name="scan_multisite_not_supported_title">Instalările WordPress multi-site nu sunt acceptate</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL invalid. Te rog introdu un URL valid.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Conținutul înglobat de la %s nu poate fi vizualizat în acest moment în editorul pentru dispozitive mobile. Te rog previzualizează pagina pentru a vedea conținutul înglobat.</string>
     <string name="gutenberg_native_add_link_0fcaed3b">ADAUGĂ LEGĂTURĂ</string>
     <string name="activity_log_multisite_message">Copii de siguranță Jetpack pentru instalări multi-site oferă copii de siguranță care pot fi descărcate, fără restaurări cu un singur clic. Pentru mai multe informații, %1$s.</string>
     <string name="activity_log_visit_our_documentation_page">vizitează pagina cu documentație.</string>
@@ -103,6 +128,8 @@ Language: ro
     <string name="gutenberg_native_mention">Mențiune</string>
     <string name="gutenberg_native_post_content_settings">Setări conținut articol</string>
     <string name="gutenberg_native_post_meta_settings">Setări metadate articol</string>
+    <string name="gutenberg_native_preview_post">Previzualizează articolul</string>
+    <string name="gutenberg_native_preview_page">Previzualizează pagina</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
     <string name="gutenberg_native_embed_link">Înglobează legătura</string>
     <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
@@ -124,11 +151,11 @@ Language: ro
     <string name="gutenberg_native_use_icon_button">Folosește butonul icon</string>
     <string name="gutenberg_native_search_input_field">Câmp de intrare pentru căutare.</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etichetă buton Căutare. Textul actual este</string>
+    <string name="gutenberg_native_search_blocks">Caută blocuri</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Buton Căutare. Textul actual al butonului este</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Atinge de două ori pentru a edita textul butonului</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Atinge de două ori pentru a edita textul etichetei</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Atinge de două ori pentru a edita textul substituentului</string>
-    <string name="gutenberg_native_no_button">Niciun buton</string>
     <string name="gutenberg_native_inside">În interior</string>
     <string name="gutenberg_native_hide_search_heading">Ascunde subtitlul de căutare</string>
     <string name="gutenberg_native_double_tap_to_change_unit">atinge de două ori pentru a schimba unitatea</string>
@@ -143,8 +170,6 @@ Language: ro
     <string name="get_likes_no_network_error">Nu este disponibilă nicio rețea.</string>
     <string name="comments_empty_list_filtered_unreplied">Niciun comentariu fără răspuns</string>
     <string name="comment_status_unreplied">Fără răspuns</string>
-    <string name="gutenberg_native_button_outside">Buton în exterior</string>
-    <string name="gutenberg_native_button_inside">Buton în interior</string>
     <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri.</string>
     <string name="gutenberg_native_search_settings">Setări căutare</string>
     <string name="gutenberg_native_add_link">Adaugă o legătură</string>
@@ -191,12 +216,11 @@ Language: ro
     <string name="disable">Dezactivează</string>
     <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
     <string name="quick_start_card_menu_unpin">Anulează fixarea</string>
-    <string name="quick_start_list_enable_sharing_title">Activează partajarea</string>
     <string name="quick_start_list_enable_sharing_subtitle">Partajezi automat articole noi în media socială.</string>
     <string name="quick_start_list_view_site_title">Vizitează-ți site-ul</string>
-    <string name="quick_start_list_upload_icon_subtitle">Adaugă un icon site pentru un aspect rafinat și profesionist.</string>
     <string name="quick_start_list_follow_site_subtitle">Descoperă și urmărește site-urile care te inspiră.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dă-i site-ului un nume care să-ți reflecte personalitatea și prin care să arăți la ce se referă.</string>
+    <string name="quick_start_list_enable_sharing_title">Partajare socială</string>
     <string name="quick_start_list_check_stats_title">Vezi statisticile</string>
     <string name="backup_download_status_failure_bullet2">Vom încerca oricum să creăm fișierul cu copia de siguranță care poate fi descărcată.</string>
     <string name="backup_download_status_failure_bullet1">Nu am putut găsi starea pentru a spune cât timp va dura crearea copiei de siguranță care poate fi descărcată.</string>
@@ -628,7 +652,6 @@ Language: ro
     <string name="quick_start_dialog_create_new_post_message_short">Atinge Creează %1$s. %2$s Apoi selectează &lt;b&gt;Articol blog&lt;/b&gt;</string>
     <string name="mlp_choose_layout_title">Alege un aranjament</string>
     <string name="prepublishing_nudges_story_title_hint">Dă-i un titlu narațiunii tale</string>
-    <string name="mlp_preview_page">Previzualizare</string>
     <string name="mlp_create_page">Creează o pagină</string>
     <string name="mlp_create_blank_page">Creează o pagină goală</string>
     <string name="mlp_choose_layout_subtitle">Începe și alege dintr-o mare varietate de aranjamente gata pregătite. Sau începe cu o pagină goală.</string>
@@ -651,6 +674,7 @@ Language: ro
     <string name="label_control_flip_camera">Întoarcere</string>
     <string name="label_frame_image">Diapozitiv</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Creează un articol sau o narațiune</string>
+    <string name="mlp_preview_page">Previzualizează</string>
     <string name="photo_picker_choose_file">Alege de pe dispozitiv</string>
     <string name="error_media_quota_exceeded">A fost depășit spațiul de stocare</string>
     <string name="error_media_quota_exceeded_toast">Nu pot încărca fișierul.\nA fost depășit spațiul de stocare.</string>
@@ -687,7 +711,7 @@ Language: ro
     <string name="check_email">Verifică emailurile primite</string>
     <string name="reader_error_request_failed_title">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a seta un nou titlu</string>
-    <string name="quick_start_list_update_site_title_title">Setează titlul site-ului</string>
+    <string name="quick_start_list_update_site_title_title">Verifică titlul site-ului</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula și modificările locale, sigur vrei să continui?</string>
     <string name="gutenberg_native_s_block_options">Opțiuni bloc %s</string>
     <string name="gutenberg_native_duplicate_block">Fă un duplicat al blocului</string>
@@ -1302,14 +1326,12 @@ Language: ro
     <string name="quick_start_complete_tasks_header">Finalizate (%d)</string>
     <string name="quick_start_sites_type_grow">Crește-ți audiența</string>
     <string name="quick_start_sites_type_subtitle">%1$d din %2$d finalizate</string>
-    <string name="quick_start_dialog_upload_icon_title">Încarcă un icon pentru site</string>
     <string name="quick_start_sites_type_customize">Personalizează-ți site-ul</string>
-    <string name="quick_start_dialog_migration_title">Am făcut câteva modificări în lista ta de verificări</string>
-    <string name="quick_start_dialog_publish_post_message">Redactează și publică primul tău articol.</string>
+    <string name="quick_start_dialog_upload_icon_title">Alege un icon unic pentru site</string>
     <string name="quick_start_dialog_need_help_message">Vom parcurge elementele de bază ale construirii și dezvoltării site-ului tău.</string>
     <string name="quick_start_dialog_check_stats_message_short">Atinge %1$s Statistici %2$s pentru a vedea rezultatele obținute de site-ul tău.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Atinge %1$s Icon site %2$s pentru a încărca unul nou</string>
-    <string name="quick_start_dialog_migration_message">Am adăugat mai multe sarcini pentru a te ajuta să-ți crești audiența.</string>
+    <string name="quick_start_dialog_publish_post_message">Redactează și publică un articol.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorează planurile</string>
     <string name="quick_start_dialog_explore_plans_message">Află despre instrumentele SEO și de marketing din planurile nostre plătite.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activează partajarea articolelor</string>
@@ -1704,7 +1726,6 @@ Language: ro
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
     <string name="site_settings_quota_space_title">Spațiu folosit</string>
-    <string name="site_settings_quota_header">Medie</string>
     <string name="comment_spam_talkback">Comentariu marcat ca spam</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
     <string name="comment_delete_talkback">Comentariu șters</string>
@@ -1718,6 +1739,7 @@ Language: ro
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
     <string name="share_intent_screen_title">Alege site-ul</string>
+    <string name="site_settings_quota_header">Media</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -1955,7 +1977,7 @@ Language: ro
     <string name="media_title_audio_details">Detalii audio</string>
     <string name="media_title_video_details">Detalii video</string>
     <string name="media_title_image_details">Detalii imagine</string>
-    <string name="fab_content_description_preview">Previzualizare</string>
+    <string name="fab_content_description_preview">Previzualizează</string>
     <string name="media_edit_upload_date_caption">Încarcă date</string>
     <string name="media_edit_duration_caption">Durată</string>
     <string name="media_edit_video_dimensions_caption">Dimensiuni video</string>
@@ -2022,7 +2044,7 @@ Language: ro
     <string name="login_already_logged_in_wpcom">Autentificat deja în WordPress.com</string>
     <string name="login_continue">Continuă</string>
     <string name="enter_wpcom_password">Introdu parola ta WordPress.com.</string>
-    <string name="connect_more">Conectează alt site</string>
+    <string name="connect_more">Conectează un alt site</string>
     <string name="login_magic_link_email_requesting">Cer emailul de autentificare</string>
     <string name="password_incorrect">Se pare că această parolă este incorectă. Te rog verifică-ți din nou informațiile și încearcă din nou.</string>
     <string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
@@ -2574,10 +2596,10 @@ Language: ro
     <string name="post_trashed">Articol trimis la gunoi</string>
     <string name="button_stats">Statistici</string>
     <string name="button_trash">Gunoi</string>
-    <string name="button_preview">Previzualizare</string>
     <string name="button_view">Vizualizare</string>
     <string name="button_edit">Editare</string>
     <string name="button_publish">Publică</string>
+    <string name="button_preview">Previzualizează</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest site</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest site nu a putut fi găsit</string>
     <string name="undo">Revin</string>
@@ -2873,10 +2895,10 @@ Language: ro
     <string name="error">Eroare</string>
     <string name="category_refresh_error">Eroare reîmprospătare categorii</string>
     <string name="on">pornit</string>
-    <string name="preview">Previzualizare</string>
     <string name="reply">Răspunde</string>
     <string name="notification_settings">Setări notificare</string>
     <string name="publish_now">Publică acum</string>
+    <string name="preview">Previzualizează</string>
     <string-array name="blogging_reminders_count">
         <item>O dată</item>
         <item>De două ori</item>
