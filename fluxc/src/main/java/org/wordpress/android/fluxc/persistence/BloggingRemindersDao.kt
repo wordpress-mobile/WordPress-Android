@@ -33,7 +33,7 @@ abstract class BloggingRemindersDao {
         var friday: Boolean = false,
         var saturday: Boolean = false,
         var sunday: Boolean = false,
-        val hour: Int,
-        var minute: Int
+        var hour: Int = 10,
+        var minute: Int = 0
     )
 }
