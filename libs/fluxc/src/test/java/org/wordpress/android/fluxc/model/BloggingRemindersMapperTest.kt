@@ -91,7 +91,6 @@ class BloggingRemindersMapperTest {
         assertThat(this.friday).isEqualTo(enabledDays.contains(FRIDAY))
         assertThat(this.saturday).isEqualTo(enabledDays.contains(SATURDAY))
         assertThat(this.sunday).isEqualTo(enabledDays.contains(SUNDAY))
-
         assertThat(this.hour).isEqualTo(testHour)
         assertThat(this.minute).isEqualTo(testMinute)
     }
@@ -105,8 +104,7 @@ class BloggingRemindersMapperTest {
         assertThat(this.enabledDays.contains(FRIDAY)).isEqualTo(databaseModel.friday)
         assertThat(this.enabledDays.contains(SATURDAY)).isEqualTo(databaseModel.saturday)
         assertThat(this.enabledDays.contains(SUNDAY)).isEqualTo(databaseModel.sunday)
-
-        assertThat(this.hour).isEqualTo(databaseModel.hour)
-        assertThat(this.minute).isEqualTo(databaseModel.minute)
+        assertThat(this.hour).isEqualTo(testHour)
+        assertThat(this.minute).isEqualTo(testMinute)
     }
 }
