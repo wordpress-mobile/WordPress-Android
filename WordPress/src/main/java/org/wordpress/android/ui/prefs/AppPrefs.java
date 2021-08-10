@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
@@ -38,6 +41,8 @@ public class AppPrefs {
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
+
+    private static final Gson GSON = new Gson();
 
     public interface PrefKey {
         String name();
@@ -256,6 +261,9 @@ public class AppPrefs {
         // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
         // (Internal Ref:p3hLNG-18u)
         SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
     }
 
     private static SharedPreferences prefs() {
@@ -878,6 +886,17 @@ public class AppPrefs {
 
     public static boolean getGutenbergFocalPointPickerTooltipShown() {
         return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
+    }
+
+    public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
+        String json = GSON.toJson(newImpressions);
+        setString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+    }
+
+    public static Map<String, Double> getGutenbergBlockTypeImpressions() {
+        String jsonString = getString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
+        return impressions;
     }
 
     /*
