@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -130,7 +129,6 @@ class BloggingRemindersViewModel @Inject constructor(
         } else {
             enabledDays.add(day)
         }
-        _isTimePickerFlow.value = false
         _bloggingRemindersModel.value = currentState.copy(enabledDays = enabledDays)
     }
 
@@ -139,10 +137,13 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun onChangeTime(hour: Int, minute: Int) {
-        Log.d("Time: ", hour.toString())
         _isTimePickerFlow.value = false
         val currentState = _bloggingRemindersModel.value!!
         _bloggingRemindersModel.value = currentState.copy(hour = hour, minute = minute)
+    }
+
+    fun onCancelTimeSelection() {
+        _isTimePickerFlow.value = false
     }
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {

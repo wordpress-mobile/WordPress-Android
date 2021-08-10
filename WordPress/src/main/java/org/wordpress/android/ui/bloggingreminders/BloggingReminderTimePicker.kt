@@ -3,6 +3,7 @@ package org.wordpress.android.ui.bloggingreminders
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.os.Bundle
 import android.text.format.DateFormat
 import androidx.fragment.app.DialogFragment
@@ -22,7 +23,7 @@ class BloggingReminderTimePicker : DialogFragment() {
         val hour = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
         val is24HrFormat = DateFormat.is24HourFormat(activity)
-        return TimePickerDialog(
+        val timePicker = TimePickerDialog(
                 activity,
                 { _, selectedHour, selectedMinute ->
                     viewModel.onChangeTime(selectedHour, selectedMinute)
@@ -30,6 +31,17 @@ class BloggingReminderTimePicker : DialogFragment() {
                 hour,
                 minute,
                 is24HrFormat)
+
+        timePicker.setCanceledOnTouchOutside(false)
+
+        timePicker.setOnShowListener {
+            timePicker.getButton(BUTTON_NEGATIVE).setOnClickListener {
+                timePicker.dismiss()
+                viewModel.onCancelTimeSelection()
+            }
+        }
+
+        return timePicker
     }
 
     override fun onAttach(context: Context) {
