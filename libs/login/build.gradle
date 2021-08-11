@@ -81,7 +81,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    lintChecks 'org.wordpress:lint:1.0.2'
+    lintChecks 'org.wordpress:lint:1.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
