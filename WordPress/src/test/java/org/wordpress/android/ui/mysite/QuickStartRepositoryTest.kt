@@ -159,10 +159,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 initStore()
 
                 triggerQSRefreshAfterSameTypeTasksAreComplete()
-                var result: QuickStartUpdate? = null
-                quickStartRepository.buildSource(testScope(), siteId).observeForever { result = it }
 
-                assertThat(result?.categories?.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
+                assertThat(result.last().categories.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
             }
 
     @Test
