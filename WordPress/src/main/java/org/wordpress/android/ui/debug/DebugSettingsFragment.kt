@@ -44,7 +44,7 @@ class DebugSettingsFragment : DaggerFragment(R.layout.debug_settings_fragment) {
 
                     val layoutManager = recyclerView.layoutManager
                     val recyclerViewState = layoutManager?.onSaveInstanceState()
-                    adapter.update(uiState.uiItems)
+                    adapter.submitList(uiState.uiItems)
                     layoutManager?.onRestoreInstanceState(recyclerViewState)
                 }
             })
