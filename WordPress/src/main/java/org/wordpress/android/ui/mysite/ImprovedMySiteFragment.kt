@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
@@ -454,11 +453,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                    viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
                 }
             }
         }
@@ -537,15 +536,15 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Positive Clicked", Toast.LENGTH_LONG).show()
+        viewModel.startQuickStart()
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Negative Clicked", Toast.LENGTH_LONG).show()
+        viewModel.ignoreQuickStart()
     }
 
     override fun onNeutralClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Neutral Clicked", Toast.LENGTH_LONG).show()
+        viewModel.disableQuickStart()
     }
 
     override fun onConfirm(result: Bundle?) {
