@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
@@ -22,9 +21,12 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -101,7 +103,9 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         TextInputDialogFragment.Callback,
-        QuickStartPromptClickInterface {
+        QuickStartPromptClickInterface,
+        OnConfirmListener,
+        OnDismissListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -306,6 +310,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
                 .setTitle(action.title)
+                .setOnConfirmListener(this)
+                .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
                 .build()
                 .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
@@ -447,11 +453,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                    viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
                 }
             }
         }
@@ -530,14 +536,26 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Positive Clicked", Toast.LENGTH_LONG).show()
+        viewModel.startQuickStart()
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Negative Clicked", Toast.LENGTH_LONG).show()
+        viewModel.ignoreQuickStart()
     }
 
     override fun onNeutralClicked(instanceTag: String) {
-        Toast.makeText(context, "QS - Neutral Clicked", Toast.LENGTH_LONG).show()
+        viewModel.disableQuickStart()
+    }
+
+    override fun onConfirm(result: Bundle?) {
+        if (result != null) {
+            viewModel.onQuickStartFullScreenDialogConfirm(
+                    task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+            )
+        }
+    }
+
+    override fun onDismiss() {
+        viewModel.onQuickStartFullScreenDialogDismiss()
     }
 }
