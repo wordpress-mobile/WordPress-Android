@@ -15,14 +15,9 @@ class QuickStartBlockBuilder @Inject constructor() {
     fun build(
         categories: List<QuickStartCategory>,
         onItemClick: (QuickStartTaskType) -> Unit
-    ): QuickStartBlock {
-        val taskTypeItems = mutableListOf<QuickStartTaskTypeItem>()
-        categories.forEach { category ->
-            taskTypeItems.add(buildQuickStartTaskTypeItem(category, onItemClick))
-        }
-
-        return QuickStartBlock(taskTypeItems = taskTypeItems)
-    }
+    ) = QuickStartBlock(
+            taskTypeItems = categories.map { buildQuickStartTaskTypeItem(it, onItemClick) }
+    )
 
     private fun buildQuickStartTaskTypeItem(
         category: QuickStartCategory,
