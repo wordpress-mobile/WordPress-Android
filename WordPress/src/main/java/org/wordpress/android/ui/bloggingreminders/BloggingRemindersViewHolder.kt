@@ -7,6 +7,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersCaptionBinding
@@ -166,7 +167,8 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             ) {
         fun onBind(item: TimeItem) = with(binding) {
             uiHelpers.setTextOrHide(timeButton, item.time)
-            timeButton.setOnClickListener { item.onClick.click() }
+            timeItem.setOnClickListener { item.onClick.click() }
+            timeItem.isVisible = !item.isInvisible
         }
     }
 }

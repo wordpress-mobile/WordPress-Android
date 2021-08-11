@@ -23,6 +23,7 @@ class BloggingReminderTimePicker : DialogFragment() {
         val hour = c.get(Calendar.HOUR_OF_DAY)
         val minute = c.get(Calendar.MINUTE)
         val is24HrFormat = DateFormat.is24HourFormat(activity)
+
         val timePicker = TimePickerDialog(
                 activity,
                 { _, selectedHour, selectedMinute ->
@@ -51,16 +52,8 @@ class BloggingReminderTimePicker : DialogFragment() {
 
     companion object {
         const val TAG = "blogging_reminders_time_picker"
-        private const val ARG_HOUR = "arg_hour"
-        private const val ARG_MINUTE = "arg_minute"
 
-        fun newInstance(hour: Int, minute: Int): BloggingReminderTimePicker {
-            return BloggingReminderTimePicker().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_HOUR, hour)
-                    putInt(ARG_MINUTE, minute)
-                }
-            }
-        }
+        @JvmStatic
+        fun newInstance() = BloggingReminderTimePicker()
     }
 }

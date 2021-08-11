@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import java.time.DayOfWeek
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 data class BloggingRemindersUiModel(
     val siteId: Int,
@@ -8,13 +11,6 @@ data class BloggingRemindersUiModel(
     val hour: Int,
     val minute: Int
 ) {
-    fun getNotificationTime(): CharSequence {
-        val period = if (hour >= HOUR_12) "PM" else "AM"
-        val hour = if (hour > HOUR_12) hour - HOUR_12 else hour
-        return "$hour:$minute $period"
-    }
-
-    companion object {
-        const val HOUR_12 = 12
-    }
+    fun getNotificationTime(): CharSequence =
+            LocalTime.of(hour, minute).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 }

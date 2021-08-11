@@ -45,17 +45,21 @@ class BloggingRemindersViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
+
+    private val _isTimePickerShowing = MutableLiveData<Event<Boolean>>()
+    val isTimePickerShowing = _isTimePickerShowing as LiveData<Event<Boolean>>
+
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
+
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersUiModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
-    private val _isTimePickerFlow = MutableLiveData<Boolean>()
+
     val uiState: LiveData<UiState> = merge(
             selectedScreen,
             _bloggingRemindersModel,
             _isFirstTimeFlow,
-            _isTimePickerFlow
-    ) { screen, bloggingRemindersModel, isFirstTimeFlow, isTimePickerFlow ->
+    ) { screen, bloggingRemindersModel, isFirstTimeFlow ->
         if (screen != null) {
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
@@ -77,7 +81,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 )
                 EPILOGUE -> epilogueBuilder.buildPrimaryButton(finish)
             }
-            UiState(uiItems, isTimePickerFlow == true, primaryButton)
+            UiState(uiItems, primaryButton)
         } else {
             UiState(listOf())
         }
@@ -133,17 +137,17 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun selectTime() {
-        _isTimePickerFlow.value = true
+        _isTimePickerShowing.value = Event(true)
     }
 
     fun onChangeTime(hour: Int, minute: Int) {
-        _isTimePickerFlow.value = false
+        _isTimePickerShowing.value = Event(false)
         val currentState = _bloggingRemindersModel.value!!
         _bloggingRemindersModel.value = currentState.copy(hour = hour, minute = minute)
     }
 
     fun onCancelTimeSelection() {
-        _isTimePickerFlow.value = false
+        _isTimePickerShowing.value = Event(false)
     }
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {
@@ -237,7 +241,6 @@ class BloggingRemindersViewModel @Inject constructor(
 
     data class UiState(
         val uiItems: List<BloggingRemindersItem>,
-        val timePicker: Boolean = false,
         val primaryButton: PrimaryButton? = null
     ) {
         data class PrimaryButton(val text: UiString, val enabled: Boolean, val onClick: ListItemInteraction)
