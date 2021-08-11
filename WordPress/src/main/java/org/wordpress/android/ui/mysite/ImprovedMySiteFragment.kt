@@ -550,8 +550,9 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onConfirm(result: Bundle?) {
         if (result != null) {
-            val task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
-            viewModel.onQuickStartFullScreenDialogConfirm(task)
+            viewModel.onQuickStartFullScreenDialogConfirm(
+                    task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+            )
         }
     }
 

@@ -95,8 +95,7 @@ class QuickStartRepository
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            val quickStartTaskTypes = getQuickStartTaskTypes(siteId)
-            quickStartTaskTypes.onEach { taskType ->
+            getQuickStartTaskTypes(siteId).onEach { taskType ->
                 if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
                     onCategoryCompleted(siteId, taskType)
                 }
