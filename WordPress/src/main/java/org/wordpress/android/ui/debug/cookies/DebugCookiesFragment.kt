@@ -1,19 +1,26 @@
 package org.wordpress.android.ui.debug.cookies
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DebugCookiesFragmentBinding
 import javax.inject.Inject
 
-class DebugCookiesFragment : DaggerFragment(R.layout.debug_cookies_fragment) {
+class DebugCookiesFragment : Fragment(R.layout.debug_cookies_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DebugCookiesViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as WordPress).component().inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

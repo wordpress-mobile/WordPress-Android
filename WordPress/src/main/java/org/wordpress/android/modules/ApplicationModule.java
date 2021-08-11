@@ -13,7 +13,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
-import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
@@ -105,9 +104,6 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract DebugSettingsFragment contributeDebugSettingsFragment();
-
-    @ContributesAndroidInjector
-    abstract DebugCookiesFragment contributeDebugCookiesFragment();
 
     @ContributesAndroidInjector
     abstract BasicDialog contributeBasicDialog();
