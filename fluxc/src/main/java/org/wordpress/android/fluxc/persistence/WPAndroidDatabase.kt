@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 
 @Database(
-        version = 3,
+        version = 4,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -41,6 +41,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -110,6 +111,15 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                                     "`parentId` INTEGER NOT NULL, " +
                                     "`iLike` INTEGER NOT NULL)"
                     )
+                }
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN hour INTEGER DEFAULT 10 NOT NULL")
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN minute INTEGER DEFAULT 0 NOT NULL")
                 }
             }
         }
