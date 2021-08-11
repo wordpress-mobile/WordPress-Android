@@ -1271,7 +1271,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (helpMenuItem != null) {
             if (mEditorFragment instanceof GutenbergEditorFragment
-                && BuildConfig.DEBUG
+                && canViewEditorOnboarding()
                 && showMenuItems
             ) {
                 helpMenuItem.setVisible(true);
