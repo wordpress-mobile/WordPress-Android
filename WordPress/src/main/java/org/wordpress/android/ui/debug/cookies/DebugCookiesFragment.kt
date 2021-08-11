@@ -53,7 +53,7 @@ class DebugCookiesFragment : DaggerFragment(R.layout.debug_cookies_fragment) {
 
     private fun DebugCookiesFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            (recyclerView.adapter as? DebugCookiesAdapter)?.update(uiState.items)
+            (recyclerView.adapter as? DebugCookiesAdapter)?.submitList(uiState.items)
             uiState.domainInputText?.let { domainInput.setTextAndMoveCursor(it) }
             uiState.nameInputText?.let { nameInput.setTextAndMoveCursor(it) }
             uiState.valueInputText?.let { valueInput.setTextAndMoveCursor(it) }

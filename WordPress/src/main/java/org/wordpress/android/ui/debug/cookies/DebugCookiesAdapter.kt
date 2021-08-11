@@ -1,32 +1,22 @@
 package org.wordpress.android.ui.debug.cookies
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DiffUtil.Callback
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.DiffUtil.ItemCallback
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.databinding.DebugCookieItemBinding
+import org.wordpress.android.ui.debug.cookies.DebugCookiesAdapter.DebugCookieItem
 import org.wordpress.android.ui.debug.cookies.DebugCookiesAdapter.DebugCookieItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.viewBinding
 
-class DebugCookiesAdapter : Adapter<DebugCookieItemViewHolder>() {
-    private var items: List<DebugCookieItem> = listOf()
-
-    fun update(newItems: List<DebugCookieItem>) {
-        val diffResult = DiffUtil.calculateDiff(DebugCookiesDiffCallback(items, newItems))
-        items = newItems
-        diffResult.dispatchUpdatesTo(this)
-    }
-
+class DebugCookiesAdapter : ListAdapter<DebugCookieItem, DebugCookieItemViewHolder>(DebugCookiesDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             DebugCookieItemViewHolder(parent.viewBinding(DebugCookieItemBinding::inflate))
 
     override fun onBindViewHolder(holder: DebugCookieItemViewHolder, position: Int) {
-        holder.onBind(items[position])
+        holder.onBind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     class DebugCookieItemViewHolder(private val binding: DebugCookieItemBinding) : ViewHolder(binding.root) {
         fun onBind(item: DebugCookieItem) = with(binding) {
@@ -39,14 +29,9 @@ class DebugCookiesAdapter : Adapter<DebugCookieItemViewHolder>() {
         }
     }
 
-    class DebugCookiesDiffCallback(
-        private val oldList: List<DebugCookieItem>,
-        private val newList: List<DebugCookieItem>
-    ) : Callback() {
-        override fun getOldListSize() = oldList.size
-        override fun getNewListSize() = newList.size
-        override fun areItemsTheSame(old: Int, new: Int) = oldList[old].key == newList[new].key
-        override fun areContentsTheSame(old: Int, new: Int) = oldList[old] == newList[new]
+    class DebugCookiesDiffCallback : ItemCallback<DebugCookieItem>() {
+        override fun areItemsTheSame(oldItem: DebugCookieItem, newItem: DebugCookieItem) = oldItem.key == newItem.key
+        override fun areContentsTheSame(oldItem: DebugCookieItem, newItem: DebugCookieItem) = oldItem == newItem
     }
 
     data class DebugCookieItem(
