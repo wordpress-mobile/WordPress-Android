@@ -363,6 +363,31 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
     }
 
+    @Test
+    fun `given active task is different than completed task, then reminder notifications are not triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+
+        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+    }
+
+    @Test
+    fun `given active task is same as completed task, then reminder notifications are triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        quickStartRepository.startQuickStart(siteId)
+
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(PUBLISH_POST)
+
+        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
+    }
+
     private fun assertModel() {
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.let { categories ->
