@@ -77,6 +77,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -106,6 +107,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -1032,6 +1034,29 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        viewModel.onQuickStartFullScreenDialogDismiss()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
+        val task = QuickStartTask.VIEW_SITE
+        initSelectedSite(
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true
+        )
+        viewModel.onQuickStartFullScreenDialogConfirm(task)
+
+        verify(quickStartRepository).setActiveTask(task)
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
@@ -1236,7 +1261,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
             doAnswer {
-                quickStartTaskTypeItemClickAction = (it.getArgument(0) as (QuickStartTaskType) -> Unit)
+                quickStartTaskTypeItemClickAction = (it.getArgument(1) as (QuickStartTaskType) -> Unit)
                 QuickStartBlock(
                         taskTypeItems = listOf(
                                 QuickStartTaskTypeItem(
@@ -1254,7 +1279,16 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 )
                         )
                 )
-            }.whenever(quickStartBlockBuilder).build(any())
+            }.whenever(quickStartBlockBuilder).build(any(), any())
+            quickStartUpdate.value = QuickStartUpdate(
+                    categories = listOf(
+                            QuickStartCategory(
+                                    taskType = QuickStartTaskType.CUSTOMIZE,
+                                    uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
+                                    completedTasks = emptyList()
+                            )
+                    )
+            )
         } else {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }
