@@ -58,7 +58,7 @@ class BloggingRemindersViewModel @Inject constructor(
     val uiState: LiveData<UiState> = merge(
             selectedScreen,
             _bloggingRemindersModel,
-            _isFirstTimeFlow,
+            _isFirstTimeFlow
     ) { screen, bloggingRemindersModel, isFirstTimeFlow ->
         if (screen != null) {
             val uiItems = when (screen) {
