@@ -386,7 +386,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupClickListeners() {
         siteInfoContainer.title.setOnClickListener {
-            completeQuickStarTask(UPDATE_SITE_TITLE)
+            completeQuickStartTask(UPDATE_SITE_TITLE)
             showTitleChangerDialog()
         }
         siteInfoContainer.subtitle.setOnClickListener { viewSite() }
@@ -396,7 +396,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowStats.setOnClickListener { viewStats() }
         mySiteBlavatar.setOnClickListener { updateBlavatar() }
         rowPlan.setOnClickListener {
-            completeQuickStarTask(EXPLORE_PLANS)
+            completeQuickStartTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         rowJetpackSettings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
@@ -478,7 +478,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 } else {
                     showAddSiteIconDialog()
                 }
-                completeQuickStarTask(UPLOAD_SITE_ICON)
+                completeQuickStartTask(UPLOAD_SITE_ICON)
             } else {
                 val message = when {
                     !site.isUsingWpComRestApi -> {
@@ -510,7 +510,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
             requestNextStepOfActiveQuickStartTask()
         } else {
-            completeQuickStarTask(REVIEW_PAGES)
+            completeQuickStartTask(REVIEW_PAGES)
         }
         val selectedSite = selectedSite
         if (selectedSite != null) {
@@ -523,7 +523,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun viewStats() {
         val selectedSite = selectedSite
         if (selectedSite != null) {
-            completeQuickStarTask(CHECK_STATS)
+            completeQuickStartTask(CHECK_STATS)
             if (!accountStore.hasAccessToken() && selectedSite.isJetpackConnected) {
                 // If the user is not connected to WordPress.com, ask him to connect first.
                 startWPComLoginForJetpackStats()
@@ -566,7 +566,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun viewSite() {
-        completeQuickStarTask(VIEW_SITE)
+        completeQuickStartTask(VIEW_SITE)
         ActivityLauncher.viewCurrentSite(activity, selectedSite, true)
     }
 
@@ -1446,7 +1446,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         return hasActiveQuickStartTask() && activeTutorialPrompt!!.task == task
     }
 
-    private fun completeQuickStarTask(quickStartTask: QuickStartTask) {
+    private fun completeQuickStartTask(quickStartTask: QuickStartTask) {
         selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
