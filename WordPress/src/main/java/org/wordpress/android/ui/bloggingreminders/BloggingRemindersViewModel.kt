@@ -146,8 +146,9 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value = currentState.copy(hour = hour, minute = minute)
     }
 
-    fun onCancelTimeSelection() {
-        _isTimePickerShowing.value = Event(false)
+    fun getSelectedTime(): Pair<Int, Int> {
+        val currentState = _bloggingRemindersModel.value!!
+        return Pair(currentState.hour, currentState.minute)
     }
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {
@@ -161,9 +162,11 @@ class BloggingRemindersViewModel @Inject constructor(
                 )
                 val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
-                    reminderScheduler.hour = bloggingRemindersModel.hour
-                    reminderScheduler.minute = bloggingRemindersModel.minute
-                    reminderScheduler.schedule(bloggingRemindersModel.siteId, bloggingRemindersModel.toReminderConfig())
+                    reminderScheduler.schedule(
+                            bloggingRemindersModel.siteId,
+                            bloggingRemindersModel.hour,
+                            bloggingRemindersModel.minute,
+                            bloggingRemindersModel.toReminderConfig())
                     analyticsTracker.trackRemindersScheduled(daysCount)
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)

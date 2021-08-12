@@ -3,13 +3,11 @@ package org.wordpress.android.ui.bloggingreminders
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.os.Bundle
 import android.text.format.DateFormat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.WordPress
-import java.util.Calendar
 import javax.inject.Inject
 
 class BloggingReminderTimePicker : DialogFragment() {
@@ -18,31 +16,17 @@ class BloggingReminderTimePicker : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
-        // Use the current time as the default values for the picker
-        val c = Calendar.getInstance()
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-        val minute = c.get(Calendar.MINUTE)
+        val time = viewModel.getSelectedTime()
         val is24HrFormat = DateFormat.is24HourFormat(activity)
 
-        val timePicker = TimePickerDialog(
+        return TimePickerDialog(
                 activity,
                 { _, selectedHour, selectedMinute ->
                     viewModel.onChangeTime(selectedHour, selectedMinute)
                 },
-                hour,
-                minute,
+                time.first,
+                time.second,
                 is24HrFormat)
-
-        timePicker.setCanceledOnTouchOutside(false)
-
-        timePicker.setOnShowListener {
-            timePicker.getButton(BUTTON_NEGATIVE).setOnClickListener {
-                timePicker.dismiss()
-                viewModel.onCancelTimeSelection()
-            }
-        }
-
-        return timePicker
     }
 
     override fun onAttach(context: Context) {

@@ -36,8 +36,7 @@ class DaySelectionBuilder
                 EmphasizedText(text),
                 bloggingRemindersModel?.enabledDays?.isEmpty() == true
         )
-        val time = bloggingRemindersModel?.getNotificationTime() ?: "10:00 AM"
-        return listOf(
+        val selectionList =  mutableListOf(
                 Illustration(R.drawable.img_illustration_calendar),
                 Title(UiStringRes(R.string.blogging_reminders_select_days)),
                 MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
@@ -48,14 +47,20 @@ class DaySelectionBuilder
                             ListItemInteraction.create(it, onSelectDay)
                     )
                 }),
-                nTimesLabel,
-                TimeItem(
-                        UiStringText(time),
-                        bloggingRemindersModel?.enabledDays?.isEmpty() == true,
-                        ListItemInteraction.create(onSelectTime)
-                ),
-                Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message))
+                nTimesLabel
         )
+
+        if (bloggingRemindersModel?.enabledDays?.isNotEmpty() == true) {
+            selectionList.add(
+                    TimeItem(
+                            UiStringText(bloggingRemindersModel.getNotificationTime()),
+                            ListItemInteraction.create(onSelectTime)))
+        }
+
+        selectionList.add(
+                Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message)))
+
+        return selectionList
     }
 
     fun buildPrimaryButton(

@@ -54,7 +54,6 @@ sealed class BloggingRemindersItem(val type: Type) {
 
     data class TimeItem(
         val time: UiString,
-        val isInvisible: Boolean = false,
         val onClick: ListItemInteraction
     ) : BloggingRemindersItem(NOTIFICATION_TIME)
 
