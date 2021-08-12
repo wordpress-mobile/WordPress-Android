@@ -34,11 +34,11 @@ class DomainRegistrationHandler
 ) : MySiteSource<DomainCreditAvailable> {
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<DomainCreditAvailable> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         continuation?.cancel()
         continuation = null
         val site = selectedSiteRepository.getSelectedSite()
-        if (site == null || site.id != siteId) {
+        if (site == null || site.id != siteLocalId) {
             return MutableLiveData()
         }
         if (shouldFetchPlans(site)) {
@@ -53,7 +53,7 @@ class DomainRegistrationHandler
                     if (event.isError) {
                         val message = "An error occurred while fetching plans : " + event.error.message
                         appLogWrapper.e(DOMAIN_REGISTRATION, message)
-                    } else if (siteId == event.site.id) {
+                    } else if (siteLocalId == event.site.id) {
                         result.postValue(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
                     }
                 } catch (e: CancellationException) {

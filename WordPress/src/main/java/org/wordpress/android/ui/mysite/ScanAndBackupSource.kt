@@ -18,9 +18,9 @@ class ScanAndBackupSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : MySiteSource<JetpackCapabilities> {
-    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<JetpackCapabilities> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
         val site = selectedSiteRepository.getSelectedSite()
-        if (site != null && site.id == siteId) {
+        if (site != null && site.id == siteLocalId) {
             val result = MutableLiveData<JetpackCapabilities>()
             coroutineScope.launch(bgDispatcher) {
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {

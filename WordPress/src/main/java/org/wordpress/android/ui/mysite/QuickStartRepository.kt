@@ -89,24 +89,24 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
         pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
-                !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
-            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteId)
+                !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
+            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteLocalId)
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            getQuickStartTaskTypes(siteId).onEach { taskType ->
-                if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
-                    onCategoryCompleted(siteId, taskType)
+            getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
+                if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)) {
+                    onCategoryCompleted(siteLocalId, taskType)
                 }
             }
         }
         return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
-            val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
-                types?.map { buildQuickStartCategory(siteId, it) } ?: listOf()
+            val categories = if (quickStartUtils.isQuickStartInProgress(siteLocalId)) {
+                types?.map { buildQuickStartCategory(siteLocalId, it) } ?: listOf()
             } else {
                 listOf()
             }

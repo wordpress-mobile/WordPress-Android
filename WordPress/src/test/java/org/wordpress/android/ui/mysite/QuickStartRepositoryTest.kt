@@ -343,14 +343,14 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `does not mark EDIT_HOMEPAGE task as done when site showing Homepage`() = test {
-        val updatedSiteId = 2
-        site.id = updatedSiteId
+        val updatedSiteLocalId = 2
+        site.id = updatedSiteLocalId
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartRepository.buildSource(testScope(), updatedSiteId)
+        quickStartRepository.buildSource(testScope(), updatedSiteLocalId)
 
-        verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
+        verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)
     }
 
     @Test
