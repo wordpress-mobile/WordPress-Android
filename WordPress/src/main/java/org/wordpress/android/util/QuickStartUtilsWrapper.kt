@@ -62,8 +62,8 @@ class QuickStartUtilsWrapper
         )
     }
 
-    fun isEveryQuickStartTaskDone(siteId: Int): Boolean {
-        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteId)
+    fun isEveryQuickStartTaskDone(siteLocalId: Int): Boolean {
+        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)
     }
 
     fun isEveryQuickStartTaskDoneForType(siteId: Int, type: QuickStartTaskType): Boolean {
@@ -94,7 +94,7 @@ class QuickStartUtilsWrapper
         quickStartStore.setDoneTask(siteId, task, true)
         analyticsTrackerWrapper.track(QuickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
 
-        if (QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, site.id)) {
+        if (isEveryQuickStartTaskDone(site.id)) {
             quickStartStore.setQuickStartCompleted(siteId, true)
             analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -122,7 +122,7 @@ class QuickStartUtilsWrapper
         task: QuickStartTask
     ): Boolean {
         return quickStartStore.getQuickStartCompleted(siteId) ||
-                QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, site.id) ||
+                isEveryQuickStartTaskDone(site.id) ||
                 quickStartStore.hasDoneTask(siteId, task) ||
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }

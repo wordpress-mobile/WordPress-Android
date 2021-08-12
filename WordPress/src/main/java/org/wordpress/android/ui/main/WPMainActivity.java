@@ -903,8 +903,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void checkQuickStartNotificationStatus() {
+        int selectedSiteLocalId = getSelectedSite() != null ? getSelectedSite().getId() : -1;
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
-            && QuickStartUtils.isEveryQuickStartTaskDone(mQuickStartStore)
+            && mQuickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSiteLocalId)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
             CompleteQuickStartPayload payload = new CompleteQuickStartPayload(getSelectedSite(), NEXT_STEPS.toString());
             mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload));
