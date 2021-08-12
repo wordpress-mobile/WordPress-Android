@@ -145,9 +145,7 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
-import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
-import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
-import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -325,7 +323,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
-        val taskToPrompt = getNextUncompletedQuickStartTask(
+        val taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(
                 quickStartStore,
                 selectedSite?.id?.toLong() ?: -1L,
                 CUSTOMIZE
@@ -1416,7 +1414,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
         }
-        addQuickStartFocusPointAboveTheView(
+        QuickStartUtils.addQuickStartFocusPointAboveTheView(
                 parentView, quickStartTarget, horizontalOffset,
                 verticalOffset
         )
@@ -1439,7 +1437,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         requireView().removeCallbacks(mAddQuickStartFocusPointTask)
-        removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
+        QuickStartUtils.removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
     }
 
     fun isQuickStartTaskActive(task: QuickStartTask): Boolean {
