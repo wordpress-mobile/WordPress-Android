@@ -589,6 +589,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    @NonNull
     private SiteList getSelectedSites() {
         SiteList sites = new SiteList();
         if (!mIsMultiSelectEnabled) {
@@ -620,9 +621,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
-        SiteList sites = getSelectedSites();
+        @NonNull SiteList sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
-        if (sites != null && sites.size() > 0) {
+        if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
             int currentSiteId = AppPrefs.getSelectedSite();
             for (SiteRecord site : sites) {
