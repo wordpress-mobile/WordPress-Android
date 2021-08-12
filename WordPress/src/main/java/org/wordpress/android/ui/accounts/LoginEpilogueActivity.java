@@ -117,7 +117,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void selectSite(int localId) {
-        setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, localId));
+        setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localId));
         finish();
     }
 
@@ -153,8 +153,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
             && resultCode == RESULT_OK
             && data != null
         ) {
-            int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_LOCAL_ID, newSiteLocalID));
+            int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
+            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID));
             finish();
         }
     }

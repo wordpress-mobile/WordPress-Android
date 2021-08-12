@@ -2713,7 +2713,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
-            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
             mViewModel.onReblogSiteSelected(siteLocalId);
         }
     }

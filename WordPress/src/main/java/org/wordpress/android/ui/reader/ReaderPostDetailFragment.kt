@@ -1054,7 +1054,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (requestCode) {
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1) ?: -1
                     viewModel.onReblogSiteSelected(siteLocalId)
                 }
             }

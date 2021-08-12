@@ -217,7 +217,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
-            val siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1)
+            val siteLocalId = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1)
             viewModel.onReblogSiteSelected(siteLocalId)
         }
     }

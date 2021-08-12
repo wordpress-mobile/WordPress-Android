@@ -1070,7 +1070,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void setSite(Intent data) {
         if (data != null) {
-            int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            int selectedSite = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
             setSelectedSite(selectedSite);
         }
     }
@@ -1134,7 +1134,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                 }
 
@@ -1175,8 +1175,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
-                                                 && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs
-                            .getSelectedSite();
+                                                 && data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1)
+                                                    == AppPrefs
+                                                            .getSelectedSite();
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
