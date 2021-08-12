@@ -1282,7 +1282,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun startQuickStart() {
-        quickStartUtilsWrapper.startQuickStart(AppPrefs.getSelectedSite())
+        quickStartUtilsWrapper.startQuickStart(selectedSite?.id ?: -1)
         binding?.updateQuickStartContainer()
     }
 
