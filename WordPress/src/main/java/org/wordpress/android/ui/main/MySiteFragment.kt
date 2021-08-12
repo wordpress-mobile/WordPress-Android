@@ -1268,13 +1268,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun skipQuickStart() {
-        val siteId = AppPrefs.getSelectedSite()
+        val localId = selectedSite?.id ?: -1
         for (quickStartTask in QuickStartTask.values()) {
-            quickStartStore.setDoneTask(siteId.toLong(), quickStartTask, true)
+            quickStartStore.setDoneTask(
+                    localId.toLong(),
+                    quickStartTask,
+                    true
+            )
         }
-        quickStartStore.setQuickStartCompleted(siteId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(localId.toLong(), true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        quickStartStore.setQuickStartNotificationReceived(siteId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(localId.toLong(), true)
     }
 
     private fun startQuickStart() {
