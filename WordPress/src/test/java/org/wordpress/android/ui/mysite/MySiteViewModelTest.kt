@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -59,6 +60,8 @@ import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
@@ -103,6 +106,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
@@ -188,6 +192,42 @@ class MySiteViewModelTest : BaseUnitTest() {
     )
     private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
+    private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
+    private var dynamicCardMenuModel = DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true)
+    private val quickStartCategory: QuickStartCategory
+        get() = QuickStartCategory(
+                taskType = QuickStartTaskType.CUSTOMIZE,
+                uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
+                completedTasks = emptyList()
+        )
+    private val quickStartBlock: QuickStartBlock
+        get() = QuickStartBlock(
+                onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
+                taskTypeItems = listOf(
+                        QuickStartTaskTypeItem(
+                                quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
+                                icon = 0,
+                                iconEnabled = true,
+                                title = UiStringText(""),
+                                titleEnabled = true,
+                                subtitle = UiStringText(""),
+                                strikeThroughTitle = false,
+                                onClick = ListItemInteraction.create(
+                                        QuickStartTaskType.CUSTOMIZE,
+                                        { quickStartTaskTypeItemClickAction }
+                                )
+                        )
+                )
+        )
+    private val quickStartTaskCard: QuickStartCard
+        get() = QuickStartCard(
+                CUSTOMIZE_QUICK_START,
+                UiStringRes(0),
+                emptyList(),
+                0,
+                0,
+                ListItemInteraction.create(dynamicCardMenuModel, dynamicCardMoreClick as (DynamicCardMenuModel) -> Unit)
+        )
 
     @InternalCoroutinesApi
     @Before
@@ -994,13 +1034,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given quick start dynamic card is enabled, when site is selected, then quick start block not built`() {
-        initSelectedSite(isQuickStartDynamicCardEnabled = true)
-
-        assertThat(findQuickStartBlock()).isNull()
-    }
-
-    @Test
     fun `given quick start is not in progress, when site is selected, then quick start block not built`() {
         initSelectedSite(isQuickStartInProgress = false)
 
@@ -1008,10 +1041,31 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given dynamic card disabled + quick start in progress, when site is selected, then quick start block built`() {
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then dynamic card not built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartDynamicCard()).isNull()
+    }
+
+    @Test
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then dynamic card built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartDynamicCard()).isNotNull
+    }
+
+    @Test
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS block built`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
         assertThat(findQuickStartBlock()).isNotNull
+    }
+
+    @Test
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS block not built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartBlock()).isNull()
     }
 
     @Test
@@ -1256,6 +1310,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
 
+    private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
+
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
@@ -1297,40 +1353,19 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        if (!isQuickStartDynamicCardEnabled && isQuickStartInProgress) {
-            doAnswer {
-                removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
-                quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
+        doAnswer {
+            removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
+            quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
+            quickStartBlock
+        }.whenever(quickStartBlockBuilder).build(any(), any(), any())
+        doAnswer {
+            dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
+            quickStartTaskCard
+        }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
 
-                QuickStartBlock(
-                        onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
-                        taskTypeItems = listOf(
-                                QuickStartTaskTypeItem(
-                                        quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
-                                        icon = 0,
-                                        iconEnabled = true,
-                                        title = UiStringText(""),
-                                        titleEnabled = true,
-                                        subtitle = UiStringText(""),
-                                        strikeThroughTitle = false,
-                                        onClick = ListItemInteraction.create(
-                                                QuickStartTaskType.CUSTOMIZE,
-                                                { quickStartTaskTypeItemClickAction }
-                                        )
-                                )
-                        )
-                )
-            }.whenever(quickStartBlockBuilder).build(any(), any(), any())
-            quickStartUpdate.value = QuickStartUpdate(
-                    categories = listOf(
-                            QuickStartCategory(
-                                    taskType = QuickStartTaskType.CUSTOMIZE,
-                                    uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
-                                    completedTasks = emptyList()
-                            )
-                    )
-            )
-        }
+        quickStartUpdate.value = QuickStartUpdate(
+                categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
+        )
         onSiteSelected.value = siteId
         onSiteChange.value = site
     }
