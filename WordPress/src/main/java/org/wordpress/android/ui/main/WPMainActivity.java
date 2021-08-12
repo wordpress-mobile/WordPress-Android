@@ -1175,10 +1175,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
+                    @Nullable SiteModel selectedSite2 = mSelectedSiteRepository.getSelectedSite();
+                    int selectedSiteLocalId2 = selectedSite2 != null ? selectedSite2.getId() : -1;
                     boolean isSameSiteSelected = data != null
                                                  && data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1)
-                                                    == AppPrefs
-                                                            .getSelectedSite();
+                                                    == selectedSiteLocalId2;
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
