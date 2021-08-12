@@ -1048,14 +1048,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given dynamic card disabled + quick start in progress, when site is selected, then dynamic card not built`() {
+    fun `given dynamic card disabled + QS in progress, when site is selected, then QS dynamic card not built`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
         assertThat(findQuickStartDynamicCard()).isNull()
     }
 
     @Test
-    fun `given dynamic card enabled + quick start in progress, when site is selected, then dynamic card built`() {
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS dynamic card built`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
 
         assertThat(findQuickStartDynamicCard()).isNotNull
