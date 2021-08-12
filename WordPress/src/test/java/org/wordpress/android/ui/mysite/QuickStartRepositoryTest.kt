@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
@@ -177,6 +178,39 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         assertThat(snackbars).isEmpty()
     }
+
+    @Test
+    fun `when quick start is skipped, then all quick start tasks for the selected site are set to done`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+
+        quickStartRepository.skipQuickStart()
+
+        for (quickStartTask in QuickStartTask.values()) {
+            verify(quickStartStore).setDoneTask(siteId.toLong(), quickStartTask, true)
+        }
+    }
+
+    @Test
+    fun `when quick start is skipped, then quick start is marked complete for the selected site`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+
+        quickStartRepository.skipQuickStart()
+
+        verify(quickStartStore).setQuickStartCompleted(siteId.toLong(), true)
+    }
+
+    @Test
+    fun `when quick start is skipped, then quick start notifications for the selected site are marked received`() =
+            test {
+                whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+                initStore()
+
+                quickStartRepository.skipQuickStart()
+
+                verify(quickStartStore).setQuickStartNotificationReceived(siteId.toLong(), true)
+            }
 
     @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
