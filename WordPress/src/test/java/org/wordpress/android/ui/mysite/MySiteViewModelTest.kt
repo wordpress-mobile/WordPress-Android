@@ -103,6 +103,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -1034,6 +1035,42 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(removeMenuItemClickAction).invoke()
 
         assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
+    }
+
+    @Test
+    fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository, never()).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS is skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS repo refreshed`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS active task cleared`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).clearActiveTask()
     }
 
     @Test
