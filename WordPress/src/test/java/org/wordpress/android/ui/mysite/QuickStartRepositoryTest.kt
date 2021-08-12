@@ -44,6 +44,7 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -60,6 +61,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var htmlCompat: HtmlCompatWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
@@ -83,7 +85,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 dynamicCardStore,
                 htmlCompat,
                 mySiteImprovementsFeatureConfig,
-                quickStartDynamicCardsFeatureConfig
+                quickStartDynamicCardsFeatureConfig,
+                contextProvider
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -316,6 +319,29 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.buildSource(testScope(), updatedSiteId)
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
+    }
+
+    @Test
+    fun `given active task != completed task, when task is completed, then reminder notifs are not triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+
+        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+    }
+
+    @Test
+    fun `given active task = completed task, when task is completed, then reminder notifs are triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        quickStartRepository.startQuickStart(siteId)
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(PUBLISH_POST)
+
+        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
     }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
