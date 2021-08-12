@@ -322,7 +322,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given active task != completed task, when task is completed, then reminder notifications are not triggered`() = test {
+    fun `given active task != completed task, when task is completed, then reminder notifs are not triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
         quickStartRepository.setActiveTask(PUBLISH_POST)
@@ -333,7 +333,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given active task = completed task, when task is completed, then reminder notifications are triggered`() = test {
+    fun `given active task = completed task, when task is completed, then reminder notifs are triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
         quickStartRepository.startQuickStart(siteId)
@@ -343,7 +343,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
     }
-
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
