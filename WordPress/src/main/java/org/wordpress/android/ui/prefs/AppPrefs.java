@@ -908,7 +908,7 @@ public class AppPrefs {
 
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
-        List<String> items = Arrays.asList(idsAsString.split(","));
+        String[] items = idsAsString.split(",");
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
