@@ -1297,9 +1297,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        if (isQuickStartInProgress) {
-            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
+        if (!isQuickStartDynamicCardEnabled && isQuickStartInProgress) {
             doAnswer {
                 removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
                 quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
@@ -1332,8 +1330,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                             )
                     )
             )
-        } else {
-            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }
         onSiteSelected.value = siteId
         onSiteChange.value = site
