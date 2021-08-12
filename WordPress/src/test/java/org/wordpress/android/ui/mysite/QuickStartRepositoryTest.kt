@@ -321,6 +321,30 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
 
+    @Test
+    fun `given active task != completed task, when task is completed, then reminder notifications are not triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+
+        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+    }
+
+    @Test
+    fun `given active task = completed task, when task is completed, then reminder notifications are triggered`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        quickStartRepository.startQuickStart(siteId)
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(PUBLISH_POST)
+
+        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
+    }
+
+
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
@@ -361,31 +385,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
-    }
-
-    @Test
-    fun `given active task is different than completed task, then reminder notifications are not triggered`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore()
-
-        quickStartRepository.setActiveTask(PUBLISH_POST)
-
-        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
-
-        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
-    }
-
-    @Test
-    fun `given active task is same as completed task, then reminder notifications are triggered`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore()
-        quickStartRepository.startQuickStart(siteId)
-
-        quickStartRepository.setActiveTask(PUBLISH_POST)
-
-        quickStartRepository.completeTask(PUBLISH_POST)
-
-        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
     }
 
     private fun assertModel() {
