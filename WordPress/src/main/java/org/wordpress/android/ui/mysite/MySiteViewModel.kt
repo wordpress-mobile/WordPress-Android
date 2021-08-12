@@ -24,6 +24,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -506,6 +508,7 @@ class MySiteViewModel
                             Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite())))
                     )
                 }
+                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
@@ -516,6 +519,7 @@ class MySiteViewModel
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
+                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
@@ -523,6 +527,17 @@ class MySiteViewModel
                 }
             }
         }
+    }
+
+    private fun onRemoveNextStepsDialogPositiveButtonClicked() {
+        analyticsTrackerWrapper.track(QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
+        quickStartRepository.skipQuickStart()
+        refresh()
+        clearActiveQuickStartTask()
+    }
+
+    private fun onRemoveNextStepsDialogNegativeButtonClicked() {
+        analyticsTrackerWrapper.track(QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
