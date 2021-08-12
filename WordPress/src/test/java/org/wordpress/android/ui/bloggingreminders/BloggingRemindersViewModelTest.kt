@@ -335,6 +335,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         verify(reminderScheduler).schedule(
                 siteId,
+                hour,
+                minute,
                 WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
         )
     }

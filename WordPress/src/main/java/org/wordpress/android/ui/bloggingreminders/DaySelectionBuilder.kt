@@ -36,7 +36,7 @@ class DaySelectionBuilder
                 EmphasizedText(text),
                 bloggingRemindersModel?.enabledDays?.isEmpty() == true
         )
-        val selectionList =  mutableListOf(
+        val selectionList = mutableListOf(
                 Illustration(R.drawable.img_illustration_calendar),
                 Title(UiStringRes(R.string.blogging_reminders_select_days)),
                 MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
