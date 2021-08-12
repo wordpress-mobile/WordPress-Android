@@ -193,7 +193,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
-    private var dynamicCardMenuModel = DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true)
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -219,14 +218,17 @@ class MySiteViewModelTest : BaseUnitTest() {
                         )
                 )
         )
-    private val quickStartTaskCard: QuickStartCard
+    private val dynamicQuickStartTaskCard: QuickStartCard
         get() = QuickStartCard(
                 CUSTOMIZE_QUICK_START,
                 UiStringRes(0),
                 emptyList(),
                 0,
                 0,
-                ListItemInteraction.create(dynamicCardMenuModel, dynamicCardMoreClick as (DynamicCardMenuModel) -> Unit)
+                ListItemInteraction.create(
+                        DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true),
+                        dynamicCardMoreClick as (DynamicCardMenuModel) -> Unit
+                )
         )
 
     @InternalCoroutinesApi
@@ -1367,7 +1369,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(quickStartBlockBuilder).build(any(), any(), any())
         doAnswer {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
-            quickStartTaskCard
+            dynamicQuickStartTaskCard
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
 
         quickStartUpdate.value = QuickStartUpdate(
