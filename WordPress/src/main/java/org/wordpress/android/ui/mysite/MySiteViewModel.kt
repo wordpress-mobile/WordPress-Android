@@ -260,8 +260,15 @@ class MySiteViewModel
                 }
             }.associateBy { it.dynamicCardType }
 
-            quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                siteItems.add(quickStartBlockBuilder.build(quickStartCategories, this::onQuickStartTaskTypeItemClick))
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
+                quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+                    siteItems.add(
+                            quickStartBlockBuilder.build(
+                                    quickStartCategories,
+                                    this::onQuickStartTaskTypeItemClick
+                            )
+                    )
+                }
             }
 
             siteItems.addAll(
