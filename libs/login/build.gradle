@@ -24,6 +24,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.automattic.android.publish-library-to-s3'
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.fluxc"
+        }
+    }
     mavenCentral()
     google()
     jcenter()
@@ -59,17 +66,9 @@ dependencies {
 
     api 'com.google.android.gms:play-services-auth:18.1.0'
 
-    // Share FluxC version from host project if defined, otherwise fallback to default
-    if (project.hasProperty("fluxCVersion")) {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
-            exclude group: "com.android.support"
-            exclude group: "org.wordpress", module: "utils"
-        }
-    } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:1.17.0") {
-            exclude group: "com.android.support"
-            exclude group: "org.wordpress", module: "utils"
-        }
+    implementation("org.wordpress:fluxc:1.23.0") {
+        exclude group: "com.android.support"
+        exclude group: "org.wordpress", module: "utils"
     }
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -82,7 +81,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    lintChecks 'org.wordpress:lint:1.0.2'
+    lintChecks 'org.wordpress:lint:1.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
