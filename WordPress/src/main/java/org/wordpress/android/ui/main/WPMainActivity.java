@@ -957,12 +957,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (mMySiteImprovementsFeatureConfig.isEnabled()) {
             if (pageType == PageType.READER) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
                 mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
             }
         } else {
             if (getMySiteFragment() != null) {
-                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
                 hideQuickStartSnackBar();
                 if (pageType == PageType.READER && getMySiteFragment()
                         .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
@@ -1473,7 +1473,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // Reset site selection
-            setSelectedSite(null);
+            removeSelectedSite();
             // Show the sign in screen
             if (BuildConfig.IS_JETPACK_APP) {
                 ActivityLauncher.showSignInForResultJetpackOnly(this);
@@ -1496,15 +1496,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     public void setSelectedSite(int localSiteId) {
-        setSelectedSite(mSiteStore.getSiteByLocalId(localSiteId));
+        SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
+        if (site != null) {
+            setSelectedSite(site);
+        }
     }
 
-    public void setSelectedSite(@Nullable SiteModel selectedSite) {
+    public void setSelectedSite(@NonNull SiteModel selectedSite) {
         mSelectedSiteRepository.updateSite(selectedSite);
-        if (selectedSite == null) {
-            AppPrefs.setSelectedSite(-1);
-            return;
-        }
 
         // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
@@ -1512,6 +1511,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
+    }
+
+    public void removeSelectedSite() {
+        mSelectedSiteRepository.removeSite();
+        AppPrefs.setSelectedSite(-1);
     }
 
     /**
@@ -1524,7 +1528,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (siteLocalId != -1) {
             // Site previously selected, use it
-            mSelectedSiteRepository.updateSite(mSiteStore.getSiteByLocalId(siteLocalId));
+            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            if (site != null) {
+                mSelectedSiteRepository.updateSite(site);
+            }
             // If saved site exist, then return, else (site has been removed?) try to select another site
             if (mSelectedSiteRepository.hasSelectedSite()) {
                 return;
@@ -1741,6 +1748,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onPause();
         hideQuickStartSnackBar();
 
-        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+        QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }
 }

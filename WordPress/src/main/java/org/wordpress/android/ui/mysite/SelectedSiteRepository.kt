@@ -23,11 +23,18 @@ class SelectedSiteRepository
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
     val siteSelected = _selectedSiteChange.map { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
-    fun updateSite(selectedSite: SiteModel?) {
-        if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
+    fun updateSite(selectedSite: SiteModel) {
+        if (getSelectedSite()?.iconUrl != selectedSite.iconUrl) {
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
+    }
+
+    fun removeSite() {
+        if (getSelectedSite()?.iconUrl != null) {
+            showSiteIconProgressBar(false)
+        }
+        _selectedSiteChange.value = null
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
