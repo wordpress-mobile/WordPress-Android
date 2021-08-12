@@ -1351,7 +1351,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlansFetched(event: OnPlansFetched) {
-        if (AppPrefs.getSelectedSite() != event.site.id) {
+        if (selectedSite?.id != event.site.id) {
             return
         }
         if (event.isError) {
