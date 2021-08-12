@@ -263,6 +263,7 @@ class MySiteViewModel
                     siteItems.add(
                             quickStartBlockBuilder.build(
                                     quickStartCategories,
+                                    this::onQuickStartBlockRemoveMenuItemClick,
                                     this::onQuickStartTaskTypeItemClick
                             )
                     )
@@ -355,6 +356,9 @@ class MySiteViewModel
 
     private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
         _onDynamicCardMenuShown.postValue(Event(model))
+    }
+
+    private fun onQuickStartBlockRemoveMenuItemClick() {
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {

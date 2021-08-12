@@ -14,8 +14,10 @@ import javax.inject.Inject
 class QuickStartBlockBuilder @Inject constructor() {
     fun build(
         categories: List<QuickStartCategory>,
+        onRemoveMenuItemClick: () -> Unit,
         onItemClick: (QuickStartTaskType) -> Unit
     ) = QuickStartBlock(
+            onRemoveMenuItemClick = ListItemInteraction.create { onRemoveMenuItemClick.invoke() },
             taskTypeItems = categories.map { buildQuickStartTaskTypeItem(it, onItemClick) }
     )
 

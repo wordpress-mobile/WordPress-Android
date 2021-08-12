@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItemViewHolder
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
 
@@ -19,13 +20,17 @@ class QuickStartBlockViewHolder(
     private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder<QuickStartBlockBinding>(parent.viewBinding(QuickStartBlockBinding::inflate)) {
     fun bind(block: QuickStartBlock) = with(binding) {
-        quickStartMore.setOnClickListener { showQuickStartCardMenu() }
+        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
         updateQuickStartCustomizeContainer(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
         updateQuickStartGrowContainer(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
-    private fun QuickStartBlockBinding.showQuickStartCardMenu() {
+    private fun QuickStartBlockBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
         val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
+        quickStartPopupMenu.setOnMenuItemClickListener {
+            onRemoveMenuItemClick.click()
+            return@setOnMenuItemClickListener true
+        }
         quickStartPopupMenu.inflate(R.menu.quick_start_card_menu)
         quickStartPopupMenu.show()
     }
