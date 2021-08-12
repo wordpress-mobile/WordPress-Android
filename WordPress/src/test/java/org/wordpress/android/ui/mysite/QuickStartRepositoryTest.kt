@@ -69,7 +69,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var result: MutableList<QuickStartUpdate>
-    private val siteId = 1
+    private val siteLocalId = 1
 
     @InternalCoroutinesApi
     @Before
@@ -99,9 +99,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
         site = SiteModel()
-        site.id = siteId
+        site.id = siteLocalId
         result = mutableListOf()
-        quickStartRepository.buildSource(testScope(), siteId).observeForever { result.add(it) }
+        quickStartRepository.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     @Test
@@ -142,7 +142,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-        verify(dynamicCardStore).removeCard(siteId, GROW_QUICK_START)
+        verify(dynamicCardStore).removeCard(siteLocalId, GROW_QUICK_START)
     }
 
     @Test
@@ -153,7 +153,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
                 triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                verify(dynamicCardStore, never()).removeCard(siteId, GROW_QUICK_START)
+                verify(dynamicCardStore, never()).removeCard(siteLocalId, GROW_QUICK_START)
             }
 
     @Test
@@ -172,7 +172,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(false)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(false)
 
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
@@ -217,9 +217,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartRepository.startQuickStart(siteId)
+        quickStartRepository.startQuickStart(siteLocalId)
 
-        verify(quickStartUtils).startQuickStart(siteId)
+        verify(quickStartUtils).startQuickStart(siteLocalId)
         assertModel()
     }
 
@@ -245,10 +245,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(task)
 
-        verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
+        verify(quickStartStore).setDoneTask(siteLocalId.toLong(), task, true)
         val update = result.last()
         assertThat(update.activeTask).isNull()
-        assertThat(update.categories).isNotEmpty()
+        assertThat(update.categories).isNotEmpty
     }
 
     @Test
@@ -262,10 +262,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(task)
         quickStartRepository.completeTask(task)
 
-        verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
+        verify(quickStartStore).setDoneTask(siteLocalId.toLong(), task, true)
         val update = result.last()
         assertThat(update.activeTask).isNull()
-        assertThat(update.categories).isNotEmpty()
+        assertThat(update.categories).isNotEmpty
     }
 
     @Test
@@ -378,7 +378,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
         whenever(htmlCompat.fromHtml(ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
 
@@ -394,7 +394,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private suspend fun initStore() {
-        whenever(dynamicCardStore.getCards(siteId)).thenReturn(
+        whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
                 DynamicCardsModel(
                         dynamicCardTypes = listOf(
                                 CUSTOMIZE_QUICK_START,
@@ -403,19 +403,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 )
         )
         whenever(quickStartUtils.isQuickStartInProgress(site.id)).thenReturn(true)
-        whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
-        whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
+        whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
+                listOf(
+                        CREATE_SITE
+                )
+        )
+        whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
                         UPDATE_SITE_TITLE
                 )
         )
         whenever(
                 quickStartStore.getUncompletedTasksByType(
-                        siteId.toLong(),
+                        siteLocalId.toLong(),
                         GROW
                 )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
-        whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
+        whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
     }
 
     private fun assertModel() {

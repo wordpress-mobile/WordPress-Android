@@ -122,9 +122,9 @@ class QuickStartRepository
         }
     }
 
-    fun startQuickStart(newSiteLocalID: Int) {
-        if (newSiteLocalID != -1) {
-            quickStartUtils.startQuickStart(newSiteLocalID)
+    fun startQuickStart(siteLocalId: Int) {
+        if (siteLocalId != -1) {
+            quickStartUtils.startQuickStart(siteLocalId)
             refresh()
         }
     }

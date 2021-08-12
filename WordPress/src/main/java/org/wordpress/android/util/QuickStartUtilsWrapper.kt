@@ -127,8 +127,8 @@ class QuickStartUtilsWrapper
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }
 
-    fun startQuickStart(siteId: Int) {
-        quickStartStore.setDoneTask(siteId.toLong(), CREATE_SITE, true)
+    fun startQuickStart(siteLocalId: Int) {
+        quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
         analyticsTrackerWrapper.track(QUICK_START_STARTED, mySiteImprovementsFeatureConfig)
     }
 }
