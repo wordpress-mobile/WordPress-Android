@@ -327,7 +327,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         val taskToPrompt = getNextUncompletedQuickStartTask(
                 quickStartStore,
-                AppPrefs.getSelectedSite().toLong(), CUSTOMIZE
+                selectedSite?.id?.toLong() ?: -1L,
+                CUSTOMIZE
         ) // CUSTOMIZE is default type
         if (taskToPrompt != null) {
             quickStartSnackBarHandler.removeCallbacksAndMessages(null)
