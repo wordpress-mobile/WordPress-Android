@@ -1304,10 +1304,7 @@ public class AppPrefs {
         }
         List<String> currentIds = getPostWithHWAccelerationOff();
         String key = localSiteId + "-" + localPostId;
-        if (currentIds.contains(key)) {
-            return true;
-        }
-        return false;
+        return currentIds.contains(key);
     }
 
     public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {
