@@ -1010,10 +1010,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
@@ -1021,10 +1019,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start active task is cleared`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         verify(quickStartRepository).clearActiveTask()
@@ -1032,10 +1028,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         viewModel.onQuickStartFullScreenDialogDismiss()
 
         verify(quickStartRepository).refresh()
@@ -1044,10 +1038,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
         val task = QuickStartTask.VIEW_SITE
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         viewModel.onQuickStartFullScreenDialogConfirm(task)
 
         verify(quickStartRepository).setActiveTask(task)
