@@ -76,6 +76,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.U
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
@@ -1027,6 +1028,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given dynamic card disabled, when QS remove menu item is clicked, then remove next steps dialog shown`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        requireNotNull(removeMenuItemClickAction).invoke()
+
+        assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
+    }
+
+    @Test
     fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
@@ -1199,7 +1209,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
             doAnswer {
+                removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
                 quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
+
                 QuickStartBlock(
                         onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                         taskTypeItems = listOf(
