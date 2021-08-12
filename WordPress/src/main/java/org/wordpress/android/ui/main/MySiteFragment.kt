@@ -647,7 +647,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         if (isQuickStartInProgress(quickStartStore)) {
-            val site = AppPrefs.getSelectedSite()
+            val site = selectedSite?.id ?: -1
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
                     site.toLong(),
                     CUSTOMIZE
