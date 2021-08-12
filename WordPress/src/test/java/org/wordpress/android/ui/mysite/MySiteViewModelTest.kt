@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +28,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteModel
@@ -1115,43 +1119,43 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given QS dynamic cards cards feature is on, when start quick start is triggered, then QS starts`() {
+    fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         verify(quickStartRepository).startQuickStart(siteId)
     }
 
     @Test
-    fun `given no selected site, when start quick start is triggered, then QSP is not shown`() {
+    fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is not available for the site, when start quick start is triggered, then QSP is not shown`() {
+    fun `given QS is not available for the site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given onboarding improvements feature is on, when start quick start is triggered, then new QSP is shown`() {
+    fun `given onboarding improvements feature is on, when check and start QS is triggered, then new QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(
@@ -1164,27 +1168,27 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given QS is disabled, when start quick start is triggered, then old QSP is not shown`() {
+    fun `given QS is disabled, when check and start QS is triggered, then old QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is enabled, when start quick start is triggered, then old QSP is shown`() {
+    fun `given QS is enabled, when check and start QS is triggered, then old QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
 
-        viewModel.startQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(
@@ -1195,6 +1199,57 @@ class MySiteViewModelTest : BaseUnitTest() {
                         R.string.quick_start_dialog_need_help_button_neutral
                 )
         )
+    }
+
+    @Test
+    fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
+        viewModel.startQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+    }
+
+    @Test
+    fun `when start QS is triggered, then QS starts`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.startQuickStart()
+
+        verify(quickStartRepository).startQuickStart(site.id)
+    }
+
+    @Test
+    fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
+        viewModel.ignoreQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    @Test
+    fun `given onboarding improvements feature is on, when disable QS is triggered, then do nothing`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.disableQuickStart()
+
+        verifyZeroInteractions(analyticsTrackerWrapper)
+        verifyZeroInteractions(appPrefsWrapper)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then QS request dialog neutral tapped is tracked`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then disable QS`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(appPrefsWrapper).setQuickStartDisabled(true)
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?

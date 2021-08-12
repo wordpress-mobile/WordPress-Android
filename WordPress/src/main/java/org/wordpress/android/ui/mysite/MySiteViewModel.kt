@@ -24,6 +24,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -649,7 +652,7 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart(newSiteLocalID: Int) {
+    fun checkAndStartQuickStart(newSiteLocalID: Int) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartRepository.startQuickStart(newSiteLocalID)
         } else {
@@ -704,6 +707,22 @@ class MySiteViewModel
                     )
                 }
             }
+        }
+    }
+
+    fun startQuickStart() {
+        analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        selectedSiteRepository.getSelectedSite()?.id?.let { quickStartRepository.startQuickStart(it) }
+    }
+
+    fun ignoreQuickStart() {
+        analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    fun disableQuickStart() {
+        if (!onboardingImprovementsFeatureConfig.isEnabled()) {
+            analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
+            appPrefsWrapper.setQuickStartDisabled(true)
         }
     }
 
