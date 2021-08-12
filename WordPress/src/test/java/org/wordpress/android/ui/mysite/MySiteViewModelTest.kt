@@ -180,6 +180,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
 
     @InternalCoroutinesApi
@@ -1206,8 +1207,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         if (isQuickStartInProgress) {
             whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
             doAnswer {
-                quickStartTaskTypeItemClickAction = (it.getArgument(1) as (QuickStartTaskType) -> Unit)
+                quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
                 QuickStartBlock(
+                        onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                         taskTypeItems = listOf(
                                 QuickStartTaskTypeItem(
                                         quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
@@ -1224,7 +1226,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 )
                         )
                 )
-            }.whenever(quickStartBlockBuilder).build(any(), any())
+            }.whenever(quickStartBlockBuilder).build(any(), any(), any())
             quickStartUpdate.value = QuickStartUpdate(
                     categories = listOf(
                             QuickStartCategory(

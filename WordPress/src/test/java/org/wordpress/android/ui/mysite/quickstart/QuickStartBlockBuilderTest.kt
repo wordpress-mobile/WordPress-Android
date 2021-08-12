@@ -22,6 +22,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
     private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
+    private val onRemoveMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
@@ -163,7 +164,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
     ): QuickStartBlock {
         val customizeCategory = buildQuickStartCategory(QuickStartTaskType.CUSTOMIZE, completedTasks, uncompletedTasks)
         val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
-        return builder.build(listOf(customizeCategory, growCategory), onItemClick)
+        return builder.build(listOf(customizeCategory, growCategory), onRemoveMenuItemClick, onItemClick)
     }
 
     private fun buildQuickStartCategory(
