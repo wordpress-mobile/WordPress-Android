@@ -1257,9 +1257,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        if (isQuickStartInProgress) {
-            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(true)
+        if (!isQuickStartDynamicCardEnabled && isQuickStartInProgress) {
             doAnswer {
                 quickStartTaskTypeItemClickAction = (it.getArgument(1) as (QuickStartTaskType) -> Unit)
                 QuickStartBlock(
@@ -1289,8 +1287,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                             )
                     )
             )
-        } else {
-            whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteId)).thenReturn(false)
         }
         onSiteSelected.value = siteId
         onSiteChange.value = site

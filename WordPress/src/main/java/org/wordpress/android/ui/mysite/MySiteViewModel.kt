@@ -260,8 +260,9 @@ class MySiteViewModel
                 }
             }.associateBy { it.dynamicCardType }
 
-            if (!quickStartDynamicCardsFeatureConfig.isEnabled() &&
-                    quickStartUtilsWrapper.isQuickStartInProgress(appPrefsWrapper.getSelectedSite())) {
+            siteItems.addAll(visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] })
+
+            if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
                 quickStartCategories.takeIf { it.isNotEmpty() }?.let {
                     siteItems.add(
                             quickStartBlockBuilder.build(
@@ -271,10 +272,6 @@ class MySiteViewModel
                     )
                 }
             }
-
-            siteItems.addAll(
-                    visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
-            )
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
