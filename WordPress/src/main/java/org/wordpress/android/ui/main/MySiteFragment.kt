@@ -147,7 +147,6 @@ import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
-import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -322,7 +321,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartNoticeIfNecessary() {
-        if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
+        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: -1) ||
+                !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
         val taskToPrompt = getNextUncompletedQuickStartTask(
@@ -646,7 +646,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!isAdded) {
             return
         }
-        if (isQuickStartInProgress(quickStartStore)) {
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: -1)) {
             val site = selectedSite?.id ?: -1
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
                     site.toLong(),
