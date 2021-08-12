@@ -1445,9 +1445,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
-                    !quickStartStore.hasDoneTask(
-                            AppPrefs.getSelectedSite().toLong(), quickStartTask
-                    ) &&
+                    !quickStartStore.hasDoneTask(site.id.toLong(), quickStartTask) &&
                             activeTutorialPrompt != null &&
                             activeTutorialPrompt!!.task == quickStartTask
             )
