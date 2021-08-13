@@ -45,7 +45,9 @@ class WeeklyRoundupNotifier @Inject constructor(
     }
 
     fun onNotificationsShown(notifications: List<WeeklyRoundupNotification>) {
-        notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP)
+        repeat(notifications.size) {
+            notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP)
+        }
 
         weeklyRoundupScheduler.schedule()
     }
@@ -62,6 +64,7 @@ class WeeklyRoundupNotifier @Inject constructor(
                             site,
                             WEEK,
                             data.period,
+                            WEEKLY_ROUNDUP,
                             notificationId,
                             FLAG_CANCEL_CURRENT or FLAG_IMMUTABLE
                     )
