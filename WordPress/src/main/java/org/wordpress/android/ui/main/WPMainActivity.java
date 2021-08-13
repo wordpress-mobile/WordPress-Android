@@ -1514,8 +1514,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         return mSelectedSiteRepository.getSelectedSite();
     }
 
-    private void setSelectedSite(int localSiteId) {
-        SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
+    private void setSelectedSite(int siteLocalId) {
+        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null) {
             setSelectedSite(site);
         }
@@ -1670,7 +1670,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         refreshCurrentSelectedSiteAfterEditorChanges(true, -1);
     }
 
-    private void refreshCurrentSelectedSiteAfterEditorChanges(boolean alwaysRefreshUI, int localSiteID) {
+    private void refreshCurrentSelectedSiteAfterEditorChanges(boolean alwaysRefreshUI, int siteLocalId) {
         // Need to update the user property about GB enabled on any of the sites
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
@@ -1686,7 +1686,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // When alwaysRefreshUI is `true` we need to refresh the UI regardless of the current site
         if (!alwaysRefreshUI) {
             // we need to refresh the UI only when the site IDs matches
-            if (getSelectedSite().getId() != localSiteID) {
+            if (getSelectedSite().getId() != siteLocalId) {
                 // No need to refresh the UI, since the current selected site is another site
                 return;
             }
