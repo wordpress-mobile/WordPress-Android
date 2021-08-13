@@ -3,8 +3,6 @@ package org.wordpress.android.workers.weeklyroundup
 import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
@@ -36,7 +34,7 @@ class WeeklyRoundupNotifier @Inject constructor(
 
         val data = weeklyRoundupRepository.fetchWeeklyRoundupData(site) ?: return emptyList()
 
-        val notification = buildNotification(site, data)
+        val notification = buildNotification(data)
 
         return listOf(notification)
     }
@@ -47,8 +45,9 @@ class WeeklyRoundupNotifier @Inject constructor(
         weeklyRoundupScheduler.schedule()
     }
 
-    private fun buildNotification(site: SiteModel, data: PeriodData): WeeklyRoundupNotification {
+    private fun buildNotification(data: WeeklyRoundupData): WeeklyRoundupNotification {
         val context = contextProvider.getContext()
+        val site = data.site
         val notificationId = WEEKLY_ROUNDUP_NOTIFICATION_ID + site.id
         return WeeklyRoundupNotification(
                 id = notificationId,

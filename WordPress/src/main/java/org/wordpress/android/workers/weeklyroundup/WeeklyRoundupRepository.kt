@@ -15,7 +15,7 @@ import javax.inject.Inject
 class WeeklyRoundupRepository @Inject constructor(
     private val visitsAndViewsStore: VisitsAndViewsStore
 ) {
-    suspend fun fetchWeeklyRoundupData(site: SiteModel): PeriodData? {
+    suspend fun fetchWeeklyRoundupData(site: SiteModel): WeeklyRoundupData? {
         val response = visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(2), true)
 
         val visitsAndViewsModel = response.model
@@ -26,7 +26,7 @@ class WeeklyRoundupRepository @Inject constructor(
             return null
         }
 
-        return getLastWeekPeriodData(visitsAndViewsModel)
+        return getLastWeekPeriodData(visitsAndViewsModel)?.let { WeeklyRoundupData.create(site, it) }
     }
 
     private fun getLastWeekPeriodData(visitsAndViewsModel: VisitsAndViewsModel): PeriodData? {
