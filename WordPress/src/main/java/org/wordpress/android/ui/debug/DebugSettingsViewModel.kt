@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
@@ -22,6 +24,7 @@ import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,6 +38,8 @@ class DebugSettingsViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
+    private val _onNavigation = MutableLiveData<Event<NavigationAction>>()
+    val onNavigation: LiveData<Event<NavigationAction>> = _onNavigation
     private var hasChange: Boolean = false
 
     fun start() {
@@ -60,7 +65,12 @@ class DebugSettingsViewModel
             uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
         }
         uiItems.add(Header(R.string.debug_settings_tools))
+        uiItems.add(Row(R.string.debug_cookies_title, ListItemInteraction.create(this::onDebugCookiesClick)))
         _uiState.value = UiState(uiItems)
+    }
+
+    private fun onDebugCookiesClick() {
+        _onNavigation.value = Event(DebugCookies)
     }
 
     private fun buildDevelopedFeatures(): List<Feature> {
@@ -131,5 +141,9 @@ class DebugSettingsViewModel
         enum class Type {
             HEADER, FEATURE, BUTTON, ROW
         }
+    }
+
+    sealed class NavigationAction {
+        object DebugCookies : NavigationAction()
     }
 }
