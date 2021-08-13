@@ -27,7 +27,6 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
@@ -121,7 +120,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageItemContainer.post {
                         val horizontalOffset = pageItemContainer.width / 2
                         val verticalOffset = (pageItemContainer.height)
-                        addQuickStartFocusPointAboveTheView(
+                        QuickStartUtils.addQuickStartFocusPointAboveTheView(
                                 pageItemContainer,
                                 pageMore,
                                 horizontalOffset,
