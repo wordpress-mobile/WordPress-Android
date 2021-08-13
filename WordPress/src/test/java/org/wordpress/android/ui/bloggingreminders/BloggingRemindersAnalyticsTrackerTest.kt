@@ -130,9 +130,10 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackRemindersScheduled tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackRemindersScheduled(3)
+        bloggingRemindersAnalyticsTracker.trackRemindersScheduled(3, "10:30 am")
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_SCHEDULED), checkMap {
             assertThat(it).containsEntry("days_of_week_count", 3)
+            assertThat(it).containsEntry("selected_time", "10:30 am")
             assertThat(it).containsKey("blog_type")
         })
     }
