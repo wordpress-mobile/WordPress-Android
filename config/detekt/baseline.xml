@@ -320,7 +320,6 @@
     <ID>ReturnCount:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils.Companion$fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String?): String?</ID>
     <ID>ReturnCount:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils.Companion$fun getPhoneNumberWithoutPrefix(phoneNumber: String?): String?</ID>
-    <ID>ReturnCount:DomainRegistrationHandler.kt$DomainRegistrationHandler$override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData&lt;DomainCreditAvailable&gt;</ID>
     <ID>ReturnCount:FeatureAnnouncementListAdapter.kt$FeatureAnnouncementListAdapter$override fun getItemCount(): Int</ID>
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun createCurrentFeaturedImageState(site: SiteModel, post: PostImmutableModel): FeaturedImageData</ID>
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun queueFeaturedImageForUpload( localPostId: Int, site: SiteModel, uri: Uri, mimeType: String? ): EnqueueFeaturedImageResult</ID>
@@ -340,7 +339,6 @@
     <ID>ReturnCount:PostListFeaturedImageTracker.kt$PostListFeaturedImageTracker$fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PostsListActivity.kt$PostsListActivity$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>ReturnCount:QuickStartUtils.kt$QuickStartUtils.Companion$ @JvmStatic fun getNextUncompletedQuickStartTask( quickStartStore: QuickStartStore, siteId: Long, taskType: QuickStartTaskType ): QuickStartTask?</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$/* * returns True if the passed URL should be opened in the external browser app */ private fun shouldOpenExternal(url: String): Boolean</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun doLikePost()</ID>
@@ -450,8 +448,6 @@
     <ID>TooManyFunctions:PrepublishingTagsFragment.kt$PrepublishingTagsFragment : TagsFragmentTagsSelectedListener</ID>
     <ID>TooManyFunctions:PrepublishingViewModel.kt$PrepublishingViewModel : ViewModel</ID>
     <ID>TooManyFunctions:PublishSettingsViewModel.kt$PublishSettingsViewModel : ViewModel</ID>
-    <ID>TooManyFunctions:QuickStartRepository.kt$QuickStartRepository : CoroutineScopeMySiteSource</ID>
-    <ID>TooManyFunctions:QuickStartUtils.kt$QuickStartUtils$Companion</ID>
     <ID>TooManyFunctions:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider : CoroutineScope</ID>
     <ID>TooManyFunctions:ReaderDiscoverLogic.kt$ReaderDiscoverLogic</ID>
     <ID>TooManyFunctions:ReaderDiscoverViewModel.kt$ReaderDiscoverViewModel : ScopedViewModel</ID>
@@ -522,7 +518,6 @@
     <ID>UtilityClassWithPublicConstructor:AppThemeUtils.kt$AppThemeUtils</ID>
     <ID>UtilityClassWithPublicConstructor:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils</ID>
     <ID>UtilityClassWithPublicConstructor:ImageEditorInitializer.kt$ImageEditorInitializer</ID>
-    <ID>UtilityClassWithPublicConstructor:QuickStartUtils.kt$QuickStartUtils</ID>
     <ID>UtilityClassWithPublicConstructor:WPSnackbar.kt$WPSnackbar</ID>
     <ID>VariableNaming:ReaderCommentsFollowUseCase.kt$ReaderCommentsFollowUseCase$private val FOLLOW_COMMENT_ACTION = "follow_action"</ID>
     <ID>VariableNaming:ReaderCommentsFollowUseCase.kt$ReaderCommentsFollowUseCase$private val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"</ID>
