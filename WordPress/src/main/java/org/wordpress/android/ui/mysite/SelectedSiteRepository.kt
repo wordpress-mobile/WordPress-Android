@@ -6,6 +6,7 @@ import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.map
 import javax.inject.Inject
@@ -97,5 +98,9 @@ class SelectedSiteRepository
 
     fun isSiteIconUploadInProgress(): Boolean {
         return _showSiteIconProgressBar.value == true
+    }
+
+    companion object {
+        const val UNAVAILABLE = AppPrefs.SELECTED_SITE_UNAVAILABLE
     }
 }

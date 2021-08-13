@@ -123,7 +123,7 @@ class QuickStartRepository
     }
 
     fun startQuickStart(siteLocalId: Int) {
-        if (siteLocalId != -1) {
+        if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper.startQuickStart(siteLocalId)
             refresh()
         }

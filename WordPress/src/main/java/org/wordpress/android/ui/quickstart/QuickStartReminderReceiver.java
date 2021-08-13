@@ -51,7 +51,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         }
 
         @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = site != null ? site.getId() : -1;
+        int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);

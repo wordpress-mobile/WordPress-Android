@@ -78,7 +78,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = site != null ? site.getId() : -1;
+        int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
 
         mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
 
@@ -172,7 +172,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     public void onSkipTaskTapped(QuickStartTask task) {
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
         @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = site != null ? site.getId() : -1;
+        int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
         mQuickStartStore.setDoneTask(siteLocalId, task, true);
 
         if (mQuickStartAdapter != null) {
@@ -205,7 +205,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         }
 
         @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = site != null ? site.getId() : -1;
+        int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
         if (mQuickStartStore.getUncompletedTasksByType(siteLocalId, mTasksType).isEmpty()) {
             toggleCompletedView(!isExpanded);
         }

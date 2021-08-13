@@ -23,6 +23,7 @@ import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 
 import java.util.ArrayList;
 
@@ -153,7 +154,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
             && resultCode == RESULT_OK
             && data != null
         ) {
-            int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
+            int newSiteLocalID = data.getIntExtra(
+                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+            );
             setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID));
             finish();
         }

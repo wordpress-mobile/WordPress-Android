@@ -1071,7 +1071,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void setSite(Intent data) {
         if (data != null) {
-            int selectedSite = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
+            int selectedSite = data.getIntExtra(
+                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+            );
             setSelectedSite(selectedSite);
         }
     }
@@ -1135,7 +1138,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1);
+                    int newSiteLocalID = data.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    );
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                 }
 
@@ -1176,10 +1182,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     @Nullable SiteModel selectedSite2 = mSelectedSiteRepository.getSelectedSite();
-                    int selectedSiteLocalId2 = selectedSite2 != null ? selectedSite2.getId() : -1;
+                    int selectedSiteLocalId2 =
+                            selectedSite2 != null ? selectedSite2.getId() : SelectedSiteRepository.UNAVAILABLE;
                     boolean isSameSiteSelected = data != null
-                                                 && data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1)
-                                                    == selectedSiteLocalId2;
+                                                 && data.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    ) == selectedSiteLocalId2;
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
@@ -1519,7 +1528,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void removeSelectedSite() {
         mSelectedSiteRepository.removeSite();
-        AppPrefs.setSelectedSite(-1);
+        AppPrefs.setSelectedSite(AppPrefs.SELECTED_SITE_UNAVAILABLE);
     }
 
     /**
@@ -1530,7 +1539,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void initSelectedSite() {
         int siteLocalId = AppPrefs.getSelectedSite();
 
-        if (siteLocalId != -1) {
+        if (siteLocalId != AppPrefs.SELECTED_SITE_UNAVAILABLE) {
             // Site previously selected, use it
             SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
             if (site != null) {

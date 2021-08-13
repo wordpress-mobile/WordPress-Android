@@ -453,11 +453,21 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1))
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, -1))
+                    viewModel.checkAndStartQuickStart(
+                            data.getIntExtra(
+                                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                    SelectedSiteRepository.UNAVAILABLE
+                            )
+                    )
                 }
             }
         }

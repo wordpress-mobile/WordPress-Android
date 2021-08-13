@@ -1008,7 +1008,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = selectedSite != null ? selectedSite.getId() : -1;
+        int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
         SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(

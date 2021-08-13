@@ -628,7 +628,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
             @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-            int currentSiteId = selectedSite != null ? selectedSite.getId() : -1;
+            int currentSiteId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
             for (SiteRecord site : sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {

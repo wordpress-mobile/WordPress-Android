@@ -319,13 +319,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartNoticeIfNecessary() {
-        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: -1) ||
+        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE) ||
                 !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
         val taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(
                 quickStartStore,
-                selectedSite?.id?.toLong() ?: -1L,
+                selectedSite?.id?.toLong() ?: SelectedSiteRepository.UNAVAILABLE.toLong(),
                 CUSTOMIZE
         ) // CUSTOMIZE is default type
         if (taskToPrompt != null) {
@@ -644,7 +644,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!isAdded) {
             return
         }
-        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: -1)) {
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)) {
             val site = selectedSite?.id ?: -1
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
                     site.toLong(),
@@ -1280,7 +1280,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun startQuickStart() {
-        quickStartUtilsWrapper.startQuickStart(selectedSite?.id ?: -1)
+        quickStartUtilsWrapper.startQuickStart(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)
         binding?.updateQuickStartContainer()
     }
 

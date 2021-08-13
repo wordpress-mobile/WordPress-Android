@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
+    public static final int SELECTED_SITE_UNAVAILABLE = -1;
+
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
@@ -595,7 +597,7 @@ public class AppPrefs {
     }
 
     public static int getSelectedSite() {
-        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
     public static void setSelectedSite(int localId) {
