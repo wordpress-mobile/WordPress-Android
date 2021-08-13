@@ -189,9 +189,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.skipQuickStart()
 
-        for (quickStartTask in QuickStartTask.values()) {
-            verify(quickStartStore).setDoneTask(siteId.toLong(), quickStartTask, true)
-        }
+        QuickStartTask.values().forEach { verify(quickStartStore).setDoneTask(siteId.toLong(), it, true) }
     }
 
     @Test

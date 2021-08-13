@@ -132,9 +132,7 @@ class QuickStartRepository
     fun skipQuickStart() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val siteLocalId = site.id.toLong()
-            for (quickStartTask in QuickStartTask.values()) {
-                quickStartStore.setDoneTask(siteLocalId, quickStartTask, true)
-            }
+            QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteLocalId, it, true) }
             quickStartStore.setQuickStartCompleted(siteLocalId, true)
             // skipping all tasks means no achievement notification, so we mark it as received
             quickStartStore.setQuickStartNotificationReceived(siteLocalId, true)
