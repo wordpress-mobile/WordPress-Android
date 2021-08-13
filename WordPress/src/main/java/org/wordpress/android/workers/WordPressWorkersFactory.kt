@@ -7,6 +7,8 @@ import org.wordpress.android.util.UploadWorker
 import org.wordpress.android.workers.reminder.ReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import org.wordpress.android.workers.reminder.ReminderWorker
+import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupNotifier
+import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupWorker
 import javax.inject.Inject
 
 class WordPressWorkersFactory @Inject constructor(
@@ -14,11 +16,13 @@ class WordPressWorkersFactory @Inject constructor(
     siteStore: SiteStore,
     localNotificationHandlerFactory: LocalNotificationHandlerFactory,
     reminderScheduler: ReminderScheduler,
-    reminderNotifier: ReminderNotifier
+    reminderNotifier: ReminderNotifier,
+    weeklyRoundupNotifier: WeeklyRoundupNotifier
 ) : DelegatingWorkerFactory() {
     init {
         addFactory(UploadWorker.Factory(uploadStarter, siteStore))
         addFactory(LocalNotificationWorker.Factory(localNotificationHandlerFactory))
         addFactory(ReminderWorker.Factory(reminderScheduler, reminderNotifier))
+        addFactory(WeeklyRoundupWorker.Factory(weeklyRoundupNotifier))
     }
 }
