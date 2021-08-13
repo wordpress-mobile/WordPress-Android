@@ -46,42 +46,27 @@ class StatsActivity : LocaleAwareActivity() {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
         const val ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM"
         const val ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME"
-        @JvmStatic
-        fun start(context: Context, site: SiteModel) {
-            context.startActivity(buildIntent(context, site))
-        }
 
         @JvmStatic
-        fun start(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe) {
-            context.startActivity(buildIntent(context, site, statsTimeframe))
-        }
-
-        fun start(context: Context, localSiteId: Int, statsTimeframe: StatsTimeframe, period: String?) {
-            val intent = buildIntent(context, localSiteId, statsTimeframe, period)
-            context.startActivity(intent)
-        }
-
-        @JvmStatic
-        fun buildIntent(context: Context, site: SiteModel): Intent {
-            return buildIntent(context, site.id)
-        }
-
-        @JvmStatic
-        fun buildIntent(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe): Intent {
-            return buildIntent(context, site.id, statsTimeframe)
-        }
-
-        private fun buildIntent(
+        @JvmOverloads
+        fun start(
             context: Context,
-            localSiteId: Int,
+            site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
             period: String? = null
-        ): Intent {
-            val intent = Intent(context, StatsActivity::class.java)
-            intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-            statsTimeframe?.let { intent.putExtra(ARG_DESIRED_TIMEFRAME, statsTimeframe) }
-            period?.let { intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, period) }
-            return intent
+        ) = context.startActivity(buildIntent(context, site, statsTimeframe, period))
+
+        @JvmStatic
+        @JvmOverloads
+        fun buildIntent(
+            context: Context,
+            site: SiteModel,
+            statsTimeframe: StatsTimeframe? = null,
+            period: String? = null
+        ) = Intent(context, StatsActivity::class.java).apply {
+            putExtra(WordPress.LOCAL_SITE_ID, site.id)
+            statsTimeframe?.let { putExtra(ARG_DESIRED_TIMEFRAME, it) }
+            period?.let { putExtra(INITIAL_SELECTED_PERIOD_KEY, it) }
         }
     }
 
