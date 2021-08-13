@@ -130,12 +130,12 @@ class QuickStartRepository
     }
 
     fun skipQuickStart() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            val siteLocalId = site.id.toLong()
-            QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteLocalId, it, true) }
-            quickStartStore.setQuickStartCompleted(siteLocalId, true)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            val selectedSiteLocalId = selectedSite.id.toLong()
+            QuickStartTask.values().forEach { quickStartStore.setDoneTask(selectedSiteLocalId, it, true) }
+            quickStartStore.setQuickStartCompleted(selectedSiteLocalId, true)
             // skipping all tasks means no achievement notification, so we mark it as received
-            quickStartStore.setQuickStartNotificationReceived(siteLocalId, true)
+            quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId, true)
         }
     }
 
@@ -164,21 +164,21 @@ class QuickStartRepository
     }
 
     @JvmOverloads fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
             pendingTask = null
-            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
-            quickStartUtilsWrapper.completeTaskAndRemindNextOne(task, site, null, contextProvider.getContext())
-            setTaskDoneAndTrack(task, site.id)
+            if (quickStartStore.hasDoneTask(selectedSite.id.toLong(), task)) return
+            quickStartUtilsWrapper.completeTaskAndRemindNextOne(task, selectedSite, null, contextProvider.getContext())
+            setTaskDoneAndTrack(task, selectedSite.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
                 refresh()
             }
-            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(site.id)) {
-                quickStartStore.setQuickStartCompleted(site.id.toLong(), true)
+            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
+                quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
-                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
+                val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             }
         }

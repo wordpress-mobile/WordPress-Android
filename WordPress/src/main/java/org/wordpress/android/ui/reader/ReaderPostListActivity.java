@@ -360,8 +360,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
-        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+        SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,

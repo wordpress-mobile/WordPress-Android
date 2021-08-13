@@ -115,8 +115,8 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
+import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.workers.WordPressWorkersFactory;
@@ -131,12 +131,12 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
-
-import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
 public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
@@ -222,8 +222,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+            int selectedSiteLocalId = AppPrefs.getSelectedSite();
+            SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
             if (selectedSite != null) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
                 // Reload editor details from the remote backend
@@ -391,13 +391,13 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     private void sanitizeMediaUploadStateForSite() {
-        int siteLocalId = AppPrefs.getSelectedSite();
-        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (selectedSite != null) {
+        int selectedSiteLocalId = AppPrefs.getSelectedSite();
+        final SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        if (site != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, site);
                 }
             }).start();
         }

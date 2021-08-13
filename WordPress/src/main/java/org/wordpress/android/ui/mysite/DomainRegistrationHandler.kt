@@ -37,17 +37,17 @@ class DomainRegistrationHandler
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         continuation?.cancel()
         continuation = null
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site == null || site.id != siteLocalId) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite == null || selectedSite.id != siteLocalId) {
             return MutableLiveData()
         }
-        if (shouldFetchPlans(site)) {
+        if (shouldFetchPlans(selectedSite)) {
             val result = MutableLiveData<DomainCreditAvailable>()
             coroutineScope.launch(bgDispatcher) {
                 try {
                     val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
                         continuation = cancellableContinuation
-                        fetchPlans(site)
+                        fetchPlans(selectedSite)
                     }
                     continuation = null
                     if (event.isError) {

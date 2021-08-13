@@ -496,10 +496,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             switch (createAction) {
                 case CREATE_NEW_POST:
                     // complete quick start task outside of QS process
-                    if (getSelectedSite() != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
+                    SiteModel selectedSite = getSelectedSite();
+                    if (selectedSite != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
                         mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                                 QuickStartTask.PUBLISH_POST,
-                                getSelectedSite(),
+                                selectedSite,
                                 null,
                                 this
                         );
@@ -522,10 +523,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
             // complete quick start task during QS process and remind of a next one
-            if (getSelectedSite() != null) {
+            SiteModel selectedSite = getSelectedSite();
+            if (selectedSite != null) {
                 mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         QuickStartTask.PUBLISH_POST,
-                        getSelectedSite(),
+                        selectedSite,
                         new QuickStartEvent(QuickStartTask.PUBLISH_POST),
                         this
                 );
@@ -896,14 +898,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(mSelectedSiteRepository.getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
+        mViewModel.onResume(
+                mSelectedSiteRepository.getSelectedSite(),
+                mSelectedSiteRepository.hasSelectedSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+        );
 
         mFirstResume = false;
     }
 
     private void checkQuickStartNotificationStatus() {
-        int selectedSiteLocalId = getSelectedSite() != null ? getSelectedSite().getId() : -1;
+        SiteModel selectedSite = getSelectedSite();
+        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : -1;
         if (getSelectedSite() != null && NetworkUtils.isNetworkAvailable(this)
             && mQuickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSiteLocalId)
             && !mQuickStartStore.getQuickStartNotificationReceived(getSelectedSite().getId())) {
@@ -975,7 +980,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onPageChanged(
                 mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                mSelectedSiteRepository.getSelectedSite());
+                mSelectedSiteRepository.getSelectedSite()
+        );
     }
 
     // user tapped the new post button in the bottom navbar
@@ -992,10 +998,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-        SiteModel site = getSelectedSite();
-        if (site != null) {
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewPageForResult(this, site, title, content, template, source);
+            ActivityLauncher.addNewPageForResult(this, selectedSite, title, content, template, source);
         }
     }
 
@@ -1016,14 +1022,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-        SiteModel site = getSelectedSite();
-        if (site != null) {
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
             if (AppPrefs.shouldShowStoriesIntro()) {
-                StoriesIntroDialogFragment.newInstance(site)
+                StoriesIntroDialogFragment.newInstance(selectedSite)
                                           .show(getSupportFragmentManager(), StoriesIntroDialogFragment.TAG);
             } else {
-                mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(this, site);
+                mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(this, selectedSite);
             }
         }
     }
@@ -1493,8 +1499,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityLauncher.showSignInForResult(this, true);
             }
         } else {
-            SiteModel site = getSelectedSite();
-            if (site == null && mSiteStore.hasSite()) {
+            SiteModel selectedSite = getSelectedSite();
+            if (selectedSite == null && mSiteStore.hasSite()) {
                 ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
             }
         }
@@ -1537,11 +1543,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
      * Activity and the selected site parameter is passed along to other activities / fragments.
      */
     private void initSelectedSite() {
-        int siteLocalId = AppPrefs.getSelectedSite();
-
-        if (siteLocalId != AppPrefs.SELECTED_SITE_UNAVAILABLE) {
+        int selectedSiteLocalId = AppPrefs.getSelectedSite();
+        if (selectedSiteLocalId != AppPrefs.SELECTED_SITE_UNAVAILABLE) {
             // Site previously selected, use it
-            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
             if (site != null) {
                 mSelectedSiteRepository.updateSite(site);
             }

@@ -328,7 +328,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return fragment;
     }
 
-    public @Nullable SiteModel getSelectedSite() {
+    @Nullable
+    public SiteModel getSelectedSite() {
         if (getActivity() instanceof WPMainActivity) {
             WPMainActivity mainActivity = (WPMainActivity) getActivity();
             return mainActivity.getSelectedSite();
@@ -907,12 +908,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
 
-            if (getSelectedSite() != null) {
+            SiteModel selectedSite = getSelectedSite();
+            if (selectedSite != null) {
                 if (mMySiteImprovementsFeatureConfig.isEnabled()) {
                     mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
                 } else {
                     mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(QuickStartTask.FOLLOW_SITE,
-                            getSelectedSite(), mQuickStartEvent, getContext());
+                            selectedSite, mQuickStartEvent, getContext());
                 }
             }
         }

@@ -645,21 +645,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)) {
-            val siteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
+            val selectedSiteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
-                    siteLocalId.toLong(),
+                    selectedSiteLocalId.toLong(),
                     CUSTOMIZE
             ).size
             val countCustomizeUncompleted = quickStartStore.getUncompletedTasksByType(
-                    siteLocalId.toLong(),
+                    selectedSiteLocalId.toLong(),
                     CUSTOMIZE
             ).size
             val countGrowCompleted = quickStartStore.getCompletedTasksByType(
-                    siteLocalId.toLong(),
+                    selectedSiteLocalId.toLong(),
                     GROW
             ).size
             val countGrowUncompleted = quickStartStore.getUncompletedTasksByType(
-                    siteLocalId.toLong(),
+                    selectedSiteLocalId.toLong(),
                     GROW
             ).size
             if (countCustomizeUncompleted > 0) {
@@ -1266,17 +1266,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun skipQuickStart() {
-        val siteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
+        val selectedSiteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
         for (quickStartTask in QuickStartTask.values()) {
             quickStartStore.setDoneTask(
-                    siteLocalId.toLong(),
+                    selectedSiteLocalId.toLong(),
                     quickStartTask,
                     true
             )
         }
-        quickStartStore.setQuickStartCompleted(siteLocalId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(selectedSiteLocalId.toLong(), true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        quickStartStore.setQuickStartNotificationReceived(siteLocalId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId.toLong(), true)
     }
 
     private fun startQuickStart() {

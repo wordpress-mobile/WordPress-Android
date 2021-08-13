@@ -59,8 +59,8 @@ class DynamicCardsSource
     }
 
     private suspend fun callWithSite(function: suspend (Int) -> Unit) {
-        selectedSiteRepository.getSelectedSite()?.id?.let { siteLocalId ->
-            function(siteLocalId)
+        selectedSiteRepository.getSelectedSite()?.id?.let { selectedSiteLocalId ->
+            function(selectedSiteLocalId)
             refresh.postValue(true)
         }
     }

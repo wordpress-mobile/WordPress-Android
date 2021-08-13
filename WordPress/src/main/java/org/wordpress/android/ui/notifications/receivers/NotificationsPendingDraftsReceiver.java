@@ -60,8 +60,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
             AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
             // build notifications for existing local drafts
             SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-            int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
-            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
             if (site != null) {
                 List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
                 for (PostModel post : draftPosts) {

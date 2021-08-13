@@ -49,8 +49,8 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-        SiteModel site = mSelectedSiteRepository.getSelectedSite();
-        int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
+        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);
@@ -58,11 +58,11 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         // Failsafes
         if (
                 quickStartTaskDetails == null
-                || siteLocalId == -1
+                || selectedSiteLocalId == -1
                 || (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
-                || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
-                || mQuickStartStore.getQuickStartCompleted(siteLocalId)
-                || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())
+                || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartTask.CREATE_SITE)
+                || mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId)
+                || mQuickStartStore.hasDoneTask(selectedSiteLocalId, quickStartTaskDetails.getTask())
         ) {
             return;
         }
