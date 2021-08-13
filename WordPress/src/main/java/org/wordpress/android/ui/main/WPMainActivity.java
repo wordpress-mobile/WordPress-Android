@@ -1181,7 +1181,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
-                    @Nullable SiteModel selectedSite2 = mSelectedSiteRepository.getSelectedSite();
+                    SiteModel selectedSite2 = mSelectedSiteRepository.getSelectedSite();
                     int selectedSiteLocalId2 =
                             selectedSite2 != null ? selectedSite2.getId() : SelectedSiteRepository.UNAVAILABLE;
                     boolean isSameSiteSelected = data != null

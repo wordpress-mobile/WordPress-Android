@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -360,7 +359,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
         int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
         SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null && event.post != null) {

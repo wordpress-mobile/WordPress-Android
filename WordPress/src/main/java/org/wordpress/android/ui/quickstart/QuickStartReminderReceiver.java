@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -50,7 +49,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-        @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
+        SiteModel site = mSelectedSiteRepository.getSelectedSite();
         int siteLocalId = site != null ? site.getId() : SelectedSiteRepository.UNAVAILABLE;
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails

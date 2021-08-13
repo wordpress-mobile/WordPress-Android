@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import org.wordpress.android.R;
@@ -60,7 +59,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
             AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
             // build notifications for existing local drafts
-            @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+            SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
             int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
             SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
             if (site != null) {

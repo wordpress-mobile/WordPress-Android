@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -1007,7 +1006,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
         int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
         SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null && event.post != null) {
