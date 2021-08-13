@@ -189,7 +189,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.skipQuickStart()
 
-        QuickStartTask.values().forEach { verify(quickStartStore).setDoneTask(siteId.toLong(), it, true) }
+        QuickStartTask.values().forEach { verify(quickStartStore).setDoneTask(siteLocalId.toLong(), it, true) }
     }
 
     @Test
@@ -199,7 +199,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.skipQuickStart()
 
-        verify(quickStartStore).setQuickStartCompleted(siteId.toLong(), true)
+        verify(quickStartStore).setQuickStartCompleted(siteLocalId.toLong(), true)
     }
 
     @Test
@@ -210,7 +210,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
                 quickStartRepository.skipQuickStart()
 
-                verify(quickStartStore).setQuickStartNotificationReceived(siteId.toLong(), true)
+                verify(quickStartStore).setQuickStartNotificationReceived(siteLocalId.toLong(), true)
             }
 
     @Test
