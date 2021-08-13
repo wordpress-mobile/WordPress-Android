@@ -36,7 +36,7 @@ class WeeklyRoundupNotifier @Inject constructor(
                 .awaitAll()
                 .asSequence()
                 .filterNotNull()
-                .sortedByDescending { it.views }
+                .sortedByDescending { it.score }
                 .take(5)
                 .filter { it.views >= 5 }
                 .map { buildNotification(it) }
