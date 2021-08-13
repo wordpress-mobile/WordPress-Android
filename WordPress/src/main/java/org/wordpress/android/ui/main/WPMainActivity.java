@@ -424,7 +424,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         initViewModel();
     }
 
-    public boolean isGooglePlayServicesAvailable(Activity activity) {
+    private boolean isGooglePlayServicesAvailable(Activity activity) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
@@ -999,7 +999,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    public void handleNewPostAction(PagePostCreationSourcesDetail source) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -1494,18 +1494,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
     /**
      * @return null if there is no site or if there is no selected site
      */
-    public @Nullable SiteModel getSelectedSite() {
+    @Nullable
+    public SiteModel getSelectedSite() {
         return mSelectedSiteRepository.getSelectedSite();
     }
 
-    public void setSelectedSite(int localSiteId) {
+    private void setSelectedSite(int localSiteId) {
         SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
         if (site != null) {
             setSelectedSite(site);
         }
     }
 
-    public void setSelectedSite(@NonNull SiteModel selectedSite) {
+    private void setSelectedSite(@NonNull SiteModel selectedSite) {
         mSelectedSiteRepository.updateSite(selectedSite);
 
         // When we select a site, we want to update its information or options
@@ -1516,7 +1517,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         AppPrefs.setSelectedSite(selectedSite.getId());
     }
 
-    public void removeSelectedSite() {
+    private void removeSelectedSite() {
         mSelectedSiteRepository.removeSite();
         AppPrefs.setSelectedSite(-1);
     }
@@ -1526,7 +1527,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
      * this to be used globally like WordPress.getCurrentBlog() was used. The state is maintained by this
      * Activity and the selected site parameter is passed along to other activities / fragments.
      */
-    public void initSelectedSite() {
+    private void initSelectedSite() {
         int siteLocalId = AppPrefs.getSelectedSite();
 
         if (siteLocalId != -1) {
