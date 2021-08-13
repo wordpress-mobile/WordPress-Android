@@ -3,6 +3,7 @@ package org.wordpress.android.workers.weeklyroundup
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
@@ -12,12 +13,14 @@ import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class WeeklyRoundupNotifier @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val contextProvider: ContextProvider,
+    private val resourceProvider: ResourceProvider,
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler,
     private val notificationsTracker: SystemNotificationsTracker
 ) {
@@ -40,8 +43,8 @@ class WeeklyRoundupNotifier @Inject constructor(
                             FLAG_CANCEL_CURRENT or FLAG_IMMUTABLE
                     )
                 },
-                contentTitle = "Weekly Roundup: $siteName",
-                contentText = "Your site got X views, Y likes, Z comments.",
+                contentTitle = resourceProvider.getString(R.string.weekly_roundup_notification_title, siteName),
+                contentText = resourceProvider.getString(R.string.weekly_roundup_notification_text, 0, 0, 0),
         )
 
         return listOf(weeklyRoundupNotification)
