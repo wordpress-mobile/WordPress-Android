@@ -2,7 +2,7 @@ package org.wordpress.android.workers.weeklyroundup
 
 import android.content.Context
 import androidx.work.Constraints
-import androidx.work.ExistingWorkPolicy.REPLACE
+import androidx.work.ExistingWorkPolicy.KEEP
 import androidx.work.NetworkType.CONNECTED
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -32,7 +32,7 @@ class WeeklyRoundupScheduler @Inject constructor(private val context: Context) {
                 .setConstraints(constraints)
                 .build()
 
-        workManager.enqueueUniqueWork(TAG, REPLACE, workRequest)
+        workManager.enqueueUniqueWork(TAG, KEEP, workRequest)
     }
 
     fun cancel() = workManager.cancelUniqueWork(TAG)
