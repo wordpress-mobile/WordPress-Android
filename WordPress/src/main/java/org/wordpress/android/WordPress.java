@@ -223,13 +223,13 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
             int selectedSiteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
-            if (selectedSite != null) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+            if (site != null) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
                 // Reload editor details from the remote backend
                 if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
                     // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(site));
                 }
             }
             return true;
