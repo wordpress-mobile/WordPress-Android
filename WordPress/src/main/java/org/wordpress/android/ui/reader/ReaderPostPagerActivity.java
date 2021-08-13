@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -145,6 +147,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject UrlUtilsWrapper mUrlUtilsWrapper;
     @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1004,7 +1007,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        int siteLocalId = AppPrefs.getSelectedSite();
+        @Nullable SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+        int siteLocalId = selectedSite != null ? selectedSite.getId() : -1;
         SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
