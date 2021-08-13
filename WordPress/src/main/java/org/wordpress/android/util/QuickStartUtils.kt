@@ -338,6 +338,7 @@ class QuickStartUtils {
          * This method tries to return the next uncompleted task from complete tasks pool
          */
         @JvmStatic
+        @Suppress("ReturnCount")
         fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
             siteLocalId: Long,
