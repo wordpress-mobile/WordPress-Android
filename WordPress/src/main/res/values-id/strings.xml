@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-04 10:54:07+0000
+Translation-Revision-Date: 2021-08-10 04:25:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Selamat datang di dunia blok</string>
+    <string name="comment_batch_moderation_error">Gagal memoderasi satu atau lebih komentar</string>
     <string name="create_site_notification_create_site_action">Buat situs</string>
     <string name="create_site_notification_text">Siapkan dan jalankan situs Anda hanya dengan beberapa langkah cepat</string>
     <string name="create_site_notification_title">Buat situs WordPress Anda</string>
@@ -25,7 +27,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_preview_page">Ketuk dua kali untuk melihat halaman.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ditampilkan di tab peramban pengunjung Anda dan di tempat lain secara online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Ajak aku berkeliling</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Kami akan membantu Anda memahami dasar-dasar pengelolaan situs dengan aplikasi.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Butuh sedikit bantuan dalam mengelola situs ini dengan aplikasi?</string>
     <string name="login_epilogue_create_new_site_button">Buat situs baru</string>
     <string name="login_epilogue_mysites_subheading">Anda dapat berganti situs kapan saja.</string>
