@@ -459,9 +459,10 @@ public class ActivityLauncher {
     public static PendingIntent buildStatsPendingIntentOverMainActivityInNewStack(Context context, SiteModel site,
                                                                                   @Nullable StatsTimeframe timeframe,
                                                                                   @Nullable String period,
+                                                                                  @Nullable NotificationType type,
                                                                                   int requestCode, int flags) {
         return buildPendingIntentOverMainActivityInNewStack(context,
-                StatsActivity.buildIntent(context, site, timeframe, period), requestCode, flags);
+                StatsActivity.buildIntent(context, site, timeframe, period, type), requestCode, flags);
     }
 
     private static PendingIntent buildPendingIntentOverMainActivityInNewStack(Context context, Intent intent,

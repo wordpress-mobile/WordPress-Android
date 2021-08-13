@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -62,11 +64,13 @@ class StatsActivity : LocaleAwareActivity() {
             context: Context,
             site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
-            period: String? = null
+            period: String? = null,
+            notificationType: NotificationType? = null
         ) = Intent(context, StatsActivity::class.java).apply {
             putExtra(WordPress.LOCAL_SITE_ID, site.id)
             statsTimeframe?.let { putExtra(ARG_DESIRED_TIMEFRAME, it) }
             period?.let { putExtra(INITIAL_SELECTED_PERIOD_KEY, it) }
+            notificationType?.let { putExtra(ARG_NOTIFICATION_TYPE, it) }
         }
     }
 
