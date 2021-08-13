@@ -44,6 +44,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
+import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
@@ -1565,5 +1566,9 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, CategoriesListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+    }
+
+    public static void viewDebugCookies(@NonNull Context context) {
+        context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 }

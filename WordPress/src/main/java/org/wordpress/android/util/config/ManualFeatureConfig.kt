@@ -1,8 +1,7 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.util.config
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
 class ManualFeatureConfig
@@ -25,7 +24,7 @@ class ManualFeatureConfig
         }
     }
 
-    private fun isConfigEnabled() = buildConfigWrapper.isManualFeatureConfigEnabled()
+    private fun isConfigEnabled() = buildConfigWrapper.isDebugSettingsEnabled()
 
     private fun FeatureConfig.toFeatureKey() = this.remoteField ?: this.javaClass.toString().split(".").last()
 }
