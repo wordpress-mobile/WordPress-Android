@@ -600,8 +600,8 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
-    public static void setSelectedSite(int localId) {
-        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, localId);
+    public static void setSelectedSite(int siteLocalId) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
