@@ -1,7 +1,9 @@
 package org.wordpress.android.workers.weeklyroundup
 
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy.REPLACE
+import androidx.work.NetworkType.CONNECTED
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.DayOfWeek.MONDAY
@@ -20,9 +22,14 @@ class WeeklyRoundupScheduler @Inject constructor(private val context: Context) {
         val next = LocalDate.now().with(next(MONDAY)).atTime(DEFAULT_START_TIME)
         val delay = Duration.between(LocalDateTime.now(), next)
 
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(CONNECTED)
+                .build()
+
         val workRequest = OneTimeWorkRequestBuilder<WeeklyRoundupWorker>()
                 .addTag(TAG)
                 .setInitialDelay(delay.toMillis(), MILLISECONDS)
+                .setConstraints(constraints)
                 .build()
 
         workManager.enqueueUniqueWork(TAG, REPLACE, workRequest)
