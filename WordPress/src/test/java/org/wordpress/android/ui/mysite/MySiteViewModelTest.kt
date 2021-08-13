@@ -80,6 +80,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.U
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
@@ -106,6 +107,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -184,6 +186,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
 
     @InternalCoroutinesApi
@@ -1013,10 +1016,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
@@ -1024,21 +1025,62 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start active task is cleared`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         verify(quickStartRepository).clearActiveTask()
     }
 
     @Test
+    fun `given dynamic card disabled, when QS remove menu item is clicked, then remove next steps dialog shown`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        requireNotNull(removeMenuItemClickAction).invoke()
+
+        assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
+    }
+
+    @Test
+    fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository, never()).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS is skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS repo refreshed`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS active task cleared`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
     fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         viewModel.onQuickStartFullScreenDialogDismiss()
 
         verify(quickStartRepository).refresh()
@@ -1047,10 +1089,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
         val task = QuickStartTask.VIEW_SITE
-        initSelectedSite(
-                isQuickStartDynamicCardEnabled = false,
-                isQuickStartInProgress = true
-        )
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
         viewModel.onQuickStartFullScreenDialogConfirm(task)
 
         verify(quickStartRepository).setActiveTask(task)
@@ -1259,8 +1299,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         if (!isQuickStartDynamicCardEnabled && isQuickStartInProgress) {
             doAnswer {
-                quickStartTaskTypeItemClickAction = (it.getArgument(1) as (QuickStartTaskType) -> Unit)
+                removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
+                quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
+
                 QuickStartBlock(
+                        onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                         taskTypeItems = listOf(
                                 QuickStartTaskTypeItem(
                                         quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
@@ -1277,7 +1320,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 )
                         )
                 )
-            }.whenever(quickStartBlockBuilder).build(any(), any())
+            }.whenever(quickStartBlockBuilder).build(any(), any(), any())
             quickStartUpdate.value = QuickStartUpdate(
                     categories = listOf(
                             QuickStartCategory(

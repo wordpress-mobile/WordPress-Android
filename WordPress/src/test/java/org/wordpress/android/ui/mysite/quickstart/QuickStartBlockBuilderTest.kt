@@ -22,6 +22,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
     private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
+    private val onRemoveMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
@@ -157,13 +158,22 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
+    /* REMOVE MENU ITEM */
+
+    @Test
+    fun `when block is built, then remove menu item click is set on the block`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.onRemoveMenuItemClick).isNotNull
+    }
+
     private fun buildQuickStartBlock(
         completedTasks: List<QuickStartTaskDetails>? = null,
         uncompletedTasks: List<QuickStartTaskDetails>? = null
     ): QuickStartBlock {
         val customizeCategory = buildQuickStartCategory(QuickStartTaskType.CUSTOMIZE, completedTasks, uncompletedTasks)
         val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
-        return builder.build(listOf(customizeCategory, growCategory), onItemClick)
+        return builder.build(listOf(customizeCategory, growCategory), onRemoveMenuItemClick, onItemClick)
     }
 
     private fun buildQuickStartCategory(
