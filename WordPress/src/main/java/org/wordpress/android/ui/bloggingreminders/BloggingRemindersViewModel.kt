@@ -167,7 +167,7 @@ class BloggingRemindersViewModel @Inject constructor(
                             bloggingRemindersModel.hour,
                             bloggingRemindersModel.minute,
                             bloggingRemindersModel.toReminderConfig())
-                    analyticsTracker.trackRemindersScheduled(daysCount)
+                    analyticsTracker.trackRemindersScheduled(daysCount, bloggingRemindersModel.getNotificationTime())
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
