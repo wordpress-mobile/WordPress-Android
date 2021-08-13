@@ -45,8 +45,8 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
@@ -368,7 +368,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `given active task = completed task, when task is completed, then reminder notifs are triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartRepository.startQuickStart(siteId)
+        quickStartRepository.startQuickStart(siteLocalId)
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
         quickStartRepository.completeTask(PUBLISH_POST)
