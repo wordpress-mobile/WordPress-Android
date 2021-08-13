@@ -1,6 +1,5 @@
 package org.wordpress.android.workers.weeklyroundup
 
-import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import org.wordpress.android.R
@@ -10,10 +9,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
-import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -54,10 +53,12 @@ class WeeklyRoundupNotifier @Inject constructor(
         return WeeklyRoundupNotification(
                 id = notificationId,
                 contentIntentBuilder = {
-                    PendingIntent.getActivity(
+                    ActivityLauncher.buildStatsPendingIntentOverMainActivityInNewStack(
                             context,
+                            site,
+                            WEEK,
+                            data.period,
                             notificationId,
-                            StatsActivity.buildIntent(context, site, WEEK),
                             FLAG_CANCEL_CURRENT or FLAG_IMMUTABLE
                     )
                 },
