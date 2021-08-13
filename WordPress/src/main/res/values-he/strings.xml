@@ -25,7 +25,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_preview_page">הקש פעמיים לתצוגה מקדימה של העמוד.</string>
     <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">הראו לי את הסביבה</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">אנחנו נלווה אותך בביצוע הפעולות הבסיסיות של ניהול האתר שלך באמצעות האפליקציה.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">נדרשת לך עזרה בניהול האתר עם האפליקציה?</string>
     <string name="login_epilogue_create_new_site_button">ליצור אתר חדש</string>
     <string name="login_epilogue_mysites_subheading">אפשר להחליף בין אתרים בכל עת.</string>

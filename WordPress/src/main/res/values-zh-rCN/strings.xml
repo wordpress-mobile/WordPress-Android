@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 08:19:15+0000
+Translation-Revision-Date: 2021-08-10 02:43:01+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">将您的内容排成列，添加调用操作按钮，并用文字覆盖图片。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">随时可通过点按左下角工具栏中的“+”图标添加新区块。</string>
+    <string name="quick_start_sites_type_tasks_completed">%2$s 的 %1$s 已完成</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">通过快速练习了解基础知识。</string>
+    <string name="comment_batch_moderation_error">未能对一条或多条评论进行审核</string>
     <string name="create_site_notification_create_site_action">创建站点</string>
     <string name="create_site_notification_text">简单几步即可启动并运行您的站点</string>
     <string name="create_site_notification_title">创建您的 WordPress 网站</string>
@@ -25,7 +30,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_preview_page">双击可预览页面。</string>
     <string name="quick_start_list_upload_icon_subtitle">显示在访问者的浏览器选项卡和其他在线位置。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">带我看看</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">我们将带您了解使用该应用管理站点的基础知识。</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要获取有关使用该应用管理此站点的帮助吗？</string>
     <string name="login_epilogue_create_new_site_button">创建新站点</string>
     <string name="login_epilogue_mysites_subheading">您可以随时切换站点。</string>

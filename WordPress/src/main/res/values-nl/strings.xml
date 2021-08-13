@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-03 23:06:03+0000
+Translation-Revision-Date: 2021-08-10 07:37:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Je kunt blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het boven of onder andere blokken te zetten.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Welkom in de wereld van blokken</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Om een blok te verwijderen, selecteer je het blok en klik je op de drie stippen rechts onderaan het blok om de instellingen te zien. Kies van daaruit de optie om het blok te verwijderen.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Sommige blokken hebben extra instellingen. Tik op het instellingen-pictogram rechts onderaan het blok om meer opties te zien.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blok, nieuw beschikbaar</string>
+    <string name="gutenberg_native_rich_text_editing">Rich tekst bewerking</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Als je eenmaal vertrouwd bent geraakt met de namen van de verschillende blokken, kun je een blok toevoegen door een voorwaartse schuine streep te typen, gevolgd door de bloknaam - bijvoorbeeld, /afbeelding of /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Laat je inhoud opvallen door afbeeldingen, gifs, video\'s, en ingesloten media aan je pagina\'s toe te voegen.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Probeer het door een paar blokken toe te voegen aan je bericht of pagina!</string>
+    <string name="gutenberg_native_embed_media">Sluit media in</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Elk blok heeft zijn eigen instellingen. Om ze te vinden, klik op een blok. Zijn instellingen zullen verschijnen in de gereedschapsbalk onderaan het scherm.</string>
+    <string name="gutenberg_native_build_layouts">Bouw lay-outs</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de gereedschapsbalk links onderaan. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
+    <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
     <string name="create_site_notification_create_site_action">Site maken</string>
     <string name="create_site_notification_text">Krijg je site in slechts een paar snelle stappen aan de slag</string>
     <string name="create_site_notification_title">Maak je WordPress site</string>
@@ -25,7 +44,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltik om de voorbeeldpagina te bekijken.</string>
     <string name="quick_start_list_upload_icon_subtitle">Getoond in de browser tab van je bezoeker en andere plaatsen online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Laat me rondleiden</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">We zullen je door de basis van het beheren van je site leiden met de app.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Wil je een beetje hulp bij het beheren van deze site met de app?</string>
     <string name="login_epilogue_create_new_site_button">Maak een nieuwe site</string>
     <string name="login_epilogue_mysites_subheading">Je kunt op elk moment sites wisselen.</string>

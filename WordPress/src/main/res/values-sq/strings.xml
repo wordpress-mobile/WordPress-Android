@@ -25,7 +25,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_preview_page">Që të parashihni faqen, prekeni dy herë.</string>
     <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Tregomani ca</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Do t’ju heqim udhën përmes hapave elementarë të administrimit të sajtit tuaj me aplikacionin.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Doni pakëz ndihmë me administrimin e këtij sajti përmes aplikacionit?</string>
     <string name="login_epilogue_create_new_site_button">Krijoni një sajt të ri</string>
     <string name="login_epilogue_mysites_subheading">Mund të ndërroni sajte në çfarëdo kohe.</string>
