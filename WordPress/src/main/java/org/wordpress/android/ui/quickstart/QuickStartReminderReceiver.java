@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -14,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.push.NotificationPushIds;
@@ -21,6 +23,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
@@ -35,6 +38,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,7 +50,8 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-        int siteLocalId = AppPrefs.getSelectedSite();
+        @Nullable SiteModel site = mSelectedSiteRepository.getSelectedSite();
+        int siteLocalId = site != null ? site.getId() : -1;
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);
