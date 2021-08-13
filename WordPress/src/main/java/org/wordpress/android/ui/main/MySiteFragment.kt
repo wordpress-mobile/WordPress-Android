@@ -496,9 +496,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun viewPosts() {
         requestNextStepOfActiveQuickStartTask()
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
-            ActivityLauncher.viewCurrentBlogPosts(requireActivity(), selectedSite)
+        val site = selectedSite
+        if (site != null) {
+            ActivityLauncher.viewCurrentBlogPosts(requireActivity(), site)
         } else {
             ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
@@ -510,26 +510,26 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         } else {
             completeQuickStartTask(REVIEW_PAGES)
         }
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
-            ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
+        val site = selectedSite
+        if (site != null) {
+            ActivityLauncher.viewCurrentBlogPages(requireActivity(), site)
         } else {
             ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
     }
 
     private fun viewStats() {
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
+        val site = selectedSite
+        if (site != null) {
             completeQuickStartTask(CHECK_STATS)
-            if (!accountStore.hasAccessToken() && selectedSite.isJetpackConnected) {
+            if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
                 // If the user is not connected to WordPress.com, ask him to connect first.
                 startWPComLoginForJetpackStats()
-            } else if (selectedSite.isWPCom || selectedSite.isJetpackInstalled && selectedSite
+            } else if (site.isWPCom || site.isJetpackInstalled && site
                             .isJetpackConnected) {
-                ActivityLauncher.viewBlogStats(activity, selectedSite)
+                ActivityLauncher.viewBlogStats(activity, site)
             } else {
-                ActivityLauncher.viewConnectJetpackForStats(activity, selectedSite)
+                ActivityLauncher.viewConnectJetpackForStats(activity, site)
             }
         }
     }
@@ -645,21 +645,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)) {
-            val site = selectedSite?.id ?: -1
+            val siteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
-                    site.toLong(),
+                    siteLocalId.toLong(),
                     CUSTOMIZE
             ).size
             val countCustomizeUncompleted = quickStartStore.getUncompletedTasksByType(
-                    site.toLong(),
+                    siteLocalId.toLong(),
                     CUSTOMIZE
             ).size
             val countGrowCompleted = quickStartStore.getCompletedTasksByType(
-                    site.toLong(),
+                    siteLocalId.toLong(),
                     GROW
             ).size
             val countGrowUncompleted = quickStartStore.getUncompletedTasksByType(
-                    site.toLong(),
+                    siteLocalId.toLong(),
                     GROW
             ).size
             if (countCustomizeUncompleted > 0) {
@@ -1266,17 +1266,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun skipQuickStart() {
-        val localId = selectedSite?.id ?: -1
+        val siteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
         for (quickStartTask in QuickStartTask.values()) {
             quickStartStore.setDoneTask(
-                    localId.toLong(),
+                    siteLocalId.toLong(),
                     quickStartTask,
                     true
             )
         }
-        quickStartStore.setQuickStartCompleted(localId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(siteLocalId.toLong(), true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        quickStartStore.setQuickStartNotificationReceived(localId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(siteLocalId.toLong(), true)
     }
 
     private fun startQuickStart() {

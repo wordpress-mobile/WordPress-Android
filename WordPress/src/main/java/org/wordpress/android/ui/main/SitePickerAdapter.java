@@ -628,7 +628,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
             SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-            int currentSiteId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+            int siteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
             for (SiteRecord site : sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
@@ -637,7 +637,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         changeSet.add(siteRecord);
                         siteRecord.mIsHidden = !makeVisible;
                         if (!makeVisible
-                            && siteRecord.mLocalId != currentSiteId
+                            && siteRecord.mLocalId != siteLocalId
                             && recentIds.contains(siteRecord.mLocalId)) {
                             AppPrefs.removeRecentlyPickedSiteId(siteRecord.mLocalId);
                         }

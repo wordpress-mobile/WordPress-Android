@@ -82,11 +82,11 @@ class QuickStartRepository
 
     private var pendingTask: QuickStartTask? = null
 
-    private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
+    private fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
-            uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId.toLong(), quickStartTaskType)
+            uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] },
-            completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
+            completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
@@ -114,9 +114,9 @@ class QuickStartRepository
         }
     }
 
-    private suspend fun getQuickStartTaskTypes(siteId: Int): List<QuickStartTaskType> {
+    private suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
         return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }
+            dynamicCardStore.getCards(siteLocalId).dynamicCardTypes.map { it.toQuickStartTaskType() }
         } else {
             listOf(CUSTOMIZE, GROW)
         }
@@ -186,9 +186,9 @@ class QuickStartRepository
 
     private fun setTaskDoneAndTrack(
         task: QuickStartTask,
-        siteId: Int
+        siteLocalId: Int
     ) {
-        quickStartStore.setDoneTask(siteId.toLong(), task, true)
+        quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
         analyticsTrackerWrapper.track(
                 quickStartUtilsWrapper.getTaskCompletedTracker(task),
                 mySiteImprovementsFeatureConfig
@@ -206,11 +206,11 @@ class QuickStartRepository
         job.cancel()
     }
 
-    private suspend fun onCategoryCompleted(siteId: Int, categoryType: QuickStartTaskType) {
+    private suspend fun onCategoryCompleted(siteLocalId: Int, categoryType: QuickStartTaskType) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             val completionMessage = getCategoryCompletionMessage(categoryType)
             _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
-            dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
+            dynamicCardStore.removeCard(siteLocalId, categoryType.toDynamicCardType())
         }
     }
 

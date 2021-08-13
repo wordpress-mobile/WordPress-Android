@@ -66,8 +66,8 @@ class QuickStartUtilsWrapper
         return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)
     }
 
-    fun isEveryQuickStartTaskDoneForType(siteId: Int, type: QuickStartTaskType): Boolean {
-        return quickStartStore.getUncompletedTasksByType(siteId.toLong(), type).isEmpty()
+    fun isEveryQuickStartTaskDoneForType(siteLocalId: Int, type: QuickStartTaskType): Boolean {
+        return quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), type).isEmpty()
     }
 
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
@@ -81,9 +81,9 @@ class QuickStartUtilsWrapper
         quickStartEvent: QuickStartEvent? = null,
         context: Context?
     ) {
-        val siteId = site.id.toLong()
+        val siteLocalId = site.id.toLong()
 
-        if (shouldCancelCompleteAction(siteId, site, task)) {
+        if (shouldCancelCompleteAction(siteLocalId, site, task)) {
             return
         }
 
@@ -91,22 +91,22 @@ class QuickStartUtilsWrapper
             QuickStartUtils.cancelQuickStartReminder(context)
         }
 
-        quickStartStore.setDoneTask(siteId, task, true)
+        quickStartStore.setDoneTask(siteLocalId, task, true)
         analyticsTrackerWrapper.track(QuickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
 
         if (isEveryQuickStartTaskDone(site.id)) {
-            quickStartStore.setQuickStartCompleted(siteId, true)
+            quickStartStore.setQuickStartCompleted(siteLocalId, true)
             analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
         } else if (quickStartEvent?.task == task) {
             AppPrefs.setQuickStartNoticeRequired(true)
         } else {
-            if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
+            if (context != null && quickStartStore.hasDoneTask(siteLocalId, CREATE_SITE)) {
                 val nextTask =
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
                                 quickStartStore,
-                                siteId,
+                                siteLocalId,
                                 task.taskType
                         )
                 if (nextTask != null) {
@@ -117,13 +117,13 @@ class QuickStartUtilsWrapper
     }
 
     private fun shouldCancelCompleteAction(
-        siteId: Long,
+        siteLocalId: Long,
         site: SiteModel,
         task: QuickStartTask
     ): Boolean {
-        return quickStartStore.getQuickStartCompleted(siteId) ||
+        return quickStartStore.getQuickStartCompleted(siteLocalId) ||
                 isEveryQuickStartTaskDone(site.id) ||
-                quickStartStore.hasDoneTask(siteId, task) ||
+                quickStartStore.hasDoneTask(siteLocalId, task) ||
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }
 

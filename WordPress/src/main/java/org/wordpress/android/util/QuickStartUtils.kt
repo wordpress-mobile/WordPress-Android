@@ -207,8 +207,8 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
-            return quickStartStore.getDoneCount(selectedSiteId.toLong()) >= QuickStartTask.values()
+        fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, siteLocalId: Int): Boolean {
+            return quickStartStore.getDoneCount(siteLocalId.toLong()) >= QuickStartTask.values()
                     .filter { it.taskType != UNKNOWN }.size
         }
 
@@ -309,10 +309,10 @@ class QuickStartUtils {
         @JvmStatic
         fun getNextUncompletedQuickStartTaskForReminderNotification(
             quickStartStore: QuickStartStore,
-            siteId: Long,
+            siteLocalId: Long,
             taskType: QuickStartTaskType
         ): QuickStartTask? {
-            val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteId, taskType)
+            val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteLocalId, taskType)
 
             var nextTask: QuickStartTask? = null
 
@@ -321,9 +321,9 @@ class QuickStartUtils {
                         .filter { it != taskType && it != UNKNOWN }
 
                 otherQuickStartTaskTypes.forEach {
-                    val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId, it)
+                    val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId, it)
                     if (otherUncompletedTasks.isNotEmpty()) {
-                        nextTask = quickStartStore.getUncompletedTasksByType(siteId, it).first()
+                        nextTask = quickStartStore.getUncompletedTasksByType(siteLocalId, it).first()
                         return@forEach
                     }
                 }
@@ -340,14 +340,14 @@ class QuickStartUtils {
         @JvmStatic
         fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
-            siteId: Long,
+            siteLocalId: Long,
             taskType: QuickStartTaskType
         ): QuickStartTask? {
             // get all the uncompleted tasks for all task types
             val uncompletedTasks = ArrayList<QuickStartTask>()
             QuickStartTaskType.values().forEach { type ->
                 if (type != UNKNOWN) {
-                    uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteId, type))
+                    uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteLocalId, type))
                 }
             }
             uncompletedTasks.sortBy { it.order }
