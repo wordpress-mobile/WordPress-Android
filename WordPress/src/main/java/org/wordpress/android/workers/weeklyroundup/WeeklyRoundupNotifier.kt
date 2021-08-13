@@ -5,6 +5,7 @@ import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
@@ -26,14 +27,17 @@ class WeeklyRoundupNotifier @Inject constructor(
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler,
     private val notificationsTracker: SystemNotificationsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val siteUtils: SiteUtilsWrapper
+    private val siteUtils: SiteUtilsWrapper,
+    private val weeklyRoundupRepository: WeeklyRoundupRepository
 ) {
     fun shouldShowNotifications() = accountStore.hasAccessToken() && siteStore.hasSitesAccessedViaWPComRest()
 
-    fun buildNotifications(): List<WeeklyRoundupNotification> {
+    suspend fun buildNotifications(): List<WeeklyRoundupNotification> {
         val site = selectedSiteRepository.getSelectedSite() ?: siteStore.sitesAccessedViaWPComRest[0]
 
-        val notification = buildNotification(site)
+        val data = weeklyRoundupRepository.fetchWeeklyRoundupData(site) ?: return emptyList()
+
+        val notification = buildNotification(site, data)
 
         return listOf(notification)
     }
@@ -44,7 +48,7 @@ class WeeklyRoundupNotifier @Inject constructor(
         weeklyRoundupScheduler.schedule()
     }
 
-    private fun buildNotification(site: SiteModel): WeeklyRoundupNotification {
+    private fun buildNotification(site: SiteModel, data: PeriodData): WeeklyRoundupNotification {
         val context = contextProvider.getContext()
         val notificationId = WEEKLY_ROUNDUP_NOTIFICATION_ID + site.id
         return WeeklyRoundupNotification(
@@ -63,9 +67,9 @@ class WeeklyRoundupNotifier @Inject constructor(
                 ),
                 contentText = resourceProvider.getString(
                         R.string.weekly_roundup_notification_text,
-                        0,
-                        0,
-                        0
+                        data.views,
+                        data.likes,
+                        data.comments
                 ),
         )
     }
