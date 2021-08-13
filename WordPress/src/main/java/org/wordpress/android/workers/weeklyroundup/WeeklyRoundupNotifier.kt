@@ -6,6 +6,8 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
+import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.util.SiteUtils
@@ -15,7 +17,9 @@ import javax.inject.Inject
 class WeeklyRoundupNotifier @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val weeklyRoundupScheduler: WeeklyRoundupScheduler,
+    private val notificationsTracker: SystemNotificationsTracker
 ) {
     fun shouldShowNotifications() = accountStore.hasAccessToken() && siteStore.hasSitesAccessedViaWPComRest()
 
@@ -41,5 +45,11 @@ class WeeklyRoundupNotifier @Inject constructor(
         )
 
         return listOf(weeklyRoundupNotification)
+    }
+
+    fun onNotificationsShown(notifications: List<WeeklyRoundupNotification>) {
+        notificationsTracker.trackShownNotification(WEEKLY_ROUNDUP)
+
+        weeklyRoundupScheduler.schedule()
     }
 }
