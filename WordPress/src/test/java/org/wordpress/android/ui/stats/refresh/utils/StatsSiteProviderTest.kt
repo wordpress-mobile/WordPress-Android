@@ -43,7 +43,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
         firstSite.id = firstSiteLocalId
         secondSite.id = secondSiteLocalId
         selectedSite.id = selectedSiteId
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSite)
+        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(selectedSite.id)
         whenever(siteStore.getSiteByLocalId(firstSiteLocalId)).thenReturn(firstSite)
         whenever(siteStore.getSiteByLocalId(secondSiteLocalId)).thenReturn(secondSite)
         whenever(siteStore.getSiteByLocalId(selectedSiteId)).thenReturn(selectedSite)

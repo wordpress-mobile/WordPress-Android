@@ -221,6 +221,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         get() {
             return selectedSiteRepository.getSelectedSite()
         }
+    private val selectedSiteLocalId: Int
+        get() {
+            return selectedSiteRepository.getSelectedSiteLocalId()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -319,13 +323,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartNoticeIfNecessary() {
-        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE) ||
+        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId) ||
                 !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
         val taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(
                 quickStartStore,
-                selectedSite?.id?.toLong() ?: SelectedSiteRepository.UNAVAILABLE.toLong(),
+                selectedSiteLocalId.toLong(),
                 CUSTOMIZE
         ) // CUSTOMIZE is default type
         if (taskToPrompt != null) {
@@ -644,22 +648,22 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!isAdded) {
             return
         }
-        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)) {
-            val selectedSiteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId)) {
+            val selectedSiteLocalId: Long = selectedSiteRepository.getSelectedSiteLocalId().toLong()
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
-                    selectedSiteLocalId.toLong(),
+                    selectedSiteLocalId,
                     CUSTOMIZE
             ).size
             val countCustomizeUncompleted = quickStartStore.getUncompletedTasksByType(
-                    selectedSiteLocalId.toLong(),
+                    selectedSiteLocalId,
                     CUSTOMIZE
             ).size
             val countGrowCompleted = quickStartStore.getCompletedTasksByType(
-                    selectedSiteLocalId.toLong(),
+                    selectedSiteLocalId,
                     GROW
             ).size
             val countGrowUncompleted = quickStartStore.getUncompletedTasksByType(
-                    selectedSiteLocalId.toLong(),
+                    selectedSiteLocalId,
                     GROW
             ).size
             if (countCustomizeUncompleted > 0) {
@@ -1266,21 +1270,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun skipQuickStart() {
-        val selectedSiteLocalId = selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE
+        val selectedSiteLocalId: Long = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         for (quickStartTask in QuickStartTask.values()) {
             quickStartStore.setDoneTask(
-                    selectedSiteLocalId.toLong(),
+                    selectedSiteLocalId,
                     quickStartTask,
                     true
             )
         }
-        quickStartStore.setQuickStartCompleted(selectedSiteLocalId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(selectedSiteLocalId, true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId, true)
     }
 
     private fun startQuickStart() {
-        quickStartUtilsWrapper.startQuickStart(selectedSite?.id ?: SelectedSiteRepository.UNAVAILABLE)
+        quickStartUtilsWrapper.startQuickStart(selectedSiteLocalId)
         binding?.updateQuickStartContainer()
     }
 

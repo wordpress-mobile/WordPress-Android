@@ -16,7 +16,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
@@ -77,8 +76,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         RecyclerView list = rootView.findViewById(R.id.list);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
-        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
 
         mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
 
@@ -171,8 +169,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     @Override
     public void onSkipTaskTapped(QuickStartTask task) {
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
-        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
         mQuickStartStore.setDoneTask(selectedSiteLocalId, task, true);
 
         if (mQuickStartAdapter != null) {
@@ -205,9 +202,10 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 break;
         }
 
-        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
-        if (mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, mTasksType).isEmpty()) {
+        if (mQuickStartStore.getUncompletedTasksByType(
+                mSelectedSiteRepository.getSelectedSiteLocalId(),
+                mTasksType
+        ).isEmpty()) {
             toggleCompletedView(!isExpanded);
         }
     }

@@ -105,14 +105,13 @@ class ModalLayoutPickerViewModelTest {
     @ExperimentalCoroutinesApi
     private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
-            val siteId = 1
             val site = SiteModel().apply {
-                id = siteId
+                id = 1
                 mobileEditor = GB_EDITOR_NAME
             }
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-            whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-            whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
+            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
+            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
             whenever(siteStore.getBlockLayout(site, "about")).thenReturn(aboutLayout)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             whenever(thumbDimensionProvider.previewWidth).thenReturn(136)

@@ -1273,7 +1273,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when start QS is triggered, then QS starts`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
 
         viewModel.startQuickStart()
 

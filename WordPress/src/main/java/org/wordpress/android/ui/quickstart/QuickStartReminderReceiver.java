@@ -14,7 +14,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.push.NotificationPushIds;
@@ -49,8 +48,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-        SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
-        int selectedSiteLocalId = selectedSite != null ? selectedSite.getId() : SelectedSiteRepository.UNAVAILABLE;
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);
@@ -58,7 +56,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         // Failsafes
         if (
                 quickStartTaskDetails == null
-                || selectedSiteLocalId == -1
+                || selectedSiteLocalId == SelectedSiteRepository.UNAVAILABLE
                 || (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
                 || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartTask.CREATE_SITE)
                 || mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId)

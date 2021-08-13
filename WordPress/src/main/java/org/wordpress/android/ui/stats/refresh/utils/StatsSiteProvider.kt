@@ -48,7 +48,7 @@ class StatsSiteProvider
     }
 
     fun reset() {
-        start(selectedSiteRepository.getSelectedSite()?.id ?: SelectedSiteRepository.UNAVAILABLE)
+        start(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     fun clear() {

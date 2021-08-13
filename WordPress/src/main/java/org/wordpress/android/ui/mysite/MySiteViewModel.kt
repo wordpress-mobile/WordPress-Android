@@ -709,7 +709,7 @@ class MySiteViewModel
 
     fun startQuickStart() {
         analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-        selectedSiteRepository.getSelectedSite()?.id?.let { quickStartRepository.startQuickStart(it) }
+        quickStartRepository.startQuickStart(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     fun ignoreQuickStart() {

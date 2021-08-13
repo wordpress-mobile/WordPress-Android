@@ -69,6 +69,8 @@ class SelectedSiteRepository
 
     fun getSelectedSite() = _selectedSiteChange.value
 
+    fun getSelectedSiteLocalId() = getSelectedSite()?.id ?: UNAVAILABLE
+
     fun updateSiteSettingsIfNecessary() {
         // If the selected site is null, we can't update its site settings
         val selectedSite = getSelectedSite() ?: return
