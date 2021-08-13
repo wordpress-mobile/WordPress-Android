@@ -115,7 +115,7 @@ public class BaseTest {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     private void wpLogout() {
