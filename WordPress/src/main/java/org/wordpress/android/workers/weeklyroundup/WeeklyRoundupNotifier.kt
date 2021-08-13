@@ -12,7 +12,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -24,7 +24,8 @@ class WeeklyRoundupNotifier @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val siteUtils: SiteUtilsWrapper
 ) {
     fun shouldShowNotifications() = accountStore.hasAccessToken() && siteStore.hasSitesAccessedViaWPComRest()
 
@@ -32,7 +33,7 @@ class WeeklyRoundupNotifier @Inject constructor(
         val context = contextProvider.getContext()
         val site = selectedSiteRepository.getSelectedSite() ?: siteStore.sitesAccessedViaWPComRest[0]
         val siteId = site.id
-        val siteName = SiteUtils.getSiteNameOrHomeURL(site)
+        val siteName = siteUtils.getSiteNameOrHomeURL(site)
         val notificationId = WEEKLY_ROUNDUP_NOTIFICATION_ID + siteId
 
         val weeklyRoundupNotification = WeeklyRoundupNotification(
