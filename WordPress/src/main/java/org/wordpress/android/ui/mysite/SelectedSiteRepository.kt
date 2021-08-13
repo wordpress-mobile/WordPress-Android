@@ -13,8 +13,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SelectedSiteRepository
-@Inject constructor(
+@Suppress("TooManyFunctions")
+class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
 ) {
