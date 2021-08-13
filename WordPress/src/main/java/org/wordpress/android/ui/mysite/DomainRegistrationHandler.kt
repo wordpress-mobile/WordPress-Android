@@ -34,6 +34,7 @@ class DomainRegistrationHandler
 ) : MySiteSource<DomainCreditAvailable> {
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
 
+    @Suppress("ReturnCount")
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         continuation?.cancel()
         continuation = null
