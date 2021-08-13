@@ -33,6 +33,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -128,6 +129,7 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
@@ -619,6 +621,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, UnifiedCommentsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
@@ -1276,16 +1279,20 @@ public class ActivityLauncher {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null);
         activity.startActivity(intent);
     }
 
     @NonNull
-    public static Intent createMainActivityAndSiteCreationActivityIntent(Context context) {
+    public static Intent createMainActivityAndSiteCreationActivityIntent(Context context,
+                                                                         @Nullable NotificationType notificationType) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
         return intent;
     }
 

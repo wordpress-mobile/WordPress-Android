@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 11:54:07+0000
+Translation-Revision-Date: 2021-08-06 13:27:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
@@ -153,6 +153,7 @@ Language: de
     <string name="gutenberg_native_search_button_current_button_text_is">Button suchen Aktueller Button-Text ist</string>
     <string name="gutenberg_native_search_blocks">Blöcke suchen</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Blocklabel suchen Aktueller Text ist</string>
+    <string name="gutenberg_native_outside">Außen</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Kein individueller Platzhalter eingestellt</string>
     <string name="gutenberg_native_inside">Innen</string>
     <string name="gutenberg_native_hide_search_heading">Suchüberschriften ausblenden</string>

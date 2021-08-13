@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-02 07:55:45+0000
+Translation-Revision-Date: 2021-08-05 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
     <string name="create_site_notification_create_site_action">サイトを作成</string>
+    <string name="create_site_notification_text">わずかな手順で迅速にサイトを立ち上げることができます</string>
+    <string name="create_site_notification_title">WordPress サイトを作成</string>
+    <string name="stats_disabled_enable_stats_error_message">サイトの統計情報を有効化できません</string>
+    <string name="stats_disabled_enable_stats_button">サイト統計情報を有効化</string>
+    <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
+    <string name="stats_disabled_title">統計情報をお探しですか ?</string>
+    <string name="gutenberg_native_what_is_a_block">ブロックとは</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_unable_to_embed_media">メディアを埋め込むことができません</string>
+    <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
+    <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">埋め込みプレビューはまだ使用できません</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
+    <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">表示</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">アプリでサイトを管理するための基礎知識を説明します。</string>
     <string name="login_epilogue_create_new_site_button">新規サイトを作成</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">アプリでこのサイトを管理する方法をしりたいですか ?</string>
+    <string name="login_epilogue_mysites_subheading">サイトはいつでも切り替えることができます。</string>
+    <string name="login_epilogue_mysites_heading">開くサイトを選択</string>
+    <string name="scan_multisite_not_supported_subtitle">現在、Jetpack スキャンは WordPress のマルチサイトインストールとの互換性がありません。</string>
+    <string name="scan_multisite_not_supported_title">WordPress マルチサイトには対応していません</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無効な URL。 正しい URL を入力してください。</string>
     <string name="gutenberg_native_embed_caption_s">埋め込みのキャプション。 %s</string>
     <string name="gutenberg_native_embed_caption_empty">埋め込みのキャプション。 空</string>

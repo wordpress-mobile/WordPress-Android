@@ -22,6 +22,7 @@ import org.wordpress.android.push.NotificationType.BADGE_RESET
 import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.push.NotificationType.COMMENT
 import org.wordpress.android.push.NotificationType.COMMENT_LIKE
+import org.wordpress.android.push.NotificationType.CREATE_SITE
 import org.wordpress.android.push.NotificationType.FOLLOW
 import org.wordpress.android.push.NotificationType.GROUP_NOTIFICATION
 import org.wordpress.android.push.NotificationType.LIKE
@@ -77,8 +78,10 @@ class SystemNotificationsTrackerTest {
             STORY_FRAME_SAVE_ERROR to "story_frame_save_error",
             PENDING_DRAFTS to "pending_draft",
             ZENDESK to "zendesk_message",
-            BLOGGING_REMINDERS to "blogging_reminders"
+            BLOGGING_REMINDERS to "blogging_reminders",
+            CREATE_SITE to "create_site"
     )
+
     @Before
     fun setUp() {
         systemNotificationsTracker = SystemNotificationsTracker(

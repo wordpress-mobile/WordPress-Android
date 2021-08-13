@@ -28,6 +28,7 @@ class LocalNotificationWorker(
         val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
         if (localNotificationHandler.shouldShowNotification()) {
             NotificationManagerCompat.from(context).notify(id, localNotificationBuilder().build())
+            localNotificationHandler.onNotificationShown()
         }
 
         return Result.success()
