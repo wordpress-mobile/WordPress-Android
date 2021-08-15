@@ -25,7 +25,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
     <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">逐步說明</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">我們會逐步說明透過應用程式管理網站的基本須知。</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要協助你透過應用程式管理此網站嗎？</string>
     <string name="login_epilogue_create_new_site_button">建立一個新網站</string>
     <string name="login_epilogue_mysites_subheading">你可以隨時切換網站。</string>

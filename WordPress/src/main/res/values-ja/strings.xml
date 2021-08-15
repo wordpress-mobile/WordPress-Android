@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 14:54:08+0000
+Translation-Revision-Date: 2021-08-11 00:50:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">ブロックの世界へようこそ</string>
+    <string name="gutenberg_native_embed_media">メディアを埋め込む</string>
+    <string name="gutenberg_native_build_layouts">レイアウトを構築</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
     <string name="create_site_notification_create_site_action">サイトを作成</string>
     <string name="create_site_notification_text">わずかな手順で迅速にサイトを立ち上げることができます</string>
     <string name="create_site_notification_title">WordPress サイトを作成</string>
@@ -25,7 +29,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
     <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">表示</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">アプリでサイトを管理するための基礎知識を説明します。</string>
     <string name="login_epilogue_create_new_site_button">新規サイトを作成</string>
     <string name="quick_start_dialog_need_help_manage_site_title">アプリでこのサイトを管理する方法をしりたいですか ?</string>
     <string name="login_epilogue_mysites_subheading">サイトはいつでも切り替えることができます。</string>
@@ -711,7 +714,7 @@ Language: ja_JP
     <string name="or_type_your_password">またはパスワードを入力</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b&gt;%1$s&lt;/b&gt;をタップしてください</string>
-    <string name="quick_start_list_update_site_title_title">サイトのタイトルを確認</string>
+    <string name="quick_start_list_update_site_title_title">サイトタイトルを確認</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
     <string name="gutenberg_native_duplicate_block">ブロックを複製</string>

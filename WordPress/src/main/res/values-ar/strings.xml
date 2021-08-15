@@ -25,7 +25,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
     <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">خذني في جولة</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">سنرشدك خلال أساسيات إدارة موقعك باستخدام التطبيق.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">هل تريد بعض المساعدة بشأن إدارة هذا الموقع باستخدام التطبيق؟</string>
     <string name="login_epilogue_create_new_site_button">إنشاء موقع جديد</string>
     <string name="login_epilogue_mysites_subheading">يمكنك تبديل المواقع في أي وقت.</string>

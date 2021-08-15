@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-04 10:54:08+0000
+Translation-Revision-Date: 2021-08-11 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
@@ -25,7 +25,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_preview_page">페이지를 미리 보려면 두 번 누르세요.</string>
     <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">주변 보여주기</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">앱으로 사이트 관리하기의 기본 사항을 안내해 드리겠습니다.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">앱으로 이 사이트를 관리하는 도움말이 조금 필요하신가요?</string>
     <string name="login_epilogue_create_new_site_button">새 사이트 생성</string>
     <string name="login_epilogue_mysites_subheading">언제든지 사이트를 전환할 수 있습니다.</string>
@@ -1979,6 +1978,8 @@ Language: ko_KR
     <string name="notification_settings_category_other">기타</string>
     <string name="notification_settings_item_your_sites_all_your_sites">내 사이트 모두</string>
     <string name="notification_settings_category_your_sites">내 사이트</string>
+    <string name="notification_settings_main_status_off">끄기</string>
+    <string name="notification_settings_main_status_on">켜기</string>
     <string name="max_video_resolution">최대 동영상 크기</string>
     <string name="max_thumbnail_px_size">최대 이미지 크기</string>
     <string name="error_upload_post_media_param">다음 글에서 미디어를 업로드하는 동안 오류가 발생했습니다. %s</string>
@@ -2443,6 +2444,7 @@ Language: ko_KR
     <string name="site_settings_denylist_hint">필터와 일치하는 댓글은 스팸으로 표시됩니다.</string>
     <string name="site_settings_moderation_hold_hint">필터와 일치하는 댓글은 중재 대기열에 배치됩니다.</string>
     <string name="site_settings_multiple_links_hint">알려진 사용자의 링크 제한을 무시합니다.</string>
+    <string name="site_settings_allowlist_hint">댓글 글쓴이에게 이전에 승인된 댓글이 있어야 함</string>
     <string name="site_settings_user_account_required_hint">가입하여 로그인한 사용자만 댓글을 남길 수 있습니다.</string>
     <string name="site_settings_identity_required_hint">댓글을 쓴 사람의 이름과 이메일을 꼭 남겨야 합니다.</string>
     <string name="site_settings_paging_hint">지정된 크기 단위로 댓글 표시</string>

@@ -1,20 +1,15 @@
 package org.wordpress.android.ui.mysite.quickstart
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -24,18 +19,14 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 class QuickStartBlockBuilderTest : BaseUnitTest() {
     private lateinit var builder: QuickStartBlockBuilder
 
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var quickStartStore: QuickStartStore
-
-    private val siteId = 1
-    private val completedTasks: List<QuickStartTask> = listOf(QuickStartTask.UPDATE_SITE_TITLE)
-    private val uncompletedTasks: List<QuickStartTask> = listOf(QuickStartTask.VIEW_SITE)
+    private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
+    private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
+    private val onRemoveMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
-        builder = QuickStartBlockBuilder(appPrefsWrapper, quickStartStore)
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        builder = QuickStartBlockBuilder()
     }
 
     @Test
@@ -167,15 +158,34 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
+    /* REMOVE MENU ITEM */
+
+    @Test
+    fun `when block is built, then remove menu item click is set on the block`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.onRemoveMenuItemClick).isNotNull
+    }
+
     private fun buildQuickStartBlock(
-        completedTasks: List<QuickStartTask>? = null,
-        uncompletedTasks: List<QuickStartTask>? = null
+        completedTasks: List<QuickStartTaskDetails>? = null,
+        uncompletedTasks: List<QuickStartTaskDetails>? = null
     ): QuickStartBlock {
-        whenever(quickStartStore.getCompletedTasksByType(anyLong(), any()))
-                .thenReturn(completedTasks ?: this.completedTasks)
-        whenever(quickStartStore.getUncompletedTasksByType(anyLong(), any()))
-                .thenReturn(uncompletedTasks ?: this.uncompletedTasks)
-        return builder.build(onItemClick)
+        val customizeCategory = buildQuickStartCategory(QuickStartTaskType.CUSTOMIZE, completedTasks, uncompletedTasks)
+        val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
+        return builder.build(listOf(customizeCategory, growCategory), onRemoveMenuItemClick, onItemClick)
+    }
+
+    private fun buildQuickStartCategory(
+        taskType: QuickStartTaskType,
+        completedTasks: List<QuickStartTaskDetails>?,
+        uncompletedTasks: List<QuickStartTaskDetails>?
+    ): QuickStartCategory {
+        return QuickStartCategory(
+                taskType = taskType,
+                completedTasks = completedTasks ?: this.completedTasks,
+                uncompletedTasks = uncompletedTasks ?: this.uncompletedTasks
+        )
     }
 
     private fun getQuickStartTaskTypeItem(

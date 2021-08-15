@@ -25,7 +25,6 @@ Language: it
     <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Mostra una panoramica</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Ti guideremo attraverso le basi della gestione del tuo sito tramite l\'app.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Ti serve aiuto per gestire il sito tramite l\'app?</string>
     <string name="login_epilogue_create_new_site_button">Crea un nuovo sito</string>
     <string name="login_epilogue_mysites_subheading">Puoi passare da un sito all\'altro in qualsiasi momento.</string>
