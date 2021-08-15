@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.LoginIntroTemplateViewBinding
+import org.wordpress.android.util.ActivityUtils
 import kotlin.math.min
 
 class LoginProloguePageFragment : Fragment(R.layout.login_intro_template_view) {
@@ -94,5 +95,10 @@ class LoginProloguePageFragment : Fragment(R.layout.login_intro_template_view) {
         promoBackgroundId?.let {
             inflater.inflate(it, binding.promoBackgroundContainer, true)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let { ActivityUtils.hideKeyboard(it) }
     }
 }
