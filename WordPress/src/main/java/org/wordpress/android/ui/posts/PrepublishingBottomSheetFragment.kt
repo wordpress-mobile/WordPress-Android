@@ -2,9 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Point
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -29,16 +26,11 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.util.ActivityUtils
-import org.wordpress.android.util.DisplayUtils.dpToPx
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.NavigationBarInteractionModeHelper
-import org.wordpress.android.util.NavigationBarInteractionModeHelper.NavigationMode
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
-
-const val STATUS_BAR_HEIGHT_IN_DP = 25
-const val MIN_SCREEN_HEIGHT_IN_PX = 2200
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
@@ -117,53 +109,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 }
             }
             setupMinimumHeightForFragmentContainer()
-            addWindowInsetToFragmentContainer()
         }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         analyticsTrackerWrapper.track(Stat.PREPUBLISHING_BOTTOM_SHEET_DISMISSED)
         super.onDismiss(dialog)
-    }
-
-    /**
-     * On Android 10 and above, in IMMERSIVE/FULLSCREEN mode, the bottom sheet is not above the window inset so that
-     * leads to the publish button being cut off. To fix this, we add the bottom inset as the margin bottom of the
-     * fragment container. When the Navigation Mode is changed to Gesture Mode, the bottom inset does not incorporate
-     * the height of the status bar  ( or the total area that should represent the bounds of navigation  area.)
-     * so currently it is being added dynamically. This solution will be improved as soon as the Android team
-     * releases an update to the insets API.
-     */
-    private fun PostPrepublishingBottomSheetBinding.addWindowInsetToFragmentContainer() {
-        // utilized to run the logic with the StoryComposerActivity since it is in IMMERSIVE mode.
-        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-            "arguments can't be null."
-        }
-
-        // only add window inset to really large screens.
-        val size = Point()
-        activity?.windowManager?.defaultDisplay?.getRealSize(size)
-        val height: Int = size.y
-        if (VERSION.SDK_INT >= VERSION_CODES.Q && isStoryPost && height > MIN_SCREEN_HEIGHT_IN_PX) {
-            activity?.window?.decorView?.rootWindowInsets?.let { windowInsets ->
-                val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
-                if (navBarModeHelper.getNavigationMode(requireActivity())
-                                ?.equals(NavigationMode.NAV_BAR_MODE_GESTURAL) == true) {
-                    param.setMargins(
-                            0,
-                            0,
-                            0,
-                            windowInsets.systemGestureInsets.bottom + dpToPx(
-                                    requireActivity(),
-                                    STATUS_BAR_HEIGHT_IN_DP
-                            )
-                    )
-                } else {
-                    param.setMargins(0, 0, 0, windowInsets.systemWindowInsetBottom)
-                }
-                prepublishingContentFragment.layoutParams = param
-            }
-        }
     }
 
     private fun PostPrepublishingBottomSheetBinding.setupMinimumHeightForFragmentContainer() {
