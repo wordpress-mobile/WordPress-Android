@@ -59,9 +59,10 @@ class QuickStartBlockBuilder @Inject constructor() {
     }
 
     private fun getProgress(countCompleted: Int, totalCount: Int) =
-            if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * 100).roundToInt() else 0
+            if (totalCount > 0) ((countCompleted / totalCount.toFloat()) * PERCENT_HUNDRED).roundToInt() else 0
 
     companion object {
         private const val UNEXPECTED_QUICK_START_TYPE = "Unexpected quick start type"
+        private const val PERCENT_HUNDRED = 100
     }
 }
