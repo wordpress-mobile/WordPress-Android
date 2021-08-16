@@ -909,7 +909,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void checkQuickStartNotificationStatus() {
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite != null && NetworkUtils.isNetworkAvailable(this)
-            && mQuickStartUtilsWrapper.isEveryQuickStartTaskDone(getSelectedSiteLocalId())
+            && mQuickStartUtilsWrapper.isEveryQuickStartTaskDone(mSelectedSiteRepository.getSelectedSiteLocalId())
             && !mQuickStartStore.getQuickStartNotificationReceived(selectedSite.getId())) {
             CompleteQuickStartPayload payload = new CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString());
             mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload));
@@ -1193,7 +1193,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                                  && data.getIntExtra(
                             SitePickerActivity.KEY_SITE_LOCAL_ID,
                             SelectedSiteRepository.UNAVAILABLE
-                    ) == getSelectedSiteLocalId();
+                    ) == mSelectedSiteRepository.getSelectedSiteLocalId();
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
@@ -1508,10 +1508,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Nullable
     public SiteModel getSelectedSite() {
         return mSelectedSiteRepository.getSelectedSite();
-    }
-
-    public int getSelectedSiteLocalId() {
-        return mSelectedSiteRepository.getSelectedSiteLocalId();
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
