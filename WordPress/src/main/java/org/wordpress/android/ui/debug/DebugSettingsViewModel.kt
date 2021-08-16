@@ -1,39 +1,45 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.ui.debug
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
+import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.DebugUtils
 import org.wordpress.android.util.config.FeaturesInDevelopment
+import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.ToggleAction
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class ManualFeatureConfigViewModel
+class DebugSettingsViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: RemoteConfig
+    private val remoteConfig: RemoteConfig,
+    private val debugUtils: DebugUtils
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
-    private val _restartAction = MutableLiveData<Event<Unit>>()
-    val restartAction: LiveData<Event<Unit>> = _restartAction
+    private val _onNavigation = MutableLiveData<Event<NavigationAction>>()
+    val onNavigation: LiveData<Event<NavigationAction>> = _onNavigation
     private var hasChange: Boolean = false
 
     fun start() {
@@ -43,26 +49,28 @@ class ManualFeatureConfigViewModel
     }
 
     private fun refresh() {
-        val uiItems = mutableListOf<FeatureUiItem>()
+        val uiItems = mutableListOf<UiItem>()
         val remoteFeatures = buildRemoteFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.manual_config_remote_features))
+            uiItems.add(Header(R.string.debug_settings_remote_features))
             uiItems.addAll(remoteFeatures)
         }
         val developedFeatures = buildDevelopedFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.manual_config_features_in_development))
+            uiItems.add(Header(R.string.debug_settings_features_in_development))
             uiItems.addAll(developedFeatures)
         }
-        uiItems.add(Header(R.string.missing_developed_feature))
+        uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
         if (hasChange) {
-            uiItems.add(Button(R.string.manual_config_restart_app, this::restart))
+            uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
         }
+        uiItems.add(Header(R.string.debug_settings_tools))
+        uiItems.add(Row(R.string.debug_cookies_title, ListItemInteraction.create(this::onDebugCookiesClick)))
         _uiState.value = UiState(uiItems)
     }
 
-    private fun restart() {
-        _restartAction.value = Event(Unit)
+    private fun onDebugCookiesClick() {
+        _onNavigation.value = Event(DebugCookies)
     }
 
     private fun buildDevelopedFeatures(): List<Feature> {
@@ -102,13 +110,11 @@ class ManualFeatureConfigViewModel
         }
     }
 
-    data class UiState(val uiItems: List<FeatureUiItem>)
-    sealed class FeatureUiItem(val type: Type) {
-        data class Header(val header: Int) : FeatureUiItem(HEADER)
-        data class Button(val text: Int, val clickAction: () -> Unit) : FeatureUiItem(BUTTON)
-        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : FeatureUiItem(
-                FEATURE
-        ) {
+    data class UiState(val uiItems: List<UiItem>)
+    sealed class UiItem(val type: Type) {
+        data class Header(val header: Int) : UiItem(HEADER)
+        data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
+        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
             constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
                     title,
                     when (enabled) {
@@ -122,6 +128,8 @@ class ManualFeatureConfigViewModel
             enum class State { ENABLED, DISABLED, UNKNOWN }
         }
 
+        data class Row(val title: Int, val onClick: ListItemInteraction) : UiItem(ROW)
+
         data class ToggleAction(
             val key: String,
             val value: Boolean,
@@ -131,7 +139,11 @@ class ManualFeatureConfigViewModel
         }
 
         enum class Type {
-            HEADER, FEATURE, BUTTON
+            HEADER, FEATURE, BUTTON, ROW
         }
+    }
+
+    sealed class NavigationAction {
+        object DebugCookies : NavigationAction()
     }
 }

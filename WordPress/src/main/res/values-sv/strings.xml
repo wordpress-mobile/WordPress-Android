@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-02 01:58:38+0000
+Translation-Revision-Date: 2021-08-13 06:27:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Du kan ändra blockens ordning genom att trycka på ett block och sedan trycka på upp/ned-pilarna som visas i blockets nedre vänstra hörn för att flytta blocket före eller efter andra block.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Välkommen till världen av block</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Ta bort ett block genom att markera blocket och klicka på de tre punkterna i blockets nedre högra hörn för att visa inställningarna. Där väljer du sedan alternativet att ta bort blocket.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Vissa block har ytterligare inställningar. Tryck på ikonen för inställningar i blockets nedre högra hörn för att se fler alternativ.</string>
+    <string name="gutenberg_native_s_block_newly_available">Blocket %s, ett nytt tillskott</string>
+    <string name="gutenberg_native_rich_text_editing">Redigering av formaterad text</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Om du vet namnen på de block du behöver kan du lägga till ett block genom att skriva ett snedstreck följt av blockets namn, exempelvis /bild eller /rubrik.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Förstärk ditt innehåll genom att lägga till bilder, gif-illustrationer, videoklipp och inbäddade media i ditt sidinnehåll.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Prova nu direkt genom att lägga till några block i ditt inlägg eller din sida!</string>
+    <string name="gutenberg_native_embed_media">Bädda in media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Varje block har sina egna inställningar. För att se dem trycker du på blocket i fråga. Inställningarna visas i verktygsfältet längst ned på skärmen.</string>
+    <string name="gutenberg_native_build_layouts">Bygg layouter</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Block är innehållsbitar som du kan lägga in, sortera om och stilsätta utan att du behöver kunna programmera eller koda. Block är ett enkelt och modernt sätt för dig att skapa vackra layouter.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Block låter dig fokusera på innehållet med den trygga vetskapen att alla formateringsverktyg du behöver för att få fram ditt budskap finns tillgängliga.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordna ditt innehåll i kolumner, lägg till knappar för uppmaningar, och överläggstexter på bilder.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Lägg till ett nytt block när som helst genom att trycka på ikonen + i verktygsfältet nere till vänster.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s av %2$s klart</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Lär dig grunderna med hjälp av en snabb genomgång.</string>
+    <string name="comment_batch_moderation_error">Lyckades inte granska en eller flera kommentarer</string>
     <string name="create_site_notification_create_site_action">Skapa webbplats</string>
     <string name="create_site_notification_text">Kom igång med din egen webbplats i några få steg</string>
     <string name="create_site_notification_title">Skapa din WordPress-webbplats</string>
@@ -25,7 +44,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
     <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Visa mig en rundtur</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Vi kommer att visa dig grunderna i hur du hanterar din webbplats via appen.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Vill du ha lite hjälp med att hantera den här webbplatsen med appen?</string>
     <string name="login_epilogue_create_new_site_button">Skapa en ny webbplats</string>
     <string name="login_epilogue_mysites_subheading">Du kan byta webbplats när som helst.</string>

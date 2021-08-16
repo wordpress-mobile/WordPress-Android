@@ -27,6 +27,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -65,6 +67,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
@@ -267,6 +270,7 @@ class MySiteViewModel
                     siteItems.add(
                             quickStartBlockBuilder.build(
                                     quickStartCategories,
+                                    this::onQuickStartBlockRemoveMenuItemClick,
                                     this::onQuickStartTaskTypeItemClick
                             )
                     )
@@ -355,6 +359,10 @@ class MySiteViewModel
 
     private fun onDynamicCardMoreClick(model: DynamicCardMenuModel) {
         _onDynamicCardMenuShown.postValue(Event(model))
+    }
+
+    private fun onQuickStartBlockRemoveMenuItemClick() {
+        _onBasicDialogShown.value = Event(ShowRemoveNextStepsDialog)
     }
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
@@ -500,6 +508,7 @@ class MySiteViewModel
                             Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite())))
                     )
                 }
+                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogPositiveButtonClicked()
             }
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
@@ -510,6 +519,7 @@ class MySiteViewModel
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
+                TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
             }
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
@@ -517,6 +527,17 @@ class MySiteViewModel
                 }
             }
         }
+    }
+
+    private fun onRemoveNextStepsDialogPositiveButtonClicked() {
+        analyticsTrackerWrapper.track(QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
+        quickStartRepository.skipQuickStart()
+        refresh()
+        clearActiveQuickStartTask()
+    }
+
+    private fun onRemoveNextStepsDialogNegativeButtonClicked() {
+        analyticsTrackerWrapper.track(QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
@@ -724,6 +745,7 @@ class MySiteViewModel
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
+        const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
     }
 }

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 09:14:36+0000
+Translation-Revision-Date: 2021-08-10 17:01:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Вы можете переупорядочить блоки, нажав на блок, а затем нажав стрелки вверх и вниз, которые появляются в нижней левой части блока, чтобы переместить его выше или ниже других блоков.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Добро пожаловать в мир блоков</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Чтобы удалить блок, выберите блок и щелкните три точки в правом нижнем углу блока, чтобы просмотреть настройки. Оттуда выберите вариант удаления блока.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Некоторые блоки имеют дополнительные настройки. Коснитесь значка настроек в правом нижнем углу блока, чтобы просмотреть дополнительные параметры.</string>
+    <string name="gutenberg_native_s_block_newly_available">Недавно доступный, блок %s</string>
+    <string name="gutenberg_native_rich_text_editing">Редактирование форматированного текста</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Когда вы познакомитесь с названиями различных блоков, вы можете добавить блок, набрав косую черту, за которой следует имя блока, например /Изображение или /Заголовок.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Сделайте содержимое заметным, добавив на свои страницы изображения, GIF-анимацию, видео и встроенные мультимедиа.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Попробуйте, добавив несколько блоков в запись или страницу!</string>
+    <string name="gutenberg_native_embed_media">Встроить медиасодержимое</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">У каждого блока свои настройки. Чтобы найти их, нажмите на блок. Его настройки появятся на панели инструментов внизу экрана.</string>
+    <string name="gutenberg_native_build_layouts">Макеты</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Блоки - это части содержимого, которые можно вставлять, переставлять и стилизовать, без необходимости использования кода. Блоки - это простой и современный способ создавать красивые макеты.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Блоки позволяют вам сосредоточиться на написании, знайте о том, что все инструменты форматирования доступны здесь, чтобы оформить ваше сообщение.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Оформите содержимое в столбцы, добавьте кнопки призыва к действию и изображения с наложением текста.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов  внизу слева.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s из %2$s завершено</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Изучите основы с помощью быстрого пошагового руководства.</string>
+    <string name="comment_batch_moderation_error">Неудалось отмодерировать один или несколько комментариев</string>
     <string name="create_site_notification_create_site_action">Создание сайта</string>
     <string name="create_site_notification_text">Получите работающий сайт всего за пару шагов</string>
     <string name="create_site_notification_title">Создайте свой сайт на WordPress</string>
@@ -25,7 +44,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_preview_page">Нажмите дважды для предварительного просмотра страницы.</string>
     <string name="quick_start_list_upload_icon_subtitle">Показывается посетителям на вкладках браузера и некоторых других местах онлайн.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Покажите мне</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Начнём с основ управления сайтом через приложение.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Нужна помощь по управлению сайтом через приложение?</string>
     <string name="login_epilogue_create_new_site_button">Создать новый сайт</string>
     <string name="login_epilogue_mysites_subheading">Вы можете переключить сайт в любое время.</string>
