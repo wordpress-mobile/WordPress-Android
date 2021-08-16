@@ -83,6 +83,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -187,6 +188,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject WordPressWorkersFactory mWordPressWorkerFactory;
     @Inject DebugCookieManager mDebugCookieManager;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -222,7 +224,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
-            int selectedSiteLocalId = AppPrefs.getSelectedSite();
+            int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
             if (site != null) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
@@ -391,7 +393,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     private void sanitizeMediaUploadStateForSite() {
-        int selectedSiteLocalId = AppPrefs.getSelectedSite();
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
         final SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
         if (site != null) {
             new Thread(new Runnable() {

@@ -69,7 +69,12 @@ class SelectedSiteRepository @Inject constructor(
 
     fun getSelectedSite() = _selectedSiteChange.value
 
-    fun getSelectedSiteLocalId() = getSelectedSite()?.id ?: UNAVAILABLE
+    @JvmOverloads
+    fun getSelectedSiteLocalId(fromPrefs: Boolean = false) = if (fromPrefs) {
+        AppPrefs.getSelectedSite()
+    } else {
+        getSelectedSite()?.id ?: UNAVAILABLE
+    }
 
     fun updateSiteSettingsIfNecessary() {
         // If the selected site is null, we can't update its site settings

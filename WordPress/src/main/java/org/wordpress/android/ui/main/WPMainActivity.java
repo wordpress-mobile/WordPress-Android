@@ -1540,7 +1540,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
      * Activity and the selected site parameter is passed along to other activities / fragments.
      */
     private void initSelectedSite() {
-        int selectedSiteLocalId = AppPrefs.getSelectedSite();
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
         if (selectedSiteLocalId != AppPrefs.SELECTED_SITE_UNAVAILABLE) {
             // Site previously selected, use it
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);

@@ -20,6 +20,7 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -596,6 +597,13 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
+    /**
+     * This method should only be used by specific client classes that need access to the persisted selected site
+     * instance due to the fact that the in-memory selected site instance might not be yet available.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such access
+     * to this method is limited to this class.
+     */
     public static int getSelectedSite() {
         return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
