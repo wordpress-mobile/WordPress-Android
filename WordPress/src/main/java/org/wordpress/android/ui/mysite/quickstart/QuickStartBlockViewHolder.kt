@@ -71,7 +71,7 @@ class QuickStartBlockViewHolder(
     }
 
     private fun ProgressBar.update(item: QuickStartTaskTypeItem) {
-        ObjectAnimator.ofInt(this, PROGRESS, item.progress).setDuration(600).start()
+        ObjectAnimator.ofInt(this, PROGRESS, item.progress).setDuration(PROGRESS_ANIMATION_DURATION).start()
 
         val progressIndicatorColor = ContextCompat.getColor(itemView.context, item.progressColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
@@ -81,5 +81,6 @@ class QuickStartBlockViewHolder(
 
     companion object {
         private const val PROGRESS = "progress"
+        private const val PROGRESS_ANIMATION_DURATION = 600L
     }
 }
