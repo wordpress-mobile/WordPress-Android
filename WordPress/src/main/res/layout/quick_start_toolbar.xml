@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeightSmall"
-    tools:showIn="@layout/quick_start_block">
+    tools:showIn="@layout/quick_start_block"
+    android:paddingStart="@dimen/content_margin_site_row_start"
+    android:paddingEnd="@dimen/content_margin_site_row_start">
 
     <ImageView
         android:id="@+id/quick_start_icon"

@@ -3,7 +3,9 @@
     android:id="@+id/item_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/QuickStartTypeRow">
+    style="@style/QuickStartTypeRow"
+    android:paddingStart="@dimen/content_margin_site_row_start"
+    android:paddingEnd="@dimen/content_margin_site_row_start">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_title"
