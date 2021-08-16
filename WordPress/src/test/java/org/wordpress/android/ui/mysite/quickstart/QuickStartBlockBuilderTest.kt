@@ -30,6 +30,24 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         builder = QuickStartBlockBuilder()
     }
 
+    /* ICON */
+
+    @Test
+    fun `when block is built, then icon exists`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.icon).isEqualTo(R.drawable.ic_list_checkmark_white_24dp)
+    }
+
+    /* TITLE */
+
+    @Test
+    fun `when block is built, then title exists`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.title).isEqualTo(UiStringRes(R.string.quick_start_sites))
+    }
+
     /* TASK TYPE ITEM */
 
     @Test
