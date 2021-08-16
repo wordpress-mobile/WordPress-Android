@@ -29,6 +29,7 @@ class SelectedSiteRepository @Inject constructor(
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
+        AppPrefs.setSelectedSite(selectedSite.id)
     }
 
     fun removeSite() {
@@ -36,6 +37,7 @@ class SelectedSiteRepository @Inject constructor(
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = null
+        AppPrefs.setSelectedSite(UNAVAILABLE)
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {

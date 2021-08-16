@@ -608,6 +608,13 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
+    /**
+     * This method should only be used by specific client classes that need to update the persisted selected site
+     * instance due to the fact that the in-memory selected site instance is updated as well.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such the
+     * update method should be limited to this class.
+     */
     public static void setSelectedSite(int siteLocalId) {
         setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }

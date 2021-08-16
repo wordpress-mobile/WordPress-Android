@@ -1485,7 +1485,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // Reset site selection
-            removeSelectedSite();
+            mSelectedSiteRepository.removeSite();
             // Show the sign in screen
             if (BuildConfig.IS_JETPACK_APP) {
                 ActivityLauncher.showSignInForResultJetpackOnly(this);
@@ -1519,19 +1519,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
+        // Make selected site visible
+        selectedSite.setIsVisible(true);
         mSelectedSiteRepository.updateSite(selectedSite);
 
         // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
-
-        // Make selected site visible
-        selectedSite.setIsVisible(true);
-        AppPrefs.setSelectedSite(selectedSite.getId());
-    }
-
-    private void removeSelectedSite() {
-        mSelectedSiteRepository.removeSite();
-        AppPrefs.setSelectedSite(AppPrefs.SELECTED_SITE_UNAVAILABLE);
     }
 
     /**
@@ -1541,7 +1534,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
      */
     private void initSelectedSite() {
         int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
-        if (selectedSiteLocalId != AppPrefs.SELECTED_SITE_UNAVAILABLE) {
+        if (selectedSiteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             // Site previously selected, use it
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
             if (site != null) {
