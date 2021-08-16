@@ -14,6 +14,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import kotlin.math.roundToInt
 
 @InternalCoroutinesApi
 class QuickStartBlockBuilderTest : BaseUnitTest() {
@@ -145,6 +146,31 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                                 )
                         )
                 )
+    }
+
+    /* PROGRESS BAR */
+
+    @Test
+    fun `given non zero completed tasks, when block is built, then completed tasks progress is non zero`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progress)
+                .isEqualTo(((completedTasks.size / (completedTasks.size + uncompletedTasks.size.toFloat())) * 100)
+                        .roundToInt())
+    }
+
+    @Test
+    fun `given zero completed tasks, when block is built, then completed tasks progress is zero`() {
+        val quickStartBlock = buildQuickStartBlock(emptyList())
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progress).isEqualTo(0)
+    }
+
+    @Test
+    fun `when block is built, then progress color equals primary color`() {
+        val quickStartBlock = buildQuickStartBlock(emptyList())
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progressColor).isEqualTo(R.color.colorPrimary)
     }
 
     /* ITEM CLICK */

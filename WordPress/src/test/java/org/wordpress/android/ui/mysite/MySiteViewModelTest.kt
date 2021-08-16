@@ -211,6 +211,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 titleEnabled = true,
                                 subtitle = UiStringText(""),
                                 strikeThroughTitle = false,
+                                progressColor = 0,
+                                progress = 0,
                                 onClick = ListItemInteraction.create(
                                         QuickStartTaskType.CUSTOMIZE,
                                         { quickStartTaskTypeItemClickAction }
