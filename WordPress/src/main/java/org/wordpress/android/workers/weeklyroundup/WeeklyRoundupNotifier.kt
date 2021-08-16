@@ -37,8 +37,8 @@ class WeeklyRoundupNotifier @Inject constructor(
                 .asSequence()
                 .filterNotNull()
                 .sortedByDescending { it.score }
-                .take(5)
-                .filter { it.views >= 5 }
+                .take(TOP_FIVE_SITES)
+                .filter { it.views >= MIN_SITE_VIEWS }
                 .map { buildNotification(it) }
                 .toList()
                 .reversed()
@@ -78,7 +78,12 @@ class WeeklyRoundupNotifier @Inject constructor(
                         data.views,
                         data.likes,
                         data.comments
-                ),
+                )
         )
+    }
+
+    companion object {
+        private const val TOP_FIVE_SITES = 5
+        private const val MIN_SITE_VIEWS = 5
     }
 }

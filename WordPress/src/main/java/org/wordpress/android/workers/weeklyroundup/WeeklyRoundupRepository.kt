@@ -23,7 +23,9 @@ class WeeklyRoundupRepository @Inject constructor(
         val model = response.model
 
         if (model == null) {
-            val message = response.error?.let { "Error fetching weekly roundup data for ${site.url}: [${it.type.name}: ${it.message}]" }
+            val message = response.error?.let {
+                "Error fetching weekly roundup data for ${site.url}: [${it.type.name}: ${it.message}]"
+            }
             AppLog.e(T.NOTIFS, message)
             return null
         }
