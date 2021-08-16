@@ -1076,11 +1076,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void setSite(Intent data) {
         if (data != null) {
-            int selectedSite = data.getIntExtra(
+            int siteLocalId = data.getIntExtra(
                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
-            setSelectedSite(selectedSite);
+            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            if (site != null) {
+                setSelectedSite(site);
+            }
         }
     }
 
@@ -1509,13 +1512,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     public int getSelectedSiteLocalId() {
         return mSelectedSiteRepository.getSelectedSiteLocalId();
-    }
-
-    private void setSelectedSite(int siteLocalId) {
-        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (site != null) {
-            setSelectedSite(site);
-        }
     }
 
     private void setSelectedSite(@NonNull SiteModel selectedSite) {
