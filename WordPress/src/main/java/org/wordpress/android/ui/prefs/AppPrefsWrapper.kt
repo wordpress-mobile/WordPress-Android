@@ -197,6 +197,10 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
 
+    fun getSelectedSite() = AppPrefs.getSelectedSite()
+
+    fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

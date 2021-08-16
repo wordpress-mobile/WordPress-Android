@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.map
 import javax.inject.Inject
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 @Suppress("TooManyFunctions")
 class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
+    private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
     private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
@@ -29,7 +31,7 @@ class SelectedSiteRepository @Inject constructor(
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
-        AppPrefs.setSelectedSite(selectedSite.id)
+        appPrefsWrapper.setSelectedSite(selectedSite.id)
     }
 
     fun removeSite() {
@@ -37,7 +39,7 @@ class SelectedSiteRepository @Inject constructor(
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = null
-        AppPrefs.setSelectedSite(UNAVAILABLE)
+        appPrefsWrapper.setSelectedSite(UNAVAILABLE)
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
@@ -73,7 +75,7 @@ class SelectedSiteRepository @Inject constructor(
 
     @JvmOverloads
     fun getSelectedSiteLocalId(fromPrefs: Boolean = false) = if (fromPrefs) {
-        AppPrefs.getSelectedSite()
+        appPrefsWrapper.getSelectedSite()
     } else {
         getSelectedSite()?.id ?: UNAVAILABLE
     }
