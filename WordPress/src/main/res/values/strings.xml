@@ -3738,4 +3738,8 @@ translators: Block name. %s: The localized block name -->
     <string name="create_site_notification_title">Create your WordPress website</string>
     <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
     <string name="create_site_notification_create_site_action">Create site</string>
+
+    <!-- Weekly Roundup Notification -->
+    <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
+    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
 </resources>
