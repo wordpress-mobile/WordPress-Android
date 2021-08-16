@@ -56,6 +56,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
     data class QuickStartBlock(
+        @DrawableRes val icon: Int,
+        val title: UiString,
         val onRemoveMenuItemClick: ListItemInteraction,
         val taskTypeItems: List<QuickStartTaskTypeItem>
     ) : MySiteItem(QUICK_START_BLOCK) {

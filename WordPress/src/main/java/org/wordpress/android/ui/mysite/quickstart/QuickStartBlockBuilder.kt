@@ -18,6 +18,8 @@ class QuickStartBlockBuilder @Inject constructor() {
         onRemoveMenuItemClick: () -> Unit,
         onItemClick: (QuickStartTaskType) -> Unit
     ) = QuickStartBlock(
+            icon = R.drawable.ic_list_checkmark_white_24dp,
+            title = UiStringRes(R.string.quick_start_sites),
             onRemoveMenuItemClick = ListItemInteraction.create { onRemoveMenuItemClick.invoke() },
             taskTypeItems = categories.map { buildQuickStartTaskTypeItem(it, onItemClick) }
     )
