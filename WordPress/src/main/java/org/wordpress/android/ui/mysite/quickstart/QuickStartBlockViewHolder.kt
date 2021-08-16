@@ -6,6 +6,7 @@ import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartBlockBinding
+import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
@@ -21,8 +22,8 @@ class QuickStartBlockViewHolder(
 ) : MySiteItemViewHolder<QuickStartBlockBinding>(parent.viewBinding(QuickStartBlockBinding::inflate)) {
     fun bind(block: QuickStartBlock) = with(binding) {
         quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
-        updateQuickStartCustomizeContainer(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
-        updateQuickStartGrowContainer(block.taskTypeItems.first { it.quickStartTaskType == GROW })
+        quickStartCustomize.update(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
+        quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
     private fun QuickStartBlockBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
@@ -35,30 +36,18 @@ class QuickStartBlockViewHolder(
         quickStartPopupMenu.show()
     }
 
-    private fun QuickStartBlockBinding.updateQuickStartCustomizeContainer(item: QuickStartTaskTypeItem) {
-        quickStartCustomizeIcon.setBackgroundResource(item.icon)
-        quickStartCustomizeIcon.isEnabled = item.iconEnabled
-
-        quickStartCustomizeTitle.text = uiHelpers.getTextOfUiString(itemView.context, item.title)
-        quickStartCustomizeTitle.isEnabled = item.titleEnabled
-        quickStartCustomizeTitle.paintFlags(item)
-
-        quickStartCustomizeSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
-
-        quickStartCustomize.setOnClickListener { item.onClick.click() }
-    }
-
-    private fun QuickStartBlockBinding.updateQuickStartGrowContainer(item: QuickStartTaskTypeItem) {
-        quickStartGrowIcon.setBackgroundResource(item.icon)
-        quickStartGrowIcon.isEnabled = item.iconEnabled
-
-        quickStartGrowTitle.text = uiHelpers.getTextOfUiString(itemView.context, item.title)
-        quickStartGrowTitle.isEnabled = item.titleEnabled
-        quickStartGrowTitle.paintFlags(item)
-
-        quickStartGrowSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
-
-        quickStartGrow.setOnClickListener { item.onClick.click() }
+    private fun QuickStartTaskTypeItemBinding.update(item: QuickStartTaskTypeItem) {
+        with(itemIcon) {
+            setBackgroundResource(item.icon)
+            isEnabled = item.iconEnabled
+        }
+        with(itemTitle) {
+            text = uiHelpers.getTextOfUiString(itemView.context, item.title)
+            isEnabled = item.titleEnabled
+            paintFlags(item)
+        }
+        itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+        itemRoot.setOnClickListener { item.onClick.click() }
     }
 
     private fun MaterialTextView.paintFlags(item: QuickStartTaskTypeItem) {

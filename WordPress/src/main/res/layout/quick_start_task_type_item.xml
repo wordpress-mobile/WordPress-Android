@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/item_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/QuickStartTypeRow">
+
+        <ImageView
+            android:id="@+id/item_icon"
+            style="@style/QuickStartTypeIcon"
+            android:background="@drawable/bg_oval_primary_40_customize_white_40dp_selector"
+            android:importantForAccessibility="no" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/item_title"
+            style="@style/QuickStartTypeTitle"
+            android:layout_toEndOf="@+id/item_icon"
+            android:text="@string/quick_start_sites_type_customize" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/item_subtitle"
+            style="@style/QuickStartTypeSubtitle"
+            android:layout_below="@+id/item_title"
+            android:layout_toEndOf="@+id/item_icon"
+            tools:text="1 of 6 complete" />
+
+</RelativeLayout>

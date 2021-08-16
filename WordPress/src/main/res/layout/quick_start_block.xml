@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quick_start"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +17,9 @@
             android:id="@+id/quick_start_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/listPreferredItemHeightSmall">
+            android:minHeight="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="@dimen/content_margin_site_row_start"
+            android:paddingEnd="@dimen/content_margin_site_row_start">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/quick_start_title"
@@ -48,31 +49,12 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <include
             android:id="@+id/quick_start_customize"
-            style="@style/QuickStartTypeRow"
-            android:layout_below="@+id/quick_start_toolbar">
-
-            <ImageView
-                android:id="@+id/quick_start_customize_icon"
-                style="@style/QuickStartTypeIcon"
-                android:background="@drawable/bg_oval_primary_40_customize_white_40dp_selector"
-                android:importantForAccessibility="no" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_customize_title"
-                style="@style/QuickStartTypeTitle"
-                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                android:text="@string/quick_start_sites_type_customize" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_customize_subtitle"
-                style="@style/QuickStartTypeSubtitle"
-                android:layout_below="@+id/quick_start_customize_title"
-                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                tools:text="1 of 6 complete" />
-
-        </RelativeLayout>
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/quick_start_toolbar" />
 
         <View
             android:layout_width="match_parent"
@@ -81,31 +63,12 @@
             android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
             android:background="?android:attr/listDivider" />
 
-        <RelativeLayout
+        <include
             android:id="@+id/quick_start_grow"
-            style="@style/QuickStartTypeRow"
-            android:layout_below="@+id/quick_start_customize">
-
-            <ImageView
-                android:id="@+id/quick_start_grow_icon"
-                style="@style/QuickStartTypeIcon"
-                android:background="@drawable/bg_oval_blue_50_multiple_users_white_40dp_selector"
-                android:importantForAccessibility="no" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_grow_title"
-                style="@style/QuickStartTypeTitle"
-                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                android:text="@string/quick_start_sites_type_grow" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_grow_subtitle"
-                style="@style/QuickStartTypeSubtitle"
-                android:layout_below="@+id/quick_start_grow_title"
-                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                tools:text="0 of 5 complete" />
-
-        </RelativeLayout>
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/quick_start_customize"/>
 
     </RelativeLayout>
 
