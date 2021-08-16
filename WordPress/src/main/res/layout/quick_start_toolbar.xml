@@ -8,11 +8,22 @@
     android:minHeight="?attr/listPreferredItemHeightSmall"
     tools:showIn="@layout/quick_start_block">
 
+    <ImageView
+        android:id="@+id/quick_start_icon"
+        android:layout_width="@dimen/my_site_list_row_icon_size"
+        android:layout_height="@dimen/my_site_list_row_icon_size"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:src="@drawable/ic_list_checkmark_white_24dp"
+        android:importantForAccessibility="no"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/quick_start_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/quick_start_icon"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/quick_start_more"
         android:ellipsize="end"
