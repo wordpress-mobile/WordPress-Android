@@ -30,6 +30,8 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         builder = QuickStartBlockBuilder()
     }
 
+    /* TASK TYPE ITEM */
+
     @Test
     fun `when block is built, then customise quick start task type item exists`() {
         val quickStartBlock = buildQuickStartBlock()
@@ -44,7 +46,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(quickStartBlock.taskTypeItems.map { it.quickStartTaskType }).contains(QuickStartTaskType.GROW)
     }
 
-    /* TITLE */
+    /* TASK TYPE ITEM TITLE */
 
     @Test
     fun `given uncompleted tasks exist, when block is built, then title is enabled`() {
@@ -90,7 +92,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(getQuickStartTaskTypeItem(quickStartBlock).strikeThroughTitle).isTrue
     }
 
-    /* SUBTITLE */
+    /* TASK TYPE ITEM SUBTITLE */
 
     @Test
     fun `when block is built, then task type item subtitle contains completed amd uncompleted count`() {
@@ -108,7 +110,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 )
     }
 
-    /* PROGRESS BAR */
+    /* TASK TYPE ITEM PROGRESS BAR */
 
     @Test
     fun `given non zero completed tasks, when block is built, then completed tasks progress is non zero`() {
