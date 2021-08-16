@@ -61,8 +61,6 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     ) : MySiteItem(QUICK_START_BLOCK) {
         data class QuickStartTaskTypeItem(
             val quickStartTaskType: QuickStartTaskType,
-            @DrawableRes val icon: Int,
-            val iconEnabled: Boolean,
             val title: UiString,
             val titleEnabled: Boolean,
             val subtitle: UiString,

@@ -44,46 +44,6 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(quickStartBlock.taskTypeItems.map { it.quickStartTaskType }).contains(QuickStartTaskType.GROW)
     }
 
-    /* ICON */
-
-    @Test
-    fun `given uncompleted tasks exist, when block is built, then icon is enabled`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock).iconEnabled).isTrue
-    }
-
-    @Test
-    fun `given uncompleted tasks do not exist, when block is built, then icon is disabled`() {
-        val quickStartBlock = buildQuickStartBlock(uncompletedTasks = emptyList())
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock).iconEnabled).isFalse
-    }
-
-    @Test
-    fun `when customize task type item is built, then customize icon exists`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.CUSTOMIZE).icon)
-                .isEqualTo(R.drawable.bg_oval_primary_40_customize_white_40dp_selector)
-    }
-
-    @Test
-    fun `given uncompleted tasks exist, when grow task type item is built, then grow icon exists`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.GROW).icon)
-                .isEqualTo(R.drawable.bg_oval_blue_50_multiple_users_white_40dp)
-    }
-
-    @Test
-    fun `given uncompleted tasks do not exist, when grow task type item is built, then grow icon exists`() {
-        val quickStartBlock = buildQuickStartBlock(uncompletedTasks = emptyList())
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.GROW).icon)
-                .isEqualTo(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
-    }
-
     /* TITLE */
 
     @Test

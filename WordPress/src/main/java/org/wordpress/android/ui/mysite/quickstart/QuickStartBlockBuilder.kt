@@ -32,8 +32,6 @@ class QuickStartBlockBuilder @Inject constructor() {
 
         return QuickStartTaskTypeItem(
                 quickStartTaskType = quickStartTaskType,
-                icon = getIcon(taskType = quickStartTaskType, isCompleted = countUncompleted == 0),
-                iconEnabled = countUncompleted > 0,
                 title = UiStringRes(getTitle(quickStartTaskType)),
                 titleEnabled = countUncompleted > 0,
                 subtitle = UiStringResWithParams(
@@ -54,18 +52,6 @@ class QuickStartBlockBuilder @Inject constructor() {
         return when (taskType) {
             QuickStartTaskType.CUSTOMIZE -> R.string.quick_start_sites_type_customize
             QuickStartTaskType.GROW -> R.string.quick_start_sites_type_grow
-            QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
-        }
-    }
-
-    private fun getIcon(taskType: QuickStartTaskType, isCompleted: Boolean): Int {
-        return when (taskType) {
-            QuickStartTaskType.CUSTOMIZE -> R.drawable.bg_oval_primary_40_customize_white_40dp_selector
-            QuickStartTaskType.GROW -> if (isCompleted) {
-                R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
-            } else {
-                R.drawable.bg_oval_blue_50_multiple_users_white_40dp
-            }
             QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
         }
     }

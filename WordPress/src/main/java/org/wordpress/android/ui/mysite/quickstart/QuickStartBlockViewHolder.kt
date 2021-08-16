@@ -50,10 +50,6 @@ class QuickStartBlockViewHolder(
     }
 
     private fun QuickStartTaskTypeItemBinding.update(item: QuickStartTaskTypeItem) {
-        with(itemIcon) {
-            setBackgroundResource(item.icon)
-            isEnabled = item.iconEnabled
-        }
         with(itemTitle) {
             text = uiHelpers.getTextOfUiString(itemView.context, item.title)
             isEnabled = item.titleEnabled

@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_size"
             android:layout_below="@+id/quick_start_customize"
-            android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
             android:background="?android:attr/listDivider" />
 
         <include
