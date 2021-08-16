@@ -29,4 +29,26 @@ object BloggingReminderUtils {
                 }
             })
     }
+
+    @JvmStatic
+    fun observeTimePicker(
+        isTimePickerShowing: LiveData<Event<Boolean>>,
+        lifecycleOwner: LifecycleOwner,
+        tag: String,
+        getSupportFragmentManager: () -> FragmentManager?
+    ) {
+        isTimePickerShowing.observeEvent(lifecycleOwner,
+                { isShowing: Boolean ->
+                    val fm: FragmentManager = getSupportFragmentManager() ?: return@observeEvent
+                    var timePicker = fm.findFragmentByTag(tag) as BloggingReminderTimePicker?
+
+                    if (isShowing && timePicker == null) {
+                        timePicker = BloggingReminderTimePicker.newInstance()
+                        timePicker.show(fm, tag)
+                    } else if (!isShowing && timePicker != null) {
+                        timePicker.dismiss()
+                    }
+                }
+        )
+    }
 }

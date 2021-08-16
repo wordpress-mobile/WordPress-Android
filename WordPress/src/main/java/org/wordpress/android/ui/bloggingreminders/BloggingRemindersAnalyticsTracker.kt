@@ -55,9 +55,9 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackFlowCompleted() = track(BLOGGING_REMINDERS_FLOW_COMPLETED)
 
-    fun trackRemindersScheduled(daysCount: Int) = track(
+    fun trackRemindersScheduled(daysCount: Int, timeSelected: CharSequence) = track(
             BLOGGING_REMINDERS_SCHEDULED,
-            mapOf(DAYS_OF_WEEK_COUNT_KEY to daysCount)
+            mapOf(DAYS_OF_WEEK_COUNT_KEY to daysCount, SELECTED_TIME_KEY to timeSelected)
     )
 
     fun trackRemindersCancelled() = track(BLOGGING_REMINDERS_CANCELLED)
@@ -90,5 +90,6 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         private const val BUTTON_KEY = "button"
         private const val SOURCE_KEY = "source"
         private const val DAYS_OF_WEEK_COUNT_KEY = "days_of_week_count"
+        private const val SELECTED_TIME_KEY = "selected_time"
     }
 }
