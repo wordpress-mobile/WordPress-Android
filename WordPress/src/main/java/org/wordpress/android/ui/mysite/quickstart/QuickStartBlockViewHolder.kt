@@ -12,6 +12,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartBlockBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
+import org.wordpress.android.databinding.QuickStartToolbarBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
@@ -29,12 +30,16 @@ class QuickStartBlockViewHolder(
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
 
     fun bind(block: QuickStartBlock) = with(binding) {
-        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+        quickStartToolbar.update(block)
         quickStartCustomize.update(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
         quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
-    private fun QuickStartBlockBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
+    private fun QuickStartToolbarBinding.update(block: QuickStartBlock) {
+        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+    }
+
+    private fun QuickStartToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
         val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
         quickStartPopupMenu.setOnMenuItemClickListener {
             onRemoveMenuItemClick.click()
