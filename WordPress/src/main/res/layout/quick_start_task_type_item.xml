@@ -34,6 +34,7 @@
             android:indeterminate="false"
             android:progressDrawable="@drawable/quick_start_card_progress_drawable"
             tools:progress="75"
-            tools:progressTint="@color/colorPrimary" />
+            tools:progressTint="@color/colorPrimary"
+            tools:progressBackgroundTint="@color/primary_0" />
 
 </RelativeLayout>
