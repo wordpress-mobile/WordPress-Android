@@ -17,9 +17,9 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:src="@drawable/ic_list_checkmark_white_24dp"
         android:importantForAccessibility="no"
-        app:tint="?attr/wpColorOnSurfaceMedium" />
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:src="@drawable/ic_list_checkmark_white_24dp"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/quick_start_title"
@@ -30,9 +30,9 @@
         android:layout_toStartOf="@+id/quick_start_more"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/quick_start_sites"
         android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        tools:text="@string/quick_start_sites" />
 
     <ImageView
         android:id="@+id/quick_start_more"
