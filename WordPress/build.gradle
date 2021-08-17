@@ -423,7 +423,10 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    implementation("$gradle.ext.fluxCBinaryPath:$fluxCVersion") {
+    implementation("$gradle.ext.fluxCBinaryPath") {
+        version {
+            strictly fluxCVersion
+        }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }
