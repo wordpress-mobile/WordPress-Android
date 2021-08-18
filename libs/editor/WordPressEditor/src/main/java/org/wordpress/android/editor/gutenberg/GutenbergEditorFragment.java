@@ -1418,6 +1418,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void showEditorHelp() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.EDITOR_HELP_SHOWN);
         getGutenbergContainerFragment().showEditorHelp();
     }
 

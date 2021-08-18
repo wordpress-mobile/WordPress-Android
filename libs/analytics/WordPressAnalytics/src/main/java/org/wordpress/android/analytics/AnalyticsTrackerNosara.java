@@ -1935,6 +1935,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_unsupported_block_webview_shown";
             case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
                 return "gutenberg_unsupported_block_webview_closed";
+            case EDITOR_HELP_SHOWN:
+                return "editor_help_shown";
             case PREPUBLISHING_BOTTOM_SHEET_OPENED:
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:

@@ -113,6 +113,7 @@ class EditorTracker @Inject constructor(
                 Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED
             TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN ->
                 Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN
+            TrackableEvent.EDITOR_HELP_SHOWN -> Stat.EDITOR_HELP_SHOWN
         }
 
         val updatedProperties = properties + ("editor" to editorName)
