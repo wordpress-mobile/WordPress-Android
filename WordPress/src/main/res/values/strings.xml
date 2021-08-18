@@ -905,12 +905,20 @@
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
 
-    <!-- Feature configuration -->
-    <string name="preference_open_feature_config" translatable="false">Test feature configuration</string>
-    <string name="manual_config_remote_features" translatable="false">Remote features</string>
-    <string name="manual_config_features_in_development" translatable="false">Features in development</string>
-    <string name="manual_config_restart_app" translatable="false">Restart the app</string>
-    <string name="missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
+    <!-- Debug settings -->
+    <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
+    <string name="debug_settings_remote_features" translatable="false">Remote features</string>
+    <string name="debug_settings_features_in_development" translatable="false">Features in development</string>
+    <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
+    <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
+    <string name="debug_settings_tools" translatable="false">Tools</string>
+
+    <!-- Debug cookies -->
+    <string name="debug_cookies_title" translatable="false">Debug cookies</string>
+    <string name="debug_cookies_set_cookie" translatable="false">Set cookie</string>
+    <string name="debug_cookies_cookie_domain_hint" translatable="false">wordpress.com</string>
+    <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
+    <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -2129,7 +2137,7 @@
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
-    <string name="my_site_btn_site_settings">Settings</string>
+    <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
@@ -3719,6 +3727,7 @@ translators: Block name. %s: The localized block name -->
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+    <string name="blogging_reminders_notification_time">Notification time</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>
@@ -3730,4 +3739,8 @@ translators: Block name. %s: The localized block name -->
     <string name="create_site_notification_title">Create your WordPress website</string>
     <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
     <string name="create_site_notification_create_site_action">Create site</string>
+
+    <!-- Weekly Roundup Notification -->
+    <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
+    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
 </resources>

@@ -17,12 +17,14 @@ class ReminderScheduler @Inject constructor(
 ) {
     val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
 
-    fun schedule(siteId: Int, reminderConfig: ReminderConfig) {
+    fun schedule(siteId: Int, hour: Int, minute: Int, reminderConfig: ReminderConfig) {
         val uniqueName = getUniqueName(siteId)
-        val next = reminderConfig.calculateNext().atTime(DEFAULT_START_TIME)
+        val next = reminderConfig.calculateNext().atTime(LocalTime.of(hour, minute))
         val delay = Duration.between(LocalDateTime.now(), next)
         val inputData = Data.Builder()
                 .putInt(REMINDER_SITE_ID, siteId)
+                .putInt(REMINDER_HOUR, hour)
+                .putInt(REMINDER_MINUTE, minute)
                 .putAll(reminderConfig.toMap())
                 .build()
 
@@ -52,6 +54,9 @@ class ReminderScheduler @Inject constructor(
     companion object {
         private const val REMINDER_TAG = "reminder"
         const val REMINDER_SITE_ID = "reminder_site_id"
-        private val DEFAULT_START_TIME = LocalTime.of(8, 0)
+        const val DEFAUlT_START_HOUR = 10
+        const val DEFAULT_START_MINUTE = 0
+        const val REMINDER_HOUR = "reminder_hour"
+        const val REMINDER_MINUTE = "reminder_minute"
     }
 }

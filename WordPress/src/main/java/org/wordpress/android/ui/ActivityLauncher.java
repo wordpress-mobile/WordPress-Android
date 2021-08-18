@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
+import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
@@ -427,18 +429,16 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe) {
+        viewStatsInNewStack(context, site, statsTimeframe, null);
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
+                                           @Nullable String period) {
         if (site == null) {
             handleMissingSite(context);
             return;
         }
-        Intent statsIntent;
-        if (statsTimeframe != null) {
-            statsIntent = StatsActivity.buildIntent(context, site, statsTimeframe);
-        } else {
-            statsIntent = StatsActivity.buildIntent(context, site);
-        }
-
-        runIntentOverMainActivityInNewStack(context, statsIntent);
+        runIntentOverMainActivityInNewStack(context, StatsActivity.buildIntent(context, site, statsTimeframe, period));
     }
 
     private static void handleMissingSite(Context context) {
@@ -453,13 +453,31 @@ public class ActivityLauncher {
     }
 
     private static void runIntentOverMainActivityInNewStack(Context context, Intent intent) {
+        buildIntentOverMainActivityInNewStack(context, intent).startActivities();
+    }
+
+    public static PendingIntent buildStatsPendingIntentOverMainActivityInNewStack(Context context, SiteModel site,
+                                                                                  @Nullable StatsTimeframe timeframe,
+                                                                                  @Nullable String period,
+                                                                                  @Nullable NotificationType type,
+                                                                                  int requestCode, int flags) {
+        return buildPendingIntentOverMainActivityInNewStack(context,
+                StatsActivity.buildIntent(context, site, timeframe, period, type), requestCode, flags);
+    }
+
+    private static PendingIntent buildPendingIntentOverMainActivityInNewStack(Context context, Intent intent,
+                                                                              int requestCode, int flags) {
+        return buildIntentOverMainActivityInNewStack(context, intent).getPendingIntent(requestCode, flags);
+    }
+
+    private static TaskStackBuilder buildIntentOverMainActivityInNewStack(Context context, Intent intent) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(intent);
-        taskStackBuilder.startActivities();
+        return taskStackBuilder;
     }
 
     public static void viewStatsInNewStack(Context context) {
@@ -1565,5 +1583,9 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, CategoriesListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+    }
+
+    public static void viewDebugCookies(@NonNull Context context) {
+        context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 }

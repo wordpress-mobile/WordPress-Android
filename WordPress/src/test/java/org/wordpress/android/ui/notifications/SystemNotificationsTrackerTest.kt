@@ -41,6 +41,7 @@ import org.wordpress.android.push.NotificationType.STORY_SAVE_ERROR
 import org.wordpress.android.push.NotificationType.STORY_SAVE_SUCCESS
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
+import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.push.NotificationType.ZENDESK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -79,7 +80,8 @@ class SystemNotificationsTrackerTest {
             PENDING_DRAFTS to "pending_draft",
             ZENDESK to "zendesk_message",
             BLOGGING_REMINDERS to "blogging_reminders",
-            CREATE_SITE to "create_site"
+            CREATE_SITE to "create_site",
+            WEEKLY_ROUNDUP to "weekly_roundup"
     )
 
     @Before

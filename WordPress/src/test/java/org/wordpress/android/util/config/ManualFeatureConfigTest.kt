@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -11,8 +11,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.AppConfig
-import org.wordpress.android.util.config.FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class ManualFeatureConfigTest {
@@ -30,7 +28,7 @@ class ManualFeatureConfigTest {
         manualFeatureConfig = ManualFeatureConfig(appPrefsWrapper, buildConfigWrapper)
         localFeatureConfig = LocalFeatureConfig(appConfig)
         remoteFeatureConfig = object : FeatureConfig(appConfig, true, remoteField) {}
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(true)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(true)
     }
 
     @Test
@@ -42,7 +40,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `does not set manual config value from feature key when flag disabled`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         manualFeatureConfig.setManuallyEnabled(featureKey, true)
 
@@ -78,7 +76,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `hasManualSetup does not call appPrefsWrapper when flag is turned off`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         val hasManualSetup = manualFeatureConfig.hasManualSetup(featureKey)
 
@@ -115,7 +113,7 @@ class ManualFeatureConfigTest {
 
     @Test
     fun `isManuallyEnabled does not call appPrefsWrapper when flag is turned off`() {
-        whenever(buildConfigWrapper.isManualFeatureConfigEnabled()).thenReturn(false)
+        whenever(buildConfigWrapper.isDebugSettingsEnabled()).thenReturn(false)
 
         val isManuallyEnabled = manualFeatureConfig.isManuallyEnabled(featureKey)
 

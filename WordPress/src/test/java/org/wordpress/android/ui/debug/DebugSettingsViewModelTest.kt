@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.manual
+package org.wordpress.android.ui.debug
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -11,27 +11,29 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
+import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiState
+import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.util.config.ManualFeatureConfig
 import org.wordpress.android.util.config.RemoteConfig
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.UiState
-import org.wordpress.android.viewmodel.Event
 
-class ManualFeatureConfigViewModelTest : BaseUnitTest() {
+class DebugSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     @Mock lateinit var remoteConfig: RemoteConfig
-    private lateinit var viewModel: ManualFeatureConfigViewModel
+    @Mock lateinit var debugUtils: DebugUtils
+    private lateinit var viewModel: DebugSettingsViewModel
     private val uiStates = mutableListOf<UiState>()
-    private val restartActions = mutableListOf<Event<Unit>>()
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = ManualFeatureConfigViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig)
+        viewModel = DebugSettingsViewModel(TEST_DISPATCHER, manualFeatureConfig, remoteConfig, debugUtils)
     }
 
     @Test
@@ -99,15 +101,12 @@ class ManualFeatureConfigViewModelTest : BaseUnitTest() {
 
         restartButton.clickAction()
 
-        assertThat(restartActions).hasSize(1)
+        verify(debugUtils).restartApp()
     }
 
     private fun setup() {
         viewModel.uiState.observeForever {
             it?.let { uiStates.add(it) }
-        }
-        viewModel.restartAction.observeForever {
-            it?.let { restartActions.add(it) }
         }
     }
 
@@ -121,6 +120,7 @@ class ManualFeatureConfigViewModelTest : BaseUnitTest() {
             val remoteItems = mutableListOf<Feature>()
             val developedItems = mutableListOf<Feature>()
             val buttons = mutableListOf<Button>()
+            val rows = mutableListOf<Row>()
             for (uiItem in this.uiItems) {
                 when (uiItem) {
                     is Header -> headers.add(uiItem)
@@ -134,12 +134,16 @@ class ManualFeatureConfigViewModelTest : BaseUnitTest() {
                     is Button -> {
                         buttons.add(uiItem)
                     }
+                    is Row -> {
+                        rows.add(uiItem)
+                    }
                 }
             }
-            assertThat(headers).hasSize(3)
-            assertThat(headers[0].header).isEqualTo(R.string.manual_config_remote_features)
-            assertThat(headers[1].header).isEqualTo(R.string.manual_config_features_in_development)
-            assertThat(headers[2].header).isEqualTo(R.string.missing_developed_feature)
+            assertThat(headers).hasSize(4)
+            assertThat(headers[0].header).isEqualTo(R.string.debug_settings_remote_features)
+            assertThat(headers[1].header).isEqualTo(R.string.debug_settings_features_in_development)
+            assertThat(headers[2].header).isEqualTo(R.string.debug_settings_missing_developed_feature)
+            assertThat(headers[3].header).isEqualTo(R.string.debug_settings_tools)
             remoteItems.filter { it.title != enabledFeature }
                     .forEach { assertThat(it.state).isEqualTo(expectedState ?: DISABLED) }
             developedItems.filter { it.title != enabledFeature }

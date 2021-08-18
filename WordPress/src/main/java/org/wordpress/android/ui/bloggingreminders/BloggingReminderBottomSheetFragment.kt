@@ -67,6 +67,15 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
 
+            BloggingReminderUtils.observeTimePicker(
+                    viewModel.isTimePickerShowing,
+                    viewLifecycleOwner,
+                    BloggingReminderTimePicker.TAG,
+                    {
+                        requireActivity().supportFragmentManager
+                    }
+            )
+
             savedInstanceState?.let { viewModel.restoreState(it) }
 
             (dialog as? BottomSheetDialog)?.apply {
