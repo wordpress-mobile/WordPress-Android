@@ -38,7 +38,8 @@ class EpilogueBuilder @Inject constructor(
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
             SEVEN_DAYS -> UiStringText(
                     htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            string.blogging_reminders_epilogue_body_everyday
+                            string.blogging_reminders_epilogue_body_everyday_with_time,
+                            bloggingRemindersModel?.getNotificationTime()
                     )
             )
             else -> {
@@ -48,9 +49,10 @@ class EpilogueBuilder @Inject constructor(
 
                 UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                string.blogging_reminders_epilogue_body_days,
+                                string.blogging_reminders_epilogue_body_days_with_time,
                                 numberOfTimes,
-                                selectedDays
+                                selectedDays,
+                                bloggingRemindersModel?.getNotificationTime().toString().toBold()
                         )
                 )
             }
