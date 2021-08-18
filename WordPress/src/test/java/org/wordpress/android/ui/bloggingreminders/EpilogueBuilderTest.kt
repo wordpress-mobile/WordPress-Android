@@ -65,12 +65,15 @@ class EpilogueBuilderTest {
                 .thenReturn(dayLabel)
         val selectedDays = "<b>Wednesday</b>, <b>Sunday</b>"
         whenever(listFormatterUtils.formatList(listOf("<b>Wednesday</b>", "<b>Sunday</b>"))).thenReturn(selectedDays)
-        val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays."
+        val selectedTime = bloggingRemindersModel.getNotificationTime()
+        val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays at <b>$selectedTime</b>."
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.blogging_reminders_epilogue_body_days,
+                        string.blogging_reminders_epilogue_body_days_with_time,
                         "<b>$dayLabel</b>",
-                        selectedDays
+                        selectedDays,
+                        "<b>$selectedTime</b>"
+
                 )
         ).thenReturn(message)
 
@@ -87,10 +90,11 @@ class EpilogueBuilderTest {
                 hour,
                 minute
         )
-        val message = "You'll get reminders to blog <b>everyday</b>."
+        val message = "You'll get reminders to blog <b>everyday</b> at <b>10:00 am</b>."
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.blogging_reminders_epilogue_body_everyday
+                        string.blogging_reminders_epilogue_body_everyday_with_time,
+                        bloggingRemindersModel.getNotificationTime()
                 )
         ).thenReturn(
                 message
