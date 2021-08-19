@@ -1,24 +1,24 @@
 package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 val SITE_ITEM_ACTION: (ListItemAction) -> Unit = {}
-val JETPACK_HEADER = CategoryHeader(
+val JETPACK_HEADER = CategoryHeaderItem(
         UiStringRes(R.string.my_site_header_jetpack)
 )
-val PUBLISH_HEADER = CategoryHeader(UiStringRes(R.string.my_site_header_publish))
-val LOOK_AND_FEEL_HEADER = CategoryHeader(
+val PUBLISH_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_publish))
+val LOOK_AND_FEEL_HEADER = CategoryHeaderItem(
         UiStringRes(R.string.my_site_header_look_and_feel)
 )
-val CONFIGURATION_HEADER = CategoryHeader(
+val CONFIGURATION_HEADER = CategoryHeaderItem(
         UiStringRes(R.string.my_site_header_configuration)
 )
-val EXTERNAL_HEADER = CategoryHeader(UiStringRes(R.string.my_site_header_external))
+val EXTERNAL_HEADER = CategoryHeaderItem(UiStringRes(R.string.my_site_header_external))
 val PLAN_NAME = "plan_name"
 val PLAN_ITEM = ListItem(
         R.drawable.ic_plans_white_24dp,

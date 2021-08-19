@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -14,13 +14,13 @@ class SiteCategoryItemBuilder
         val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
                 !site.isWPComAtomic // isn't atomic site
         return if (jetpackSettingsVisible) {
-            CategoryHeader(UiStringRes(R.string.my_site_header_jetpack))
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_jetpack))
         } else null
     }
 
     fun buildLookAndFeelHeaderIfAvailable(site: SiteModel): MySiteItem? {
         return if (themeBrowserUtils.isAccessible(site)) {
-            CategoryHeader(UiStringRes(R.string.my_site_header_look_and_feel))
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_look_and_feel))
         } else null
     }
 
@@ -29,7 +29,7 @@ class SiteCategoryItemBuilder
         return if (site.hasCapabilityManageOptions ||
                 !siteUtilsWrapper.isAccessedViaWPComRest(site) ||
                 site.hasCapabilityListUsers) {
-            CategoryHeader(UiStringRes(R.string.my_site_header_configuration))
+            CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration))
         } else null
     }
 }

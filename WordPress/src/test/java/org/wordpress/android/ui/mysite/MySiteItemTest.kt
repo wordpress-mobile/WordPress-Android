@@ -5,7 +5,7 @@ import org.junit.Test
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
@@ -93,7 +93,7 @@ class MySiteItemTest {
 
     @Test
     fun `category header is never active`() {
-        val categoryHeader = CategoryHeader(UiStringText("title"))
+        val categoryHeader = CategoryHeaderItem(UiStringText("title"))
 
         assertThat(categoryHeader.activeQuickStartItem).isFalse()
     }

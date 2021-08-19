@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
+import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_CARD
@@ -22,7 +22,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         DOMAIN_REGISTRATION_CARD,
         QUICK_START_CARD,
         QUICK_START_DYNAMIC_CARD,
-        CATEGORY_HEADER,
+        CATEGORY_HEADER_ITEM,
         LIST_ITEM
     }
 
@@ -103,7 +103,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         }
     }
 
-    data class CategoryHeader(val title: UiString) : MySiteItem(CATEGORY_HEADER)
+    data class CategoryHeaderItem(val title: UiString) : MySiteItem(CATEGORY_HEADER_ITEM)
 
     data class ListItem(
         @DrawableRes val primaryIcon: Int,

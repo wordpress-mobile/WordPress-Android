@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -35,7 +35,7 @@ class SiteItemsBuilder
                 siteListItemBuilder.buildBackupItemIfAvailable(onClick, isBackupAvailable),
                 siteListItemBuilder.buildScanItemIfAvailable(onClick, isScanAvailable),
                 siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick),
-                CategoryHeader(UiStringRes(R.string.my_site_header_publish)),
+                CategoryHeaderItem(UiStringRes(R.string.my_site_header_publish)),
                 ListItem(
                         R.drawable.ic_posts_white_24dp,
                         UiStringRes(R.string.my_site_btn_blog_posts),
@@ -60,7 +60,7 @@ class SiteItemsBuilder
                 siteListItemBuilder.buildShareItemIfAvailable(site, onClick, showEnablePostSharingFocusPoint),
                 siteListItemBuilder.buildDomainsItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(site, onClick),
-                CategoryHeader(UiStringRes(R.string.my_site_header_external)),
+                CategoryHeaderItem(UiStringRes(R.string.my_site_header_external)),
                 ListItem(
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),

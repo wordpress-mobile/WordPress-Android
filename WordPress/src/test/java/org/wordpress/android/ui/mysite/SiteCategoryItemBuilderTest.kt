@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -32,7 +32,7 @@ class SiteCategoryItemBuilderTest {
 
         val lookAndFeelHeader = siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)
 
-        assertThat(lookAndFeelHeader).isEqualTo(CategoryHeader(UiStringRes(R.string.my_site_header_jetpack)))
+        assertThat(lookAndFeelHeader).isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_jetpack)))
     }
 
     @Test
@@ -59,7 +59,7 @@ class SiteCategoryItemBuilderTest {
 
         val lookAndFeelHeader = siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(siteModel)
 
-        assertThat(lookAndFeelHeader).isEqualTo(CategoryHeader(UiStringRes(R.string.my_site_header_look_and_feel)))
+        assertThat(lookAndFeelHeader).isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_look_and_feel)))
     }
 
     @Test
@@ -77,7 +77,8 @@ class SiteCategoryItemBuilderTest {
 
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
-        assertThat(configurationHeader).isEqualTo(CategoryHeader(UiStringRes(R.string.my_site_header_configuration)))
+        assertThat(configurationHeader)
+                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test
@@ -86,7 +87,8 @@ class SiteCategoryItemBuilderTest {
 
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
-        assertThat(configurationHeader).isEqualTo(CategoryHeader(UiStringRes(R.string.my_site_header_configuration)))
+        assertThat(configurationHeader)
+                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test
@@ -95,7 +97,8 @@ class SiteCategoryItemBuilderTest {
 
         val configurationHeader = siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)
 
-        assertThat(configurationHeader).isEqualTo(CategoryHeader(UiStringRes(R.string.my_site_header_configuration)))
+        assertThat(configurationHeader)
+                .isEqualTo(CategoryHeaderItem(UiStringRes(R.string.my_site_header_configuration)))
     }
 
     @Test

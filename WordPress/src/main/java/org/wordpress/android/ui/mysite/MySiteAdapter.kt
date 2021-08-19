@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
+import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_CARD
@@ -49,7 +49,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
                     nestedScrollStates,
                     uiHelpers
             )
-            CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
+            CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
@@ -62,7 +62,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationCard)
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
             is QuickStartDynamicCardViewHolder -> holder.bind(items[position] as QuickStartDynamicCard)
-            is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)
+            is MySiteCategoryItemViewHolder -> holder.bind(items[position] as CategoryHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
         }
     }
