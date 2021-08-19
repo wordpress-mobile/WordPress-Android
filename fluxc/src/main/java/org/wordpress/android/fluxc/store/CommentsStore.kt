@@ -611,6 +611,14 @@ class CommentsStore
                 payload.like
         )
 
+        if (!response.isError) {
+            response.data?.comments?.firstOrNull()?.let { entity ->
+                payload.comment?.apply {
+                    this.iLike = entity.iLike
+                }
+            }
+        }
+
         return createOnCommentChangedEvent(
                 response.data?.rowsAffected.orNone(),
                 CommentAction.LIKE_COMMENT,
