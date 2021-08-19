@@ -57,6 +57,10 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
     }
 
+    fun trackWithSiteDetails(stat: Stat, siteModel: SiteModel?) {
+        AnalyticsUtils.trackWithSiteDetails(stat, siteModel)
+    }
+
     fun trackWithSiteDetails(
         stat: Stat,
         siteModel: SiteModel?,

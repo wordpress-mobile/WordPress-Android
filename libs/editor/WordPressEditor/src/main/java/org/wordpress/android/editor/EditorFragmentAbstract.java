@@ -265,6 +265,5 @@ public abstract class EditorFragmentAbstract extends Fragment {
         UNDO_TAPPED,
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
-        EDITOR_HELP_SHOWN,
     }
 }
