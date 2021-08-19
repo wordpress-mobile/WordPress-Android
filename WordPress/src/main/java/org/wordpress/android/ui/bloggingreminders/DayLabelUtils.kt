@@ -31,4 +31,17 @@ class DayLabelUtils
         val size = bloggingRemindersModel?.enabledDays?.size ?: 0
         return counts.getOrNull(size - 1)
     }
+
+    fun buildSiteSettingsLabel(bloggingRemindersModel: BloggingRemindersUiModel?): UiString {
+        val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count)
+        val size = bloggingRemindersModel?.enabledDays?.size ?: 0
+        return if (size > 0) {
+            UiStringResWithParams(R.string.blogging_reminders_site_settings_label, listOf(
+                    UiStringText(counts[size - 1]),
+                    UiStringText(bloggingRemindersModel?.getNotificationTime().toString()))
+            )
+        } else {
+            UiStringRes(R.string.blogging_reminders_not_set)
+        }
+    }
 }

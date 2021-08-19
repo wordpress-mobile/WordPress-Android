@@ -152,9 +152,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                         model
                 )
         )
-        val dayLabel = UiStringText("Blogging reminders 2 times a week")
+        val dayLabel = UiStringText("Blogging reminders 2 times a week at 10:00 am")
         whenever(
-                dayLabelUtils.buildNTimesLabel(
+                dayLabelUtils.buildSiteSettingsLabel(
                         BloggingRemindersUiModel(
                                 siteId,
                                 setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
