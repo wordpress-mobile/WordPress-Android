@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.databinding.QuickStartTaskCardBinding
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.QuickStartTaskCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding

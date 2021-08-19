@@ -20,8 +20,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -37,7 +37,7 @@ class QuickStartItemBuilder
         pinnedDynamicCardType: DynamicCardType?,
         onQuickStartCardMoreClick: (DynamicCardMenuModel) -> Unit,
         onQuickStartTaskClick: (QuickStartTask) -> Unit
-    ): QuickStartCard {
+    ): QuickStartDynamicCard {
         val accentColor = getAccentColor(quickStartCategory.taskType)
         val tasks = mutableListOf<QuickStartTaskCard>()
         tasks.addAll(quickStartCategory.uncompletedTasks.map { it.toUiItem(false, accentColor, onQuickStartTaskClick) })
@@ -51,7 +51,7 @@ class QuickStartItemBuilder
         tasks.addAll(completedTasks)
         val dynamicCardType = quickStartCategory.taskType.toDynamicCardType()
         val isPinned = pinnedDynamicCardType == dynamicCardType
-        return QuickStartCard(
+        return QuickStartDynamicCard(
                 dynamicCardType,
                 UiStringRes(getTitle(quickStartCategory.taskType)),
                 tasks,

@@ -61,7 +61,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
@@ -224,8 +224,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                         )
                 )
         )
-    private val dynamicQuickStartTaskCard: QuickStartCard
-        get() = QuickStartCard(
+    private val dynamicQuickStartTaskCard: QuickStartDynamicCard
+        get() = QuickStartDynamicCard(
                 CUSTOMIZE_QUICK_START,
                 UiStringRes(0),
                 emptyList(),

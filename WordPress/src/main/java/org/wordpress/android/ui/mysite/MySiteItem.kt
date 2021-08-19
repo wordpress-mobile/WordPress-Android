@@ -83,7 +83,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
             type,
             activeQuickStartItem
     ) {
-        data class QuickStartCard(
+        data class QuickStartDynamicCard(
             val id: DynamicCardType,
             val title: UiString,
             val taskCards: List<QuickStartTaskCard>,

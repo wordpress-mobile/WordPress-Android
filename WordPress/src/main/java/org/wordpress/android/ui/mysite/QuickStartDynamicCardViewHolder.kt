@@ -14,19 +14,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.R
-import org.wordpress.android.databinding.QuickStartCardBinding
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
+import org.wordpress.android.databinding.QuickStartDynamicCardBinding
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.viewBinding
 
-class QuickStartCardViewHolder(
+class QuickStartDynamicCardViewHolder(
     parent: ViewGroup,
     private val viewPool: RecycledViewPool,
     private val nestedScrollStates: Bundle,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
-    private var currentItem: QuickStartCard? = null
+) : MySiteItemViewHolder<QuickStartDynamicCardBinding>(parent.viewBinding(QuickStartDynamicCardBinding::inflate)) {
+    private var currentItem: QuickStartDynamicCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
 
     init {
@@ -53,7 +53,7 @@ class QuickStartCardViewHolder(
         }
     }
 
-    fun bind(item: QuickStartCard) = with(binding) {
+    fun bind(item: QuickStartDynamicCard) = with(binding) {
         currentItem = item
 
         ObjectAnimator.ofInt(quickStartCardProgress, "progress", item.progress).setDuration(600).start()

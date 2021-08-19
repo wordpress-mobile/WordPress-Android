@@ -7,7 +7,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
@@ -79,7 +79,7 @@ class MySiteItemTest {
 
     @Test
     fun `quick start card is never active`() {
-        val quickStartCard = QuickStartCard(
+        val quickStartCard = QuickStartDynamicCard(
                 GROW_QUICK_START,
                 UiStringText("title"),
                 listOf(),
