@@ -1452,7 +1452,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (itemId == R.id.menu_editor_help) {
                 // Display the editor help page -- option should only be available in the GutenbergEditor
                 if (mEditorFragment instanceof GutenbergEditorFragment) {
-                    mAnalyticsTrackerWrapper.trackWithSiteDetails(Stat.EDITOR_HELP_SHOWN, mSite);
+                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, mSite);
                     ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
                 }
             }
