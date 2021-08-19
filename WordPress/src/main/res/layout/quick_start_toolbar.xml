@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_start_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/listPreferredItemHeightSmall"
+    android:paddingEnd="@dimen/content_margin_site_row_start"
+    android:paddingStart="@dimen/content_margin_site_row_start"
+    tools:showIn="@layout/quick_start_block">
+
+    <ImageView
+        android:id="@+id/quick_start_icon"
+        android:layout_width="@dimen/my_site_list_row_icon_size"
+        android:layout_height="@dimen/my_site_list_row_icon_size"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:src="@drawable/ic_list_checkmark_white_24dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/quick_start_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_more"
+        app:layout_constraintStart_toEndOf="@+id/quick_start_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/quick_start_sites" />
+
+    <ImageView
+        android:id="@+id/quick_start_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/content_description_more"
+        android:focusable="true"
+        android:src="@drawable/ic_more_vert_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
