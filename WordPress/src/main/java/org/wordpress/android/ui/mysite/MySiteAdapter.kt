@@ -13,12 +13,12 @@ import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
-import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -39,10 +39,10 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
         return when (viewType) {
-            SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
-            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
-            DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
+            SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
+            QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
+            DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
+            QUICK_START_CARD.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
                     parent,
                     quickStartViewPool,
