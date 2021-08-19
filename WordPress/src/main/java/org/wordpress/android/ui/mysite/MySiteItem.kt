@@ -54,7 +54,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         val showPagesFocusPoint: Boolean = false
     ) : MySiteItem(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
-    data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_CARD)
+    data class DomainRegistrationCard(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_CARD)
 
     data class QuickStartBlock(
         val title: UiString,

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
@@ -59,7 +59,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         when (holder) {
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoCard)
             is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsCard)
-            is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationBlock)
+            is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationCard)
             is QuickStartBlockViewHolder -> holder.bind(items[position] as QuickStartBlock)
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
             is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)

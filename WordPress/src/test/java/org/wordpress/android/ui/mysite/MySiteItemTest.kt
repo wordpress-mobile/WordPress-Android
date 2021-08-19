@@ -6,7 +6,7 @@ import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
@@ -71,10 +71,10 @@ class MySiteItemTest {
     }
 
     @Test
-    fun `domain registration block is never active`() {
-        val domainRegistrationBlock = DomainRegistrationBlock(interaction)
+    fun `domain registration card is never active`() {
+        val domainRegistrationCard = DomainRegistrationCard(interaction)
 
-        assertThat(domainRegistrationBlock.activeQuickStartItem).isFalse()
+        assertThat(domainRegistrationCard.activeQuickStartItem).isFalse()
     }
 
     @Test

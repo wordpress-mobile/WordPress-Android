@@ -63,7 +63,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
@@ -249,7 +249,7 @@ class MySiteViewModel
             }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
+                siteItems.add(DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick)))
             }
             val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
                 // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd

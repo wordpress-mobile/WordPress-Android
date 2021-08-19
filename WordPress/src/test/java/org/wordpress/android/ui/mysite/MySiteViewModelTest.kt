@@ -59,7 +59,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
@@ -925,7 +925,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        findDomainRegistrationBlock()?.onClick?.click()
+        findDomainRegistrationCard()?.onClick?.click()
 
         verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
 
@@ -1493,8 +1493,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
 
-    private fun findDomainRegistrationBlock() =
-            getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+    private fun findDomainRegistrationCard() =
+            getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun findSiteInfoCard() =
             getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
