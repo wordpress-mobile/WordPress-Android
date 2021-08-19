@@ -545,7 +545,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
 
-        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
+        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite!!) &&
+                selectedSite?.hasCapabilityManageOptions!!
         val hint = if (canEditTitle) {
             getString(R.string.my_site_title_changer_dialog_hint)
         } else {

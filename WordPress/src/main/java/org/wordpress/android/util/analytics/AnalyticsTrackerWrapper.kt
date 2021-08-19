@@ -42,7 +42,7 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, properties + feature.toParams())
     }
 
-    fun track(stat: Stat, site: SiteModel) {
+    fun track(stat: Stat, site: SiteModel?) {
         AnalyticsUtils.trackWithSiteDetails(stat, site)
     }
 
