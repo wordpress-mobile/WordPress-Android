@@ -26,7 +26,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         LIST_ITEM
     }
 
-    data class SiteInfoBlock(
+    data class SiteInfoCard(
         val title: String,
         val url: String,
         val iconState: IconState,

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.mysite
 
 import android.view.View
 import android.view.ViewGroup
-import org.wordpress.android.databinding.MySiteInfoBlockBinding
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.databinding.MySiteInfoCardBinding
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.viewBinding
@@ -12,8 +12,8 @@ import org.wordpress.android.util.viewBinding
 class MySiteInfoViewHolder(
     parent: ViewGroup,
     private val imageManager: ImageManager
-) : MySiteItemViewHolder<MySiteInfoBlockBinding>(parent.viewBinding(MySiteInfoBlockBinding::inflate)) {
-    fun bind(item: SiteInfoBlock) = with(binding) {
+) : MySiteItemViewHolder<MySiteInfoCardBinding>(parent.viewBinding(MySiteInfoCardBinding::inflate)) {
+    fun bind(item: SiteInfoCard) = with(binding) {
         if (item.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
             imageManager.load(mySiteBlavatar, BLAVATAR, item.iconState.url ?: "")

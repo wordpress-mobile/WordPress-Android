@@ -2,16 +2,16 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class SiteInfoBlockBuilder
+class SiteInfoCardBuilder
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun buildSiteInfoBlock(
+    fun buildSiteInfoCard(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         titleClick: () -> Unit,
@@ -20,7 +20,7 @@ class SiteInfoBlockBuilder
         switchSiteClick: () -> Unit,
         showUpdateSiteTitleFocusPoint: Boolean,
         showUploadSiteIconFocusPoint: Boolean
-    ): SiteInfoBlock {
+    ): SiteInfoCard {
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
         val siteIcon = if (!showSiteIconProgressBar && !site.iconUrl.isNullOrEmpty()) {
@@ -33,7 +33,7 @@ class SiteInfoBlockBuilder
         } else {
             IconState.Visible()
         }
-        return SiteInfoBlock(
+        return SiteInfoCard(
                 blogTitle,
                 homeUrl,
                 siteIcon,

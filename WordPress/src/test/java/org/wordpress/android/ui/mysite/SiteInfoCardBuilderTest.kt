@@ -10,59 +10,58 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
-class SiteInfoBlockBuilderTest {
+class SiteInfoCardBuilderTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
-    private lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
+    private lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
 
     @Before
     fun setUp() {
-        siteInfoBlockBuilder = SiteInfoBlockBuilder(resourceProvider)
+        siteInfoCardBuilder = SiteInfoCardBuilder(resourceProvider)
     }
 
     @Test
     fun `shows title quick start focus point when showUpdateSiteTitleFocusPoint is true`() {
-        val buildSiteInfoBlock = buildSiteInfoBlock(
+        val buildSiteInfoCard = buildSiteInfoCard(
                 showUpdateSiteTitleFocusPoint = true
         )
 
-        assertThat(buildSiteInfoBlock.showTitleFocusPoint).isTrue()
+        assertThat(buildSiteInfoCard.showTitleFocusPoint).isTrue()
     }
 
     @Test
     fun `hides title quick start focus point when showUpdateSiteTitleFocusPoint is false`() {
-        val buildSiteInfoBlock = buildSiteInfoBlock(
+        val buildSiteInfoCard = buildSiteInfoCard(
                 showUpdateSiteTitleFocusPoint = false
         )
 
-        assertThat(buildSiteInfoBlock.showTitleFocusPoint).isFalse()
+        assertThat(buildSiteInfoCard.showTitleFocusPoint).isFalse()
     }
 
     @Test
     fun `shows icon quick start focus point when showUploadSiteIconFocusPoint is true`() {
-        val buildSiteInfoBlock = buildSiteInfoBlock(
+        val buildSiteInfoCard = buildSiteInfoCard(
                 showUploadSiteIconFocusPoint = true
         )
 
-        assertThat(buildSiteInfoBlock.showIconFocusPoint).isTrue()
+        assertThat(buildSiteInfoCard.showIconFocusPoint).isTrue()
     }
 
     @Test
     fun `hides icon quick start focus point when showUploadSiteIconFocusPoint is false`() {
-        val buildSiteInfoBlock = buildSiteInfoBlock(
+        val buildSiteInfoCard = buildSiteInfoCard(
                 showUploadSiteIconFocusPoint = false
         )
 
-        assertThat(buildSiteInfoBlock.showIconFocusPoint).isFalse()
+        assertThat(buildSiteInfoCard.showIconFocusPoint).isFalse()
     }
 
-    private fun buildSiteInfoBlock(
+    private fun buildSiteInfoCard(
         showUpdateSiteTitleFocusPoint: Boolean = false,
         showUploadSiteIconFocusPoint: Boolean = false
-    ) =
-            siteInfoBlockBuilder.buildSiteInfoBlock(site,
-                    showUploadSiteIconFocusPoint, {}, {}, {}, {},
-                    showUpdateSiteTitleFocusPoint = showUpdateSiteTitleFocusPoint,
-                    showUploadSiteIconFocusPoint = showUploadSiteIconFocusPoint
-            )
+    ) = siteInfoCardBuilder.buildSiteInfoCard(site,
+            showUploadSiteIconFocusPoint, {}, {}, {}, {},
+            showUpdateSiteTitleFocusPoint = showUpdateSiteTitleFocusPoint,
+            showUploadSiteIconFocusPoint = showUploadSiteIconFocusPoint
+    )
 }

@@ -65,8 +65,8 @@ import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -76,10 +76,10 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.ICON_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.SWITCH_SITE_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.TITLE_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.URL_CLICK
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
@@ -137,7 +137,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
-    @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
+    @Mock lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -178,7 +178,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
     private lateinit var site: SiteModel
-    private lateinit var siteInfoBlock: SiteInfoBlock
+    private lateinit var siteInfoCard: SiteInfoCard
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
@@ -274,7 +274,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 analyticsTrackerWrapper,
-                siteInfoBlockBuilder,
+                siteInfoCardBuilder,
                 siteItemsBuilder,
                 accountStore,
                 selectedSiteRepository,
@@ -338,7 +338,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.iconUrl = siteIcon
         site.siteId = siteLocalId.toLong()
 
-        siteInfoBlock = SiteInfoBlock(
+        siteInfoCard = SiteInfoCard(
                 title = siteName,
                 url = siteUrl,
                 iconState = IconState.Visible(siteIcon),
@@ -351,7 +351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         doAnswer {
-            siteInfoBlock = siteInfoBlock.copy(
+            siteInfoCard = siteInfoCard.copy(
                     onTitleClick = ListItemInteraction.create { (it.getArgument(2) as () -> Unit).invoke() },
                     onIconClick = ListItemInteraction.create { (it.getArgument(3) as () -> Unit).invoke() },
                     onUrlClick = ListItemInteraction.create { (it.getArgument(4) as () -> Unit).invoke() },
@@ -359,8 +359,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                         (it.getArgument(5) as () -> Unit).invoke()
                     }
             )
-            siteInfoBlock
-        }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(
+            siteInfoCard
+        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
                 site = any(),
                 showSiteIconProgressBar = any(),
                 titleClick = any(),
@@ -389,16 +389,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
-        assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
+        assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
     }
 
     @Test
-    fun `site block title click shows snackbar message when network not available`() = test {
+    fun `site info card title click shows snackbar message when network not available`() = test {
         initQuickActionsBlock()
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        invokeSiteInfoBlockAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -407,13 +407,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block title click shows snackbar message when hasCapabilityManageOptions is false`() = test {
+    fun `site info card title click shows snackbar message when hasCapabilityManageOptions is false`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = false
         site.origin = SiteModel.ORIGIN_WPCOM_REST
 
-        invokeSiteInfoBlockAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -424,13 +424,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block title click shows snackbar message when origin not ORIGIN_WPCOM_REST`() = test {
+    fun `site info card title click shows snackbar message when origin not ORIGIN_WPCOM_REST`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_XMLRPC
 
-        invokeSiteInfoBlockAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -439,14 +439,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block title click shows input dialog when editing allowed`() = test {
+    fun `site info card title click shows input dialog when editing allowed`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_WPCOM_REST
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
-        invokeSiteInfoBlockAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(TITLE_CLICK)
 
         assertThat(snackbars).isEmpty()
         assertThat(textInputDialogModels.last()).isEqualTo(
@@ -462,40 +462,40 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block icon click shows change icon dialog when site has icon`() = test {
+    fun `site info card icon click shows change icon dialog when site has icon`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
         site.iconUrl = siteIcon
 
-        invokeSiteInfoBlockAction(ICON_CLICK)
+        invokeSiteInfoCardAction(ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(ChangeSiteIconDialogModel)
     }
 
     @Test
-    fun `site block icon click shows add icon dialog when site doesn't have icon`() = test {
+    fun `site info card icon click shows add icon dialog when site doesn't have icon`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
         site.iconUrl = null
 
-        invokeSiteInfoBlockAction(ICON_CLICK)
+        invokeSiteInfoCardAction(ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(AddSiteIconDialogModel)
     }
 
     @Test
-    fun `site block icon click shows snackbar when upload files not allowed and site doesn't have Jetpack`() = test {
+    fun `site info card icon click shows snackbar when upload files not allowed and site doesn't have Jetpack`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
         site.setIsWPCom(false)
 
-        invokeSiteInfoBlockAction(ICON_CLICK)
+        invokeSiteInfoCardAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -504,7 +504,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block icon click shows snackbar when upload files not allowed and site has icon`() = test {
+    fun `site info card icon click shows snackbar when upload files not allowed and site has icon`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
@@ -512,7 +512,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = siteIcon
 
-        invokeSiteInfoBlockAction(ICON_CLICK)
+        invokeSiteInfoCardAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -521,7 +521,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block icon click shows snackbar when upload files not allowed and site does not have icon`() = test {
+    fun `site info card icon click shows snackbar when upload files not allowed and site does not have icon`() = test {
         initQuickActionsBlock()
 
         site.hasCapabilityManageOptions = true
@@ -529,7 +529,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = null
 
-        invokeSiteInfoBlockAction(ICON_CLICK)
+        invokeSiteInfoCardAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -559,29 +559,29 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site block url click opens site`() = test {
+    fun `site info card url click opens site`() = test {
         initQuickActionsBlock()
 
-        invokeSiteInfoBlockAction(URL_CLICK)
+        invokeSiteInfoCardAction(URL_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSite(site))
     }
 
     @Test
-    fun `site block switch click opens site picker`() = test {
+    fun `site info card switch click opens site picker`() = test {
         initQuickActionsBlock()
 
-        invokeSiteInfoBlockAction(SWITCH_SITE_CLICK)
+        invokeSiteInfoCardAction(SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
     }
 
     @Test
-    fun `passes active UPDATE_SITE_TITLE into site info block builder`() = test {
+    fun `passes active UPDATE_SITE_TITLE into site info card builder`() = test {
         initSelectedSite()
 
         whenever(
-                siteInfoBlockBuilder.buildSiteInfoBlock(
+                siteInfoCardBuilder.buildSiteInfoCard(
                         site = eq(site),
                         showSiteIconProgressBar = any(),
                         titleClick = any(),
@@ -592,20 +592,20 @@ class MySiteViewModelTest : BaseUnitTest() {
                         showUploadSiteIconFocusPoint = any()
                 )
         ).thenReturn(
-                siteInfoBlock.copy(showTitleFocusPoint = true)
+                siteInfoCard.copy(showTitleFocusPoint = true)
         )
 
         quickStartUpdate.value = QuickStartUpdate(UPDATE_SITE_TITLE, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue
+        assertThat(findSiteInfoCard()!!.showTitleFocusPoint).isTrue
     }
 
     @Test
-    fun `passes active UPLOAD_SITE_ICON into site info block builder`() {
+    fun `passes active UPLOAD_SITE_ICON into site info card builder`() {
         initSelectedSite()
 
         whenever(
-                siteInfoBlockBuilder.buildSiteInfoBlock(
+                siteInfoCardBuilder.buildSiteInfoCard(
                         site = eq(site),
                         showSiteIconProgressBar = any(),
                         titleClick = any(),
@@ -616,12 +616,12 @@ class MySiteViewModelTest : BaseUnitTest() {
                         showUploadSiteIconFocusPoint = eq(true)
                 )
         ).thenReturn(
-                siteInfoBlock.copy(showIconFocusPoint = true)
+                siteInfoCard.copy(showIconFocusPoint = true)
         )
 
         quickStartUpdate.value = QuickStartUpdate(UPLOAD_SITE_ICON, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue
+        assertThat(findSiteInfoCard()!!.showIconFocusPoint).isTrue
     }
 
     @Test
@@ -1495,23 +1495,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
-    private fun findSiteInfoBlock() =
-            getLastItems().find { it is SiteInfoBlock } as SiteInfoBlock?
+    private fun findSiteInfoCard() =
+            getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).items
 
-    private suspend fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
+    private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
         onSiteSelected.value = siteLocalId
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
-        val siteInfoBlock = findSiteInfoBlock()!!
+        val siteInfoCard = findSiteInfoCard()!!
         when (action) {
-            TITLE_CLICK -> siteInfoBlock.onTitleClick!!.click()
-            ICON_CLICK -> siteInfoBlock.onIconClick.click()
-            URL_CLICK -> siteInfoBlock.onUrlClick.click()
-            SWITCH_SITE_CLICK -> siteInfoBlock.onSwitchSiteClick.click()
+            TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
+            ICON_CLICK -> siteInfoCard.onIconClick.click()
+            URL_CLICK -> siteInfoCard.onUrlClick.click()
+            SWITCH_SITE_CLICK -> siteInfoCard.onSwitchSiteClick.click()
         }
     }
 
@@ -1560,7 +1560,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any())
     }
 
-    private enum class SiteInfoBlockAction {
+    private enum class SiteInfoCardAction {
         TITLE_CLICK, ICON_CLICK, URL_CLICK, SWITCH_SITE_CLICK
     }
 }

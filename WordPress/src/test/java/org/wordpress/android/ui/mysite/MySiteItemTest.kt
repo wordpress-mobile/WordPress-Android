@@ -10,8 +10,8 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState.Visible
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState.Visible
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -20,30 +20,30 @@ class MySiteItemTest {
 
     @Test
     fun `site info block is active when focus point on title`() {
-        val siteInfoBlock = initSiteInfoBlock(showTitleFocusPoint = true)
+        val siteInfoCard = initSiteInfoCard(showTitleFocusPoint = true)
 
-        assertThat(siteInfoBlock.activeQuickStartItem).isTrue()
+        assertThat(siteInfoCard.activeQuickStartItem).isTrue()
     }
 
     @Test
     fun `site info block is active when focus point on icon`() {
-        val siteInfoBlock = initSiteInfoBlock(showIconFocusPoint = true)
+        val siteInfoCard = initSiteInfoCard(showIconFocusPoint = true)
 
-        assertThat(siteInfoBlock.activeQuickStartItem).isTrue()
+        assertThat(siteInfoCard.activeQuickStartItem).isTrue()
     }
 
     @Test
     fun `site info block is not active when focus point not added`() {
-        val siteInfoBlock = initSiteInfoBlock()
+        val siteInfoCard = initSiteInfoCard()
 
-        assertThat(siteInfoBlock.activeQuickStartItem).isFalse()
+        assertThat(siteInfoCard.activeQuickStartItem).isFalse()
     }
 
-    private fun initSiteInfoBlock(
+    private fun initSiteInfoCard(
         showTitleFocusPoint: Boolean = false,
         showIconFocusPoint: Boolean = false
-    ): SiteInfoBlock {
-        return SiteInfoBlock(
+    ): SiteInfoCard {
+        return SiteInfoCard(
                 title = "test",
                 url = "url",
                 iconState = Visible(null),

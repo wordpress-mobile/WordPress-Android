@@ -146,7 +146,7 @@ class MySiteViewModel
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val siteInfoCardBuilder: SiteInfoCardBuilder,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -223,7 +223,7 @@ class MySiteViewModel
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
-                    siteInfoBlockBuilder.buildSiteInfoBlock(
+                    siteInfoCardBuilder.buildSiteInfoCard(
                             site,
                             showSiteIconProgressBar,
                             this::titleClick,
