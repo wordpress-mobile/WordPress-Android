@@ -2137,7 +2137,7 @@
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
-    <string name="my_site_btn_site_settings">Settings</string>
+    <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
@@ -2963,7 +2963,7 @@
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s of %2$s complete</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
@@ -3703,6 +3703,7 @@ translators: Block name. %s: The localized block name -->
     <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
     <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
     <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="blogging_reminders_site_settings_label">%1$s a week at %2$s</string>
     <string name="blogging_reminders_n_a_week">%s a week</string>
     <string-array name="blogging_reminders_count">
         <item>Once</item>
@@ -3719,8 +3720,8 @@ translators: Block name. %s: The localized block name -->
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
-    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">You\'ll get reminders to blog %1$s a week on %2$s at %3$s.</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt; at &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
     <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>

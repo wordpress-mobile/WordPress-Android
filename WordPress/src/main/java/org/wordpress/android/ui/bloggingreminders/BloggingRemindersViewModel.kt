@@ -104,7 +104,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun getSettingsState(siteId: Int): LiveData<UiString> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
-            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildNTimesLabel(uiModel) }
+            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildSiteSettingsLabel(uiModel) }
         }.asLiveData(mainDispatcher)
     }
 

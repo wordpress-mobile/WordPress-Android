@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-10 13:55:14+0000
+Translation-Revision-Date: 2021-08-14 11:07:14+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -2094,10 +2094,10 @@ Language: ro
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
     <string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>
     <string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlu articolului.</string>
-    <string name="post_settings_post_format">Format articol</string>
     <string name="post_settings_tags">Etichete</string>
     <string name="post_settings_slug">Descriptor</string>
     <string name="post_settings_excerpt">Rezumat</string>
+    <string name="post_settings_post_format">Format de articol</string>
     <string name="post_settings_not_set">Nesetate</string>
     <string name="post_settings_more_options">Mai multe opțiuni</string>
     <string name="post_settings_categories_and_tags">Categorii și etichete</string>
@@ -2572,8 +2572,8 @@ Language: ro
     <string name="active">Activă</string>
     <string name="post_published">Articol publicat</string>
     <string name="page_published">Pagină publicată</string>
-    <string name="post_updated">Articol actualizat</string>
     <string name="page_updated">Pagină actualizată</string>
+    <string name="post_updated">Articolul a fost actualizat</string>
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu se potrivește cu „%s”</string>
