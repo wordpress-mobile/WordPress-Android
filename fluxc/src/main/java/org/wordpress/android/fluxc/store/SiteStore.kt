@@ -401,7 +401,7 @@ open class SiteStore
 
     data class PostFormatsError @JvmOverloads constructor(
         @JvmField val type: PostFormatsErrorType,
-        @JvmField val message: String = ""
+        @JvmField val message: String? = ""
     ) : OnChangedError
 
     data class UserRolesError internal constructor(
