@@ -81,11 +81,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
-        // The presence of `imageCount` means we have the new format, so return early to defer to recursive processing
-        if (jsonAttributes.has("imageCount")) {
-            return false;
-        }
-
+        // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {
             return false;

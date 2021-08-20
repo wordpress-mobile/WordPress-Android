@@ -84,6 +84,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -143,6 +144,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.workers.CreateSiteNotificationScheduler;
+import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -235,6 +237,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
+    @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -416,7 +419,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
 
-        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
+        scheduleLocalNotifications();
 
         initViewModel();
     }
@@ -443,6 +446,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                    + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
+    }
+
+    private void scheduleLocalNotifications() {
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
+        mWeeklyRoundupScheduler.schedule();
     }
 
     private void initViewModel() {
@@ -1157,7 +1165,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.LOGIN_EPILOGUE:
                 if (resultCode == RESULT_OK) {
                     setSite(data);
-                    showQuickStartDialog();
+                    if (getMySiteFragment() != null) {
+                        showQuickStartDialog();
+                    } else {
+                        passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
+                    }
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -1277,6 +1289,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         // TODO consider the new my site fragment
+        return null;
+    }
+
+    private ImprovedMySiteFragment getImprovedMySiteFragment() {
+        Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
+        if (fragment instanceof ImprovedMySiteFragment) {
+            return (ImprovedMySiteFragment) fragment;
+        }
+
         return null;
     }
 
@@ -1660,25 +1681,34 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.onPositiveClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onPositiveClicked(instanceTag);
+        } else if (improvedMySiteFragment != null) {
+            improvedMySiteFragment.onPositiveClicked(instanceTag);
         }
     }
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.onNegativeClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onNegativeClicked(instanceTag);
+        } else if (improvedMySiteFragment != null) {
+            improvedMySiteFragment.onNegativeClicked(instanceTag);
         }
     }
 
     @Override
     public void onNeutralClicked(@NonNull String instanceTag) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.onNeutralClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onNeutralClicked(instanceTag);
+        } else if (improvedMySiteFragment != null) {
+            improvedMySiteFragment.onNeutralClicked(instanceTag);
         }
     }
 

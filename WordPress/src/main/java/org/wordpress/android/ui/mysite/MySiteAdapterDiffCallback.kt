@@ -7,6 +7,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 
 class MySiteAdapterDiffCallback(
@@ -24,6 +25,7 @@ class MySiteAdapterDiffCallback(
             oldItem is SiteInfoBlock && updatedItem is SiteInfoBlock -> true
             oldItem is QuickActionsBlock && updatedItem is QuickActionsBlock -> true
             oldItem is DomainRegistrationBlock && updatedItem is DomainRegistrationBlock -> true
+            oldItem is QuickStartBlock && updatedItem is QuickStartBlock -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> oldItem.id == updatedItem.id
             oldItem is CategoryHeader && updatedItem is CategoryHeader -> oldItem.title == updatedItem.title
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText

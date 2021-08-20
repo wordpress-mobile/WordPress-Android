@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-26 09:54:57+0000
+Translation-Revision-Date: 2021-08-05 09:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">إنشاء موقع</string>
+    <string name="create_site_notification_text">إعداد موقعك وتشغيله ببعض الخطوات السريعة فقط</string>
+    <string name="create_site_notification_title">إنشاء موقع ووردبريس الخاص بك على الويب</string>
+    <string name="stats_disabled_enable_stats_error_message">يتعذر تفعيل إحصاءات الموقع</string>
+    <string name="stats_disabled_enable_stats_button">تمكين إحصاءات الموقع</string>
+    <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
+    <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
+    <string name="gutenberg_native_what_is_a_block">ماذا يُقصد بالمكوِّن؟</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
+    <string name="gutenberg_native_unable_to_embed_media">يتعذر تضمين وسائط</string>
+    <string name="gutenberg_native_try_another_search_term">تجربة مصطلح بحث آخر</string>
+    <string name="gutenberg_native_no_blocks_found">لم يتم العثور على أي مكوِّنات</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">تضمين المعاينات ليس متاحًا بعد</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">يتوافر تضمين معاينات المكوِّن قريبًا</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
+    <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">خذني في جولة</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">هل تريد بعض المساعدة بشأن إدارة هذا الموقع باستخدام التطبيق؟</string>
+    <string name="login_epilogue_create_new_site_button">إنشاء موقع جديد</string>
+    <string name="login_epilogue_mysites_subheading">يمكنك تبديل المواقع في أي وقت.</string>
+    <string name="login_epilogue_mysites_heading">اختيار موقع لفتحه</string>
+    <string name="scan_multisite_not_supported_subtitle">عذرًا، لكن عملية المسح على Jetpack Scan غير متوافقة مع تثبيت ووردبريس متعددة المواقع في الوقت الحالي.</string>
+    <string name="scan_multisite_not_supported_title">مواقع ووردبريس المتعددة غير مدعومة</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">رابط غير صالح. الرجاء إدخال عنوان موقع صالح.</string>
     <string name="gutenberg_native_embed_caption_s">قم بتضمين تسمية توضيحية. %s</string>
     <string name="gutenberg_native_embed_caption_empty">قم بتضمين تسمية توضيحية. فارغ</string>
@@ -102,6 +127,8 @@ Language: ar
     <string name="gutenberg_native_mention">الإشارة</string>
     <string name="gutenberg_native_post_content_settings">إعدادات محتوى المقالة</string>
     <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
+    <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
+    <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_featured">مميز</string>
     <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
@@ -192,6 +219,7 @@ Language: ar
     <string name="quick_start_list_view_site_title">زيارة موقعك</string>
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
+    <string name="quick_start_list_enable_sharing_title">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="quick_start_list_check_stats_title">تحقّق من احصائياتك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
     <string name="backup_download_status_failure_bullet1">يتعذر علينا العثور على الحالة حتى نخبرك بالمدة التي ستستغرقها عملية النسخة الاحتياطية القابلة للتنزيل لديك.</string>
@@ -682,6 +710,7 @@ Language: ar
     <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b&gt;⁦%1$s⁩&lt;/b&gt; لتعيين عنوان جديد</string>
+    <string name="quick_start_list_update_site_title_title">التحقُّق من عنوان موقعك</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options">خيارات المكوِّن %s</string>
     <string name="gutenberg_native_duplicate_block">تكرار المكوِّن</string>
@@ -1297,9 +1326,11 @@ Language: ar
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
+    <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
     <string name="quick_start_dialog_need_help_message">سنوجهك عبر أساسيات بناء موقعك وتنميته.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
+    <string name="quick_start_dialog_publish_post_message">قمل بعمل مسودة مقالة وانشرها.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>

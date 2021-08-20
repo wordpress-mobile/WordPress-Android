@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-16 10:59:24+0000
+Translation-Revision-Date: 2021-08-18 09:18:26+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -361,7 +361,7 @@ Language: pl
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
     <string name="media_insert_failed_with_reason">Nie udało się osadzić plików mediów: %s</string>
     <string name="photo_picker_wordpress_media_library">Wybierz z biblioteki mediów WordPressa</string>
-    <string name="reader_label_toolbar_back">Cofnij</string>
+    <string name="reader_label_toolbar_back">Powrót</string>
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
     <string name="reader_discover_empty_subtitle">Obserwuj tematy aby odkryć nowe blogi</string>
@@ -377,7 +377,6 @@ Language: pl
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
-    <string name="typeface_label_shrikhand">Pogrubiona</string>
     <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
     <string name="typeface_label_oswald">Silna</string>
@@ -386,6 +385,7 @@ Language: pl
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
     <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
+    <string name="typeface_label_shrikhand">Pogrubienie</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -445,12 +445,9 @@ Language: pl
     <string name="dialog_discard_page_message">Ten slajd zostanie usunięty z twojej relacji.</string>
     <string name="dialog_discard_page_title">Czy usunąć slajd z relacji?</string>
     <string name="label_frame_image">Slajd</string>
-    <string name="label_retry_icon">Ponów</string>
-    <string name="label_saved_icon">Zapisana</string>
     <string name="label_close_button">Zamknij</string>
     <string name="label_snackbar_share">UDOSTĘPNIJ</string>
     <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
-    <string name="label_control_retry">Ponów</string>
     <string name="label_control_saved">Zapisano</string>
     <string name="label_control_flash">Flash</string>
     <string name="label_control_flip_camera">Odwróć</string>
@@ -471,6 +468,9 @@ Language: pl
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
     <string name="label_control_saving">Zapisywanie</string>
+    <string name="label_saved_icon">Zapisano</string>
+    <string name="label_control_retry">Spróbuj ponownie</string>
+    <string name="label_retry_icon">Spróbuj ponownie</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -536,7 +536,6 @@ Language: pl
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
     <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
-    <string name="prepublishing_nudges_back_button">Cofnij</string>
     <string name="prepublishing_nudges_home_save_button">Zapisz teraz</string>
     <string name="prepublishing_nudges_home_submit_button">Prześlij teraz</string>
     <string name="prepublishing_nudges_home_schedule_button">Zaplanuj teraz</string>
@@ -547,6 +546,7 @@ Language: pl
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Przesuń do Szkiców</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publikacji</string>
+    <string name="prepublishing_nudges_back_button">Powrót</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
     <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
     <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
@@ -930,10 +930,10 @@ Language: pl
     <string name="post_notification_when_published">Kiedy opublikowano</string>
     <string name="post_notification_ten_minutes_before">10 minut temu</string>
     <string name="post_notification_one_hour_before">1 godzina temu</string>
-    <string name="post_notification_off">Wyłączono</string>
     <string name="post_settings_add_to_calendar">Dodaj do kalendarza</string>
     <string name="post_settings_notification">Powiadomienie</string>
     <string name="post_settings_time_and_date">Data i czas</string>
+    <string name="post_notification_off">Wyłączone</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -1188,7 +1188,6 @@ Language: pl
     <string name="stats_videos_title_label">Tytuł</string>
     <string name="stats_videos">Filmy</string>
     <string name="stats_country_views_label">Wyświetleń</string>
-    <string name="stats_country_label">Państwo</string>
     <string name="stats_clicks_label">Kliknięcia</string>
     <string name="stats_clicks_link_label">Odnośnik</string>
     <string name="stats_clicks">Kliknięcia</string>
@@ -1208,6 +1207,7 @@ Language: pl
     <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
     <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
     <string name="stats_countries">Kraje</string>
+    <string name="stats_country_label">Kraj</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
@@ -1321,7 +1321,6 @@ Language: pl
     <string name="reader_empty_followed_tags_subtitle">Dodaj tematy aby odnaleźć wpisy dotyczące tych które ciebie interesują</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
     <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
-    <string name="install_jetpack_retry">Ponów</string>
     <string name="jetpack_installation_problem_message">Nie można było zainstalować  Jetpacka</string>
     <string name="jetpack_installation_problem">Wystąpił problem</string>
     <string name="jetpack_installed">Jetpack zainstalowany</string>
@@ -1331,6 +1330,7 @@ Language: pl
     <string name="install_jetpack_continue">Utwórz</string>
     <string name="install_jetpack_message">Dane logowania do witryny nie będą przechowywane i są użyte jedynie do celów instalacji Jetpacka.</string>
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
+    <string name="install_jetpack_retry">Spróbuj ponownie</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -1600,17 +1600,17 @@ Language: pl
     <string name="signup_user_exists">Email już istnieje na WordPress.com.\nKontynuowanie logowania.</string>
     <string name="signup_updating_account">Aktualizacja konta…</string>
     <string name="signup_magic_link_progress">Wysyłanie emaila</string>
-    <string name="signup_magic_link_error_button_positive">Ponów próbę</string>
     <string name="signup_magic_link_error_button_negative">Zamknij</string>
     <string name="signup_epilogue_hint_username">Nazwa użytkownika</string>
     <string name="signup_epilogue_hint_password_detail">Możesz zawsze zalogować się za pomocą odnośnika którego właśnie użyłeś, ale możesz również założyć hasło jeśli wolisz.</string>
     <string name="signup_epilogue_hint_password">Hasło (opcjonalnie)</string>
     <string name="signup_epilogue_hint_display">Nazwa wyświetlana</string>
-    <string name="signup_epilogue_error_button_positive">Ponów próbę</string>
     <string name="signup_epilogue_error_button_negative">Cofnij</string>
     <string name="signup_epilogue_error_generic">Wystąpił problem podczas aktualizacji twojego konta. Możesz spróbować ponownie lub cofnąć zmianę użytkownika aby kontynuować.</string>
     <string name="signup_epilogue_error_avatar">Wystąpił błąd przesyłania swojego zdjęcia profilowego.</string>
     <string name="signup_magic_link_error">Wystąpił problem podczas wysyłania wiadomości email. Możesz spróbować ponownie lub zamknąć i spróbować ponownie później.</string>
+    <string name="signup_magic_link_error_button_positive">Spróbuj ponownie</string>
+    <string name="signup_epilogue_error_button_positive">Spróbuj ponownie</string>
     <string name="plugin_needs_update">Wymaga aktualizacji/subskrypcji</string>
     <string name="plugin_caption_search">Szukaj wtyczek</string>
     <string name="plugin_caption_new">Nowe</string>
@@ -1887,9 +1887,9 @@ Language: pl
     <string name="media_error_http_too_large_photo_upload">Obrazek za duży aby można go było przesłać. Spróbuj zmienić konfigurację optymalizacji obrazków w ustawieniach aplikacji.</string>
     <string name="media_all">Wszystkie</string>
     <string name="media_images">Obrazki</string>
-    <string name="media_audio">Pliki dźwiękowe</string>
     <string name="media_videos">Filmy</string>
     <string name="media_documents">Dokumenty</string>
+    <string name="media_audio">Plik dźwiękowy</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="reader_view_comments">Zobacz komentarze</string>
     <string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
@@ -1902,8 +1902,8 @@ Language: pl
     <string name="permission_camera">Aparat</string>
     <string name="permission_storage">Pamięć</string>
     <string name="button_edit_permissions">Edytuj uprawnienia</string>
-    <string name="photo_picker_soft_ask_allow">Zezwalaj</string>
     <string name="photo_picker_soft_ask_label">%s potrzebuje uprawnień dostępu do twoich zdjęć</string>
+    <string name="photo_picker_soft_ask_allow">Zezwól</string>
     <string name="sharing_twitter_message">Będzie to zawarte w tweetach kiedy ludzie udostępniają treści używając  przycisku Twitter</string>
     <string name="sharing_label_message">Zmień opis dla przycisków udostępniania. Opis pojawi się dopiero gdy dodasz przynajmniej jeden przycisk udostępniania.</string>
     <string name="connecting_account">Łączenie konta</string>
@@ -1990,7 +1990,7 @@ Language: pl
     <string name="media_encoder_quality_90">Wysoka</string>
     <string name="media_encoder_quality_85">Średnia</string>
     <string name="media_encoder_quality_80">Niska</string>
-    <string name="media_upload_state_uploaded">Przesłano</string>
+    <string name="media_upload_state_uploaded">Wysłano</string>
     <string name="media_upload_state_deleted">Usunięto</string>
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>
@@ -1999,7 +1999,7 @@ Language: pl
     <string name="image_quality">Jakość obrazka</string>
     <string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
     <string name="error_unknown_post_type">Nieznany format wpisu</string>
-    <string name="submit_for_review">Prześlij</string>
+    <string name="submit_for_review">Wyślij</string>
     <string name="duplicate_site_detected">Wykryto duplikat witryny</string>
     <string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
     <string name="already_logged_in_wpcom">Jesteś już zalogowany na swoje konto WordPress.com, nie można dodać konta WordPress.com połączonego z innym kontem.</string>
@@ -2157,7 +2157,7 @@ Language: pl
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Film</string>
-    <string name="alignment_center">Wyśrodkowany</string>
+    <string name="alignment_center">Pośrodku</string>
     <string name="post_format_chat">Czat</string>
     <string name="post_format_gallery">Galeria</string>
     <string name="post_format_image">Obrazek</string>
@@ -2421,8 +2421,8 @@ Language: pl
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="show">Pokaż</string>
     <string name="hide">Ukryj</string>
-    <string name="select_all">Wybierz wszystko</string>
     <string name="deselect_all">Odznacz wszystko</string>
+    <string name="select_all">Zaznacz wszystko</string>
     <string name="language">Język</string>
     <string name="verification_code">Kod weryfikacyjny</string>
     <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
@@ -2673,7 +2673,7 @@ Language: pl
     <string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
     <string name="dlg_deleting_comments">Usuwanie komentarzy</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
-    <string name="media">Multimedia</string>
+    <string name="media">Media</string>
     <string name="delete">Usuń</string>
     <string name="approve">Zatwierdź</string>
     <string name="none">Brak</string>

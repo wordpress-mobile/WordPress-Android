@@ -402,10 +402,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowBlogPosts.setOnClickListener { viewPosts() }
         rowMedia.setOnClickListener { viewMedia() }
         rowPages.setOnClickListener { viewPages() }
-        rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
-        rowUnifiedComments.setOnClickListener {
+        rowComments.setOnClickListener {
             if (unifiedCommentsListFeatureConfig.isEnabled()) {
                 ActivityLauncher.viewUnifiedComments(activity, selectedSite)
+            } else {
+                ActivityLauncher.viewCurrentBlogComments(activity, selectedSite)
             }
         }
         rowThemes.setOnClickListener {
@@ -544,7 +545,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
 
-        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
+        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite!!) &&
+                selectedSite?.hasCapabilityManageOptions!!
         val hint = if (canEditTitle) {
             getString(R.string.my_site_title_changer_dialog_hint)
         } else {
@@ -607,12 +609,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         selectedSiteRepository.showSiteIconProgressBar.observe(viewLifecycleOwner, {
             showSiteIconProgressBar(it == true)
         })
-
-        rowUnifiedComments.visibility = if (unifiedCommentsListFeatureConfig.isEnabled()) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

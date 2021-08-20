@@ -2,12 +2,14 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +29,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteModel
@@ -38,6 +43,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
@@ -54,7 +60,11 @@ import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -70,8 +80,10 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
@@ -84,6 +96,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -91,10 +104,16 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -104,8 +123,11 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
@@ -128,11 +150,16 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
+    @Mock lateinit var quickStartBlockBuilder: QuickStartBlockBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
+    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -163,6 +190,48 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private var removeMenuItemClickAction: (() -> Unit)? = null
+    private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
+    private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
+    private val quickStartCategory: QuickStartCategory
+        get() = QuickStartCategory(
+                taskType = QuickStartTaskType.CUSTOMIZE,
+                uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
+                completedTasks = emptyList()
+        )
+    private val quickStartBlock: QuickStartBlock
+        get() = QuickStartBlock(
+                icon = 0,
+                title = UiStringText(""),
+                onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
+                taskTypeItems = listOf(
+                        QuickStartTaskTypeItem(
+                                quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
+                                title = UiStringText(""),
+                                titleEnabled = true,
+                                subtitle = UiStringText(""),
+                                strikeThroughTitle = false,
+                                progressColor = 0,
+                                progress = 0,
+                                onClick = ListItemInteraction.create(
+                                        QuickStartTaskType.CUSTOMIZE,
+                                        { quickStartTaskTypeItemClickAction }
+                                )
+                        )
+                )
+        )
+    private val dynamicQuickStartTaskCard: QuickStartCard
+        get() = QuickStartCard(
+                CUSTOMIZE_QUICK_START,
+                UiStringRes(0),
+                emptyList(),
+                0,
+                0,
+                ListItemInteraction.create(
+                        DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true),
+                        dynamicCardMoreClick as (DynamicCardMenuModel) -> Unit
+                )
+        )
 
     @InternalCoroutinesApi
     @Before
@@ -200,10 +269,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartItemBuilder,
+                quickStartBlockBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
-                unifiedCommentsListFeatureConfig
+                unifiedCommentsListFeatureConfig,
+                quickStartDynamicCardsFeatureConfig,
+                onboardingImprovementsFeatureConfig,
+                quickStartUtilsWrapper,
+                appPrefsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -240,6 +314,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.url = siteUrl
         site.name = siteName
         site.iconUrl = siteIcon
+        site.siteId = siteId.toLong()
 
         siteInfoBlock = SiteInfoBlock(
                 title = siteName,
@@ -478,7 +553,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         quickStartUpdate.value = QuickStartUpdate(UPDATE_SITE_TITLE, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
+        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue
     }
 
     @Test
@@ -502,7 +577,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         quickStartUpdate.value = QuickStartUpdate(UPLOAD_SITE_ICON, listOf())
 
-        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue()
+        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue
     }
 
     @Test
@@ -858,8 +933,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -876,8 +950,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -894,8 +967,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -912,44 +984,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
                 showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = any()
-        )
-    }
-
-    @Test
-    fun `unified comment menu item is visible, when unifiedCommentsListFeatureConfig is enabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(true)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(true)
-        )
-    }
-
-    @Test
-    fun `unified comment menu item is NOT visible, when unifiedCommentsListFeatureConfig is disabled`() = test {
-        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(false)
-
-        initSelectedSite()
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any(),
-                isUnifiedCommentsFeatureEnabled = eq(false)
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -1003,6 +1038,130 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given quick start is not in progress, when site is selected, then quick start block not built`() {
+        initSelectedSite(isQuickStartInProgress = false)
+
+        assertThat(findQuickStartBlock()).isNull()
+    }
+
+    @Test
+    fun `given quick start is not in progress, when site is selected, then QS dynamic card not built`() {
+        initSelectedSite(isQuickStartInProgress = false)
+
+        assertThat(findQuickStartDynamicCard()).isNull()
+    }
+
+    @Test
+    fun `given dynamic card disabled + QS in progress, when site is selected, then QS dynamic card not built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartDynamicCard()).isNull()
+    }
+
+    @Test
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS dynamic card built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartDynamicCard()).isNotNull
+    }
+
+    @Test
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS block built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartBlock()).isNotNull
+    }
+
+    @Test
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS block not built`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
+
+        assertThat(findQuickStartBlock()).isNull()
+    }
+
+    @Test
+    fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
+    }
+
+    @Test
+    fun `when quick start task type item is clicked, then quick start active task is cleared`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `given dynamic card disabled, when QS remove menu item is clicked, then remove next steps dialog shown`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        requireNotNull(removeMenuItemClickAction).invoke()
+
+        assertThat(dialogModels.last()).isEqualTo(ShowRemoveNextStepsDialog)
+    }
+
+    @Test
+    fun `when remove next steps dialog negative btn clicked, then QS is not skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository, never()).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS is skipped`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).skipQuickStart()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS repo refreshed`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when remove next steps dialog positive btn clicked, then QS active task cleared`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `when QS fullscreen dialog dismiss is triggered, then quick start repository is refreshed`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onQuickStartFullScreenDialogDismiss()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
+        val task = QuickStartTask.VIEW_SITE
+        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        viewModel.onQuickStartFullScreenDialogConfirm(task)
+
+        verify(quickStartRepository).setActiveTask(task)
+    }
+
+    @Test
     fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
@@ -1024,7 +1183,145 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(quickActionsBlock).isNotNull
     }
 
+    @Test
+    fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        verify(quickStartRepository).startQuickStart(siteId)
+    }
+
+    @Test
+    fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given QS is not available for the site, when check and start QS is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given onboarding improvements feature is on, when check and start QS is triggered, then new QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        assertThat(navigationActions).containsExactly(
+                ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
+                )
+        )
+    }
+
+    @Test
+    fun `given QS is disabled, when check and start QS is triggered, then old QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given QS is enabled, when check and start QS is triggered, then old QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteId)
+
+        assertThat(navigationActions).containsExactly(
+                ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_title,
+                        R.string.quick_start_dialog_need_help_message,
+                        R.string.quick_start_dialog_need_help_button_positive,
+                        R.string.quick_start_dialog_need_help_manage_site_button_negative,
+                        R.string.quick_start_dialog_need_help_button_neutral
+                )
+        )
+    }
+
+    @Test
+    fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
+        viewModel.startQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+    }
+
+    @Test
+    fun `when start QS is triggered, then QS starts`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.startQuickStart()
+
+        verify(quickStartRepository).startQuickStart(site.id)
+    }
+
+    @Test
+    fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
+        viewModel.ignoreQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    @Test
+    fun `given onboarding improvements feature is on, when disable QS is triggered, then do nothing`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.disableQuickStart()
+
+        verifyZeroInteractions(analyticsTrackerWrapper)
+        verifyZeroInteractions(appPrefsWrapper)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then QS request dialog neutral tapped is tracked`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
+    }
+
+    @Test
+    fun `when disable QS is triggered, then disable QS`() {
+        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.disableQuickStart()
+
+        verify(appPrefsWrapper).setQuickStartDisabled(true)
+    }
+
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
+
+    private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
+
+    private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
 
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
@@ -1054,7 +1351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 
@@ -1062,7 +1359,24 @@ class MySiteViewModelTest : BaseUnitTest() {
         clickAction!!.invoke(action)
     }
 
-    private fun initSelectedSite() {
+    private fun initSelectedSite(
+        isQuickStartDynamicCardEnabled: Boolean = false,
+        isQuickStartInProgress: Boolean = false
+    ) {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
+        doAnswer {
+            removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
+            quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
+            quickStartBlock
+        }.whenever(quickStartBlockBuilder).build(any(), any(), any())
+        doAnswer {
+            dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
+            dynamicQuickStartTaskCard
+        }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
+
+        quickStartUpdate.value = QuickStartUpdate(
+                categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
+        )
         onSiteSelected.value = siteId
         onSiteChange.value = site
     }

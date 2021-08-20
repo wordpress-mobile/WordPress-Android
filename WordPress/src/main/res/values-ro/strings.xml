@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 10:23:31+0000
+Translation-Revision-Date: 2021-08-14 11:07:14+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Poți rearanja blocurile prin atingerea unui bloc și apoi a săgeților sus și jos care apar în stânga jos a blocului pentru a-l muta mai sus sau sub alte blocuri.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bine ai venit în lumea blocurilor</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Pentru a înlătura un bloc, selectează blocul și dă clic pe cele trei puncte din dreaptă jos a blocului pentru a vizualiza setările. Acolo, alege opțiunea de a înlătura blocul.</string>
+    <string name="gutenberg_native_s_block_newly_available">Bloc %s, este disponibil acum</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Unele blocuri au setări suplimentare. Atinge iconul setări din dreapta jos a blocului pentru a vedea mai multe opțiuni.</string>
+    <string name="gutenberg_native_rich_text_editing">Editare text îmbogățit</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">După ce te familiarizezi cu numele blocurilor, poți adăuga un bloc tastând mai întâi un slash (o bară oblică) și apoi numele blocului - de exemplu, /imagine sau /subtitlu.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Îți scoți conținutul în evidență prin adăugarea de imagini, imagini GIF, videouri și elemente media înglobate în paginile tale.</string>
+    <string name="gutenberg_native_embed_media">Înglobează media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Fiecare bloc are setări proprii. Pentru a le găsi, dă clic pe un bloc. Setările lui vor apărea în bara de unelte din partea de jos a ecranului.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Încearcă-le, adaugă câteva blocuri în articolele sau paginile tale!</string>
+    <string name="gutenberg_native_build_layouts">Construiește aranjamente</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocurile sunt părți de conținut pe care le poți insera, rearanja și folosi în forma lor fără să scrii sau să modifici vreun cod. Blocurile sunt o modalitate ușoară și modernă de a crea aranjamente frumoase.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocurile îți permit să te concentrezi pe scrierea conținutului, știind că toate instrumentele de formatare de care ai nevoie sunt acolo ca să te ajute să transmiți mesajul.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Îți aranjezi conținutul pe coloane, adaugi butoane pentru Apeluri la acțiune și suprapui text peste imagini.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Poți să adaugi un bloc oricând prin atingerea iconului + din bara de unelte, în stânga jos.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s din %2$s sunt finalizate</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Învață elementele de bază printr-un tur ghidat rapid.</string>
+    <string name="comment_batch_moderation_error">Moderarea unuia sau a mai multor comentarii a eșuat</string>
     <string name="create_site_notification_create_site_action">Creează un site</string>
     <string name="stats_disabled_subtitle">Activează statistici site pentru a vedea informații detaliate despre trafic, aprecieri, comentarii și abonați.</string>
     <string name="stats_disabled_enable_stats_button">Activează statistici site</string>
@@ -24,7 +43,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_preview_page">Atinge de două ori pentru a previzualiza pagina.</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Atinge de două ori pentru a previzualiza articolul.</string>
     <string name="quick_start_list_upload_icon_subtitle">Este afișat în fila navigatoarelor vizitatorilor tăi și în alte locuri online.</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Vom parcurge elementele de bază pentru administrarea site-ului tău cu aplicația.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Arată-mi ce să fac</string>
     <string name="login_epilogue_create_new_site_button">Creează un site nou</string>
     <string name="login_epilogue_mysites_subheading">Poți comuta între site-uri oricând.</string>
@@ -1726,7 +1744,6 @@ Language: ro
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
     <string name="site_settings_quota_space_title">Spațiu folosit</string>
-    <string name="site_settings_quota_header">Medie</string>
     <string name="comment_spam_talkback">Comentariu marcat ca spam</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
     <string name="comment_delete_talkback">Comentariu șters</string>
@@ -1740,6 +1757,7 @@ Language: ro
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
     <string name="share_intent_screen_title">Alege site-ul</string>
+    <string name="site_settings_quota_header">Media</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -2076,10 +2094,10 @@ Language: ro
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
     <string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>
     <string name="post_settings_slug_dialog_hint">Descriptorul este versiunea prietenoasă a URL-ului pentru titlu articolului.</string>
-    <string name="post_settings_post_format">Format articol</string>
     <string name="post_settings_tags">Etichete</string>
     <string name="post_settings_slug">Descriptor</string>
     <string name="post_settings_excerpt">Rezumat</string>
+    <string name="post_settings_post_format">Format de articol</string>
     <string name="post_settings_not_set">Nesetate</string>
     <string name="post_settings_more_options">Mai multe opțiuni</string>
     <string name="post_settings_categories_and_tags">Categorii și etichete</string>
@@ -2554,8 +2572,8 @@ Language: ro
     <string name="active">Activă</string>
     <string name="post_published">Articol publicat</string>
     <string name="page_published">Pagină publicată</string>
-    <string name="post_updated">Articol actualizat</string>
     <string name="page_updated">Pagină actualizată</string>
+    <string name="post_updated">Articolul a fost actualizat</string>
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu se potrivește cu „%s”</string>

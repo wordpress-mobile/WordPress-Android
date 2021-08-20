@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-23 11:54:08+0000
+Translation-Revision-Date: 2021-08-05 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Créer un site</string>
+    <string name="create_site_notification_text">Lancez votre site Web en quelques étapes rapides</string>
+    <string name="create_site_notification_title">Créez votre site Web WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">Impossible d’activer les statistiques du site</string>
+    <string name="stats_disabled_enable_stats_button">Activer les statistiques du site</string>
+    <string name="stats_disabled_subtitle">Activez les statistiques du site pour afficher des informations détaillées sur votre trafic, vos préférences, vos commentaires et vos abonnés.</string>
+    <string name="stats_disabled_title">Vous cherchez les statistiques ?</string>
+    <string name="gutenberg_native_what_is_a_block">Qu\'est-ce qu\'un bloc ?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Nous travaillons d’arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur l\'article de blog.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Nous travaillons d\'arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur la page.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Impossible d\'embarquer les médias</string>
+    <string name="gutenberg_native_try_another_search_term">Essayez un autre terme de recherche</string>
+    <string name="gutenberg_native_no_blocks_found">Aucun bloc trouvé</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Aperçus embarqués pas encore disponibles</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Les aperçus de bloc embarqués seront prochainement disponibles</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Appuyez deux fois pour prévisualiser l\'article de blog.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Appuyez deux fois pour prévisualiser la page.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Contenu affiché dans l’onglet du navigateur de vos visiteurs et à d’autres endroits en ligne.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Me faire découvrir</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Besoin d’un peu d’aide sur la gestion de ce site avec l’application ?</string>
+    <string name="login_epilogue_create_new_site_button">Créer un nouveau site</string>
+    <string name="login_epilogue_mysites_subheading">Vous pouvez changer de site à tout moment.</string>
+    <string name="login_epilogue_mysites_heading">Choisir un site à ouvrir</string>
+    <string name="scan_multisite_not_supported_subtitle">Désolé, Jetpack Scan n’est pas compatible avec les installations multisites de WordPress pour le moment.</string>
+    <string name="scan_multisite_not_supported_title">Les multisites WordPress ne sont pas pris en charge</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non valide. Veuillez entrer une URL valide.</string>
     <string name="gutenberg_native_embed_caption_s">Légende intégrée. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Légende intégrée. Vide</string>
@@ -97,6 +122,8 @@ Language: fr
     <string name="likes_list_screen_title">Liste des mentions J’aime %s</string>
     <string name="gutenberg_native_sorting_and_filtering">Tri et filtre</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
+    <string name="gutenberg_native_preview_post">Prévisualiser l&amp;rsquo;article</string>
+    <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_post_meta_settings">Réglages des métas de publication</string>
     <string name="gutenberg_native_post_content_settings">Réglages de contenu de publication</string>
     <string name="gutenberg_native_featured">À la Une</string>
@@ -181,6 +208,7 @@ Language: fr
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
     <string name="quick_start_list_view_site_title">Voir votre site</string>
     <string name="quick_start_list_follow_site_subtitle">Découvrez et abonnez-vous aux sites qui vous inspirent.</string>
+    <string name="quick_start_list_enable_sharing_title">Partage sur les réseaux sociaux</string>
     <string name="quick_start_list_enable_sharing_subtitle">Partagez automatiquement les nouveaux articles sur vos réseaux sociaux.</string>
     <string name="quick_start_list_update_site_title_subtitle">Donnez à votre site un nom qui reflète sa personnalité et son thème.</string>
     <string name="quick_start_list_check_stats_title">Vérifier vos statistiques</string>
@@ -657,6 +685,7 @@ Language: fr
     <string name="send_link_by_email">Envoyer un lien par e-mail</string>
     <string name="reset_your_password">Réinitialiser votre mot de passe</string>
     <string name="reader_error_request_failed_title">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
+    <string name="quick_start_list_update_site_title_title">Vérifier le titre de votre site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Appuyer sur &lt;b&gt;%1$s&lt;/b&gt; pour définir un nouveau titre</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Supprimer cet article va également supprimer les modifications locales, confirmez-vous vous vouloir continuer ?</string>
     <string name="gutenberg_native_s_block_options">Option du bloc %s</string>
@@ -1271,10 +1300,12 @@ Language: fr
     <string name="quick_start_sites">Prochaines étapes</string>
     <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_dialog_view_site_message">Profitez de votre produit fini !</string>
+    <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Appuyez sur %1$s Plan %2$s pour voir votre plan actuel et les autres plans disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Appuyez sur %1$s Stats %2$s pour voir comment votre site est performant.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Appuyez sur %1$s Votre icône de site %2$s pour en téléverser une nouvelle</string>
+    <string name="quick_start_dialog_publish_post_message">Rédiger un brouillon et publier un article de blog.</string>
     <string name="quick_start_dialog_need_help_message">Nous allons vous expliquer les bases de la construction et de la croissance de votre site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorer les plans</string>
     <string name="quick_start_dialog_explore_plans_message">Apprenez-en plus sur le marketing et les outils SEO dans nos plans payants.</string>
@@ -1461,6 +1492,7 @@ Language: fr
     <string name="quick_start_dialog_need_help_title">Besoin d\'un petit coup de pouce pour commencer ?</string>
     <string name="quick_start_dialog_need_help_button_positive">Accepter</string>
     <string name="quick_start_dialog_need_help_button_neutral">Jamais</string>
+    <string name="quick_start_dialog_need_help_button_negative">Non merci</string>
     <string name="quick_start_dialog_follow_sites_title">S\'abonner à d\'autres sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Appuyez sur %1$s Rechercher %2$s pour rechercher des sites avec des thèmes similaires</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Appuyez sur %1$s Lecteur %2$s pour continuer</string>

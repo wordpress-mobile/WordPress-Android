@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -43,6 +45,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
+import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
@@ -127,6 +130,7 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
@@ -425,18 +429,16 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe) {
+        viewStatsInNewStack(context, site, statsTimeframe, null);
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
+                                           @Nullable String period) {
         if (site == null) {
             handleMissingSite(context);
             return;
         }
-        Intent statsIntent;
-        if (statsTimeframe != null) {
-            statsIntent = StatsActivity.buildIntent(context, site, statsTimeframe);
-        } else {
-            statsIntent = StatsActivity.buildIntent(context, site);
-        }
-
-        runIntentOverMainActivityInNewStack(context, statsIntent);
+        runIntentOverMainActivityInNewStack(context, StatsActivity.buildIntent(context, site, statsTimeframe, period));
     }
 
     private static void handleMissingSite(Context context) {
@@ -451,13 +453,31 @@ public class ActivityLauncher {
     }
 
     private static void runIntentOverMainActivityInNewStack(Context context, Intent intent) {
+        buildIntentOverMainActivityInNewStack(context, intent).startActivities();
+    }
+
+    public static PendingIntent buildStatsPendingIntentOverMainActivityInNewStack(Context context, SiteModel site,
+                                                                                  @Nullable StatsTimeframe timeframe,
+                                                                                  @Nullable String period,
+                                                                                  @Nullable NotificationType type,
+                                                                                  int requestCode, int flags) {
+        return buildPendingIntentOverMainActivityInNewStack(context,
+                StatsActivity.buildIntent(context, site, timeframe, period, type), requestCode, flags);
+    }
+
+    private static PendingIntent buildPendingIntentOverMainActivityInNewStack(Context context, Intent intent,
+                                                                              int requestCode, int flags) {
+        return buildIntentOverMainActivityInNewStack(context, intent).getPendingIntent(requestCode, flags);
+    }
+
+    private static TaskStackBuilder buildIntentOverMainActivityInNewStack(Context context, Intent intent) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(intent);
-        taskStackBuilder.startActivities();
+        return taskStackBuilder;
     }
 
     public static void viewStatsInNewStack(Context context) {
@@ -618,6 +638,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, UnifiedCommentsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
@@ -1275,16 +1296,20 @@ public class ActivityLauncher {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null);
         activity.startActivity(intent);
     }
 
     @NonNull
-    public static Intent createMainActivityAndSiteCreationActivityIntent(Context context) {
+    public static Intent createMainActivityAndSiteCreationActivityIntent(Context context,
+                                                                         @Nullable NotificationType notificationType) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
         return intent;
     }
 
@@ -1558,5 +1583,9 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, CategoriesListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+    }
+
+    public static void viewDebugCookies(@NonNull Context context) {
+        context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 }

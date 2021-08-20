@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-26 09:54:56+0000
+Translation-Revision-Date: 2021-08-11 00:50:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">ブロックの世界へようこそ</string>
+    <string name="gutenberg_native_embed_media">メディアを埋め込む</string>
+    <string name="gutenberg_native_build_layouts">レイアウトを構築</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
+    <string name="create_site_notification_create_site_action">サイトを作成</string>
+    <string name="create_site_notification_text">わずかな手順で迅速にサイトを立ち上げることができます</string>
+    <string name="create_site_notification_title">WordPress サイトを作成</string>
+    <string name="stats_disabled_enable_stats_error_message">サイトの統計情報を有効化できません</string>
+    <string name="stats_disabled_enable_stats_button">サイト統計情報を有効化</string>
+    <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
+    <string name="stats_disabled_title">統計情報をお探しですか ?</string>
+    <string name="gutenberg_native_what_is_a_block">ブロックとは</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_unable_to_embed_media">メディアを埋め込むことができません</string>
+    <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
+    <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">埋め込みプレビューはまだ使用できません</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
+    <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">表示</string>
+    <string name="login_epilogue_create_new_site_button">新規サイトを作成</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">アプリでこのサイトを管理する方法をしりたいですか ?</string>
+    <string name="login_epilogue_mysites_subheading">サイトはいつでも切り替えることができます。</string>
+    <string name="login_epilogue_mysites_heading">開くサイトを選択</string>
+    <string name="scan_multisite_not_supported_subtitle">現在、Jetpack スキャンは WordPress のマルチサイトインストールとの互換性がありません。</string>
+    <string name="scan_multisite_not_supported_title">WordPress マルチサイトには対応していません</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無効な URL。 正しい URL を入力してください。</string>
     <string name="gutenberg_native_embed_caption_s">埋め込みのキャプション。 %s</string>
     <string name="gutenberg_native_embed_caption_empty">埋め込みのキャプション。 空</string>
@@ -102,6 +131,8 @@ Language: ja_JP
     <string name="gutenberg_native_mention">\@ 返信</string>
     <string name="gutenberg_native_post_content_settings">投稿コンテンツ設定</string>
     <string name="gutenberg_native_post_meta_settings">投稿メタ設定</string>
+    <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
+    <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_featured">おすすめ</string>
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
@@ -192,6 +223,7 @@ Language: ja_JP
     <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
     <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
+    <string name="quick_start_list_enable_sharing_title">ソーシャル共有</string>
     <string name="quick_start_list_check_stats_title">統計情報を確認</string>
     <string name="backup_download_status_failure_bullet2">ダウンロード可能なバックアップファイルの作成を試みます。</string>
     <string name="backup_download_status_failure_bullet1">ダウンロード可能なバックアップにかかる時間を示すステータスが見つかりませんでした。</string>
@@ -682,6 +714,7 @@ Language: ja_JP
     <string name="or_type_your_password">またはパスワードを入力</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b&gt;%1$s&lt;/b&gt;をタップしてください</string>
+    <string name="quick_start_list_update_site_title_title">サイトタイトルを確認</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
     <string name="gutenberg_native_duplicate_block">ブロックを複製</string>
@@ -1297,9 +1330,11 @@ Language: ja_JP
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>
     <string name="quick_start_dialog_view_site_message">完成しました。お楽しみください !</string>
+    <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
     <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
     <string name="quick_start_dialog_need_help_message">サイトの構築と訪問者を増やす方法の基本について紹介します。</string>
+    <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
     <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
     <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
     <string name="quick_start_dialog_explore_plans_message">有料プランのマーケティングと SEO ツールについての詳細を読む。</string>
@@ -1489,6 +1524,7 @@ Language: ja_JP
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>
     <string name="quick_start_dialog_follow_sites_message">興味のあるサイトを見つけて、更新が公開されたらすぐ見られるようにフォローしてみましょう。</string>
+    <string name="quick_start_dialog_need_help_button_negative">いいえ、結構です</string>
     <string name="quick_start_button_positive">移動</string>
     <string name="quick_start_button_negative_short">キャンセル</string>
     <string name="quick_start_button_negative">後で</string>

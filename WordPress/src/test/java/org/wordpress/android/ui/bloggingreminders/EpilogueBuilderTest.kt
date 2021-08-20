@@ -31,7 +31,8 @@ class EpilogueBuilderTest {
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var epilogueBuilder: EpilogueBuilder
     private var done = false
-
+    private val hour = 10
+    private val minute = 0
     private val onDone: () -> Unit = {
         done = true
     }
@@ -45,7 +46,7 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with no selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf())
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(), hour, minute)
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithNoSelection(uiModel)
@@ -53,18 +54,26 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY))
+        val bloggingRemindersModel = BloggingRemindersUiModel(
+                1,
+                setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY),
+                hour,
+                minute
+        )
         val dayLabel = "twice"
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
         val selectedDays = "<b>Wednesday</b>, <b>Sunday</b>"
         whenever(listFormatterUtils.formatList(listOf("<b>Wednesday</b>", "<b>Sunday</b>"))).thenReturn(selectedDays)
-        val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays."
+        val selectedTime = bloggingRemindersModel.getNotificationTime()
+        val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays at <b>$selectedTime</b>."
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.blogging_reminders_epilogue_body_days,
+                        string.blogging_reminders_epilogue_body_days_with_time,
                         "<b>$dayLabel</b>",
-                        selectedDays
+                        selectedDays,
+                        "<b>$selectedTime</b>"
+
                 )
         ).thenReturn(message)
 
@@ -77,12 +86,15 @@ class EpilogueBuilderTest {
     fun `builds UI model with all days selected`() {
         val bloggingRemindersModel = BloggingRemindersUiModel(
                 1,
-                DayOfWeek.values().toSet()
+                DayOfWeek.values().toSet(),
+                hour,
+                minute
         )
-        val message = "You'll get reminders to blog <b>everyday</b>."
+        val message = "You'll get reminders to blog <b>everyday</b> at <b>10:00 am</b>."
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.blogging_reminders_epilogue_body_everyday
+                        string.blogging_reminders_epilogue_body_everyday_with_time,
+                        bloggingRemindersModel.getNotificationTime()
                 )
         ).thenReturn(
                 message
