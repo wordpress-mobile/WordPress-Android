@@ -22,6 +22,10 @@ class LoginEpilogueViewModel @Inject constructor(
         _navigationEvents.postValue(Event(LoginNavigationEvents.SelectSite(localId)))
     }
 
+    fun onCreateNewSite() {
+        _navigationEvents.postValue(Event(LoginNavigationEvents.CreateNewSite))
+    }
+
     fun onContinue() {
         if (!siteStore.hasSite()) handleNoSitesFound() else handleSitesFound()
     }

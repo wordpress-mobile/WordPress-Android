@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -72,12 +71,10 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         }
 
         // style custom switch preference
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Switch switchControl = getSwitch((ViewGroup) view);
-            if (switchControl != null) {
-                if (mThumbTint != null) {
-                    switchControl.setThumbTintList(mThumbTint);
-                }
+        Switch switchControl = getSwitch((ViewGroup) view);
+        if (switchControl != null) {
+            if (mThumbTint != null) {
+                switchControl.setThumbTintList(mThumbTint);
             }
         }
 

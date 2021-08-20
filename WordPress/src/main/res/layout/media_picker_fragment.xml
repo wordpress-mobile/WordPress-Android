@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/photo_picker_camera_desc"
         android:src="@drawable/ic_photo_camera_24px"
         android:visibility="gone"
         tools:ignore="InconsistentLayout" />

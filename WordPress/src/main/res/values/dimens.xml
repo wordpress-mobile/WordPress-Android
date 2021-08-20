@@ -165,7 +165,7 @@
     <!-- reader more menu spacer height -->
     <dimen name="reader_more_menu_spacer_height">16dp</dimen>
     <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">150dp</dimen>
+    <dimen name="scrim_visible_height_trigger">130dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_extra_low

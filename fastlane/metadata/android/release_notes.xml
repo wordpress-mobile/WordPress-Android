@@ -1,128 +1,102 @@
 <ar>
-17.9:
-بفضل مكوِّن التضمين الجديد، يمكنك تضمين محتوى من الخدمات المدعومة، مثل يوتيوب وإنستغرام.
+18.0:
+لقد قمنا بتحسين تدفق تسجيل الدخول لتسهيل إنشاء مواقعك وإدارتها.
 
-أليس لديك موقع بعد؟ سترى تنبيهًا يطالبك بإنشاء واحد.
-
-تتضمن التحديثات الأخرى تحسينات على ميزة تذكيرات التدوين والتعديلات في أقسام الإحصاءات والوسائط من تطبيقك، وإصلاح عناوين المقالة الطويلة في القارئ.
+لقد قمنا كذلك بتحسين صور القالب للاستمتاع بتنزيلات أسرع وتأثير أقل في خطة بياناتك، وأضفنا ألوان النمط العالمي إلى قوالب تحرير الموقع بالكامل، وقمنا بالتخلص من الخطأ الذي كان يمنع شريط أدوات "المزيد" من الظهور في محرِّر المكوِّن غير المدعوم.
 </ar>
 <de-DE>
-17.9:
-Mit dem neuen Embed-Block kannst du Inhalte aus unterstützten Diensten wie YouTube oder Instagram einbetten.
+18.0:
+Wir haben den Anmeldevorgang verbessert, damit du deine Websites leichter erstellen und verwalten kannst.
 
-Du hast noch keine Website? Du wirst über Benachrichtigungen zur Erstellung einer Website aufgefordert.
-
-Außerdem haben wir das Feature für Blog-Erinnerungen verbessert und in den Abschnitten „Statistiken“ und „Medien“ deiner App Änderungen vorgenommen. Und wir haben einen Fehler bei langen Beitragstiteln im Reader behoben.
+Wir haben auch die Theme-Bilder für schnelleres Herunterladen und weniger Auswirkungen auf deinen Datentarif optimiert, Farben für globale Stile zu den Full Site Editing-Themes hinzugefügt und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.
 </de-DE>
 <en-US>
-17.9:
-With the new Embed block, embed content from supported services, like YouTube or Instagram.
+18.0:
+We’ve improved the login flow to make it easier for you to create and manage your sites.
 
-Don’t have a site yet? You’ll see notifications that prompt you to create one.
-
-Other updates include improvements to the Blogging Reminders feature, tweaks in the Stats and Media sections of your app, and a fix to long post titles in the Reader.
+We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
 </en-US>
 <es-ES>
-17.9:
-Con el nuevo bloque de incrustación, incrusta contenido de servicios compatibles, como YouTube o Instagram.
+18.0:
+Hemos mejorado el flujo de acceso para hacerte más fácil crear y gestionar tus sitios.
 
-¿Aún no tienes un sitio? Verás avisos que te invitan a crear uno.
-
-Otras actualizaciones incluyen mejoras en la característica de recordatorios de blogueo, retoques en las secciones de estadísticas y de medios de tu aplicación y una corrección de los títulos largos de las entradas en el lector.
+También hemos optimizado las imágenes de los temas para que se descarguen más rápido y tengan un menor impacto en tu plan de datos, hemos añadido colores de estilo globales a los temas de la edición completa de sitios y hemos liquidado un fallo que impedía que apareciera la barra de herramientas «Más» en el editor de bloques no compatibles.
 </es-ES>
 <fr-CA>
-17.9 :
-Grâce au nouveau bloc de contenu embarqué, intégrez des contenus issus de services pris en charges, tels que YouTube ou Instagram.
+18.0 :
+Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
 
-Vous n’avez pas encore de site ? Des notifications vous inviteront à en créer un.
-
-Les autres mises à jour comprennent des améliorations de la fonctionnalité Rappels de blog, des ajustements apportés aux sections Statistiques et Médias de votre application, ainsi qu’un correctif pour les longs titres d’article dans le Lecteur.
+Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
 </fr-CA>
 <fr-FR>
-17.9 :
-Grâce au nouveau bloc de contenu embarqué, intégrez des contenus issus de services pris en charges, tels que YouTube ou Instagram.
+18.0 :
+Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
 
-Vous n’avez pas encore de site ? Des notifications vous inviteront à en créer un.
-
-Les autres mises à jour comprennent des améliorations de la fonctionnalité Rappels de blog, des ajustements apportés aux sections Statistiques et Médias de votre application, ainsi qu’un correctif pour les longs titres d’article dans le Lecteur.
+Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
 </fr-FR>
 <iw-IL>
-17.9:
-בעזרת בלוק 'הטמעה' החדש, ניתן להטמיע תוכן משירותים נתמכים כמו YouTube או אינסטגרם.
+18.0:
+שיפרנו את תהליך ההתחברות לאתר כדי שיהיה פשוט יותר ליצור ולנהל אתרים.
 
-עדיין אין לך חשבון באתר? ניתן לראות הודעות שמנחות אותך ליצור חשבון.
-
-עדכונים אחרים כוללים שיפורים באפשרות 'תזכורת לכתיבת בלוג' ותיקונים קלים במקטעים 'נתונים סטטיסטיים' ו'מדיה' של האפליקציה שלך, ותיקון לכותרות של פוסט ארוך בקורא.
+בנוסף, שיפרנו את הפעילות של התמונות בערכת העיצוב כדי לאפשר הורדות מהירות יותר ולצמצם את ההשפעה על חבילת הנתונים בנייד, הוספנו את האפשרות של צבעי סגנון גלובליים לערכות עיצוב עם עריכה של אתר מלא, ומחצנו באג שמנע מסרגל הכלים 'עוד' להופיע בעורך של בלוקים שאינם נתמכים.
 </iw-IL>
 <id>
-17.9:
-Dengan blok Sematan yang baru, konten sematan dari layanan yang didukung, seperti YouTube atau Instagram. 
+18.0:
+Kami telah meningkatkan alur login untuk memudahkan Anda membuat dan mengelola situs.
 
-Belum punya situs? Anda akan mendapatkan notifikasi agar Anda membuatnya.
-
-Pembaruan lainnya meliputi peningkatan fitur Pengingat Blogging, penyesuaian aplikasi di bagian Statistik dan Media, dan perbaikan judul atikel yang panjang di Pembaca.
+Kami juga telah mengoptimalkan gambar tema agar pengunduhan bisa dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda, menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, dan menghilangkan bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.
 </id>
 <it-IT>
-17.9:
-Con il nuovo blocco Incorporamenti, puoi incorporare contenuti dai servizi supportati, come YouTube o Instagram.
+18.0:
+Abbiamo migliorato il flusso di accesso per agevolare la creazione e la gestione dei siti.
 
-Non hai ancora un sito? Visualizzerai delle notifiche che ti invitano a crearne uno.
-
-Tra gli altri aggiornamenti, sono inclusi la funzionalità Promemoria relativi al blog, correzioni delle sezioni Statistiche e Media dell'app e una correzione per i titoli lunghi dei post nel Reader.
+Abbiamo inoltre ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati, aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
 </it-IT>
 <ja-JP>
-17.9:
-新しい埋め込みブロックを使用すると、YouTube や Instagram などの対応サービスからコンテンツを埋め込むことができます。
+18.0:
+ログインプロセスが改善されたことで、サイトの作成と管理がやりやすくなりました。
 
-サイトがまだない場合は、 サイトの作成を促す通知が表示されます。
-
-その他のアップデートとして、ブログ投稿のリマインダー機能が改善されたほか、アプリの「統計情報」セクションと「メディア」セクションが調整されました。Reader の長い投稿タイトルの問題も修正されました。
+また、ダウンロード時間を短縮し、お使いのデータプランへの影響を抑えられるよう、テーマ画像を最適化しました。さらに、グローバルスタイルカラーをフルサイト編集テーマに追加し、サポート対象外のブロックエディターで「その他」ツールバーが表示されないバグを修正しました。
 </ja-JP>
 <ko-KR>
-17.9:
-지원되는 서비스(예: YouTube 또는 Instagram)에서 새로운 임베드 블록으로 콘텐츠를 임베드하세요.
+18.0:
+사이트를 더 쉽게 생성하고 관리할 수 있도록 로그인 절차를 개선했습니다.
 
-아직 사이트가 없나요? 하나를 생성하라는 알림이 표시됩니다.
-
-기타 업데이트에는 블로깅 알림 개선, 앱의 통계와 미디어 섹션 조정, 뉴스피드의 긴 글 제목 수정이 포함되어 있습니다.
+또한 다운로드 속도가 단축되고 데이터 요금제에 미치는 영향이 적어지도록 테마 이미지를 최적화했고, 전체 스타일 색상을 전체 사이트 편집 테마에 추가했으며, 지원되지 않는 블록 편집기에 '더 보기' 도구 모음이 표시되지 않는 버그를 수정했습니다.
 </ko-KR>
 <nl-NL>
-17.9:
-Met het nieuwe Insluit blok kun je inhoud insluiten van ondersteunde diensten, zoals YouTube of Instagram.
+18.0:
+We hebben de login flow verbeterd om het gemakkelijker voor je te maken je sites te maken en te beheren.
 
-Heb je nog geen site? Je ziet kennisgevingen die je vragen er een te maken.
-
-Andere updates zijn verbeteringen aan de Blog herinnering functie, aanpassingen in de statistieken en media secties van je app, en een oplossing voor lange berichttitels in de reader.
+We hebben ook thema-afbeeldingen geoptimaliseerd voor snellere downloads en een lichter effect op je gegevensabonnement, globale stijlkleuren toegevoegd aan full site editing thema's, en een bug verholpen die verhinderde dat de 'Meer' toolbar verscheen in de niet ondersteunde blok-editor.
 </nl-NL>
 <ru-RU>
-17.9:
-С новым блоком встраивания можно встраивать содержимое от поддерживаемых сайтов, таких как YouTube или Instagram.
+18.0:
+Мы улучшили процесс входа в систему, чтобы вам было проще создавать свои сайты и управлять ими.
 
-У вас еще нет сайта? Вы увидите уведомления, предлагающие создать его.
-
-Другие обновления включают улучшения функции напоминаний о ведении блога, настройки в разделах «Статистика» и «Медиа» вашего приложения, а также исправление длинных заголовков сообщений в Чтиве.
+Мы также оптимизировали изображения тем для более быстрой загрузки и меньшего использования вашего мобильного трафика, добавили глобальные цвета стиля к темам полного редактирования сайта и устранили ошибку, из-за которой панель инструментов «дополнительно» не отображалась в неподдерживаемом блоке.
 </ru-RU>
 <sv-SE>
-17.9:
-Med det nya inbäddningsblocket kan du bädda in innehåll från tjänster som stöds, såsom YouTube och Instagram.
+18.0:
+Vi har förbättrat inloggningsflödet för att göra det enklare att skapa och hantera dina webbplatser.
 
-Har du ingen egen webbplats än? I så fall visas uppmaningar om att skapa en.
-
-Bland andra nyheter finns förbättringar i funktionen för bloggningspåminnelser, finjusteringar av appens funktioner för statistik och media och en rättelse som berör långa inläggsrubriker i läsaren.
+Vi har också optimerat temans bilder så att du får snabbare nedladdningar och lägre förbrukning av mobildata, lagt till globala stilfärger i teman för redigering av hela webbplatsen och rättat ett fel som gjorde att verktygsfältet ”Mer” inte visades i redigeraren för ej stödda block.
 </sv-SE>
+<tr-TR>
+18.0:
+Sitelerinizi oluşturmanızı ve yönetmenizi kolaylaştırmak için giriş akışını iyileştirdik.
+
+Ayrıca, indirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik, Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı ortadan kaldırdık.
+</tr-TR>
 <zh-CN>
-17.9：
-使用全新的嵌入区块从受支持的服务中嵌入内容，如YouTube或Instagram。
+18.0：
+我们改进了登录流程，让您更容易创建和管理您的站点。
 
-如果您还没有站点，则会看到一个创建站点的提示通知。
-
-其他更新包括改进博客提醒功能、调整应用中的统计和媒体部分以及修复阅读器中的长文章标题。
+我们还优化了主题图片，以加快下载速度并降低对您的数据套餐的影响；向“全站编辑”主题添加了“全局样式颜色”；修复了阻止“不支持的区块编辑器”中显示“更多”工具栏的错误。
 </zh-CN>
 <zh-TW>
-17.9：
-全新的嵌入內容區塊可從支援服務嵌入內容，例如 YouTube 或 Instagram。
+18.0：
+我們已改善登入流程，讓你更輕鬆建立及管理網站。
 
-還沒有網站嗎？ 你會看到提示你建立網站的通知。
-
-其他更新內容包括改善「網誌提醒」功能、調整應用程式的「統計資料和媒體」區段，以及修正閱讀器中較長的文章標題。
+我們也最佳化了佈景主題圖片，加快下載速度並減輕對行動數據方案的影響、為「完整網站編輯」佈景主題新增「全域樣式顏色」，並修復導致「更多」工具列在不受支援區塊編輯器中無法顯示的錯誤。
 </zh-TW>

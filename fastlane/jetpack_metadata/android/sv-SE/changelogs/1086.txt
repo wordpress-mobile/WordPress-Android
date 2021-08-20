@@ -1,6 +1,0 @@
-17.9:
-Med det nya inbäddningsblocket kan du bädda in innehåll från tjänster som YouTube eller Instagram.
-
-Har du inte någon webbplats än? Du kommer att få notiser som uppmanar dig att skapa en.
-
-Andra uppdateringar inkluderar förbättringar av funktionen Bloggningspåminnelser och av sektionerna Statistik och Media i din app.
