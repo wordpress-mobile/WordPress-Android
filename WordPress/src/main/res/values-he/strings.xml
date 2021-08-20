@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-19 20:53:27+0000
+Translation-Revision-Date: 2021-08-20 12:07:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -178,6 +178,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_edit_label_text">יש להקיש פעמיים כדי לערוך את הטקסט של התווית</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">יש להקיש פעמיים כדי לערוך את הטקסט של הכפתור</string>
     <string name="gutenberg_native_double_tap_to_change_unit">יש להקיש פעמיים כדי לשנות את היחידה</string>
+    <string name="gutenberg_native_outside">חיצוני</string>
     <string name="gutenberg_native_current_placeholder_text_is">הטקסט הנוכחי של מציין מיקום הוא</string>
     <string name="gutenberg_native_clear_search">לנקות את החיפוש</string>
     <string name="gutenberg_native_cancel_search">לבטל חיפוש</string>
@@ -1538,6 +1539,7 @@ Language: he_IL
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
     <string name="quick_start_dialog_follow_sites_message">כדאי לחפש אתרים שנותנים לך השראה ולעקוב אחריהם כדי לקבל עדכונים כשהם יפרסמו תוכן חדש.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">להקיש על ⁦%1$s⁩ חיפוש ⁦%2$s⁩ כדי לחפש אתרים בנושאים דומים</string>
+    <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
     <string name="quick_start_button_positive">מעבר אל</string>
     <string name="quick_start_button_negative_short">ביטול</string>
     <string name="quick_start_button_negative">לא עכשיו</string>

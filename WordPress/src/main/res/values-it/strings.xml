@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-19 20:47:42+0000
+Translation-Revision-Date: 2021-08-20 12:56:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
@@ -135,6 +135,7 @@ Language: it
     <string name="login_not_a_jetpack_site">Per usare quest\'app per %1$s, il plugin Jetpack dovrà essere installato e connesso al tuo account WordPress.com.</string>
     <string name="gutenberg_native_move_image_forward">Sposta l\'immagine avanti</string>
     <string name="gutenberg_native_move_image_backward">Sposta l\'immagine indietro</string>
+    <string name="gutenberg_native_width_settings">Impostazioni larghezza</string>
     <string name="gutenberg_native_image_settings">Impostazioni immagine</string>
     <string name="user_profile_untitled_site">(Senza titolo)</string>
     <string name="user_profile_site_section_header">Sito</string>
@@ -170,6 +171,7 @@ Language: it
     <string name="gutenberg_native_search_button_current_button_text_is">Pulsante di ricerca. Il testo del pulsante attuale è</string>
     <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Cerca etichetta del blocco. Il testo attuale è</string>
+    <string name="gutenberg_native_outside">Fuori</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nessun set di segnaposto personalizzato</string>
     <string name="gutenberg_native_inside">Interno</string>
     <string name="gutenberg_native_hide_search_heading">Nascondi titolo della ricerca</string>

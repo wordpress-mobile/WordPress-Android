@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-11 21:31:39+0000
+Translation-Revision-Date: 2021-08-20 12:08:36+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
@@ -10,6 +10,7 @@ Language: pt_BR
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Boas-vindas ao mundo dos blocos</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para remover um bloco, selecione o bloco e clique nos três pontos no canto inferior direito do bloco para ver as configurações. A partir daí, escolha a opção de remover o bloco.</string>
     <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Alguns blocos tem configurações adicionais. Toque no ícone de configurações na parte inferior direita do bloco para ver mais opções.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blocos, novos disponíveis</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Experimente adicionando alguns blocos a seu post ou página!</string>
     <string name="gutenberg_native_embed_media">Mídia incorporada</string>
     <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Cada bloco possui suas próprias configurações. Para encontrá-las, clique em um bloco. Suas configurações aparecerão na barra de ferramentas na parte inferior da tela.</string>
