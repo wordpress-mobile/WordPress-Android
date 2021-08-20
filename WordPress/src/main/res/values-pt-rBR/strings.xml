@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-06 15:14:21+0000
+Translation-Revision-Date: 2021-08-11 21:31:39+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Você pode reorganizar os blocos tocando em um bloco e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo acima ou abaixo de outros blocos.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Boas-vindas ao mundo dos blocos</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para remover um bloco, selecione o bloco e clique nos três pontos no canto inferior direito do bloco para ver as configurações. A partir daí, escolha a opção de remover o bloco.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Alguns blocos tem configurações adicionais. Toque no ícone de configurações na parte inferior direita do bloco para ver mais opções.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Experimente adicionando alguns blocos a seu post ou página!</string>
+    <string name="gutenberg_native_embed_media">Mídia incorporada</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Cada bloco possui suas próprias configurações. Para encontrá-las, clique em um bloco. Suas configurações aparecerão na barra de ferramentas na parte inferior da tela.</string>
+    <string name="gutenberg_native_build_layouts">Criar layouts</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Adicione um novo bloco a qualquer momento tocando no ícone + na barra de ferramentas no canto inferior esquerdo.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s concluídos</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Aprenda o básico com um rápido passo a passo.</string>
+    <string name="comment_batch_moderation_error">Falha ao moderar um ou mais comentários</string>
     <string name="create_site_notification_create_site_action">Criar site</string>
     <string name="create_site_notification_text">Tenha seu site funcionando em apenas alguns passos rápidos</string>
     <string name="create_site_notification_title">Crie o seu site WordPress</string>
@@ -25,7 +37,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_preview_page">Toque duas vezes para visualizar a página.</string>
     <string name="quick_start_list_upload_icon_subtitle">Exibido na aba do navegador de seu visitante e outros lugares online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Mostrar o caminho</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Iremos lhe direcionar nos itens básicos para gerenciar o seu site com o aplicativo.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Gostaria de uma ajuda para gerenciar este site com o aplicativo?</string>
     <string name="login_epilogue_create_new_site_button">Criar um novo site</string>
     <string name="login_epilogue_mysites_subheading">Você pode mudar de site a qualquer momento.</string>

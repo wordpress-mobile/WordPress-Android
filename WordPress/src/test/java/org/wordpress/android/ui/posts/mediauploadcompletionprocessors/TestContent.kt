@@ -284,7 +284,7 @@ object TestContent {
 </figure>
 <!-- /wp:image -->
 """
-    const val oldRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none","imageCount":3} -->
+    const val oldRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none"} -->
 <figure class="wp-block-gallery blocks-gallery-grid has-nested-images columns-3 is-cropped">
 $oldRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->
@@ -312,7 +312,7 @@ $oldRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:image -->
 """
 
-    const val newRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none","imageCount":3} -->
+    const val newRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none"} -->
 <figure class="wp-block-gallery blocks-gallery-grid has-nested-images columns-3 is-cropped">
 $newRefactoredGalleryBlockInnerBlocks</figure>
 <!-- /wp:gallery -->

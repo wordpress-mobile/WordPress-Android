@@ -57,6 +57,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var reminderScheduler: ReminderScheduler
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
+    private val hour = 10
+    private val minute = 0
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<UiState>
 
@@ -131,7 +133,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `date selection selected`() = test {
         val model = initEmptyStore()
         val daySelectionScreen = listOf<BloggingRemindersItem>()
-        whenever(daySelectionBuilder.buildSelection(eq(model), any())).thenReturn(daySelectionScreen)
+        whenever(daySelectionBuilder.buildSelection(eq(model), any(), any())).thenReturn(daySelectionScreen)
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
         viewModel.onSettingsItemClicked(siteId)
@@ -150,12 +152,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                         model
                 )
         )
-        val dayLabel = UiStringText("Blogging reminders 2 times a week")
+        val dayLabel = UiStringText("Blogging reminders 2 times a week at 10:00 am")
         whenever(
-                dayLabelUtils.buildNTimesLabel(
+                dayLabelUtils.buildSiteSettingsLabel(
                         BloggingRemindersUiModel(
                                 siteId,
-                                setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY)
+                                setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
+                                hour,
+                                minute
                         )
                 )
         ).thenReturn(dayLabel)
@@ -331,6 +335,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         verify(reminderScheduler).schedule(
                 siteId,
+                hour,
+                minute,
                 WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
         )
     }
@@ -405,7 +411,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun initEmptyStore(): BloggingRemindersUiModel {
         val emptyModel = BloggingRemindersModel(siteId)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
-        return BloggingRemindersUiModel(siteId)
+        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute)
     }
 
     private fun assertPrologue() {
@@ -454,7 +460,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                     }
                     )
             )
-        }.whenever(daySelectionBuilder).buildSelection(any(), any())
+        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any())
 
         doAnswer {
             val model = it.getArgument<BloggingRemindersUiModel>(0)

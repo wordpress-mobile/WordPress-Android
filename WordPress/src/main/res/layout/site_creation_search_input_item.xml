@@ -24,7 +24,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:drawablePadding="@dimen/margin_extra_large"
             android:background="@android:color/transparent"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionSearch|flagNoExtractUi"
             android:importantForAutofill="noExcludeDescendants"
             android:inputType="text"
             android:singleLine="true"

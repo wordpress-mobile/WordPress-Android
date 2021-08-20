@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 12:30:14+0000
+Translation-Revision-Date: 2021-08-18 09:18:26+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -361,7 +361,7 @@ Language: pl
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
     <string name="media_insert_failed_with_reason">Nie udało się osadzić plików mediów: %s</string>
     <string name="photo_picker_wordpress_media_library">Wybierz z biblioteki mediów WordPressa</string>
-    <string name="reader_label_toolbar_back">Cofnij</string>
+    <string name="reader_label_toolbar_back">Powrót</string>
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
     <string name="reader_discover_empty_subtitle">Obserwuj tematy aby odkryć nowe blogi</string>
@@ -377,7 +377,6 @@ Language: pl
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
-    <string name="typeface_label_shrikhand">Pogrubiona</string>
     <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
     <string name="typeface_label_oswald">Silna</string>
@@ -386,6 +385,7 @@ Language: pl
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
     <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
+    <string name="typeface_label_shrikhand">Pogrubienie</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -536,7 +536,6 @@ Language: pl
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
     <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
-    <string name="prepublishing_nudges_back_button">Cofnij</string>
     <string name="prepublishing_nudges_home_save_button">Zapisz teraz</string>
     <string name="prepublishing_nudges_home_submit_button">Prześlij teraz</string>
     <string name="prepublishing_nudges_home_schedule_button">Zaplanuj teraz</string>
@@ -547,6 +546,7 @@ Language: pl
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Przesuń do Szkiców</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publikacji</string>
+    <string name="prepublishing_nudges_back_button">Powrót</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
     <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
     <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
@@ -930,10 +930,10 @@ Language: pl
     <string name="post_notification_when_published">Kiedy opublikowano</string>
     <string name="post_notification_ten_minutes_before">10 minut temu</string>
     <string name="post_notification_one_hour_before">1 godzina temu</string>
-    <string name="post_notification_off">Wyłączono</string>
     <string name="post_settings_add_to_calendar">Dodaj do kalendarza</string>
     <string name="post_settings_notification">Powiadomienie</string>
     <string name="post_settings_time_and_date">Data i czas</string>
+    <string name="post_notification_off">Wyłączone</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -1188,7 +1188,6 @@ Language: pl
     <string name="stats_videos_title_label">Tytuł</string>
     <string name="stats_videos">Filmy</string>
     <string name="stats_country_views_label">Wyświetleń</string>
-    <string name="stats_country_label">Państwo</string>
     <string name="stats_clicks_label">Kliknięcia</string>
     <string name="stats_clicks_link_label">Odnośnik</string>
     <string name="stats_clicks">Kliknięcia</string>
@@ -1208,6 +1207,7 @@ Language: pl
     <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
     <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
     <string name="stats_countries">Kraje</string>
+    <string name="stats_country_label">Kraj</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
@@ -1887,9 +1887,9 @@ Language: pl
     <string name="media_error_http_too_large_photo_upload">Obrazek za duży aby można go było przesłać. Spróbuj zmienić konfigurację optymalizacji obrazków w ustawieniach aplikacji.</string>
     <string name="media_all">Wszystkie</string>
     <string name="media_images">Obrazki</string>
-    <string name="media_audio">Pliki dźwiękowe</string>
     <string name="media_videos">Filmy</string>
     <string name="media_documents">Dokumenty</string>
+    <string name="media_audio">Plik dźwiękowy</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="reader_view_comments">Zobacz komentarze</string>
     <string name="site_settings_video_quality_hint">Jakość filmów. Wyższa wartość oznacza lepszą jakość filmów.</string>
@@ -1999,7 +1999,7 @@ Language: pl
     <string name="image_quality">Jakość obrazka</string>
     <string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
     <string name="error_unknown_post_type">Nieznany format wpisu</string>
-    <string name="submit_for_review">Prześlij</string>
+    <string name="submit_for_review">Wyślij</string>
     <string name="duplicate_site_detected">Wykryto duplikat witryny</string>
     <string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
     <string name="already_logged_in_wpcom">Jesteś już zalogowany na swoje konto WordPress.com, nie można dodać konta WordPress.com połączonego z innym kontem.</string>
@@ -2157,7 +2157,7 @@ Language: pl
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Film</string>
-    <string name="alignment_center">Wyśrodkowany</string>
+    <string name="alignment_center">Pośrodku</string>
     <string name="post_format_chat">Czat</string>
     <string name="post_format_gallery">Galeria</string>
     <string name="post_format_image">Obrazek</string>

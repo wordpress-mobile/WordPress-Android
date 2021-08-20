@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root"
+    style="@style/QuickStartTypeRow"
+    android:paddingEnd="@dimen/content_margin_site_row_start"
+    android:paddingStart="@dimen/content_margin_site_row_start">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/item_title"
+        style="@style/QuickStartTypeTitle"
+        android:text="@string/quick_start_sites_type_customize"
+        app:layout_constraintEnd_toStartOf="@+id/item_progress"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/item_subtitle"
+        style="@style/QuickStartTypeSubtitle"
+        app:layout_constraintEnd_toStartOf="@+id/item_progress"
+        app:layout_constraintTop_toBottomOf="@+id/item_title"
+        tools:text="1 of 6 complete" />
+
+    <!-- The ProgressBar component does not support determinate mode when using a
+        circular progress bar style. To work around this, we set a horizontal style
+        coupled with a custom circular drawable that has an equivalent structure,
+        which allow us to tint both its background and foreground layers programmatically. -->
+    <ProgressBar
+        android:id="@+id/item_progress"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="@dimen/quick_start_card_progress_indicator_size"
+        android:layout_height="@dimen/quick_start_card_progress_indicator_size"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/quick_start_card_progress_drawable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:progress="75"
+        tools:progressBackgroundTint="@color/primary_0"
+        tools:progressTint="@color/colorPrimary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

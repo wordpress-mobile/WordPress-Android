@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 05:24:01+0000
+Translation-Revision-Date: 2021-08-10 05:09:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bienvenido al mundo de los bloques</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para eliminar un bloque, selecciona el bloque y haz clic en los tres puntos de la parte inferior derecha del bloque para ver los ajustes. A partir de ahí, elige la opción para eliminar el bloque.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Algunos bloques tienen ajustes adicionales. Toca el icono de los ajustes en la parte inferior derecha del bloque para ver más opciones.</string>
+    <string name="gutenberg_native_s_block_newly_available">Bloque %s, disponible nuevamente</string>
+    <string name="gutenberg_native_rich_text_editing">Edición de texto enriquecido</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Una vez que te hayas familiarizado con los nombres de los diferentes bloques, puedes añadir un bloque escribiendo una barra inclinada seguida del nombre del bloque, por ejemplo, «/imagen» o «/encabezado».</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Haz que tu contenido destaque añadiendo imágenes, gifs, vídeos y medios incrustados a tus páginas.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">¡Pruébalo añadiendo unos cuantos bloques a tu entrada o página!</string>
+    <string name="gutenberg_native_embed_media">Medio incrustado</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Cada bloque tiene sus propios ajustes. Para encontrarlos, haz clic en un bloque. Sus ajustes aparecerán en la barra de herramientas de la parte inferior de la pantalla.</string>
+    <string name="gutenberg_native_build_layouts">Crear diseños</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Los bloques son piezas de contenido que puedes insertar, reorganizar y dar estilo sin necesidad de saber programar. Los bloques son una forma fácil y moderna para que crees bonitos diseños.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Los bloques te permiten centrarte en la escritura de tu contenido, sabiendo que todas las herramientas de formato que necesitas están ahí para ayudarte a transmitir tu mensaje.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organiza tu contenido en columnas, añade botones de llamada a la acción y superpón imágenes con texto.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas de la parte inferior izquierda. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Aprende lo básico con un rápido recorrido.</string>
+    <string name="comment_batch_moderation_error">Ha fallado la moderación de uno o más comentarios</string>
     <string name="create_site_notification_create_site_action">Crear un sitio</string>
     <string name="create_site_notification_text">Ten tu sitio activo y funcionando en solo unos rápidos pasos</string>
     <string name="create_site_notification_title">Crea tu web WordPress</string>
@@ -25,7 +44,6 @@ Language: es_VE
     <string name="gutenberg_native_double_tap_to_preview_page">Toca dos veces para previsualizar la página.</string>
     <string name="quick_start_list_upload_icon_subtitle">Mostrado en la pestaña del navegador de tu visitante y en otros sitios online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Muéstrame el camino</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Te guiaremos a través de las bases de la gestión de tu sitio con la aplicación.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">¿Quieres una pequeña ayuda para gestionar este sitio con la aplicación?</string>
     <string name="login_epilogue_create_new_site_button">Crear un nuevo sitio</string>
     <string name="login_epilogue_mysites_subheading">Puedes cambiar los sitios en cualquier momento.</string>

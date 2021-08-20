@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-30 10:41:51+0000
+Translation-Revision-Date: 2021-08-10 07:25:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="quick_start_sites_type_tasks_completed">%1$s/%2$s tamamlandı</string>
     <string name="create_site_notification_create_site_action">Site oluştur</string>
     <string name="create_site_notification_text">Bir kaç hızlı adım ile sitenizi yayınlayın</string>
     <string name="create_site_notification_title">Wordpress web sitenizi oluşturun</string>
@@ -25,7 +26,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_preview_page">Sayfayı önizlemek için iki kez dokunun.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrimiçi yerlerde gösterilir.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Bana etrafı göster</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Uygulamayla sitenizi yönetmenin temelleri konusunda size yol göstereceğiz.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Bu siteyi uygulamayla yönetmek için biraz yardım ister misiniz?</string>
     <string name="login_epilogue_create_new_site_button">Yeni site oluştur</string>
     <string name="login_epilogue_mysites_subheading">Siteleri istediğiniz zaman değiştirebilirsiniz.</string>

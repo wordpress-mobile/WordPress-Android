@@ -12,7 +12,7 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:id="@+id/button"
-        android:text="@string/manual_config_restart_app"
+        android:text="@string/debug_settings_restart_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
