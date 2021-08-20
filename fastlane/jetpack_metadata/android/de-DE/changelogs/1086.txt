@@ -1,6 +1,0 @@
-17.9:
-Mit dem neuen Embed-Block kannst du Inhalte aus unterstützten Diensten wie YouTube oder Instagram einbetten. 
-
-Du hast noch keine Website? Du wirst über Benachrichtigungen zur Erstellung einer Website aufgefordert.
-
-Außerdem haben wir das Feature für Blog-Erinnerungen verbessert und in den Abschnitten „Statistiken“ und „Medien“ deiner App Änderungen vorgenommen.
