@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-11 10:54:08+0000
+Translation-Revision-Date: 2021-08-19 20:48:51+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 다른 블록 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수 있습니다.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">블록 세상 시작</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">블록을 제거하려면 블록을 선택하고 블록의 오른쪽 하단에 있는 점 3개를 클릭하여 설정을 봅니다. 블록을 제거하는 옵션을 설정에서 선택합니다.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">일부 블록에는 추가 설정이 있습니다. 블록의 오른쪽 하단에 있는 설정 아이콘을 눌러 추가 옵션을 봅니다.</string>
+    <string name="gutenberg_native_s_block_newly_available">새로 사용 가능한 %s 블록</string>
+    <string name="gutenberg_native_rich_text_editing">서식 있는 텍스트 편집</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">다양한 블록의 이름에 익숙해지면 슬래시 다음에 블록 이름을 입력하여 블록을 추가할 수 있습니다(예: /image 또는 /heading).</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">이미지, gif 파일, 비디오 또는 임베드된 미디어를 페이지에 추가하여 콘텐츠를 돋보이게 만드세요.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">글 또는 페이지에 블록을 몇 개만 추가하여 시도해 보세요!</string>
+    <string name="gutenberg_native_embed_media">미디어 임베드</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">각 블록에는 자체 설정이 있습니다. 해당 설정을 찾으려면 블록을 클릭합니다. 화면 하단의 도구 모음에 해당 설정이 표시됩니다.</string>
+    <string name="gutenberg_native_build_layouts">레이아웃 구축</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">블록은 코드를 작성하는 방법을 몰라도 삽입, 재정렬 및 스타일 지정이 가능한 콘텐츠 조각입니다. 블록은 아름다운 레이아웃을 생성할 수 있는 쉽고 현대적인 방법입니다.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">블록을 사용하면 메시지를 전달하는 데 도움이 되도록 필요한 모든 형식 지정 도구가 준비되어 있으므로 콘텐츠 작성에 집중할 수 있습니다.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">콘텐츠를 열로 정렬하고, 행동 유도 버튼을 추가하고, 이미지에 텍스트를 입히세요.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">왼쪽 하단의 도구 모음에서 + 아이콘을 눌러 언제든지 새 블록을 추가하세요. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s/%2$s개 완료</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">간단한 연습을 통해 기본 사항을 알아보세요.</string>
+    <string name="comment_batch_moderation_error">하나 이상의 댓글 검토 실패</string>
     <string name="create_site_notification_create_site_action">사이트 생성하기</string>
     <string name="create_site_notification_text">간단한 몇 가지 단계로 사이트를 설정하고 운영하세요.</string>
     <string name="create_site_notification_title">WordPress 웹사이트 생성하기</string>

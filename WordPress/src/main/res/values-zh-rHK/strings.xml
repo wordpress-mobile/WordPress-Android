@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 09:54:08+0000
+Translation-Revision-Date: 2021-08-19 20:49:43+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">若要重新排列區塊，請依序點選區塊和區塊左下角顯示的上下鍵，將其移動到其他區塊的上方或下方。</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">歡迎進入內容區塊領域</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">若要移除區塊，請選取區塊，並按一下區塊右下角的三個點以檢視設定。 在設定中選擇移除區塊的選項。</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">有些區塊具有其他設定。 請點選區塊右下角的設定圖示以檢視更多選項。</string>
+    <string name="gutenberg_native_s_block_newly_available">%s區塊，全新推出</string>
+    <string name="gutenberg_native_rich_text_editing">RTF 編輯</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">熟悉不同區塊的名稱後，輸入正斜線，後面加上區塊名稱 (例如 /image 或 /heading)，就能新增區塊。</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">為頁面新增圖片、GIF、影片和嵌入式媒體，讓你的內容脫穎而出。</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">馬上嘗試為你的文章或頁面新增幾個區塊！</string>
+    <string name="gutenberg_native_embed_media">嵌入媒體</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">每個區塊都有其各自的設定。 若要找到這些設定，請按一下區塊。 區塊設定會顯示在畫面底部的工具列。</string>
+    <string name="gutenberg_native_build_layouts">建構版面形式</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">區塊是讓你可以不必瞭解如何編寫程式碼，就能插入、重新排列及調整樣式的塊狀內容。 區塊可讓你用簡單且現代化的方式建立美麗的版面配置。</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">隨時都能點選左下角工具列的「+」號圖示新增區塊。 </string>
+    <string name="quick_start_sites_type_tasks_completed">已完成 %1$s 項，共 %2$s 項</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
+    <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
     <string name="create_site_notification_create_site_action">建立網站</string>
     <string name="create_site_notification_text">只要幾個快速步驟，即可讓你的網站上線運作</string>
     <string name="create_site_notification_title">建立你的 WordPress 網站</string>

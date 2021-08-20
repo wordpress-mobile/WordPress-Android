@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 10:54:08+0000
+Translation-Revision-Date: 2021-08-19 20:50:39+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Vous pouvez réorganiser les blocs en appuyant sur un bloc, puis sur les flèches vers le haut et vers le bas qui apparaissent en bas à gauche du bloc pour le déplacer au-dessus ou en dessous d’autres blocs.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bienvenue dans le monde des blocs</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Pour supprimer un bloc, sélectionnez-le et cliquez sur les trois points en bas à droite du bloc pour afficher les réglages. À partir de là, choisissez l’option pour supprimer le bloc.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Certains blocs ont des réglages supplémentaires. Appuyez sur l’icône des réglages en bas à droite du bloc pour afficher plus d’options.</string>
+    <string name="gutenberg_native_s_block_newly_available">Bloc %s, nouvellement disponible</string>
+    <string name="gutenberg_native_rich_text_editing">Modification de texte enrichi</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Une fois que vous vous êtes familiarisé avec les noms des différents blocs, vous pouvez ajouter un bloc en entrant une barre oblique suivie d’un nom de bloc, comme /image ou /titre, par exemple.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Mettez en avant votre contenu en ajoutant des images, des gifs, des vidéos et des médias intégrés à vos pages.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Essayez-le en ajoutant quelques blocs à vos article ou à votre page !</string>
+    <string name="gutenberg_native_embed_media">Média intégré</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Chaque bloc possède ses propres réglages. Pour les trouver, cliquez sur un bloc. Ses réglages apparaissent sur la barre d’outils en bas de l’écran.</string>
+    <string name="gutenberg_native_build_layouts">Créer des mises en page</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Les blocs sont des éléments de contenu que vous pouvez insérer, réorganiser et styliser sans avoir besoin de savoir coder. Les blocs sont un moyen simple et moderne de créer de belles mises en page.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Les blocs vous permettent de vous concentrer sur la rédaction de votre contenu, en sachant que tous les outils de mise en forme dont vous avez besoin sont là pour vous aider à faire passer votre message.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organisez votre contenu en colonnes, ajoutez des boutons d’appel à l’action et superposez des images avec du texte.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Ajoutez un nouveau bloc à tout moment en appuyant sur l’icône + dans la barre d’outils en bas à gauche. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s sur %2$s terminés</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Apprenez les bases avec une procédure pas à pas rapide.</string>
+    <string name="comment_batch_moderation_error">Échec de la modération d’un ou de plusieurs commentaires</string>
     <string name="create_site_notification_create_site_action">Créer un site</string>
     <string name="create_site_notification_text">Lancez votre site Web en quelques étapes rapides</string>
     <string name="create_site_notification_title">Créez votre site Web WordPress</string>

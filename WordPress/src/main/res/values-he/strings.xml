@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 09:54:09+0000
+Translation-Revision-Date: 2021-08-19 20:53:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">כדי לשנות את סדר הבלוקים, יש להקיש על הבלוק ולאחר מכן להקיש על החצים למעלה ולמטה שמופיעים בפינה השמאלית התחתונה כדי להזיז את הבלוק מעל הבלוקים האחרים או מתחתיהם.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">ברוך בואך אל עולם הבלוקים</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">כדי להסיר בלוק, יש לבחור את הבלוק, ללחוץ על שלוש הנקודות בפינה הימנית התחתונה של הבלוק ולהציג את ההגדרות. במקטע הזה יש לבחור באפשרות להסיר את הבלוק.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">בבלוקים מסוימים יש הגדרות נוספות. יש להקיש על סמל ההגדרות בפינה הימנית התחתונה של הבלוק כדי להציג את האפשרויות הנוספות.</string>
+    <string name="gutenberg_native_s_block_newly_available">בלוק %s, נוסף לאחרונה</string>
+    <string name="gutenberg_native_rich_text_editing">עריכה של טקסט עשיר</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">אחרי שהכרת את השמות של הבלוקים השונים, אפשר להוסיף בלוק על ידי הקלדה של קו נטוי ולאחריו שם הבלוק – לדוגמה, ‎/image או ‎/heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">כדאי להבליט את התוכן על ידי הוספה של תמונות, הנפשות GIF, סרטונים ומדיה מוטמעת בעמודים שלך.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">אפשר לנסות את האפשרויות על ידי הוספה של כמה בלוקים לפוסט או לעמוד שלך!</string>
+    <string name="gutenberg_native_embed_media">להטמיע מדיה</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">לכל בלוק יש הגדרות משלו. כדי למצוא אותן, יש ללחוץ על הבלוק. ההגדרות שלו יופיעו בסרגל הכלים שנמצא בתחתית המסך.</string>
+    <string name="gutenberg_native_build_layouts">לבנות פריסות</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">הבלוקים הם חלקים של תוכן שאפשר להוסיף, לארגן ולעצב ללא צורך בניסיון עם כתיבת קודים. בלוקים הם אפשרות פשוטה ומודרנית ליצור פריסות יפות.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">הבלוקים מאפשרים לך להתמקד בכתיבת התוכן ולדעת שכל כלי העיצוב שנדרשים לך נמצאים בהישג יד כדי לעזור לך להעביר את המסר.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">אפשר לארגן את התוכן בטורים, להוסיף כפתורים של קריאה לפעולה ולהוסיף שכבה של טקסט על תמונות.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">ניתן להוסיף בלוק בכל עת על ידי הקשה על הסמל \'+\' בסרגל הכלים שנמצא בפינה השמאלית התחתונה. </string>
+    <string name="quick_start_sites_type_tasks_completed">הושלמו ⁦%1$s⁩ מתוך ⁦%2$s⁩</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">כדאי ללמוד את השלבים הבסיסיים באמצעות סקירה זריזה.</string>
+    <string name="comment_batch_moderation_error">לא ניתן היה לאשר תגובה אחת או יותר</string>
     <string name="create_site_notification_create_site_action">יצירת אתר</string>
     <string name="create_site_notification_text">הפעלת האתר שלך במספר מועט של שלבים מהירים</string>
     <string name="create_site_notification_title">יצירת אתר אינטרנט WordPress שלך</string>
