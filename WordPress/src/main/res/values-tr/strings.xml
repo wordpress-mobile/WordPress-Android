@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-10 07:25:07+0000
+Translation-Revision-Date: 2021-08-19 20:52:02+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Bir bloka dokunup ardından bloku diğer blokların üstüne veya altına taşımak için blokun sol alt tarafında görünen yukarı ve aşağı oklara dokunarak blokların sırasını yeniden düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bloklar dünyasına hoş geldiniz</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Bir bloku kaldırmak için bloku seçin ve blokun sağ alt kısmındaki üç noktaya tıklayıp ayarları görüntüleyin. Oradan bloku kaldırma seçeneğini seçin.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Bazı blokların ek ayarları vardır. Daha fazla seçenek görüntülemek için blokun sağ alt kısmındaki ayarlar simgesine dokunun.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blok, hazır</string>
+    <string name="gutenberg_native_rich_text_editing">Zengin metin düzenleme</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Farklı blokların adlarını öğrendikten sonra, eğik çizgi ve ardından blok adını (örneğin, /resim veya /başlık) yazarak bir blok ekleyebilirsiniz.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Sayfalarınıza görsel, gif, video ve gömülü medya ekleyerek içeriğinizin öne çıkmasını sağlayın.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Gönderinize veya sayfanıza birkaç blok ekleyerek deneyin!</string>
+    <string name="gutenberg_native_embed_media">Medya gömün</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Her blokun kendi ayarları vardır. Bunları bulmak için bir bloka tıklayın. Ayarları, ekranın altındaki araç çubuğunda görünür.</string>
+    <string name="gutenberg_native_build_layouts">Düzenler oluşturun</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Bloklar, kodlama bilmenize gerek kalmadan ekleyebileceğiniz, yeniden düzenleyebileceğiniz ve stilini değiştirebileceğiniz içerik parçalarıdır. Bloklar, güzel düzenler oluşturmanın kolay ve modern bir yoludur.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Bloklar, mesajınızı iletmenize yardımcı olmak için ihtiyacınız olan tüm biçimlendirme araçlarını kullanabileceğinizi bilerek içeriğinizi yazmaya odaklanmanızı sağlar.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">İçeriğinizi sütunlar halinde düzenleyin, Harekete Geçirici Mesaj düğmeleri ekleyin ve görselleri metinle kaplayın.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Sol alttaki araç çubuğundaki + simgesine dokunarak istediğiniz zaman yeni bir blok ekleyin. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s/%2$s tamamlandı</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Hızlı bir şekilde temel bilgileri alın.</string>
+    <string name="comment_batch_moderation_error">Bir veya daha fazla yorum denetlenemedi</string>
     <string name="create_site_notification_create_site_action">Site oluştur</string>
     <string name="create_site_notification_text">Bir kaç hızlı adım ile sitenizi yayınlayın</string>
     <string name="create_site_notification_title">Wordpress web sitenizi oluşturun</string>
