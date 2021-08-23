@@ -2,12 +2,14 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.snackbar.Snackbar.Callback.DISMISS_EVENT_SWIPE
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
 import org.wordpress.android.fluxc.Dispatcher
@@ -266,7 +268,10 @@ class QuickStartRepository
                     SnackbarMessageHolder(
                             message = UiStringRes(QuickStartNoticeDetails.getNoticeForTask(taskToPrompt).titleResId),
                             buttonTitle = UiStringRes(string.quick_start_button_positive),
-                            buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) }
+                            buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
+                            onDismissAction = { event ->
+                                if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
+                            }
                     )
             )
         }
@@ -275,6 +280,11 @@ class QuickStartRepository
     private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
         analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
         setActiveTask(task)
+    }
+
+    private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
+        analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
+        appPrefsWrapper.setLastSkippedQuickStartTask(task)
     }
 
     data class QuickStartCategory(
