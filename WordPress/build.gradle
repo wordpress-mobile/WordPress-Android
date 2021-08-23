@@ -108,6 +108,7 @@ android {
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
+        buildConfigField "boolean", "DOMAIN_PURCHASE", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
