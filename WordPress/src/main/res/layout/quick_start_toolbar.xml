@@ -14,7 +14,6 @@
         android:id="@+id/quick_start_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_large"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAlignment="viewStart"
