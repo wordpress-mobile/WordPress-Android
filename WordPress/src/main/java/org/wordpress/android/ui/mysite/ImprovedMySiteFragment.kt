@@ -501,12 +501,12 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let { parent ->
             snackbarSequencer.enqueue(
                     SnackbarItem(
-                            Info(
+                            info = Info(
                                     view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
                                     duration = Snackbar.LENGTH_LONG
                             ),
-                            holder.buttonTitle?.let {
+                            action = holder.buttonTitle?.let {
                                 Action(
                                         textRes = holder.buttonTitle,
                                         clickListener = { holder.buttonAction() }
