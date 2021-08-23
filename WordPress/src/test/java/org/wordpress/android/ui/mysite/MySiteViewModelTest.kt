@@ -1317,6 +1317,48 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper).setQuickStartDisabled(true)
     }
 
+    @Test
+    fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
+        viewModel.checkAndShowQuickStartNotice()
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when add site icon dialog negative button is clicked, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when change site icon dialog negative button is clicked, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when add site icon dialog is dismissed, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when change site icon dialog is dismissed, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when site chooser is dismissed, then check and show quick start notice`() {
+        viewModel.onSiteNameChooserDismissed()
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
