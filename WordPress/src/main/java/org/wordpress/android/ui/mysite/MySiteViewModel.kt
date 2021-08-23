@@ -479,6 +479,10 @@ class MySiteViewModel
         quickStartRepository.clearActiveTask()
     }
 
+    fun checkAndShowQuickStartNotice() {
+        quickStartRepository.checkAndShowQuickStartNotice()
+    }
+
     fun onSiteNameChosen(input: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.postValue(
@@ -493,6 +497,7 @@ class MySiteViewModel
         // This callback is called even when the dialog interaction is positive,
         // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
         quickStartRepository.completeTask(UPDATE_SITE_TITLE, true)
+        quickStartRepository.checkAndShowQuickStartNotice()
     }
 
     fun onDialogInteraction(interaction: DialogInteraction) {
@@ -509,10 +514,12 @@ class MySiteViewModel
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                 }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(MY_SITE_ICON_REMOVED)
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
                 TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
@@ -520,6 +527,7 @@ class MySiteViewModel
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                 }
             }
         }

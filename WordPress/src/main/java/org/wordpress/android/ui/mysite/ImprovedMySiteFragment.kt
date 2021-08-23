@@ -359,6 +359,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     override fun onResume() {
         super.onResume()
         viewModel.refresh()
+        viewModel.checkAndShowQuickStartNotice()
     }
 
     override fun onPause() {
