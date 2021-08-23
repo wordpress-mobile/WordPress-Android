@@ -1,3 +1,4 @@
-We’ve optimized theme images for faster downloads and a lighter impact on your data plan.
+* [**] Added a time selection feature to Blogging Reminders: users can now choose at what time they will receive the reminders [#15128]
+* [**] Block editor: Embed block: Add "Resize for smaller devices" setting. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3753]
+* [***] Weekly Roundup: users will receive a weekly notification that presents a summary of the activity on their most used sites [#15195]
 
-We also added Global Style Colors to Full Site Editing themes, made some behind-the-scenes improvements to the comments experience, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
