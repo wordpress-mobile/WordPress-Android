@@ -325,10 +325,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
-        val taskToPrompt = getNextUncompletedQuickStartTask(
-                quickStartStore,
-                AppPrefs.getSelectedSite().toLong(), CUSTOMIZE
-        ) // CUSTOMIZE is default type
+        val taskToPrompt = getNextUncompletedQuickStartTask(quickStartStore, AppPrefs.getSelectedSite().toLong())
         if (taskToPrompt != null) {
             quickStartSnackBarHandler.removeCallbacksAndMessages(null)
             quickStartSnackBarHandler.postDelayed({

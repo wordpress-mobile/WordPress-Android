@@ -350,8 +350,7 @@ class QuickStartUtils {
         @JvmStatic
         fun getNextUncompletedQuickStartTask(
             quickStartStore: QuickStartStore,
-            siteId: Long,
-            taskType: QuickStartTaskType
+            siteId: Long
         ): QuickStartTask? {
             // get all the uncompleted tasks for all task types
             val uncompletedTasks = ArrayList<QuickStartTask>()
