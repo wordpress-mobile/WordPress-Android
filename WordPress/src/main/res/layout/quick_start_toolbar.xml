@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeightSmall"
-    android:paddingEnd="@dimen/content_margin_site_row_start"
-    android:paddingStart="@dimen/content_margin_site_row_start"
+    android:paddingEnd="@dimen/my_site_card_row_padding"
+    android:paddingStart="@dimen/my_site_card_row_padding"
     tools:showIn="@layout/quick_start_block">
 
     <com.google.android.material.textview.MaterialTextView
