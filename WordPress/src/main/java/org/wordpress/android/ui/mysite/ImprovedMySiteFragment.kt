@@ -548,11 +548,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onConfirm(result: Bundle?) {
-        if (result != null) {
-            viewModel.onQuickStartFullScreenDialogConfirm(
-                    task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
-            )
-        }
+        val task = result?.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+        task?.let { viewModel.onQuickStartTaskCardClick(it) }
     }
 
     override fun onDismiss() {

@@ -370,12 +370,8 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
-    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
+    fun onQuickStartTaskCardClick(task: QuickStartTask) {
         quickStartRepository.setActiveTask(task)
-    }
-
-    fun onQuickStartFullScreenDialogConfirm(task: QuickStartTask?) {
-        task?.let { onQuickStartTaskCardClick(it) }
     }
 
     fun onQuickStartFullScreenDialogDismiss() {
