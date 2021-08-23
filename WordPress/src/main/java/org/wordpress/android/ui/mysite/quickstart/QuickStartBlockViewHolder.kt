@@ -36,7 +36,6 @@ class QuickStartBlockViewHolder(
     }
 
     private fun QuickStartToolbarBinding.update(block: QuickStartBlock) {
-        quickStartIcon.setBackgroundResource(block.icon)
         quickStartTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
         quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
