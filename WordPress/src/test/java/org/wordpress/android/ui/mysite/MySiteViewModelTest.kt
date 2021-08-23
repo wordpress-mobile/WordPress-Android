@@ -1318,6 +1318,34 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when refresh is triggered, then update site settings if necessary`() {
+        viewModel.refresh()
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh quick start`() {
+        viewModel.refresh()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh current avatar`() {
+        viewModel.refresh()
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `when clear active quick start task is triggered, then clear active quick start task`() {
+        viewModel.clearActiveQuickStartTask()
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
     fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
         viewModel.checkAndShowQuickStartNotice()
 
