@@ -45,15 +45,15 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
 
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
-    @Mock lateinit var quickStartUtils: QuickStartUtilsWrapper
+    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -77,7 +77,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
-                quickStartUtils,
+                quickStartUtilsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
                 analyticsTrackerWrapper,
@@ -172,7 +172,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(false)
+        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(false)
 
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
@@ -219,7 +219,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.startQuickStart(siteId)
 
-        verify(quickStartUtils).startQuickStart(siteId)
+        verify(quickStartUtilsWrapper).startQuickStart(siteId)
         assertModel()
     }
 
@@ -361,7 +361,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
 
-        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
     }
 
     @Test
@@ -373,12 +373,17 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(PUBLISH_POST)
 
-        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
+        verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
+                PUBLISH_POST,
+                site,
+                null,
+                contextProvider.getContext()
+        )
     }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
+        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
         whenever(htmlCompat.fromHtml(ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
 
@@ -402,7 +407,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(quickStartUtils.isQuickStartInProgress(site.id)).thenReturn(true)
+        whenever(quickStartUtilsWrapper.isQuickStartInProgress(site.id)).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(

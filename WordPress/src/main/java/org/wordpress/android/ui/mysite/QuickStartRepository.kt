@@ -54,7 +54,7 @@ class QuickStartRepository
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val quickStartStore: QuickStartStore,
-    private val quickStartUtils: QuickStartUtilsWrapper,
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -99,13 +99,13 @@ class QuickStartRepository
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
             getQuickStartTaskTypes(siteId).onEach { taskType ->
-                if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
+                if (quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
                     onCategoryCompleted(siteId, taskType)
                 }
             }
         }
         return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
-            val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
+            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteId)) {
                 types?.map { buildQuickStartCategory(siteId, it) } ?: listOf()
             } else {
                 listOf()
@@ -124,7 +124,7 @@ class QuickStartRepository
 
     fun startQuickStart(newSiteLocalID: Int) {
         if (newSiteLocalID != -1) {
-            quickStartUtils.startQuickStart(newSiteLocalID)
+            quickStartUtilsWrapper.startQuickStart(newSiteLocalID)
             refresh()
         }
     }
@@ -169,13 +169,13 @@ class QuickStartRepository
             _activeTask.value = null
             pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
-            quickStartUtils.completeTaskAndRemindNextOne(task, site, null, contextProvider.getContext())
+            quickStartUtilsWrapper.completeTaskAndRemindNextOne(task, site, null, contextProvider.getContext())
             setTaskDoneAndTrack(task, site.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
                 refresh()
             }
-            if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
+            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(site.id)) {
                 quickStartStore.setQuickStartCompleted(site.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -189,7 +189,10 @@ class QuickStartRepository
         siteId: Int
     ) {
         quickStartStore.setDoneTask(siteId.toLong(), task, true)
-        analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
+        analyticsTrackerWrapper.track(
+                quickStartUtilsWrapper.getTaskCompletedTracker(task),
+                mySiteImprovementsFeatureConfig
+        )
     }
 
     fun requestNextStepOfTask(task: QuickStartTask) {
