@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
@@ -1350,6 +1351,59 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.checkAndShowQuickStartNotice()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+    }
+
+    @Test
+    fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+    }
+
+    @Test
+    fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when site icon dialog is dismissed, then upload site icon task is marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when add site icon dialog positive button is clicked, then media picker is opened`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+    }
+
+    @Test
+    fun `when change site icon dialog positive button is clicked, then media picker is opened`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
     }
 
     @Test
