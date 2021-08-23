@@ -175,7 +175,12 @@ class QuickStartRepository
             _activeTask.value = null
             pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
-            quickStartUtilsWrapper.completeTaskAndRemindNextOne(task, site, null, contextProvider.getContext())
+            quickStartUtilsWrapper.completeTaskAndRemindNextOne(
+                    task,
+                    site,
+                    QuickStartEvent(task),
+                    contextProvider.getContext()
+            )
             setTaskDoneAndTrack(task, site.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
