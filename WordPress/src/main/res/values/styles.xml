@@ -762,7 +762,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
