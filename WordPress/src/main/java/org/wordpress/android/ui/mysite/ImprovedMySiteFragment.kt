@@ -512,7 +512,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                                         clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }

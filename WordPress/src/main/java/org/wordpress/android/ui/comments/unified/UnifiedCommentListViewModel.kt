@@ -229,7 +229,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                                             )
                                         }
                                     },
-                                    onDismissAction = {
+                                    onDismissAction = { _ ->
                                         launch(bgDispatcher) {
                                             if (commentInModeration.contains(it.data.remoteCommentId)) {
                                                 commentInModeration.remove(it.data.remoteCommentId)

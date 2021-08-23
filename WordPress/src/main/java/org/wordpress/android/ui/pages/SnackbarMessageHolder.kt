@@ -6,5 +6,5 @@ data class SnackbarMessageHolder(
     val message: UiString,
     val buttonTitle: UiString? = null,
     val buttonAction: () -> Unit = {},
-    val onDismissAction: () -> Unit = {}
+    val onDismissAction: (event: Int) -> Unit = {}
 )
