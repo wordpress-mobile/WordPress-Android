@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import com.google.android.material.snackbar.Snackbar.Callback
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -65,8 +67,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var htmlCompat: HtmlCompatWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
-    @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -91,7 +94,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 htmlCompat,
                 mySiteImprovementsFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
-                contextProvider
+                contextProvider,
+                htmlMessageUtils
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -380,7 +384,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
                 PUBLISH_POST,
                 site,
-                null,
+                QuickStartEvent(PUBLISH_POST),
                 contextProvider.getContext()
         )
     }
@@ -482,6 +486,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteId.toLong()))
                 .thenReturn(nextUncompletedTask)
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
     }
 
     private fun assertModel() {
