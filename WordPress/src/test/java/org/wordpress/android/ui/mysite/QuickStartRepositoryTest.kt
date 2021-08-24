@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import com.google.android.material.snackbar.Snackbar.Callback
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
@@ -412,6 +413,27 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 snackbars.last().buttonAction.invoke()
 
                 assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+            }
+
+    @Test
+    fun `when show quick start notice dismissed using swipe-to-dismiss action, then the task is skipped`() = test {
+        initStore(nextUncompletedTask = PUBLISH_POST)
+        quickStartRepository.checkAndShowQuickStartNotice()
+
+        snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_SWIPE)
+
+        verify(appPrefsWrapper).setLastSkippedQuickStartTask(PUBLISH_POST)
+    }
+
+    @Test
+    fun `when show quick start notice dismissed using non swipe-to-dismiss action, then the task is not skipped`() =
+            test {
+                initStore(nextUncompletedTask = PUBLISH_POST)
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_ACTION)
+
+                verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(PUBLISH_POST)
             }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
