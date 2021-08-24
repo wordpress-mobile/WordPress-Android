@@ -19,6 +19,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class QuickStartUtilsWrapper
 @Inject constructor(
     private val quickStartStore: QuickStartStore,
