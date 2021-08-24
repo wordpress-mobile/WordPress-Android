@@ -50,6 +50,7 @@
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
     <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
+    <string name="pref_key_site_domains" translatable="false">wp_pref_site_domains</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
