@@ -37,6 +37,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
@@ -73,7 +74,8 @@ class QuickStartRepository
     private val htmlCompat: HtmlCompatWrapper,
     private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -264,9 +266,14 @@ class QuickStartRepository
         if (taskToPrompt != null) {
             analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)
+            val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt)
+            val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                    "<b>${resourceProvider.getString(taskNoticeDetails.titleResId)}</b>:" +
+                            " ${resourceProvider.getString(taskNoticeDetails.messageResId)}"
+            )
             _onSnackbar.value = Event(
                     SnackbarMessageHolder(
-                            message = UiStringRes(QuickStartNoticeDetails.getNoticeForTask(taskToPrompt).titleResId),
+                            message = UiStringText(message),
                             buttonTitle = UiStringRes(string.quick_start_button_positive),
                             buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
                             onDismissAction = { event ->
