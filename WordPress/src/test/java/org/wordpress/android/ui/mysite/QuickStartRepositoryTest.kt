@@ -403,6 +403,17 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 assertThat(snackbars).isEmpty()
             }
 
+    @Test
+    fun `given uncompleted task, when quick start notice button action is clicked, then the task is marked active`() =
+            test {
+                initStore(nextUncompletedTask = PUBLISH_POST)
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                snackbars.last().buttonAction.invoke()
+
+                assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+            }
+
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
