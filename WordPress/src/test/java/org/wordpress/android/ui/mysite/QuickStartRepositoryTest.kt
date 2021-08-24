@@ -33,6 +33,7 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -54,6 +55,7 @@ private const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -78,6 +80,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 quickStartStore,
                 quickStartUtilsWrapper,
+                appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
                 analyticsTrackerWrapper,

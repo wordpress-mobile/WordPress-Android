@@ -199,6 +199,10 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
 
+    fun isQuickStartNoticeRequired() = AppPrefs.isQuickStartNoticeRequired()
+
+    fun setQuickStartNoticeRequired(shown: Boolean) = AppPrefs.setQuickStartNoticeRequired(shown)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

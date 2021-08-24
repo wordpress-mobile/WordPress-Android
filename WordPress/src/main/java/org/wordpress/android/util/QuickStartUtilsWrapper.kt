@@ -131,4 +131,7 @@ class QuickStartUtilsWrapper
         quickStartStore.setDoneTask(siteId.toLong(), CREATE_SITE, true)
         analyticsTrackerWrapper.track(QUICK_START_STARTED, mySiteImprovementsFeatureConfig)
     }
+
+    fun getNextUncompletedQuickStartTask(siteLocalId: Long) =
+            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, siteLocalId)
 }

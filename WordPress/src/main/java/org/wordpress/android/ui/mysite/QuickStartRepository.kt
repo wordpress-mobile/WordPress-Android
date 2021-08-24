@@ -6,7 +6,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -27,9 +29,12 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
+import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -55,6 +60,7 @@ class QuickStartRepository
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -234,6 +240,28 @@ class QuickStartRepository
             CUSTOMIZE -> CUSTOMIZE_QUICK_START
             GROW -> GROW_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
+        }
+    }
+
+    fun checkAndShowQuickStartNotice() {
+        val selectedSiteLocalId = selectedSiteRepository.getSelectedSite()?.id ?: -1
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId) &&
+                appPrefsWrapper.isQuickStartNoticeRequired()) {
+            showQuickStartNotice(selectedSiteLocalId)
+        }
+    }
+
+    private fun showQuickStartNotice(selectedSiteLocalId: Int) {
+        val taskToPrompt = quickStartUtilsWrapper.getNextUncompletedQuickStartTask(selectedSiteLocalId.toLong())
+        if (taskToPrompt != null) {
+            analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_VIEWED)
+            appPrefsWrapper.setQuickStartNoticeRequired(false)
+            _onSnackbar.value = Event(
+                    SnackbarMessageHolder(
+                            message = UiStringRes(QuickStartNoticeDetails.getNoticeForTask(taskToPrompt).titleResId),
+                            buttonTitle = UiStringRes(string.quick_start_button_positive)
+                    )
+            )
         }
     }
 
