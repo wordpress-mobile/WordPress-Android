@@ -20,7 +20,6 @@ import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.viewBinding
 
 class QuickStartBlockViewHolder(
@@ -73,8 +72,6 @@ class QuickStartBlockViewHolder(
         ObjectAnimator.ofInt(this, PROGRESS, item.progress).setDuration(PROGRESS_ANIMATION_DURATION).start()
 
         val progressIndicatorColor = ContextCompat.getColor(itemView.context, item.progressColor)
-        val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
-        progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
         progressTintList = ColorStateList.valueOf(progressIndicatorColor)
     }
 
