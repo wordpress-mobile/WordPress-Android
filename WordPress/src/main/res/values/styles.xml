@@ -466,14 +466,15 @@
     </style>
 
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="borderWidth">0dp</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="borderWidth">1dp</item>
+        <item name="elevation">0dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
+        <item name="backgroundTint">@color/on_surface_divider</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
