@@ -39,7 +39,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
         return when (viewType) {
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
-            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
+            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
             QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
