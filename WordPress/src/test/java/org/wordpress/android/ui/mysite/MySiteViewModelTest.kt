@@ -201,7 +201,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     private val quickStartBlock: QuickStartBlock
         get() = QuickStartBlock(
-                icon = 0,
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                 taskTypeItems = listOf(
