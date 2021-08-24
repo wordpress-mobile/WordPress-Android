@@ -113,6 +113,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Pos
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -231,7 +232,10 @@ class MySiteViewModel
             )
             if (!buildConfigWrapper.isJetpackApp) {
                 siteItems.add(
+                        // todo: Move this into a builder and add string to resources
                         QuickActionsBlock(
+                                UiStringText("Quick Actions"),
+                                ListItemInteraction.create(this::onQuickStartBlockRemoveMenuItemClick),
                                 ListItemInteraction.create(this::quickActionStatsClick),
                                 ListItemInteraction.create(this::quickActionPagesClick),
                                 ListItemInteraction.create(this::quickActionPostsClick),
