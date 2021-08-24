@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -505,7 +504,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                             info = Info(
                                     view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
-                                    duration = Snackbar.LENGTH_LONG
+                                    duration = holder.duration
                             ),
                             action = holder.buttonTitle?.let {
                                 Action(

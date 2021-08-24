@@ -278,7 +278,8 @@ class QuickStartRepository
                             buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
                             onDismissAction = { event ->
                                 if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
-                            }
+                            },
+                            duration = QUICK_START_NOTICE_DURATION
                     )
             )
         }
@@ -299,4 +300,8 @@ class QuickStartRepository
         val uncompletedTasks: List<QuickStartTaskDetails>,
         val completedTasks: List<QuickStartTaskDetails>
     )
+
+    companion object {
+        private const val QUICK_START_NOTICE_DURATION = 7000
+    }
 }
