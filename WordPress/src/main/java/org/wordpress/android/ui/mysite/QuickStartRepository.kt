@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -264,10 +265,16 @@ class QuickStartRepository
             _onSnackbar.value = Event(
                     SnackbarMessageHolder(
                             message = UiStringRes(QuickStartNoticeDetails.getNoticeForTask(taskToPrompt).titleResId),
-                            buttonTitle = UiStringRes(string.quick_start_button_positive)
+                            buttonTitle = UiStringRes(string.quick_start_button_positive),
+                            buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) }
                     )
             )
         }
+    }
+
+    private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
+        analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
+        setActiveTask(task)
     }
 
     data class QuickStartCategory(
