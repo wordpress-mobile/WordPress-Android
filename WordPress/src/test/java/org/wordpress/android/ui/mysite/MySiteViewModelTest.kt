@@ -168,7 +168,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
-    private val siteId = 1
+    private val siteLocalId = 1
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
@@ -311,11 +311,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
         }
         site = SiteModel()
-        site.id = siteId
+        site.id = siteLocalId
         site.url = siteUrl
         site.name = siteName
         site.iconUrl = siteIcon
-        site.siteId = siteId.toLong()
+        site.siteId = siteLocalId.toLong()
 
         siteInfoBlock = SiteInfoBlock(
                 title = siteName,
@@ -890,7 +890,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `correct event is tracked when domain registration item is shown`() = test {
-        onSiteSelected.value = siteId
+        onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
@@ -1188,9 +1188,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
-        verify(quickStartRepository).startQuickStart(siteId)
+        verify(quickStartRepository).startQuickStart(siteLocalId)
     }
 
     @Test
@@ -1198,7 +1198,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1209,7 +1209,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1221,7 +1221,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(
@@ -1241,7 +1241,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1254,7 +1254,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteId)
+        viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).containsExactly(
                 ShowQuickStartDialog(
@@ -1276,7 +1276,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when start QS is triggered, then QS starts`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
 
         viewModel.startQuickStart()
 
@@ -1457,7 +1457,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private suspend fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         onSiteChange.value = site
-        onSiteSelected.value = siteId
+        onSiteSelected.value = siteLocalId
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
@@ -1501,7 +1501,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
-        onSiteSelected.value = siteId
+        onSiteSelected.value = siteLocalId
         onSiteChange.value = site
     }
 

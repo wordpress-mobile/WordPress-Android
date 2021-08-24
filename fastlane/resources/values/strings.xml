@@ -905,12 +905,20 @@
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
 
-    <!-- Feature configuration -->
-    <string name="preference_open_feature_config" translatable="false">Test feature configuration</string>
-    <string name="manual_config_remote_features" translatable="false">Remote features</string>
-    <string name="manual_config_features_in_development" translatable="false">Features in development</string>
-    <string name="manual_config_restart_app" translatable="false">Restart the app</string>
-    <string name="missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
+    <!-- Debug settings -->
+    <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
+    <string name="debug_settings_remote_features" translatable="false">Remote features</string>
+    <string name="debug_settings_features_in_development" translatable="false">Features in development</string>
+    <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
+    <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
+    <string name="debug_settings_tools" translatable="false">Tools</string>
+
+    <!-- Debug cookies -->
+    <string name="debug_cookies_title" translatable="false">Debug cookies</string>
+    <string name="debug_cookies_set_cookie" translatable="false">Set cookie</string>
+    <string name="debug_cookies_cookie_domain_hint" translatable="false">wordpress.com</string>
+    <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
+    <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -2129,7 +2137,7 @@
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
-    <string name="my_site_btn_site_settings">Settings</string>
+    <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
@@ -2955,7 +2963,7 @@
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s of %2$s complete</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
@@ -3258,6 +3266,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -3278,6 +3287,7 @@
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources">Applies the setting</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
     <!-- translators: accessibility text. Empty Audio caption. -->
     <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Audio caption. Empty</string>
@@ -3307,6 +3317,7 @@
     <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Button position</string>
     <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Cancel search</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources">Changes to featured image will not be affected by the undo/redo buttons.</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
     <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Choose audio</string>
     <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Choose file</string>
@@ -3327,6 +3338,7 @@
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Customize blocks</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Describe the purpose of the image. Leave empty if the image is purely decorative. </string>
@@ -3368,7 +3380,7 @@
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">Drag to adjust focal point</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its" tools:ignore="UnusedResources">Each block has its own settings. To find them, click on a block. Its settings will appear on the toolbar at the bottom of the screen.</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">Each block has its own settings. To find them, tap on a block. Its settings will appear on the toolbar at the bottom of the screen.</string>
     <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Edit cover media</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
     <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edit focal point</string>
@@ -3400,11 +3412,14 @@
     <!-- translators: accessibility text. %s: gallery caption. -->
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Give it a try by adding a few blocks to your post or page!</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Go back</string>
     <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
     <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Help button</string>
     <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Hide search heading</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources">How to edit your page</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">How to edit your post</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
     <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
@@ -3436,6 +3451,7 @@
     <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Move block up</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block up from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources">Move blocks</string>
     <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Move Image Backward</string>
     <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
     <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Move to bottom</string>
@@ -3443,6 +3459,9 @@
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
+    <!-- translators: %s: Select control button label e.g. "Button width" -->
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Navigates to select %s</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">No application can handle this request.</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
     <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">No blocks found</string>
@@ -3512,7 +3531,10 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
     <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Search settings</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">Select a color above</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
+    <!-- translators: %s: Select control option value e.g: "Auto, 25%". -->
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Selected: %s</string>
     <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Set as Featured Image </string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Slash inserter autocomplete results -->
@@ -3526,6 +3548,7 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
     <string name="gutenberg_native_tap_to_add_content" tools:ignore="UnusedResources">Tap to add content</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Transform block…</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
@@ -3695,6 +3718,7 @@ translators: Block name. %s: The localized block name -->
     <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
     <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
     <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="blogging_reminders_site_settings_label">%1$s a week at %2$s</string>
     <string name="blogging_reminders_n_a_week">%s a week</string>
     <string-array name="blogging_reminders_count">
         <item>Once</item>
@@ -3711,14 +3735,15 @@ translators: Block name. %s: The localized block name -->
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
-    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">You\'ll get reminders to blog %1$s a week on %2$s at %3$s.</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt; at &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
     <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+    <string name="blogging_reminders_notification_time">Notification time</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>
@@ -3730,4 +3755,8 @@ translators: Block name. %s: The localized block name -->
     <string name="create_site_notification_title">Create your WordPress website</string>
     <string name="create_site_notification_text">Get your site up and running in just a few quick steps</string>
     <string name="create_site_notification_create_site_action">Create site</string>
+
+    <!-- Weekly Roundup Notification -->
+    <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
+    <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
 </resources>

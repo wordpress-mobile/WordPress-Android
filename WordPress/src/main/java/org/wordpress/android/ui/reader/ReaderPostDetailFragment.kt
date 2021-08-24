@@ -68,6 +68,7 @@ import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
@@ -1054,7 +1055,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (requestCode) {
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val siteLocalId = data?.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    ) ?: SelectedSiteRepository.UNAVAILABLE
                     viewModel.onReblogSiteSelected(siteLocalId)
                 }
             }

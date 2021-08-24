@@ -137,8 +137,6 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
     }
 
-    fun getSelectedSite(): Int = AppPrefs.getSelectedSite()
-
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
@@ -199,6 +197,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun isQuickStartEnabled() = !AppPrefs.isQuickStartDisabled()
 
     fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
+
+    fun getSelectedSite() = AppPrefs.getSelectedSite()
+
+    fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
 
     fun isQuickStartNoticeRequired() = AppPrefs.isQuickStartNoticeRequired()
 

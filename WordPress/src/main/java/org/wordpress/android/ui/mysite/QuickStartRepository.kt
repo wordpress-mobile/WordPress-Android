@@ -7,11 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -93,31 +89,31 @@ class QuickStartRepository
 
     private var pendingTask: QuickStartTask? = null
 
-    private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
+    private fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
-            uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId.toLong(), quickStartTaskType)
+            uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] },
-            completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
+            completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
         pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
-                !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
-            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteId)
+                !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
+            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteLocalId)
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            getQuickStartTaskTypes(siteId).onEach { taskType ->
-                if (quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
-                    onCategoryCompleted(siteId, taskType)
+            getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
+                if (quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)) {
+                    onCategoryCompleted(siteLocalId, taskType)
                 }
             }
         }
         return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
-            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteId)) {
-                types?.map { buildQuickStartCategory(siteId, it) } ?: listOf()
+            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)) {
+                types?.map { buildQuickStartCategory(siteLocalId, it) } ?: listOf()
             } else {
                 listOf()
             }
@@ -125,28 +121,28 @@ class QuickStartRepository
         }
     }
 
-    private suspend fun getQuickStartTaskTypes(siteId: Int): List<QuickStartTaskType> {
+    private suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
         return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }
+            dynamicCardStore.getCards(siteLocalId).dynamicCardTypes.map { it.toQuickStartTaskType() }
         } else {
             listOf(CUSTOMIZE, GROW)
         }
     }
 
-    fun startQuickStart(newSiteLocalID: Int) {
-        if (newSiteLocalID != -1) {
-            quickStartUtilsWrapper.startQuickStart(newSiteLocalID)
+    fun startQuickStart(siteLocalId: Int) {
+        if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
+            quickStartUtilsWrapper.startQuickStart(siteLocalId)
             refresh()
         }
     }
 
     fun skipQuickStart() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            val siteLocalId = site.id.toLong()
-            QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteLocalId, it, true) }
-            quickStartStore.setQuickStartCompleted(siteLocalId, true)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            val selectedSiteLocalId = selectedSite.id.toLong()
+            QuickStartTask.values().forEach { quickStartStore.setDoneTask(selectedSiteLocalId, it, true) }
+            quickStartStore.setQuickStartCompleted(selectedSiteLocalId, true)
             // skipping all tasks means no achievement notification, so we mark it as received
-            quickStartStore.setQuickStartNotificationReceived(siteLocalId, true)
+            quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId, true)
         }
     }
 
@@ -175,26 +171,26 @@ class QuickStartRepository
     }
 
     @JvmOverloads fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
             pendingTask = null
-            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
+            if (quickStartStore.hasDoneTask(selectedSite.id.toLong(), task)) return
             quickStartUtilsWrapper.completeTaskAndRemindNextOne(
                     task,
-                    site,
+                    selectedSite,
                     QuickStartEvent(task),
                     contextProvider.getContext()
             )
-            setTaskDoneAndTrack(task, site.id)
+            setTaskDoneAndTrack(task, selectedSite.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
                 refresh()
             }
-            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(site.id)) {
-                quickStartStore.setQuickStartCompleted(site.id.toLong(), true)
+            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
+                quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
-                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
+                val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             }
         }
@@ -202,9 +198,9 @@ class QuickStartRepository
 
     private fun setTaskDoneAndTrack(
         task: QuickStartTask,
-        siteId: Int
+        siteLocalId: Int
     ) {
-        quickStartStore.setDoneTask(siteId.toLong(), task, true)
+        quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
         analyticsTrackerWrapper.track(
                 quickStartUtilsWrapper.getTaskCompletedTracker(task),
                 mySiteImprovementsFeatureConfig
@@ -222,11 +218,11 @@ class QuickStartRepository
         job.cancel()
     }
 
-    private suspend fun onCategoryCompleted(siteId: Int, categoryType: QuickStartTaskType) {
+    private suspend fun onCategoryCompleted(siteLocalId: Int, categoryType: QuickStartTaskType) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             val completionMessage = getCategoryCompletionMessage(categoryType)
             _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
-            dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
+            dynamicCardStore.removeCard(siteLocalId, categoryType.toDynamicCardType())
         }
     }
 
@@ -264,7 +260,7 @@ class QuickStartRepository
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
         val taskToPrompt = quickStartUtilsWrapper.getNextUncompletedQuickStartTask(selectedSiteLocalId.toLong())
         if (taskToPrompt != null) {
-            analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_VIEWED)
+            analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)
             val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt)
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
@@ -274,7 +270,7 @@ class QuickStartRepository
             _onSnackbar.value = Event(
                     SnackbarMessageHolder(
                             message = UiStringText(message),
-                            buttonTitle = UiStringRes(string.quick_start_button_positive),
+                            buttonTitle = UiStringRes(R.string.quick_start_button_positive),
                             buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
                             onDismissAction = { event ->
                                 if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
@@ -286,12 +282,12 @@ class QuickStartRepository
     }
 
     private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
         setActiveTask(task)
     }
 
     private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
+        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
         appPrefsWrapper.setLastSkippedQuickStartTask(task)
     }
 

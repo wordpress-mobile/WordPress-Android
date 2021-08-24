@@ -25,7 +25,7 @@ import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -40,7 +40,7 @@ import javax.inject.Named
 class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
@@ -62,7 +62,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
     private val site: SiteModel by lazy {
-        requireNotNull(siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()))
+        requireNotNull(siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId()))
     }
 
     override val useCachedData: Boolean = true
