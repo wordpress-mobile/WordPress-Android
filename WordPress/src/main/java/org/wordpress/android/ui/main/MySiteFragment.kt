@@ -433,7 +433,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         quickStartCustomize.setOnClickListener { showQuickStartList(CUSTOMIZE) }
         quickStartGrow.setOnClickListener { showQuickStartList(GROW) }
-        quickStartMore.setOnClickListener { showQuickStartCardMenu() }
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu() }
     }
 
     private fun MySiteFragmentBinding.setupQuickActionsIfNecessary() {
@@ -703,7 +703,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.showQuickStartCardMenu() {
         val quickStartPopupMenu = PopupMenu(
                 requireContext(),
-                quickStartMore
+                mySiteCardToolbarMore
         )
         quickStartPopupMenu.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.quick_start_card_menu_remove) {

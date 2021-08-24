@@ -22,12 +22,12 @@ class QuickActionsViewHolder(
     }
 
     private fun MySiteCardToolbarBinding.update(block: QuickActionsBlock) {
-        quickStartTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
-        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+        mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
 
     private fun MySiteCardToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
-        val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
+        val quickStartPopupMenu = PopupMenu(itemView.context, mySiteCardToolbarMore)
         quickStartPopupMenu.setOnMenuItemClickListener {
             onRemoveMenuItemClick.click()
             return@setOnMenuItemClickListener true

@@ -26,18 +26,18 @@ class QuickStartBlockViewHolder(
     private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder<QuickStartBlockBinding>(parent.viewBinding(QuickStartBlockBinding::inflate)) {
     fun bind(block: QuickStartBlock) = with(binding) {
-        quickStartToolbar.update(block)
+        mySiteCardToolbar.update(block)
         quickStartCustomize.update(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
         quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
     private fun MySiteCardToolbarBinding.update(block: QuickStartBlock) {
-        quickStartTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
-        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+        mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
 
     private fun MySiteCardToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
-        val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
+        val quickStartPopupMenu = PopupMenu(itemView.context, mySiteCardToolbarMore)
         quickStartPopupMenu.setOnMenuItemClickListener {
             onRemoveMenuItemClick.click()
             return@setOnMenuItemClickListener true
