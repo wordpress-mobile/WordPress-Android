@@ -12,7 +12,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartBlockBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
-import org.wordpress.android.databinding.QuickStartToolbarBinding
+import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
@@ -34,12 +34,12 @@ class QuickStartBlockViewHolder(
         quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
-    private fun QuickStartToolbarBinding.update(block: QuickStartBlock) {
+    private fun MySiteCardToolbarBinding.update(block: QuickStartBlock) {
         quickStartTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
         quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
 
-    private fun QuickStartToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
+    private fun MySiteCardToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
         val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
         quickStartPopupMenu.setOnMenuItemClickListener {
             onRemoveMenuItemClick.click()
