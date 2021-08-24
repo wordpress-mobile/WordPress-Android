@@ -2,14 +2,19 @@ package org.wordpress.android.ui.mysite
 
 import android.view.View
 import android.view.ViewGroup
+import org.wordpress.android.databinding.MySiteQuickActionsCardBinding
 import org.wordpress.android.databinding.QuickActionsBlockBinding
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.util.viewBinding
 
 class QuickActionsViewHolder(
     parent: ViewGroup
-) : MySiteItemViewHolder<QuickActionsBlockBinding>(parent.viewBinding(QuickActionsBlockBinding::inflate)) {
-    fun bind(item: QuickActionsBlock) = with(binding) {
+) : MySiteItemViewHolder<MySiteQuickActionsCardBinding>(parent.viewBinding(MySiteQuickActionsCardBinding::inflate)) {
+    fun bind(block: QuickActionsBlock) = with(binding) {
+        quickActionsBlock.update(block)
+    }
+
+    private fun QuickActionsBlockBinding.update(item: QuickActionsBlock) {
         quickActionStatsButton.setOnClickListener { item.onStatsClick.click() }
         quickActionPostsButton.setOnClickListener { item.onPostsClick.click() }
         quickActionMediaButton.setOnClickListener { item.onMediaClick.click() }
