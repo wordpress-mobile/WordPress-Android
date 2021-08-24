@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/quick_start_toolbar"
-            layout="@layout/quick_start_toolbar"
+            layout="@layout/my_site_card_toolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
