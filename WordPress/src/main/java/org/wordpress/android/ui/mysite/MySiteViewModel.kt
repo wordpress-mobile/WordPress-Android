@@ -24,11 +24,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -312,46 +312,46 @@ class MySiteViewModel
     }
 
     private fun onItemClick(action: ListItemAction) {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             val navigationAction = when (action) {
-                ACTIVITY_LOG -> OpenActivityLog(site)
-                BACKUP -> OpenBackup(site)
-                SCAN -> OpenScan(site)
+                ACTIVITY_LOG -> OpenActivityLog(selectedSite)
+                BACKUP -> OpenBackup(selectedSite)
+                SCAN -> OpenScan(selectedSite)
                 PLAN -> {
                     quickStartRepository.completeTask(EXPLORE_PLANS)
-                    OpenPlan(site)
+                    OpenPlan(selectedSite)
                 }
-                POSTS -> OpenPosts(site)
+                POSTS -> OpenPosts(selectedSite)
                 PAGES -> {
                     quickStartRepository.completeTask(REVIEW_PAGES)
-                    OpenPages(site)
+                    OpenPages(selectedSite)
                 }
-                ADMIN -> OpenAdmin(site)
-                PEOPLE -> OpenPeople(site)
+                ADMIN -> OpenAdmin(selectedSite)
+                PEOPLE -> OpenPeople(selectedSite)
                 SHARING -> {
                     quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
-                    OpenSharing(site)
+                    OpenSharing(selectedSite)
                 }
-                SITE_SETTINGS -> OpenSiteSettings(site)
-                THEMES -> OpenThemes(site)
-                PLUGINS -> OpenPlugins(site)
+                SITE_SETTINGS -> OpenSiteSettings(selectedSite)
+                THEMES -> OpenThemes(selectedSite)
+                PLUGINS -> OpenPlugins(selectedSite)
                 STATS -> {
                     quickStartRepository.completeTask(CHECK_STATS)
-                    getStatsNavigationActionForSite(site)
+                    getStatsNavigationActionForSite(selectedSite)
                 }
-                MEDIA -> OpenMedia(site)
+                MEDIA -> OpenMedia(selectedSite)
                 COMMENTS -> {
                     if (unifiedCommentsListFeatureConfig.isEnabled()) {
-                        OpenUnifiedComments(site)
+                        OpenUnifiedComments(selectedSite)
                     } else {
-                        OpenComments(site)
+                        OpenComments(selectedSite)
                     }
                 }
                 VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
-                    OpenSite(site)
+                    OpenSite(selectedSite)
                 }
-                JETPACK_SETTINGS -> OpenJetpackSettings(site)
+                JETPACK_SETTINGS -> OpenJetpackSettings(selectedSite)
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -405,10 +405,10 @@ class MySiteViewModel
     }
 
     private fun iconClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
-        val hasIcon = site.iconUrl != null
-        if (site.hasCapabilityManageOptions && site.hasCapabilityUploadFiles) {
+        val hasIcon = selectedSite.iconUrl != null
+        if (selectedSite.hasCapabilityManageOptions && selectedSite.hasCapabilityUploadFiles) {
             if (hasIcon) {
                 _onBasicDialogShown.value = Event(ChangeSiteIconDialogModel)
             } else {
@@ -416,7 +416,7 @@ class MySiteViewModel
             }
         } else {
             val message = when {
-                !site.isUsingWpComRestApi -> {
+                !selectedSite.isUsingWpComRestApi -> {
                     R.string.my_site_icon_dialog_change_requires_jetpack_message
                 }
                 hasIcon -> {
@@ -431,46 +431,46 @@ class MySiteViewModel
     }
 
     private fun urlClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(OpenSite(site))
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(OpenSite(selectedSite))
     }
 
     private fun switchSiteClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(OpenSitePicker(site))
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(OpenSitePicker(selectedSite))
     }
 
     private fun quickActionStatsClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
         quickStartRepository.completeTask(CHECK_STATS)
-        _onNavigation.value = Event(getStatsNavigationActionForSite(site))
+        _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
         quickStartRepository.requestNextStepOfTask(EDIT_HOMEPAGE)
         quickStartRepository.completeTask(REVIEW_PAGES)
-        _onNavigation.value = Event(OpenPages(site))
+        _onNavigation.value = Event(OpenPages(selectedSite))
     }
 
     private fun quickActionPostsClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
-        _onNavigation.value = Event(OpenPosts(site))
+        _onNavigation.value = Event(OpenPosts(selectedSite))
     }
 
     private fun quickActionMediaClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
-        _onNavigation.value = Event(OpenMedia(site))
+        _onNavigation.value = Event(OpenMedia(selectedSite))
     }
 
     private fun domainRegistrationClick() {
-        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
-        _onNavigation.value = Event(OpenDomainRegistration(site))
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+        _onNavigation.value = Event(OpenDomainRegistration(selectedSite))
     }
 
     fun refresh() {
@@ -596,9 +596,9 @@ class MySiteViewModel
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.file_error_create))))
             return
         }
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site != null) {
-            val media = buildMediaModel(file, site)
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null) {
+            val media = buildMediaModel(file, selectedSite)
             if (media == null) {
                 _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.file_not_found))))
                 return
@@ -649,9 +649,9 @@ class MySiteViewModel
         }
     }
 
-    fun checkAndStartQuickStart(newSiteLocalID: Int) {
+    fun checkAndStartQuickStart(siteLocalId: Int) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            quickStartRepository.startQuickStart(newSiteLocalID)
+            quickStartRepository.startQuickStart(siteLocalId)
         } else {
             showQuickStartDialog(selectedSiteRepository.getSelectedSite())
         }
@@ -709,7 +709,7 @@ class MySiteViewModel
 
     fun startQuickStart() {
         analyticsTrackerWrapper.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-        selectedSiteRepository.getSelectedSite()?.id?.let { quickStartRepository.startQuickStart(it) }
+        quickStartRepository.startQuickStart(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     fun ignoreQuickStart() {

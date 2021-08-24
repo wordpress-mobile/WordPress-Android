@@ -21,6 +21,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
@@ -35,6 +36,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,7 +48,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
             return;
         }
 
-        int siteLocalId = AppPrefs.getSelectedSite();
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
 
         QuickStartTaskDetails quickStartTaskDetails = (QuickStartTaskDetails) bundleWithQuickStartTaskDetails
                 .getSerializable(QuickStartTaskDetails.KEY);
@@ -54,11 +56,11 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         // Failsafes
         if (
                 quickStartTaskDetails == null
-                || siteLocalId == -1
+                || selectedSiteLocalId == SelectedSiteRepository.UNAVAILABLE
                 || (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
-                || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
-                || mQuickStartStore.getQuickStartCompleted(siteLocalId)
-                || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())
+                || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartTask.CREATE_SITE)
+                || mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId)
+                || mQuickStartStore.hasDoneTask(selectedSiteLocalId, quickStartTaskDetails.getTask())
         ) {
             return;
         }

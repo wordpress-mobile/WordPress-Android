@@ -24,10 +24,10 @@ class MySiteStateProvider(
         addAll(sources)
     }
 
-    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
+    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
         val result = MediatorLiveData<SiteIdToState>()
-        val currentSources = if (siteId != null) {
-            mySiteSources.map { source -> source.buildSource(coroutineScope, siteId).distinctUntilChanged() }
+        val currentSources = if (siteLocalId != null) {
+            mySiteSources.map { source -> source.buildSource(coroutineScope, siteLocalId).distinctUntilChanged() }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
                     .map { source -> source.buildSource(coroutineScope).distinctUntilChanged() }
@@ -35,7 +35,7 @@ class MySiteStateProvider(
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
                 if (partialState != null) {
-                    result.value = (result.value ?: SiteIdToState(siteId)).update(partialState)
+                    result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
                 }
             }
         }
@@ -52,9 +52,9 @@ class MySiteStateProvider(
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {
-                override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<SelectedSite> {
+                override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<SelectedSite> {
                     return selectedSiteRepository.selectedSiteChange
-                            .filter { it == null || it.id == siteId }
+                            .filter { it == null || it.id == siteLocalId }
                             .map { SelectedSite(it) }
                 }
             }
@@ -63,7 +63,7 @@ class MySiteStateProvider(
             object : MySiteSource<ShowSiteIconProgressBar> {
                 override fun buildSource(
                     coroutineScope: CoroutineScope,
-                    siteId: Int
+                    siteLocalId: Int
                 ): LiveData<ShowSiteIconProgressBar> {
                     return selectedSiteRepository.showSiteIconProgressBar
                             .map { ShowSiteIconProgressBar(it == true) }

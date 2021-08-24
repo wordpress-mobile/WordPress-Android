@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -128,6 +129,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ImageManager mImageManager;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
@@ -589,6 +591,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    @NonNull
     private SiteList getSelectedSites() {
         SiteList sites = new SiteList();
         if (!mIsMultiSelectEnabled) {
@@ -622,9 +625,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
-        if (sites != null && sites.size() > 0) {
+        if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
-            int currentSiteId = AppPrefs.getSelectedSite();
+            int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
             for (SiteRecord site : sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
@@ -633,7 +636,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         changeSet.add(siteRecord);
                         siteRecord.mIsHidden = !makeVisible;
                         if (!makeVisible
-                            && siteRecord.mLocalId != currentSiteId
+                            && siteRecord.mLocalId != selectedSiteLocalId
                             && recentIds.contains(siteRecord.mLocalId)) {
                             AppPrefs.removeRecentlyPickedSiteId(siteRecord.mLocalId);
                         }

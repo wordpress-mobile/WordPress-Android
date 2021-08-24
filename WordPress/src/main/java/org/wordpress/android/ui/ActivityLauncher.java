@@ -205,7 +205,7 @@ public class ActivityLauncher {
      */
     private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
         Intent intent = new Intent(context, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, site.getId());
         intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
         return intent;
     }
