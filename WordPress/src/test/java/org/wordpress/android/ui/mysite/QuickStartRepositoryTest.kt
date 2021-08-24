@@ -384,6 +384,25 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `given uncompleted task exists, when show quick start notice is triggered, then snackbar is shown`() = test {
+        initStore(nextUncompletedTask = PUBLISH_POST)
+
+        quickStartRepository.checkAndShowQuickStartNotice()
+
+        assertThat(snackbars).isNotEmpty
+    }
+
+    @Test
+    fun `given uncompleted task not exists, when show quick start notice is triggered, then snackbar not shown`() =
+            test {
+                initStore(nextUncompletedTask = null)
+
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                assertThat(snackbars).isEmpty()
+            }
+
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
@@ -401,7 +420,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.refresh()
     }
 
-    private suspend fun initStore() {
+    private suspend fun initStore(
+        nextUncompletedTask: QuickStartTask? = null
+    ) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(dynamicCardStore.getCards(siteId)).thenReturn(
                 DynamicCardsModel(
                         dynamicCardTypes = listOf(
@@ -411,6 +433,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 )
         )
         whenever(quickStartUtilsWrapper.isQuickStartInProgress(site.id)).thenReturn(true)
+        whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
@@ -424,6 +447,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
+        whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteId.toLong()))
+                .thenReturn(nextUncompletedTask)
     }
 
     private fun assertModel() {
