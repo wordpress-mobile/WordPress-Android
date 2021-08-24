@@ -48,7 +48,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SelectedSiteStorage
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -365,11 +364,5 @@ class StatsModule {
     @Singleton
     fun provideSharedPrefs(context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSelectedSiteStorage(): SelectedSiteStorage {
-        return SelectedSiteStorage()
     }
 }

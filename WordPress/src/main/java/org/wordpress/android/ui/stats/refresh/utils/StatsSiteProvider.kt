@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult.NotConnectedJetpackSite
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult.SiteConnected
 import org.wordpress.android.viewmodel.Event
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 class StatsSiteProvider
 @Inject constructor(
     private val siteStore: SiteStore,
-    private val selectedSite: SelectedSiteStorage,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
 ) {
     var siteModel = SiteModel()
@@ -48,7 +48,7 @@ class StatsSiteProvider
     }
 
     fun reset() {
-        start(selectedSite.currentLocalSiteId)
+        start(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     fun clear() {
@@ -79,11 +79,6 @@ class StatsSiteProvider
                 }
             }
         }
-    }
-
-    class SelectedSiteStorage {
-        val currentLocalSiteId
-            get() = AppPrefs.getSelectedSite()
     }
 
     sealed class SiteUpdateResult {

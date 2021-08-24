@@ -17,12 +17,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 
 class SelectedSiteRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
     @Mock lateinit var siteSettingsInterfaceWrapper: SiteSettingsInterfaceWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var siteModel: SiteModel
     private var siteIconProgressBarVisible: Boolean = false
     private var selectedSite: SiteModel? = null
@@ -35,7 +37,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        selectedSiteRepository = SelectedSiteRepository(dispatcher, siteSettingsInterfaceFactory)
+        selectedSiteRepository = SelectedSiteRepository(dispatcher, siteSettingsInterfaceFactory, appPrefsWrapper)
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
         selectedSiteRepository.selectedSiteChange.observeForever { selectedSite = it }
         siteModel = SiteModel()
@@ -54,7 +56,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
 
-        assertThat(siteIconProgressBarVisible).isTrue()
+        assertThat(siteIconProgressBarVisible).isTrue
         val inOrder = inOrder(siteSettingsInterfaceWrapper)
         inOrder.verify(siteSettingsInterfaceWrapper).setSiteIconMediaId(mediaId)
         inOrder.verify(siteSettingsInterfaceWrapper).saveSettings()
@@ -67,7 +69,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.updateSiteIconMediaId(mediaId, false)
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
         val inOrder = inOrder(siteSettingsInterfaceWrapper)
         inOrder.verify(siteSettingsInterfaceWrapper).setSiteIconMediaId(mediaId)
         inOrder.verify(siteSettingsInterfaceWrapper).saveSettings()
@@ -79,7 +81,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
         verifyZeroInteractions(siteSettingsInterfaceWrapper)
     }
 
@@ -87,14 +89,14 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     fun `showSiteIconProgressBar(true) shows progress bar`() {
         selectedSiteRepository.showSiteIconProgressBar(true)
 
-        assertThat(siteIconProgressBarVisible).isTrue()
+        assertThat(siteIconProgressBarVisible).isTrue
     }
 
     @Test
     fun `showSiteIconProgressBar(false) hides progress bar`() {
         selectedSiteRepository.showSiteIconProgressBar(false)
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
     }
 
     @Test
@@ -117,12 +119,12 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `updateSite updates site`() {
-        assertThat(selectedSiteRepository.hasSelectedSite()).isFalse()
+        assertThat(selectedSiteRepository.hasSelectedSite()).isFalse
         assertThat(selectedSiteRepository.getSelectedSite()).isNull()
 
         selectedSiteRepository.updateSite(siteModel)
 
-        assertThat(selectedSiteRepository.hasSelectedSite()).isTrue()
+        assertThat(selectedSiteRepository.hasSelectedSite()).isTrue
         assertThat(selectedSiteRepository.getSelectedSite()).isEqualTo(siteModel)
     }
 
@@ -136,7 +138,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.updateSite(updatedSite)
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
     }
 
     @Test
@@ -150,29 +152,29 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.updateSite(updatedSite)
 
-        assertThat(siteIconProgressBarVisible).isTrue()
+        assertThat(siteIconProgressBarVisible).isTrue
     }
 
     @Test
     fun `site settings onSaveError hides icon progress bar`() {
         initializeSiteAndSiteSettings()
         selectedSiteRepository.showSiteIconProgressBar(true)
-        assertThat(siteIconProgressBarVisible).isTrue()
+        assertThat(siteIconProgressBarVisible).isTrue
 
         onSaveError!!.invoke(Exception("testing"))
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
     }
 
     @Test
     fun `site settings onFetchError hides icon progress bar`() {
         initializeSiteAndSiteSettings()
         selectedSiteRepository.showSiteIconProgressBar(true)
-        assertThat(siteIconProgressBarVisible).isTrue()
+        assertThat(siteIconProgressBarVisible).isTrue
 
         onFetchError!!.invoke(Exception("testing"))
 
-        assertThat(siteIconProgressBarVisible).isFalse()
+        assertThat(siteIconProgressBarVisible).isFalse
     }
 
     @Test
@@ -204,7 +206,7 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
         selectedSiteRepository.siteSelected.observeForever { emptySiteIdEmitted = true }
 
-        assertThat(emptySiteIdEmitted).isTrue()
+        assertThat(emptySiteIdEmitted).isTrue
     }
 
     private fun initializeSiteAndSiteSettings() {
