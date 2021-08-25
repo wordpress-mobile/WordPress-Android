@@ -5,35 +5,22 @@
     android:id="@+id/quick_start_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/listPreferredItemHeightSmall"
-    android:paddingEnd="@dimen/content_margin_site_row_start"
-    android:paddingStart="@dimen/content_margin_site_row_start"
+    android:paddingEnd="@dimen/my_site_card_row_padding"
+    android:paddingStart="@dimen/my_site_card_row_padding"
+    android:paddingTop="@dimen/my_site_card_row_top_padding"
     tools:showIn="@layout/quick_start_block">
-
-    <ImageView
-        android:id="@+id/quick_start_icon"
-        android:layout_width="@dimen/my_site_list_row_icon_size"
-        android:layout_height="@dimen/my_site_list_row_icon_size"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:importantForAccessibility="no"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/wpColorOnSurfaceMedium"
-        tools:src="@drawable/ic_list_checkmark_white_24dp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/quick_start_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_large"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textAppearance="?attr/textAppearanceBody2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/quick_start_more"
-        app:layout_constraintStart_toEndOf="@+id/quick_start_icon"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/quick_start_sites" />
 

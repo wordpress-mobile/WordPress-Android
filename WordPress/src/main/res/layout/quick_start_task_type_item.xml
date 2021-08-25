@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_root"
     style="@style/QuickStartTypeRow"
-    android:paddingEnd="@dimen/content_margin_site_row_start"
-    android:paddingStart="@dimen/content_margin_site_row_start">
+    android:padding="@dimen/my_site_card_row_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
