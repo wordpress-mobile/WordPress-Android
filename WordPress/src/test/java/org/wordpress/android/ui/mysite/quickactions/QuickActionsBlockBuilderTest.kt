@@ -53,7 +53,6 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
         Assertions.assertThat(quickActionsBlock.onMediaClick).isNotNull
     }
 
-
     private fun buildQuickActionsBlock(
         showPages: Boolean = true,
         showStatsFocusPoint: Boolean = false,
