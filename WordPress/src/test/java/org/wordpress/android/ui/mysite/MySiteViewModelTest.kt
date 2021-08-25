@@ -110,6 +110,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJe
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickactions.QuickActionsBlockBuilder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -153,6 +154,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     @Mock lateinit var quickStartBlockBuilder: QuickStartBlockBuilder
+    @Mock lateinit var quickActionsBlockBuilder: QuickActionsBlockBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
@@ -235,6 +237,20 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
         )
 
+    private var quickActionsItemClickAction: (() -> Unit)? = null
+    private val quickActionsBlock: QuickActionsBlock
+        get() = QuickActionsBlock(
+                title = UiStringText(""),
+                onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
+                onStatsClick = ListItemInteraction.create { quickActionsItemClickAction },
+                onPagesClick = ListItemInteraction.create { quickActionsItemClickAction },
+                onMediaClick = ListItemInteraction.create { quickActionsItemClickAction },
+                onPostsClick = ListItemInteraction.create { quickActionsItemClickAction },
+                showPages = false,
+                showPagesFocusPoint = false,
+                showStatsFocusPoint = false
+                )
+
     @InternalCoroutinesApi
     @Before
     fun setUp() = test {
@@ -272,6 +288,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartRepository,
                 quickStartItemBuilder,
                 quickStartBlockBuilder,
+                quickActionsBlockBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
@@ -1499,7 +1516,14 @@ class MySiteViewModelTest : BaseUnitTest() {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
             dynamicQuickStartTaskCard
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
-
+        doAnswer {
+            removeMenuItemClickAction = (it.getArgument(0) as () -> Unit)
+            quickActionsItemClickAction = (it.getArgument(1) as () -> Unit)
+            quickActionsItemClickAction = (it.getArgument(2) as () -> Unit)
+            quickActionsItemClickAction = (it.getArgument(3) as () -> Unit)
+            quickActionsItemClickAction = (it.getArgument(4) as () -> Unit)
+            quickActionsBlock
+        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any(), any())
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
