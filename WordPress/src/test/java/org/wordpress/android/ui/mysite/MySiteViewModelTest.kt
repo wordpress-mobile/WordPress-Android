@@ -237,16 +237,19 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
         )
 
-    private var quickActionsItemClickAction: (() -> Unit)? = null
+    private var quickActionsStatsClickAction: (() -> Unit)? = null
+    private var quickActionsPagesClickAction: (() -> Unit)? = null
+    private var quickActionsPostsClickAction: (() -> Unit)? = null
+    private var quickActionsMediaClickAction: (() -> Unit)? = null
     private val quickActionsBlock: QuickActionsBlock
         get() = QuickActionsBlock(
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
-                onStatsClick = ListItemInteraction.create { quickActionsItemClickAction },
-                onPagesClick = ListItemInteraction.create { quickActionsItemClickAction },
-                onMediaClick = ListItemInteraction.create { quickActionsItemClickAction },
-                onPostsClick = ListItemInteraction.create { quickActionsItemClickAction },
-                showPages = false,
+                onStatsClick = ListItemInteraction.create { quickActionsStatsClickAction },
+                onPagesClick = ListItemInteraction.create { quickActionsPagesClickAction },
+                onPostsClick = ListItemInteraction.create { quickActionsPostsClickAction },
+                onMediaClick = ListItemInteraction.create { quickActionsMediaClickAction },
+                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
                 )
@@ -392,6 +395,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block title click shows snackbar message when network not available`() = test {
+        initQuickActionsBlock()
+
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         invokeSiteInfoBlockAction(TITLE_CLICK)
@@ -404,6 +409,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block title click shows snackbar message when hasCapabilityManageOptions is false`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = false
         site.origin = SiteModel.ORIGIN_WPCOM_REST
 
@@ -419,6 +426,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block title click shows snackbar message when origin not ORIGIN_WPCOM_REST`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_XMLRPC
 
@@ -432,6 +441,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block title click shows input dialog when editing allowed`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_WPCOM_REST
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -453,6 +464,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block icon click shows change icon dialog when site has icon`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
         site.iconUrl = siteIcon
@@ -464,6 +477,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block icon click shows add icon dialog when site doesn't have icon`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
         site.iconUrl = null
@@ -475,6 +490,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block icon click shows snackbar when upload files not allowed and site doesn't have Jetpack`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
         site.setIsWPCom(false)
@@ -489,6 +506,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block icon click shows snackbar when upload files not allowed and site has icon`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
         site.setIsWPCom(true)
@@ -504,6 +523,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block icon click shows snackbar when upload files not allowed and site does not have icon`() = test {
+        initQuickActionsBlock()
+
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
         site.setIsWPCom(true)
@@ -540,6 +561,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block url click opens site`() = test {
+        initQuickActionsBlock()
+
         invokeSiteInfoBlockAction(URL_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSite(site))
@@ -547,6 +570,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site block switch click opens site picker`() = test {
+        initQuickActionsBlock()
+
         invokeSiteInfoBlockAction(SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
@@ -636,7 +661,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(OpenStats(site))
     }
@@ -650,7 +675,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(OpenStats(site))
     }
@@ -664,7 +689,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
     }
@@ -678,7 +703,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
     }
@@ -692,7 +717,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
     }
@@ -701,7 +726,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `quick action stats click completes CHECK_STATS task`() {
         initSelectedSite()
 
-        findQuickActionsBlock()?.onStatsClick?.click()
+        requireNotNull(quickActionsStatsClickAction).invoke()
 
         verify(quickStartRepository).completeTask(CHECK_STATS)
     }
@@ -710,7 +735,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
         initSelectedSite()
 
-        findQuickActionsBlock()?.onPagesClick?.click()
+        requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(OpenPages(site))
@@ -720,7 +745,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
         initSelectedSite()
 
-        findQuickActionsBlock()?.onPagesClick?.click()
+        requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
@@ -730,7 +755,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `quick action posts click opens posts screen`() {
         initSelectedSite()
 
-        findQuickActionsBlock()?.onPostsClick?.click()
+        requireNotNull(quickActionsPostsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(OpenPosts(site))
     }
@@ -739,7 +764,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `quick action media click opens media screen`() {
         initSelectedSite()
 
-        findQuickActionsBlock()?.onMediaClick?.click()
+        requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(OpenMedia(site))
     }
@@ -909,6 +934,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `correct event is tracked when domain registration item is shown`() = test {
+        initQuickActionsBlock()
+
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
@@ -1516,19 +1543,23 @@ class MySiteViewModelTest : BaseUnitTest() {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
             dynamicQuickStartTaskCard
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
-        doAnswer {
-            removeMenuItemClickAction = (it.getArgument(0) as () -> Unit)
-            quickActionsItemClickAction = (it.getArgument(1) as () -> Unit)
-            quickActionsItemClickAction = (it.getArgument(2) as () -> Unit)
-            quickActionsItemClickAction = (it.getArgument(3) as () -> Unit)
-            quickActionsItemClickAction = (it.getArgument(4) as () -> Unit)
-            quickActionsBlock
-        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any(), any())
+        initQuickActionsBlock()
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
+    }
+
+    private fun initQuickActionsBlock() {
+        doAnswer {
+            removeMenuItemClickAction = (it.getArgument(0) as () -> Unit)
+            quickActionsStatsClickAction = (it.getArgument(1) as () -> Unit)
+            quickActionsPagesClickAction = (it.getArgument(2) as () -> Unit)
+            quickActionsPostsClickAction = (it.getArgument(3) as () -> Unit)
+            quickActionsMediaClickAction = (it.getArgument(4) as () -> Unit)
+            quickActionsBlock
+        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any(), any())
     }
 
     private enum class SiteInfoBlockAction {
