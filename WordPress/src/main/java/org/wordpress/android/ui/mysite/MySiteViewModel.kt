@@ -120,6 +120,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -166,7 +167,8 @@ class MySiteViewModel
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val snackbarSequencer: SnackbarSequencer
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -370,12 +372,8 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
     }
 
-    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
+    fun onQuickStartTaskCardClick(task: QuickStartTask) {
         quickStartRepository.setActiveTask(task)
-    }
-
-    fun onQuickStartFullScreenDialogConfirm(task: QuickStartTask?) {
-        task?.let { onQuickStartTaskCardClick(it) }
     }
 
     fun onQuickStartFullScreenDialogDismiss() {
@@ -483,6 +481,14 @@ class MySiteViewModel
         quickStartRepository.clearActiveTask()
     }
 
+    fun checkAndShowQuickStartNotice() {
+        quickStartRepository.checkAndShowQuickStartNotice()
+    }
+
+    fun dismissQuickStartNotice() {
+        if (quickStartRepository.isQuickStartNoticeShown) snackbarSequencer.dismissLastSnackbar()
+    }
+
     fun onSiteNameChosen(input: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.postValue(
@@ -497,6 +503,7 @@ class MySiteViewModel
         // This callback is called even when the dialog interaction is positive,
         // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
         quickStartRepository.completeTask(UPDATE_SITE_TITLE, true)
+        quickStartRepository.checkAndShowQuickStartNotice()
     }
 
     fun onDialogInteraction(interaction: DialogInteraction) {
@@ -513,10 +520,12 @@ class MySiteViewModel
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                 }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(MY_SITE_ICON_REMOVED)
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
                 TAG_REMOVE_NEXT_STEPS_DIALOG -> onRemoveNextStepsDialogNegativeButtonClicked()
@@ -524,6 +533,7 @@ class MySiteViewModel
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
                     quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                    quickStartRepository.checkAndShowQuickStartNotice()
                 }
             }
         }

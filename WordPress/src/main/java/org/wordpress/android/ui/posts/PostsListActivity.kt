@@ -431,7 +431,7 @@ class PostsListActivity : LocaleAwareActivity(),
                                         clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }

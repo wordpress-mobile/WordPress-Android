@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.snackbar.Snackbar.Callback.DISMISS_EVENT_SWIPE
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -27,9 +28,13 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
+import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -55,6 +60,7 @@ class QuickStartRepository
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -64,7 +70,8 @@ class QuickStartRepository
     private val htmlCompat: HtmlCompatWrapper,
     private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -79,6 +86,7 @@ class QuickStartRepository
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+    var isQuickStartNoticeShown: Boolean = false
 
     private var pendingTask: QuickStartTask? = null
 
@@ -169,7 +177,12 @@ class QuickStartRepository
             _activeTask.value = null
             pendingTask = null
             if (quickStartStore.hasDoneTask(selectedSite.id.toLong(), task)) return
-            quickStartUtilsWrapper.completeTaskAndRemindNextOne(task, selectedSite, null, contextProvider.getContext())
+            quickStartUtilsWrapper.completeTaskAndRemindNextOne(
+                    task,
+                    selectedSite,
+                    QuickStartEvent(task),
+                    contextProvider.getContext()
+            )
             setTaskDoneAndTrack(task, selectedSite.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
@@ -237,9 +250,57 @@ class QuickStartRepository
         }
     }
 
+    fun checkAndShowQuickStartNotice() {
+        val selectedSiteLocalId = selectedSiteRepository.getSelectedSite()?.id ?: -1
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId) &&
+                appPrefsWrapper.isQuickStartNoticeRequired()) {
+            showQuickStartNotice(selectedSiteLocalId)
+        }
+    }
+
+    private fun showQuickStartNotice(selectedSiteLocalId: Int) {
+        val taskToPrompt = quickStartUtilsWrapper.getNextUncompletedQuickStartTask(selectedSiteLocalId.toLong())
+        if (taskToPrompt != null) {
+            analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
+            appPrefsWrapper.setQuickStartNoticeRequired(false)
+            val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt)
+            val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                    "<b>${resourceProvider.getString(taskNoticeDetails.titleResId)}</b>:" +
+                            " ${resourceProvider.getString(taskNoticeDetails.messageResId)}"
+            )
+            isQuickStartNoticeShown = true
+            _onSnackbar.value = Event(
+                    SnackbarMessageHolder(
+                            message = UiStringText(message),
+                            buttonTitle = UiStringRes(R.string.quick_start_button_positive),
+                            buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
+                            onDismissAction = { event ->
+                                isQuickStartNoticeShown = false
+                                if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
+                            },
+                            duration = QUICK_START_NOTICE_DURATION
+                    )
+            )
+        }
+    }
+
+    private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
+        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
+        setActiveTask(task)
+    }
+
+    private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
+        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
+        appPrefsWrapper.setLastSkippedQuickStartTask(task)
+    }
+
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
         val uncompletedTasks: List<QuickStartTaskDetails>,
         val completedTasks: List<QuickStartTaskDetails>
     )
+
+    companion object {
+        private const val QUICK_START_NOTICE_DURATION = 7000
+    }
 }

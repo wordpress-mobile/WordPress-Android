@@ -19,6 +19,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class QuickStartUtilsWrapper
 @Inject constructor(
     private val quickStartStore: QuickStartStore,
@@ -131,4 +132,7 @@ class QuickStartUtilsWrapper
         quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
         analyticsTrackerWrapper.track(QUICK_START_STARTED, mySiteImprovementsFeatureConfig)
     }
+
+    fun getNextUncompletedQuickStartTask(siteLocalId: Long) =
+            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, siteLocalId)
 }

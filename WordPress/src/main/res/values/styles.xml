@@ -360,6 +360,7 @@
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:maxLines">5</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">

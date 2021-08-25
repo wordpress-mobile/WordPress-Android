@@ -341,8 +341,7 @@ object QuickStartUtils {
     @Suppress("ReturnCount")
     fun getNextUncompletedQuickStartTask(
         quickStartStore: QuickStartStore,
-        siteLocalId: Long,
-        taskType: QuickStartTaskType
+        siteLocalId: Long
     ): QuickStartTask? {
         // get all the uncompleted tasks for all task types
         val uncompletedTasks = ArrayList<QuickStartTask>()
