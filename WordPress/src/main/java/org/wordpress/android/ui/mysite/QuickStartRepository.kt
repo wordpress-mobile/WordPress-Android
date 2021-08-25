@@ -86,6 +86,7 @@ class QuickStartRepository
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+    var isQuickStartNoticeShown: Boolean = false
 
     private var pendingTask: QuickStartTask? = null
 
@@ -267,12 +268,14 @@ class QuickStartRepository
                     "<b>${resourceProvider.getString(taskNoticeDetails.titleResId)}</b>:" +
                             " ${resourceProvider.getString(taskNoticeDetails.messageResId)}"
             )
+            isQuickStartNoticeShown = true
             _onSnackbar.value = Event(
                     SnackbarMessageHolder(
                             message = UiStringText(message),
                             buttonTitle = UiStringRes(R.string.quick_start_button_positive),
                             buttonAction = { onQuickStartNoticeButtonAction(taskToPrompt) },
                             onDismissAction = { event ->
+                                isQuickStartNoticeShown = false
                                 if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
                             },
                             duration = QUICK_START_NOTICE_DURATION

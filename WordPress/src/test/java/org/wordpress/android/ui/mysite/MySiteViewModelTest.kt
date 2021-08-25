@@ -125,6 +125,7 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
@@ -161,6 +162,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -278,7 +280,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 onboardingImprovementsFeatureConfig,
                 quickStartUtilsWrapper,
-                appPrefsWrapper
+                appPrefsWrapper,
+                snackbarSequencer
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

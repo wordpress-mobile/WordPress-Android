@@ -120,6 +120,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -166,7 +167,8 @@ class MySiteViewModel
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val snackbarSequencer: SnackbarSequencer
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -481,6 +483,10 @@ class MySiteViewModel
 
     fun checkAndShowQuickStartNotice() {
         quickStartRepository.checkAndShowQuickStartNotice()
+    }
+
+    fun dismissQuickStartNotice() {
+        if (quickStartRepository.isQuickStartNoticeShown) snackbarSequencer.dismissLastSnackbar()
     }
 
     fun onSiteNameChosen(input: String) {

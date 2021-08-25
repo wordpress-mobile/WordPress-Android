@@ -366,6 +366,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let {
             if (!it.isChangingConfigurations) {
                 viewModel.clearActiveQuickStartTask()
+                viewModel.dismissQuickStartNotice()
             }
         }
     }
