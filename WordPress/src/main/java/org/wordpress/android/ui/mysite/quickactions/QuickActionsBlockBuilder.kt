@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.mysite.quickactions
 
+import org.wordpress.android.R.string
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 class QuickActionsBlockBuilder @Inject constructor() {
@@ -17,7 +18,7 @@ class QuickActionsBlockBuilder @Inject constructor() {
         showStatsFocusPoint: Boolean,
         showPagesFocusPoint: Boolean
     ) = QuickActionsBlock(
-            UiStringText("Quick Actions"),
+            UiStringRes(string.my_site_quick_actions_title),
             ListItemInteraction.create { onRemoveMenuItemClick.invoke() },
             ListItemInteraction.create { onQuickActionStatsClick.invoke() },
             ListItemInteraction.create { onQuickActionPagesClick.invoke() },
