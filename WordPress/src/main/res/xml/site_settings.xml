@@ -59,11 +59,6 @@
             android:title="@string/site_settings_timezone_title" />
 
         <org.wordpress.android.ui.prefs.WPPreference
-            android:id="@+id/pref_site_domains"
-            android:key="@string/pref_key_site_domains"
-            android:title="@string/site_settings_site_domains_title" />
-
-        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_blogging_reminders"
             android:key="@string/pref_key_blogging_reminders"
             android:title="@string/site_settings_blogging_reminders_title" />
