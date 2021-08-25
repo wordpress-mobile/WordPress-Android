@@ -19,6 +19,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
+import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager

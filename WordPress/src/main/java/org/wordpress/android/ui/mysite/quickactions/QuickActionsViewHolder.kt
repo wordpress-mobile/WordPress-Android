@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.quickactions
 
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteQuickActionsCardBinding
 import org.wordpress.android.databinding.QuickActionsBlockBinding
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
