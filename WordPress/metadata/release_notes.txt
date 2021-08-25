@@ -1,4 +1,3 @@
-* [**] Added a time selection feature to Blogging Reminders: users can now choose at what time they will receive the reminders [#15128]
-* [**] Block editor: Embed block: Add "Resize for smaller devices" setting. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3753]
-* [***] Weekly Roundup: users will receive a weekly notification that presents a summary of the activity on their most used sites [#15195]
-
+-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
+-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
+-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
