@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
@@ -124,6 +125,7 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
@@ -160,6 +162,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -276,7 +279,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 onboardingImprovementsFeatureConfig,
                 quickStartUtilsWrapper,
-                appPrefsWrapper
+                appPrefsWrapper,
+                snackbarSequencer
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1151,11 +1155,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when QS full screen dialog confirm is triggered on task tap, then task is set as active task`() {
+    fun `when quick start task is clicked, then task is set as active task`() {
         val task = QuickStartTask.VIEW_SITE
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
-        viewModel.onQuickStartFullScreenDialogConfirm(task)
+        viewModel.onQuickStartTaskCardClick(task)
 
         verify(quickStartRepository).setActiveTask(task)
     }
@@ -1314,6 +1318,129 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.disableQuickStart()
 
         verify(appPrefsWrapper).setQuickStartDisabled(true)
+    }
+
+    @Test
+    fun `when refresh is triggered, then update site settings if necessary`() {
+        viewModel.refresh()
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh quick start`() {
+        viewModel.refresh()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh current avatar`() {
+        viewModel.refresh()
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `when clear active quick start task is triggered, then clear active quick start task`() {
+        viewModel.clearActiveQuickStartTask()
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
+        viewModel.checkAndShowQuickStartNotice()
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+    }
+
+    @Test
+    fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+    }
+
+    @Test
+    fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when site icon dialog is dismissed, then upload site icon task is marked complete with refresh`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+    }
+
+    @Test
+    fun `when add site icon dialog positive button is clicked, then media picker is opened`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+    }
+
+    @Test
+    fun `when change site icon dialog positive button is clicked, then media picker is opened`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+    }
+
+    @Test
+    fun `when add site icon dialog negative button is clicked, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when change site icon dialog negative button is clicked, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when add site icon dialog is dismissed, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when change site icon dialog is dismissed, then check and show quick start notice`() {
+        viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when site chooser is dismissed, then check and show quick start notice`() {
+        viewModel.onSiteNameChooserDismissed()
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?

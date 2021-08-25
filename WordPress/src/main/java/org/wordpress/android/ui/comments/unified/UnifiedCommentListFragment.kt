@@ -127,9 +127,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                                             clickListener = { snackbarMessage.buttonAction() }
                                     )
                                 },
-                                dismissCallback = { _, _ ->
+                                dismissCallback = { _, event ->
                                     currentSnackbar = null
-                                    snackbarMessage.onDismissAction()
+                                    snackbarMessage.onDismissAction(event)
                                 },
                                 showCallback = { snackbar -> currentSnackbar = snackbar }
                         )

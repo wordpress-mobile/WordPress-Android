@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mysite
 
+import com.google.android.material.snackbar.Snackbar.Callback
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -33,12 +35,14 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
@@ -53,7 +57,8 @@ private const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
 
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
-    @Mock lateinit var quickStartUtils: QuickStartUtilsWrapper
+    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -62,8 +67,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var htmlCompat: HtmlCompatWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
-    @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -77,7 +83,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
-                quickStartUtils,
+                quickStartUtilsWrapper,
+                appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
                 analyticsTrackerWrapper,
@@ -87,7 +94,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 htmlCompat,
                 mySiteImprovementsFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
-                contextProvider
+                contextProvider,
+                htmlMessageUtils
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -172,7 +180,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(false)
+        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(false)
 
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
@@ -219,7 +227,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.startQuickStart(siteLocalId)
 
-        verify(quickStartUtils).startQuickStart(siteLocalId)
+        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId)
         assertModel()
     }
 
@@ -361,7 +369,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
 
-        verify(quickStartUtils, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
     }
 
     @Test
@@ -373,12 +381,68 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(PUBLISH_POST)
 
-        verify(quickStartUtils).completeTaskAndRemindNextOne(PUBLISH_POST, site, null, contextProvider.getContext())
+        verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
+                PUBLISH_POST,
+                site,
+                QuickStartEvent(PUBLISH_POST),
+                contextProvider.getContext()
+        )
     }
+
+    @Test
+    fun `given uncompleted task exists, when show quick start notice is triggered, then snackbar is shown`() = test {
+        initStore(nextUncompletedTask = PUBLISH_POST)
+
+        quickStartRepository.checkAndShowQuickStartNotice()
+
+        assertThat(snackbars).isNotEmpty
+    }
+
+    @Test
+    fun `given uncompleted task not exists, when show quick start notice is triggered, then snackbar not shown`() =
+            test {
+                initStore(nextUncompletedTask = null)
+
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                assertThat(snackbars).isEmpty()
+            }
+
+    @Test
+    fun `given uncompleted task, when quick start notice button action is clicked, then the task is marked active`() =
+            test {
+                initStore(nextUncompletedTask = PUBLISH_POST)
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                snackbars.last().buttonAction.invoke()
+
+                assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+            }
+
+    @Test
+    fun `when show quick start notice dismissed using swipe-to-dismiss action, then the task is skipped`() = test {
+        initStore(nextUncompletedTask = PUBLISH_POST)
+        quickStartRepository.checkAndShowQuickStartNotice()
+
+        snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_SWIPE)
+
+        verify(appPrefsWrapper).setLastSkippedQuickStartTask(PUBLISH_POST)
+    }
+
+    @Test
+    fun `when show quick start notice dismissed using non swipe-to-dismiss action, then the task is not skipped`() =
+            test {
+                initStore(nextUncompletedTask = PUBLISH_POST)
+                quickStartRepository.checkAndShowQuickStartNotice()
+
+                snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_ACTION)
+
+                verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(PUBLISH_POST)
+            }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(true)
+        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
         whenever(htmlCompat.fromHtml(ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
 
@@ -393,7 +457,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.refresh()
     }
 
-    private suspend fun initStore() {
+    private suspend fun initStore(
+        nextUncompletedTask: QuickStartTask? = null
+    ) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
                 DynamicCardsModel(
                         dynamicCardTypes = listOf(
@@ -402,7 +469,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(quickStartUtils.isQuickStartInProgress(site.id)).thenReturn(true)
+        whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)).thenReturn(true)
+        whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
                         CREATE_SITE
@@ -420,6 +488,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
         whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
+        whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteLocalId.toLong()))
+                .thenReturn(nextUncompletedTask)
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
     }
 
     private fun assertModel() {
