@@ -153,6 +153,15 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
+    /* MORE MENU */
+
+    @Test
+    fun `when block is built, then more menu is visible`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.moreMenuVisible).isTrue
+    }
+
     /* REMOVE MENU ITEM */
 
     @Test
