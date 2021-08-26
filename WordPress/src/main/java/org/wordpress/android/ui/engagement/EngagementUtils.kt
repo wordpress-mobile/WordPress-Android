@@ -4,6 +4,8 @@ import dagger.Reusable
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import javax.inject.Inject
 
 @Reusable
@@ -28,6 +30,17 @@ class EngagementUtils @Inject constructor() {
                     preferredBlogBlavatar = likeData.preferredBlogBlavatarUrl!!,
                     onClick = onClick,
                     source = source
+            )
+        }
+    }
+
+    fun likesToTrainOfFaces(
+        likes: List<LikeModel>
+    ): List<TrainOfFacesItem> {
+        return likes.map { likeData ->
+            FaceItem(
+                    userId = likeData.likerId,
+                    userAvatarUrl = likeData.likerAvatarUrl!!
             )
         }
     }
