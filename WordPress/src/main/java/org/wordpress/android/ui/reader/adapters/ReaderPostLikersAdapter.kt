@@ -4,11 +4,12 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.engagement.EngageItem
-import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.LIKER
-import org.wordpress.android.ui.engagement.EngageItem.Liker
-import org.wordpress.android.ui.engagement.EngagedPeopleAdapterDiffCallback
 import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.FACE
+import org.wordpress.android.ui.reader.viewholders.BloggingLikersTextViewHolder
 import org.wordpress.android.ui.reader.viewholders.PostLikerViewHolder
 import org.wordpress.android.util.image.ImageManager
 
@@ -16,11 +17,11 @@ class ReaderPostLikersAdapter(
     private val imageManager: ImageManager,
     private val context: Context
 ) : Adapter<EngagedPeopleViewHolder>() {
-    private var itemsList = listOf<EngageItem>()
+    private var itemsList = listOf<TrainOfFacesItem>()
 
-    fun loadData(items: List<EngageItem>) {
+    fun loadData(items: List<TrainOfFacesItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                EngagedPeopleAdapterDiffCallback(itemsList, items)
+                ReaderPostLikersAdapterDiffCallback(itemsList, items)
         )
         itemsList = items
         diffResult.dispatchUpdatesTo(this)
@@ -28,7 +29,8 @@ class ReaderPostLikersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EngagedPeopleViewHolder {
         return when (viewType) {
-            LIKER.ordinal -> PostLikerViewHolder(parent, imageManager, context)
+            FACE.ordinal -> PostLikerViewHolder(parent, imageManager, context)
+            BLOGGERS_LIKING_TEXT.ordinal -> BloggingLikersTextViewHolder(parent, context)
             else -> throw IllegalArgumentException("Illegal view type $viewType")
         }
     }
@@ -36,8 +38,8 @@ class ReaderPostLikersAdapter(
     override fun onBindViewHolder(holder: EngagedPeopleViewHolder, position: Int) {
         val item = itemsList[position]
         when (item) {
-            is Liker -> (holder as PostLikerViewHolder).bind(item)
-            else -> throw IllegalArgumentException("Illegal EngageItem $item")
+            is FaceItem -> (holder as PostLikerViewHolder).bind(item)
+            is BloggersLikingTextItem -> (holder as BloggingLikersTextViewHolder).bind(item)
         }
     }
 
