@@ -78,6 +78,8 @@ import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -493,6 +495,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likeEmptyStateText.visibility = View.VISIBLE
             } else {
                 likeEmptyStateText.visibility = View.GONE
+            }
+
+            // For accessibility purpose
+            likeFacesTrain.contentDescription = if (state.showLikeFacesTrainContainer && !state.showEmptyState) {
+                when (val lastItem = state.engageItemsList.lastOrNull()) {
+                    is BloggersLikingTextItem -> lastItem.text
+                    is FaceItem, null -> ""
+                }
+            } else {
+                ""
             }
 
             likeFacesTrain.setOnClickListener {

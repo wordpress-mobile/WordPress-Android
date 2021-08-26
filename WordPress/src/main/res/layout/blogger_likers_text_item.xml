@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:layout_marginStart="@dimen/margin_large"
+        android:importantForAccessibility="no"
         android:paddingTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:ellipsize="end"
