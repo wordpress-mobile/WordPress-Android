@@ -9,7 +9,6 @@ import javax.inject.Inject
 class QuickActionsBlockBuilder @Inject constructor() {
     @Suppress("LongParameterList")
     fun build(
-        onRemoveMenuItemClick: () -> Unit,
         onQuickActionStatsClick: () -> Unit,
         onQuickActionPagesClick: () -> Unit,
         onQuickActionPostsClick: () -> Unit,
@@ -19,7 +18,6 @@ class QuickActionsBlockBuilder @Inject constructor() {
         showPagesFocusPoint: Boolean
     ) = QuickActionsBlock(
             UiStringRes(string.my_site_quick_actions_title),
-            ListItemInteraction.create { onRemoveMenuItemClick.invoke() },
             ListItemInteraction.create { onQuickActionStatsClick.invoke() },
             ListItemInteraction.create { onQuickActionPagesClick.invoke() },
             ListItemInteraction.create { onQuickActionPostsClick.invoke() },

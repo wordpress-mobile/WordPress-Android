@@ -64,7 +64,6 @@ class MySiteItemTest {
                 interaction,
                 interaction,
                 interaction,
-                interaction,
                 true
         )
 
