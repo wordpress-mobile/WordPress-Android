@@ -58,6 +58,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
 
     data class QuickStartBlock(
         val title: UiString,
+        val moreMenuVisible: Boolean = true,
         val onRemoveMenuItemClick: ListItemInteraction,
         val taskTypeItems: List<QuickStartTaskTypeItem>
     ) : MySiteItem(QUICK_START_BLOCK) {
