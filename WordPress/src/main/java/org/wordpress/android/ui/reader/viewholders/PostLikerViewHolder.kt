@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
+import org.wordpress.android.ui.reader.adapters.FACE_ITEM_AVATAR_SIZE_DIMEN
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
@@ -20,7 +21,7 @@ class PostLikerViewHolder(
     fun bind(liker: FaceItem) {
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
                 liker.userAvatarUrl,
-                context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+                context.resources.getDimensionPixelSize(FACE_ITEM_AVATAR_SIZE_DIMEN)
         )
 
         this.likerAvatar.setOnClickListener(null)

@@ -74,6 +74,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
@@ -425,7 +426,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
-                R.dimen.margin_small_medium)
+                FACE_ITEM_LEFT_OFFSET_DIMEN)
         )
 
         likeFacesRecycler.layoutManager = layoutManager

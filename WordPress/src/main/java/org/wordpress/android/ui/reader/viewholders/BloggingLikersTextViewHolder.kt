@@ -10,6 +10,8 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
+import org.wordpress.android.ui.reader.adapters.FACE_ITEM_AVATAR_SIZE_DIMEN
+import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.getColorFromAttribute
@@ -26,7 +28,10 @@ class BloggingLikersTextViewHolder(
         if (position >= 0) {
             val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
             val paddingWidth = 2 * context.resources.getDimensionPixelSize(R.dimen.reader_detail_margin)
-            val facesWidth = position * context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+            val avataSize = context.resources.getDimensionPixelSize(FACE_ITEM_AVATAR_SIZE_DIMEN)
+            val leftOffest = context.resources.getDimensionPixelSize(FACE_ITEM_LEFT_OFFSET_DIMEN)
+            val facesWidth = position * avataSize - (position - 1).coerceAtLeast(0) * leftOffest
+
             itemView.layoutParams.width = displayWidth - paddingWidth - facesWidth
         }
 
