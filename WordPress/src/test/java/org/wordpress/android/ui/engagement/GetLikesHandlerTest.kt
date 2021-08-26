@@ -17,7 +17,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.test
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -61,7 +60,7 @@ class GetLikesHandlerTest {
     @Test
     fun `handleGetLikesForPost collects expected state`() = test {
         val fingerPrint = LikeGroupFingerPrint(siteId, postId, expectedNumLikes)
-        val paginationParams = PaginationParams(false, defaultPageLenght, noLikesLimit)
+        val paginationParams = PaginationParams(false, defaultPageLenght)
         val likesData = getDefaultLikers(expectedNumLikes, POST_LIKE, siteId, postId)
 
         val state = LikesData(
@@ -71,7 +70,7 @@ class GetLikesHandlerTest {
                 pageInfo = pageInfo
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
                 flow { emit(state) }
         )
 
@@ -80,8 +79,7 @@ class GetLikesHandlerTest {
         getLikesHandler.handleGetLikesForPost(
                 fingerPrint,
                 paginationParams.requestNextPage,
-                paginationParams.pageLength,
-                paginationParams.limit
+                paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {
@@ -95,7 +93,7 @@ class GetLikesHandlerTest {
     fun `handleGetLikesForPost forwards failures signaling to snackbar`() = test {
         val error = UiStringText("An error occurred")
         val fingerPrint = LikeGroupFingerPrint(siteId, postId, expectedNumLikes)
-        val paginationParams = PaginationParams(false, defaultPageLenght, noLikesLimit)
+        val paginationParams = PaginationParams(false, defaultPageLenght)
         val likesData = getDefaultLikers(expectedNumLikes, POST_LIKE, siteId, postId)
 
         val state = Failure(
@@ -108,7 +106,7 @@ class GetLikesHandlerTest {
                 pageInfo = pageInfo
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
                 flow { emit(state) }
         )
 
@@ -117,8 +115,7 @@ class GetLikesHandlerTest {
         getLikesHandler.handleGetLikesForPost(
                 fingerPrint,
                 paginationParams.requestNextPage,
-                paginationParams.pageLength,
-                paginationParams.limit
+                paginationParams.pageLength
         )
 
         requireNotNull(likesState).let {
@@ -133,7 +130,7 @@ class GetLikesHandlerTest {
     @Test
     fun `handleGetLikesForComment collects expected state`() = test {
         val fingerPrint = LikeGroupFingerPrint(siteId, commentId, expectedNumLikes)
-        val paginationParams = PaginationParams(false, defaultPageLenght, noLikesLimit)
+        val paginationParams = PaginationParams(false, defaultPageLenght)
         val likesData = getDefaultLikers(expectedNumLikes, COMMENT_LIKE, siteId, commentId)
 
         val state = LikesData(
@@ -166,7 +163,7 @@ class GetLikesHandlerTest {
     fun `handleGetLikesForComment forwards failures signaling to snackbar`() = test {
         val error = UiStringText("An error occurred")
         val fingerPrint = LikeGroupFingerPrint(siteId, commentId, expectedNumLikes)
-        val paginationParams = PaginationParams(false, defaultPageLenght, noLikesLimit)
+        val paginationParams = PaginationParams(false, defaultPageLenght)
         val likesData = getDefaultLikers(expectedNumLikes, COMMENT_LIKE, siteId, commentId)
 
         val state = Failure(
