@@ -3,12 +3,11 @@ package org.wordpress.android.ui.reader.viewholders
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
+import android.text.TextPaint
 import android.text.style.UnderlineSpan
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
 import org.wordpress.android.ui.reader.adapters.FACE_ITEM_AVATAR_SIZE_DIMEN
 import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
@@ -48,13 +47,12 @@ class BloggingLikersTextViewHolder(
         } else {
             this.apply {
                 setSpan(
-                        ForegroundColorSpan(context.getColorFromAttribute(attr.colorPrimary)),
-                        start,
-                        end,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                setSpan(
-                        UnderlineSpan(),
+                        object : UnderlineSpan() {
+                            override fun updateDrawState(ds: TextPaint) {
+                                ds.isUnderlineText = true
+                                ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
+                            }
+                        },
                         start,
                         end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
