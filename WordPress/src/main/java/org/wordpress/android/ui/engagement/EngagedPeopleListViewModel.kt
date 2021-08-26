@@ -68,15 +68,13 @@ class EngagedPeopleListViewModel @Inject constructor(
     val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
 
     data class EngagedPeopleListUiState(
-        val showLikeFacesTrainContainer: Boolean,
         val numLikes: Int = 0,
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
         val emptyStateAction: (() -> Unit)? = null,
-        val emptyStateButtonText: UiString? = null,
-        val likersFacesText: UiString? = null
+        val emptyStateButtonText: UiString? = null
     )
 
     fun start(listScenario: ListScenario) {
@@ -221,7 +219,6 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrainContainer = false,
                 showLoading = updateLikesState is Loading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
