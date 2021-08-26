@@ -28,9 +28,9 @@ class BloggingLikersTextViewHolder(
         if (position >= 0) {
             val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
             val paddingWidth = 2 * context.resources.getDimensionPixelSize(R.dimen.reader_detail_margin)
-            val avataSize = context.resources.getDimensionPixelSize(FACE_ITEM_AVATAR_SIZE_DIMEN)
+            val avatarSize = context.resources.getDimensionPixelSize(FACE_ITEM_AVATAR_SIZE_DIMEN)
             val leftOffest = context.resources.getDimensionPixelSize(FACE_ITEM_LEFT_OFFSET_DIMEN)
-            val facesWidth = position * avataSize - (position - 1).coerceAtLeast(0) * leftOffest
+            val facesWidth = position * avatarSize - (position - 1).coerceAtLeast(0) * leftOffest
 
             itemView.layoutParams.width = displayWidth - paddingWidth - facesWidth
         }
