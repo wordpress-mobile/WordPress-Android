@@ -497,21 +497,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likeEmptyStateText.visibility = View.GONE
             }
 
-            // For accessibility purpose
-            likeFacesTrain.contentDescription = if (state.showLikeFacesTrainContainer && !state.showEmptyState) {
-                when (val lastItem = state.engageItemsList.lastOrNull()) {
-                    is BloggersLikingTextItem -> lastItem.text
-                    is FaceItem, null -> ""
-                }
-            } else {
-                ""
-            }
+            manageAccessibility(
+                    showingFaces = state.showLikeFacesTrainContainer && !state.showEmptyState,
+                    lastItem = state.engageItemsList.lastOrNull()
+            )
 
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
 
                 viewModel.onLikeFacesClicked()
             }
+        }
+    }
+
+    private fun manageAccessibility(showingFaces: Boolean, lastItem: TrainOfFacesItem?) {
+        // For accessibility purpose
+        likeFacesTrain.contentDescription = if (showingFaces) {
+            when (val lastItem = lastItem) {
+                is BloggersLikingTextItem -> lastItem.text
+                is FaceItem, null -> ""
+            }
+        } else {
+            ""
         }
     }
 
