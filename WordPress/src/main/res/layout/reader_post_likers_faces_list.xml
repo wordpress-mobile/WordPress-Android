@@ -9,47 +9,23 @@
     android:visibility="gone"
     tools:visibility="visible"
     android:clipChildren="true"
-    android:animateLayoutChanges="true"
-    android:minHeight="@dimen/liker_faces_section_min_height">
+    android:animateLayoutChanges="false"
+    android:minHeight="@dimen/liker_faces_section_min_height"
+    android:background="?attr/selectableItemBackground"
+    android:paddingEnd="@dimen/reader_detail_margin"
+    android:paddingStart="@dimen/reader_detail_margin"
+    app:alignItems="center">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/faces_block"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/likes_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:paddingBottom="@dimen/margin_extra_medium_large"
-        android:paddingEnd="@dimen/reader_detail_margin"
-        android:paddingStart="@dimen/reader_detail_margin"
-        android:paddingTop="@dimen/margin_extra_medium_large"
-        app:alignItems="center"
-        app:flexWrap="wrap"
-        app:maxLine="2">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/likes_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:clipChildren="false"
-            tools:itemCount="5"
-            tools:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/liker_face_item"
-            tools:orientation="horizontal" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/num_bloggers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            tools:text="19 bloggers like this." />
-
-    </com.google.android.flexbox.FlexboxLayout>
+        android:clipChildren="false"
+        android:layout_gravity="center_vertical"
+        tools:itemCount="5"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/liker_face_item"
+        tools:orientation="horizontal" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
