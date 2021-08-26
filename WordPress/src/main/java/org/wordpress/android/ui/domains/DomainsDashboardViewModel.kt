@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -35,8 +35,8 @@ class DomainsDashboardViewModel @Inject constructor(
 
     private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteItem> {
         val listItems = mutableListOf<MySiteItem>()
-        listItems +=  CategoryHeader(UiStringRes(string.domains_primary_domain))
-        listItems +=  ListItem(
+        listItems += CategoryHeader(UiStringRes(string.domains_primary_domain))
+        listItems += ListItem(
                         R.drawable.ic_domains_white_24dp,
                         primaryText = UiStringResWithParams(
                                 string.domains_primary_domain_address,
