@@ -524,14 +524,6 @@ tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.
     ]
 }
 
-tasks.register("updateVersionProperties") {
-    doLast {
-        ant.propertyfile(file: "../version.properties") {
-            entry( key: "$key", value: "$value")
-        }
-    }
-}
-
 tasks.register("printVersionName") {
     doLast {
         if (project.hasProperty('alpha')) {
