@@ -86,7 +86,6 @@ import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
 import org.wordpress.android.util.HtmlUtils;
@@ -103,7 +102,6 @@ import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
-import org.wordpress.android.util.config.SiteDomainsFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -186,7 +184,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
-    @Inject SiteDomainsFeatureConfig mSiteDomainsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
 
@@ -209,7 +206,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPref;
     private DetailListPreference mPrivacyPref;
     private DetailListPreference mLanguagePref;
-    private Preference mSiteDomainsPref;
 
     // Homepage settings
     private WPPreference mHomepagePref;
@@ -502,7 +498,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initBloggingReminders();
-        setupSiteDomainsSetting();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -581,8 +576,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupTimezoneBottomSheet();
         } else if (preference == mBloggingRemindersPref) {
             setupBloggingRemindersBottomSheet();
-        } else if (preference == mSiteDomainsPref) {
-            startSiteDomainsFlow();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -979,7 +972,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mBloggingRemindersPref = getClickPref(R.string.pref_key_blogging_reminders);
-        mSiteDomainsPref = getClickPref(R.string.pref_key_site_domains);
         mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
         updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
@@ -1097,7 +1089,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mBloggingRemindersPref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
-                mGutenbergDefaultForNewPosts, mHomepagePref, mSiteDomainsPref
+                mGutenbergDefaultForNewPosts, mHomepagePref
         };
 
         for (Preference preference : editablePreference) {
@@ -1236,28 +1228,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         mBloggingRemindersViewModel.onSettingsItemClicked(mSite.getId());
-    }
-
-    private void setupSiteDomainsSetting() {
-        if (mSiteDomainsPref == null || !isAdded()) {
-            return;
-        }
-
-        if (!mSiteDomainsFeatureConfig.isEnabled()) {
-            removeSiteDomainsPref();
-        } else {
-            if (mSiteDomainsPref != null) {
-                mSiteDomainsPref.setSummary(R.string.register_domain); // TODO: Use the correct title here
-            }
-        }
-    }
-
-    private void startSiteDomainsFlow() {
-        if (mSiteDomainsPref == null || !isAdded()) {
-            return;
-        }
-        // TODO: Launch Domian purchase flow
-        AppLog.d(T.SETTINGS, "Site domains flow");
     }
 
     private void showHomepageSettings() {

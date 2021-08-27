@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
@@ -21,6 +22,7 @@ class SiteListItemBuilderTest {
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
+    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -29,7 +31,8 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
-                themeBrowserUtils
+                themeBrowserUtils,
+                siteDomainsFeatureConfig
         )
     }
 
