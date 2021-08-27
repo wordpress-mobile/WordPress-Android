@@ -476,6 +476,7 @@
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="backgroundTint">@color/on_surface_divider</item>
+        <item name="android:outlineProvider">none</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
