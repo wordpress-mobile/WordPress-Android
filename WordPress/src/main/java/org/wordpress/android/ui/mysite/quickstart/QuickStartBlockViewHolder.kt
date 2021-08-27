@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartBlockBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
-import org.wordpress.android.databinding.QuickStartToolbarBinding
+import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
@@ -26,21 +25,19 @@ class QuickStartBlockViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder<QuickStartBlockBinding>(parent.viewBinding(QuickStartBlockBinding::inflate)) {
-    private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
-
     fun bind(block: QuickStartBlock) = with(binding) {
-        quickStartToolbar.update(block)
+        mySiteCardToolbar.update(block)
         quickStartCustomize.update(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
         quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
-    private fun QuickStartToolbarBinding.update(block: QuickStartBlock) {
-        quickStartTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
-        quickStartMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+    private fun MySiteCardToolbarBinding.update(block: QuickStartBlock) {
+        mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
 
-    private fun QuickStartToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
-        val quickStartPopupMenu = PopupMenu(itemView.context, quickStartMore)
+    private fun MySiteCardToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {
+        val quickStartPopupMenu = PopupMenu(itemView.context, mySiteCardToolbarMore)
         quickStartPopupMenu.setOnMenuItemClickListener {
             onRemoveMenuItemClick.click()
             return@setOnMenuItemClickListener true

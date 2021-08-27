@@ -44,6 +44,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     }
 
     data class QuickActionsBlock(
+        val title: UiString,
+        val onRemoveMenuItemClick: ListItemInteraction,
         val onStatsClick: ListItemInteraction,
         val onPagesClick: ListItemInteraction,
         val onPostsClick: ListItemInteraction,

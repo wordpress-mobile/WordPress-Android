@@ -65,7 +65,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -104,6 +103,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.quickactions.QuickActionsBlockBuilder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -162,6 +162,7 @@ class MySiteViewModel
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
     private val quickStartBlockBuilder: QuickStartBlockBuilder,
+    private val quickActionsBlockBuilder: QuickActionsBlockBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -235,16 +236,15 @@ class MySiteViewModel
             )
             if (!buildConfigWrapper.isJetpackApp) {
                 siteItems.add(
-                        QuickActionsBlock(
-                                ListItemInteraction.create(this::quickActionStatsClick),
-                                ListItemInteraction.create(this::quickActionPagesClick),
-                                ListItemInteraction.create(this::quickActionPostsClick),
-                                ListItemInteraction.create(this::quickActionMediaClick),
-                                site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                        quickActionsBlockBuilder.build(
+                        this::onQuickStartBlockRemoveMenuItemClick,
+                        this::quickActionStatsClick,
+                        this::quickActionPagesClick,
+                        this::quickActionPostsClick,
+                        this::quickActionMediaClick,
+                        site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                                 activeTask == CHECK_STATS,
-                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
-                        )
-                )
+                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES))
             }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
