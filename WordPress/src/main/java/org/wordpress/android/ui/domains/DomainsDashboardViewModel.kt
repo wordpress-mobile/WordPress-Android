@@ -17,6 +17,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -31,8 +32,9 @@ class DomainsDashboardViewModel @Inject constructor(
     private val _uiModel = MutableLiveData<List<MySiteItem>>()
     val uiModel = _uiModel
 
-    val siteUrl = selectedSiteRepository.selectedSiteChange.value?.url.toString()
+    val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
 
+    // TODO: UI and logic is work in progress.  Will be revamped once design is ready
     private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteItem> {
         val listItems = mutableListOf<MySiteItem>()
         listItems += CategoryHeader(UiStringRes(string.domains_primary_domain))
