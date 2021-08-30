@@ -95,10 +95,5 @@ enum class QuickStartMySitePrompts constructor(
             }
             return null
         }
-
-        @JvmStatic
-        fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
-            return task == QuickStartTask.FOLLOW_SITE
-        }
     }
 }
