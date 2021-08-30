@@ -146,16 +146,6 @@ REPOSITORY_NAME="WordPress-Android"
     android_bump_version_release(app: 'wordpress')
     new_version = android_get_app_version(app: 'wordpress')
 
-    # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
-    #   which won't work since we already ran this action for wordpress and are already in release branch. Patch it manually for now, by applying the same versionName and versionCOde as the ones from WordPress
-    new_version_tuple = android_get_release_version(app: 'wordpress')
-    Dir.chdir('..') do
-      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version_tuple['name']}")
-      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_tuple['code']}")
-      sh('git', 'add', 'version.properties')
-      sh('git', 'commit', '-m', 'Bump Jetpack version number')
-    end
-
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
 
