@@ -481,29 +481,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mFloatingActionButton.hide();
             }
 
-            if (mMySiteImprovementsFeatureConfig.isEnabled()) {
-                if (fabUiState.isFocusPointVisible()) {
-                    mHandler.postDelayed(mShowFabFocusPoint, 200);
-                } else if (!fabUiState.isFocusPointVisible()) {
-                    mHandler.removeCallbacks(mShowFabFocusPoint);
-                    mHandler.post(() -> addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, false));
-                }
+            if (fabUiState.isFocusPointVisible()) {
+                mHandler.postDelayed(mShowFabFocusPoint, 200);
+            } else if (!fabUiState.isFocusPointVisible()) {
+                mHandler.removeCallbacks(mShowFabFocusPoint);
+                mHandler.post(() -> addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, false));
             }
         });
 
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                    // complete quick start task outside of QS process
-                    SiteModel selectedSite = getSelectedSite();
-                    if (selectedSite != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
-                        mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
-                                QuickStartTask.PUBLISH_POST,
-                                selectedSite,
-                                null,
-                                this
-                        );
-                    }
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
@@ -946,12 +934,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
 
-        if (mMySiteImprovementsFeatureConfig.isEnabled()) {
-            if (pageType == PageType.READER) {
-                // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
-                mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
-            }
+        if (pageType == PageType.READER) {
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
+            mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
         }
 
         mViewModel.onPageChanged(
