@@ -953,16 +953,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
                 mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
             }
-        } else {
-            if (getMySiteFragment() != null) {
-                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
-                hideQuickStartSnackBar();
-                if (pageType == PageType.READER && getMySiteFragment()
-                        .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
-                    // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                    getMySiteFragment().requestNextStepOfActiveQuickStartTask();
-                }
-            }
         }
 
         mViewModel.onPageChanged(
