@@ -16,13 +16,11 @@ Language: it
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Metti in evidenza i tuoi contenuti aggiungendo immagini, GIF ed elementi multimediali alle tue pagine.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Prova aggiungendo alcuni blocchi al post o alla pagina.</string>
     <string name="gutenberg_native_embed_media">Incorpora elemento multimediale</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Ogni blocco ha le proprie impostazioni. Per trovarle, fai clic su un blocco. Verranno visualizzate le impostazioni nella barra degli strumenti nella parte inferiore dello schermo.</string>
     <string name="gutenberg_native_build_layouts">Crea layout</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">I blocchi sono contenuti da poter inserire, organizzare e modellare senza dover conoscere alcun codice. I blocchi rappresentano un modo semplice e moderno per creare meravigliosi layout.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">I blocchi ti consentono di concentrarti sulla scrittura dei contenuti, perché tutti gli strumenti di formattazione di cui hai bisogno sono già lì per aiutarti a trasmettere il tuo messaggio.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organizza i tuoi contenuti in colonne, aggiungi pulsanti di inviti all\'azione e sovrapponi il testo alle immagini.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Aggiungi un nuovo blocco in qualsiasi momento toccando l\'icona + sulla barra degli strumenti nella parte inferiore sinistra. </string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s di %2$s completati</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Scopri le nozioni di base grazie a una rapida guida dettagliata.</string>
     <string name="comment_batch_moderation_error">Non è stato possibile moderare uno o più commenti</string>
     <string name="create_site_notification_create_site_action">Crea il sito</string>
@@ -62,8 +60,6 @@ Language: it
     <string name="blogging_reminders_select_days">Seleziona i giorni in cui vuoi lavorare sul blog</string>
     <string name="blogging_reminders_epilogue_caption">Puoi aggiornare questa impostazione in qualsiasi momento tramite Il mio sito &gt; Impostazioni &gt; Promemoria blog.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Non ci sono promemoria impostati.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Riceverai promemoria relativi al blog &lt;b&gt;tutti i giorni&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Riceverai promemoria relativi al blog %1$s alla settimana di %2$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Promemoria eliminati.</string>
     <string name="blogging_reminders_epilogue_title">Tutto impostato.</string>
     <string name="blogging_reminders_update">Aggiorna</string>
@@ -745,9 +741,11 @@ Language: it
     <string name="error_update_site_title_network">Impossibile aggiornare il titolo del sito. Controlla la connessione di rete e riprova.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifiche non salvate.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Apri il link in un browser.</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Naviga al foglio dei contenuti precedente</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Naviga alla personalizzazione del gradiente</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Naviga al selezionatore del colore personalizzato</string>
     <string name="gutenberg_native_gradient_type">Tipo di gradiente</string>
+    <string name="gutenberg_native_go_back">Torna indietro</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tocca due volte per selezionare l\'opzione</string>
     <string name="gutenberg_native_customize_gradient">Personalizza gradiente</string>
     <string name="pages_list_author">Autore della pagina</string>
@@ -2641,7 +2639,6 @@ Language: it
     <string name="my_site_btn_view_site">Visualizza il sito</string>
     <string name="my_site_btn_view_admin">Visualizza l\'amministrazione</string>
     <string name="my_site_btn_switch_site">Cambia sito</string>
-    <string name="my_site_btn_site_settings">Impostazioni</string>
     <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="my_site_header_publish">Pubblica</string>
     <string name="my_site_header_look_and_feel">Aspetto</string>

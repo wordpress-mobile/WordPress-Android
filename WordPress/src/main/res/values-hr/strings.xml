@@ -349,7 +349,6 @@ Language: hr
     <string name="site_picker_title">Odaberi stranicu</string>
     <string name="my_site_btn_view_admin">Prikaži Admin</string>
     <string name="my_site_btn_switch_site">Promjeni web-stranicu</string>
-    <string name="my_site_btn_site_settings">Postavke</string>
     <string name="my_site_header_publish">Objavi</string>
     <string name="my_site_btn_blog_posts">Blog objave</string>
     <string name="my_site_header_look_and_feel">Izgled i dojam</string>
