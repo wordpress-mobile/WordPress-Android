@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
