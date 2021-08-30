@@ -79,8 +79,6 @@ import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -477,8 +475,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE &&
-                    state.showLikeFacesTrainContainer && !state.showEmptyState
+            val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE && state.goingToShowFaces
 
             setupLikeFacesTrain(
                     state.engageItemsList,
@@ -498,9 +495,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likeEmptyStateText.visibility = View.GONE
             }
 
-            manageAccessibility(
-                    showingFaces = state.showLikeFacesTrainContainer && !state.showEmptyState,
-                    lastItem = state.engageItemsList.lastOrNull()
+            likeFacesTrain.contentDescription = uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    state.contentDescription
             )
 
             likeFacesTrain.setOnClickListener {
@@ -508,18 +505,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 viewModel.onLikeFacesClicked()
             }
-        }
-    }
-
-    private fun manageAccessibility(showingFaces: Boolean, lastItem: TrainOfFacesItem?) {
-        // For accessibility purpose
-        likeFacesTrain.contentDescription = if (showingFaces) {
-            when (val lastItem = lastItem) {
-                is BloggersLikingTextItem -> lastItem.text
-                is FaceItem, null -> ""
-            }
-        } else {
-            ""
         }
     }
 
@@ -537,7 +522,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (adapter == null) {
             adapter = ReaderPostLikersAdapter(
                     imageManager,
-                    contextProvider.getContext()
+                    uiHelpers
             )
 
             likeFacesRecycler.adapter = adapter

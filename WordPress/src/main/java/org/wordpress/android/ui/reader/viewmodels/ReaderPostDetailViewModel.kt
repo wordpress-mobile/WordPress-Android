@@ -30,6 +30,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
@@ -59,6 +60,8 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -145,7 +148,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         val showLoading: Boolean,
         val engageItemsList: List<TrainOfFacesItem>,
         val showEmptyState: Boolean,
-        val emptyStateTitle: UiString? = null/*,*/
+        val emptyStateTitle: UiString? = null,
+        val contentDescription: UiString,
+        val goingToShowFaces: Boolean
     )
 
     init {
@@ -572,51 +577,77 @@ class ReaderPostDetailViewModel @Inject constructor(
             it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
+        val engageItemsList = if (showLikeFacesTrainContainer) {
+            likers + getLikersFacesText(showEmptyState, numLikes, iLiked)
+        } else {
+            listOf()
+        }
+
+        val goingToShowFaces = showLikeFacesTrainContainer && !showEmptyState
+
+        val contentDescription = if (goingToShowFaces) {
+            when (val lastItem = engageItemsList.lastOrNull()) {
+                is BloggersLikingTextItem -> lastItem.textWithParams
+                is FaceItem, null -> UiStringText("")
+            }
+        } else {
+            UiStringText("")
+        }
+
         return TrainOfFacesUiState(
                 showLikeFacesTrainContainer = showLikeFacesTrainContainer,
                 showLoading = showLoading,
-                engageItemsList = if (showLikeFacesTrainContainer) {
-                    likers + getLikersFacesText(showEmptyState, numLikes, iLiked)
-                } else {
-                    listOf()
-                },
+                engageItemsList = engageItemsList,
                 showEmptyState = showEmptyState,
-                emptyStateTitle = emptyStateTitle
+                emptyStateTitle = emptyStateTitle,
+                contentDescription = contentDescription,
+                goingToShowFaces = goingToShowFaces
         )
     }
 
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
-        val context = contextProvider.getContext()
-        val likeThisLocalizedString = context.getString(R.string.like_this)
-        val likesThisLocalizedString = context.getString(R.string.likes_this)
+        val likeThisResString = UiStringRes(R.string.like_this)
+        val likesThisResString = UiStringRes(R.string.likes_this)
 
         return when {
             showEmptyState -> {
                 listOf()
             }
             numLikes == 1 && iLiked -> {
-                val text = context.getString(R.string.like_faces_you_text, likeThisLocalizedString)
-                BloggersLikingTextItem(text, likeThisLocalizedString).toList()
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_you_text, listOf(likeThisResString)),
+                        likeThisResString
+                ).toList()
             }
             numLikes == 2 && iLiked -> {
-                val text = context.getString(R.string.like_faces_you_plus_one_text, likeThisLocalizedString)
-                BloggersLikingTextItem(text, likeThisLocalizedString).toList()
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf(likeThisResString)),
+                        likeThisResString
+                ).toList()
             }
             numLikes > 2 && iLiked -> {
-                val text = context.getString(
-                        R.string.like_faces_plural_with_you_text,
-                        numLikes - 1,
-                        likeThisLocalizedString
-                )
-                BloggersLikingTextItem(text, likeThisLocalizedString).toList()
+                BloggersLikingTextItem(
+                        UiStringResWithParams(
+                                R.string.like_faces_plural_with_you_text,
+                                listOf(UiStringText((numLikes - 1).toString()), likeThisResString)
+                        ),
+                        likeThisResString
+                ).toList()
             }
             numLikes == 1 && !iLiked -> {
-                val text = context.getString(R.string.like_faces_one_blogger_text, likesThisLocalizedString)
-                BloggersLikingTextItem(text, likesThisLocalizedString).toList()
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf(likesThisResString)),
+                        likesThisResString
+                ).toList()
             }
             numLikes > 1 && !iLiked -> {
-                val text = context.getString(R.string.like_faces_more_bloggers_text, numLikes, likeThisLocalizedString)
-                BloggersLikingTextItem(text, likeThisLocalizedString).toList()
+                BloggersLikingTextItem(
+                        UiStringResWithParams(
+                                R.string.like_faces_more_bloggers_text,
+                                listOf(UiStringText(numLikes.toString()), likeThisResString)
+                        ),
+                        likeThisResString
+                ).toList()
             }
             else -> {
                 listOf()

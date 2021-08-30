@@ -11,11 +11,12 @@ import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.FACE
 import org.wordpress.android.ui.reader.viewholders.BloggingLikersTextViewHolder
 import org.wordpress.android.ui.reader.viewholders.PostLikerViewHolder
 import org.wordpress.android.ui.reader.viewholders.TrainOfFacesViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
 class ReaderPostLikersAdapter(
     private val imageManager: ImageManager,
-    private val context: Context
+    private val uiHelpers: UiHelpers
 ) : Adapter<TrainOfFacesViewHolder<*>>() {
     private var itemsList = listOf<TrainOfFacesItem>()
 
@@ -29,8 +30,8 @@ class ReaderPostLikersAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainOfFacesViewHolder<*> {
         return when (viewType) {
-            FACE.ordinal -> PostLikerViewHolder(parent, imageManager, context)
-            BLOGGERS_LIKING_TEXT.ordinal -> BloggingLikersTextViewHolder(parent, context)
+            FACE.ordinal -> PostLikerViewHolder(parent, imageManager)
+            BLOGGERS_LIKING_TEXT.ordinal -> BloggingLikersTextViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Illegal view type $viewType")
         }
     }
