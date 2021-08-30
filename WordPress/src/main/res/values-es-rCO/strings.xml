@@ -2132,7 +2132,6 @@ Language: es_CO
     <string name="my_site_btn_view_site">Ver sitio</string>
     <string name="my_site_btn_view_admin">Ver Administrador</string>
     <string name="my_site_btn_switch_site">Cambiar sitio</string>
-    <string name="my_site_btn_site_settings">Ajustes</string>
     <string name="my_site_btn_blog_posts">Entradas del blog</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aspecto</string>

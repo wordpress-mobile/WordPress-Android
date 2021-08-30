@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 09:07:31+0000
+Translation-Revision-Date: 2021-08-27 06:32:26+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -19,9 +19,8 @@ Language: cs_CZ
     <string name="blogging_reminders_epilogue_caption">Tuto položku můžete kdykoli aktualizovat na stránce Můj web&gt; Nastavení&gt; Připomenutí blogů.</string>
     <string name="blogging_reminders_epilogue_title">Vše připraveno!</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Nemáte nastavena žádná připomenutí.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Dostanete připomenutí blogovat &lt;b&gt;každý den&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Dostanete připomenutí blogovat %1$s týdně na %2$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Připomenutí odstraněny!</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Dostanete připomenutí blogovat %1$s týdně na %2$s na %3$s.</string>
     <string name="blogging_reminders_update">Aktualizace</string>
     <string name="blogging_reminders_not_set">Žádná sada</string>
     <string name="blogging_reminders_n_a_week">%s za týden</string>
@@ -2596,9 +2595,9 @@ Language: cs_CZ
     <string name="my_site_btn_switch_site">Přepnout web</string>
     <string name="my_site_btn_view_site">Zobrazit web</string>
     <string name="my_site_btn_blog_posts">Příspěvky</string>
-    <string name="my_site_btn_site_settings">Nastavení</string>
     <string name="my_site_header_publish">Publikovat</string>
     <string name="my_site_header_look_and_feel">Vzhled</string>
+    <string name="my_site_btn_site_settings">Nastavení webu</string>
     <string name="my_site_header_configuration">Nastavení</string>
     <string name="reader_label_new_posts_subtitle">Klepněte pro jejich zobrazení</string>
     <string name="hide">Skrýt</string>
