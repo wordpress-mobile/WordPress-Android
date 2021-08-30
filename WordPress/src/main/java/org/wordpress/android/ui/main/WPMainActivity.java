@@ -1200,16 +1200,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
-    private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
-        if (fragment instanceof MySiteFragment) {
-            return (MySiteFragment) fragment;
-        }
-
-        // TODO consider the new my site fragment
-        return null;
-    }
-
     private ImprovedMySiteFragment getImprovedMySiteFragment() {
         Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
         if (fragment instanceof ImprovedMySiteFragment) {
