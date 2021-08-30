@@ -758,5 +758,7 @@ class MySiteViewModel
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
+        const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
+        const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
     }
 }

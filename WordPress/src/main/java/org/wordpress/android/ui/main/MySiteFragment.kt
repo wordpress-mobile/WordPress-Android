@@ -103,6 +103,7 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
@@ -1093,7 +1094,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
                     HIDE_WP_ADMIN_DAY
             )
-            calendar.timeZone = TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE)
+            calendar.timeZone = TimeZone.getTimeZone(MySiteViewModel.HIDE_WP_ADMIN_GMT_TIME_ZONE)
             dateCreated != null && dateCreated.after(calendar.time)
         }
     }
@@ -1536,8 +1537,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         const val HIDE_WP_ADMIN_YEAR = 2015
         const val HIDE_WP_ADMIN_MONTH = 9
         const val HIDE_WP_ADMIN_DAY = 7
-        const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
-        const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
