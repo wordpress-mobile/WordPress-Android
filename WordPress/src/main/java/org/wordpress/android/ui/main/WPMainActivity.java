@@ -553,19 +553,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     .show(getSupportFragmentManager(), FeatureAnnouncementDialogFragment.TAG);
         });
 
-        mFloatingActionButton.setOnClickListener(v -> {
-            boolean shouldShowPublishPostQuickStartTask = getMySiteFragment() != null && getMySiteFragment()
-                    .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST);
-
-            if (shouldShowPublishPostQuickStartTask) {
-                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.fab_container));
-                hideQuickStartSnackBar();
-                if (getMySiteFragment() != null) {
-                    getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
-                }
-            }
-            mViewModel.onFabClicked(getSelectedSite(), shouldShowPublishPostQuickStartTask);
-        });
+        mFloatingActionButton.setOnClickListener(v -> mViewModel.onFabClicked(getSelectedSite()));
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {

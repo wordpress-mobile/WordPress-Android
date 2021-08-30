@@ -191,13 +191,13 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(site: SiteModel?, shouldShowQuickStartFocusPoint: Boolean = false) {
+    fun onFabClicked(site: SiteModel?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
         val quickStartFromImprovedMySiteFragment = mySiteImprovementsFeatureConfig.isEnabled() &&
                 quickStartRepository.activeTask.value == PUBLISH_POST
-        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
+        _showQuickStarInBottomSheet.postValue(quickStartFromImprovedMySiteFragment)
 
         if (SiteUtils.supportsStoriesFeature(site) || hasFullAccessToContent(site)) {
             // The user has at least two create options available for this site (pages and/or story posts),

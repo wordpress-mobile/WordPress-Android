@@ -368,7 +368,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
@@ -389,7 +389,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `CREATE_NEW_POST action sets task as done in QuickStartRepository when my site improvements turned on`() {
         whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
@@ -402,7 +402,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
