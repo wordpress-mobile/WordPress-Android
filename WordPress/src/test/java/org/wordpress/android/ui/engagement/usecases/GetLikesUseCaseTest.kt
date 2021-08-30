@@ -56,10 +56,7 @@ class GetLikesUseCaseTest {
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
     private val limitedPageLenght = 8
-/*
-    private val defaultLikesLimit = 5
-    private val noLikesLimit = -1
-*/
+
     private val pageInfo = PagingInfo(
             20,
             1
