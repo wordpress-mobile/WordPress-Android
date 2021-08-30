@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -47,6 +46,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -290,6 +290,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+                activity,
+                action.site,
+                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+        )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
@@ -359,6 +364,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     override fun onResume() {
         super.onResume()
         viewModel.refresh()
+        viewModel.checkAndShowQuickStartNotice()
     }
 
     override fun onPause() {
@@ -366,6 +372,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let {
             if (!it.isChangingConfigurations) {
                 viewModel.clearActiveQuickStartTask()
+                viewModel.dismissQuickStartNotice()
             }
         }
     }
@@ -453,11 +460,21 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.checkAndStartQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                    viewModel.checkAndStartQuickStart(
+                            data.getIntExtra(
+                                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                    SelectedSiteRepository.UNAVAILABLE
+                            )
+                    )
                 }
             }
         }
@@ -501,18 +518,18 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let { parent ->
             snackbarSequencer.enqueue(
                     SnackbarItem(
-                            Info(
+                            info = Info(
                                     view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
-                                    duration = Snackbar.LENGTH_LONG
+                                    duration = holder.duration
                             ),
-                            holder.buttonTitle?.let {
+                            action = holder.buttonTitle?.let {
                                 Action(
                                         textRes = holder.buttonTitle,
                                         clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }
@@ -548,11 +565,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     override fun onConfirm(result: Bundle?) {
-        if (result != null) {
-            viewModel.onQuickStartFullScreenDialogConfirm(
-                    task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
-            )
-        }
+        val task = result?.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+        task?.let { viewModel.onQuickStartTaskCardClick(it) }
     }
 
     override fun onDismiss() {

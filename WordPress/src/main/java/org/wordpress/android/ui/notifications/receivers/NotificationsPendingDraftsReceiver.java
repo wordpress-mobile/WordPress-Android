@@ -19,9 +19,9 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -47,6 +47,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,8 +59,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
             AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
             // build notifications for existing local drafts
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
             if (site != null) {
                 List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
                 for (PostModel post : draftPosts) {

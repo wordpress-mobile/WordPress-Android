@@ -6,16 +6,19 @@ import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SelectedSiteRepository
-@Inject constructor(
+@Suppress("TooManyFunctions")
+class SelectedSiteRepository @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
+    private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
     private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
@@ -23,11 +26,20 @@ class SelectedSiteRepository
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
     val siteSelected = _selectedSiteChange.map { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
-    fun updateSite(selectedSite: SiteModel?) {
-        if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
+    fun updateSite(selectedSite: SiteModel) {
+        if (getSelectedSite()?.iconUrl != selectedSite.iconUrl) {
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
+        appPrefsWrapper.setSelectedSite(selectedSite.id)
+    }
+
+    fun removeSite() {
+        if (getSelectedSite()?.iconUrl != null) {
+            showSiteIconProgressBar(false)
+        }
+        _selectedSiteChange.value = null
+        appPrefsWrapper.setSelectedSite(UNAVAILABLE)
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
@@ -61,6 +73,13 @@ class SelectedSiteRepository
 
     fun getSelectedSite() = _selectedSiteChange.value
 
+    @JvmOverloads
+    fun getSelectedSiteLocalId(fromPrefs: Boolean = false) = if (fromPrefs) {
+        appPrefsWrapper.getSelectedSite()
+    } else {
+        getSelectedSite()?.id ?: UNAVAILABLE
+    }
+
     fun updateSiteSettingsIfNecessary() {
         // If the selected site is null, we can't update its site settings
         val selectedSite = getSelectedSite() ?: return
@@ -90,5 +109,9 @@ class SelectedSiteRepository
 
     fun isSiteIconUploadInProgress(): Boolean {
         return _showSiteIconProgressBar.value == true
+    }
+
+    companion object {
+        const val UNAVAILABLE = AppPrefs.SELECTED_SITE_UNAVAILABLE
     }
 }

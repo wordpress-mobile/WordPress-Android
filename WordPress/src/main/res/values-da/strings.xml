@@ -94,7 +94,6 @@ Language: da_DK
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
     <string name="my_site_btn_view_admin">Vis administration</string>
-    <string name="my_site_btn_site_settings">Indstillinger</string>
     <string name="my_site_header_publish">Udgiv</string>
     <string name="my_site_btn_blog_posts">Blogindlæg</string>
     <string name="my_site_header_look_and_feel">Udseende</string>

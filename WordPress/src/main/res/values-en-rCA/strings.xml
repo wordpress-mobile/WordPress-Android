@@ -16,13 +16,11 @@ Language: en_CA
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Make your content stand out by adding images, gifs, videos, and embedded media to your pages.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Give it a try by adding a few blocks to your post or page!</string>
     <string name="gutenberg_native_embed_media">Embed media</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">Each block has its own settings. To find them, click on a block. Its settings will appear on the Toolbar at the bottom of the screen.</string>
     <string name="gutenberg_native_build_layouts">Build layouts</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks are pieces of content that you can insert, rearrange, and style without needing to know how to code. Blocks are an easy and modern way for you to create beautiful layouts.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks allow you to focus on writing your content, knowing that all the formatting tools you need are there to help you get your message across.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Arrange your content into columns, add Call to Action buttons, and overlay images with text.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Add a new block at any time by tapping on the + icon in the Toolbar on the bottom left. </string>
-    <string name="quick_start_sites_type_tasks_completed">%1$s of %2$s complete</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="comment_batch_moderation_error">Failed to moderate one or more comments</string>
     <string name="create_site_notification_create_site_action">Create site</string>
@@ -62,8 +60,6 @@ Language: en_CA
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_update">Update</string>
@@ -745,9 +741,11 @@ Language: en_CA
     <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigates to customize the gradient</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigates to custom colour picker</string>
     <string name="gutenberg_native_gradient_type">Gradient Type</string>
+    <string name="gutenberg_native_go_back">Go back</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Double tap to select the option</string>
     <string name="gutenberg_native_customize_gradient">Customize Gradient</string>
     <string name="pages_list_author">Page author</string>
@@ -2641,7 +2639,6 @@ Language: en_CA
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>

@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-10 17:01:09+0000
+Translation-Revision-Date: 2021-08-23 11:58:24+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Ваш сайт просмотрен %1$d раз, %2$d отметок \"понравилось\" и %3$d комментариев.</string>
+    <string name="weekly_roundup_notification_title">За неделю: %s</string>
+    <string name="blogging_reminders_notification_time">Время уведомления</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Вы получите напоминания о необходимости писать в блог &lt;b&gt;ежедневно&lt;/b&gt; в &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s в неделю в %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Элементы управления форматированием текста расположены на панели инструментов над клавиатурой при редактировании текстового блока.</string>
+    <string name="gutenberg_native_selected_s">Выбрано. %s</string>
+    <string name="gutenberg_native_select_a_color_above">Выберите цвет выше</string>
+    <string name="gutenberg_native_navigates_to_select_s">Навигация для выделения %s</string>
+    <string name="gutenberg_native_move_blocks">Переместить блоки</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Как отредактировать запись</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Как отредактировать страницу</string>
+    <string name="gutenberg_native_customize_blocks">Настроить блоки</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Изменения избранного изображения не будут затронуты кнопками отменить/повторить.</string>
+    <string name="gutenberg_native_applies_the_setting">Применить настройку</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Вы можете переупорядочить блоки, нажав на блок, а затем нажав стрелки вверх и вниз, которые появляются в нижней левой части блока, чтобы переместить его выше или ниже других блоков.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Добро пожаловать в мир блоков</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Чтобы удалить блок, выберите блок и щелкните три точки в правом нижнем углу блока, чтобы просмотреть настройки. Оттуда выберите вариант удаления блока.</string>
@@ -16,7 +31,7 @@ Language: ru
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Сделайте содержимое заметным, добавив на свои страницы изображения, GIF-анимацию, видео и встроенные мультимедиа.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Попробуйте, добавив несколько блоков в запись или страницу!</string>
     <string name="gutenberg_native_embed_media">Встроить медиасодержимое</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">У каждого блока свои настройки. Чтобы найти их, нажмите на блок. Его настройки появятся на панели инструментов внизу экрана.</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">У каждого блока свои настройки. Чтобы найти их, нажмите на блок. Его настройки появятся на панели инструментов внизу экрана.</string>
     <string name="gutenberg_native_build_layouts">Макеты</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Блоки - это части содержимого, которые можно вставлять, переставлять и стилизовать, без необходимости использования кода. Блоки - это простой и современный способ создавать красивые макеты.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Блоки позволяют вам сосредоточиться на написании, знайте о том, что все инструменты форматирования доступны здесь, чтобы оформить ваше сообщение.</string>
@@ -62,8 +77,7 @@ Language: ru
     <string name="blogging_reminders_select_days">Выберите дни, в которые вы хотите писать в блог</string>
     <string name="blogging_reminders_epilogue_caption">Вы можете изменить это в любое время в Мой сайт &gt; Настройки &gt; Напоминания блоггинга.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Напоминания не установлены.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Вы получите напоминания о необходимости писать в блог &lt;b&gt;ежедневно&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Вы получите напоминания о необходимости написать в блог %1$s в неделю, по  %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Вы получите напоминания о необходимости написать в блог %1$s в неделю, по  %2$s в %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Напоминания удалены!</string>
     <string name="blogging_reminders_epilogue_title">Всё готово!</string>
     <string name="blogging_reminders_update">Обновить</string>
@@ -152,6 +166,7 @@ Language: ru
     <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
+    <string name="gutenberg_native_add_blocks">Добавить блоки</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Что такое текст alt?</string>
     <string name="gutenberg_native_transform_s_to">Преобразовать %s в</string>
@@ -745,9 +760,11 @@ Language: ru
     <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Переход на предыдущий экран содержимого</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Переход к настройкам градиента</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Переход к выбору пользовательского цвета</string>
     <string name="gutenberg_native_gradient_type">Тип градиента</string>
+    <string name="gutenberg_native_go_back">Вернуться</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
     <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
     <string name="pages_list_author">Автор страницы</string>
@@ -2641,7 +2658,7 @@ Language: ru
     <string name="my_site_btn_view_site">Просмотреть веб-сайт</string>
     <string name="my_site_btn_view_admin">Перейти в консоль сайта</string>
     <string name="my_site_btn_switch_site">Сменить сайт</string>
-    <string name="my_site_btn_site_settings">Настройки</string>
+    <string name="my_site_btn_site_settings">Настройки сайта</string>
     <string name="my_site_btn_blog_posts">Записи в блоге</string>
     <string name="my_site_header_publish">Публикация</string>
     <string name="my_site_header_look_and_feel">Внешний вид</string>

@@ -27,7 +27,6 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
@@ -40,6 +39,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
+@Suppress("MultiLineIfElse")
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
@@ -121,7 +121,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     pageItemContainer.post {
                         val horizontalOffset = pageItemContainer.width / 2
                         val verticalOffset = (pageItemContainer.height)
-                        addQuickStartFocusPointAboveTheView(
+                        QuickStartUtils.addQuickStartFocusPointAboveTheView(
                                 pageItemContainer,
                                 pageMore,
                                 horizontalOffset,

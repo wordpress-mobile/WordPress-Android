@@ -16,13 +16,13 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SelectedSiteStorage
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 
 class StatsSiteProviderTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var siteStorage: SelectedSiteStorage
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SiteModel>>
     private lateinit var firstSite: SiteModel
@@ -34,7 +34,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        statsSiteProvider = StatsSiteProvider(siteStore, siteStorage, dispatcher)
+        statsSiteProvider = StatsSiteProvider(siteStore, selectedSiteRepository, dispatcher)
         dispatchCaptor = argumentCaptor()
         firstSite = SiteModel()
         secondSite = SiteModel()
@@ -43,7 +43,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
         firstSite.id = firstSiteLocalId
         secondSite.id = secondSiteLocalId
         selectedSite.id = selectedSiteId
-        whenever(siteStorage.currentLocalSiteId).thenReturn(selectedSiteId)
+        whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(selectedSite.id)
         whenever(siteStore.getSiteByLocalId(firstSiteLocalId)).thenReturn(firstSite)
         whenever(siteStore.getSiteByLocalId(secondSiteLocalId)).thenReturn(secondSite)
         whenever(siteStore.getSiteByLocalId(selectedSiteId)).thenReturn(selectedSite)
@@ -59,7 +59,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
 
     @Test
     fun `hasLoadedSite returns false when current site ID == 0`() {
-        assertThat(statsSiteProvider.hasLoadedSite()).isFalse()
+        assertThat(statsSiteProvider.hasLoadedSite()).isFalse
         assertThat(statsSiteProvider.siteModel.id).isEqualTo(0)
     }
 
@@ -67,7 +67,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
     fun `hasLoadedSite returns true when current site ID != 0`() {
         statsSiteProvider.start(firstSiteLocalId)
 
-        assertThat(statsSiteProvider.hasLoadedSite()).isTrue()
+        assertThat(statsSiteProvider.hasLoadedSite()).isTrue
         assertThat(statsSiteProvider.siteModel).isEqualTo(firstSite)
     }
 

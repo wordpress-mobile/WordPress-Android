@@ -241,7 +241,9 @@ Language: ku_TR
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Guhertinên netomarkirî</string>
     <string name="my_site_title_changer_dialog_hint">Sernavê Malperê, li benda-sernavê ya geroka webê tê xuyan û di pirî rûkaran de jî li sermalperê tê xuyan.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Girêdanê di gerokê de veke</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Diçe rûpela naverokê ya berî vê</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Diçe beşa taybetkirina gradyanê</string>
+    <string name="gutenberg_native_go_back">Paşve here</string>
     <string name="gutenberg_native_customize_gradient">Gradyanê taybet bike</string>
     <string name="gutenberg_native_gradient_type">Cûreya Gradyanê</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ji bo vebijarkekê hilbijêrî, ducar bitikîne</string>
@@ -2088,7 +2090,6 @@ Language: ku_TR
     <string name="my_site_btn_view_admin">Revebir Bibîne</string>
     <string name="site_picker_title">Malperê hilbijêre</string>
     <string name="my_site_header_publish">Biweşîne</string>
-    <string name="my_site_btn_site_settings">Sazkarî</string>
     <string name="my_site_btn_blog_posts">Şandiyên Blogê</string>
     <string name="my_site_header_look_and_feel">Xuyang û Şêwaz</string>
     <string name="my_site_header_configuration">Pevsazî</string>
