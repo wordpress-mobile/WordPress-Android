@@ -170,7 +170,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
-                contextProvider,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
@@ -239,18 +238,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(likesEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
-
-        val context = mock<Context>()
-
-        whenever(context.getString(R.string.like_this)).thenReturn("like this")
-        whenever(context.getString(R.string.likes_this)).thenReturn("likes this")
-        whenever(context.getString(
-                eq(R.string.like_faces_more_bloggers_text),
-                anyInt(),
-                anyString()
-        )).thenReturn("10 bloggers like this.")
-
-        whenever(contextProvider.getContext()).thenReturn(context)
 
         likesCaptor = argumentCaptor()
     }
