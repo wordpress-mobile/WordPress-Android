@@ -1253,7 +1253,6 @@ Language: sk
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
     <string name="my_site_btn_view_admin">Zobraziť administráciu</string>
-    <string name="my_site_btn_site_settings">Nastavenia</string>
     <string name="my_site_header_publish">Zverejniť</string>
     <string name="my_site_btn_blog_posts">Články blogu</string>
     <string name="my_site_header_look_and_feel">Vzhľad</string>
