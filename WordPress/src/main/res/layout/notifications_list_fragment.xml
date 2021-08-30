@@ -50,7 +50,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar_height"
         android:gravity="center"
-        android:background="@drawable/back"
         android:orientation="vertical"
         android:visibility="invisible"
         tools:visibility="visible">
