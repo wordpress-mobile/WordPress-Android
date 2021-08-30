@@ -15,7 +15,6 @@ class PostLikerViewHolder(
     private val imageManager: ImageManager,
     private val context: Context
 ) : TrainOfFacesViewHolder<LikerFaceItemBinding>(parent.viewBinding(LikerFaceItemBinding::inflate)) {
-
     fun bind(liker: FaceItem) = with(binding) {
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
                 liker.userAvatarUrl,

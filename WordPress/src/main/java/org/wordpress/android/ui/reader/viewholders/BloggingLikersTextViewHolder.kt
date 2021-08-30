@@ -19,7 +19,6 @@ class BloggingLikersTextViewHolder(
     parent: ViewGroup,
     private val context: Context
 ) : TrainOfFacesViewHolder<BloggerLikersTextItemBinding>(parent.viewBinding(BloggerLikersTextItemBinding::inflate)) {
-
     fun bind(bloggersTextItem: BloggersLikingTextItem) = with(binding) {
         val position = adapterPosition
 
