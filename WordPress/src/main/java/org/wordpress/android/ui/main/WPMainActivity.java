@@ -278,7 +278,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        mBottomNav.init(getSupportFragmentManager(), this, mMySiteImprovementsFeatureConfig.isEnabled());
+        mBottomNav.init(getSupportFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
