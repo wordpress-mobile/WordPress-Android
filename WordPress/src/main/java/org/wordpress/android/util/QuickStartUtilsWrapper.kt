@@ -93,11 +93,9 @@ class QuickStartUtilsWrapper
         }
 
         quickStartStore.setDoneTask(siteLocalId, task, true)
-        analyticsTrackerWrapper.track(QuickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
 
         if (isEveryQuickStartTaskDone(site.id)) {
             quickStartStore.setQuickStartCompleted(siteLocalId, true)
-            analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
         } else if (quickStartEvent?.task == task) {
