@@ -30,7 +30,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -97,7 +96,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
-import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
@@ -165,7 +163,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         BottomNavController,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
-        BasicDialogOnDismissByOutsideTouchInterface,
         QuickStartPromptClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
@@ -1569,10 +1566,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (improvedMySiteFragment != null) {
             improvedMySiteFragment.onNeutralClicked(instanceTag);
         }
-    }
-
-    @Override
-    public void onDismissByOutsideTouch(@NotNull String instanceTag) {
     }
 
     // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
