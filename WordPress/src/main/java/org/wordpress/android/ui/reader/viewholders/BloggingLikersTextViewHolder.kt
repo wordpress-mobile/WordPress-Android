@@ -6,22 +6,21 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.style.UnderlineSpan
 import android.view.ViewGroup
-import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
+import org.wordpress.android.databinding.BloggerLikersTextItemBinding
 import org.wordpress.android.ui.reader.adapters.FACE_ITEM_AVATAR_SIZE_DIMEN
 import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.viewBinding
 
 class BloggingLikersTextViewHolder(
     parent: ViewGroup,
     private val context: Context
-) : EngagedPeopleViewHolder(parent, R.layout.blogger_likers_text_item) {
-    private val bloggersText = itemView.findViewById<TextView>(R.id.num_bloggers)
+) : TrainOfFacesViewHolder<BloggerLikersTextItemBinding>(parent.viewBinding(BloggerLikersTextItemBinding::inflate)) {
 
-    fun bind(bloggersTextItem: BloggersLikingTextItem) {
+    fun bind(bloggersTextItem: BloggersLikingTextItem) = with(binding) {
         val position = adapterPosition
 
         if (position >= 0) {
@@ -34,7 +33,7 @@ class BloggingLikersTextViewHolder(
             itemView.layoutParams.width = displayWidth - paddingWidth - facesWidth
         }
 
-        bloggersText.text = with(bloggersTextItem) {
+        numBloggers.text = with(bloggersTextItem) {
             SpannableString(text).formatWithSpan(itemView.context, text, closure)
         }
     }

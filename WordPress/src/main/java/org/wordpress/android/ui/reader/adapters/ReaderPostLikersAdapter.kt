@@ -4,19 +4,19 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.engagement.EngagedPeopleViewHolder
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.FACE
 import org.wordpress.android.ui.reader.viewholders.BloggingLikersTextViewHolder
 import org.wordpress.android.ui.reader.viewholders.PostLikerViewHolder
+import org.wordpress.android.ui.reader.viewholders.TrainOfFacesViewHolder
 import org.wordpress.android.util.image.ImageManager
 
 class ReaderPostLikersAdapter(
     private val imageManager: ImageManager,
     private val context: Context
-) : Adapter<EngagedPeopleViewHolder>() {
+) : Adapter<TrainOfFacesViewHolder<*>>() {
     private var itemsList = listOf<TrainOfFacesItem>()
 
     fun loadData(items: List<TrainOfFacesItem>) {
@@ -27,7 +27,7 @@ class ReaderPostLikersAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EngagedPeopleViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainOfFacesViewHolder<*> {
         return when (viewType) {
             FACE.ordinal -> PostLikerViewHolder(parent, imageManager, context)
             BLOGGERS_LIKING_TEXT.ordinal -> BloggingLikersTextViewHolder(parent, context)
@@ -35,7 +35,7 @@ class ReaderPostLikersAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: EngagedPeopleViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrainOfFacesViewHolder<*>, position: Int) {
         val item = itemsList[position]
         when (item) {
             is FaceItem -> (holder as PostLikerViewHolder).bind(item)
