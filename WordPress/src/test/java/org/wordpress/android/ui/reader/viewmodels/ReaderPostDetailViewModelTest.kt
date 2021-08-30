@@ -94,6 +94,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.R
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
@@ -876,7 +877,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(
-                    likers + BloggersLikingTextItem(text = "10 bloggers like this.", closure = "like this")
+                    likers + BloggersLikingTextItem(
+                            textWithParams = UiStringResWithParams(
+                                    stringRes = R.string.like_faces_more_bloggers_text,
+                                    params = listOf(UiStringText("10"), UiStringRes(R.string.like_this))
+                            ),
+                            underlineDelimiterClosure = UiStringRes(R.string.like_this)
+                    )
             )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
