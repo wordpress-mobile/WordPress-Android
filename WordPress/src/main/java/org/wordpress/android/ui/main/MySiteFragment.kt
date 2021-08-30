@@ -230,7 +230,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        (requireActivity().application as WordPress).component().inject(this)
         uiScope = CoroutineScope(uiDispatcher + job)
         if (savedInstanceState != null) {
             activeTutorialPrompt = savedInstanceState

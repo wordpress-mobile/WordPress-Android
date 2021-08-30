@@ -70,7 +70,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
-import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -332,8 +331,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MyProfileFragment object);
 
     void inject(AccountSettingsFragment object);
-
-    void inject(MySiteFragment object);
 
     void inject(SitePickerActivity object);
 
@@ -694,7 +691,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(QuickStartPromptDialogFragment object);
 
     void inject(BloggingReminderTimePicker object);
-    
+
     void inject(DebugCookiesFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
