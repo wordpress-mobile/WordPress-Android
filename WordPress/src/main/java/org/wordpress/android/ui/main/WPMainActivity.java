@@ -1132,11 +1132,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
 
                 setSite(data);
-                if (getMySiteFragment() != null) {
-                    showQuickStartDialog();
-                } else {
-                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
-                }
+                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -1158,38 +1154,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.LOGIN_EPILOGUE:
                 if (resultCode == RESULT_OK) {
                     setSite(data);
-                    if (getMySiteFragment() != null) {
-                        showQuickStartDialog();
-                    } else {
-                        passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
-                    }
+                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (getMySiteFragment() != null) {
-                    boolean isSameSiteSelected = data != null
-                                                 && data.getIntExtra(
-                            SitePickerActivity.KEY_SITE_LOCAL_ID,
-                            SelectedSiteRepository.UNAVAILABLE
-                    ) == mSelectedSiteRepository.getSelectedSiteLocalId();
-
-                    if (!isSameSiteSelected) {
-                        QuickStartUtils.cancelQuickStartReminder(this);
-                        AppPrefs.setQuickStartNoticeRequired(false);
-                        AppPrefs.setLastSkippedQuickStartTask(null);
-                        mPrivateAtomicCookie.clearCookie();
-                    }
-                }
-
                 setSite(data);
-
-                if (getMySiteFragment() != null) {
-                    if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                        showQuickStartDialog();
-                    }
-                } else {
-                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
-                }
+                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
             case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
