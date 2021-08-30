@@ -1695,7 +1695,6 @@ Language: sr_RS
     <string name="site_picker_title">Одабери веб место</string>
     <string name="my_site_btn_switch_site">Промени веб место</string>
     <string name="my_site_btn_blog_posts">Чланци блога</string>
-    <string name="my_site_btn_site_settings">Подешавања</string>
     <string name="my_site_header_look_and_feel">Изглед и осећај</string>
     <string name="my_site_header_publish">Објави</string>
     <string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>

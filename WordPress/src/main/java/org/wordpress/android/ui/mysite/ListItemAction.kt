@@ -11,6 +11,7 @@ enum class ListItemAction {
     ADMIN,
     PEOPLE,
     SHARING,
+    DOMAINS,
     SITE_SETTINGS,
     THEMES,
     PLUGINS,

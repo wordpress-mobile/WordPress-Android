@@ -49,6 +49,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.ListItemAction.DOMAINS
 import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.ListItemAction.PAGES
@@ -75,6 +76,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -335,6 +337,7 @@ class MySiteViewModel
                     quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
                     OpenSharing(selectedSite)
                 }
+                DOMAINS -> OpenDomains(selectedSite)
                 SITE_SETTINGS -> OpenSiteSettings(selectedSite)
                 THEMES -> OpenThemes(selectedSite)
                 PLUGINS -> OpenPlugins(selectedSite)

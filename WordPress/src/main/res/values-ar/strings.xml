@@ -16,13 +16,11 @@ Language: ar
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">اجعل محتواك مميزًا عن طريق إضافة صور وصورgif ومقاطع فيديو ووسائط مضمنة إلى صفحاتك.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">جربه عن طريق إضافة القليل من المكوِّنات إلى مقالتك أو صفحتك!</string>
     <string name="gutenberg_native_embed_media">تضمين وسائط</string>
-    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_click_on_a_block_its">لكل مكوِّن الإعدادات الخاصة به. للعثور عليها، انقر على مكوِّن. ستظهر إعداداته على شريط الأدوات في الجزء السفلي من الشاشة.</string>
     <string name="gutenberg_native_build_layouts">إنشاء تخطيطات</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">المكوِّنات عبارة عن أجزاء من المحتوى التي يمكنك إدراجها وإعادة ترتيبها وتصميمها من دون الحاجة إلى معرفة كيفية ترميزها. المكوِّنات عبارة عن طريقة سهلة وعصرية لك لإنشاء تخطيطات جميلة.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار. </string>
-    <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
     <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات باستخدام معاينة سريعة.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
@@ -62,8 +60,6 @@ Language: ar
     <string name="blogging_reminders_select_days">تحديد الأيام التي ترغب في التدوين بها</string>
     <string name="blogging_reminders_epilogue_caption">يمكن تحديث هذا في أي وقت من خلال موقعي &gt; الإعدادات &gt; تذكيرات التدوين.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">ليست لديك أي تذكيرات معينة.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">ستحصل على تذكيرات للتدوين ⁦%1$s⁩ في الأسبوع يوم ⁦%2$s⁩.</string>
     <string name="blogging_reminders_epilogue_not_set_title">تمت إزالة التذكيرات!</string>
     <string name="blogging_reminders_epilogue_title">كل شيء جاهز!</string>
     <string name="blogging_reminders_update">تحديث</string>
@@ -744,7 +740,9 @@ Language: ar
     <string name="reader_title_tag_preview">موضوع</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
     <string name="gutenberg_native_open_link_in_a_browser">فتح الرابط في متصفح</string>
+    <string name="gutenberg_native_go_back">العودة للخلف</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
     <string name="gutenberg_native_gradient_type">نوع التدرج</string>
@@ -2641,7 +2639,6 @@ Language: ar
     <string name="site_picker_title">إختر الموقع</string>
     <string name="my_site_btn_switch_site">تبديل الموقع</string>
     <string name="my_site_btn_view_site">عرض الموقع</string>
-    <string name="my_site_btn_site_settings">الإعدادات</string>
     <string name="my_site_header_look_and_feel">الشكل والطابع</string>
     <string name="my_site_header_publish">نشر</string>
     <string name="my_site_btn_blog_posts">مقالات المدونة</string>
