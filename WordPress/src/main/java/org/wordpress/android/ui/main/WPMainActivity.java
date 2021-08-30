@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -100,7 +99,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeCli
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -1184,52 +1182,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void showQuickStartDialog() {
-        SiteModel selectedSite = getSelectedSite();
-        if (
-                (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
-                || selectedSite == null
-                || !QuickStartUtils.isQuickStartAvailableForTheSite(selectedSite)
-        ) {
-            return;
-        }
-
-        @StringRes final int titleRes;
-        @StringRes final int messageRes;
-        @StringRes final int positiveButtonTitleRes;
-        @StringRes final int negativeButtonTitleRes;
-        @StringRes final int neutralButtonTitleRes;
-
-        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
-            titleRes = R.string.quick_start_dialog_need_help_manage_site_title;
-            messageRes = R.string.quick_start_dialog_need_help_manage_site_message;
-            positiveButtonTitleRes = R.string.quick_start_dialog_need_help_manage_site_button_positive;
-            negativeButtonTitleRes = R.string.quick_start_dialog_need_help_button_negative;
-            neutralButtonTitleRes = NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES;
-        } else {
-            titleRes = R.string.quick_start_dialog_need_help_title;
-            messageRes = R.string.quick_start_dialog_need_help_message;
-            positiveButtonTitleRes = R.string.quick_start_dialog_need_help_button_positive;
-            negativeButtonTitleRes = R.string.quick_start_dialog_need_help_manage_site_button_negative;
-            neutralButtonTitleRes = R.string.quick_start_dialog_need_help_button_neutral;
-        }
-
-        String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
-        QuickStartPromptDialogFragment quickStartPromptDialogFragment = new QuickStartPromptDialogFragment();
-        quickStartPromptDialogFragment.initialize(
-                tag,
-                getString(titleRes),
-                getString(messageRes),
-                getString(positiveButtonTitleRes),
-                R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonTitleRes),
-                neutralButtonTitleRes != NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES ? getString(neutralButtonTitleRes) : ""
-        );
-
-        quickStartPromptDialogFragment.show(getSupportFragmentManager(), tag);
-        AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
-    }
-
     private void appLanguageChanged() {
         // Recreate this activity (much like a configuration change)
         // We need to post this call to UI thread, since it's called from onActivityResult and the call interferes with
@@ -1634,43 +1586,30 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
-        MySiteFragment mySiteFragment = getMySiteFragment();
         ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (mySiteFragment != null) {
-            mySiteFragment.onPositiveClicked(instanceTag);
-        } else if (improvedMySiteFragment != null) {
+        if (improvedMySiteFragment != null) {
             improvedMySiteFragment.onPositiveClicked(instanceTag);
         }
     }
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
-        MySiteFragment mySiteFragment = getMySiteFragment();
         ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (mySiteFragment != null) {
-            mySiteFragment.onNegativeClicked(instanceTag);
-        } else if (improvedMySiteFragment != null) {
+        if (improvedMySiteFragment != null) {
             improvedMySiteFragment.onNegativeClicked(instanceTag);
         }
     }
 
     @Override
     public void onNeutralClicked(@NonNull String instanceTag) {
-        MySiteFragment mySiteFragment = getMySiteFragment();
         ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (mySiteFragment != null) {
-            mySiteFragment.onNeutralClicked(instanceTag);
-        } else if (improvedMySiteFragment != null) {
+        if (improvedMySiteFragment != null) {
             improvedMySiteFragment.onNeutralClicked(instanceTag);
         }
     }
 
     @Override
     public void onDismissByOutsideTouch(@NotNull String instanceTag) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.onDismissByOutsideTouch(instanceTag);
-        }
     }
 
     // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
