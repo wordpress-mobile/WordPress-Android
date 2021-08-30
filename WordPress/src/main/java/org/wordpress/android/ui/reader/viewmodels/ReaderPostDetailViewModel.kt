@@ -68,7 +68,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.map
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -89,7 +88,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
-    private val contextProvider: ContextProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -585,14 +583,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         val goingToShowFaces = showLikeFacesTrainContainer && !showEmptyState
 
-        val contentDescription = if (goingToShowFaces) {
-            when (val lastItem = engageItemsList.lastOrNull()) {
-                is BloggersLikingTextItem -> lastItem.textWithParams
-                is FaceItem, null -> UiStringText("")
-            }
-        } else {
-            UiStringText("")
-        }
+        val contentDescription = getContentDescription(goingToShowFaces, engageItemsList)
 
         return TrainOfFacesUiState(
                 showLikeFacesTrainContainer = showLikeFacesTrainContainer,
@@ -603,6 +594,18 @@ class ReaderPostDetailViewModel @Inject constructor(
                 contentDescription = contentDescription,
                 goingToShowFaces = goingToShowFaces
         )
+    }
+
+    private fun getContentDescription(
+        goingToShowFaces: Boolean,
+        items: List<TrainOfFacesItem>
+    ) = if (goingToShowFaces) {
+        when (val lastItem = items.lastOrNull()) {
+            is BloggersLikingTextItem -> lastItem.textWithParams
+            is FaceItem, null -> UiStringText("")
+        }
+    } else {
+        UiStringText("")
     }
 
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {

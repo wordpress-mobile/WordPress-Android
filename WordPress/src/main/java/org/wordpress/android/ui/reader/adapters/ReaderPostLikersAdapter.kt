@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
