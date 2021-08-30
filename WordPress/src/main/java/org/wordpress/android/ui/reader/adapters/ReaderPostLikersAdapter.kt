@@ -36,8 +36,7 @@ class ReaderPostLikersAdapter(
     }
 
     override fun onBindViewHolder(holder: TrainOfFacesViewHolder<*>, position: Int) {
-        val item = itemsList[position]
-        when (item) {
+        when (val item = itemsList[position]) {
             is FaceItem -> (holder as PostLikerViewHolder).bind(item)
             is BloggersLikingTextItem -> (holder as BloggingLikersTextViewHolder).bind(item)
         }
