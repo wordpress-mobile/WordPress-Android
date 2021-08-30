@@ -1,7 +1,7 @@
 GIT
   remote: git@github.com:wordpress-mobile/release-toolkit.git
-  revision: 0acb3a997f4f4646994973a113e4db8f273f3f43
-  branch: jetpack-infra/step1
+  revision: 908ff74c45a3ccd022adb028b2b4a2fad296e27a
+  ref: 908ff74c45a3ccd022adb028b2b4a2fad296e27a
   specs:
     fastlane-plugin-wpmreleasetoolkit (1.4.0)
       activesupport (~> 5)
