@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -53,7 +52,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
-    @Mock lateinit var onQuickStartCompletedEventObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
@@ -93,15 +91,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
-                mySiteImprovementsFeatureConfig,
                 quickStartRepository,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
-        )
-        viewModel.completeBottomSheetQuickStartTask.observeForever(
-                onQuickStartCompletedEventObserver
         )
         viewModel.onFocusPointVisibilityChange.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -377,7 +371,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
         verify(quickStartRepository, never()).completeTask(any(), any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
@@ -396,7 +389,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         action.onClickAction?.invoke(CREATE_NEW_POST)
 
         verify(quickStartRepository).completeTask(PUBLISH_POST)
-        verifyZeroInteractions(onQuickStartCompletedEventObserver)
     }
 
     @Test
@@ -411,7 +403,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
-        verify(onQuickStartCompletedEventObserver, never()).onChanged(anyOrNull())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false

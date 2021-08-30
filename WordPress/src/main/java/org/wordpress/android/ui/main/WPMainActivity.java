@@ -104,7 +104,6 @@ import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartP
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
@@ -505,19 +504,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_STORY:
                     handleNewStoryAction();
                     break;
-            }
-        });
-
-        mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
-            // complete quick start task during QS process and remind of a next one
-            SiteModel selectedSite = getSelectedSite();
-            if (selectedSite != null) {
-                mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
-                        QuickStartTask.PUBLISH_POST,
-                        selectedSite,
-                        new QuickStartEvent(QuickStartTask.PUBLISH_POST),
-                        this
-                );
             }
         });
 
