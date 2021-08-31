@@ -222,8 +222,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
                     mAnalyticsListener.trackSelectEmailField();
                     showHintPickerDialogIfNeeded();
-                } else {
-                    ActivityUtils.hideKeyboardForced(mEmailInput);
                 }
             }
         });
