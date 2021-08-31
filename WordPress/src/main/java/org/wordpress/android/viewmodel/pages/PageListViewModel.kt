@@ -399,8 +399,11 @@ class PageListViewModel @Inject constructor(
                             actionsEnabled = actionsEnabled,
                             progressBarUiState = itemUiStateData.progressBarUiState,
                             showOverlay = itemUiStateData.showOverlay,
-                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                null else it.post.authorDisplayName,
+                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                                null
+                            } else {
+                                it.post.authorDisplayName
+                            },
                             showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                     )
                 }
