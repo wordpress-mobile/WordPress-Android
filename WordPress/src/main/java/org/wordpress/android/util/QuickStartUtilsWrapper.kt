@@ -100,9 +100,9 @@ class QuickStartUtilsWrapper
             analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
-        } else if (quickStartEvent?.task == task) {
-            AppPrefs.setQuickStartNoticeRequired(true)
         } else {
+            if (quickStartEvent?.task == task) AppPrefs.setQuickStartNoticeRequired(true)
+
             if (context != null && quickStartStore.hasDoneTask(siteLocalId, CREATE_SITE)) {
                 val nextTask =
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
