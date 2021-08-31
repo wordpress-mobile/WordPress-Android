@@ -45,10 +45,16 @@ class BloggingRemindersViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
+
+    private val _isTimePickerShowing = MutableLiveData<Event<Boolean>>()
+    val isTimePickerShowing = _isTimePickerShowing as LiveData<Event<Boolean>>
+
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
+
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersUiModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
+
     val uiState: LiveData<UiState> = merge(
             selectedScreen,
             _bloggingRemindersModel,
@@ -58,7 +64,9 @@ class BloggingRemindersViewModel @Inject constructor(
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
                 PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
-                SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay)
+                SELECTION -> daySelectionBuilder.buildSelection(
+                        bloggingRemindersModel, this::selectDay, this::selectTime
+                )
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
             val primaryButton = when (screen) {
@@ -96,7 +104,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun getSettingsState(siteId: Int): LiveData<UiString> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
-            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildNTimesLabel(uiModel) }
+            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildSiteSettingsLabel(uiModel) }
         }.asLiveData(mainDispatcher)
     }
 
@@ -128,6 +136,21 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value = currentState.copy(enabledDays = enabledDays)
     }
 
+    fun selectTime() {
+        _isTimePickerShowing.value = Event(true)
+    }
+
+    fun onChangeTime(hour: Int, minute: Int) {
+        _isTimePickerShowing.value = Event(false)
+        val currentState = _bloggingRemindersModel.value!!
+        _bloggingRemindersModel.value = currentState.copy(hour = hour, minute = minute)
+    }
+
+    fun getSelectedTime(): Pair<Int, Int> {
+        val currentState = _bloggingRemindersModel.value!!
+        return Pair(currentState.hour, currentState.minute)
+    }
+
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {
         analyticsTracker.trackPrimaryButtonPressed(SELECTION)
         if (bloggingRemindersModel != null) {
@@ -139,8 +162,13 @@ class BloggingRemindersViewModel @Inject constructor(
                 )
                 val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
-                    reminderScheduler.schedule(bloggingRemindersModel.siteId, bloggingRemindersModel.toReminderConfig())
-                    analyticsTracker.trackRemindersScheduled(daysCount)
+                    reminderScheduler.schedule(
+                            bloggingRemindersModel.siteId,
+                            bloggingRemindersModel.hour,
+                            bloggingRemindersModel.minute,
+                            bloggingRemindersModel.toReminderConfig())
+                    analyticsTracker.trackRemindersScheduled(
+                            daysCount, bloggingRemindersModel.getNotificationTime24hour())
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
@@ -157,6 +185,8 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value?.let { model ->
             outState.putInt(SITE_ID, model.siteId)
             outState.putStringArrayList(SELECTED_DAYS, ArrayList(model.enabledDays.map { it.name }))
+            outState.putInt(SELECTED_HOUR, model.hour)
+            outState.putInt(SELECTED_MINUTE, model.minute)
         }
         _isFirstTimeFlow.value?.let {
             outState.putBoolean(IS_FIRST_TIME_FLOW, it)
@@ -170,7 +200,9 @@ class BloggingRemindersViewModel @Inject constructor(
         val siteId = state.getInt(SITE_ID)
         if (siteId != 0) {
             val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { DayOfWeek.valueOf(it) }?.toSet() ?: setOf()
-            _bloggingRemindersModel.value = BloggingRemindersUiModel(siteId, enabledDays)
+            val selectedHour = state.getInt(SELECTED_HOUR)
+            val selectedMinute = state.getInt(SELECTED_MINUTE)
+            _bloggingRemindersModel.value = BloggingRemindersUiModel(siteId, enabledDays, selectedHour, selectedMinute)
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
@@ -211,13 +243,18 @@ class BloggingRemindersViewModel @Inject constructor(
         EPILOGUE("all_set")
     }
 
-    data class UiState(val uiItems: List<BloggingRemindersItem>, val primaryButton: PrimaryButton? = null) {
+    data class UiState(
+        val uiItems: List<BloggingRemindersItem>,
+        val primaryButton: PrimaryButton? = null
+    ) {
         data class PrimaryButton(val text: UiString, val enabled: Boolean, val onClick: ListItemInteraction)
     }
 
     companion object {
         private const val SELECTED_SCREEN = "key_shown_screen"
         private const val SELECTED_DAYS = "key_selected_days"
+        private const val SELECTED_HOUR = "key_selected_hour"
+        private const val SELECTED_MINUTE = "key_selected_minute"
         private const val IS_FIRST_TIME_FLOW = "is_first_time_flow"
         private const val SITE_ID = "key_site_id"
     }

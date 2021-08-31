@@ -1,6 +1,0 @@
-17.9:
-Con el nuevo bloque de incrustación, incrusta contenido de servicios compatibles, como YouTube o Instagram.
-
-¿Aún no tienes un sitio? Verás avisos que te invitan a crear uno.
-
-Otras actualizaciones incluyen mejoras en la característica de recordatorios de blogueo, retoques en las secciones de estadísticas y de medios de tu aplicación.

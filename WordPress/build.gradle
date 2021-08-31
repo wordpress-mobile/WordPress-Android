@@ -94,11 +94,9 @@ android {
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
-        buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
+        buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
-        buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-        buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -110,6 +108,7 @@ android {
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
+        buildConfigField "boolean", "SITE_DOMAINS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -153,15 +152,13 @@ android {
             dimension "buildType"
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
-            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
-            buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
+            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
+            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -427,7 +424,10 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    implementation("$gradle.ext.fluxCBinaryPath:$fluxCVersion") {
+    implementation("$gradle.ext.fluxCBinaryPath") {
+        version {
+            strictly fluxCVersion
+        }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }

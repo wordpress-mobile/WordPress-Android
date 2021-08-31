@@ -1,6 +1,0 @@
-17.9:
-With the new Embed block, embed content from supported services, like YouTube or Instagram.
-
-Don’t have a site yet? You’ll see notifications that prompt you to create one.
-
-Other updates include improvements to the Blogging Reminders feature, tweaks in the Stats and Media sections of your app, and a fix to long post titles in the Reader.

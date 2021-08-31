@@ -22,6 +22,7 @@ sealed class SiteNavigationAction {
     data class OpenAdmin(val site: SiteModel) : SiteNavigationAction()
     data class OpenPeople(val site: SiteModel) : SiteNavigationAction()
     data class OpenSharing(val site: SiteModel) : SiteNavigationAction()
+    data class OpenDomains(val site: SiteModel) : SiteNavigationAction()
     data class OpenSiteSettings(val site: SiteModel) : SiteNavigationAction()
     data class OpenThemes(val site: SiteModel) : SiteNavigationAction()
     data class OpenPlugins(val site: SiteModel) : SiteNavigationAction()

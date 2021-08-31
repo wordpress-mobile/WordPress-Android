@@ -19,6 +19,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
+import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -39,7 +40,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
         return when (viewType) {
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
-            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
+            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
             QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(

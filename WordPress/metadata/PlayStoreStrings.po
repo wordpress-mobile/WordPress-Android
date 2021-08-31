@@ -11,22 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_181"
+msgid ""
+"18.1:\n"
+"-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.\n"
+"-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.\n"
+"-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.\n"
+msgstr ""
+
 msgctxt "release_note_180"
 msgid ""
 "18.0:\n"
 "We’ve improved the login flow to make it easier for you to create and manage your sites.\n"
 "\n"
-"We also optimised theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.\n"
-msgstr ""
-
-msgctxt "release_note_179"
-msgid ""
-"17.9:\n"
-"With the new Embed block, embed content from supported services, like YouTube or Instagram.\n"
-"\n"
-"Don’t have a site yet? You’ll see notifications that prompt you to create one.\n"
-"\n"
-"Other updates include improvements to the Blogging Reminders feature, tweaks in the Stats and Media sections of your app, and a fix to long post titles in the Reader.\n"
+"We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

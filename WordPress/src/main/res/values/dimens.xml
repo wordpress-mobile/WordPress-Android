@@ -120,7 +120,7 @@
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
-    <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
+    <dimen name="margin_my_site_quick_actions_bottom">24dp</dimen>
 
     <!-- left/right margin for reader interests content -->
     <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
@@ -314,6 +314,8 @@
     <dimen name="my_site_content_area">500dp</dimen>
     <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
     <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
+    <dimen name="my_site_card_row_padding">16dp</dimen>
+    <dimen name="my_site_card_row_top_padding">12dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -595,8 +597,8 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">72dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_width">48dp</dimen>
     <dimen name="story_thumbnail_margin">6dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
 

@@ -13,8 +13,11 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
+import org.wordpress.android.ui.debug.DebugSettingsViewModel;
+import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
@@ -73,7 +76,6 @@ import org.wordpress.android.ui.stories.StoryComposerViewModel;
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
 import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
@@ -275,6 +277,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(DomainsDashboardViewModel.class)
+    abstract ViewModel domainsDashboardViewModel(DomainsDashboardViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(DomainSuggestionsViewModel.class)
     abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
 
@@ -415,8 +422,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ManualFeatureConfigViewModel.class)
-    abstract ViewModel manualFeatureConfigViewModel(ManualFeatureConfigViewModel viewModel);
+    @ViewModelKey(DebugSettingsViewModel.class)
+    abstract ViewModel debugSettingsViewModel(DebugSettingsViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -560,4 +567,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UnifiedCommentActivityViewModel.class)
     abstract ViewModel unifiedCommentActivityViewModel(UnifiedCommentActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DebugCookiesViewModel.class)
+    abstract ViewModel debugCookiesViewModel(DebugCookiesViewModel viewModel);
 }

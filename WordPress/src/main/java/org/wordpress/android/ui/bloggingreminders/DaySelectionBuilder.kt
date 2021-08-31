@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
@@ -25,7 +27,8 @@ class DaySelectionBuilder
 ) {
     fun buildSelection(
         bloggingRemindersModel: BloggingRemindersUiModel?,
-        onSelectDay: (DayOfWeek) -> Unit
+        onSelectDay: (DayOfWeek) -> Unit,
+        onSelectTime: () -> Unit
     ): List<BloggingRemindersItem> {
         val daysOfWeek = daysProvider.getDaysOfWeekByLocale()
         val text = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
@@ -33,7 +36,7 @@ class DaySelectionBuilder
                 EmphasizedText(text),
                 bloggingRemindersModel?.enabledDays?.isEmpty() == true
         )
-        return listOf(
+        val selectionList = mutableListOf(
                 Illustration(R.drawable.img_illustration_calendar),
                 Title(UiStringRes(R.string.blogging_reminders_select_days)),
                 MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
@@ -44,9 +47,20 @@ class DaySelectionBuilder
                             ListItemInteraction.create(it, onSelectDay)
                     )
                 }),
-                nTimesLabel,
-                Tip(UiStringRes(R.string.blogging_reminders_tip), UiStringRes(R.string.blogging_reminders_tip_message))
+                nTimesLabel
         )
+
+        if (bloggingRemindersModel?.enabledDays?.isNotEmpty() == true) {
+            selectionList.add(
+                    TimeItem(
+                            UiStringText(bloggingRemindersModel.getNotificationTime()),
+                            ListItemInteraction.create(onSelectTime)))
+        }
+
+        selectionList.add(
+                Tip(UiStringRes(string.blogging_reminders_tip), UiStringRes(string.blogging_reminders_tip_message)))
+
+        return selectionList
     }
 
     fun buildPrimaryButton(
