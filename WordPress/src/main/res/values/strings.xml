@@ -26,6 +26,9 @@
     <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
 
+    <!-- test peril -->
+    <string name="test_resource">@string/save</string>
+
     <!-- comment form labels -->
     <string name="anonymous">Anonymous</string>
 
