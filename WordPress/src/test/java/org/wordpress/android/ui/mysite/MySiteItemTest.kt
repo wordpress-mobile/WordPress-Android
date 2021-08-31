@@ -59,13 +59,12 @@ class MySiteItemTest {
     @Test
     fun `quick actions block is never active`() {
         val quickActionsBlock = QuickActionsBlock(
-                UiStringText("test"),
-                interaction,
-                interaction,
-                interaction,
-                interaction,
-                interaction,
-                true
+                title = UiStringText("test"),
+                onStatsClick = interaction,
+                onPagesClick = interaction,
+                onPostsClick = interaction,
+                onMediaClick = interaction,
+                showPages = true
         )
 
         assertThat(quickActionsBlock.activeQuickStartItem).isFalse

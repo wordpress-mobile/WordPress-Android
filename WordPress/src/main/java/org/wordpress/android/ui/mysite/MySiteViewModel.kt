@@ -237,14 +237,15 @@ class MySiteViewModel
             if (!buildConfigWrapper.isJetpackApp) {
                 siteItems.add(
                         quickActionsBlockBuilder.build(
-                        this::onQuickStartBlockRemoveMenuItemClick,
-                        this::quickActionStatsClick,
-                        this::quickActionPagesClick,
-                        this::quickActionPostsClick,
-                        this::quickActionMediaClick,
-                        site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                                this::quickActionStatsClick,
+                                this::quickActionPagesClick,
+                                this::quickActionPostsClick,
+                                this::quickActionMediaClick,
+                                site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                                 activeTask == CHECK_STATS,
-                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES))
+                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
+                        )
+                )
             }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)

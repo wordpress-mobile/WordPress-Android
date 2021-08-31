@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartBlockBinding
@@ -33,6 +34,7 @@ class QuickStartBlockViewHolder(
 
     private fun MySiteCardToolbarBinding.update(block: QuickStartBlock) {
         mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
+        mySiteCardToolbarMore.isVisible = block.moreMenuVisible
         mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
     }
 

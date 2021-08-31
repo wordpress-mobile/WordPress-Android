@@ -33,9 +33,11 @@
         android:contentDescription="@string/content_description_more"
         android:focusable="true"
         android:src="@drawable/ic_more_vert_white_24dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/wpColorOnSurfaceMedium" />
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

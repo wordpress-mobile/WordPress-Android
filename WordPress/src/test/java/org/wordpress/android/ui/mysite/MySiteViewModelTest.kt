@@ -244,7 +244,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val quickActionsBlock: QuickActionsBlock
         get() = QuickActionsBlock(
                 title = UiStringText(""),
-                onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                 onStatsClick = ListItemInteraction.create { quickActionsStatsClickAction },
                 onPagesClick = ListItemInteraction.create { quickActionsPagesClickAction },
                 onPostsClick = ListItemInteraction.create { quickActionsPostsClickAction },
@@ -252,7 +251,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
-                )
+        )
 
     @InternalCoroutinesApi
     @Before
@@ -1553,13 +1552,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initQuickActionsBlock() {
         doAnswer {
-            removeMenuItemClickAction = (it.getArgument(0) as () -> Unit)
-            quickActionsStatsClickAction = (it.getArgument(1) as () -> Unit)
-            quickActionsPagesClickAction = (it.getArgument(2) as () -> Unit)
-            quickActionsPostsClickAction = (it.getArgument(3) as () -> Unit)
-            quickActionsMediaClickAction = (it.getArgument(4) as () -> Unit)
+            quickActionsStatsClickAction = (it.getArgument(0) as () -> Unit)
+            quickActionsPagesClickAction = (it.getArgument(1) as () -> Unit)
+            quickActionsPostsClickAction = (it.getArgument(2) as () -> Unit)
+            quickActionsMediaClickAction = (it.getArgument(3) as () -> Unit)
             quickActionsBlock
-        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any(), any())
+        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any())
     }
 
     private enum class SiteInfoBlockAction {

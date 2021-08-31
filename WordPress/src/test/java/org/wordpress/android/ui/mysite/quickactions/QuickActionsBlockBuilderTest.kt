@@ -17,7 +17,6 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
     private val onPostsClick: () -> Unit = {}
     private val onPagesClick: () -> Unit = {}
     private val onMediaClick: () -> Unit = {}
-    private val onRemoveMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
@@ -31,15 +30,6 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
         val quickActionsBlock = buildQuickActionsBlock()
 
         Assertions.assertThat(quickActionsBlock.title).isEqualTo(UiStringRes(string.my_site_quick_actions_title))
-    }
-
-    /* REMOVE MENU ITEM */
-
-    @Test
-    fun `when block is built, then remove menu item click is set on the block`() {
-        val quickActionsBlock = buildQuickActionsBlock()
-
-        Assertions.assertThat(quickActionsBlock.onRemoveMenuItemClick).isNotNull
     }
 
     /* ACTION CLICKS */
@@ -59,7 +49,6 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
         showPagesFocusPoint: Boolean = false
     ): QuickActionsBlock {
         return builder.build(
-                onRemoveMenuItemClick,
                 onStatsClick,
                 onPagesClick,
                 onPostsClick,
