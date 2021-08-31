@@ -132,7 +132,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -225,7 +224,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
@@ -985,8 +983,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     mAnalyticsTrackerWrapper
-                            .trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite(),
-                                    mMySiteImprovementsFeatureConfig);
+                            .trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
                 break;
             case READER:

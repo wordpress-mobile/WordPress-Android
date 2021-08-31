@@ -39,7 +39,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
@@ -54,7 +53,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private val featureAnnouncement = FeatureAnnouncement(
@@ -105,7 +103,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(false)
 
         loginFlowTriggered = false
         switchTabTriggered = false
@@ -379,8 +376,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository when my site improvements turned on`() {
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
 
