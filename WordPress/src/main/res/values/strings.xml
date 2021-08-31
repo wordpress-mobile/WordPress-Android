@@ -2964,7 +2964,6 @@
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
