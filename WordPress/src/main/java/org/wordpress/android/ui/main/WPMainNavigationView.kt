@@ -286,7 +286,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         return position in 0 until numPages()
     }
 
-    private inner class NavAdapter() {
+    private inner class NavAdapter {
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> ImprovedMySiteFragment.newInstance()
