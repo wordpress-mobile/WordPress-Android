@@ -27,19 +27,19 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
+import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
-import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.SiteUtils.GB_EDITOR_NAME
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Blank
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
-import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 
 @RunWith(MockitoJUnitRunner::class)
 class ModalLayoutPickerViewModelTest {
@@ -54,7 +54,7 @@ class ModalLayoutPickerViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
     @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
@@ -88,7 +88,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel = ModalLayoutPickerViewModel(
                 dispatcher,
                 siteStore,
-                appPrefsWrapper,
+                selectedSiteRepository,
                 supportedBlocksProvider,
                 thumbDimensionProvider,
                 displayUtilsWrapper,
@@ -105,11 +105,13 @@ class ModalLayoutPickerViewModelTest {
     @ExperimentalCoroutinesApi
     private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
-            val siteId = 1
-            val site = SiteModel().apply { mobileEditor = GB_EDITOR_NAME }
-            whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-            whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-            whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            val site = SiteModel().apply {
+                id = 1
+                mobileEditor = GB_EDITOR_NAME
+            }
+            whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
+            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
+            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
             whenever(siteStore.getBlockLayout(site, "about")).thenReturn(aboutLayout)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             whenever(thumbDimensionProvider.previewWidth).thenReturn(136)

@@ -12,6 +12,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPSnackbarWrapper
+import java.lang.ref.SoftReference
 import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
@@ -30,6 +31,8 @@ class SnackbarSequencer @Inject constructor(
     private var job: Job = Job()
 
     private val snackBarQueue: Queue<SnackbarItem> = LinkedList()
+
+    private var lastSnackBarReference: SoftReference<Snackbar?>? = null
 
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
@@ -83,6 +86,8 @@ class SnackbarSequencer @Inject constructor(
 
             val snackbar = wpSnackbarWrapper.make(view, message, item.info.duration)
 
+            lastSnackBarReference = SoftReference(snackbar)
+
             item.action?.let { actionInfo ->
                 snackbar.setAction(
                         uiHelper.getTextOfUiString(context, actionInfo.textRes),
@@ -100,5 +105,9 @@ class SnackbarSequencer @Inject constructor(
         } ?: null.also {
             AppLog.e(T.UTILS, "SnackbarSequencer > prepareSnackBar Unexpected null view")
         }
+    }
+
+    fun dismissLastSnackbar() {
+        lastSnackBarReference?.get()?.dismiss()
     }
 }

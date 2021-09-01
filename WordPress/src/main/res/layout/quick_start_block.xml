@@ -1,112 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quick_start"
+    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_large">
+    android:layout_margin="@dimen/margin_medium">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/content_margin_site_row_start"
-        android:paddingEnd="@dimen/content_margin_site_row_start">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/quick_start_toolbar"
-            android:layout_width="match_parent"
+        <include
+            android:id="@+id/my_site_card_toolbar"
+            layout="@layout/my_site_card_toolbar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/listPreferredItemHeightSmall">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/quick_start_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/quick_start_more"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/quick_start_sites"
-                android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-            <ImageView
-                android:id="@+id/quick_start_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/content_description_more"
-                android:focusable="true"
-                android:src="@drawable/ic_more_vert_white_24dp"
-                app:tint="?attr/wpColorOnSurfaceMedium" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
+        <include
             android:id="@+id/quick_start_customize"
-            style="@style/QuickStartTypeRow"
-            android:layout_below="@+id/quick_start_toolbar">
-
-            <ImageView
-                android:id="@+id/quick_start_customize_icon"
-                style="@style/QuickStartTypeIcon"
-                android:background="@drawable/bg_oval_primary_40_customize_white_40dp_selector"
-                android:importantForAccessibility="no" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_customize_title"
-                style="@style/QuickStartTypeTitle"
-                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                android:text="@string/quick_start_sites_type_customize" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_customize_subtitle"
-                style="@style/QuickStartTypeSubtitle"
-                android:layout_below="@+id/quick_start_customize_title"
-                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                tools:text="1 of 6 complete" />
-
-        </RelativeLayout>
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_size"
-            android:layout_below="@+id/quick_start_customize"
-            android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
-            android:background="?android:attr/listDivider" />
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quick_start_customize" />
 
-        <RelativeLayout
+        <include
             android:id="@+id/quick_start_grow"
-            style="@style/QuickStartTypeRow"
-            android:layout_below="@+id/quick_start_customize">
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
-            <ImageView
-                android:id="@+id/quick_start_grow_icon"
-                style="@style/QuickStartTypeIcon"
-                android:background="@drawable/bg_oval_blue_50_multiple_users_white_40dp_selector"
-                android:importantForAccessibility="no" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_grow_title"
-                style="@style/QuickStartTypeTitle"
-                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                android:text="@string/quick_start_sites_type_grow" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/quick_start_grow_subtitle"
-                style="@style/QuickStartTypeSubtitle"
-                android:layout_below="@+id/quick_start_grow_title"
-                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                tools:text="0 of 5 complete" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

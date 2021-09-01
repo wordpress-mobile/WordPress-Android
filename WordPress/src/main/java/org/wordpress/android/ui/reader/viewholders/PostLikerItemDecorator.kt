@@ -15,12 +15,13 @@ class PostLikerItemDecorator(isRtl: Boolean, context: Context, @DimenRes leftOff
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: State) {
         super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
-
-        if (position > 0) {
-            if (isRtl) {
-                outRect.set(outRect.left, outRect.top, outRect.right - offset, outRect.bottom)
-            } else {
-                outRect.set(outRect.left - offset, outRect.top, outRect.right, outRect.bottom)
+        parent.adapter?.let {
+            if (position > 0 && position < it.itemCount - 1) {
+                if (isRtl) {
+                    outRect.set(outRect.left, outRect.top, outRect.right - offset, outRect.bottom)
+                } else {
+                    outRect.set(outRect.left - offset, outRect.top, outRect.right, outRect.bottom)
+                }
             }
         }
     }

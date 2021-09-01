@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-04 10:54:07+0000
+Translation-Revision-Date: 2021-08-23 08:54:21+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Anda dapat mengatur ulang blok dengan mengetuk satu blok lalu mengetuk panah atas dan bawah yang ada di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah blok lain.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Selamat datang di dunia blok</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Untuk menghapus blok, pilih blok dan klik titik tiga yang ada di kanan bawah blok untuk melihat pengaturan. Dari sana, pilih opsi untuk menghapus blok.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Beberapa blok memiliki beberapa pengaturan tambahan. Ketuk ikon pengaturan di kanan bawah blok untuk melihat opsi lainnya.</string>
+    <string name="gutenberg_native_s_block_newly_available">Blok %s, baru tersedia</string>
+    <string name="gutenberg_native_rich_text_editing">Mengedit rich text</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Setelah akrab dengan berbagai nama blok, Anda dapat menambahkan blok dengan mengetik tanda garis miring diikuti nama blok – contohnya, /gambar atau /judul.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Tonjolkan konten Anda dengan menambahkan gambar, viideo, dan media tersemat ke halaman Anda.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Cobalah dengan menambahkan beberapa blok ke postingan atau halaman Anda!</string>
+    <string name="gutenberg_native_embed_media">Sematkan media</string>
+    <string name="gutenberg_native_build_layouts">Bangun tata letak</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blok adalah bagian-bagian konten yang dapat Anda masukkan, atur ulang, dan tata gayanya tanpa perlu menulis kode. Blok adalah cara yang mudah dan modern untuk membuat tata letak yang indah.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Dengan blok, Anda dapat fokus menulis konten, karena semua alat pemformatan yang dibutuhkan tersedia untuk membantu Anda menyampaikan pesan.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Atur konten ke dalam kolom-kolom, tambahkan tombol Ajakan Bertindak, dan lengkapi gambar dengan teks.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Tambahkan blok baru kapan saja dengan mengetuk ikon + pada bilah peralatan di kiri bawah. </string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Pelajari dasar-dasarnya dengan panduan cepat.</string>
+    <string name="comment_batch_moderation_error">Gagal memoderasi satu atau lebih komentar</string>
     <string name="create_site_notification_create_site_action">Buat situs</string>
     <string name="create_site_notification_text">Siapkan dan jalankan situs Anda hanya dengan beberapa langkah cepat</string>
     <string name="create_site_notification_title">Buat situs WordPress Anda</string>
@@ -25,7 +42,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_preview_page">Ketuk dua kali untuk melihat halaman.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ditampilkan di tab peramban pengunjung Anda dan di tempat lain secara online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Ajak aku berkeliling</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Kami akan membantu Anda memahami dasar-dasar pengelolaan situs dengan aplikasi.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Butuh sedikit bantuan dalam mengelola situs ini dengan aplikasi?</string>
     <string name="login_epilogue_create_new_site_button">Buat situs baru</string>
     <string name="login_epilogue_mysites_subheading">Anda dapat berganti situs kapan saja.</string>
@@ -44,8 +60,6 @@ Language: id
     <string name="blogging_reminders_select_days">Pilih tanggal Anda ingin membuat blog</string>
     <string name="blogging_reminders_epilogue_caption">Anda dapat memperbaruinya kapan saja lewat Situs Saya &gt; Pengaturan &gt; Pengingat blogging.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Tidak ada pengingat yang disetel.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Anda akan mendapat pengingat blogging %1$s seminggu pada %2$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Pengingat dihapus!</string>
     <string name="blogging_reminders_epilogue_title">Semua telah siap!</string>
     <string name="blogging_reminders_update">Mutakhirkan</string>
@@ -315,7 +329,7 @@ Language: id
     <string name="quick_start_card_menu_pin">Sematkan ini</string>
     <string name="quick_start_dialog_review_pages_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
-    <string name="quick_start_dialog_review_pages_title">Tinjau halaman situs</string>
+    <string name="quick_start_dialog_review_pages_title">Tinjau laman situs</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Pilih %1$s Beranda %2$s untuk menyunting Beranda Anda.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Pilih %1$s Halaman %2$s untuk melihat daftar halaman Anda.</string>
     <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
@@ -688,7 +702,7 @@ Language: id
     <string name="gutenberg_native_choose_image_or_video">Pilih gambar atau video</string>
     <string name="gutenberg_native_choose_image">Pilih gambar</string>
     <string name="gutenberg_native_block_removed">Blok dihapus</string>
-    <string name="enter_your_site_address">Masukkan alamat situs Anda yang sudah ada</string>
+    <string name="enter_your_site_address">Masukkan alamat situs Anda saat ini</string>
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
@@ -727,9 +741,11 @@ Language: id
     <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
     <string name="gutenberg_native_open_link_in_a_browser">Buka tautan pada perambah</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigasi ke halaman konten sebelumnya</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigasi untuk mengustomisasi gradien</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigasi untuk mengustomisasi pemilih warna</string>
     <string name="gutenberg_native_gradient_type">Jenis Gradasi</string>
+    <string name="gutenberg_native_go_back">Kembali</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ketuk dua kali untuk memilih opsi</string>
     <string name="gutenberg_native_customize_gradient">Kustomisasi Gradasi</string>
     <string name="pages_list_author">Pembuat halaman</string>
@@ -992,7 +1008,7 @@ Language: id
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Ketuk untuk menyembunyikan keyboard</string>
     <string name="gutenberg_native_tap_here_to_show_help">Ketuk di sini untuk menampilkan bantuan</string>
     <string name="gutenberg_native_take_a_video">Ambil Video</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Potret atau Rekam Video</string>
+    <string name="gutenberg_native_take_a_photo_or_video">Ambil Foto atau Video</string>
     <string name="gutenberg_native_take_a_photo">Ambil Foto</string>
     <string name="gutenberg_native_start_writing">Mulai menulis…</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
@@ -1205,7 +1221,7 @@ Language: id
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Mendaftarkan nama domain…</string>
     <string name="domain_registration_state_picker_dialog_title">Pilih Provinsi</string>
     <string name="domain_registration_country_picker_dialog_title">Pilih Negara</string>
-    <string name="domain_registration_result_continue_button">Lanjut</string>
+    <string name="domain_registration_result_continue_button">lanjutkan</string>
     <string name="domain_registration_result_description">domain baru Anda &lt;b&gt;%s&lt;/b&gt; sedang disiapkan. Situs Anda\n melakukan perubahan dengan penuh keseruan!</string>
     <string name="domain_registration_result_title">Selamat</string>
     <string name="domain_contact_information_register_domain_button">Daftarkan Domain</string>
@@ -1284,7 +1300,7 @@ Language: id
     <string name="new_site_creation_preview_subtitle">Anda dapat melakukan penyesuaian tampilan dan nuansa situs Anda</string>
     <string name="publish_on">Terbitkan pada: %s</string>
     <string name="schedule_for">Jadwalkan untuk: %s</string>
-    <string name="published_on">Diterbitkan pada: %s</string>
+    <string name="published_on">Dipublikasikan pada: %s</string>
     <string name="scheduled_for">Dijadwalkan untuk: %s</string>
     <string name="stats_detail_recent_weeks">Beberapa Minggu Terakhir</string>
     <string name="stats_detail_average_views_per_day">Rata-rata Kunjungan Per Hari</string>
@@ -1475,7 +1491,7 @@ Language: id
     <string name="pages_empty_trashed">Anda tidak punya halaman yang dibuang</string>
     <string name="pages_empty_scheduled">Anda tidak punya halaman yang dijadwalkan</string>
     <string name="pages_empty_drafts">Anda tidak punya halaman konsep</string>
-    <string name="pages_empty_published">Anda belum menerbitkan halaman apa pun</string>
+    <string name="pages_empty_published">Anda belum memublikasikan laman apa pun</string>
     <string name="pages_search_suggestion">Cari halaman</string>
     <string name="pages_empty_search_result">Tidak ada halaman yang cocok dengan pencarian Anda</string>
     <string name="pages_delete_permanently">Hapus Permanen</string>
@@ -1863,7 +1879,7 @@ Language: id
     <string name="plugin_byline">oleh %s</string>
     <string name="change_photo">Ubah foto</string>
     <string name="plugin_fetch_error">Tidak dapat memuat plugin</string>
-    <string name="my_site_btn_site_pages">Halaman Situs</string>
+    <string name="my_site_btn_site_pages">Laman Situs</string>
     <string name="site_settings_tags_hint">Kelola tag situs Anda</string>
     <string name="dlg_saving_tag">Menyimpan</string>
     <string name="dlg_deleting_tag">Menghapus</string>
@@ -2091,7 +2107,7 @@ Language: id
     <string name="media_empty_videos_list">Anda tidak memiliki video apa pun</string>
     <string name="media_empty_image_list">Anda tidak memiliki gambar apa pun</string>
     <string name="media_error_timeout">Server terlalu lama merespons</string>
-    <string name="media_error_exceeds_memory_limit">File terlalu besar untuk diunggah ke situs ini</string>
+    <string name="media_error_exceeds_memory_limit">Berkas terlalu besar untuk diunggah ke situs</string>
     <string name="media_error_exceeds_php_filesize">File melebihi ukuran maksimum unggahan untuk situs ini</string>
     <string name="media_error_http_too_large_video_upload">Video terlalu besar untuk diunggah</string>
     <string name="media_error_http_too_large_photo_upload">Gambar terlalu besar untuk diunggah Coba ubah Optimalkan Gambar di pengaturan situs</string>
@@ -2156,7 +2172,7 @@ Language: id
     <string name="tabbar_accessibility_label_my_site">Situs Saya. Lihat situs dan kelola, termasuk statusnya.</string>
     <string name="my_site_btn_sharing">Berbagi</string>
     <string name="button_not_now">Jangan sekarang</string>
-    <string name="media_error_internal_server_error">Terjadi error saat mengunggah. Coba aktifkan Optimalkan Gambar di Situs-&gt;Pengaturan</string>
+    <string name="media_error_internal_server_error">Terjadi eror saat mengunggah. Coba aktifkan Optimalkan Gambar di pengaturan aplikasi.</string>
     <string name="media_downloading">Menyimpan media ke perangkat ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>
     <string name="editor_draft_saved_locally">Konsep disimpan di perangkat</string>
@@ -2554,8 +2570,8 @@ Language: id
     <string name="current_theme">Tema Saat Ini</string>
     <string name="page_updated">Halaman diperbarui</string>
     <string name="post_updated">Pos diperbarui</string>
-    <string name="page_published">Halaman diterbitkan</string>
-    <string name="post_published">Pos diterbitkan</string>
+    <string name="page_published">Laman dipublikasikan</string>
+    <string name="post_published">Pos dipublikasikan</string>
     <string name="theme_no_search_result_found">Maaf, tema tidak ditemukan.</string>
     <string name="reader_label_gap_marker">Muat pos lainnya</string>
     <string name="notifications_no_search_results">Tidak ada situs yang cocok dengan \'%s\'</string>
@@ -2616,14 +2632,13 @@ Language: id
     <string name="account_settings">Pengaturan Akun</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="site_picker_create_wpcom">Buat situs WordPress.com</string>
-    <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
+    <string name="site_picker_add_self_hosted">Tambahkan situs yang dikelola sendiri</string>
     <string name="site_picker_add_site">Tambah situs baru</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
     <string name="site_picker_title">Pilih situs</string>
     <string name="my_site_btn_view_site">Tampilkan Situs</string>
     <string name="my_site_btn_view_admin">Tampilkan Admin</string>
     <string name="my_site_btn_switch_site">Ganti Situs</string>
-    <string name="my_site_btn_site_settings">Pengaturan</string>
     <string name="my_site_btn_blog_posts">Pos Blog</string>
     <string name="my_site_header_publish">Terbitkan</string>
     <string name="my_site_header_look_and_feel">Tampilan dan Nuansa</string>
@@ -2848,7 +2863,7 @@ Language: id
     <string name="more_notifications">dan %d lagi.</string>
     <string name="new_notifications">%d notifikasi baru</string>
     <string name="follows">Mengikuti</string>
-    <string name="note_reply_successful">Balasan telah terbit</string>
+    <string name="note_reply_successful">Balasan dipublikasikan</string>
     <string name="sign_in">Log in</string>
     <string name="loading">Memuat…</string>
     <string name="httppassword">Kata sandi HTTP</string>

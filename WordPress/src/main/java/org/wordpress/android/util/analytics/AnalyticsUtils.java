@@ -239,8 +239,9 @@ public class AnalyticsUtils {
      * @param site       The site object
      * @param properties Properties to attach to the event
      */
-    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
-                                            Map<String, Object> properties) {
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat,
+                                            @Nullable SiteModel site,
+                                            @Nullable Map<String, Object> properties) {
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");

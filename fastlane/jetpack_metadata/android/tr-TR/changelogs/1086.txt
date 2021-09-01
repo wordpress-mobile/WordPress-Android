@@ -1,6 +1,0 @@
-17.9:
-Yeni Gömme bloku ile, YouTube veya Instagram gibi desteklenen hizmetlerden içerik gömün.
-
-Henüz bir siteniz yok mu? Bir site oluşturmanızı isteyen bildirimler göreceksiniz.
-
-Diğer güncellemeler, Blog Hatırlatıcıları özelliğindeki iyileştirmeleri ve uygulamanızın İstatistikler ve Medya bölümlerindeki ince ayarları içerir.

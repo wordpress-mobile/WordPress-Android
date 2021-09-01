@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-05 09:54:08+0000
+Translation-Revision-Date: 2021-08-20 12:47:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">若要重新排列區塊，請依序點選區塊和區塊左下角顯示的上下鍵，將其移動到其他區塊的上方或下方。</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">歡迎進入內容區塊領域</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">若要移除區塊，請選取區塊，並按一下區塊右下角的三個點以檢視設定。 在設定中選擇移除區塊的選項。</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">有些區塊具有其他設定。 請點選區塊右下角的設定圖示以檢視更多選項。</string>
+    <string name="gutenberg_native_s_block_newly_available">%s區塊，全新推出</string>
+    <string name="gutenberg_native_rich_text_editing">RTF 編輯</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">熟悉不同區塊的名稱後，輸入正斜線，後面加上區塊名稱 (例如 /image 或 /heading)，就能新增區塊。</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">為頁面新增圖片、GIF、影片和嵌入式媒體，讓你的內容脫穎而出。</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">馬上嘗試為你的文章或頁面新增幾個區塊！</string>
+    <string name="gutenberg_native_embed_media">嵌入媒體</string>
+    <string name="gutenberg_native_build_layouts">建構版面形式</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">區塊是讓你可以不必瞭解如何編寫程式碼，就能插入、重新排列及調整樣式的塊狀內容。 區塊可讓你用簡單且現代化的方式建立美麗的版面配置。</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">隨時都能點選左下角工具列的「+」號圖示新增區塊。 </string>
+    <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
+    <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
     <string name="create_site_notification_create_site_action">建立網站</string>
     <string name="create_site_notification_text">只要幾個快速步驟，即可讓你的網站上線運作</string>
     <string name="create_site_notification_title">建立你的 WordPress 網站</string>
@@ -25,7 +42,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
     <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">逐步說明</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">我們會逐步說明透過應用程式管理網站的基本須知。</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要協助你透過應用程式管理此網站嗎？</string>
     <string name="login_epilogue_create_new_site_button">建立一個新網站</string>
     <string name="login_epilogue_mysites_subheading">你可以隨時切換網站。</string>
@@ -44,10 +60,8 @@ Language: zh_TW
     <string name="blogging_reminders_tip_message">定期發表文章有助於持續與讀者互動，並吸引更多訪客造訪網站。</string>
     <string name="blogging_reminders_select_days">選取你希望發表網誌的日期</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">你目前並未設定任何提醒。</string>
-    <string name="blogging_reminders_epilogue_body_everyday">你會&lt;b&gt;每天&lt;/b&gt;收到網誌提醒。</string>
     <string name="blogging_reminders_epilogue_not_set_title">提醒已移除！</string>
     <string name="blogging_reminders_epilogue_title">一切就緒！</string>
-    <string name="blogging_reminders_epilogue_body_days">你每週會收到%1$s網誌提醒，分別在%2$s。</string>
     <string name="blogging_reminders_update">更新</string>
     <string name="blogging_reminders_not_set">未設定任何目標</string>
     <string name="blogging_reminders_n_a_week">一週%s</string>
@@ -117,6 +131,8 @@ Language: zh_TW
     <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
     <string name="gutenberg_native_image_settings">圖片設定</string>
     <string name="gutenberg_native_width_settings">寬度設定</string>
+    <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
+    <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
@@ -158,6 +174,7 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
     <string name="gutenberg_native_double_tap_to_change_unit">按兩下以變更單位</string>
+    <string name="gutenberg_native_outside">外部</string>
     <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
     <string name="gutenberg_native_clear_search">清除搜尋</string>
     <string name="gutenberg_native_cancel_search">取消搜尋</string>
@@ -169,6 +186,7 @@ Language: zh_TW
     <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
     <string name="comment_status_unreplied">尚未回覆</string>
     <string name="gutenberg_native_add_link">新增連結</string>
+    <string name="gutenberg_native_search_settings">搜尋設定</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
@@ -255,6 +273,7 @@ Language: zh_TW
     <string name="photo_picker_use_audio">使用這個音訊</string>
     <string name="photo_picker_choose_audio">從裝置中選擇音訊</string>
     <string name="people_optional_custom_message_helper_text">選填：輸入自訂訊息，連同你的邀請一併傳送。</string>
+    <string name="gutenberg_native_audio_file">音訊檔案</string>
     <string name="people_learn_more_about_roles">瞭解更多有關角色的資訊</string>
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
@@ -722,9 +741,11 @@ Language: zh_TW
     <string name="error_update_site_title_network">無法更新網站標題。 請檢查你的網路連線並再試一次。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未儲存的變更</string>
     <string name="gutenberg_native_open_link_in_a_browser">在瀏覽器中開啟連結</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">瀏覽至上一個內容表</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">瀏覽至自訂漸層色彩</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">瀏覽至自訂顏色選擇器</string>
     <string name="gutenberg_native_gradient_type">漸層色彩類型</string>
+    <string name="gutenberg_native_go_back">返回</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">按兩下以選擇</string>
     <string name="gutenberg_native_customize_gradient">自訂漸層色彩</string>
     <string name="pages_list_author">頁面作者</string>
@@ -1240,6 +1261,8 @@ Language: zh_TW
     <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
     <string name="stats_view_follower_totals">追蹤者總數</string>
     <string name="domain_suggestions_search_hint">輸入關鍵字尋找更多想法</string>
+    <string name="domain_suggestions_fetch_error">無法載入網域建議</string>
+    <string name="domains_suggestions_empty_list">找不到任何建議</string>
     <string name="stats_menu_remove">從洞察報告中移除</string>
     <string name="stats_menu_move_down">向下移動</string>
     <string name="stats_menu_move_up">向上移動</string>
@@ -1514,6 +1537,7 @@ Language: zh_TW
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s「搜尋」%2$s以尋找具有相似主題的網站</string>
+    <string name="quick_start_dialog_need_help_button_negative">不用！謝謝</string>
     <string name="quick_start_button_positive">執行</string>
     <string name="quick_start_button_negative_short">取消</string>
     <string name="quick_start_button_negative">現在不要</string>
@@ -1577,6 +1601,8 @@ Language: zh_TW
     <string name="support_contact_email">聯絡電子郵件</string>
     <string name="application_log_button">應用程式記錄檔</string>
     <string name="my_tickets">我的票證</string>
+    <string name="activity_log_currently_restoring_message">正在還原至 %1$s %2$s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
     <string name="activity_log_button">活動記錄動作按鈕</string>
@@ -1672,6 +1698,7 @@ Language: zh_TW
     <string name="site_settings_quota_space_unlimited">%1$s 的配額空間不受限制</string>
     <string name="preview_count">預覽 %d</string>
     <string name="add_count">新增 %d</string>
+    <string name="fab_add_tag_desc">建立標籤</string>
     <string name="navigate_up_desc">瀏覽</string>
     <string name="notification_settings_switch_desc">通知</string>
     <string name="show_more_desc">顯示更多</string>
@@ -1697,6 +1724,7 @@ Language: zh_TW
     <string name="profile_picture">%s 的個人檔案照片</string>
     <string name="comment_checkmark_desc">檢查標記</string>
     <string name="signup_with_google_progress">透過 Google 註冊…</string>
+    <string name="open_external_link_desc">開啟外部連結</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
@@ -2612,7 +2640,6 @@ Language: zh_TW
     <string name="site_picker_title">選擇網站</string>
     <string name="my_site_btn_switch_site">切換網站</string>
     <string name="my_site_btn_blog_posts">網誌文章</string>
-    <string name="my_site_btn_site_settings">設定</string>
     <string name="my_site_header_look_and_feel">外觀和風格</string>
     <string name="my_site_header_publish">發表</string>
     <string name="my_site_header_configuration">組態</string>

@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-03 23:06:03+0000
+Translation-Revision-Date: 2021-08-23 13:37:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d likes, %3$d reacties gekregen.</string>
+    <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
+    <string name="blogging_reminders_notification_time">Kennisgeving tijd</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s per week op %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">De tekstopmaak besturingen bevinden zich in de werkbalk boven het toetsenbord tijdens het bewerken van een tekstblok</string>
+    <string name="gutenberg_native_selected_s">Geselecteerd: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Selecteer een kleur erboven</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navigeert om %s te selecteren</string>
+    <string name="gutenberg_native_move_blocks">Blokken verplaatsen</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Hoe je bericht te bewerken</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Hoe je pagina te bewerken</string>
+    <string name="gutenberg_native_customize_blocks">Blokken aanpassen</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Wijzigingen aan de afbeelding worden niet beïnvloed door de undo/redo knoppen.</string>
+    <string name="gutenberg_native_applies_the_setting">Past de instelling toe</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Je kunt blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het boven of onder andere blokken te zetten.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Welkom in de wereld van blokken</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Om een blok te verwijderen, selecteer je het blok en klik je op de drie stippen rechts onderaan het blok om de instellingen te zien. Kies van daaruit de optie om het blok te verwijderen.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Sommige blokken hebben extra instellingen. Tik op het instellingen-pictogram rechts onderaan het blok om meer opties te zien.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blok, nieuw beschikbaar</string>
+    <string name="gutenberg_native_rich_text_editing">Rich tekst bewerking</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Als je eenmaal vertrouwd bent geraakt met de namen van de verschillende blokken, kun je een blok toevoegen door een voorwaartse schuine streep te typen, gevolgd door de bloknaam - bijvoorbeeld, /afbeelding of /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Laat je inhoud opvallen door afbeeldingen, gifs, video\'s, en ingesloten media aan je pagina\'s toe te voegen.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Probeer het door een paar blokken toe te voegen aan je bericht of pagina!</string>
+    <string name="gutenberg_native_embed_media">Sluit media in</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Elk blok heeft zijn eigen instellingen. Om ze te vinden, tik op een blok. Zijn instellingen zullen verschijnen in de gereedschapsbalk onderaan het scherm.</string>
+    <string name="gutenberg_native_build_layouts">Bouw lay-outs</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de gereedschapsbalk links onderaan. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
+    <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
     <string name="create_site_notification_create_site_action">Site maken</string>
     <string name="create_site_notification_text">Krijg je site in slechts een paar snelle stappen aan de slag</string>
     <string name="create_site_notification_title">Maak je WordPress site</string>
@@ -25,7 +59,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltik om de voorbeeldpagina te bekijken.</string>
     <string name="quick_start_list_upload_icon_subtitle">Getoond in de browser tab van je bezoeker en andere plaatsen online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Laat me rondleiden</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">We zullen je door de basis van het beheren van je site leiden met de app.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Wil je een beetje hulp bij het beheren van deze site met de app?</string>
     <string name="login_epilogue_create_new_site_button">Maak een nieuwe site</string>
     <string name="login_epilogue_mysites_subheading">Je kunt op elk moment sites wisselen.</string>
@@ -44,8 +77,7 @@ Language: nl
     <string name="blogging_reminders_select_days">Selecteer de dagen waarop je wil bloggen</string>
     <string name="blogging_reminders_epilogue_caption">Je kunt dit op elk gewenst moment updaten via Mijn site &gt; Instellingen &gt; Blog herinneringen.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Je hebt geen herinneringen ingesteld.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Je krijgt om herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Je krijgt herinneringen om %1$s per week te bloggen op %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Je krijgt herinneringen om %1$s per week te bloggen op %2$s om %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Herinneringen verwijderd!</string>
     <string name="blogging_reminders_epilogue_title">Alles ingesteld!</string>
     <string name="blogging_reminders_update">Update</string>
@@ -134,6 +166,7 @@ Language: nl
     <string name="gutenberg_native_embed_link">Sluit link in</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
+    <string name="gutenberg_native_add_blocks">Voeg blokken toe</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
@@ -727,9 +760,11 @@ Language: nl
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigeert naar het vorige inhoudsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigeert naar aanpassen van het verloop</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigeert naar de aangepaste kleurkiezer</string>
     <string name="gutenberg_native_gradient_type">Verloop type</string>
+    <string name="gutenberg_native_go_back">Ga terug</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tik tweemaal om de optie te selecteren</string>
     <string name="gutenberg_native_customize_gradient">Pas de verloop aan</string>
     <string name="pages_list_author">Pagina auteur</string>
@@ -2623,7 +2658,7 @@ Language: nl
     <string name="my_site_btn_view_site">Bekijk site</string>
     <string name="my_site_btn_view_admin">Beheer bekijken</string>
     <string name="my_site_btn_switch_site">Site wisselen</string>
-    <string name="my_site_btn_site_settings">Instellingen</string>
+    <string name="my_site_btn_site_settings">Site instellingen</string>
     <string name="my_site_btn_blog_posts">Blogberichten</string>
     <string name="my_site_header_publish">Publiceren</string>
     <string name="my_site_header_look_and_feel">Uiterlijk en gebruiksgemak</string>

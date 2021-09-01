@@ -58,6 +58,7 @@ class SiteItemsBuilder
                 siteListItemBuilder.buildPeopleItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildPluginItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildShareItemIfAvailable(site, onClick, showEnablePostSharingFocusPoint),
+                siteListItemBuilder.buildDomainsItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_external)),
                 ListItem(

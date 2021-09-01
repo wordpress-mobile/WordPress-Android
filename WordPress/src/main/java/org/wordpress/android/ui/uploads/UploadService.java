@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtilsWrapper;
@@ -85,6 +86,7 @@ public class UploadService extends Service {
     @Inject UploadStore mUploadStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject PostUtilsWrapper mPostUtilsWrapper;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onCreate() {
@@ -925,7 +927,7 @@ public class UploadService extends Service {
 
                 // if media has a local site id, use that. If not, default to currently selected site.
                 int siteLocalId = event.media.getLocalSiteId() > 0 ? event.media.getLocalSiteId()
-                        : AppPrefs.getSelectedSite();
+                        : mSelectedSiteRepository.getSelectedSiteLocalId(true);
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
 
                 List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);

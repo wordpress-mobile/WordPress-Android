@@ -31,7 +31,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var appLogWrapper: AppLogWrapper
     @Mock lateinit var siteUtils: SiteUtilsWrapper
-    private val siteId = 1
+    private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<DomainCreditAvailable>
     private lateinit var handler: DomainRegistrationHandler
@@ -46,7 +46,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
                 appLogWrapper,
                 siteUtils
         )
-        site.id = siteId
+        site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         result = mutableListOf()
     }
@@ -119,7 +119,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { handler.onPlansFetched(event) }
         }
-        handler.buildSource(testScope(), siteId).observeForever { result.add(it) }
+        handler.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(

@@ -22,11 +22,23 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
     private val completedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE)
     private val uncompletedTasks: List<QuickStartTaskDetails> = listOf(QuickStartTaskDetails.VIEW_SITE_TUTORIAL)
     private val onItemClick: (QuickStartTaskType) -> Unit = {}
+    private val onRemoveMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
         builder = QuickStartBlockBuilder()
     }
+
+    /* TITLE */
+
+    @Test
+    fun `when block is built, then title exists`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.title).isEqualTo(UiStringRes(R.string.quick_start_sites))
+    }
+
+    /* TASK TYPE ITEM */
 
     @Test
     fun `when block is built, then customise quick start task type item exists`() {
@@ -42,47 +54,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(quickStartBlock.taskTypeItems.map { it.quickStartTaskType }).contains(QuickStartTaskType.GROW)
     }
 
-    /* ICON */
-
-    @Test
-    fun `given uncompleted tasks exist, when block is built, then icon is enabled`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock).iconEnabled).isTrue
-    }
-
-    @Test
-    fun `given uncompleted tasks do not exist, when block is built, then icon is disabled`() {
-        val quickStartBlock = buildQuickStartBlock(uncompletedTasks = emptyList())
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock).iconEnabled).isFalse
-    }
-
-    @Test
-    fun `when customize task type item is built, then customize icon exists`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.CUSTOMIZE).icon)
-                .isEqualTo(R.drawable.bg_oval_primary_40_customize_white_40dp_selector)
-    }
-
-    @Test
-    fun `given uncompleted tasks exist, when grow task type item is built, then grow icon exists`() {
-        val quickStartBlock = buildQuickStartBlock()
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.GROW).icon)
-                .isEqualTo(R.drawable.bg_oval_blue_50_multiple_users_white_40dp)
-    }
-
-    @Test
-    fun `given uncompleted tasks do not exist, when grow task type item is built, then grow icon exists`() {
-        val quickStartBlock = buildQuickStartBlock(uncompletedTasks = emptyList())
-
-        assertThat(getQuickStartTaskTypeItem(quickStartBlock, QuickStartTaskType.GROW).icon)
-                .isEqualTo(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
-    }
-
-    /* TITLE */
+    /* TASK TYPE ITEM TITLE */
 
     @Test
     fun `given uncompleted tasks exist, when block is built, then title is enabled`() {
@@ -128,7 +100,7 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
         assertThat(getQuickStartTaskTypeItem(quickStartBlock).strikeThroughTitle).isTrue
     }
 
-    /* SUBTITLE */
+    /* TASK TYPE ITEM SUBTITLE */
 
     @Test
     fun `when block is built, then task type item subtitle contains completed amd uncompleted count`() {
@@ -146,6 +118,30 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 )
     }
 
+    /* TASK TYPE ITEM PROGRESS BAR */
+
+    @Test
+    fun `given non zero completed tasks, when block is built, then completed tasks progress is non zero`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        val percentCompleted = 50
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progress).isEqualTo(percentCompleted)
+    }
+
+    @Test
+    fun `given zero completed tasks, when block is built, then completed tasks progress is zero`() {
+        val quickStartBlock = buildQuickStartBlock(emptyList())
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progress).isEqualTo(0)
+    }
+
+    @Test
+    fun `when block is built, then progress color equals primary color`() {
+        val quickStartBlock = buildQuickStartBlock(emptyList())
+
+        assertThat(getQuickStartTaskTypeItem(quickStartBlock).progressColor).isEqualTo(R.color.colorPrimary)
+    }
+
     /* ITEM CLICK */
 
     @Test
@@ -157,13 +153,31 @@ class QuickStartBlockBuilderTest : BaseUnitTest() {
                 .isEqualTo(ListItemInteraction.create(taskTypeItem.quickStartTaskType, onItemClick))
     }
 
+    /* MORE MENU */
+
+    @Test
+    fun `when block is built, then more menu is visible`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.moreMenuVisible).isTrue
+    }
+
+    /* REMOVE MENU ITEM */
+
+    @Test
+    fun `when block is built, then remove menu item click is set on the block`() {
+        val quickStartBlock = buildQuickStartBlock()
+
+        assertThat(quickStartBlock.onRemoveMenuItemClick).isNotNull
+    }
+
     private fun buildQuickStartBlock(
         completedTasks: List<QuickStartTaskDetails>? = null,
         uncompletedTasks: List<QuickStartTaskDetails>? = null
     ): QuickStartBlock {
         val customizeCategory = buildQuickStartCategory(QuickStartTaskType.CUSTOMIZE, completedTasks, uncompletedTasks)
         val growCategory = buildQuickStartCategory(QuickStartTaskType.GROW, completedTasks, uncompletedTasks)
-        return builder.build(listOf(customizeCategory, growCategory), onItemClick)
+        return builder.build(listOf(customizeCategory, growCategory), onRemoveMenuItemClick, onItemClick)
     }
 
     private fun buildQuickStartCategory(

@@ -316,6 +316,7 @@ Language: nb_NO
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
+    <string name="gutenberg_native_go_back">Gå tilbake</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_list_author">Sideforfatter</string>
@@ -2147,7 +2148,6 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_btn_switch_site">Bytt nettsted</string>
-    <string name="my_site_btn_site_settings">Innstillinger</string>
     <string name="my_site_btn_blog_posts">Blogginnlegg</string>
     <string name="my_site_header_publish">Publiser</string>
     <string name="my_site_header_look_and_feel">Se og kjenn</string>

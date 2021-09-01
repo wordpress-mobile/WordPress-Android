@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 08:19:15+0000
+Translation-Revision-Date: 2021-08-28 00:11:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">您的站点获得了%1$d次浏览、%2$d次喜欢、%3$d次评论。</string>
+    <string name="weekly_roundup_notification_title">每周综述：%s</string>
+    <string name="blogging_reminders_notification_time">通知间隔</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">您会收到提醒，要在&lt;b&gt;每天&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;写博客。</string>
+    <string name="blogging_reminders_site_settings_label">每周%1$s次（%2$s）。</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">编辑文本区块时，文本格式控件位于键盘上方的工具栏内</string>
+    <string name="gutenberg_native_selected_s">已选择：%s</string>
+    <string name="gutenberg_native_select_a_color_above">从上方选择颜色</string>
+    <string name="gutenberg_native_navigates_to_select_s">导航至选择%s</string>
+    <string name="gutenberg_native_move_blocks">移动区块</string>
+    <string name="gutenberg_native_how_to_edit_your_post">如何编辑您的文章</string>
+    <string name="gutenberg_native_how_to_edit_your_page">如何编辑您的页面</string>
+    <string name="gutenberg_native_customize_blocks">自定义区块</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">更改特色图片的操作不受撤销、恢复按钮影响。</string>
+    <string name="gutenberg_native_applies_the_setting">使用此设置</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">您现在可以重新排列区块，方法是轻点一个区块，然后轻点该区块左下角出现的向上和向下箭头，将该区块移动到其他区块上方或下方。</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">欢迎来到区块的世界</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">要移除某个区块，请选中该区块，然后点击该区块右上角的三个点，以查看设置。 从该处，选择用于移除区块的选项。</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">某些区块具有其他设置。 轻点区块右上角的“设置”图标，以查看更多选项。</string>
+    <string name="gutenberg_native_s_block_newly_available">%s 区块全新推出</string>
+    <string name="gutenberg_native_rich_text_editing">富文本编辑</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">熟悉不同区块的名称之后，您可以输入正斜杠，后跟区块名称（例如，/image 或 /heading），以此方式来添加区块。</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">将图像、GIF、视频和嵌入式媒体添加到您的页面，让您的内容脱颖而出。</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">将一些区块添加到您的博文或页面，试试看吧！</string>
+    <string name="gutenberg_native_embed_media">嵌入媒体</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">每个区块都有各自的设置。要找到这些设置，请点击一个区块。区块的设置将出现在屏幕底部的工具栏上。</string>
+    <string name="gutenberg_native_build_layouts">构建布局</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">区块是您不需要知道如何编写代码就能够插入、重新排列和设置样式的内容。 区块让您能够以轻松而现代的方式创建精美的布局。</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">区块让您能够专注于编写您的内容，因为您需要的所有格式化工具将帮助您清楚地传达您的消息。</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">将您的内容排成列，添加调用操作按钮，并用文字覆盖图片。</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">随时可通过点按左下角工具栏中的“+”图标添加新区块。</string>
+    <string name="quick_start_sites_type_tasks_completed">总计 %2$s 项任务，其中 %1$s 项已完成</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">通过快速练习了解基础知识。</string>
+    <string name="comment_batch_moderation_error">未能对一条或多条评论进行审核</string>
     <string name="create_site_notification_create_site_action">创建站点</string>
     <string name="create_site_notification_text">简单几步即可启动并运行您的站点</string>
     <string name="create_site_notification_title">创建您的 WordPress 网站</string>
@@ -25,7 +59,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_preview_page">双击可预览页面。</string>
     <string name="quick_start_list_upload_icon_subtitle">显示在访问者的浏览器选项卡和其他在线位置。</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">带我看看</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">我们将带您了解使用该应用管理站点的基础知识。</string>
     <string name="quick_start_dialog_need_help_manage_site_title">需要获取有关使用该应用管理此站点的帮助吗？</string>
     <string name="login_epilogue_create_new_site_button">创建新站点</string>
     <string name="login_epilogue_mysites_subheading">您可以随时切换站点。</string>
@@ -44,8 +77,7 @@ Language: zh_CN
     <string name="blogging_reminders_select_days">选择您希望发布博客的日期</string>
     <string name="blogging_reminders_epilogue_caption">您可以通过“我的站点 &gt; 设置 &gt; 博客发布提醒”来随时更新。</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">您没有设置提醒。</string>
-    <string name="blogging_reminders_epilogue_body_everyday">您&lt;b&gt;每天&lt;/b&gt;都会收到发布博客的提醒。</string>
-    <string name="blogging_reminders_epilogue_body_days">您会收到每周在 %2$s 上发布 %1$s 次博客的提醒。</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">您会收到提醒，让您每周 %3$s 在 %2$s 上写 %1$s 次博客。</string>
     <string name="blogging_reminders_epilogue_not_set_title">删除提醒！</string>
     <string name="blogging_reminders_epilogue_title">搞定！</string>
     <string name="blogging_reminders_update">更新</string>
@@ -110,7 +142,7 @@ Language: zh_CN
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">双击可添加链接。</string>
     <string name="gutenberg_native_edit_link">编辑链接</string>
-    <string name="login_empty_view_try_another_account">使用其他帐户尝试</string>
+    <string name="login_empty_view_try_another_account">使用其他账户尝试</string>
     <string name="login_empty_view_see_instructions">请参阅说明</string>
     <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
     <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
@@ -134,6 +166,7 @@ Language: zh_CN
     <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
+    <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>
@@ -192,7 +225,7 @@ Language: zh_CN
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将吸引更多用户。 做得漂亮！</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将自定义您的站点。 大功告成了！</string>
     <string name="quick_start_card_menu_hide">立即隐藏</string>
-    <string name="magic_link_not_meaning_to_create_account">不打算创建新帐户？ 返回以重新输入您的电子邮箱地址。</string>
+    <string name="magic_link_not_meaning_to_create_account">不打算创建新账户？返回以重新输入您的电子邮箱地址。</string>
     <string name="invite_links_disable_dialog_message">禁用此邀请链接后，任何人都无法再使用它来加入您的团队。 是否确定？</string>
     <string name="invite_links_disable_dialog_title">禁用邀请链接</string>
     <string name="invite_links_bad_format_response">收到无效响应</string>
@@ -591,7 +624,7 @@ Language: zh_CN
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 已选择</string>
     <string name="login_get_link_by_email">通过电子邮件获取登录链接</string>
-    <string name="email_not_registered_wpcom">找不到与此电子邮箱地址关联的 WordPress.com 帐户。</string>
+    <string name="email_not_registered_wpcom">找不到与此电子邮箱地址关联的 WordPress.com 账户。</string>
     <string name="permission_microphone">麦克风</string>
     <string name="comment_unable_to_show_error">无法显示此评论</string>
     <string name="media_browse_for_items">浏览商品</string>
@@ -690,11 +723,11 @@ Language: zh_CN
     <string name="gutenberg_native_block_removed">区块已删除</string>
     <string name="enter_your_site_address">输入您的现有站点地址</string>
     <string name="signup_confirmation_title">注册确认</string>
-    <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
+    <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 账户，则需要创建一个账户，并同意我们的%1$s服务条款%2$s。</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_message">我们将使用此电子邮箱地址为您创建新 WordPress.com 帐户。</string>
-    <string name="signup_magic_link_message">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
+    <string name="signup_confirmation_message">我们将使用此电子邮箱地址为您创建新 WordPress.com 账户。</string>
+    <string name="signup_magic_link_message">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 账户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
+    <string name="enter_account_info_for_site">输入您的 %1$s 账户信息。</string>
     <string name="login_or">或</string>
     <string name="continue_google_button_suffix">继续使用 Google</string>
     <string name="login_find_your_site_adress">找到您的站点地址</string>
@@ -704,9 +737,9 @@ Language: zh_CN
     <string name="login_magic_links_label">我们将通过电子邮件向您发送一个链接，无需密码即可登录。</string>
     <string name="check_email">查收电子邮件</string>
     <string name="get_started">开始</string>
-    <string name="enter_email_to_continue_wordpress_com">输入您的电子邮箱地址以登录或创建 WordPress.com 帐户。</string>
+    <string name="enter_email_to_continue_wordpress_com">输入您的电子邮箱地址以登录或创建 WordPress.com 账户。</string>
     <string name="or_type_your_password">或者输入您的密码</string>
-    <string name="create_account">创建帐户</string>
+    <string name="create_account">创建账户</string>
     <string name="send_link_by_email">通过电子邮件发送链接</string>
     <string name="reset_your_password">重置密码</string>
     <string name="reader_error_request_failed_title">处理请求时出现问题。 请稍后重试。</string>
@@ -727,9 +760,11 @@ Language: zh_CN
     <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未保存的更改</string>
     <string name="gutenberg_native_open_link_in_a_browser">在浏览器中打开链接</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">导航到上一个内容工作表</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">导航以自定义渐变</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">导航至自定义颜色选择器</string>
     <string name="gutenberg_native_gradient_type">渐变类型</string>
+    <string name="gutenberg_native_go_back">返回</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">轻点两下以选择选项</string>
     <string name="gutenberg_native_customize_gradient">自定义渐变</string>
     <string name="pages_list_author">页面作者</string>
@@ -1166,7 +1201,7 @@ Language: zh_CN
     <string name="post_settings_retry_featured_image">重试上传</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">正在上传媒体。\n请轻按以查看选项。</string>
     <string name="link_open_new_window">在新窗口/选项卡中打开链接</string>
-    <string name="stats_widget_error_no_access_token">要查看您的统计信息，请登录 WordPress.com 帐户。</string>
+    <string name="stats_widget_error_no_access_token">要查看您的统计信息，请登录 WordPress.com 账户。</string>
     <string name="post_list_search_nothing_found">没有与您的关键词匹配的文章</string>
     <string name="post_list_search_prompt">搜索文章</string>
     <string name="domains_suggestions_intro_description">人们可以通过此域名在互联网上找到您。</string>
@@ -1196,7 +1231,7 @@ Language: zh_CN
     <string name="domain_registration_privacy_protection_tos">注册此域即表示，您同意我们的%1$s条款和条件%2$s</string>
     <string name="error_network_connection">请检查您的网络连接，然后重试。</string>
     <string name="error_browser_no_network">无法立即加载此页面。</string>
-    <string name="error_disabled_apis">无法获取设置：一些 API 不适用于此 OAuth 应用程序 ID + 帐户组合。</string>
+    <string name="error_disabled_apis">无法获取设置：一些 API 不适用于此 OAuth 应用程序 ID + 账户组合。</string>
     <string name="jetpack_connection_terms_and_conditions">设置 Jetpack 即表示，您同意我们的%1$s条款和条件%2$s</string>
     <string name="site_settings_disconnected_toast">没有连接。编辑已禁用。</string>
     <string name="site_settings_update_password_message">要将应用程序重新连接到您的自托管站点，请在此处输入站点的新密码。</string>
@@ -1335,7 +1370,7 @@ Language: zh_CN
     <string name="quick_start_dialog_explore_plans_title">了解各个套餐</string>
     <string name="quick_start_dialog_explore_plans_message">了解付费套餐中的营销和搜索引擎优化工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">启用文章共享</string>
-    <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体帐户。</string>
+    <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体账户。</string>
     <string name="quick_start_dialog_check_stats_title">查看站点统计信息</string>
     <string name="quick_start_dialog_check_stats_message">及时了解您站点的效果。</string>
     <string name="quick_start_dialog_remove_next_steps_message">删除“后续步骤”将隐藏此站点中的所有导览。此操作无法撤销。</string>
@@ -1488,7 +1523,7 @@ Language: zh_CN
     <string name="pages_drafts">草稿</string>
     <string name="pages_published">已发布</string>
     <string name="login_error_sms_throttled">尝试发送短信验证码的次数太多了 - 休息一下，在一分钟后再申请新的短信验证码。</string>
-    <string name="login_error_email_not_found_v2">没有与此 Google 帐户匹配的 WordPress.com 帐户。</string>
+    <string name="login_error_email_not_found_v2">没有与此 Google 账户匹配的 WordPress.com 账户。</string>
     <string name="site_picker_remove_site_empty">没有与您的搜索匹配的站点</string>
     <string name="reader_empty_followed_blogs_search_title">没有与您的搜索匹配的站点</string>
     <string name="page_parent_changed">已更改父页面</string>
@@ -1510,8 +1545,8 @@ Language: zh_CN
     <string name="quick_start_dialog_view_site_message_short">轻按%1$s查看站点%2$s可预览您的站点</string>
     <string name="quick_start_dialog_share_site_title">分享您的站点</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">轻按 %1$s 分享 %2$s 并继续</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">轻按 %1$s 连接 %2$s 可添加您的社交媒体帐户</string>
-    <string name="quick_start_dialog_share_site_message">连接至您的社交媒体帐户 - 您的站点将自动共享新文章。</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">轻按 %1$s 连接 %2$s 可添加您的社交媒体账户</string>
+    <string name="quick_start_dialog_share_site_message">连接至您的社交媒体账户 - 您的站点将自动共享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">发布文章</string>
     <string name="quick_start_dialog_publish_post_message_short">轻按%1$s“创建文章”%2$s，撰写一篇新文章</string>
     <string name="quick_start_dialog_need_help_title">不知从何入手，需要一点帮助？</string>
@@ -1529,7 +1564,7 @@ Language: zh_CN
     <string name="my_site_create_new_site_title">您没有任何站点</string>
     <string name="reader_empty_followed_tags_title">无已关注的主题</string>
     <string name="reader_empty_followed_tags_subtitle">在此处添加主题，以查找有关您喜爱的主题的博文</string>
-    <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 帐户。</string>
+    <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
     <string name="install_jetpack_retry">重试</string>
     <string name="install_jetpack_continue">设置</string>
     <string name="jetpack_installation_problem_message">目前无法安装 Jetpack。</string>
@@ -1637,7 +1672,7 @@ Language: zh_CN
     <string name="third_party_policy_learn_more_header">第三方政策</string>
     <string name="privacy_policy_learn_more_caption">该信息有助于我们改善产品、开展与您更加相关的营销活动、个性化您的 WordPress.com 体验等，请参阅隐私政策以了解详情。</string>
     <string name="privacy_policy_learn_more_header">隐私政策</string>
-    <string name="cookie_policy_learn_more_caption">登录到您的 WordPress.com 帐户时，使用分析工具共享关于您使用服务的信息。</string>
+    <string name="cookie_policy_learn_more_caption">登录到您的 WordPress.com 账户时，使用分析工具共享关于您使用服务的信息。</string>
     <string name="cookie_policy_learn_more_header">Cookie 政策</string>
     <string name="preference_privacy_settings">隐私设置</string>
     <string name="preference_collect_information">收集信息</string>
@@ -1739,7 +1774,7 @@ Language: zh_CN
     <string name="notif_detail_screen_title">通知详情：%s</string>
     <string name="edit_photo_screen_title">编辑照片</string>
     <string name="share_intent_screen_title">选择站点</string>
-    <string name="signup_epilogue_screen_title">新建帐户</string>
+    <string name="signup_epilogue_screen_title">新建账户</string>
     <string name="login_epilogue_screen_title">登录身份为</string>
     <string name="person_detail_screen_title">个人详情</string>
     <string name="media_settings_screen_title">文件详情</string>
@@ -1808,7 +1843,7 @@ Language: zh_CN
     <string name="username_changer_action">保存</string>
     <string name="content_description_add_avatar">添加头像</string>
     <string name="signup_user_exists">电子邮件已注册 WordPress.com。\n继续登录。</string>
-    <string name="signup_updating_account">正在更新帐户…</string>
+    <string name="signup_updating_account">正在更新账户…</string>
     <string name="signup_magic_link_progress">正在发送邮件</string>
     <string name="signup_magic_link_error_button_positive">重试</string>
     <string name="signup_magic_link_error_button_negative">关闭</string>
@@ -1819,7 +1854,7 @@ Language: zh_CN
     <string name="signup_epilogue_hint_display">显示名称</string>
     <string name="signup_epilogue_error_button_positive">重试</string>
     <string name="signup_epilogue_error_button_negative">恢复</string>
-    <string name="signup_epilogue_error_generic">更新帐户时出现问题。您可以重试或恢复更改以继续。</string>
+    <string name="signup_epilogue_error_generic">更新账户时出现问题。您可以重试或恢复更改以继续。</string>
     <string name="signup_epilogue_error_avatar">上传头像时出现问题。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜索插件</string>
@@ -1939,9 +1974,9 @@ Language: zh_CN
     <string name="media_edit_customize_card_caption">自定义</string>
     <string name="media_edit_file_details_card_caption">文件详细信息</string>
     <string name="login_error_suffix">\n换个账户试试?</string>
-    <string name="login_error_generic">连接到 Google 帐户时出现问题。</string>
+    <string name="login_error_generic">连接到 Google 账户时出现问题。</string>
     <string name="login_error_button">关闭</string>
-    <string name="enter_wpcom_password_google">要继续使用此 Google 帐户，请提供匹配的 WordPress.com 密码。此要求仅会出现一次。</string>
+    <string name="enter_wpcom_password_google">要继续使用此 Google 账户，请提供匹配的 WordPress.com 密码。此要求仅会出现一次。</string>
     <string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
     <string name="post_settings_remove_featured_image">删除推荐图片</string>
     <string name="post_settings_choose_featured_image">选择特色图片</string>
@@ -1954,7 +1989,7 @@ Language: zh_CN
     <string name="jetpack_disconnect_pref_title">「断开与 WordPress.com 的连接」</string>
     <string name="site_settings_jetpack_allowlist_description">您可以将一个或多个 IP 地址加入白名单，以避免 Jetpack 将其屏蔽。IPv4 和 IPv6 都支持。如要按范围指定地址，请输入最小值和最大值，并用破折号隔开。示例：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要两步验证</string>
-    <string name="jetpack_match_wpcom_via_email_title">使用邮箱地址匹配帐户</string>
+    <string name="jetpack_match_wpcom_via_email_title">使用邮箱地址匹配账户</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允许通过 WordPress.com 登录</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com 登录</string>
     <string name="jetpack_prevent_brute_force_title">阻止恶意登录尝试</string>
@@ -2116,8 +2151,8 @@ Language: zh_CN
     <string name="photo_picker_soft_ask_label">%s 需要权限才能访问您的照片</string>
     <string name="sharing_twitter_message">当人们使用「Twitter」按钮分享时，会将其包含在推文中</string>
     <string name="sharing_label_message">更改分享按钮的标签文本。在您添加至少一个分享按钮后，这些文字才会显示。</string>
-    <string name="connecting_account">正在连接帐户</string>
-    <string name="cannot_connect_account_error">由于未选择任何帐户，因此无法建立 %s 连接。</string>
+    <string name="connecting_account">正在连接账户</string>
+    <string name="cannot_connect_account_error">由于未选择任何账户，因此无法建立 %s 连接。</string>
     <string name="connected">已连接</string>
     <string name="twitter">Twitter</string>
     <string name="likes">喜欢</string>
@@ -2138,16 +2173,16 @@ Language: zh_CN
     <string name="text_only_display">仅显示文字</string>
     <string name="icon_only_display">仅显示图标</string>
     <string name="icon_and_text_display">显示图标和文字</string>
-    <string name="connection_chooser_message">选择您希望授权的帐户。请注意，您的文章将会自动分享至已选帐户。</string>
+    <string name="connection_chooser_message">选择您希望授权的账户。请注意，您的文章将会自动分享至已选账户。</string>
     <string name="connecting_social_network">正在连接 %s</string>
     <string name="dlg_confirm_publicize_disconnect">是否断开与 %s 的连接？</string>
-    <string name="share_btn_connect_another_account">连接其他帐户</string>
+    <string name="share_btn_connect_another_account">连接其他账户</string>
     <string name="share_btn_reconnect">重新连接</string>
     <string name="share_btn_disconnect">断开连接</string>
     <string name="share_btn_connect">连接</string>
     <string name="connection_service_description">连接以自动将您的博文分享至 %s。</string>
     <string name="connection_service_label">通过 Publicize 分享至 %s</string>
-    <string name="connected_accounts_label">已连接帐户</string>
+    <string name="connected_accounts_label">已连接账户</string>
     <string name="connections_description">关联您最喜爱的社交媒体服务，自动与朋友分享新文章。</string>
     <string name="connections_label">连接</string>
     <string name="sharing">分享</string>
@@ -2212,7 +2247,7 @@ Language: zh_CN
     <string name="submit_for_review">提交</string>
     <string name="duplicate_site_detected">检测到重复的站点。</string>
     <string name="cannot_add_duplicate_site">应用中已存在此站点，无法重复添加。</string>
-    <string name="already_logged_in_wpcom">您已登录 WordPress.com 帐户，不能添加被其他帐户绑定的 WordPress.com 站点。</string>
+    <string name="already_logged_in_wpcom">您已登录 WordPress.com 账户，不能添加被其他账户绑定的 WordPress.com 站点。</string>
     <string name="error_media_load">无法加载媒体</string>
     <string name="error_media_refresh_no_connection">需有网络连接才能刷新库</string>
     <string name="error_media_unauthorized">您没有查看或编辑媒体的权限</string>
@@ -2423,8 +2458,8 @@ Language: zh_CN
     <string name="off">关闭</string>
     <string name="interface_language">界面语言</string>
     <string name="about_the_app">关于该应用程序</string>
-    <string name="error_post_account_settings">无法保存您的帐户设置</string>
-    <string name="error_fetch_account_settings">无法检索您的帐户设置</string>
+    <string name="error_post_account_settings">无法保存您的账户设置</string>
+    <string name="error_fetch_account_settings">无法检索您的账户设置</string>
     <string name="error_fetch_my_profile">无法检索您的个人资料</string>
     <string name="site_settings_unknown_language_code_error">无法识别语言代码</string>
     <string name="site_settings_threading_dialog_description">允许在线程中嵌入评论。</string>
@@ -2486,7 +2521,7 @@ Language: zh_CN
     <string name="site_settings_format_hint">设置新的文章格式</string>
     <string name="site_settings_category_hint">设置新的文章类别</string>
     <string name="site_settings_password_hint">更改您的密码</string>
-    <string name="site_settings_username_hint">当前用户帐户</string>
+    <string name="site_settings_username_hint">当前用户账户</string>
     <string name="site_settings_language_hint">此博客的主要撰写语言</string>
     <string name="site_settings_privacy_hint">控制可查看站点的人员</string>
     <string name="site_settings_address_hint">目前不支持更改地址</string>
@@ -2517,7 +2552,7 @@ Language: zh_CN
     <string name="site_settings_title_title">站点标题</string>
     <string name="site_settings_discussion_new_posts_header">默认用于新文章</string>
     <string name="site_settings_writing_header">撰写</string>
-    <string name="site_settings_account_header">帐户</string>
+    <string name="site_settings_account_header">账户</string>
     <string name="site_settings_general_header">常规</string>
     <string name="newest_first">最新评论在先</string>
     <string name="oldest_first">最早评论在先</string>
@@ -2581,7 +2616,7 @@ Language: zh_CN
     <string name="reader_menu_tags">编辑主题和站点</string>
     <string name="reader_title_post_detail">读者文章</string>
     <string name="notifications_push_summary">关于出现在设备上的通知的设置。</string>
-    <string name="notifications_email_summary">发送到与您的帐户相关联的电子邮件中的通知的设置。</string>
+    <string name="notifications_email_summary">发送到与您的账户相关联的电子邮件中的通知的设置。</string>
     <string name="notifications_tab_summary">「通知」选项卡中关于通知的设置。</string>
     <string name="notifications_disabled">应用程序通知已禁用。轻按此处以在「设置」中将其启用。</string>
     <string name="notification_types">通知类型</string>
@@ -2613,7 +2648,7 @@ Language: zh_CN
     <string name="me_connect_to_wordpress_com">登录 WordPress.com</string>
     <string name="me_btn_login_logout">登录/退出</string>
     <string name="me_btn_support">帮助与支持</string>
-    <string name="account_settings">帐户设置</string>
+    <string name="account_settings">账户设置</string>
     <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
     <string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>
     <string name="site_picker_add_self_hosted">添加自托管站点</string>
@@ -2623,7 +2658,7 @@ Language: zh_CN
     <string name="my_site_btn_view_site">查看站点</string>
     <string name="my_site_btn_view_admin">查看管理员</string>
     <string name="my_site_btn_switch_site">切换站点</string>
-    <string name="my_site_btn_site_settings">设置</string>
+    <string name="my_site_btn_site_settings">站点设置</string>
     <string name="my_site_btn_blog_posts">博客文章</string>
     <string name="my_site_header_publish">发布</string>
     <string name="my_site_header_look_and_feel">外观</string>

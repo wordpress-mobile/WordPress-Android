@@ -1,6 +1,0 @@
-17.9 :
-Grâce au nouveau bloc de contenu embarqué, intégrez des contenus issus de services pris en charges, tels que YouTube ou Instagram.
-
-Vous n’avez pas encore de site ? Des notifications vous inviteront à en créer un.
-
-Les autres mises à jour comprennent des améliorations de la fonctionnalité Rappels de blog ainsi que des ajustements apportés aux sections Statistiques et Médias de votre application.
