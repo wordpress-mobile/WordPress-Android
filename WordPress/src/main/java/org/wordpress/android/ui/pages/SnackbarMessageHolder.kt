@@ -8,5 +8,6 @@ data class SnackbarMessageHolder(
     val buttonTitle: UiString? = null,
     val buttonAction: () -> Unit = {},
     val onDismissAction: (event: Int) -> Unit = {},
-    val duration: Int = Snackbar.LENGTH_LONG
+    val duration: Int = Snackbar.LENGTH_LONG,
+    val isImportant: Boolean = true
 )

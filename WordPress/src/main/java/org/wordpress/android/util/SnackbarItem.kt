@@ -36,7 +36,8 @@ class SnackbarItem(
     class Info(
         view: View,
         val textRes: UiString,
-        val duration: Int
+        val duration: Int,
+        val isImportant: Boolean = true
     ) {
         val view = WeakReference(view)
     }
