@@ -47,6 +47,8 @@ data class EditorTheme(
         element.version = version
         element.rawStyles = themeSupport.rawStyles
         element.rawFeatures = themeSupport.rawFeatures
+        element.isFSETheme = themeSupport.isFSETheme
+        element.galleryWithImageBlocks = themeSupport.galleryWithImageBlocks
 
         return element
     }
