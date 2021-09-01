@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-02 01:58:38+0000
+Translation-Revision-Date: 2021-08-23 11:06:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
+    <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
+    <string name="blogging_reminders_notification_time">Aviseringstid</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Du får påminnelser om att blogga &lt;b&gt;varje dag&lt;/b&gt; kl. &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s per vecka kl. %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Medan man redigerar ett textblock finns verktygen för textformatering finns i verktygsfältet ovanför tangentbordet </string>
+    <string name="gutenberg_native_selected_s">Valt: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Välj en färg ovan</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navigerar för att markera %s</string>
+    <string name="gutenberg_native_move_blocks">Flytta block</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Så redigerar du ditt inlägg</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Så redigerar du din sida</string>
+    <string name="gutenberg_native_customize_blocks">Anpassa block</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Ändringar som gäller den utvalda bilden påverkas inte av knapparna ångra/gör om.</string>
+    <string name="gutenberg_native_applies_the_setting">Tillämpar inställningen</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Du kan ändra blockens ordning genom att trycka på ett block och sedan trycka på upp/ned-pilarna som visas i blockets nedre vänstra hörn för att flytta blocket före eller efter andra block.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Välkommen till världen av block</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Ta bort ett block genom att markera blocket och klicka på de tre punkterna i blockets nedre högra hörn för att visa inställningarna. Där väljer du sedan alternativet att ta bort blocket.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Vissa block har ytterligare inställningar. Tryck på ikonen för inställningar i blockets nedre högra hörn för att se fler alternativ.</string>
+    <string name="gutenberg_native_s_block_newly_available">Blocket %s, ett nytt tillskott</string>
+    <string name="gutenberg_native_rich_text_editing">Redigering av formaterad text</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Om du vet namnen på de block du behöver kan du lägga till ett block genom att skriva ett snedstreck följt av blockets namn, exempelvis /bild eller /rubrik.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Förstärk ditt innehåll genom att lägga till bilder, gif-illustrationer, videoklipp och inbäddade media i ditt sidinnehåll.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Prova nu direkt genom att lägga till några block i ditt inlägg eller din sida!</string>
+    <string name="gutenberg_native_embed_media">Bädda in media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Varje block har sina egna inställningar. För att se dem trycker du på blocket i fråga. Inställningarna visas i verktygsfältet längst ned på skärmen.</string>
+    <string name="gutenberg_native_build_layouts">Bygg layouter</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Block är innehållsbitar som du kan lägga in, sortera om och stilsätta utan att du behöver kunna programmera eller koda. Block är ett enkelt och modernt sätt för dig att skapa vackra layouter.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Block låter dig fokusera på innehållet med den trygga vetskapen att alla formateringsverktyg du behöver för att få fram ditt budskap finns tillgängliga.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordna ditt innehåll i kolumner, lägg till knappar för uppmaningar, och överläggstexter på bilder.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Lägg till ett nytt block när som helst genom att trycka på ikonen + i verktygsfältet nere till vänster.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s av %2$s klart</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Lär dig grunderna med hjälp av en snabb genomgång.</string>
+    <string name="comment_batch_moderation_error">Lyckades inte granska en eller flera kommentarer</string>
     <string name="create_site_notification_create_site_action">Skapa webbplats</string>
     <string name="create_site_notification_text">Kom igång med din egen webbplats i några få steg</string>
     <string name="create_site_notification_title">Skapa din WordPress-webbplats</string>
@@ -25,7 +59,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
     <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Visa mig en rundtur</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Vi kommer att visa dig grunderna i hur du hanterar din webbplats via appen.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Vill du ha lite hjälp med att hantera den här webbplatsen med appen?</string>
     <string name="login_epilogue_create_new_site_button">Skapa en ny webbplats</string>
     <string name="login_epilogue_mysites_subheading">Du kan byta webbplats när som helst.</string>
@@ -44,8 +77,7 @@ Language: sv_SE
     <string name="blogging_reminders_select_days">Ange på vilka dagar du vill blogga</string>
     <string name="blogging_reminders_epilogue_caption">Du kan ändra detta när som helst via Min webbplats → Inställningar → Bloggningspåminnelser.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Du har inga påminnelser inställda.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Du får påminnelser om att blogga &lt;b&gt;varje dag&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Du kommer att få bloggningspåminnelser %1$s per vecka på %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Du kommer att få bloggningspåminnelser %1$s per vecka på %2$s kl. %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Påminnelser borttagna!</string>
     <string name="blogging_reminders_epilogue_title">Allt är klart!</string>
     <string name="blogging_reminders_update">Uppdatera</string>
@@ -134,6 +166,7 @@ Language: sv_SE
     <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
+    <string name="gutenberg_native_add_blocks">Lägg till block</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
     <string name="gutenberg_native_what_is_alt_text">Vad är alternativ text?</string>
     <string name="gutenberg_native_transform_s_to">Omvandla %s till</string>
@@ -727,9 +760,11 @@ Language: sv_SE
     <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Går till föregående innehållsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Går till anpassning av gradient</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Går till färgväljare</string>
     <string name="gutenberg_native_gradient_type">Gradienttyp</string>
+    <string name="gutenberg_native_go_back">Gå tillbaka</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dubbeltryck för att välja alternativet</string>
     <string name="gutenberg_native_customize_gradient">Anpassa gradient</string>
     <string name="pages_list_author">Sidans författare</string>
@@ -2623,7 +2658,7 @@ Language: sv_SE
     <string name="my_site_btn_view_site">Visa webbplats</string>
     <string name="my_site_btn_view_admin">Visa admin</string>
     <string name="my_site_btn_switch_site">Byt webbplats</string>
-    <string name="my_site_btn_site_settings">Inställningar </string>
+    <string name="my_site_btn_site_settings">Webbplatsinställningar</string>
     <string name="my_site_btn_blog_posts">Blogginlägg</string>
     <string name="my_site_header_publish">Publicera</string>
     <string name="my_site_header_look_and_feel">Utseende och känsla</string>

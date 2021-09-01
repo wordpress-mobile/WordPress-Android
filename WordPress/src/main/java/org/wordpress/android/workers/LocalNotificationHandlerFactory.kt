@@ -19,4 +19,5 @@ class LocalNotificationHandlerFactory @Inject constructor(
 interface LocalNotificationHandler {
     fun shouldShowNotification(): Boolean
     fun buildIntent(context: Context): Intent
+    fun onNotificationShown()
 }

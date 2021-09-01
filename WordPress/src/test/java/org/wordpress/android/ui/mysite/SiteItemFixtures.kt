@@ -71,11 +71,6 @@ val COMMENTS_ITEM = ListItem(
         UiStringRes(R.string.my_site_btn_comments),
         onClick = ListItemInteraction.create(ListItemAction.COMMENTS, SITE_ITEM_ACTION)
 )
-val UNIFIED_COMMENTS_ITEM = ListItem(
-        R.drawable.ic_comment_white_24dp,
-        UiStringRes(R.string.my_site_btn_unified_comments),
-        onClick = ListItemInteraction.create(ListItemAction.UNIFIED_COMMENTS, SITE_ITEM_ACTION)
-)
 val ADMIN_ITEM = ListItem(
         R.drawable.ic_wordpress_white_24dp,
         UiStringRes(R.string.my_site_btn_view_admin),

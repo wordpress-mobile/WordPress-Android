@@ -2,16 +2,12 @@ package org.wordpress.android.ui.mysite
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
@@ -64,18 +60,8 @@ class QuickStartCardViewHolder(
 
         val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
-            quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
-        } else {
-            // Workaround for Lollipop
-            val progressDrawable = quickStartCardProgress.progressDrawable.mutate() as LayerDrawable
-            val backgroundLayer = progressDrawable.findDrawableByLayerId(android.R.id.background)
-            val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress)
-            backgroundLayer.colorFilter = createBlendModeColorFilterCompat(progressTrackColor, SRC_IN)
-            progressLayer.colorFilter = createBlendModeColorFilterCompat(progressIndicatorColor, SRC_IN)
-            quickStartCardProgress.progressDrawable = progressDrawable
-        }
+        quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
+        quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
 
         quickStartCardTitle.text = uiHelpers.getTextOfUiString(root.context, item.title)
         (quickStartCardRecyclerView.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)

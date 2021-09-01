@@ -2,8 +2,6 @@ package org.wordpress.android.ui.whatsnew
 
 import android.app.Dialog
 import android.content.Context
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,14 +38,12 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
 
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            val window: Window? = dialog.window
-            window?.let {
-                window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-                if (!resources.configuration.isDarkTheme()) {
-                    window.decorView.systemUiVisibility = window.decorView
-                            .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                }
+        val window: Window? = dialog.window
+        window?.let {
+            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
+            if (!resources.configuration.isDarkTheme()) {
+                window.decorView.systemUiVisibility = window.decorView
+                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }
         return dialog

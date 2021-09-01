@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium">
+
+    <TextView
+        android:id="@+id/cookie_domain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toStartOf="@+id/delete_cookie_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="wordpress.com" />
+
+    <TextView
+        android:id="@+id/cookie_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toStartOf="@+id/delete_cookie_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cookie_domain"
+        tools:text="cookie_name" />
+
+    <TextView
+        android:id="@+id/cookie_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toStartOf="@+id/delete_cookie_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cookie_name"
+        tools:text="cookie_value" />
+
+    <ImageButton
+        android:id="@+id/delete_cookie_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/margin_medium"
+        android:src="@drawable/ic_delete_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:ignore="ContentDescription" />
+</androidx.constraintlayout.widget.ConstraintLayout>

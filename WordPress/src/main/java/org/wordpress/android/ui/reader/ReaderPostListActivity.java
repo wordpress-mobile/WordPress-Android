@@ -33,8 +33,8 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -58,6 +58,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ReaderTracker mReaderTracker;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -358,8 +359,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        int siteLocalId = AppPrefs.getSelectedSite();
-        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,

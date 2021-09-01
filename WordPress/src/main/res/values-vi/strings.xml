@@ -393,7 +393,6 @@ Language: vi_VN
     <string name="site_picker_title">Chọn Site</string>
     <string name="my_site_btn_switch_site">Chuyển Site</string>
     <string name="my_site_btn_blog_posts">Bài viết Blog</string>
-    <string name="my_site_btn_site_settings">Thiết đặt</string>
     <string name="my_site_header_look_and_feel">Nhìn và Cảm nhận</string>
     <string name="my_site_header_publish">Xuất bản</string>
     <string name="my_site_header_configuration">Cấu hình</string>

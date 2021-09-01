@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -25,16 +26,16 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.EngageItem.Liker
-import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -43,6 +44,8 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -77,6 +80,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
@@ -89,6 +93,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.R
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
@@ -138,6 +143,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val getLikesState = MutableLiveData<GetLikesState>()
 
+    private lateinit var likesCaptor: KArgumentCaptor<List<LikeModel>>
+
     private val snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
@@ -162,7 +169,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
-                contextProvider,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
@@ -231,9 +237,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(likesEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
-        val context = mock<Context>()
-        whenever(context.getString(anyInt(), anyInt())).thenReturn("10 bloggers like this.")
-        whenever(contextProvider.getContext()).thenReturn(context)
+
+        likesCaptor = argumentCaptor()
     }
 
     /* SHOW POST - LOADING */
@@ -798,23 +803,55 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `likes for post are refreshed on request`() = test {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
+        whenever(accountStore.account).thenReturn(AccountModel().apply { userId = -1 })
 
         getLikesState.value = likesState
         init()
+
         viewModel.onRefreshLikersData(viewModel.post!!)
         verify(
                 getLikesHandler,
                 times(1)
-        ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt(), anyInt(), eq(DONT_CARE))
+        ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt())
+    }
+
+    @Test
+    fun `user avatar is added as last on like action`() = test {
+        val likesState = (getGetLikesState(TEST_CONFIG_1) as LikesData)
+        whenever(accountStore.account).thenReturn(AccountModel().apply {
+            userId = -1
+            avatarUrl = "https://avatar.url.example/image.jpg"
+        })
+        whenever(engagementUtils.likesToTrainOfFaces(likesCaptor.capture())).thenReturn(listOf())
+
+        getLikesState.value = likesState
+        val post = ReaderPost().apply {
+            isExternal = false
+            isLikedByCurrentUser = true
+        }
+        viewModel.post = post
+        init()
+
+        viewModel.onRefreshLikersData(post, true)
+
+        verify(
+                getLikesHandler,
+                times(0)
+        ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt())
+
+        val listOfFaces = likesCaptor.lastValue
+        assertThat(listOfFaces.size).isEqualTo(ReaderPostDetailViewModel.MAX_NUM_LIKES_FACES_WITH_SELF)
+        assertThat(listOfFaces.last().likerAvatarUrl).isEqualTo(accountStore.account.avatarUrl)
     }
 
     @Test
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
-        val likers = MutableList(5) { mock<Liker>() }
+        val likers = MutableList(5) { mock<FaceItem>() }
 
         getLikesState.value = likesState
-        whenever(engagementUtils.likesToEngagedPeople(anyList(), eq(null), eq(null))).thenReturn(likers)
+        whenever(accountStore.account).thenReturn(AccountModel().apply { userId = -1 })
+        whenever(engagementUtils.likesToTrainOfFaces(anyList())).thenReturn(likers)
         val post = mock<ReaderPost>()
         whenever(post.isWP).thenReturn(true)
         viewModel.post = post
@@ -824,13 +861,18 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLikeFacesTrainContainer).isTrue
             assertThat(showLoading).isFalse
-            assertThat(engageItemsList).isEqualTo(likers)
-            assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
+            assertThat(engageItemsList).isEqualTo(
+                    likers + BloggersLikingTextItem(
+                            textWithParams = UiStringResWithParams(
+                                    stringRes = R.string.like_faces_more_bloggers_text,
+                                    params = listOf(UiStringText("10"), UiStringRes(R.string.like_this))
+                            ),
+                            underlineDelimiterClosure = UiStringRes(R.string.like_this)
+                    )
+            )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
-            assertThat(likersFacesText is UiStringText).isTrue
         }
     }
 
@@ -840,7 +882,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val likers = listOf<Liker>()
 
         getLikesState.value = likesState
-        whenever(engagementUtils.likesToEngagedPeople(anyList(), eq(null), eq(null))).thenReturn(likers)
         val post = mock<ReaderPost>()
         whenever(post.isWP).thenReturn(true)
         viewModel.post = post
@@ -850,13 +891,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLikeFacesTrainContainer).isTrue
             assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(likers)
-            assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
             assertThat(showEmptyState).isTrue
             assertThat(emptyStateTitle is UiStringRes).isTrue
-            assertThat(likersFacesText).isNull()
         }
     }
 
@@ -977,7 +1015,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        val likesUiStates = mutableListOf<EngagedPeopleListUiState>()
+        val likesUiStates = mutableListOf<TrainOfFacesUiState>()
         viewModel.likesUiState.observeForever {
             likesUiStates.add(it)
         }
@@ -1009,6 +1047,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val uiStates: List<UiState>,
         val navigation: List<Event<ReaderNavigationEvents>>,
         val snackbarMsgs: List<Event<SnackbarMessageHolder>>,
-        val likesUiState: List<EngagedPeopleListUiState>
+        val likesUiState: List<TrainOfFacesUiState>
     )
 }

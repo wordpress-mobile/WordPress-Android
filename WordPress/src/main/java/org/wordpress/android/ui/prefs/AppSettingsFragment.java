@@ -55,7 +55,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.manual.ManualFeatureConfigActivity;
+import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -131,7 +131,7 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_feature_config))
+        findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
@@ -191,8 +191,8 @@ public class AppSettingsFragment extends PreferenceFragment
             removeExperimentalCategory();
         }
 
-        if (!BuildConfig.ENABLE_FEATURE_CONFIGURATION) {
-            removeFeatureConfigCategory();
+        if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
+            removeDebugSettingsCategory();
         }
     }
 
@@ -216,9 +216,9 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
-    private void removeFeatureConfigCategory() {
+    private void removeDebugSettingsCategory() {
         Preference experimentalPreference =
-                findPreference(getString(R.string.pref_key_feature_config));
+                findPreference(getString(R.string.pref_key_debug_settings));
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreference);
@@ -332,8 +332,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_feature_config))) {
-            return handleFeatureConfigPreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
+            return handleDebugSettingsPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -471,8 +471,8 @@ public class AppSettingsFragment extends PreferenceFragment
         return true;
     }
 
-    private boolean handleFeatureConfigPreferenceClick() {
-        startActivity(new Intent(getActivity(), ManualFeatureConfigActivity.class));
+    private boolean handleDebugSettingsPreferenceClick() {
+        startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
     }
 

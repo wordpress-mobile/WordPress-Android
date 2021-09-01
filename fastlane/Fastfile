@@ -333,19 +333,20 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # new_hotfix_release
   # -----------------------------------------------------------------------------------
-  # This lane updates the release branch for a new hotix release.
+  # This lane updates the release branch for a new hotfix release.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version:<version>]
+  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version_name:<x.y.z>] [version_code:<nnnn>]
   #
   # Example:
-  # bundle exec fastlane new_hotfix_release version:10.6.1
-  # bundle exec fastlane new_hotfix_release skip_confirm:true version:10.6.1
+  # bundle exec fastlane new_hotfix_release version_name:10.6.1 version_code:1070
   #####################################################################################
-  desc "Creates a new hotfix branch from the given tag"
-  lane :new_hotfix_release do | options |
-    prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
-    android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code], app: options[:app])
+  desc "Prepare a new hotfix branch cut from the previous tag, and bump the version"
+  lane :new_hotfix_release do |options|
+    hotfix_version = options[:version_name] || UI.input('Version number for the new hotfix?')
+    previous_tag = android_hotfix_prechecks(version_name: hotfix_version, skip_confirm: options[:skip_confirm])
+    # FIXME: get rid of the `app:`` parameter once Jetpack refactoring gets done
+    android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code], app: options[:app])
   end
 
   #####################################################################################
@@ -358,8 +359,8 @@ REPOSITORY_NAME="WordPress-Android"
   #
   # Example:
   # bundle exec fastlane finalize_hotfix_release
-  desc "Finalizes a hotfix release by tagging the build"
-  lane :finalize_hotfix_release do | options |
+  desc "Finalizes a hotfix release by triggering a release build"
+  lane :finalize_hotfix_release do |options|
     new_version = android_get_app_version(app: options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}", app: options[:app])
   end
@@ -937,36 +938,6 @@ REPOSITORY_NAME="WordPress-Android"
       locales: ALL_LOCALES,
       lint_task: "lint#{options[:app]}VanillaRelease" # TODO: Should we adapt this
     )
-  end
-
-  #####################################################################################
-  # build_for_translation_review
-  # -----------------------------------------------------------------------------------
-  # This lane builds an app bundle with pending translations
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_for_translation_review [custom_version:<custom_version>]
-  #####################################################################################
-  desc "Builds an app bundle"
-  lane :build_for_translation_review do | options |
-
-    translator_locales = %w[de es fr id it ja ko nl ru sv zh-cn zh-tw tr he pt ar pl th sr vi]
-    translator_locales_map = ALL_LOCALES.select { translator_locales.include?(h[:glotpress]) }
-
-    android_download_translations(
-      glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
-      status_filter: ['current', 'waiting', 'fuzzy'],
-      locales: translator_locales_map,
-      lint_task: nil, skip_commit: true
-    )
-
-    cmd_params = ""
-    unless options[:custom_version].nil?
-      UI.message("Building custom version: #{options[:custom_version]}")
-      cmd_params=" -PversionName=\"#{options[:custom_version]}\""
-    end
-
-    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end
 
   #####################################################################################

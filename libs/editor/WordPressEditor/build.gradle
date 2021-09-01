@@ -36,10 +36,8 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        versionCode 13
-        versionName "1.3"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
     }
     compileOptions {
         sourceCompatibility 1.8

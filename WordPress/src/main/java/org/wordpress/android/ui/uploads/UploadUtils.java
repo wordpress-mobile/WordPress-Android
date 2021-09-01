@@ -319,6 +319,7 @@ public class UploadUtils {
                              new UiStringRes(buttonTitleRes),
                              onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -332,6 +333,7 @@ public class UploadUtils {
                                 new UiStringText(message),
                                 K_SNACKBAR_WAIT_TIME_MS
                         ),
+                        null,
                         null,
                         null
                 )
@@ -351,6 +353,7 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -369,6 +372,7 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -387,6 +391,7 @@ public class UploadUtils {
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -402,6 +407,7 @@ public class UploadUtils {
                         Snackbar.LENGTH_LONG
                 ),
                 new Action(new UiStringRes(buttonTitleRes), onClickListener),
+                null,
                 null
         ));
     }
@@ -414,6 +420,7 @@ public class UploadUtils {
                                 new UiStringRes(messageRes),
                                 Snackbar.LENGTH_LONG
                         ),
+                        null,
                         null,
                         null
                 )
@@ -428,6 +435,7 @@ public class UploadUtils {
                                 new UiStringText(messageText),
                                 Snackbar.LENGTH_LONG
                         ),
+                        null,
                         null,
                         null
                 )

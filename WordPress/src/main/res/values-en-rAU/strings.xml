@@ -1539,7 +1539,6 @@ Language: en_AU
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
