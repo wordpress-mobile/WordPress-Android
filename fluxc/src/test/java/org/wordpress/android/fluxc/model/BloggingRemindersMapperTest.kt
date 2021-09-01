@@ -15,13 +15,17 @@ import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingRemi
 class BloggingRemindersMapperTest {
     private val mapper = BloggingRemindersMapper()
     private val testSiteId = 1
+    private val testHour = 10
+    private val testMinute = 0
 
     @Test
     fun `model mapped to database with all days selected`() {
         val enabledDays = setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
         val fullModel = BloggingRemindersModel(
                 testSiteId,
-                enabledDays
+                enabledDays,
+                testHour,
+                testMinute
         )
 
         val databaseModel = mapper.toDatabaseModel(fullModel)
@@ -54,7 +58,9 @@ class BloggingRemindersMapperTest {
                 thursday = true,
                 friday = true,
                 saturday = true,
-                sunday = true
+                sunday = true,
+                hour = testHour,
+                minute = testMinute
         )
 
         val domainModel = mapper.toDomainModel(fullModel)
@@ -66,7 +72,9 @@ class BloggingRemindersMapperTest {
     fun `model mapped from database with one day selected`() {
         val fullModel = BloggingReminders(
                 localSiteId = testSiteId,
-                sunday = true
+                sunday = true,
+                hour = testHour,
+                minute = testMinute
         )
 
         val domainModel = mapper.toDomainModel(fullModel)
@@ -83,6 +91,8 @@ class BloggingRemindersMapperTest {
         assertThat(this.friday).isEqualTo(enabledDays.contains(FRIDAY))
         assertThat(this.saturday).isEqualTo(enabledDays.contains(SATURDAY))
         assertThat(this.sunday).isEqualTo(enabledDays.contains(SUNDAY))
+        assertThat(this.hour).isEqualTo(testHour)
+        assertThat(this.minute).isEqualTo(testMinute)
     }
 
     private fun BloggingRemindersModel.assertDays(databaseModel: BloggingReminders) {
@@ -94,5 +104,7 @@ class BloggingRemindersMapperTest {
         assertThat(this.enabledDays.contains(FRIDAY)).isEqualTo(databaseModel.friday)
         assertThat(this.enabledDays.contains(SATURDAY)).isEqualTo(databaseModel.saturday)
         assertThat(this.enabledDays.contains(SUNDAY)).isEqualTo(databaseModel.sunday)
+        assertThat(this.hour).isEqualTo(testHour)
+        assertThat(this.minute).isEqualTo(testMinute)
     }
 }

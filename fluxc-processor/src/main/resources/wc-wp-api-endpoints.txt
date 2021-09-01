@@ -26,6 +26,8 @@
 /products/tags/<id>/
 /products/tags/batch/
 
+/product-add-ons/
+
 /customers/<id>
 /customers/
 /customers/<id>/downloads
@@ -45,6 +47,7 @@
 /payments/connection_tokens
 /payments/orders/<id>/capture_terminal_payment
 /payments/accounts
+/payments/orders/<order_id>/create_customer
 
 /taxes
 /taxes/classes/

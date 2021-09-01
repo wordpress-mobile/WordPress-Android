@@ -58,6 +58,10 @@ public class CommentErrorUtils {
         return payload;
     }
 
+    public static CommentError networkToCommentError(BaseNetworkError error) {
+        return new CommentError(genericToCommentError(error), getErrorMessage(error));
+    }
+
     private static CommentErrorType genericToCommentError(BaseNetworkError error) {
         CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
         if (error.isGeneric()) {
