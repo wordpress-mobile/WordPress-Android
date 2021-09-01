@@ -359,6 +359,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
         startViewModelWithDefaultParameters()
+        activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
@@ -368,7 +369,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(quickStartRepository, never()).completeTask(any(), any())
+        verify(quickStartRepository).completeTask(any(), any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
@@ -378,6 +379,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action sets task as done in QuickStartRepository`() {
         startViewModelWithDefaultParameters()
+        activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
@@ -390,6 +392,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
         startViewModelWithDefaultParameters()
+        activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
