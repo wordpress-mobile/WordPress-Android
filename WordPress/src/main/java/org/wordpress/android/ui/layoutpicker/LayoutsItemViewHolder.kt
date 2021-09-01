@@ -45,7 +45,6 @@ class LayoutsItemViewHolder(
         }
     }
 
-
     fun bind(category: LayoutCategoryUiState) {
         currentItem = category
 
