@@ -515,7 +515,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                             info = Info(
                                     view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
-                                    duration = holder.duration
+                                    duration = holder.duration,
+                                    isImportant = holder.isImportant
                             ),
                             action = holder.buttonTitle?.let {
                                 Action(

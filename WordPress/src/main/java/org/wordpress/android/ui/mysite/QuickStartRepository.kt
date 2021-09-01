@@ -273,7 +273,8 @@ class QuickStartRepository
                                 isQuickStartNoticeShown = false
                                 if (event == DISMISS_EVENT_SWIPE) onQuickStartNoticeNegativeAction(taskToPrompt)
                             },
-                            duration = QUICK_START_NOTICE_DURATION
+                            duration = QUICK_START_NOTICE_DURATION,
+                            isImportant = false
                     )
             )
         }
