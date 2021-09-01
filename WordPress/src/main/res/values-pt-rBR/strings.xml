@@ -1,19 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-20 23:34:17+0000
+Translation-Revision-Date: 2021-08-20 13:42:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Você pode reorganizar os blocos tocando em um bloco e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo acima ou abaixo de outros blocos.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Boas-vindas ao mundo dos blocos</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para remover um bloco, selecione o bloco e clique nos três pontos no canto inferior direito do bloco para ver as configurações. A partir daí, escolha a opção de remover o bloco.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Alguns blocos tem configurações adicionais. Toque no ícone de configurações na parte inferior direita do bloco para ver mais opções.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blocos, novos disponíveis</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Faça seu conteúdo se destacar adicionando imagens, gifs, vídeos, e mídias incorporadas às suas páginas.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Experimente adicionando alguns blocos a seu post ou página!</string>
+    <string name="gutenberg_native_embed_media">Mídia incorporada</string>
+    <string name="gutenberg_native_build_layouts">Criar layouts</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Adicione um novo bloco a qualquer momento tocando no ícone + na barra de ferramentas no canto inferior esquerdo.</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Aprenda o básico com um rápido passo a passo.</string>
+    <string name="comment_batch_moderation_error">Falha ao moderar um ou mais comentários</string>
+    <string name="create_site_notification_create_site_action">Criar site</string>
+    <string name="create_site_notification_text">Tenha seu site funcionando em apenas alguns passos rápidos</string>
+    <string name="create_site_notification_title">Crie o seu site WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">Não foi possível ativar as estatísticas do site</string>
+    <string name="stats_disabled_enable_stats_button">Ativar estatísticas do site</string>
+    <string name="stats_disabled_subtitle">Ative as estatísticas do site para obter informações detalhadas sobre o tráfego, curtidas, comentários e assinantes.</string>
+    <string name="stats_disabled_title">Procurando pelas estatísticas?</string>
+    <string name="gutenberg_native_what_is_a_block">O que é um bloco?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Estamos trabalhando duro para adicionarmos compatibilidade com visualização de código incorporado. Enquanto isso, você pode visualizar o conteúdo incorporado diretamente no post.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Estamos trabalhando duro para adicionarmos compatibilidade com visualização de código incorporado. Enquanto isso, você pode visualizar o conteúdo incorporado diretamente na página.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Não foi possível incorporar mídia</string>
+    <string name="gutenberg_native_try_another_search_term">Tente outro termo de pesquisa</string>
+    <string name="gutenberg_native_no_blocks_found">Nenhum bloco encontrado</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Visualização de código incorporado ainda não disponível</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">A visualização para blocos de código incorporado estarão disponíveis em breve</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Toque duas vezes para visualizar post.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Toque duas vezes para visualizar a página.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Exibido na aba do navegador de seu visitante e outros lugares online.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Mostrar o caminho</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Gostaria de uma ajuda para gerenciar este site com o aplicativo?</string>
+    <string name="login_epilogue_create_new_site_button">Criar um novo site</string>
+    <string name="login_epilogue_mysites_subheading">Você pode mudar de site a qualquer momento.</string>
+    <string name="login_epilogue_mysites_heading">Escolha um site para abrir</string>
+    <string name="scan_multisite_not_supported_subtitle">Lamentamos, mas o Jetpack Scan não é compatível com instalações multisite do WordPress no momento.</string>
+    <string name="scan_multisite_not_supported_title">WordPress multisites não é suportado</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL inválido. Digite um URL válido.</string>
+    <string name="gutenberg_native_embed_caption_s">Legenda incorporada. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Legenda incorporada. Vazio</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ADICIONAR LINK</string>
+    <string name="activity_log_visit_our_documentation_page">visite a nossa página de documentação</string>
+    <string name="activity_log_multisite_message">O Jetpack Backup para instalações multisite oferece backups para você baixar, mas não restauração em 1 clique. Para mais informações %1$s.</string>
     <string name="blogging_reminders_tip_message">Publicar regularmente pode ajudar a manter seus leitores engajados e a atrair novos visitantes ao seu site.</string>
     <string name="blogging_reminders_tip">Dica</string>
     <string name="blogging_reminders_select_days_message">Você pode atualizar isso a qualquer momento</string>
     <string name="blogging_reminders_select_days">Selecione os dias nos quais deseja publicar</string>
     <string name="blogging_reminders_epilogue_caption">Você pode atualizar isso a qualquer momento em Meu Site &gt; Configurações &gt; Lembretes para publicação.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Não há nenhum lembrete configurado.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Você receberá lembretes para publicar &lt;b&gt;diariamente&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Você receberá lembretes para publicar %1$s por semana em %2$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Lembretes removidos!</string>
     <string name="blogging_reminders_epilogue_title">Pronto!</string>
     <string name="blogging_reminders_update">Atualizar</string>
@@ -94,6 +135,8 @@ Language: pt_BR
     <string name="gutenberg_native_sorting_and_filtering">Ordem e filtros</string>
     <string name="gutenberg_native_s_social_icon">Ícone do %s</string>
     <string name="gutenberg_native_mention">Menção</string>
+    <string name="gutenberg_native_preview_post">Visualizar post</string>
+    <string name="gutenberg_native_preview_page">Visualizar página</string>
     <string name="gutenberg_native_post_meta_settings">Configurações de metadados do post</string>
     <string name="gutenberg_native_post_content_settings">Configurações do conteúdo do post</string>
     <string name="gutenberg_native_featured">Em destaque</string>
@@ -184,6 +227,7 @@ Language: pt_BR
     <string name="quick_start_list_review_pages_subtitle">Verifique suas páginas e faça alterações ou adicione e remova páginas.</string>
     <string name="quick_start_list_view_site_title">Acesse seu site</string>
     <string name="quick_start_list_follow_site_subtitle">Descubra e siga sites que te inspiram.</string>
+    <string name="quick_start_list_enable_sharing_title">Compartilhamento nas redes sociais</string>
     <string name="quick_start_list_enable_sharing_subtitle">Compartilhe novos posts em suas redes sociais automaticamente.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e temática.</string>
     <string name="quick_start_list_check_stats_title">Verifique suas estatísticas</string>
@@ -675,6 +719,7 @@ Language: pt_BR
     <string name="send_link_by_email">Enviar link por e-mail</string>
     <string name="reset_your_password">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
+    <string name="quick_start_list_update_site_title_title">Confira o título do seu site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="gutenberg_native_s_block_options">Opções do bloco %s</string>
@@ -691,9 +736,11 @@ Language: pt_BR
     <string name="error_update_site_title_network">Não foi possível atualizar o título do site. Verifique sua conexão de rede e tente novamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Alterações não salvas</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir link no navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Ir para a folha de conteúdo anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Ir para a personalização de gradiente</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Ir para o seletor de cores personalizadas</string>
     <string name="gutenberg_native_gradient_type">Tipo de gradiente</string>
+    <string name="gutenberg_native_go_back">Voltar</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
     <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
     <string name="pages_list_author">Autor da página</string>
@@ -1289,10 +1336,12 @@ Language: pt_BR
     <string name="quick_start_sites">Próximos passos</string>
     <string name="quick_start_complete_tasks_header">Concluídas (%d)</string>
     <string name="quick_start_dialog_view_site_message">Aproveite seu novo site!</string>
+    <string name="quick_start_dialog_upload_icon_title">Envie um ícone do site</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toque em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>
     <string name="quick_start_dialog_check_stats_message_short">Toque em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toque em %1$s Ícone do seu site %2$s para enviar um ícone</string>
+    <string name="quick_start_dialog_publish_post_message">Crie um rascunho e publique um post.</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos pelos passos básicos em criar um site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore planos</string>
     <string name="quick_start_dialog_explore_plans_message">Aprenda mais sobre as ferramentas de marketing e SEO de nossos planos pagos.</string>
@@ -1479,6 +1528,7 @@ Language: pt_BR
     <string name="quick_start_dialog_need_help_title">Precisa de alguma ajuda para iniciar?</string>
     <string name="quick_start_dialog_need_help_button_positive">Aceitar</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
+    <string name="quick_start_dialog_need_help_button_negative">Não, obrigado</string>
     <string name="quick_start_dialog_follow_sites_title">Siga outros sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Toque em %1$s Pesquisar %2$s para procurar por sites com assuntos similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toque em %1$s Leitor %2$s para continuar</string>
@@ -2584,7 +2634,6 @@ Language: pt_BR
     <string name="my_site_btn_view_site">Ver site</string>
     <string name="my_site_btn_view_admin">Ver Painel</string>
     <string name="my_site_btn_switch_site">Mudar de site</string>
-    <string name="my_site_btn_site_settings">Configurações</string>
     <string name="my_site_btn_blog_posts">Posts do blog</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparência</string>

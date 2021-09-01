@@ -145,10 +145,7 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
-import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
-import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
-import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
-import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -223,6 +220,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private val selectedSite: SiteModel?
         get() {
             return selectedSiteRepository.getSelectedSite()
+        }
+    private val selectedSiteLocalId: Int
+        get() {
+            return selectedSiteRepository.getSelectedSiteLocalId()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -322,13 +323,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartNoticeIfNecessary() {
-        if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
+        if (!quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId) ||
+                !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
-        val taskToPrompt = getNextUncompletedQuickStartTask(
+        val taskToPrompt = QuickStartUtils.getNextUncompletedQuickStartTask(
                 quickStartStore,
-                AppPrefs.getSelectedSite().toLong(), CUSTOMIZE
-        ) // CUSTOMIZE is default type
+                AppPrefs.getSelectedSite().toLong()
+        )
         if (taskToPrompt != null) {
             quickStartSnackBarHandler.removeCallbacksAndMessages(null)
             quickStartSnackBarHandler.postDelayed({
@@ -385,7 +387,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.setupClickListeners() {
         siteInfoContainer.title.setOnClickListener {
-            completeQuickStarTask(UPDATE_SITE_TITLE)
+            completeQuickStartTask(UPDATE_SITE_TITLE)
             showTitleChangerDialog()
         }
         siteInfoContainer.subtitle.setOnClickListener { viewSite() }
@@ -395,17 +397,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowStats.setOnClickListener { viewStats() }
         mySiteBlavatar.setOnClickListener { updateBlavatar() }
         rowPlan.setOnClickListener {
-            completeQuickStarTask(EXPLORE_PLANS)
+            completeQuickStartTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         rowJetpackSettings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
         rowBlogPosts.setOnClickListener { viewPosts() }
         rowMedia.setOnClickListener { viewMedia() }
         rowPages.setOnClickListener { viewPages() }
-        rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
-        rowUnifiedComments.setOnClickListener {
+        rowComments.setOnClickListener {
             if (unifiedCommentsListFeatureConfig.isEnabled()) {
                 ActivityLauncher.viewUnifiedComments(activity, selectedSite)
+            } else {
+                ActivityLauncher.viewCurrentBlogComments(activity, selectedSite)
             }
         }
         rowThemes.setOnClickListener {
@@ -429,7 +432,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         quickStartCustomize.setOnClickListener { showQuickStartList(CUSTOMIZE) }
         quickStartGrow.setOnClickListener { showQuickStartList(GROW) }
-        quickStartMore.setOnClickListener { showQuickStartCardMenu() }
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu() }
     }
 
     private fun MySiteFragmentBinding.setupQuickActionsIfNecessary() {
@@ -476,7 +479,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 } else {
                     showAddSiteIconDialog()
                 }
-                completeQuickStarTask(UPLOAD_SITE_ICON)
+                completeQuickStartTask(UPLOAD_SITE_ICON)
             } else {
                 val message = when {
                     !site.isUsingWpComRestApi -> {
@@ -496,9 +499,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun viewPosts() {
         requestNextStepOfActiveQuickStartTask()
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
-            ActivityLauncher.viewCurrentBlogPosts(requireActivity(), selectedSite)
+        val site = selectedSite
+        if (site != null) {
+            ActivityLauncher.viewCurrentBlogPosts(requireActivity(), site)
         } else {
             ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
@@ -508,28 +511,28 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
             requestNextStepOfActiveQuickStartTask()
         } else {
-            completeQuickStarTask(REVIEW_PAGES)
+            completeQuickStartTask(REVIEW_PAGES)
         }
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
-            ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
+        val site = selectedSite
+        if (site != null) {
+            ActivityLauncher.viewCurrentBlogPages(requireActivity(), site)
         } else {
             ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
     }
 
     private fun viewStats() {
-        val selectedSite = selectedSite
-        if (selectedSite != null) {
-            completeQuickStarTask(CHECK_STATS)
-            if (!accountStore.hasAccessToken() && selectedSite.isJetpackConnected) {
+        val site = selectedSite
+        if (site != null) {
+            completeQuickStartTask(CHECK_STATS)
+            if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
                 // If the user is not connected to WordPress.com, ask him to connect first.
                 startWPComLoginForJetpackStats()
-            } else if (selectedSite.isWPCom || selectedSite.isJetpackInstalled && selectedSite
+            } else if (site.isWPCom || site.isJetpackInstalled && site
                             .isJetpackConnected) {
-                ActivityLauncher.viewBlogStats(activity, selectedSite)
+                ActivityLauncher.viewBlogStats(activity, site)
             } else {
-                ActivityLauncher.viewConnectJetpackForStats(activity, selectedSite)
+                ActivityLauncher.viewConnectJetpackForStats(activity, site)
             }
         }
     }
@@ -544,7 +547,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
 
-        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
+        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite!!) &&
+                selectedSite?.hasCapabilityManageOptions!!
         val hint = if (canEditTitle) {
             getString(R.string.my_site_title_changer_dialog_hint)
         } else {
@@ -564,7 +568,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun viewSite() {
-        completeQuickStarTask(VIEW_SITE)
+        completeQuickStartTask(VIEW_SITE)
         ActivityLauncher.viewCurrentSite(activity, selectedSite, true)
     }
 
@@ -607,12 +611,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         selectedSiteRepository.showSiteIconProgressBar.observe(viewLifecycleOwner, {
             showSiteIconProgressBar(it == true)
         })
-
-        rowUnifiedComments.visibility = if (unifiedCommentsListFeatureConfig.isEnabled()) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -650,22 +648,22 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (!isAdded) {
             return
         }
-        if (isQuickStartInProgress(quickStartStore)) {
-            val site = AppPrefs.getSelectedSite()
+        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId)) {
+            val selectedSiteLocalId: Long = selectedSiteRepository.getSelectedSiteLocalId().toLong()
             val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
-                    site.toLong(),
+                    selectedSiteLocalId,
                     CUSTOMIZE
             ).size
             val countCustomizeUncompleted = quickStartStore.getUncompletedTasksByType(
-                    site.toLong(),
+                    selectedSiteLocalId,
                     CUSTOMIZE
             ).size
             val countGrowCompleted = quickStartStore.getCompletedTasksByType(
-                    site.toLong(),
+                    selectedSiteLocalId,
                     GROW
             ).size
             val countGrowUncompleted = quickStartStore.getUncompletedTasksByType(
-                    site.toLong(),
+                    selectedSiteLocalId,
                     GROW
             ).size
             if (countCustomizeUncompleted > 0) {
@@ -704,7 +702,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.showQuickStartCardMenu() {
         val quickStartPopupMenu = PopupMenu(
                 requireContext(),
-                quickStartMore
+                mySiteCardToolbarMore
         )
         quickStartPopupMenu.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.quick_start_card_menu_remove) {
@@ -1272,17 +1270,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun skipQuickStart() {
-        val siteId = AppPrefs.getSelectedSite()
+        val selectedSiteLocalId: Long = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         for (quickStartTask in QuickStartTask.values()) {
-            quickStartStore.setDoneTask(siteId.toLong(), quickStartTask, true)
+            quickStartStore.setDoneTask(
+                    selectedSiteLocalId,
+                    quickStartTask,
+                    true
+            )
         }
-        quickStartStore.setQuickStartCompleted(siteId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(selectedSiteLocalId, true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        quickStartStore.setQuickStartNotificationReceived(siteId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId, true)
     }
 
     private fun startQuickStart() {
-        quickStartUtilsWrapper.startQuickStart(AppPrefs.getSelectedSite())
+        quickStartUtilsWrapper.startQuickStart(selectedSiteLocalId)
         binding?.updateQuickStartContainer()
     }
 
@@ -1356,7 +1358,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlansFetched(event: OnPlansFetched) {
-        if (AppPrefs.getSelectedSite() != event.site.id) {
+        if (selectedSite?.id != event.site.id) {
             return
         }
         if (event.isError) {
@@ -1416,7 +1418,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
         }
-        addQuickStartFocusPointAboveTheView(
+        QuickStartUtils.addQuickStartFocusPointAboveTheView(
                 parentView, quickStartTarget, horizontalOffset,
                 verticalOffset
         )
@@ -1439,20 +1441,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         requireView().removeCallbacks(mAddQuickStartFocusPointTask)
-        removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
+        QuickStartUtils.removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
     }
 
     fun isQuickStartTaskActive(task: QuickStartTask): Boolean {
         return hasActiveQuickStartTask() && activeTutorialPrompt!!.task == task
     }
 
-    private fun completeQuickStarTask(quickStartTask: QuickStartTask) {
+    private fun completeQuickStartTask(quickStartTask: QuickStartTask) {
         selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
-                    !quickStartStore.hasDoneTask(
-                            AppPrefs.getSelectedSite().toLong(), quickStartTask
-                    ) &&
+                    !quickStartStore.hasDoneTask(site.id.toLong(), quickStartTask) &&
                             activeTutorialPrompt != null &&
                             activeTutorialPrompt!!.task == quickStartTask
             )

@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
@@ -21,6 +22,7 @@ class SiteListItemBuilderTest {
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
+    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -29,7 +31,8 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
-                themeBrowserUtils
+                themeBrowserUtils,
+                siteDomainsFeatureConfig
         )
     }
 
@@ -426,30 +429,6 @@ class SiteListItemBuilderTest {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
         val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Test
-    fun `unified comments item built if the feature flag is enabled`() {
-        val isUnifiedCommentFeatureAvailable = true
-
-        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
-                SITE_ITEM_ACTION,
-                isUnifiedCommentFeatureAvailable
-        )
-
-        assertThat(item).isEqualTo(UNIFIED_COMMENTS_ITEM)
-    }
-
-    @Test
-    fun `unified comments item not built if the feature flag is not enabled`() {
-        val isUnifiedCommentFeatureAvailable = false
-
-        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
-                SITE_ITEM_ACTION,
-                isUnifiedCommentFeatureAvailable
-        )
 
         assertThat(item).isNull()
     }

@@ -239,18 +239,18 @@
                             android:paddingEnd="@dimen/content_margin_site_row_start">
 
                             <RelativeLayout
-                                android:id="@+id/quick_start_toolbar"
+                                android:id="@+id/my_site_card_toolbar"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:minHeight="?attr/listPreferredItemHeightSmall">
 
                                 <org.wordpress.android.widgets.WPTextView
-                                    android:id="@+id/quick_start_title"
+                                    android:id="@+id/my_site_card_toolbar_title"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentStart="true"
                                     android:layout_centerVertical="true"
-                                    android:layout_toStartOf="@+id/quick_start_more"
+                                    android:layout_toStartOf="@+id/my_site_card_toolbar_more"
                                     android:ellipsize="end"
                                     android:maxLines="1"
                                     android:text="@string/quick_start_sites"
@@ -258,7 +258,7 @@
                                     android:textAppearance="?attr/textAppearanceSubtitle1" />
 
                                 <ImageView
-                                    android:id="@+id/quick_start_more"
+                                    android:id="@+id/my_site_card_toolbar_more"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
@@ -275,7 +275,7 @@
                             <RelativeLayout
                                 android:id="@+id/quick_start_customize"
                                 style="@style/QuickStartTypeRow"
-                                android:layout_below="@+id/quick_start_toolbar">
+                                android:layout_below="@+id/my_site_card_toolbar">
 
                                 <ImageView
                                     android:id="@+id/quick_start_customize_icon"
@@ -575,24 +575,6 @@
                             android:id="@+id/my_site_comments_text_view"
                             style="@style/MySiteListRowTextView"
                             android:text="@string/my_site_btn_comments" />
-
-                    </LinearLayout>
-
-                    <!--Unified Comments -->
-                    <LinearLayout
-                        android:id="@+id/row_unified_comments"
-                        style="@style/MySiteListRowLayout">
-
-                        <ImageView
-                            android:id="@+id/my_site_unified_comments_icon"
-                            style="@style/MySiteListRowIcon"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_comment_white_24dp" />
-
-                        <org.wordpress.android.widgets.WPTextView
-                            android:id="@+id/my_site_unified_comments_text_view"
-                            style="@style/MySiteListRowTextView"
-                            android:text="@string/my_site_btn_unified_comments" />
 
                     </LinearLayout>
 

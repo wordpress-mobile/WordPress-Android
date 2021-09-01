@@ -1,79 +1,101 @@
 <en-US>
-We added color/background customization for text blocks.
-It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
+We’ve optimized theme images for faster downloads and a lighter impact on your data plan.
+
+We also added Global Style Colors to Full Site Editing themes, made some behind-the-scenes improvements to the comments experience, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
 </en-US>
+<ar>
+18.0:
+لقد قمنا بتحسين صور القالب للاستمتاع بتنزيلات أسرع وتأثير أقل في خطة بياناتك.
+
+أضفنا كذلك ألوان النمط العالمي إلى قوالب تحرير الموقع بالكامل، وقمنا بإجراء بعض التحسينات خلف الكواليس على تجربة التعليقات، وقمنا بالتخلص من الخطأ الذي كان يمنع شريط أدوات "المزيد" من الظهور في محرِّر المكوِّن غير المدعوم.
+</ar>
 <de-DE>
-17.8:
-Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
-Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
+18.0:
+Wir haben die Theme-Bilder optimiert, damit du sie schneller herunterladen kannst und sie weniger Auswirkungen auf deinen Datentarif haben.
+
+Außerdem haben wir den Full Site Editing-Themes Farben für globale Stile hinzugefügt, Verbesserungen hinter den Kulissen am Kommentarerlebnis vorgenommen und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.
 </de-DE>
 <es-ES>
-17.8:
-Hemos añadido la personalización del color y del fondo para los bloques de texto.
-No se podían editar los bloques no compatibles con cuentas que se hubiesen creado antes de diciembre del 2018. ¡Ya lo hemos arreglado! Durante el proceso, también hemos actualizado las pantallas de carga y de error en el editor de bloques no compatibles.
+18.0:
+Hemos optimizado las imágenes de los temas para que se descarguen más rápido para que tu plan de datos no sufra tanto.
+
+También hemos añadido los Colores para estilos globales para los temas de Edición completa del sitio, hemos mejorado entre bastidores algunos aspectos de los comentarios y también hemos solucionado el error por el que no aparecía la barra de herramientas "Más" en el editor de bloques no compatibles.
 </es-ES>
 <fr-FR>
-17.8:
-Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
-Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+18.0 :
+Nous avons optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données.
+
+Nous avons également ajouté des couleurs de style global aux thèmes de modification globale de site, apporté quelques améliorations en arrière-plan à l’expérience des commentaires et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
 </fr-FR>
 <iw-IL>
-17.8:
-הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
-לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
+18.0:
+שיפרנו את הפעילות של התמונות בערכת העיצוב כדי לאפשר הורדות מהירות יותר ולצמצם את ההשפעה על חבילת הנתונים בנייד.
+
+הוספנו גם את האפשרות של צבעי סגנון גלובליים לערכות עיצוב עם עריכה של אתר מלא, שיפרנו כמה אלמנטים מאחורי הקלעים בחוויית השימוש בתגובות ומחצנו באג שמנע מסרגל הכלים 'עוד' להופיע בעורך של בלוקים שאינם נתמכים.
 </iw-IL>
 <id>
-17.8:
-Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
-Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
+18.0:
+Kami telah mengoptimalkan gambar tema agar pengunduhan dapat dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda.
+
+Kami juga menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, melakukan perbaikan di balik layar untuk meningkatkan pengalaman komentar, dan menghapus bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.
 </id>
 <it-IT>
-17.8:
-Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
-Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
+18.0:
+Abbiamo ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati.
+
+Abbiamo anche aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
 </it-IT>
 <ja-JP>
-17.8:
-テキストブロックに色や背景のカスタマイズ機能を追加しました。
-2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
+18.0:
+ダウンロード時間を短縮し、お使いのデータプランへの影響を抑えられるよう、テーマ画像を最適化しました。
+
+また、グローバルスタイルカラーをフルサイト編集テーマに追加することで、コメントの操作環境のバックグラウンド処理を改善するとともに、サポート対象外のブロックエディターで「その他」ツールバーが表示されないバグを修正しました。
 </ja-JP>
 <ko-KR>
-17.8:
-텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
-2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
+18.0:
+다운로드 속도가 단축되고 데이터 요금제에 미치는 영향이 적어지도록 테마 이미지를 최적화했습니다.
+
+또한 전체 스타일 색상을 전체 사이트 편집 테마에 추가했고, 댓글 환경 이면의 몇 가지를 개선했으며, 지원되지 않는 블록 편집기에 '더 보기' 도구 모음이 표시되지 않는 버그를 수정했습니다.
 </ko-KR>
 <nl-NL>
-17.8:
-We hebben aanpassing van kleur/achtergrond toegevoegd aan tekstblokken.
-Het was niet mogelijk om niet-ondersteunde blokken te bewerken met accounts die voor december 2018 waren aangemaakt. Dat is nu verholpen! Daarnaast hebben we de schermen Laden/Mislukt bijgewerkt voor de editor van niet-ondersteunde blokken.
+18.0:
+We hebben de Thema-afbeeldingen geoptimaliseerd voor snellere downloads en minder verbruik van mobiele data.
+
+Ook hebben we: kleuren in algemene stijlen toegevoegd aan thema's voor het bewerken van de volledige site; achter de schermen de opmerkingen verbeterd; en een bug verholpen die ervoor zorgde dat de 'Meer'-werkbalk niet verscheen in de editor van een niet-ondersteund blok.
 </nl-NL>
 <pt-BR>
-17.8:
-Adicionamos personalização de plano de fundo/cor para blocos de texto.
-Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
+18.0:
+Nós otimizamos as imagens de tema para proporcionar downloads mais rápidos e um impacto reduzido em seu plano de dados.
+
+Também adicionamos cores de estilo global aos temas de edição de site completo, realizamos algumas melhorias nos bastidores da experiência de comentários e corrigimos um bug que impedia a barra de ferramentas "Mais" de aparecer no editor de blocos não compatíveis.
 </pt-BR>
 <ru-RU>
-17.8:
-Добавлена возможность настраивать цвет и фон параграфов.
-Неподдерживаемые блоки невозможно было редактировать в учётных записях, созданных до декабря 2018 года. Мы это исправили! Кроме того, мы обновили экраны загрузки и сбоя для редактора неподдерживаемых блоков.
+18.0:
+Мы оптимизировали изображения тем, ускорив их загрузку и снизив расходы на мобильный трафик.
+
+Кроме того, добавлены цвета глобальных стилей в темы для полного редактирования сайта, улучшены некоторые моменты в работе с комментариями, и исправлен баг, в результате которого панель инструментов "Дополнительно" не появлялась в редакторе неподдерживаемых блоков.
 </ru-RU>
 <sv-SE>
-17.8:
-Vi har lagt till färg-/bakgrundsanpassning för textblock.
-Tidigare var det inte möjligt att redigera ostödda block med konton skapade före december 2018. Vi har åtgärdat det! Vi har dessutom uppdaterat hämtar-/misslyckades-skärmarna för den ostödda blockredigeraren.
+18.0:
+Vi har optimerat temabilderna för snabbare nedladdningar och mindre påverkan på din dataplan.
+
+Vi har också lagt till färger för globala stilar i teman med fullständig webbplatsredigering, gjort några förbättringar bakom kulisserna i kommentarsupplevelsen och åtgärdat ett fel som förhindrade att verktygsfältet "Mer" visades för block som inte stöds av blockredigeraren.
 </sv-SE>
 <tr-TR>
-17,8:
-Metin blokları için renk/arkaplan özelleştirmeleri ekledik.
-Desteklenmeyen blokların Aralık 2018'den önce oluşturulmuş hesaplar tarafından düzenlenmeleri eskiden mümkün değildi. Bunu düzelttik! Bununla birlikte, desteklenmeyen blok düzenleyicinin yükleme/hata ekranlarını da güncelledik.
+18.0:
+İndirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik.
+
+Ayrıca Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik, yorum deneyimi için perde arkasında bazı iyileştirmeler yaptık ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı düzelttik.
 </tr-TR>
 <zh-CN>
-17.8:
-我们为文本块添加了颜色/背景定制功能。
-之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
+18.0：
+我们优化了主题图片，以加快下载速度并降低对您的数据套餐的影响。
+
+我们还向“全站编辑”主题添加了“全局样式颜色”；对“评论”体验进行了一些后台改进；修复了阻止“不支持的区块编辑器”中显示“更多”工具栏的错误。
 </zh-CN>
 <zh-TW>
-17.8:
-我們為文字區塊新增了色彩/背景自訂功能。
-2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
+18.0：
+我們已更新佈景主題圖片，加快下載速度並減輕對行動數據方案的影響。
+
+我們也為「完整網站編輯」佈景主題新增了「全域樣式顏色」，對留言體驗做出一些幕後改善，並修復導致「更多」工具列在不受支援區塊編輯器中無法顯示的錯誤。
 </zh-TW>

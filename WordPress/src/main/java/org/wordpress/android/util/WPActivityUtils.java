@@ -173,12 +173,10 @@ public class WPActivityUtils {
         Context context = window.getContext();
         boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
         if (!isDarkTheme) {
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                int systemVisibility = window.getDecorView().getSystemUiVisibility();
-                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        : systemVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
-            }
+            int systemVisibility = window.getDecorView().getSystemUiVisibility();
+            int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    : systemVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.getDecorView().setSystemUiVisibility(newSystemVisibility);
         }
     }
 

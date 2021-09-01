@@ -180,8 +180,8 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private fun NotificationsListFragmentBinding.showConnectJetpackView() {
         clearToolbarScrollFlags()
         jetpackSetup.setOnClickListener {
-            val siteModel = (requireActivity() as? WPMainActivity)?.selectedSite
-            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, siteModel, false)
+            val selectedSite = (requireActivity() as? WPMainActivity)?.selectedSite
+            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, selectedSite, false)
         }
     }
 

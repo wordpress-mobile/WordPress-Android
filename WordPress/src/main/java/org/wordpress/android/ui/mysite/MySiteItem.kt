@@ -4,11 +4,13 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -18,7 +20,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
         DOMAIN_REGISTRATION_BLOCK,
-        QUICK_START_CARD,
+        QUICK_START_BLOCK,
+        QUICK_START_DYNAMIC_CARD,
         CATEGORY_HEADER,
         LIST_ITEM
     }
@@ -41,6 +44,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     }
 
     data class QuickActionsBlock(
+        val title: UiString,
         val onStatsClick: ListItemInteraction,
         val onPagesClick: ListItemInteraction,
         val onPostsClick: ListItemInteraction,
@@ -51,6 +55,24 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
     ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
+
+    data class QuickStartBlock(
+        val title: UiString,
+        val moreMenuVisible: Boolean = true,
+        val onRemoveMenuItemClick: ListItemInteraction,
+        val taskTypeItems: List<QuickStartTaskTypeItem>
+    ) : MySiteItem(QUICK_START_BLOCK) {
+        data class QuickStartTaskTypeItem(
+            val quickStartTaskType: QuickStartTaskType,
+            val title: UiString,
+            val titleEnabled: Boolean,
+            val subtitle: UiString,
+            val strikeThroughTitle: Boolean,
+            @ColorRes val progressColor: Int,
+            val progress: Int,
+            val onClick: ListItemInteraction
+        )
+    }
 
     sealed class DynamicCard(
         override val type: Type,
@@ -68,7 +90,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
             @ColorRes val accentColor: Int,
             val progress: Int,
             override val onMoreClick: ListItemInteraction
-        ) : DynamicCard(QUICK_START_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
+        ) : DynamicCard(QUICK_START_DYNAMIC_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
             data class QuickStartTaskCard(
                 val quickStartTask: QuickStartTask,
                 val title: UiString,

@@ -68,9 +68,9 @@
         android:title="@string/preference_open_device_settings" />
 
     <Preference
-        android:key="@string/pref_key_feature_config"
+        android:key="@string/pref_key_debug_settings"
         app:isPreferenceVisible="false"
-        android:title="@string/preference_open_feature_config" />
+        android:title="@string/preference_open_debug_settings" />
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"

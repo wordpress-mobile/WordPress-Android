@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 07:57:34+0000
+Translation-Revision-Date: 2021-08-23 13:37:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d likes, %3$d reacties gekregen.</string>
+    <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
+    <string name="blogging_reminders_notification_time">Kennisgeving tijd</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s per week op %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">De tekstopmaak besturingen bevinden zich in de werkbalk boven het toetsenbord tijdens het bewerken van een tekstblok</string>
+    <string name="gutenberg_native_selected_s">Geselecteerd: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Selecteer een kleur erboven</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navigeert om %s te selecteren</string>
+    <string name="gutenberg_native_move_blocks">Blokken verplaatsen</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Hoe je bericht te bewerken</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Hoe je pagina te bewerken</string>
+    <string name="gutenberg_native_customize_blocks">Blokken aanpassen</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Wijzigingen aan de afbeelding worden niet beïnvloed door de undo/redo knoppen.</string>
+    <string name="gutenberg_native_applies_the_setting">Past de instelling toe</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Je kunt blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het boven of onder andere blokken te zetten.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Welkom in de wereld van blokken</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Om een blok te verwijderen, selecteer je het blok en klik je op de drie stippen rechts onderaan het blok om de instellingen te zien. Kies van daaruit de optie om het blok te verwijderen.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Sommige blokken hebben extra instellingen. Tik op het instellingen-pictogram rechts onderaan het blok om meer opties te zien.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blok, nieuw beschikbaar</string>
+    <string name="gutenberg_native_rich_text_editing">Rich tekst bewerking</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Als je eenmaal vertrouwd bent geraakt met de namen van de verschillende blokken, kun je een blok toevoegen door een voorwaartse schuine streep te typen, gevolgd door de bloknaam - bijvoorbeeld, /afbeelding of /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Laat je inhoud opvallen door afbeeldingen, gifs, video\'s, en ingesloten media aan je pagina\'s toe te voegen.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Probeer het door een paar blokken toe te voegen aan je bericht of pagina!</string>
+    <string name="gutenberg_native_embed_media">Sluit media in</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Elk blok heeft zijn eigen instellingen. Om ze te vinden, tik op een blok. Zijn instellingen zullen verschijnen in de gereedschapsbalk onderaan het scherm.</string>
+    <string name="gutenberg_native_build_layouts">Bouw lay-outs</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de gereedschapsbalk links onderaan. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
+    <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
     <string name="create_site_notification_create_site_action">Site maken</string>
     <string name="create_site_notification_text">Krijg je site in slechts een paar snelle stappen aan de slag</string>
     <string name="create_site_notification_title">Maak je WordPress site</string>
@@ -25,7 +59,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltik om de voorbeeldpagina te bekijken.</string>
     <string name="quick_start_list_upload_icon_subtitle">Getoond in de browser tab van je bezoeker en andere plaatsen online.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Laat me rondleiden</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">We zullen je door de basis van het beheren van je site leiden met de app.</string>
     <string name="quick_start_dialog_need_help_manage_site_title">Wil je een beetje hulp bij het beheren van deze site met de app?</string>
     <string name="login_epilogue_create_new_site_button">Maak een nieuwe site</string>
     <string name="login_epilogue_mysites_subheading">Je kunt op elk moment sites wisselen.</string>
@@ -44,8 +77,7 @@ Language: nl
     <string name="blogging_reminders_select_days">Selecteer de dagen waarop je wil bloggen</string>
     <string name="blogging_reminders_epilogue_caption">Je kunt dit op elk gewenst moment updaten via Mijn site &gt; Instellingen &gt; Blog herinneringen.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Je hebt geen herinneringen ingesteld.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Je krijgt om herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Je krijgt herinneringen om %1$s per week te bloggen op %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Je krijgt herinneringen om %1$s per week te bloggen op %2$s om %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Herinneringen verwijderd!</string>
     <string name="blogging_reminders_epilogue_title">Alles ingesteld!</string>
     <string name="blogging_reminders_update">Update</string>
@@ -63,8 +95,8 @@ Language: nl
     <string name="blogging_reminders_done">Klaar</string>
     <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
-    <string name="gutenberg_native_set_as_featured_image">Instellen als uitgelichte afbeelding</string>
-    <string name="gutenberg_native_remove_as_featured_image">Verwijder als uitgelichte afbeelding</string>
+    <string name="gutenberg_native_set_as_featured_image">Instellen als uitgelichte afbeelding </string>
+    <string name="gutenberg_native_remove_as_featured_image">Verwijder als uitgelichte afbeelding </string>
     <string name="fab_add_category_desc">Maak categorie</string>
     <string name="support_ticket_subject">WordPress voor Android ondersteuning</string>
     <string name="site_settings_categories_hint">Beheer je site categorieën</string>
@@ -134,13 +166,14 @@ Language: nl
     <string name="gutenberg_native_embed_link">Sluit link in</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
+    <string name="gutenberg_native_add_blocks">Voeg blokken toe</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
     <string name="gutenberg_native_transform_block">Transformeer blok…</string>
     <string name="gutenberg_native_failed_to_insert_media">Media invoegen is mislukt.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Audiobestand invoegen is mislukt.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
     <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
     <string name="like_faces_plural_text">%d bloggers vinden dit leuk.</string>
@@ -150,7 +183,7 @@ Language: nl
     <string name="suggestion">Suggestie:</string>
     <string name="gutenberg_native_use_icon_button">Gebruik pictogram knop</string>
     <string name="gutenberg_native_search_input_field">Zoeken invoerveld.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Zoekknop. Huidige knoptekst is.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Zoekknop. Huidige knoptekst is</string>
     <string name="gutenberg_native_search_blocks">Blokken zoeken</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Zoekblok label. Huidige tekst is</string>
     <string name="gutenberg_native_outside">Buitenkant</string>
@@ -224,8 +257,8 @@ Language: nl
     <string name="quick_start_list_check_stats_title">Bekijk je statistieken</string>
     <string name="backup_download_status_failure_bullet2">We zullen nog steeds proberen om je downloadbare back-upbestand te maken.</string>
     <string name="backup_download_status_failure_bullet1">We konden de status niet vinden om aan te geven hoe lang je downloadbare back-up zal duren.</string>
-    <string name="backup_download_status_failure_heading">We konden je downloadbare back-up status niet vinden.</string>
-    <string name="restore_status_bullet_checkmark_icon_content_desc">Vinkje</string>
+    <string name="backup_download_status_failure_heading">We konden je downloadbare back-up status niet vinden</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Vinkje pictogram</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klok pictogram</string>
     <string name="restore_status_failure_bullet3">We laten het je weten als het klaar is.</string>
     <string name="restore_status_failure_bullet2">We proberen nog steeds om je site terug te zetten.</string>
@@ -308,7 +341,7 @@ Language: nl
     <string name="backup_download_complete_failed_icon_content_description">Cloud met X pictogram</string>
     <string name="backup_download_complete_failed_action_button_content_description">Klaar knop</string>
     <string name="backup_download_complete_failed_action_button">Klaar</string>
-    <string name="backup_download_complete_failed_title">Download mislukt.</string>
+    <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
     <string name="quick_start_card_menu_remove">Niet meer tonen</string>
@@ -349,7 +382,7 @@ Language: nl
     <string name="scan_history">Scangeschiedenis</string>
     <string name="backup_active_filter_empty_subtitle">Probeer het met aanpassen van je datumbereik</string>
     <string name="backup_active_filter_empty_title">Geen overeenkomende back-ups gevonden</string>
-    <string name="backup_empty_subtitle">Je eerste back-up verschijnt hier binnen 24 uur en je ontvangt een bericht zodra de back-up is afgerond.</string>
+    <string name="backup_empty_subtitle">Je eerste back-up verschijnt hier binnen 24 uur en je ontvangt een bericht zodra de back-up is afgerond</string>
     <string name="backup_empty_title">Je eerste back-up is binnenkort klaar</string>
     <string name="request_failed_message">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="gutenberg_native_move_to_bottom">Verplaats naar beneden</string>
@@ -393,7 +426,7 @@ Language: nl
     <string name="threat_fix_fixable_update">Jetpack Scan zal updaten naar een nieuwere versie (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan verwijdert het betreffende bestand of de folder.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan vervangt het betreffende bestand of de folder.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan deze bedreiging niet automatisch herstellen\n        We raden aan om de bedreiging handmatig op te lossen: zorg ervoor dat WordPress, je thema en alle je plugins up-to-date zijn, en verwijder de aanstootgevende code, het thema of de plugin van je site.\n \n\n        Als je meer hulp nodig hebt om deze bedreiging op te lossen, raden we&lt;b&gt;Codeable&lt;/b&gt;, een vertrouwde freelancer marktplaats van zeer goed gescreende WordPress experts aan.\n        Ze hebben een selecte groep beveiligingsexperts aangewezen om bij deze projecten te helpen. De prijzen variëren van $70&amp;mdash;120/uur, en je kan een gratis schatting krijgen zonder verplichting om in te huren.\n    </string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan deze bedreiging niet automatisch herstellen\n        We raden aan om de bedreiging handmatig op te lossen: zorg ervoor dat WordPress, je thema en al je plugins up-to-date zijn, en verwijder de aanstootgevende code, het thema of de plugin van je site.\n \n\n        Als je meer hulp nodig hebt om deze bedreiging op te lossen, raden we &lt;b&gt;Codeable&lt;/b&gt;, een vertrouwde freelancer marktplaats van zeer goed gescreende WordPress experts aan.\n        Ze hebben een selecte groep beveiligingsexperts aangewezen om bij deze projecten te helpen. De prijzen variëren van $70–120/uur, en je kan een gratis schatting krijgen zonder verplichting om in te huren.\n    </string>
     <string name="threat_fix_current_not_fixable_header">Bedreiging aan het oplossen</string>
     <string name="threat_fix_fixed_header">Hoe heeft Jetpack het opgelost?</string>
     <string name="threat_fix_default_header">Hoe lossen we het op?</string>
@@ -610,7 +643,7 @@ Language: nl
     <string name="gutenberg_native_video_caption_empty">Video bijschrift. Leeg</string>
     <string name="gutenberg_native_updates_the_title">Werkt de titel bij.</string>
     <string name="gutenberg_native_paste_block_after">Plak het blok na</string>
-    <string name="gutenberg_native_page_title_s">Oagina titel. %s</string>
+    <string name="gutenberg_native_page_title_s">Paginatitel. %s</string>
     <string name="gutenberg_native_page_title_empty">Paginatitel. Leeg</string>
     <string name="toast_error_playing_video">Er is een fout opgetreden bij het afspelen van je video</string>
     <string name="camera_error">Dit apparaat ondersteund geen Camera2 API.</string>
@@ -621,7 +654,7 @@ Language: nl
     <string name="dialog_insufficient_device_storage_error_ok_button">Bekijk de opslag</string>
     <string name="dialog_insufficient_device_storage_error_message">We moeten het verhaal op je apparaat opslaan voordat het kan worden gepubliceerd. Controleer je opslaginstellingen en verwijder bestanden om ruimte vrij te maken.</string>
     <string name="dialog_insufficient_device_storage_error_title">Onvoldoende apparaat opslag</string>
-    <string name="dialog_story_saving_error_message">Probeer opnieuw om de slides op te slaan of te verwijderen,  probeer daarna opnieuw om je verhaal te publiceren.</string>
+    <string name="dialog_story_saving_error_message">Probeer opnieuw om de slides op te slaan of te verwijderen, probeer daarna opnieuw om je verhaal te publiceren.</string>
     <string name="dialog_story_saving_error_title_plural">Niet mogelijk om %1$d slides op te slaan</string>
     <string name="dialog_story_saving_error_title_singular">Niet mogelijk om 1 slide op te slaan</string>
     <string name="story_saving_failed_quick_action_manage">Beheer</string>
@@ -727,9 +760,11 @@ Language: nl
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigeert naar het vorige inhoudsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigeert naar aanpassen van het verloop</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigeert naar de aangepaste kleurkiezer</string>
     <string name="gutenberg_native_gradient_type">Verloop type</string>
+    <string name="gutenberg_native_go_back">Ga terug</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tik tweemaal om de optie te selecteren</string>
     <string name="gutenberg_native_customize_gradient">Pas de verloop aan</string>
     <string name="pages_list_author">Pagina auteur</string>
@@ -739,11 +774,11 @@ Language: nl
     <string name="me">Mij</string>
     <string name="gutenberg_native_dismiss">Negeren</string>
     <string name="prepublishing_nudges_home_tags_not_set">Niet ingesteld</string>
-    <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat</string>
+    <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicatie datum</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tags toevoegen</string>
     <string name="prepublishing_nudges_back_button">Terug</string>
-    <string name="prepublishing_nudges_home_save_button">Bewaar nu</string>
+    <string name="prepublishing_nudges_home_save_button">Nu opslaan</string>
     <string name="prepublishing_nudges_home_submit_button">Verzend nu</string>
     <string name="prepublishing_nudges_home_schedule_button">Nu inplannen</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publiceren naar</string>
@@ -1361,7 +1396,7 @@ Language: nl
     <string name="notification_new_site_creation_failed">Er was een probleem</string>
     <string name="notification_new_site_creation_title">Maak een site</string>
     <string name="new_site_creation_create_site_button">Maak een site</string>
-    <string name="new_site_creation_domain_header_subtitle">Dit is waar mensen je op internet zullen vinden .</string>
+    <string name="new_site_creation_domain_header_subtitle">Dit is waar mensen je op internet zullen vinden.</string>
     <string name="new_site_creation_empty_domain_list_message">Geen beschikbare adressen die overeenkomen met je zoekopdracht</string>
     <string name="site_creation_error_generic_subtitle">Fout bij communicatie met de server. Probeer het opnieuw</string>
     <string name="site_creation_error_generic_title">Er was een probleem</string>
@@ -1369,10 +1404,10 @@ Language: nl
     <string name="new_site_creation_preview_title">Je site is gemaakt!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d van %2$d</string>
     <string name="new_site_creation_screen_title_general">Maak een site</string>
-    <string name="suggestions_updated_content_description">Suggesties bijgewerkt</string>
+    <string name="suggestions_updated_content_description">Suggesties geüpdatet</string>
     <string name="site_picker_failed_selecting_added_site">Kan de nieuw toegevoegde zelf-gehoste site niet selecteren .</string>
     <string name="local_post_is_conflicted">Versie conflict</string>
-    <string name="preference_crash_reports_summary">Sta automatische crashrapporten toe om ons te helpen de prestaties van de app te verbeteren.</string>
+    <string name="preference_crash_reports_summary">Sta automatische vastloper rapporten toe om ons te helpen de prestaties van de app te verbeteren.</string>
     <string name="preference_crash_reports">Crash-rapporten</string>
     <string name="snackbar_conflict_undo">Ongedaan maken</string>
     <string name="snackbar_conflict_web_version_discarded">Webversie genegeerd</string>
@@ -2623,7 +2658,7 @@ Language: nl
     <string name="my_site_btn_view_site">Bekijk site</string>
     <string name="my_site_btn_view_admin">Beheer bekijken</string>
     <string name="my_site_btn_switch_site">Site wisselen</string>
-    <string name="my_site_btn_site_settings">Instellingen</string>
+    <string name="my_site_btn_site_settings">Site instellingen</string>
     <string name="my_site_btn_blog_posts">Blogberichten</string>
     <string name="my_site_header_publish">Publiceren</string>
     <string name="my_site_header_look_and_feel">Uiterlijk en gebruiksgemak</string>

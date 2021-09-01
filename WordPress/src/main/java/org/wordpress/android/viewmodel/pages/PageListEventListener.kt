@@ -173,7 +173,7 @@ class PageListEventListener(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        if (!event.isError) {
+        if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {
             siteStore.getSiteByLocalId(site.id)?.let { updatedSite ->
                 if (updatedSite.showOnFront != site.showOnFront ||
                         updatedSite.pageForPosts != site.pageForPosts ||

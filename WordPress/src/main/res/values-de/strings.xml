@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 20:31:47+0000
+Translation-Revision-Date: 2021-08-22 10:26:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Du kannst Blocks neu anordnen, indem du auf einen Block tippst und ihn dann mit den Pfeilen nach oben und unten, die unten links auf dem Block erscheinen, an die passende Stelle navigieren.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Willkommen in der Welt der Blöcke</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Wenn du einen Block entfernen möchtest, wähle ihn aus und klicke auf die drei Punkte unten rechts im Block, um die Einstellungen anzuzeigen. Hier kannst du die Option zum Entfernen des Blocks auswählen.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Einige Blöcke verfügen über zusätzliche Einstellungen. Tippe auf das Einstellungs-Icon unten rechts im Block, um dir die Optionen anzusehen.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s Block, neu verfügbar</string>
+    <string name="gutenberg_native_rich_text_editing">Rich Text bearbeiten</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Wenn du mit den Bezeichnungen der verschiedenen Blöcke vertraut bist, kannst du Blöcke auch so hinzufügen: Gib einen Schrägstrich gefolgt vom Namen des Blocks ein, z. B. /image oder /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Sorge dafür, dass dein Inhalt hervorsticht, indem du Bilder, GIFs, Videos und andere eingebettete Medien zu deinen Seiten hinzufügst.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Probier es aus, indem du deinem Beitrag oder deiner Seite ein paar Blocks hinzufügst!</string>
+    <string name="gutenberg_native_embed_media">Medien einbetten</string>
+    <string name="gutenberg_native_build_layouts">Layouts erstellen</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst. </string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
+    <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
     <string name="create_site_notification_create_site_action">Website erstellen</string>
     <string name="create_site_notification_title">Erstelle deine WordPress-Website</string>
     <string name="stats_disabled_enable_stats_button">Website-Statistiken aktivieren</string>
+    <string name="create_site_notification_text">Richte deine Website mit wenigen schnellen Schritten ein</string>
+    <string name="stats_disabled_enable_stats_error_message">Website-Statistiken können nicht aktiviert werden</string>
+    <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
+    <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
+    <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">Eingebettete Vorschau noch nicht verfügbar</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Eingebettete Block-Vorschau demnächst verfügbar</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
+    <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Zeig mir alles</string>
     <string name="scan_multisite_not_supported_subtitle">Es tut uns leid, aber Jetpack Scan ist derzeit nicht mit WordPress-Multisite-Installationen kompatibel.</string>
     <string name="login_epilogue_mysites_heading">Wähle eine Website aus, die geöffnet werden soll</string>
     <string name="login_epilogue_mysites_subheading">Du kannst die Websites jederzeit wechseln.</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Brauchst du ein wenig Hilfe dabei, diese Website mit der App zu verwalten?</string>
+    <string name="login_epilogue_create_new_site_button">Eine neue Website erstellen</string>
     <string name="scan_multisite_not_supported_title">WordPress-Multisites werden nicht unterstützt</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ungültige URL. Bitte gib eine gültige URL ein.</string>
     <string name="gutenberg_native_embed_caption_s">Beschriftung einbetten %s</string>
@@ -28,8 +60,6 @@ Language: de
     <string name="blogging_reminders_select_days">Lege fest, an welchen Tagen du bloggen willst</string>
     <string name="blogging_reminders_epilogue_caption">Unter „Meine Website“ &amp;rarr; „Einstellungen“ &amp;rarr; „Blog-Erinnerungen“ kannst du dies jederzeit aktualisieren.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Du hast keine Erinnerungen festgelegt.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Du erhältst &lt;b&gt;täglich&lt;/b&gt; Blog-Erinnerungen.</string>
-    <string name="blogging_reminders_epilogue_body_days">Du erhältst %1$swöchentlich am %2$s Blog-Erinnerungen</string>
     <string name="blogging_reminders_epilogue_not_set_title">Erinnerungen entfernt!</string>
     <string name="blogging_reminders_epilogue_title">Fertig!</string>
     <string name="blogging_reminders_update">Aktualisieren</string>
@@ -144,6 +174,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_edit_label_text">Zum Bearbeiten des Label-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Zum Bearbeiten des Button-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Zum Wechseln der Einheit zweimal tippen</string>
+    <string name="gutenberg_native_outside">Außen</string>
     <string name="gutenberg_native_current_placeholder_text_is">Aktueller Platzhaltertext ist</string>
     <string name="gutenberg_native_clear_search">Suche löschen</string>
     <string name="gutenberg_native_cancel_search">Suche abbrechen</string>
@@ -203,6 +234,7 @@ Language: de
     <string name="quick_start_list_follow_site_subtitle">Entdecke und folge Websites, die dich inspirieren.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Neue Beiträge automatisch in deinen sozialen Medien teilen.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt.</string>
+    <string name="quick_start_list_enable_sharing_title">Teilen über soziale Netzwerke</string>
     <string name="quick_start_list_check_stats_title">Deine Statistiken prüfen</string>
     <string name="backup_download_status_failure_bullet2">Wir versuchen weiterhin, deine Backup-Datei zum Herunterladen zu erstellen.</string>
     <string name="backup_download_status_failure_bullet1">Wir konnten den Status nicht finden, der angibt, wie lange dein Backup zum Herunterladen dauert.</string>
@@ -709,9 +741,11 @@ Language: de
     <string name="error_update_site_title_network">Konnte den Website-Titel nicht aktualisieren. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.</string>
     <string name="my_site_title_changer_dialog_hint">Der Website-Titel wird in der Titelleiste eines Webbrowsers angezeigt und wird bei den meisten Themes im Header angezeigt.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigiert zum vorherigen Content Sheet</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigiert zum Anpassen des Verlaufs</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigiert zur individuellen Farbauswahl</string>
     <string name="gutenberg_native_gradient_type">Verlaufstyp</string>
+    <string name="gutenberg_native_go_back">Zurück</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Zum Auswählen der Option zweimal tippen</string>
     <string name="gutenberg_native_customize_gradient">Verlauf anpassen</string>
     <string name="pages_list_author">Seitenautor</string>
@@ -2598,15 +2632,14 @@ Language: de
     <string name="account_settings">Konto-Einstellungen</string>
     <string name="site_picker_cant_hide_current_site">„%s“ wurde nicht ausgeblendet, denn es ist die aktuelle Website</string>
     <string name="site_picker_create_wpcom">WordPress.com-Website erstellen</string>
-    <string name="site_picker_add_self_hosted">Selbstgehostete Website hinzufügen</string>
     <string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
     <string name="site_picker_add_site">Website hinzufügen</string>
+    <string name="site_picker_add_self_hosted">Selbst gehostete Website hinzufügen</string>
     <string name="my_site_btn_view_admin">Admin aufrufen</string>
     <string name="my_site_btn_view_site">Website ansehen</string>
     <string name="site_picker_title">Website auswählen</string>
     <string name="my_site_btn_switch_site">Website wechseln</string>
     <string name="my_site_btn_blog_posts">Blogbeiträge</string>
-    <string name="my_site_btn_site_settings">Einstellungen</string>
     <string name="my_site_header_look_and_feel">Erscheinungsbild</string>
     <string name="my_site_header_publish">Veröffentlichen</string>
     <string name="my_site_header_configuration">Einrichtung</string>

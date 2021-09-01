@@ -21,8 +21,7 @@ class SiteItemsBuilder
         isScanAvailable: Boolean = false,
         showViewSiteFocusPoint: Boolean = false,
         showEnablePostSharingFocusPoint: Boolean = false,
-        showExplorePlansFocusPoint: Boolean = false,
-        isUnifiedCommentsFeatureEnabled: Boolean = false
+        showExplorePlansFocusPoint: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, showExplorePlansFocusPoint, onClick),
@@ -53,16 +52,13 @@ class SiteItemsBuilder
                         UiStringRes(R.string.my_site_btn_comments),
                         onClick = ListItemInteraction.create(ListItemAction.COMMENTS, onClick)
                 ),
-                siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
-                        onClick,
-                        isUnifiedCommentsFeatureEnabled
-                ),
                 siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(site),
                 siteListItemBuilder.buildThemesItemIfAvailable(site, onClick),
                 siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(site),
                 siteListItemBuilder.buildPeopleItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildPluginItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildShareItemIfAvailable(site, onClick, showEnablePostSharingFocusPoint),
+                siteListItemBuilder.buildDomainsItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_external)),
                 ListItem(

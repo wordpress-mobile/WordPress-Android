@@ -11,12 +11,12 @@ enum class ListItemAction {
     ADMIN,
     PEOPLE,
     SHARING,
+    DOMAINS,
     SITE_SETTINGS,
     THEMES,
     PLUGINS,
     STATS,
     MEDIA,
     COMMENTS,
-    UNIFIED_COMMENTS,
     VIEW_SITE
 }

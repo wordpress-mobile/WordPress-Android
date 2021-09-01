@@ -1,9 +1,15 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 /**
  * Created by mikepenz on 14.03.15.
@@ -12,8 +18,8 @@ import android.view.ViewTreeObserver;
  * Basic idea for this solution found here: http://stackoverflow.com/a/9108219/325479
  */
 public class KeyboardResizeViewUtil {
-    private View mDecorView;
-    private View mContentView;
+    private final View mDecorView;
+    private final View mContentView;
 
     public KeyboardResizeViewUtil(Activity activity, View contentView) {
         this.mDecorView = activity.getWindow().getDecorView();
@@ -41,8 +47,7 @@ public class KeyboardResizeViewUtil {
                 mDecorView.getWindowVisibleDisplayFrame(r);
 
                 // get screen height and calculate the difference with the useable area from the r
-                int height = mDecorView.getContext().getResources().getDisplayMetrics().heightPixels;
-                int diff = height - r.bottom;
+                int diff = getRealScreenHeight() - (r.bottom + getInsetBottom());
 
                 // if it could be a keyboard add the padding to the view
                 if (diff != 0) {
@@ -63,4 +68,16 @@ public class KeyboardResizeViewUtil {
             });
         }
     };
+
+    private int getInsetBottom() {
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mContentView);
+        return insets != null ? insets.getSystemWindowInsetBottom() : 0;
+    }
+
+    private int getRealScreenHeight() {
+        WindowManager windowManager = (WindowManager) mDecorView.getContext().getSystemService(Context.WINDOW_SERVICE);
+        Point realSize = new Point();
+        if (windowManager != null) windowManager.getDefaultDisplay().getRealSize(realSize);
+        return realSize.y;
+    }
 }

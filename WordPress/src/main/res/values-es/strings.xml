@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-27 05:22:18+0000
+Translation-Revision-Date: 2021-08-23 11:42:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Tu sitio recibió %1$d visualizaciones, %2$d me gusta, %3$d comentarios.</string>
+    <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
+    <string name="blogging_reminders_notification_time">Hora del aviso</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloquear &lt;b&gt;todos los días&lt;/b&gt; a las &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s a la semana a las %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Los controles de formato de texto están dentro de la barra de herramientas situada encima del teclado mientras editas un bloque de texto</string>
+    <string name="gutenberg_native_selected_s">Selecionado: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Selecciona un color de arriba</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navega para seleccionar %s</string>
+    <string name="gutenberg_native_move_blocks">Mover bloques</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Cómo editar tu entrada</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Cómo editar tu página</string>
+    <string name="gutenberg_native_customize_blocks">Personalizar bloques</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Los cambios en la imagen destacada no se verán afectados por los botones de deshacer/rehacer.</string>
+    <string name="gutenberg_native_applies_the_setting">Aplica el ajuste</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para eliminar un bloque, selecciona el bloque y haz clic en los tres puntos de la parte inferior derecha del bloque para ver los ajustes. A partir de ahí, elige la opción para eliminar el bloque.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bienvenido al mundo de los bloques</string>
+    <string name="gutenberg_native_s_block_newly_available">Bloque %s, disponible nuevamente</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Algunos bloques tienen ajustes adicionales. Toca el icono de los ajustes en la parte inferior derecha del bloque para ver más opciones.</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Una vez que te hayas familiarizado con los nombres de los diferentes bloques, puedes añadir un bloque escribiendo una barra inclinada seguida del nombre del bloque, por ejemplo, «/imagen» o «/encabezado».</string>
+    <string name="gutenberg_native_rich_text_editing">Edición de texto enriquecido</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Haz que tu contenido destaque añadiendo imágenes, gifs, vídeos y medios incrustados a tus páginas.</string>
+    <string name="gutenberg_native_embed_media">Medio incrustado</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">¡Pruébalo añadiendo unos cuantos bloques a tu entrada o página!</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Cada bloque tiene sus propios ajustes. Para encontrarlos, toca en un bloque. Sus ajustes aparecerán en la barra de herramientas de la parte inferior de la pantalla.</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Los bloques son piezas de contenido que puedes insertar, reorganizar y dar estilo sin necesidad de saber programar. Los bloques son una forma fácil y moderna para que crees bonitos diseños.</string>
+    <string name="gutenberg_native_build_layouts">Crear diseños</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Los bloques te permiten centrarte en la escritura de tu contenido, sabiendo que todas las herramientas de formato que necesitas están ahí para ayudarte a transmitir tu mensaje.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organiza tu contenido en columnas, añade botones de llamada a la acción y superpón imágenes con texto.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas de la parte inferior izquierda. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
+    <string name="comment_batch_moderation_error">Ha fallado la moderación de uno o más comentarios</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Aprende lo básico con un rápido recorrido.</string>
     <string name="create_site_notification_create_site_action">Crear un sitio</string>
     <string name="stats_disabled_subtitle">Activa las estadísticas del sitio para ver información detallada sobre el tráfico, los «Me gusta», los comentarios y los suscriptores.</string>
     <string name="stats_disabled_enable_stats_button">Activar las estadísticas del sitio</string>
@@ -24,7 +58,6 @@ Language: es
     <string name="quick_start_list_upload_icon_subtitle">Mostrado en la pestaña del navegador de tu visitante y en otros sitios online.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Toca dos veces para previsualizar la página.</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Toca dos veces para previsualizar la entrada.</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">Te guiaremos a través de las bases de la gestión de tu sitio con la aplicación.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Muéstrame el camino</string>
     <string name="scan_multisite_not_supported_subtitle">Lo sentimos, en este momento Jetpack Scan no es compatible con las instalaciones multisitio de WordPress.</string>
     <string name="login_epilogue_mysites_heading">Elige un sitio para abrir</string>
@@ -44,10 +77,9 @@ Language: es
     <string name="blogging_reminders_select_days">Selecciona los días en los que quieres bloguear</string>
     <string name="blogging_reminders_epilogue_caption">Puedes actualizar esto en cualquier momento desde Mi sitio &gt; Ajustes &gt; Recordatorios de blogueo.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">No tienes configurado ningún recordatorio.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Tienes recordatorios para bloguear &lt;b&gt;todos los días&lt;/b&gt;.</string>
     <string name="blogging_reminders_epilogue_not_set_title">¡Recordatorios eliminados!</string>
     <string name="blogging_reminders_epilogue_title">¡Todo configurado!</string>
-    <string name="blogging_reminders_epilogue_body_days">Tienes recordatorios para bloguear %1$s a la semana en %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Recibirás recordatorios para bloguear %1$s a la semana el %2$s a las %3$s.</string>
     <string name="blogging_reminders_update">Actualizar</string>
     <string name="blogging_reminders_not_set">Nada configurado</string>
     <string name="blogging_reminders_n_a_week">%s a la semana</string>
@@ -134,6 +166,7 @@ Language: es
     <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
+    <string name="gutenberg_native_add_blocks">Añadir bloques</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">¿Qué es el texto alt?</string>
     <string name="gutenberg_native_transform_s_to">Transformar %s a</string>
@@ -727,9 +760,11 @@ Language: es
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>
     <string name="reader_title_tag_preview">Tema</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navega a la hoja de contenido anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navega para personalizar el degradado</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navega al selector de color personalizado</string>
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
+    <string name="gutenberg_native_go_back">Volver</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_list_author">Autor de la página</string>
@@ -2626,7 +2661,7 @@ Language: es
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_btn_blog_posts">Entradas del blog</string>
     <string name="my_site_header_look_and_feel">Aspecto</string>
-    <string name="my_site_btn_site_settings">Ajustes</string>
+    <string name="my_site_btn_site_settings">Ajustes del sitio</string>
     <string name="my_site_header_configuration">Configuración</string>
     <string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
     <string name="show">Mostrar</string>

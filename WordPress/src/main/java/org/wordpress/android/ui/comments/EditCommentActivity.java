@@ -25,18 +25,17 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -65,9 +64,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
     private AlertDialog mCancelEditCommentDialog;
 
-    @Inject Dispatcher mDispatcher;
+    @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
-    @Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -97,7 +95,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
+        mCommentsStoreAdapter.register(this);
     }
 
     @Override
@@ -111,7 +109,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
     @Override
     public void onStop() {
-        mDispatcher.unregister(this);
+        mCommentsStoreAdapter.unregister(this);
         super.onStop();
     }
 
@@ -146,7 +144,7 @@ public class EditCommentActivity extends LocaleAwareActivity {
             mSite = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             RemoteCommentPayload payload = new RemoteCommentPayload(mSite, mNote.getCommentId());
             mFetchingComment = true;
-            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
         } else {
             showErrorAndFinish();
         }
@@ -232,7 +230,8 @@ public class EditCommentActivity extends LocaleAwareActivity {
 
         showSaveDialog();
         mComment.setContent(getEditTextStr(R.id.edit_comment_content));
-        mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+        mCommentsStoreAdapter.dispatch(CommentActionBuilder
+                .newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
     }
 
     /*
@@ -355,10 +354,10 @@ public class EditCommentActivity extends LocaleAwareActivity {
         }
 
         if (mNote != null) {
-            mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+            mComment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
         } else if (mComment != null) {
             // Reload the comment
-            mComment = mCommentStore.getCommentByLocalId(mComment.getId());
+            mComment = mCommentsStoreAdapter.getCommentByLocalId(mComment.getId());
         }
         configureViews();
     }

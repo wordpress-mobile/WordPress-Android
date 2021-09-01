@@ -210,8 +210,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
-import org.wordpress.android.util.config.LayoutGridBlockFeatureConfig;
 import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -410,10 +408,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
-    @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
-    @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -1271,7 +1267,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (helpMenuItem != null) {
             if (mEditorFragment instanceof GutenbergEditorFragment
-                && BuildConfig.DEBUG
+                && canViewEditorOnboarding()
                 && showMenuItems
             ) {
                 helpMenuItem.setVisible(true);
@@ -1456,6 +1452,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (itemId == R.id.menu_editor_help) {
                 // Display the editor help page -- option should only be available in the GutenbergEditor
                 if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_HELP_SHOWN, mSite);
                     ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
                 }
             }
@@ -2308,11 +2305,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
-        boolean enableEditorOnboarding = !AppPrefs.hasLaunchedGutenbergEditor() && canViewEditorOnboarding();
-
         return new GutenbergPropsBuilder(
-                mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
-                mLayoutGridBlockFeatureConfig.isEnabled() && SiteUtils.supportsLayoutGridFeature(mSite),
+                SiteUtils.supportsContactInfoFeature(mSite),
+                SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
@@ -2324,7 +2319,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 postType,
                 featuredImageId,
                 themeBundle,
-                enableEditorOnboarding
+                canViewEditorOnboarding(),
+                !AppPrefs.hasLaunchedGutenbergEditor()
         );
     }
 
@@ -3447,6 +3443,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
             updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
         }
         return true;
+    }
+
+    @Override public Map<String, Double> onRequestBlockTypeImpressions() {
+        return AppPrefs.getGutenbergBlockTypeImpressions();
+    }
+
+    @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
+        AppPrefs.setGutenbergBlockTypeImpressions(impressions);
     }
 
     // FluxC events

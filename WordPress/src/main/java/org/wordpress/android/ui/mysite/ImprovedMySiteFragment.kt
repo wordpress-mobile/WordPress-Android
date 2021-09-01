@@ -7,20 +7,25 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.NewMySiteFragmentBinding
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.FullScreenDialogFragment
+import org.wordpress.android.ui.FullScreenDialogFragment.Builder
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -41,6 +46,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -50,6 +56,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
@@ -59,6 +66,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
@@ -68,6 +76,9 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -89,8 +100,12 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
-        TextInputDialogFragment.Callback {
+        TextInputDialogFragment.Callback,
+        QuickStartPromptClickInterface,
+        OnConfirmListener,
+        OnDismissListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -275,12 +290,36 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+                activity,
+                action.site,
+                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+        )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
         is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is ShowQuickStartDialog -> showQuickStartDialog(
+                action.title,
+                action.message,
+                action.positiveButtonLabel,
+                action.negativeButtonLabel,
+                action.neutralButtonLabel
+        )
+        is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+    }
+
+    private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
+        val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
+        Builder(requireContext())
+                .setTitle(action.title)
+                .setOnConfirmListener(this)
+                .setOnDismissListener(this)
+                .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
+                .build()
+                .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
     private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
@@ -313,7 +352,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(imageUri.uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
@@ -325,6 +364,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     override fun onResume() {
         super.onResume()
         viewModel.refresh()
+        viewModel.checkAndShowQuickStartNotice()
     }
 
     override fun onPause() {
@@ -332,6 +372,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let {
             if (!it.isChangingConfigurations) {
                 viewModel.clearActiveQuickStartTask()
+                viewModel.dismissQuickStartNotice()
             }
         }
     }
@@ -417,15 +458,48 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
+            RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
+                    viewModel.checkAndStartQuickStart(
+                            data.getIntExtra(
+                                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                    SelectedSiteRepository.UNAVAILABLE
+                            )
+                    )
                 }
             }
         }
+    }
+
+    private fun showQuickStartDialog(
+        @StringRes title: Int,
+        @StringRes message: Int,
+        @StringRes positiveButtonLabel: Int,
+        @StringRes negativeButtonLabel: Int,
+        @StringRes neutralButtonLabel: Int? = null
+    ) {
+        val tag = TAG_QUICK_START_DIALOG
+        val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
+        quickStartPromptDialogFragment.initialize(
+                tag,
+                getString(title),
+                getString(message),
+                getString(positiveButtonLabel),
+                R.drawable.img_illustration_site_about_280dp,
+                getString(negativeButtonLabel),
+                neutralButtonLabel?.let { getString(it) } ?: ""
+        )
+        quickStartPromptDialogFragment.show(parentFragmentManager, tag)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
     private fun NewMySiteFragmentBinding.loadData(items: List<MySiteItem>) {
@@ -444,18 +518,18 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         activity?.let { parent ->
             snackbarSequencer.enqueue(
                     SnackbarItem(
-                            Info(
+                            info = Info(
                                     view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
-                                    duration = Snackbar.LENGTH_LONG
+                                    duration = holder.duration
                             ),
-                            holder.buttonTitle?.let {
+                            action = holder.buttonTitle?.let {
                                 Action(
                                         textRes = holder.buttonTitle,
                                         clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }
@@ -464,6 +538,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
+        private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }
@@ -475,5 +550,26 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
         viewModel.onSiteNameChooserDismissed()
+    }
+
+    override fun onPositiveClicked(instanceTag: String) {
+        viewModel.startQuickStart()
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+        viewModel.ignoreQuickStart()
+    }
+
+    override fun onNeutralClicked(instanceTag: String) {
+        viewModel.disableQuickStart()
+    }
+
+    override fun onConfirm(result: Bundle?) {
+        val task = result?.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
+        task?.let { viewModel.onQuickStartTaskCardClick(it) }
+    }
+
+    override fun onDismiss() {
+        viewModel.onQuickStartFullScreenDialogDismiss()
     }
 }
