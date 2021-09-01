@@ -22,7 +22,9 @@ class BloggingRemindersMapper
                 thursday = enabledDays.contains(THURSDAY),
                 friday = enabledDays.contains(FRIDAY),
                 saturday = enabledDays.contains(SATURDAY),
-                sunday = enabledDays.contains(SUNDAY)
+                sunday = enabledDays.contains(SUNDAY),
+                hour = this.hour,
+                minute = this.minute
         )
     }
 
@@ -38,7 +40,9 @@ class BloggingRemindersMapper
                     if (saturday) list.add(SATURDAY)
                     if (sunday) list.add(SUNDAY)
                     list
-                }
+                },
+                hour = hour,
+                minute = minute
         )
     }
 }
