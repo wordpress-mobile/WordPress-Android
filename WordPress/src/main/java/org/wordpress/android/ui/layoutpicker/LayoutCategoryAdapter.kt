@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.mysite.MySiteItemViewHolder
-import org.wordpress.android.ui.mysite.QuickStartCardViewHolder
 
 /**
  * Renders the layout categories
