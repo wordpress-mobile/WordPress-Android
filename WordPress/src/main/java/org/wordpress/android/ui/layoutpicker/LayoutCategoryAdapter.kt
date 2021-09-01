@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.mysite.MySiteItemViewHolder
+import org.wordpress.android.ui.mysite.QuickStartCardViewHolder
 
 /**
  * Renders the layout categories
@@ -27,6 +29,11 @@ class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
 
     override fun onBindViewHolder(holder: LayoutsItemViewHolder, position: Int) {
         holder.bind(items[position])
+    }
+
+    override fun onViewRecycled(holder: LayoutsItemViewHolder) {
+        super.onViewRecycled(holder)
+        holder.onRecycled()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
