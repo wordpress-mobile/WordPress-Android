@@ -1769,7 +1769,6 @@
     <string name="version_with_name_param">Version %s</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
-    <string name="share_the_app">@string/me_btn_share</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
