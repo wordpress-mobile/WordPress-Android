@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteQuickActionsCardBinding
 import org.wordpress.android.databinding.QuickActionsCardBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding

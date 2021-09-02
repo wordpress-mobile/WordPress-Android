@@ -2,8 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -24,10 +24,12 @@ class SiteInfoCardBuilder
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
         val siteIcon = if (!showSiteIconProgressBar && !site.iconUrl.isNullOrEmpty()) {
-            IconState.Visible(SiteUtils.getSiteIconUrl(
-                    site,
-                    resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-            ))
+            IconState.Visible(
+                    SiteUtils.getSiteIconUrl(
+                            site,
+                            resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
+                    )
+            )
         } else if (showSiteIconProgressBar) {
             IconState.Progress
         } else {

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.quickactions
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject

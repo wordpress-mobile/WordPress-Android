@@ -26,70 +26,57 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         LIST_ITEM
     }
 
-    sealed class Card
-
-    sealed class Item(
+    sealed class Card(
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
-        data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
-
-        data class ListItem(
-            @DrawableRes val primaryIcon: Int,
-            val primaryText: UiString,
-            @DrawableRes val secondaryIcon: Int? = null,
-            val secondaryText: UiString? = null,
-            val showFocusPoint: Boolean = false,
-            val onClick: ListItemInteraction
-        ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
-    }
-
-    data class SiteInfoCard(
-        val title: String,
-        val url: String,
-        val iconState: IconState,
-        val showTitleFocusPoint: Boolean,
-        val showIconFocusPoint: Boolean,
-        val onTitleClick: ListItemInteraction? = null,
-        val onIconClick: ListItemInteraction,
-        val onUrlClick: ListItemInteraction,
-        val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
-        sealed class IconState {
-            object Progress : IconState()
-            data class Visible(val url: String? = null) : IconState()
+        data class SiteInfoCard(
+            val title: String,
+            val url: String,
+            val iconState: IconState,
+            val showTitleFocusPoint: Boolean,
+            val showIconFocusPoint: Boolean,
+            val onTitleClick: ListItemInteraction? = null,
+            val onIconClick: ListItemInteraction,
+            val onUrlClick: ListItemInteraction,
+            val onSwitchSiteClick: ListItemInteraction
+        ) : Card(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+            sealed class IconState {
+                object Progress : IconState()
+                data class Visible(val url: String? = null) : IconState()
+            }
         }
-    }
 
-    data class QuickActionsCard(
-        val title: UiString,
-        val onStatsClick: ListItemInteraction,
-        val onPagesClick: ListItemInteraction,
-        val onPostsClick: ListItemInteraction,
-        val onMediaClick: ListItemInteraction,
-        val showPages: Boolean = true,
-        val showStatsFocusPoint: Boolean = false,
-        val showPagesFocusPoint: Boolean = false
-    ) : MySiteCardAndItem(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
-
-    data class DomainRegistrationCard(val onClick: ListItemInteraction) : MySiteCardAndItem(DOMAIN_REGISTRATION_CARD)
-
-    data class QuickStartCard(
-        val title: UiString,
-        val moreMenuVisible: Boolean = true,
-        val onRemoveMenuItemClick: ListItemInteraction,
-        val taskTypeItems: List<QuickStartTaskTypeItem>
-    ) : MySiteCardAndItem(QUICK_START_CARD) {
-        data class QuickStartTaskTypeItem(
-            val quickStartTaskType: QuickStartTaskType,
+        data class QuickActionsCard(
             val title: UiString,
-            val titleEnabled: Boolean,
-            val subtitle: UiString,
-            val strikeThroughTitle: Boolean,
-            @ColorRes val progressColor: Int,
-            val progress: Int,
-            val onClick: ListItemInteraction
-        )
+            val onStatsClick: ListItemInteraction,
+            val onPagesClick: ListItemInteraction,
+            val onPostsClick: ListItemInteraction,
+            val onMediaClick: ListItemInteraction,
+            val showPages: Boolean = true,
+            val showStatsFocusPoint: Boolean = false,
+            val showPagesFocusPoint: Boolean = false
+        ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+
+        data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
+
+        data class QuickStartCard(
+            val title: UiString,
+            val moreMenuVisible: Boolean = true,
+            val onRemoveMenuItemClick: ListItemInteraction,
+            val taskTypeItems: List<QuickStartTaskTypeItem>
+        ) : Card(QUICK_START_CARD) {
+            data class QuickStartTaskTypeItem(
+                val quickStartTaskType: QuickStartTaskType,
+                val title: UiString,
+                val titleEnabled: Boolean,
+                val subtitle: UiString,
+                val strikeThroughTitle: Boolean,
+                @ColorRes val progressColor: Int,
+                val progress: Int,
+                val onClick: ListItemInteraction
+            )
+        }
     }
 
     sealed class DynamicCard(
@@ -119,5 +106,21 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onClick: ListItemInteraction
             )
         }
+    }
+
+    sealed class Item(
+        override val type: Type,
+        override val activeQuickStartItem: Boolean = false
+    ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
+
+        data class ListItem(
+            @DrawableRes val primaryIcon: Int,
+            val primaryText: UiString,
+            @DrawableRes val secondaryIcon: Int? = null,
+            val secondaryText: UiString? = null,
+            val showFocusPoint: Boolean = false,
+            val onClick: ListItemInteraction
+        ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
     }
 }
