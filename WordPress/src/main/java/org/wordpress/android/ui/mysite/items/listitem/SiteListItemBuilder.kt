@@ -1,10 +1,25 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items.listitem
 
 import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -33,7 +48,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_gridicons_clipboard_white_24dp,
                     UiStringRes(R.string.activity_log),
-                    onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
+                    onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick)
             )
         } else null
     }
@@ -43,7 +58,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_gridicons_cloud_upload_white_24dp,
                     UiStringRes(R.string.backup),
-                    onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
+                    onClick = ListItemInteraction.create(BACKUP, onClick)
             )
         } else null
     }
@@ -53,7 +68,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_baseline_security_white_24dp,
                     UiStringRes(R.string.scan),
-                    onClick = ListItemInteraction.create(ListItemAction.SCAN, onClick)
+                    onClick = ListItemInteraction.create(SCAN, onClick)
             )
         } else null
     }
@@ -67,7 +82,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_cog_white_24dp,
                     UiStringRes(R.string.my_site_btn_jetpack_settings),
-                    onClick = ListItemInteraction.create(ListItemAction.JETPACK_SETTINGS, onClick)
+                    onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
             )
         } else null
     }
@@ -86,7 +101,7 @@ class SiteListItemBuilder
                     R.drawable.ic_plans_white_24dp,
                     UiStringRes(R.string.plan),
                     secondaryText = UiStringText(planShortName),
-                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick),
+                    onClick = ListItemInteraction.create(PLAN, onClick),
                     showFocusPoint = showFocusPoint
             )
         } else null
@@ -97,7 +112,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_pages_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_pages),
-                    onClick = ListItemInteraction.create(ListItemAction.PAGES, onClick)
+                    onClick = ListItemInteraction.create(PAGES, onClick)
             )
         } else null
     }
@@ -108,7 +123,7 @@ class SiteListItemBuilder
                     R.drawable.ic_wordpress_white_24dp,
                     UiStringRes(R.string.my_site_btn_view_admin),
                     secondaryIcon = R.drawable.ic_external_white_24dp,
-                    onClick = ListItemInteraction.create(ListItemAction.ADMIN, onClick)
+                    onClick = ListItemInteraction.create(ADMIN, onClick)
             )
         } else null
     }
@@ -118,7 +133,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_user_white_24dp,
                     UiStringRes(R.string.people),
-                    onClick = ListItemInteraction.create(ListItemAction.PEOPLE, onClick)
+                    onClick = ListItemInteraction.create(PEOPLE, onClick)
             )
         } else null
     }
@@ -128,7 +143,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_plugins_white_24dp,
                     UiStringRes(R.string.my_site_btn_plugins),
-                    onClick = ListItemInteraction.create(ListItemAction.PLUGINS, onClick)
+                    onClick = ListItemInteraction.create(PLUGINS, onClick)
             )
         } else null
     }
@@ -143,7 +158,7 @@ class SiteListItemBuilder
                     R.drawable.ic_share_white_24dp,
                     UiStringRes(R.string.my_site_btn_sharing),
                     showFocusPoint = showFocusPoint,
-                    onClick = ListItemInteraction.create(ListItemAction.SHARING, onClick)
+                    onClick = ListItemInteraction.create(SHARING, onClick)
             )
         } else null
     }
@@ -155,7 +170,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_domains_white_24dp,
                     UiStringRes(R.string.my_site_btn_domains),
-                    onClick = ListItemInteraction.create(ListItemAction.DOMAINS, onClick)
+                    onClick = ListItemInteraction.create(DOMAINS, onClick)
             )
         } else null
     }
@@ -165,7 +180,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_cog_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_settings),
-                    onClick = ListItemInteraction.create(ListItemAction.SITE_SETTINGS, onClick)
+                    onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
             )
         } else null
     }
@@ -189,7 +204,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_themes_white_24dp,
                     UiStringRes(R.string.themes),
-                    onClick = ListItemInteraction.create(ListItemAction.THEMES, onClick)
+                    onClick = ListItemInteraction.create(THEMES, onClick)
             )
         } else null
     }

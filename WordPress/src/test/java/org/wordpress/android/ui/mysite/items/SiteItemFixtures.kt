@@ -1,8 +1,9 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText

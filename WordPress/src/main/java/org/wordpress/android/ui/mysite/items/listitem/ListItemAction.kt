@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items.listitem
 
 enum class ListItemAction {
     ACTIVITY_LOG,

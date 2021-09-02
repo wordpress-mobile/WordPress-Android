@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items.categoryheader
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat

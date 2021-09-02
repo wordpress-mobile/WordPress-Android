@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
+import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {

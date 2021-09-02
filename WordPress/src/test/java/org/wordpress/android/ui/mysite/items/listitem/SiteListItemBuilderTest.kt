@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.items.listitem
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +10,19 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
+import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
+import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
+import org.wordpress.android.ui.mysite.items.JETPACK_ITEM
+import org.wordpress.android.ui.mysite.items.PAGES_ITEM
+import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
+import org.wordpress.android.ui.mysite.items.PLAN_ITEM
+import org.wordpress.android.ui.mysite.items.PLAN_NAME
+import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
+import org.wordpress.android.ui.mysite.items.SCAN_ITEM
+import org.wordpress.android.ui.mysite.items.SHARING_ITEM
+import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
+import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.SiteUtilsWrapper
