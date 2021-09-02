@@ -59,7 +59,13 @@ class SnackbarSequencer @Inject constructor(
             if (context != null && isContextAlive(context)) {
                 prepareSnackBar(context, item)?.show()
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
-                delay(item.getSnackbarDurationMs())
+                /**
+                 * Delay showing the next snackbar only if the current snack bar is important.
+                 * For more details on adding a delay at this point, see
+                 * https://github.com/wordpress-mobile/WordPress-Android/pull/10856#issuecomment-604452148
+                 * https://issuetracker.google.com/issues/37069975
+                 */
+                if (item?.info?.isImportant == true) delay(item.getSnackbarDurationMs())
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
                 AppLog.d(T.UTILS,
