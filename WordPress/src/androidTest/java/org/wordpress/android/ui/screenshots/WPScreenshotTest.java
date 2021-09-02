@@ -216,7 +216,6 @@ public class WPScreenshotTest extends BaseTest {
 
         (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
 
-        // todo: annmarie
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         if (isElementDisplayed(R.id.tooltip_message)) {
