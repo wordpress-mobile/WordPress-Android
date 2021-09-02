@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -48,14 +49,19 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -75,6 +81,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
+    @Inject lateinit var sequencer: SnackbarSequencer
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,6 +127,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
+        if (recommendTheAppFeatureConfig.isEnabled()) {
+            setLoadingState(false)
+            rowRecommendTheApp.visibility = View.VISIBLE
+            rowRecommendTheApp.setOnClickListener {
+                viewModel.onRecommendTheApp()
+            }
+        } else {
+            rowRecommendTheApp.visibility = View.GONE
+        }
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -146,6 +163,49 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 false -> hideDisconnectDialog()
             }
         })
+
+        viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
+            if (!isAdded) return@observeEvent
+
+            binding?.setLoadingState(it.showLoading)
+
+            if (!it.showLoading) {
+                if (it.isError()) {
+                    view?.let { view ->
+                        sequencer.enqueue(
+                                SnackbarItem(
+                                        Info(view, UiStringText(it.error!!), Snackbar.LENGTH_LONG),
+                                        null,
+                                        null
+                                )
+                        )
+                    }
+                } else {
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.type = "text/plain"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "${it.message}\n${it.link}")
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.recommend_app_subject))
+
+                    startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_link)))
+                }
+            }
+        })
+    }
+
+    private fun MeFragmentBinding.setLoadingState(startShimmer: Boolean) {
+        recommendTheAppShimmer.let {
+            it.isEnabled = !startShimmer
+
+            if (startShimmer) {
+                if (it.isShimmerVisible) {
+                    it.startShimmer()
+                } else {
+                    it.showShimmer(true)
+                }
+            } else {
+                it.hideShimmer()
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
