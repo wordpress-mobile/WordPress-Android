@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartDynamicCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteItemViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.viewBinding
@@ -26,7 +26,9 @@ class QuickStartDynamicCardViewHolder(
     private val viewPool: RecycledViewPool,
     private val nestedScrollStates: Bundle,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder<QuickStartDynamicCardBinding>(parent.viewBinding(QuickStartDynamicCardBinding::inflate)) {
+) : MySiteCardAndItemViewHolder<QuickStartDynamicCardBinding>(
+        parent.viewBinding(QuickStartDynamicCardBinding::inflate)
+) {
     private var currentItem: QuickStartDynamicCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
 

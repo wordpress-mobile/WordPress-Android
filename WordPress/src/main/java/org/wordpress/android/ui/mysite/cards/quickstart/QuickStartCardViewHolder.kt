@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteItemViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
@@ -25,7 +25,7 @@ import org.wordpress.android.util.viewBinding
 class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
+) : MySiteCardAndItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
     fun bind(card: QuickStartCard) = with(binding) {
         mySiteCardToolbar.update(card)
         quickStartCustomize.update(card.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })

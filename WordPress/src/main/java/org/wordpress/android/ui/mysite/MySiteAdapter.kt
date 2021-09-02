@@ -20,16 +20,19 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
-import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
-import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
-import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.cards.siteinfo.MySiteInfoViewHolder
+import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
+import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
+import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
+class MySiteAdapter(
+    val imageManager: ImageManager,
+    val uiHelpers: UiHelpers
+) : Adapter<MySiteCardAndItemViewHolder<*>>() {
     private var items = listOf<MySiteCardAndItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
@@ -42,7 +45,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteCardAndItemViewHolder<*> {
         return when (viewType) {
             SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
@@ -60,7 +63,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         }
     }
 
-    override fun onBindViewHolder(holder: MySiteItemViewHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoCard)
             is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsCard)
@@ -72,7 +75,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         }
     }
 
-    override fun onViewRecycled(holder: MySiteItemViewHolder<*>) {
+    override fun onViewRecycled(holder: MySiteCardAndItemViewHolder<*>) {
         super.onViewRecycled(holder)
         if (holder is QuickStartDynamicCardViewHolder) {
             holder.onRecycled()

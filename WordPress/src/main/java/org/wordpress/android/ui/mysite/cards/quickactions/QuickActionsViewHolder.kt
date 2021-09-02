@@ -6,14 +6,16 @@ import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySiteQuickActionsCardBinding
 import org.wordpress.android.databinding.QuickActionsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItemViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
 
 class QuickActionsViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder<MySiteQuickActionsCardBinding>(parent.viewBinding(MySiteQuickActionsCardBinding::inflate)) {
+) : MySiteCardAndItemViewHolder<MySiteQuickActionsCardBinding>(
+        parent.viewBinding(MySiteQuickActionsCardBinding::inflate)
+) {
     fun bind(card: QuickActionsCard) = with(binding) {
         quickActionsToolbar.update(card)
         quickActionsCard.update(card)
