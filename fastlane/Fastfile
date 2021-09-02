@@ -673,15 +673,15 @@ REPOSITORY_NAME="WordPress-Android"
   # from GlotPress and updates the local files
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane download_metadata_strings app:<wordpress|jetpack> build_number:<build_number> version:<version>
+  # fastlane download_metadata_strings build_number:<build_number> version:<version>
   #
   # Example:
-  # fastlane download_metadata_strings app:jetpack build_number:573 version:10.3
+  # fastlane download_metadata_strings build_number:573 version:10.3
   #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options|
-    download_wordpress_metadata_strings(options) unless options[:app] != 'wordpress'
-    download_jetpack_metadata_strings(options) unless options[:app] != 'jetpack'
+    download_wordpress_metadata_strings(options)
+    download_jetpack_metadata_strings(options)
   end
 
   desc "Downloads WordPress's translated metadata from GlotPress"
