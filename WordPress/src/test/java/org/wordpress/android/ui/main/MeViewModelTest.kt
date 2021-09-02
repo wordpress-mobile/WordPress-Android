@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
