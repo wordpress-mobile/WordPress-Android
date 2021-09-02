@@ -89,11 +89,9 @@ APP_SPECIFIC_VALUES = {
 
 WP_PACKAGE_NAME = "org.wordpress.android"
 WP_PREFIX = "wpandroid"
-WP_APP_NAME = "WordPress"
 
 JP_PACKAGE_NAME = "com.jetpack.android"
 JP_PREFIX = "jpandroid"
-JP_APP_NAME = "Jetpack"
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
@@ -191,7 +189,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
     new_version = android_get_app_version(app: options[:app])
-    trigger_release_build(branch_to_build: "release/#{new_version}", app: options[:app])
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -317,7 +315,7 @@ REPOSITORY_NAME="WordPress-Android"
     download_translations(app: app)
     android_bump_version_beta(app: app)
     new_version = android_get_app_version(app: app)
-    trigger_release_build(branch_to_build: "release/#{new_version}", app: app)
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -349,10 +347,11 @@ REPOSITORY_NAME="WordPress-Android"
   #
   # Example:
   # bundle exec fastlane finalize_hotfix_release
+  #####################################################################################
   desc "Finalizes a hotfix release by triggering a release build"
   lane :finalize_hotfix_release do |options|
     new_version = android_get_app_version(app: options[:app])
-    trigger_release_build(branch_to_build: "release/#{new_version}", app: options[:app])
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -402,7 +401,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     # Trigger release build
-    trigger_release_build(branch_to_build: "release/#{version["name"]}", app: options[:app])
+    trigger_release_build(branch_to_build: "release/#{version["name"]}")
   end
 
   #####################################################################################
@@ -620,12 +619,11 @@ REPOSITORY_NAME="WordPress-Android"
   #
   #####################################################################################
   lane :trigger_release_build do | options |
-    app_name = options[:app].downcase == "jetpack" ? JP_APP_NAME : WP_APP_NAME
     circleci_trigger_job(
       circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
       repository: REPOSITORY_NAME,
       branch: options[:branch_to_build],
-      job_params: {"release_build" => true, "app_name" => app_name, "product_key" =>  options[:app] }
+      job_params: { "release_build" => true }
     )
   end
 
