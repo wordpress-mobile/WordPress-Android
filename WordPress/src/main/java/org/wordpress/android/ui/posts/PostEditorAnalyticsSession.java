@@ -154,7 +154,6 @@ public class PostEditorAnalyticsSession implements Serializable {
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
         properties.put(KEY_ENDPOINT, endpoint);
-        properties.put(KEY_ENDPOINT, endpoint);
         AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
     }
 
