@@ -63,8 +63,8 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -221,7 +221,7 @@ class MySiteViewModel
             visibleDynamicCards
     ) ->
         val state = if (site != null) {
-            val siteItems = mutableListOf<MySiteItem>()
+            val siteItems = mutableListOf<MySiteCardAndItem>()
             siteItems.add(
                     siteInfoCardBuilder.buildSiteInfoCard(
                             site,
@@ -743,7 +743,7 @@ class MySiteViewModel
     )
 
     sealed class State {
-        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class SiteSelected(val cardAndItems: List<MySiteCardAndItem>) : State()
         data class NoSites(val shouldShowImage: Boolean) : State()
     }
 

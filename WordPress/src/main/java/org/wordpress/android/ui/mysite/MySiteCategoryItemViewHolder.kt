@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteCategoryHeaderItemBinding
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
 

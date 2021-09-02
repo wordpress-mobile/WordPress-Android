@@ -6,7 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @InternalCoroutinesApi

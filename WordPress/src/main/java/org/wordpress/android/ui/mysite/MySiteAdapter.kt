@@ -5,31 +5,31 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
 class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
-    private var items = listOf<MySiteItem>()
+    private var items = listOf<MySiteCardAndItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
 
-    fun loadData(result: List<MySiteItem>) {
+    fun loadData(result: List<MySiteCardAndItem>) {
         val diffResult = DiffUtil.calculateDiff(
                 MySiteAdapterDiffCallback(items, result)
         )

@@ -5,17 +5,17 @@ import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
-sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
+sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_CARD,
         QUICK_ACTIONS_CARD,
@@ -36,7 +36,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()
@@ -52,16 +52,16 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         val showPages: Boolean = true,
         val showStatsFocusPoint: Boolean = false,
         val showPagesFocusPoint: Boolean = false
-    ) : MySiteItem(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+    ) : MySiteCardAndItem(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
-    data class DomainRegistrationCard(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_CARD)
+    data class DomainRegistrationCard(val onClick: ListItemInteraction) : MySiteCardAndItem(DOMAIN_REGISTRATION_CARD)
 
     data class QuickStartCard(
         val title: UiString,
         val moreMenuVisible: Boolean = true,
         val onRemoveMenuItemClick: ListItemInteraction,
         val taskTypeItems: List<QuickStartTaskTypeItem>
-    ) : MySiteItem(QUICK_START_CARD) {
+    ) : MySiteCardAndItem(QUICK_START_CARD) {
         data class QuickStartTaskTypeItem(
             val quickStartTaskType: QuickStartTaskType,
             val title: UiString,
@@ -79,7 +79,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         override val activeQuickStartItem: Boolean = false,
         open val dynamicCardType: DynamicCardType,
         open val onMoreClick: ListItemInteraction
-    ) : MySiteItem(
+    ) : MySiteCardAndItem(
             type,
             activeQuickStartItem
     ) {
@@ -103,7 +103,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         }
     }
 
-    data class CategoryHeaderItem(val title: UiString) : MySiteItem(CATEGORY_HEADER_ITEM)
+    data class CategoryHeaderItem(val title: UiString) : MySiteCardAndItem(CATEGORY_HEADER_ITEM)
 
     data class ListItem(
         @DrawableRes val primaryIcon: Int,
@@ -112,5 +112,5 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         val secondaryText: UiString? = null,
         val showFocusPoint: Boolean = false,
         val onClick: ListItemInteraction
-    ) : MySiteItem(LIST_ITEM, activeQuickStartItem = showFocusPoint)
+    ) : MySiteCardAndItem(LIST_ITEM, activeQuickStartItem = showFocusPoint)
 }

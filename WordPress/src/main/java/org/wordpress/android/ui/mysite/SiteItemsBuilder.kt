@@ -2,8 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class SiteItemsBuilder
         showViewSiteFocusPoint: Boolean = false,
         showEnablePostSharingFocusPoint: Boolean = false,
         showExplorePlansFocusPoint: Boolean = false
-    ): List<MySiteItem> {
+    ): List<MySiteCardAndItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, showExplorePlansFocusPoint, onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site),

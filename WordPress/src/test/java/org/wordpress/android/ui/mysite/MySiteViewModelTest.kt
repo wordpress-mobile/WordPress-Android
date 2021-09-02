@@ -59,14 +59,14 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -1499,7 +1499,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findSiteInfoCard() =
             getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
 
-    private fun getLastItems() = (uiModels.last().state as SiteSelected).items
+    private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
@@ -1520,7 +1520,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         var clickAction: ((ListItemAction) -> Unit)? = null
         doAnswer {
             clickAction = it.getArgument(1)
-            listOf<MySiteItem>()
+            listOf<MySiteCardAndItem>()
         }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()

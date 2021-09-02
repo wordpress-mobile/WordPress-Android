@@ -6,10 +6,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.ui.mysite.ListItemAction
-import org.wordpress.android.ui.mysite.MySiteItem
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -29,14 +29,14 @@ class DomainsDashboardViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<MySiteItem>>()
+    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
     val uiModel = _uiModel
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
 
     // TODO: UI and logic is work in progress.  Will be revamped once design is ready
-    private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteItem> {
-        val listItems = mutableListOf<MySiteItem>()
+    private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteCardAndItem> {
+        val listItems = mutableListOf<MySiteCardAndItem>()
         listItems += CategoryHeader(UiStringRes(string.domains_primary_domain))
         listItems += ListItem(
                         R.drawable.ic_domains_white_24dp,

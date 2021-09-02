@@ -4,7 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -184,7 +184,7 @@ class SiteListItemBuilder
         }
     }
 
-    fun buildThemesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteItem? {
+    fun buildThemesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteCardAndItem? {
         return if (themeBrowserUtils.isAccessible(site)) {
             ListItem(
                     R.drawable.ic_themes_white_24dp,

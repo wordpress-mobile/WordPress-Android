@@ -194,7 +194,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
-                is State.SiteSelected -> loadData(state.items)
+                is State.SiteSelected -> loadData(state.cardAndItems)
                 is State.NoSites -> loadEmptyView(state.shouldShowImage)
             }
         })
@@ -502,10 +502,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun MySiteFragmentBinding.loadData(items: List<MySiteItem>) {
+    private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(items)
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {

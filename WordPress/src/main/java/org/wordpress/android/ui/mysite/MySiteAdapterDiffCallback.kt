@@ -2,25 +2,25 @@ package org.wordpress.android.ui.mysite
 
 import androidx.recyclerview.widget.DiffUtil
 import org.apache.commons.lang3.NotImplementedException
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeaderItem
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
 
 class MySiteAdapterDiffCallback(
-    private val oldItems: List<MySiteItem>,
-    private val updatedItems: List<MySiteItem>
+    private val oldCardAndItems: List<MySiteCardAndItem>,
+    private val updatedCardAndItems: List<MySiteCardAndItem>
 ) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldItems.size
+    override fun getOldListSize(): Int = oldCardAndItems.size
 
-    override fun getNewListSize(): Int = updatedItems.size
+    override fun getNewListSize(): Int = updatedCardAndItems.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldItems[oldItemPosition]
-        val updatedItem = updatedItems[newItemPosition]
+        val oldItem = oldCardAndItems[oldItemPosition]
+        val updatedItem = updatedCardAndItems[newItemPosition]
         return oldItem.type == updatedItem.type && when {
             oldItem is SiteInfoCard && updatedItem is SiteInfoCard -> true
             oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
@@ -34,6 +34,6 @@ class MySiteAdapterDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition] == updatedItems[newItemPosition]
+        return oldCardAndItems[oldItemPosition] == updatedCardAndItems[newItemPosition]
     }
 }
