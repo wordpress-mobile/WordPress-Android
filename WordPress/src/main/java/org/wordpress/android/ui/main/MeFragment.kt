@@ -183,7 +183,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.initRecommendUiState() {
-        if (recommendTheAppFeatureConfig.isEnabled()) {
+        // Limiting the feature to WordPress only in this v1
+        if (recommendTheAppFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             setRecommendLoadingState(false)
             rowRecommendTheApp.visibility = View.VISIBLE
             rowRecommendTheApp.setOnClickListener {
