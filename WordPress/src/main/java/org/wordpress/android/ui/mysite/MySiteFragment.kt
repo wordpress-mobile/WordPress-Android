@@ -101,7 +101,7 @@ import java.io.File
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
+class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
         TextInputDialogFragment.Callback,
         QuickStartPromptClickInterface,
         OnConfirmListener,
@@ -221,7 +221,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                     model.isInputEnabled,
                     model.callbackId
             )
-            inputDialog.setTargetFragment(this@ImprovedMySiteFragment, 0)
+            inputDialog.setTargetFragment(this@MySiteFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
         viewModel.onDynamicCardMenuShown.observeEvent(viewLifecycleOwner, { dynamicCardMenuModel ->
@@ -255,7 +255,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
         is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-        is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@ImprovedMySiteFragment, action.site)
+        is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
         is OpenCropActivity -> startCropActivity(action.imageUri)
         is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
         is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
@@ -274,7 +274,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         is OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-        is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@ImprovedMySiteFragment)
+        is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
         is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
         is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
         is AddNewStory -> ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
@@ -540,8 +540,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        fun newInstance(): ImprovedMySiteFragment {
-            return ImprovedMySiteFragment()
+        fun newInstance(): MySiteFragment {
+            return MySiteFragment()
         }
     }
 
