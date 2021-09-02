@@ -3317,7 +3317,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Boolean supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
+        Boolean supportsGalleryWithImageBlocks = null;
+        if (editorTheme != null) {
+            // Note that if the editor theme has not been initialized (usually on the first app run) the
+            // `unstableGalleryWithImageBlocks` analytics property will not be reported
+            supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
+        }
         mPostEditorAnalyticsSession
                 .start(unsupportedBlocksList, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
         presentNewPageNoticeIfNeeded();
