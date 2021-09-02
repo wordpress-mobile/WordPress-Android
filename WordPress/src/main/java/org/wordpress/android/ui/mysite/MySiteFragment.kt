@@ -12,14 +12,14 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.appbar.AppBarLayout
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.databinding.NewMySiteFragmentBinding
+import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
@@ -101,7 +101,7 @@ import java.io.File
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
+class MySiteFragment : Fragment(R.layout.my_site_fragment),
         TextInputDialogFragment.Callback,
         QuickStartPromptClickInterface,
         OnConfirmListener,
@@ -118,7 +118,7 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
 
-    private var binding: NewMySiteFragmentBinding? = null
+    private var binding: MySiteFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,14 +132,14 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = NewMySiteFragmentBinding.bind(view).apply {
+        binding = MySiteFragmentBinding.bind(view).apply {
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
         }
     }
 
-    private fun NewMySiteFragmentBinding.setupToolbar() {
+    private fun MySiteFragmentBinding.setupToolbar() {
         toolbarMain.let { toolbar ->
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
@@ -152,7 +152,7 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
 
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 
-        appbarMain.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
@@ -170,7 +170,7 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
         })
     }
 
-    private fun NewMySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
+    private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
         actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
 
         val layoutManager = LinearLayoutManager(activity)
@@ -190,7 +190,7 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
         recyclerView.adapter = adapter
     }
 
-    private fun NewMySiteFragmentBinding.setupObservers() {
+    private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
@@ -392,7 +392,7 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
         binding = null
     }
 
-    private fun NewMySiteFragmentBinding.loadGravatar(avatarUrl: String) =
+    private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
             root.findViewById<ImageView>(R.id.avatar)?.let {
                 meGravatarLoader.load(
                         false,
@@ -502,13 +502,13 @@ class MySiteFragment : Fragment(R.layout.new_my_site_fragment),
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun NewMySiteFragmentBinding.loadData(items: List<MySiteItem>) {
+    private fun MySiteFragmentBinding.loadData(items: List<MySiteItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         (recyclerView.adapter as? MySiteAdapter)?.loadData(items)
     }
 
-    private fun NewMySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+    private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
         actionableEmptyView.setVisible(true)
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
