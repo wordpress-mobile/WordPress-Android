@@ -59,7 +59,8 @@ class QuickStartDynamicCardViewHolder(
     fun bind(item: QuickStartDynamicCard) = with(binding) {
         currentItem = item
 
-        ObjectAnimator.ofInt(quickStartCardProgress, "progress", item.progress).setDuration(600).start()
+        ObjectAnimator.ofInt(quickStartCardProgress, PROGRESS_PROPERTY_NAME, item.progress)
+                .setDuration(PROGRESS_DURATION).start()
 
         val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
@@ -90,5 +91,10 @@ class QuickStartDynamicCardViewHolder(
                 scrollToPosition(0)
             }
         }
+    }
+
+    companion object {
+        private const val PROGRESS_PROPERTY_NAME = "progress"
+        private const val PROGRESS_DURATION = 600L
     }
 }

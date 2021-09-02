@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 class SiteInfoCardBuilder
 @Inject constructor(private val resourceProvider: ResourceProvider) {
+    @Suppress("LongParameterList")
     fun buildSiteInfoCard(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
