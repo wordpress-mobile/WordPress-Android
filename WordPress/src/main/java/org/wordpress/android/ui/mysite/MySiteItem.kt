@@ -43,7 +43,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         }
     }
 
-    data class QuickActionsBlock(
+    data class QuickActionsCard(
         val title: UiString,
         val onStatsClick: ListItemInteraction,
         val onPagesClick: ListItemInteraction,

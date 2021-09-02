@@ -5,13 +5,13 @@ import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.R
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @InternalCoroutinesApi
-class QuickActionsBlockBuilderTest : BaseUnitTest() {
-    private lateinit var builder: QuickActionsBlockBuilder
+class QuickActionsCardBuilderTest : BaseUnitTest() {
+    private lateinit var builder: QuickActionsCardBuilder
 
     private val onStatsClick: () -> Unit = {}
     private val onPostsClick: () -> Unit = {}
@@ -20,7 +20,7 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = QuickActionsBlockBuilder()
+        builder = QuickActionsCardBuilder()
     }
 
     /* TITLE */
@@ -29,7 +29,7 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
     fun `when toolbar is built, then title exists`() {
         val quickActionsBlock = buildQuickActionsBlock()
 
-        Assertions.assertThat(quickActionsBlock.title).isEqualTo(UiStringRes(string.my_site_quick_actions_title))
+        Assertions.assertThat(quickActionsBlock.title).isEqualTo(UiStringRes(R.string.my_site_quick_actions_title))
     }
 
     /* ACTION CLICKS */
@@ -47,7 +47,7 @@ class QuickActionsBlockBuilderTest : BaseUnitTest() {
         showPages: Boolean = true,
         showStatsFocusPoint: Boolean = false,
         showPagesFocusPoint: Boolean = false
-    ): QuickActionsBlock {
+    ): QuickActionsCard {
         return builder.build(
                 onStatsClick,
                 onPagesClick,

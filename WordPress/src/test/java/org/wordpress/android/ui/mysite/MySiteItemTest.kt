@@ -9,7 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState.Visible
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -57,8 +57,8 @@ class MySiteItemTest {
     }
 
     @Test
-    fun `quick actions block is never active`() {
-        val quickActionsBlock = QuickActionsBlock(
+    fun `quick actions card is never active`() {
+        val quickActionsCard = QuickActionsCard(
                 title = UiStringText("test"),
                 onStatsClick = interaction,
                 onPagesClick = interaction,
@@ -67,7 +67,7 @@ class MySiteItemTest {
                 showPages = true
         )
 
-        assertThat(quickActionsBlock.activeQuickStartItem).isFalse
+        assertThat(quickActionsCard.activeQuickStartItem).isFalse
     }
 
     @Test

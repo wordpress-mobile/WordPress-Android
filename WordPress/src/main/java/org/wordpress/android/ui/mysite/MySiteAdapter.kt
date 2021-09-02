@@ -9,7 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
@@ -58,7 +58,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
     override fun onBindViewHolder(holder: MySiteItemViewHolder<*>, position: Int) {
         when (holder) {
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoCard)
-            is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsBlock)
+            is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsCard)
             is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationBlock)
             is QuickStartBlockViewHolder -> holder.bind(items[position] as QuickStartBlock)
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)

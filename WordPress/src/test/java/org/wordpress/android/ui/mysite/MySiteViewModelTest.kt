@@ -62,7 +62,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
@@ -110,7 +110,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJe
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.mysite.quickactions.QuickActionsBlockBuilder
+import org.wordpress.android.ui.mysite.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -154,7 +154,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     @Mock lateinit var quickStartBlockBuilder: QuickStartBlockBuilder
-    @Mock lateinit var quickActionsBlockBuilder: QuickActionsBlockBuilder
+    @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
@@ -241,8 +241,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
     private var quickActionsMediaClickAction: (() -> Unit)? = null
-    private val quickActionsBlock: QuickActionsBlock
-        get() = QuickActionsBlock(
+    private val quickActionsCard: QuickActionsCard
+        get() = QuickActionsCard(
                 title = UiStringText(""),
                 onStatsClick = ListItemInteraction.create { quickActionsStatsClickAction },
                 onPagesClick = ListItemInteraction.create { quickActionsPagesClickAction },
@@ -290,7 +290,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartRepository,
                 quickStartItemBuilder,
                 quickStartBlockBuilder,
-                quickActionsBlockBuilder,
+                quickActionsCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
@@ -394,7 +394,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card title click shows snackbar message when network not available`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
@@ -408,7 +408,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card title click shows snackbar message when hasCapabilityManageOptions is false`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = false
         site.origin = SiteModel.ORIGIN_WPCOM_REST
@@ -425,7 +425,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card title click shows snackbar message when origin not ORIGIN_WPCOM_REST`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_XMLRPC
@@ -440,7 +440,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card title click shows input dialog when editing allowed`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_WPCOM_REST
@@ -463,7 +463,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card icon click shows change icon dialog when site has icon`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
@@ -476,7 +476,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card icon click shows add icon dialog when site doesn't have icon`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = true
@@ -488,24 +488,25 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card icon click shows snackbar when upload files not allowed and site doesn't have Jetpack`() = test {
-        initQuickActionsBlock()
+    fun `site info card icon click shows snackbar when upload files not allowed and site doesn't have Jetpack`() =
+            test {
+                initQuickActionsCard()
 
-        site.hasCapabilityManageOptions = true
-        site.hasCapabilityUploadFiles = false
-        site.setIsWPCom(false)
+                site.hasCapabilityManageOptions = true
+                site.hasCapabilityUploadFiles = false
+                site.setIsWPCom(false)
 
-        invokeSiteInfoCardAction(ICON_CLICK)
+                invokeSiteInfoCardAction(ICON_CLICK)
 
-        assertThat(dialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(
-                SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_jetpack_message))
-        )
-    }
+                assertThat(dialogModels).isEmpty()
+                assertThat(snackbars).containsOnly(
+                        SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_jetpack_message))
+                )
+            }
 
     @Test
     fun `site info card icon click shows snackbar when upload files not allowed and site has icon`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
@@ -522,7 +523,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card icon click shows snackbar when upload files not allowed and site does not have icon`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         site.hasCapabilityManageOptions = true
         site.hasCapabilityUploadFiles = false
@@ -560,7 +561,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card url click opens site`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         invokeSiteInfoCardAction(URL_CLICK)
 
@@ -569,7 +570,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card switch click opens site picker`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         invokeSiteInfoCardAction(SWITCH_SITE_CLICK)
 
@@ -646,10 +647,10 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val quickActionsBlock = findQuickActionsBlock()
+        val quickActionsCard = findQuickActionsCard()
 
-        assertThat(quickActionsBlock).isNotNull
-        assertThat(quickActionsBlock?.showPages).isFalse
+        assertThat(quickActionsCard).isNotNull
+        assertThat(quickActionsCard?.showPages).isFalse
     }
 
     @Test
@@ -933,7 +934,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `correct event is tracked when domain registration item is shown`() = test {
-        initQuickActionsBlock()
+        initQuickActionsCard()
 
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
@@ -1208,25 +1209,25 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when build is Jetpack, then quick action block is not built`() {
+    fun `when build is Jetpack, then quick action card is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
 
-        val quickActionsBlock = findQuickActionsBlock()
+        val quickActionsCard = findQuickActionsCard()
 
-        assertThat(quickActionsBlock).isNull()
+        assertThat(quickActionsCard).isNull()
     }
 
     @Test
-    fun `when build is WordPress, then quick action block is built`() {
+    fun `when build is WordPress, then quick action card is built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
 
         initSelectedSite()
 
-        val quickActionsBlock = findQuickActionsBlock()
+        val quickActionsCard = findQuickActionsCard()
 
-        assertThat(quickActionsBlock).isNotNull
+        assertThat(quickActionsCard).isNotNull
     }
 
     @Test
@@ -1486,7 +1487,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
-    private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
+    private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
 
@@ -1542,7 +1543,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
             dynamicQuickStartTaskCard
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
-        initQuickActionsBlock()
+        initQuickActionsCard()
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
@@ -1550,14 +1551,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.value = site
     }
 
-    private fun initQuickActionsBlock() {
+    private fun initQuickActionsCard() {
         doAnswer {
             quickActionsStatsClickAction = (it.getArgument(0) as () -> Unit)
             quickActionsPagesClickAction = (it.getArgument(1) as () -> Unit)
             quickActionsPostsClickAction = (it.getArgument(2) as () -> Unit)
             quickActionsMediaClickAction = (it.getArgument(3) as () -> Unit)
-            quickActionsBlock
-        }.whenever(quickActionsBlockBuilder).build(any(), any(), any(), any(), any(), any(), any())
+            quickActionsCard
+        }.whenever(quickActionsCardBuilder).build(any(), any(), any(), any(), any(), any(), any())
     }
 
     private enum class SiteInfoCardAction {

@@ -6,7 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
 
@@ -23,7 +23,7 @@ class MySiteAdapterDiffCallback(
         val updatedItem = updatedItems[newItemPosition]
         return oldItem.type == updatedItem.type && when {
             oldItem is SiteInfoCard && updatedItem is SiteInfoCard -> true
-            oldItem is QuickActionsBlock && updatedItem is QuickActionsBlock -> true
+            oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
             oldItem is DomainRegistrationBlock && updatedItem is DomainRegistrationBlock -> true
             oldItem is QuickStartBlock && updatedItem is QuickStartBlock -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> oldItem.id == updatedItem.id

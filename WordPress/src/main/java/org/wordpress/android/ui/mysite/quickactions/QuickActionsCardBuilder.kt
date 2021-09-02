@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.mysite.quickactions
 
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
-class QuickActionsBlockBuilder @Inject constructor() {
+class QuickActionsCardBuilder @Inject constructor() {
     @Suppress("LongParameterList")
     fun build(
         onQuickActionStatsClick: () -> Unit,
@@ -16,7 +16,7 @@ class QuickActionsBlockBuilder @Inject constructor() {
         showPages: Boolean,
         showStatsFocusPoint: Boolean,
         showPagesFocusPoint: Boolean
-    ) = QuickActionsBlock(
+    ) = QuickActionsCard(
             title = UiStringRes(R.string.my_site_quick_actions_title),
             onStatsClick = ListItemInteraction.create { onQuickActionStatsClick.invoke() },
             onPagesClick = ListItemInteraction.create { onQuickActionPagesClick.invoke() },
