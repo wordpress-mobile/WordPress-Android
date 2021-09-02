@@ -4,7 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction

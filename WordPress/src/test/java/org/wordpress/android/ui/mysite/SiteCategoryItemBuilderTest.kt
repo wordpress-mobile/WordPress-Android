@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.SiteUtilsWrapper

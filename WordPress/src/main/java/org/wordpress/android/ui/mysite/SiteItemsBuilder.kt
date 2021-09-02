@@ -2,8 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject

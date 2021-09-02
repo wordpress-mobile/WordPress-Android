@@ -5,10 +5,10 @@ import org.junit.Test
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState.Visible

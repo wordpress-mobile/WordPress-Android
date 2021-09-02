@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard

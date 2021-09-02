@@ -28,7 +28,21 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     sealed class Card
 
-    sealed class Item
+    sealed class Item(
+        override val type: Type,
+        override val activeQuickStartItem: Boolean = false
+    ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
+
+        data class ListItem(
+            @DrawableRes val primaryIcon: Int,
+            val primaryText: UiString,
+            @DrawableRes val secondaryIcon: Int? = null,
+            val secondaryText: UiString? = null,
+            val showFocusPoint: Boolean = false,
+            val onClick: ListItemInteraction
+        ) : Item(LIST_ITEM, activeQuickStartItem = showFocusPoint)
+    }
 
     data class SiteInfoCard(
         val title: String,
@@ -106,15 +120,4 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             )
         }
     }
-
-    data class CategoryHeaderItem(val title: UiString) : MySiteCardAndItem(CATEGORY_HEADER_ITEM)
-
-    data class ListItem(
-        @DrawableRes val primaryIcon: Int,
-        val primaryText: UiString,
-        @DrawableRes val secondaryIcon: Int? = null,
-        val secondaryText: UiString? = null,
-        val showFocusPoint: Boolean = false,
-        val onClick: ListItemInteraction
-    ) : MySiteCardAndItem(LIST_ITEM, activeQuickStartItem = showFocusPoint)
 }
