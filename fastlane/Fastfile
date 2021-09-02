@@ -312,7 +312,7 @@ REPOSITORY_NAME="WordPress-Android"
     app = options[:app]
     android_betabuild_prechecks(options)
     send_strings_for_translation()
-    download_translations(app: app)
+    download_translations()
     android_bump_version_beta(app: app)
     new_version = android_get_app_version(app: app)
     trigger_release_build(branch_to_build: "release/#{new_version}")
@@ -386,7 +386,7 @@ REPOSITORY_NAME="WordPress-Android"
       abort_on_violations: false
     )
 
-    download_translations(app: app)
+    download_translations()
 
     android_bump_version_final_release(app: app)
     version = android_get_release_version(app: app)
@@ -912,19 +912,19 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # download_translations
   # -----------------------------------------------------------------------------------
-  # This lane download the string translations from GlotPress
+  # This lane downloads the string translations from GlotPress
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane download_translations [app:<wordpress|jetpack>]
+  # bundle exec fastlane download_translations
   #####################################################################################
-  lane :download_translations do |options|
+  lane :download_translations do
     # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
     # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
       locales: ALL_LOCALES,
-      lint_task: "lint#{options[:app]}VanillaRelease" # TODO: Should we adapt this
+      lint_task: "lintWordpressVanillaRelease" # TODO: Should we adapt this?
     )
   end
 
