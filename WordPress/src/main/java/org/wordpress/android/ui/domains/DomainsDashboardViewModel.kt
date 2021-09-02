@@ -7,8 +7,8 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.ui.mysite.ListItemAction
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.ListItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -37,22 +37,24 @@ class DomainsDashboardViewModel @Inject constructor(
     // TODO: UI and logic is work in progress.  Will be revamped once design is ready
     private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteCardAndItem> {
         val listItems = mutableListOf<MySiteCardAndItem>()
-        listItems += CategoryHeader(UiStringRes(string.domains_primary_domain))
+        listItems += CategoryHeaderItem(UiStringRes(string.domains_primary_domain))
         listItems += ListItem(
-                        R.drawable.ic_domains_white_24dp,
-                        primaryText = UiStringResWithParams(
-                                string.domains_primary_domain_address,
-                                listOf(UiStringText(siteUrl))),
-                        onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
-                )
+                R.drawable.ic_domains_white_24dp,
+                primaryText = UiStringResWithParams(
+                        string.domains_primary_domain_address,
+                        listOf(UiStringText(siteUrl))
+                ),
+                onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
+        )
 
         if (selectedSiteRepository.getSelectedSite()?.hasFreePlan == true) {
             listItems += ListItem(
                     R.drawable.ic_domains_white_24dp,
                     primaryText = UiStringRes(string.domains_free_plan_get_your_domain_title),
-                    onClick = ListItemInteraction.create(this::domainRegistrationClick))
+                    onClick = ListItemInteraction.create(this::domainRegistrationClick)
+            )
         } else {
-            DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick))
+            DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick))
         }
         return listItems
     }
