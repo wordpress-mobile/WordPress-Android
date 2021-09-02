@@ -4,7 +4,6 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.main.MySiteFragment
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
@@ -180,7 +179,7 @@ class SiteListItemBuilder
                             .date
             )
             val calendar = GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY)
-            calendar.timeZone = TimeZone.getTimeZone(MySiteFragment.HIDE_WP_ADMIN_GMT_TIME_ZONE)
+            calendar.timeZone = TimeZone.getTimeZone(MySiteViewModel.HIDE_WP_ADMIN_GMT_TIME_ZONE)
             dateCreated == null || dateCreated.before(calendar.time)
         }
     }

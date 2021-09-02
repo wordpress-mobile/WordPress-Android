@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -24,8 +23,7 @@ class QuickStartUtilsWrapper
 @Inject constructor(
     private val quickStartStore: QuickStartStore,
     private val dispatcher: Dispatcher,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun isQuickStartInProgress(siteLocalId: Int): Boolean {
         return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteLocalId)
@@ -93,11 +91,9 @@ class QuickStartUtilsWrapper
         }
 
         quickStartStore.setDoneTask(siteLocalId, task, true)
-        analyticsTrackerWrapper.track(QuickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
 
         if (isEveryQuickStartTaskDone(site.id)) {
             quickStartStore.setQuickStartCompleted(siteLocalId, true)
-            analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
         } else {
@@ -130,7 +126,7 @@ class QuickStartUtilsWrapper
 
     fun startQuickStart(siteLocalId: Int) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
-        analyticsTrackerWrapper.track(QUICK_START_STARTED, mySiteImprovementsFeatureConfig)
+        analyticsTrackerWrapper.track(QUICK_START_STARTED)
     }
 
     fun getNextUncompletedQuickStartTask(siteLocalId: Long) =

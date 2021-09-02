@@ -41,7 +41,6 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
@@ -68,7 +67,6 @@ class QuickStartRepository
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
     private val htmlCompat: HtmlCompatWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils
@@ -190,7 +188,7 @@ class QuickStartRepository
             }
             if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
-                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
+                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             }
@@ -202,10 +200,7 @@ class QuickStartRepository
         siteLocalId: Int
     ) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
-        analyticsTrackerWrapper.track(
-                quickStartUtilsWrapper.getTaskCompletedTracker(task),
-                mySiteImprovementsFeatureConfig
-        )
+        analyticsTrackerWrapper.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
     }
 
     fun requestNextStepOfTask(task: QuickStartTask) {
