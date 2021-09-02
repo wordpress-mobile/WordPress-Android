@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 

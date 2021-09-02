@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +16,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.MySiteSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtilsWrapper

@@ -97,6 +97,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
