@@ -2174,7 +2174,7 @@
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
-    <string name="my_site_quick_actions_title">Shortcuts</string>
+    <string name="my_site_quick_actions_title">Quick Links</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
