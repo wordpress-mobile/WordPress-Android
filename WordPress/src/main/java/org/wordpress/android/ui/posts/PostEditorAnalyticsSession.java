@@ -24,6 +24,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
     private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
     private static final String KEY_CAN_VIEW_EDITOR_ONBOARDING = "can_view_editor_onboarding";
+    private static final String KEY_GALLERY_WITH_IMAGE_BLOCKS = "unstableGalleryWithImageBlocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
@@ -97,7 +98,9 @@ public class PostEditorAnalyticsSession implements Serializable {
         return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
     }
 
-    public void start(ArrayList<Object> unsupportedBlocksList, Boolean canViewEditorOnboarding) {
+    public void start(ArrayList<Object> unsupportedBlocksList,
+                      Boolean canViewEditorOnboarding,
+                      Boolean galleryWithImageBlocks) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
@@ -105,6 +108,9 @@ public class PostEditorAnalyticsSession implements Serializable {
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
             if (canViewEditorOnboarding != null) {
                 properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
+            }
+            if (galleryWithImageBlocks != null) {
+                properties.put(KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks);
             }
             // Note that start time only counts when the analytics session was created and not when the editor
             // activity started. We are mostly interested in measuring the loading times for the block editor,
