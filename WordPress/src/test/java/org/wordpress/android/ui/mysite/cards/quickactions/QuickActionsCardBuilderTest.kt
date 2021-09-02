@@ -1,7 +1,7 @@
-package org.wordpress.android.ui.mysite.quickactions
+package org.wordpress.android.ui.mysite.cards.quickactions
 
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -27,23 +27,23 @@ class QuickActionsCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `when toolbar is built, then title exists`() {
-        val quickActionsBlock = buildQuickActionsBlock()
+        val quickActionsBlock = buildQuickActionsCard()
 
-        Assertions.assertThat(quickActionsBlock.title).isEqualTo(UiStringRes(R.string.my_site_quick_actions_title))
+        assertThat(quickActionsBlock.title).isEqualTo(UiStringRes(R.string.my_site_quick_actions_title))
     }
 
     /* ACTION CLICKS */
     @Test
-    fun `when block is built, then action item click are set on the block`() {
-        val quickActionsBlock = buildQuickActionsBlock()
+    fun `when card is built, then action item click are set on the card`() {
+        val quickActionsCard = buildQuickActionsCard()
 
-        Assertions.assertThat(quickActionsBlock.onStatsClick).isNotNull
-        Assertions.assertThat(quickActionsBlock.onPagesClick).isNotNull
-        Assertions.assertThat(quickActionsBlock.onPostsClick).isNotNull
-        Assertions.assertThat(quickActionsBlock.onMediaClick).isNotNull
+        assertThat(quickActionsCard.onStatsClick).isNotNull
+        assertThat(quickActionsCard.onPagesClick).isNotNull
+        assertThat(quickActionsCard.onPostsClick).isNotNull
+        assertThat(quickActionsCard.onMediaClick).isNotNull
     }
 
-    private fun buildQuickActionsBlock(
+    private fun buildQuickActionsCard(
         showPages: Boolean = true,
         showStatsFocusPoint: Boolean = false,
         showPagesFocusPoint: Boolean = false

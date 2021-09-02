@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.quickactions
+package org.wordpress.android.ui.mysite.cards.quickactions
 
 import android.view.View
 import android.view.ViewGroup

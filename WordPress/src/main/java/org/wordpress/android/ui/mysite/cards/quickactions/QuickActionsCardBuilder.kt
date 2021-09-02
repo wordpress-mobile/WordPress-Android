@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.quickactions
+package org.wordpress.android.ui.mysite.cards.quickactions
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
