@@ -31,7 +31,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
-import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem

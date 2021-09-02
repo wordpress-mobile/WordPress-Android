@@ -82,9 +82,9 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
-import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
-import org.wordpress.android.ui.mysite.QuickStartRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -1179,10 +1179,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
-    private ImprovedMySiteFragment getImprovedMySiteFragment() {
+    private MySiteFragment getMySiteFragment() {
         Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
-        if (fragment instanceof ImprovedMySiteFragment) {
-            return (ImprovedMySiteFragment) fragment;
+        if (fragment instanceof MySiteFragment) {
+            return (MySiteFragment) fragment;
         }
 
         return null;
@@ -1555,25 +1555,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
-        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (improvedMySiteFragment != null) {
-            improvedMySiteFragment.onPositiveClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onPositiveClicked(instanceTag);
         }
     }
 
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
-        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (improvedMySiteFragment != null) {
-            improvedMySiteFragment.onNegativeClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onNegativeClicked(instanceTag);
         }
     }
 
     @Override
     public void onNeutralClicked(@NonNull String instanceTag) {
-        ImprovedMySiteFragment improvedMySiteFragment = getImprovedMySiteFragment();
-        if (improvedMySiteFragment != null) {
-            improvedMySiteFragment.onNeutralClicked(instanceTag);
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        if (mySiteFragment != null) {
+            mySiteFragment.onNeutralClicked(instanceTag);
         }
     }
 

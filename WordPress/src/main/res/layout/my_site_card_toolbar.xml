@@ -8,7 +8,7 @@
     android:paddingEnd="@dimen/my_site_card_row_padding"
     android:paddingStart="@dimen/my_site_card_row_padding"
     android:paddingTop="@dimen/my_site_card_row_top_padding"
-    tools:showIn="@layout/quick_start_block">
+    tools:showIn="@layout/quick_start_card">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/my_site_card_toolbar_title"

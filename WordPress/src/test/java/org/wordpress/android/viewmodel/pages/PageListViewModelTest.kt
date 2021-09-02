@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page

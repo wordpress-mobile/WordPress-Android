@@ -25,7 +25,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
-import org.wordpress.android.ui.mysite.ImprovedMySiteFragment
+import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
@@ -289,7 +289,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private inner class NavAdapter {
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
-                MY_SITE -> ImprovedMySiteFragment.newInstance()
+                MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
