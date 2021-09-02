@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.quickstart
+package org.wordpress.android.ui.mysite.cards.quickstart
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList

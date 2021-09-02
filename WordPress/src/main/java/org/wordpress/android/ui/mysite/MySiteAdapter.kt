@@ -23,7 +23,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamic
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartCardViewHolder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
