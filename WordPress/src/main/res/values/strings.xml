@@ -1769,6 +1769,7 @@
     <string name="version_with_name_param">Version %s</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
+    <string name="share_the_app">@string/me_btn_share</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
@@ -2201,6 +2202,7 @@
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
+    <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
@@ -2357,6 +2359,12 @@
     <string name="invite_links_bad_format_response">Invalid response received</string>
     <string name="invite_links_disable_dialog_title">Disable invite link</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
+
+    <!--Recommend the app-->
+    <string name="recommend_app_subject">WordPress Apps - Apps for any screen</string>
+    <string name="recommend_app_null_response">No response received</string>
+    <string name="recommend_app_bad_format_response">Invalid response received</string>
+    <string name="recommend_app_generic_get_template_error">Unknown error fetching recommend app template</string>
 
     <!--Plugins-->
     <string name="plugins">Plugins</string>
