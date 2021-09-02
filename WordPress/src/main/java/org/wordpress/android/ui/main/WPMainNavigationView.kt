@@ -69,11 +69,11 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked()
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener, showNewMySiteFragment: Boolean) {
+    fun init(fm: FragmentManager, listener: OnPageListener) {
         fragmentManager = fm
         pageListener = listener
 
-        navAdapter = NavAdapter(showNewMySiteFragment)
+        navAdapter = NavAdapter()
         assignNavigationListeners(true)
         disableShiftMode()
 
@@ -286,14 +286,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         return position in 0 until numPages()
     }
 
-    private inner class NavAdapter(val showNewMySiteFragment: Boolean) {
+    private inner class NavAdapter {
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
-                MY_SITE -> if (showNewMySiteFragment) {
-                    ImprovedMySiteFragment.newInstance()
-                } else {
-                    MySiteFragment.newInstance()
-                }
+                MY_SITE -> ImprovedMySiteFragment.newInstance()
                 READER -> ReaderFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
             }

@@ -27,7 +27,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -45,7 +44,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartRepository: QuickStartRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -95,9 +93,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
-
-    private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
-    val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
@@ -166,13 +161,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.value?.let { showQuickStart ->
             if (showQuickStart) {
-                if (actionType == CREATE_NEW_POST) {
-                    if (mySiteImprovementsFeatureConfig.isEnabled()) {
-                        quickStartRepository.completeTask(PUBLISH_POST)
-                    } else {
-                        _completeBottomSheetQuickStartTask.call()
-                    }
-                }
+                if (actionType == CREATE_NEW_POST) quickStartRepository.completeTask(PUBLISH_POST)
                 _showQuickStarInBottomSheet.postValue(false)
             }
         }
@@ -191,13 +180,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(site: SiteModel?, shouldShowQuickStartFocusPoint: Boolean = false) {
+    fun onFabClicked(site: SiteModel?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
-        val quickStartFromImprovedMySiteFragment = mySiteImprovementsFeatureConfig.isEnabled() &&
-                quickStartRepository.activeTask.value == PUBLISH_POST
-        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
+        _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
         if (SiteUtils.supportsStoriesFeature(site) || hasFullAccessToContent(site)) {
             // The user has at least two create options available for this site (pages and/or story posts),
