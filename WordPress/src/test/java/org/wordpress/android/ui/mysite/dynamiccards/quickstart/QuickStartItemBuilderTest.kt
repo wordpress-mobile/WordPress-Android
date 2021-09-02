@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes

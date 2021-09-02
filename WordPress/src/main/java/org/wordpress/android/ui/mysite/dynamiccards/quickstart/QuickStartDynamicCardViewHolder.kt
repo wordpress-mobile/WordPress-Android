@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartDynamicCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.viewBinding

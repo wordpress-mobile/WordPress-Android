@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
 import android.graphics.Rect
 import android.view.View
