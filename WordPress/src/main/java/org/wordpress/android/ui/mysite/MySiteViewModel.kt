@@ -104,7 +104,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
+import org.wordpress.android.ui.mysite.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -161,7 +161,7 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
-    private val quickStartBlockBuilder: QuickStartBlockBuilder,
+    private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
@@ -273,7 +273,7 @@ class MySiteViewModel
             if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
                 quickStartCategories.takeIf { it.isNotEmpty() }?.let {
                     siteItems.add(
-                            quickStartBlockBuilder.build(
+                            quickStartCardBuilder.build(
                                     quickStartCategories,
                                     this::onQuickStartBlockRemoveMenuItemClick,
                                     this::onQuickStartTaskTypeItemClick
@@ -373,7 +373,7 @@ class MySiteViewModel
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
+        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type)))
     }
 
     fun onQuickStartTaskCardClick(task: QuickStartTask) {

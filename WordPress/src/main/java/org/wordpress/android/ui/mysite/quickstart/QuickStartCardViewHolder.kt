@@ -10,32 +10,32 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
-import org.wordpress.android.databinding.QuickStartBlockBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
+import org.wordpress.android.databinding.QuickStartCardBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.viewBinding
 
-class QuickStartBlockViewHolder(
+class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder<QuickStartBlockBinding>(parent.viewBinding(QuickStartBlockBinding::inflate)) {
-    fun bind(block: QuickStartBlock) = with(binding) {
-        mySiteCardToolbar.update(block)
-        quickStartCustomize.update(block.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
-        quickStartGrow.update(block.taskTypeItems.first { it.quickStartTaskType == GROW })
+) : MySiteItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
+    fun bind(card: QuickStartCard) = with(binding) {
+        mySiteCardToolbar.update(card)
+        quickStartCustomize.update(card.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
+        quickStartGrow.update(card.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
-    private fun MySiteCardToolbarBinding.update(block: QuickStartBlock) {
-        mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, block.title)
-        mySiteCardToolbarMore.isVisible = block.moreMenuVisible
-        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(block.onRemoveMenuItemClick) }
+    private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
+        mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, card.title)
+        mySiteCardToolbarMore.isVisible = card.moreMenuVisible
+        mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(card.onRemoveMenuItemClick) }
     }
 
     private fun MySiteCardToolbarBinding.showQuickStartCardMenu(onRemoveMenuItemClick: ListItemInteraction) {

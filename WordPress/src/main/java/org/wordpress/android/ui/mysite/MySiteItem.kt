@@ -56,7 +56,7 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
 
     data class DomainRegistrationCard(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_CARD)
 
-    data class QuickStartBlock(
+    data class QuickStartCard(
         val title: UiString,
         val moreMenuVisible: Boolean = true,
         val onRemoveMenuItemClick: ListItemInteraction,

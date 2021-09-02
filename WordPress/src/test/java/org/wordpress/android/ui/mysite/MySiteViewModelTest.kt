@@ -63,8 +63,8 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -111,7 +111,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
+import org.wordpress.android.ui.mysite.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -153,7 +153,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
-    @Mock lateinit var quickStartBlockBuilder: QuickStartBlockBuilder
+    @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
@@ -204,8 +204,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
                 completedTasks = emptyList()
         )
-    private val quickStartBlock: QuickStartBlock
-        get() = QuickStartBlock(
+    private val quickStartCard: QuickStartCard
+        get() = QuickStartCard(
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
                 taskTypeItems = listOf(
@@ -289,7 +289,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartItemBuilder,
-                quickStartBlockBuilder,
+                quickStartCardBuilder,
                 quickActionsCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
@@ -1085,10 +1085,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given quick start is not in progress, when site is selected, then quick start block not built`() {
+    fun `given quick start is not in progress, when site is selected, then quick start card not built`() {
         initSelectedSite(isQuickStartInProgress = false)
 
-        assertThat(findQuickStartBlock()).isNull()
+        assertThat(findQuickStartCard()).isNull()
     }
 
     @Test
@@ -1113,17 +1113,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS block built`() {
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS card built`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
-        assertThat(findQuickStartBlock()).isNotNull
+        assertThat(findQuickStartCard()).isNotNull
     }
 
     @Test
-    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS block not built`() {
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS card not built`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
 
-        assertThat(findQuickStartBlock()).isNull()
+        assertThat(findQuickStartCard()).isNull()
     }
 
     @Test
@@ -1489,7 +1489,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
-    private fun findQuickStartBlock() = getLastItems().find { it is QuickStartBlock } as QuickStartBlock?
+    private fun findQuickStartCard() = getLastItems().find { it is QuickStartCard } as QuickStartCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
 
@@ -1537,8 +1537,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
             quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
-            quickStartBlock
-        }.whenever(quickStartBlockBuilder).build(any(), any(), any())
+            quickStartCard
+        }.whenever(quickStartCardBuilder).build(any(), any(), any())
         doAnswer {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
             dynamicQuickStartTaskCard

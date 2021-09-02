@@ -10,7 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_CARD
@@ -20,7 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
+import org.wordpress.android.ui.mysite.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -42,7 +42,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
             DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
+            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
             QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
                     parent,
                     quickStartViewPool,
@@ -60,7 +60,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoCard)
             is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsCard)
             is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationCard)
-            is QuickStartBlockViewHolder -> holder.bind(items[position] as QuickStartBlock)
+            is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
             is QuickStartDynamicCardViewHolder -> holder.bind(items[position] as QuickStartDynamicCard)
             is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
