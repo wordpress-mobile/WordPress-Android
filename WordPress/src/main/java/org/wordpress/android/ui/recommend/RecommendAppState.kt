@@ -7,7 +7,7 @@ sealed class RecommendAppState {
         val message: String,
         val link: String
     ) : RecommendAppState() {
-        constructor(error: String): this(error, "", "")
+        constructor(error: String) : this(error, "", "")
         fun isError() = error != null
     }
 }

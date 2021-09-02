@@ -53,7 +53,8 @@ class RecommendApiCallsProvider @Inject constructor(
                     val template = gson.fromJson<RecommendTemplateData>(it.toString(), mapType)
                     AppLog.d(
                             T.API,
-                            "getTemplateFromJson > name[${template.name}], link[${template.link}], message[${template.message}]"
+                            "getTemplateFromJson > name[${template.name}], " +
+                                    "link[${template.link}], message[${template.message}]"
                     )
                     Success(template)
                 } catch (jsonEx: JsonParseException) {

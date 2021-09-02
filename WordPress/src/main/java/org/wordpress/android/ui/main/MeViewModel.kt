@@ -48,12 +48,12 @@ class MeViewModel
         val message: String,
         val link: String
     ) {
-        constructor(showLoading: Boolean): this(
+        constructor(showLoading: Boolean) : this(
                 showLoading = showLoading,
                 message = "",
                 link = ""
         )
-        constructor(error: String): this(
+        constructor(error: String) : this(
                 error = error,
                 message = "",
                 link = ""
@@ -78,7 +78,7 @@ class MeViewModel
     fun getSite() = selectedSiteRepository.getSelectedSite()
 
     fun onRecommendTheApp() {
-        when(val state = _recommendUiState.value) {
+        when (val state = _recommendUiState.value) {
             is ApiFetchedResult -> {
                 if (state.isError()) {
                     getRecommendTemplate()
@@ -121,7 +121,7 @@ class MeViewModel
     }
 
     private fun RecommendCallResult.toFetchedResult(): ApiFetchedResult {
-        return when(this) {
+        return when (this) {
             is Failure -> ApiFetchedResult(error = this.error)
             is Success -> ApiFetchedResult(
                     message = this.templateData.message,
@@ -131,7 +131,7 @@ class MeViewModel
     }
 
     private fun RecommendAppState.toUiState(): Event<RecommendAppUiState> {
-        return Event(when(this) {
+        return Event(when (this) {
             is ApiFetchedResult -> if (this.isError()) {
                 RecommendAppUiState(this.error!!)
             } else {

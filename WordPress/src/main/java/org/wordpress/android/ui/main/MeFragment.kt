@@ -43,6 +43,7 @@ import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
+import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -127,15 +128,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
-        if (recommendTheAppFeatureConfig.isEnabled()) {
-            setLoadingState(false)
-            rowRecommendTheApp.visibility = View.VISIBLE
-            rowRecommendTheApp.setOnClickListener {
-                viewModel.onRecommendTheApp()
-            }
-        } else {
-            rowRecommendTheApp.visibility = View.GONE
-        }
+
+        initRecommendUiState()
+
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -167,32 +162,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
             if (!isAdded) return@observeEvent
 
-            binding?.setLoadingState(it.showLoading)
-
-            if (!it.showLoading) {
-                if (it.isError()) {
-                    view?.let { view ->
-                        sequencer.enqueue(
-                                SnackbarItem(
-                                        Info(view, UiStringText(it.error!!), Snackbar.LENGTH_LONG),
-                                        null,
-                                        null
-                                )
-                        )
-                    }
-                } else {
-                    val shareIntent = Intent(Intent.ACTION_SEND)
-                    shareIntent.type = "text/plain"
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, "${it.message}\n${it.link}")
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.recommend_app_subject))
-
-                    startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_link)))
-                }
-            }
+            manageRecommendUiState(it)
         })
     }
 
-    private fun MeFragmentBinding.setLoadingState(startShimmer: Boolean) {
+    private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
         recommendTheAppShimmer.let {
             it.isEnabled = !startShimmer
 
@@ -204,6 +178,43 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 }
             } else {
                 it.hideShimmer()
+            }
+        }
+    }
+
+    private fun MeFragmentBinding.initRecommendUiState() {
+        if (recommendTheAppFeatureConfig.isEnabled()) {
+            setRecommendLoadingState(false)
+            rowRecommendTheApp.visibility = View.VISIBLE
+            rowRecommendTheApp.setOnClickListener {
+                viewModel.onRecommendTheApp()
+            }
+        } else {
+            rowRecommendTheApp.visibility = View.GONE
+        }
+    }
+
+    private fun manageRecommendUiState(state: RecommendAppUiState) {
+        binding?.setRecommendLoadingState(state.showLoading)
+
+        if (!state.showLoading) {
+            if (state.isError()) {
+                view?.let { view ->
+                    sequencer.enqueue(
+                            SnackbarItem(
+                                    Info(view, UiStringText(state.error!!), Snackbar.LENGTH_LONG),
+                                    null,
+                                    null
+                            )
+                    )
+                }
+            } else {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "${state.message}\n${state.link}")
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.recommend_app_subject))
+
+                startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_link)))
             }
         }
     }
