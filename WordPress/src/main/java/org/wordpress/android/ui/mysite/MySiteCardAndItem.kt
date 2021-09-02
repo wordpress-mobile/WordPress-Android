@@ -26,6 +26,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         LIST_ITEM
     }
 
+    sealed class Card
+
+    sealed class Item
+
     data class SiteInfoCard(
         val title: String,
         val url: String,
