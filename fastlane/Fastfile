@@ -941,6 +941,59 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
+  # create_gh_release
+  # -----------------------------------------------------------------------------------
+  # This lane creates a GitHub release for the current version
+  #   - attaching the existing .aab files in `build/` as the release assets
+  #   - using the WP & JP release_notes.txt as description
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:true]
+  #
+  # Examples:
+  # bundle exec fastlane create_gh_release prerelease:true  # Includes existing assets for WPAlpha+WPBeta+JPBeta
+  # bundle exec fastlane create_gh_release app:wordpress prerelease:true # Includes existing assets for WPAlpha+WPBeta
+  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true # Includes existing assets for WPAlpha+WPBeta+JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
+  #####################################################################################
+  lane :create_gh_release do |options|
+    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
+
+    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
+    versions = options[:version].nil? ? [android_get_alpha_version(app: 'wp_jp'), android_get_release_version(app: 'wp_jp')] : [options[:version]]
+
+    release_assets = apps.flat_map do |app|
+      versions.flat_map { |vers| bundle_file_path(app, vers) }
+    end.select { |f| File.exist?(f) }
+
+    release_title = versions.last['name']
+
+    UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
+
+    require 'tempfile'
+    Tempfile.create('unified-release-notes') do |tmp_file|
+      app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
+      unified_notes = apps.map do |app|
+        notes = File.read(release_notes_path(app))
+        "\#\# #{app_titles[app]}\n\n#{notes}"
+      end.join("\n\n")
+      tmp_file.write(unified_notes)
+
+      create_release(
+        repository: GHHELPER_REPO,
+        version: release_title,
+        release_notes_file_path: tmp_file.path,
+        prerelease: set_prerelease_flag,
+        release_assets: release_assets.join(',')
+      )
+    end
+  end
+
+#####################################################################################
+# Private lanes
+#####################################################################################
+
+  #####################################################################################
   # trigger_ci
   # -----------------------------------------------------------------------------------
   # This lane triggers a CircleCI build on demand, with custom parameters
@@ -983,37 +1036,12 @@ REPOSITORY_NAME="WordPress-Android"
     end
   end
 
-#####################################################################################
-# Private lanes
-#####################################################################################
   private_lane :delete_old_changelogs do |options|
     app = options[:app] || 'wordpress'
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
       File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
     end
-  end
-
-  private_lane :create_gh_release do | options |
-    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
-    version = options[:version]
-
-    if version.nil?
-      UI.message("Ignoring request to create GH version since version specified is nil")
-      next
-    end
-
-    apk_file_path = universal_apk_file_path(options[:app], version)
-    aab_file_path = bundle_file_path(options[:app], version)
-    # APKs built on CI are unsigned, so don't upload them until we have a fix
-    release_assets = [aab_file_path]
-    release_assets.append(apk_file_path) unless is_ci
-    create_release(repository:GHHELPER_REPO,
-      version: version["name"],
-      release_notes_file_path: release_notes_path(options[:app]),
-      prerelease: set_prerelease_flag,
-      release_assets: release_assets.join(',')
-    )
   end
 
   private_lane :cleanup_release_files do | options |
@@ -1046,20 +1074,9 @@ REPOSITORY_NAME="WordPress-Android"
     ]
   end
 
-  def universal_apk_name(app, version)
-    basenames = { wordpress: 'wpandroid', jetpack: 'jpandroid' }
-    basename = basenames[app.to_sym] || basenames[:wordpress]
-    "#{basename}-#{version["name"]}-universal.apk"
-  end
-
   def bundle_file_path(app, version)
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
-  end
-
-  def universal_apk_file_path(app, version)
-    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", universal_apk_name(app, version))
+    File.join(project_root, "build", "#{prefix}-#{version["name"]}.aab")
   end
 end
