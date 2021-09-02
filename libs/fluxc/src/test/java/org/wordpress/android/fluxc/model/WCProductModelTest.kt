@@ -3,9 +3,9 @@ package org.wordpress.android.fluxc.model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.fluxc.JsonLoaderUtils.jsonFileAs
-import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnPriceType.FlatFee
-import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnRestrictionsType.AnyText
-import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnType.Checkbox
+import org.wordpress.android.fluxc.model.addons.RemoteAddonDto.RemotePriceType.FlatFee
+import org.wordpress.android.fluxc.model.addons.RemoteAddonDto.RemoteRestrictionsType.AnyText
+import org.wordpress.android.fluxc.model.addons.RemoteAddonDto.RemoteType.Checkbox
 import org.wordpress.android.fluxc.network.rest.wpcom.wc.product.ProductApiResponse
 import kotlin.test.fail
 
