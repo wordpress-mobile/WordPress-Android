@@ -1123,6 +1123,18 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.SITE_PICKER:
+                boolean isSameSiteSelected = data != null
+                                             && data.getIntExtra(
+                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        SelectedSiteRepository.UNAVAILABLE
+                ) == mSelectedSiteRepository.getSelectedSiteLocalId();
+
+                if (!isSameSiteSelected) {
+                    QuickStartUtils.cancelQuickStartReminder(this);
+                    AppPrefs.setQuickStartNoticeRequired(false);
+                    AppPrefs.setLastSkippedQuickStartTask(null);
+                    mPrivateAtomicCookie.clearCookie();
+                }
                 setSite(data);
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;

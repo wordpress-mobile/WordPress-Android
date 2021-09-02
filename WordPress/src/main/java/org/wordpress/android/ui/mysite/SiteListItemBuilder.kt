@@ -12,6 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -21,7 +22,8 @@ class SiteListItemBuilder
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val themeBrowserUtils: ThemeBrowserUtils
+    private val themeBrowserUtils: ThemeBrowserUtils,
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -142,6 +144,18 @@ class SiteListItemBuilder
                     UiStringRes(R.string.my_site_btn_sharing),
                     showFocusPoint = showFocusPoint,
                     onClick = ListItemInteraction.create(ListItemAction.SHARING, onClick)
+            )
+        } else null
+    }
+
+    fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (siteDomainsFeatureConfig.isEnabled() &&
+                site.hasCapabilityManageOptions ||
+                !siteUtilsWrapper.isAccessedViaWPComRest(site)) {
+            ListItem(
+                    R.drawable.ic_domains_white_24dp,
+                    UiStringRes(R.string.my_site_btn_domains),
+                    onClick = ListItemInteraction.create(ListItemAction.DOMAINS, onClick)
             )
         } else null
     }

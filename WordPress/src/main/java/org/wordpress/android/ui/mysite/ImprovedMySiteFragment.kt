@@ -46,6 +46,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -288,6 +289,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 action.site,
                 action.source,
                 action.mediaUris.toTypedArray()
+        )
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+                activity,
+                action.site,
+                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
         )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,

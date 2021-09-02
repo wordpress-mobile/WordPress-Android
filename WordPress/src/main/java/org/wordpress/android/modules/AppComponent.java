@@ -52,6 +52,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
+import org.wordpress.android.ui.domains.DomainsDashboardFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
@@ -537,6 +538,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PlansListAdapter object);
 
     void inject(PlanDetailsFragment object);
+
+    void inject(DomainsDashboardFragment object);
 
     void inject(DomainSuggestionsFragment object);
 

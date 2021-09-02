@@ -48,6 +48,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.domains.DomainsDashboardActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
@@ -672,6 +673,14 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewDomainsDashboardActivityForResult(Activity activity, SiteModel site,
+                                            @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = new Intent(activity, DomainsDashboardActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
     public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,

@@ -341,9 +341,11 @@ Language: es_MX
     <string name="error_update_site_title_network">No se ha podido actualizar el título del sitio. Comprueba tu conexión de red e inténtalo nuevamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navega a la hoja de contenido anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navega para personalizar el degradado</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navega al selector de color personalizado</string>
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
+    <string name="gutenberg_native_go_back">Volver</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_list_author">Autor de la página</string>
@@ -2218,7 +2220,6 @@ Language: es_MX
     <string name="my_site_btn_view_admin">Ver Administrador</string>
     <string name="my_site_header_look_and_feel">Aspecto</string>
     <string name="my_site_header_publish">Publicar</string>
-    <string name="my_site_btn_site_settings">Ajustes</string>
     <string name="my_site_btn_blog_posts">Entradas del blog</string>
     <string name="my_site_header_configuration">Configuración</string>
     <string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>

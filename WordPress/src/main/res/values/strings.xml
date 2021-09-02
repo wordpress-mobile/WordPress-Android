@@ -1505,8 +1505,13 @@
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
-    <string name="like_faces_singular_text">1 blogger likes this.</string>
-    <string name="like_faces_plural_text">%d bloggers like this.</string>
+    <string name="like_this">like this</string>
+    <string name="likes_this">likes this</string>
+    <string name="like_faces_you_text">You %1$s.</string>
+    <string name="like_faces_you_plus_one_text">You and 1 blogger %1$s.</string>
+    <string name="like_faces_plural_with_you_text">You and %1$s bloggers %2$s.</string>
+    <string name="like_faces_one_blogger_text">1 blogger %1$s.</string>
+    <string name="like_faces_more_bloggers_text">%1$s bloggers %2$s.</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
 
     <!-- reader -->
@@ -2138,6 +2143,7 @@
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
+    <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
@@ -2430,6 +2436,18 @@
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
+
+    <string name="domains_primary_domain">PRIMARY SITE ADDRESS</string>
+    <string name="domains_primary_domain_address">%s</string>
+<!--    <string name="domains_primary_domain_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>-->
+<!--    <string name="domains_redirected_domains">REDIRECTED DOMAINS</string>-->
+<!--    <string name="domains_redirected_domains_blurb">Redirected domains are domains that you own and redirect to your site at %s. Anyone visiting your redirected domains will land on your site. Learn more.</string>-->
+<!--    <string name="domains_manage_domains">Manage Domains</string>-->
+<!--    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>-->
+<!--    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your domain</string>-->
+    <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
+<!--    <string name="domains_free_plan_get_your_domain_caption">Redirect a custom domain to your site at %s</string>-->
+<!--    <string name="domains_free_plan_redirect_learn_more">Learn more about domain redirects</string>-->
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
