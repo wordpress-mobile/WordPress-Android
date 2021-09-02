@@ -12,14 +12,6 @@ parameters:
   release_build:
     type: boolean
     default: false
-  # Display name of the app and should match the usual public facing name (e.g. WordPress, Jetpack)
-  app_name:
-    type: string
-    default: "WordPress"
-  # The key used to reference the app in the Fastfile
-  product_key:
-    type: string
-    default: "wordpress"
 
 commands:
   copy-gradle-properties:
@@ -97,7 +89,7 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android failed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress/Jetpack Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -111,27 +103,36 @@ jobs:
       - run:
           name: Prepare build
           command: |
-            echo "export APP_VERSION=$(./gradlew -q printVersionName -PproductKey='<< pipeline.parameters.product_key >>' | tail -1)" >> $BASH_ENV
-            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey="<< pipeline.parameters.product_key >>" | tail -1)
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress/Jetpack Android $APP_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress/Jetpack Android $APP_VERSION has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
       - run:
-          name: Build Zalpha
+          name: Build WordPress Zalpha
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_alpha app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_alpha app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - run:
-          name: Build Vanilla
+          name: Build WordPress Vanilla
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_beta app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             else
-              bundle exec fastlane build_and_upload_release app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            fi
+          no_output_timeout: 15m
+      - run:
+          name: Build Jetpack Vanilla
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_beta app:jetpack skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            else
+              bundle exec fastlane build_and_upload_release app:jetpack skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - android/save-gradle-cache
