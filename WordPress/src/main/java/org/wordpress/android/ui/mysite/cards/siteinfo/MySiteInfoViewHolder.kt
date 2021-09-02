@@ -1,10 +1,11 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteInfoCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteItemViewHolder
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.viewBinding

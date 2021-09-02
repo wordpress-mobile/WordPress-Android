@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before

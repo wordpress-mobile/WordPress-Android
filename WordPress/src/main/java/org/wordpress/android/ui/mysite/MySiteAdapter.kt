@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemVi
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
+import org.wordpress.android.ui.mysite.cards.siteinfo.MySiteInfoViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 

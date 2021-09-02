@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
