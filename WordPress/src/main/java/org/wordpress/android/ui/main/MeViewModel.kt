@@ -16,10 +16,11 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
-import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -30,7 +31,8 @@ class MeViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val recommendApiCallsProvider: RecommendApiCallsProvider
+    private val recommendApiCallsProvider: RecommendApiCallsProvider,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -103,7 +105,7 @@ class MeViewModel
                         } else {
                             RecommendAppName.WordPress.appName
                         },
-                        RecommendAppSource.ME
+                        ME
                 ).toFetchedResult()
 
                 _recommendUiState.postValue(fetchedResult)
@@ -126,10 +128,12 @@ class MeViewModel
             is ApiFetchedResult -> if (this.isError()) {
                 RecommendAppUiState(this.error!!)
             } else {
-                RecommendAppUiState(
+                val openSheetData = RecommendAppUiState(
                         link = this.link,
                         message = this.message
                 )
+                analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
+                openSheetData
             }
             FetchingApi -> RecommendAppUiState(showLoading = true)
         })
