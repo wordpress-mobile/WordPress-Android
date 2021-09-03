@@ -372,7 +372,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: '')
+    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: 'wp_jp')
 
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
