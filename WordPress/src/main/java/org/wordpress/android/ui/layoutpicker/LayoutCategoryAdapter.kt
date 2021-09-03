@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 /**
  * Renders the layout categories
  */
-class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
+class LayoutCategoryAdapter(private var nestedScrollStates: Bundle) : Adapter<LayoutsItemViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
-    private var nestedScrollStates = Bundle()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
         val diffResult = DiffUtil.calculateDiff(
