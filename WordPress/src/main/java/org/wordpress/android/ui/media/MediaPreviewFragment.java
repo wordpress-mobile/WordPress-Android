@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
-
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -48,8 +47,6 @@ import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment {
     public static final String TAG = "media_preview_fragment";
