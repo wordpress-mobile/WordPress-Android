@@ -8,7 +8,12 @@ import org.wordpress.android.R;
 
 /**
  * Dialogs related to comment moderation displayed from CommentsActivity and NotificationsActivity
+ *
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam
  */
+@Deprecated
 class CommentDialogs {
     static final int ID_COMMENT_DLG_APPROVING = 100;
     static final int ID_COMMENT_DLG_DISAPPROVING = 101;

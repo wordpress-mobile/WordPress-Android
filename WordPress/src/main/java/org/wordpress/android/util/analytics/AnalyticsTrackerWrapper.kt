@@ -4,6 +4,7 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
@@ -15,24 +16,30 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat)
     }
 
-    fun track(stat: Stat, feature: FeatureConfig) {
-        AnalyticsTracker.track(stat, mapOf(feature.remoteField to feature.isEnabled()))
+    fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
+        AnalyticsTracker.track(
+                stat,
+                mapOf(
+                        remoteField to featureState.isEnabled,
+                        "${remoteField}_state" to featureState.name
+                )
+        )
     }
 
     fun track(stat: Stat, experimentConfig: ExperimentConfig) {
         AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
     }
 
-    fun track(stat: Stat, properties: Map<String, *>) {
+    fun track(stat: Stat, properties: Map<String, Any?>) {
         AnalyticsTracker.track(stat, properties)
     }
 
-    fun track(stat: Stat, site: SiteModel) {
-        AnalyticsUtils.trackWithSiteDetails(stat, site)
+    fun track(stat: Stat, properties: Map<String, *>, feature: FeatureConfig) {
+        AnalyticsTracker.track(stat, properties + feature.toParams())
     }
 
-    fun track(stat: Stat, siteId: Long) {
-        AnalyticsUtils.trackWithSiteId(stat, siteId)
+    fun track(stat: Stat, site: SiteModel?) {
+        AnalyticsUtils.trackWithSiteDetails(stat, site)
     }
 
     /**
@@ -45,4 +52,13 @@ class AnalyticsTrackerWrapper
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
     }
+
+    fun trackWithSiteDetails(
+        stat: Stat,
+        siteModel: SiteModel?
+    ) {
+        AnalyticsUtils.trackWithSiteDetails(stat, siteModel)
+    }
+
+    private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())
 }

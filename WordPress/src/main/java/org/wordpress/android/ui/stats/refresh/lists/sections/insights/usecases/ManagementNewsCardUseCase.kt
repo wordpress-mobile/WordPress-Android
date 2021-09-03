@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ImageItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
@@ -44,9 +44,9 @@ class ManagementNewsCardUseCase
                 Text(text = newsCardMessage, bolds = listOf(highlightedText)),
                 DialogButtons(
                         R.string.stats_management_try_it_now,
-                        NavigationAction.create(this::onEditInsights),
+                        ListItemInteraction.create(this::onEditInsights),
                         R.string.stats_management_dismiss_insights_news_card,
-                        NavigationAction.create(this::onDismiss)
+                        ListItemInteraction.create(this::onDismiss)
                 )
         )
     }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
@@ -35,7 +35,6 @@ Language: mk
     <string name="browse_our_faq_button">Разгледи наши ЧПП</string>
     <string name="reader_empty_comments">Нема коментари сеуште</string>
     <string name="reader_label_view_original">Види ја оригиналната статија</string>
-    <string name="reader_empty_posts_in_tag">Нема постови со оваа ознака</string>
     <string name="reader_label_like">Сака</string>
     <string name="reader_label_comments_closed">Коментари затворени</string>
     <string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
@@ -55,9 +54,7 @@ Language: mk
     <string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Закажи</string>
-    <string name="reader_page_followed_tags">Проследени ознаки</string>
     <string name="help">Помош</string>
-    <string name="forgot_password">Ја изгубивте Вашата лозинка?</string>
     <string name="ssl_certificate_error">Невалиден SSl сертификат</string>
     <string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
     <string name="mnu_comment_unspam">Не е спам</string>
@@ -102,8 +99,6 @@ Language: mk
     <string name="error_blog_hidden">Овој блог е скриен и неможе да се вчита. Овозможи го повторно во подесувањата и обиди се повторно.</string>
     <string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
     <string name="reader_title_applog">Дневник на апликацијата</string>
-    <string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
-    <string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>
     <string name="mnu_comment_trash">Отпадок</string>
@@ -146,8 +141,6 @@ Language: mk
     <string name="reader_btn_share">Сподели</string>
     <string name="reader_btn_follow">Следи</string>
     <string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>
-    <string name="reader_toast_err_tag_exists">Веќе го следите ова обележување</string>
-    <string name="reader_toast_err_tag_invalid">Тоа не е валидно обележување</string>
     <string name="reader_toast_err_share_intent">Неможе да се сподели</string>
     <string name="reader_toast_err_view_image">Неможе да се види сликата</string>
     <string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>

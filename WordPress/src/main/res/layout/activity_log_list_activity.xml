@@ -2,6 +2,7 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,15 +10,70 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@+id/log_list_view">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/WordPress.ActionBar" />
+
+        <HorizontalScrollView
+            android:id="@+id/filters_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:scrollIndicators="none"
+            android:visibility="gone"
+            app:layout_scrollFlags="noScroll"
+            android:scrollbars="none"
+            tools:targetApi="m">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/filter_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:importantForAccessibility="no"
+                    android:paddingEnd="@dimen/margin_extra_extra_medium_large"
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:src="@drawable/ic_filter_list_white_24dp"
+                    app:tint="?attr/wpColorOnSurfaceMedium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/date_range_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    app:chipBackgroundColor="?attr/colorSurface"
+                    app:chipStrokeColor="@color/neutral_10"
+                    app:chipStrokeWidth="@dimen/divider_size" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/activity_type_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipBackgroundColor="?attr/colorSurface"
+                    app:chipStrokeColor="@color/neutral_10"
+                    app:chipStrokeWidth="@dimen/divider_size" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View
+            android:id="@+id/filters_bar_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
+            android:background="?attr/wpColorSurfaceSecondary"
+            android:visibility="gone" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

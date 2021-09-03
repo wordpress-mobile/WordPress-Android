@@ -12,7 +12,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Type.INSIGHT
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -111,7 +111,7 @@ class InsightsManagementViewModel @Inject constructor(
             val insightType: InsightType,
             val name: Int,
             val status: Status,
-            val onClick: NavigationAction
+            val onClick: ListItemInteraction
         ) : InsightListItem(INSIGHT) {
             enum class Status {
                 ADDED,

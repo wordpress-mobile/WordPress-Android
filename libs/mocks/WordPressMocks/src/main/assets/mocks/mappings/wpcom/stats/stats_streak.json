@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/stats/streak/"
+        "urlPattern": "/rest/v1.1/sites/.*/stats/streak/.*"
     },
     "response": {
         "status": 200,

@@ -8,7 +8,7 @@ import org.wordpress.android.util.AutoForegroundNotification
 object SiteCreationServiceNotification {
     private const val channelResId = R.string.notification_channel_normal_id
     private const val colorResId = R.color.primary_50
-    private const val drawableResId = R.drawable.ic_my_sites_white_24dp
+    private const val drawableResId = R.drawable.ic_app_white_24dp
 
     fun createCreatingSiteNotification(context: Context): Notification {
         return AutoForegroundNotification.progressIndeterminate(

@@ -187,7 +187,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
+                    List<Uri> mediaUris = WPMediaUtils.retrieveMediaUris(data);
+                    getPickerFragment().urisSelectedFromSystemPicker(mediaUris);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
@@ -275,7 +276,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             final String mimeType = getContentResolver().getType(mediaUri);
 
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                     mLocalPostId
             );
 
@@ -304,8 +305,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                                     // noop
                                     break;
                             }
-                            Intent intent = new Intent()
-                                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED, true);
+                            Intent intent = new Intent();
                             setResult(RESULT_OK, intent);
                             finish();
                         }
@@ -325,17 +325,12 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         if (mediaIds != null && mediaIds.size() > 0) {
             if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
                 // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
-                Intent data = new Intent()
-                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
-                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
-                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
-                setResult(RESULT_OK, data);
-                finish();
+                getPickerFragment().mediaIdsSelectedFromWPMediaPicker(mediaIds);
             } else {
                 // if user chose a featured image, track image picked event
                 if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
                     mFeaturedImageHelper.trackFeaturedImageEvent(
-                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                             mLocalPostId
                     );
                 }

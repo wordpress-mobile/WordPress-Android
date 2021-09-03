@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include android:id="@+id/disabled_view" layout="@layout/stats_disabled_view" />
+
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/pullToRefresh"
             android:layout_width="match_parent"

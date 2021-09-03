@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -33,9 +35,15 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.test
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
+import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
@@ -45,6 +53,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -100,7 +109,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
-        assertThat(uiState.postHeaderClickData).isNull()
+        assertThat(uiState.blogSection.blogSectionClickData).isNull()
     }
 
     @Test
@@ -111,9 +120,23 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post, it)
             // Assert
-            assertThat(uiState.postHeaderClickData).isNotNull
+            assertThat(uiState.blogSection.blogSectionClickData).isNotNull
         }
     }
+
+    @Test
+    fun `p2 posts in the feed show author's avatar alongside site icon`() = test {
+        // Arrange
+        val p2post = createPost(isp2Post = true)
+        val nonP2Post = createPost(isp2Post = false)
+        // Act
+        val p2UiState = mapPostToUiState(p2post)
+        val nonP2UiState = mapPostToUiState(nonP2Post)
+        // Assert
+        assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue
+        assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
+    }
+
     // endregion
 
     // region BLOG URL
@@ -125,7 +148,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogUrl).isEqualTo("dummy.url")
+        assertThat(uiState.blogSection.blogUrl).isEqualTo("dummy.url")
     }
     // endregion
 
@@ -235,7 +258,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue()
+        assertThat(uiState.videoOverlayVisibility).isTrue
     }
 
     @Test
@@ -321,7 +344,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoTitle).isNotNull()
+        assertThat(uiState.photoTitle).isNotNull
     }
 
     @Test
@@ -367,7 +390,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
 
     @Test
@@ -377,7 +400,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isTrue()
+        assertThat(uiState.photoFrameVisibility).isTrue
     }
 
     @Test
@@ -387,7 +410,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
 
     @Test
@@ -397,7 +420,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isTrue()
+        assertThat(uiState.photoFrameVisibility).isTrue
     }
 
     @Test
@@ -407,7 +430,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
     // endregion
 
@@ -485,17 +508,49 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNotNull()
+        assertThat(uiState.blogSection.blogName).isNotNull
     }
 
     @Test
-    fun `blogName is not displayed the post doesn't have a blog name`() = test {
+    fun `default blog name is displayed when the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNull()
+        assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
+    }
+
+    @Test
+    fun `p2 posts in the feed show author's first name (or full name) alongside the blog name`() = test {
+        // Arrange
+        val postWithFirstName = createPost(
+                isp2Post = true,
+                blogName = "Fancy Blog",
+                authorFirstName = "John",
+                authorName = "John Smith"
+        )
+        val postWithoutFirstName = createPost(
+                isp2Post = true,
+                blogName = "Fancy Blog",
+                authorFirstName = "",
+                authorName = "John Smith"
+        )
+        // Act
+        val firstNameUiState = mapPostToUiState(postWithFirstName)
+        val fullNameUiState = mapPostToUiState(postWithoutFirstName)
+        // Assert
+        val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(firstNameBlog.params.size).isEqualTo(2)
+        assertThat((firstNameBlog.params[0] as UiStringText).text).isEqualTo("John")
+        assertThat((firstNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+
+        val fullNameBlog = fullNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(fullNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(fullNameBlog.params.size).isEqualTo(2)
+        assertThat((fullNameBlog.params[0] as UiStringText).text).isEqualTo("John Smith")
+        assertThat((fullNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
     }
     // endregion
 
@@ -510,7 +565,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.dateLine).isEqualTo("success")
+        assertThat(uiState.blogSection.dateLine).isEqualTo("success")
     }
     // endregion
 
@@ -522,7 +577,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse
     }
 
     @Test
@@ -532,7 +587,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse
     }
 
     @Test
@@ -542,7 +597,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isTrue()
+        assertThat(uiState.bookmarkAction.isEnabled).isTrue
     }
 
     @Test
@@ -552,7 +607,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isTrue()
+        assertThat(uiState.bookmarkAction.isSelected).isTrue
     }
 
     @Test
@@ -562,7 +617,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isFalse()
+        assertThat(uiState.bookmarkAction.isSelected).isFalse
     }
 
     @Test
@@ -586,7 +641,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isTrue()
+        assertThat(uiState.likeAction.isEnabled).isTrue
     }
 
     @Test
@@ -597,7 +652,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
+        assertThat(uiState.likeAction.isEnabled).isFalse
     }
 
     @Test
@@ -607,7 +662,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
+        assertThat(uiState.likeAction.isEnabled).isFalse
     }
 
     @Test
@@ -631,7 +686,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isTrue()
+        assertThat(uiState.reblogAction.isEnabled).isTrue
     }
 
     @Test
@@ -641,7 +696,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isFalse()
+        assertThat(uiState.reblogAction.isEnabled).isFalse
     }
 
     @Test
@@ -652,7 +707,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isFalse()
+        assertThat(uiState.reblogAction.isEnabled).isFalse
     }
 
     @Test
@@ -676,7 +731,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isTrue()
+        assertThat(uiState.commentsAction.isEnabled).isTrue
     }
 
     @Test
@@ -686,7 +741,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -696,7 +751,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -707,7 +762,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -718,7 +773,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isTrue()
+        assertThat(uiState.commentsAction.isEnabled).isTrue
     }
 
     @Test
@@ -728,7 +783,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -773,31 +828,87 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Ensures that the first InterestUiState has isDividerVisible set to true`() = test {
+    fun `given a tag list with 4 elements, then the uiState contains each style`() = test {
         // arrange
-        val currentReaderTagListSize = 2
+        val currentReaderTagListSize = 4
+        val expectedListStyles = listOf(ChipStyleGreen, ChipStylePurple, ChipStyleYellow, ChipStyleOrange)
+
         val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
         // assert
-        assertThat(result.interest.first().isDividerVisible).isTrue()
+        for ((index, interest) in result.interest.withIndex()) {
+            assertThat(interest.chipStyle).isEqualTo(expectedListStyles[index])
+        }
     }
 
     @Test
-    fun `Ensures that the last InterestUiState has isDividerVisible set to false`() = test {
+    fun `given a tag list with 5 elements, then the 5th interest within the uiState is styled green`() = test {
         // arrange
-        val currentReaderTagListSize = 2
+        val currentReaderTagListSize = 5
+
         val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
         // assert
-        assertThat(result.interest.last().isDividerVisible).isFalse()
+        assertThat(result.interest.last().chipStyle).isInstanceOf(ChipStyleGreen::class.java)
     }
+
     // endregion
+
+    @Test
+    fun `scheme is removed from recommended blog url`() = test {
+        // Arrange
+        val url = "http://dummy.url"
+        val blog = createRecommendedBlog(blogUrl = url)
+        whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                listOf(blog),
+                { _, _, _ -> },
+                { }
+        )
+        // Assert
+        assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
+    }
+
+    @Test
+    fun `limits recommended blogs count to 3`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(6) { createRecommendedBlog() }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `ReaderRecommendedBlogUiState description is null when description is empty`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs[0].description).isNull()
+    }
 
     // region Private methods
     private suspend fun mapPostToUiState(
@@ -806,6 +917,7 @@ class ReaderPostUiStateBuilderTest {
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
+                source = "source",
                 post = post,
                 isDiscover = false,
                 photonWidth = 0,
@@ -842,7 +954,11 @@ class ReaderPostUiStateBuilderTest {
         isCanLikePost: Boolean = true,
         hasFeaturedImage: Boolean = false,
         featuredImageUrlForDisplay: String? = null,
-        hasFeaturedVideo: Boolean = false
+        hasFeaturedVideo: Boolean = false,
+        isp2Post: Boolean = false,
+        blogName: String = "",
+        authorFirstName: String = "",
+        authorName: String = ""
     ): ReaderPost {
         val post = spy(ReaderPost().apply {
             this.blogUrl = blogUrl
@@ -872,6 +988,10 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
+        post.organization = if (isp2Post) P2 else NO_ORGANIZATION
+        post.blogName = blogName
+        post.authorFirstName = authorFirstName
+        post.authorName = authorName
         return post
     }
 
@@ -889,5 +1009,18 @@ class ReaderPostUiStateBuilderTest {
             mock(),
             false
     )
+
+    private fun createRecommendedBlog(
+        blogUrl: String = "url",
+        blogDescription: String = "desc"
+    ) = ReaderBlog().apply {
+        blogId = 1L
+        name = "name"
+        description = blogDescription
+        url = blogUrl
+        imageUrl = null
+        feedId = 0L
+        isFollowing = false
+    }
     // endregion
 }

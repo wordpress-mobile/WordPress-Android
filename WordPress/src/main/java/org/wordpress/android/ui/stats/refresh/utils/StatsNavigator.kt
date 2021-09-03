@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_STATS
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.ANNUAL_STATS
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
@@ -53,10 +55,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StatsNavigator
-@Inject constructor(
+class StatsNavigator @Inject constructor(
     private val siteProvider: StatsSiteProvider,
-    private val selectedDateProvider: SelectedDateProvider
+    private val selectedDateProvider: SelectedDateProvider,
+    private val readerTracker: ReaderTracker
 ) {
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
@@ -69,7 +71,8 @@ class StatsNavigator
                         siteProvider.siteModel.siteId,
                         target.postId.toString(),
                         target.postType,
-                        target.postUrl
+                        target.postUrl,
+                        readerTracker
                 )
             }
             is SharePost -> {
@@ -210,6 +213,16 @@ class StatsNavigator
             }
             is ViewInsightsManagement -> {
                 ActivityLauncher.viewInsightsManagement(activity, siteProvider.siteModel.id)
+            }
+            is ViewAttachment -> {
+                StatsUtils.openPostInReaderOrInAppWebview(
+                        activity,
+                        siteProvider.siteModel.siteId,
+                        target.postId.toString(),
+                        target.postType,
+                        target.postUrl,
+                        readerTracker
+                )
             }
         }
     }

@@ -1,21 +1,15 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-    }
-}
-
 apply plugin: 'com.android.application'
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
 
 android {
@@ -23,10 +17,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.editorexample"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
     }
     buildTypes {
         release {

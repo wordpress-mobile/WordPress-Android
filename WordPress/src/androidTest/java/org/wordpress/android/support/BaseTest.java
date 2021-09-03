@@ -3,6 +3,7 @@ package org.wordpress.android.support;
 import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -13,8 +14,12 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.DateOffset;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult;
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultType;
 
 import org.apache.commons.lang3.LocaleUtils;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.wordpress.android.R;
@@ -36,7 +41,12 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -51,6 +61,12 @@ public class BaseTest {
         mMockedAppComponent = DaggerAppComponentTest.builder()
                                                     .application(mAppContext)
                                                     .build();
+
+        Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
+                Matchers.allOf(matchesTypes(
+                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
+        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
+                           .setSuppressingResultMatcher(nonErrorLevelMatcher);
     }
 
     @Rule
@@ -85,7 +101,7 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.first_button) || isElementDisplayed(R.id.login_open_email_client)) {
+        if (isElementDisplayed(R.id.continue_with_wpcom_button) || isElementDisplayed(R.id.login_open_email_client)) {
             return;
         }
 
@@ -97,9 +113,9 @@ public class BaseTest {
     protected void wpLogin() {
         logoutIfNecessary();
         new LoginFlow().chooseContinueWithWpCom()
-                       .enterEmailAddress()
-                       .enterPassword()
-                       .confirmLogin();
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
+                       .enterPassword(E2E_WP_COM_USER_PASSWORD)
+                       .confirmLogin(false);
     }
 
     private void wpLogout() {

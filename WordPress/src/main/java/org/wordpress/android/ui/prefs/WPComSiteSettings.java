@@ -53,10 +53,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String COMMENT_MODERATION_KEY = "comment_moderation";
     private static final String REQUIRE_IDENTITY_KEY = "require_name_email";
     private static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
-    private static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
+    private static final String ALLOWLIST_KNOWN_USERS_KEY = "comment_whitelist";
     private static final String MAX_LINKS_KEY = "comment_max_links";
     private static final String MODERATION_KEYS_KEY = "moderation_keys";
-    private static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    private static final String DENYLIST_KEYS_KEY = "blacklist_keys";
     private static final String SHARING_LABEL_KEY = "sharing_label";
     private static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
     private static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
@@ -65,7 +65,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String TWITTER_USERNAME_KEY = "twitter_via";
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
-    private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String JP_PROTECT_ALLOWLIST_KEY = "jetpack_protect_whitelist";
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String SERVE_STATIC_FILES_FROM_OUR_SERVERS = "photon-cdn";
@@ -79,6 +79,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
     private static final String TIMEZONE_KEY = "timezone_string";
+    private static final String GMT_OFFSET_KEY = "gmt_offset";
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
@@ -257,17 +258,17 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
                 mRemoteJpSettings.commentLikes = data.optBoolean(COMMENT_LIKES, false);
 
-                JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
-                if (jetpackProtectWhitelist != null) {
-                    // clear existing whitelist entries before adding items from response
-                    mRemoteJpSettings.jetpackProtectWhitelist.clear();
+                JSONObject jetpackProtectAllowlist = data.optJSONObject("jetpack_protect_global_whitelist");
+                if (jetpackProtectAllowlist != null) {
+                    // clear existing allowlist entries before adding items from response
+                    mRemoteJpSettings.jetpackProtectAllowlist.clear();
 
-                    JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
-                    if (whitelistItems != null) {
-                        for (int i = 0; i < whitelistItems.length(); ++i) {
-                            String item = whitelistItems.optString(i, "");
-                            if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                                mRemoteJpSettings.jetpackProtectWhitelist.add(item);
+                    JSONArray allowlistItems = jetpackProtectAllowlist.optJSONArray("local");
+                    if (allowlistItems != null) {
+                        for (int i = 0; i < allowlistItems.length(); ++i) {
+                            String item = allowlistItems.optString(i, "");
+                            if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectAllowlist.contains(item)) {
+                                mRemoteJpSettings.jetpackProtectAllowlist.add(item);
                             }
                         }
                     }
@@ -275,8 +276,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
 
                 mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                 mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                mJpSettings.jetpackProtectWhitelist.clear();
-                mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
+                mJpSettings.jetpackProtectAllowlist.clear();
+                mJpSettings.jetpackProtectAllowlist.addAll(mRemoteJpSettings.jetpackProtectAllowlist);
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
@@ -445,8 +446,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
                         mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
                         mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
-                        mRemoteJpSettings.jetpackProtectWhitelist.clear();
-                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(sentJpData.jetpackProtectWhitelist);
+                        mRemoteJpSettings.jetpackProtectAllowlist.clear();
+                        mRemoteJpSettings.jetpackProtectAllowlist.addAll(sentJpData.jetpackProtectAllowlist);
                         mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
                         mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
                         mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
@@ -653,6 +654,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private void deserializeWpComRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
+        if (settingsObject == null) {
+            AppLog.e(AppLog.T.API, "Error: Settings response doesn't contain settings object");
+            return;
+        }
 
         mRemoteSettings.username = site.getUsername();
         mRemoteSettings.password = site.getPassword();
@@ -677,10 +682,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.commentApprovalRequired = settingsObject.optBoolean(COMMENT_MODERATION_KEY, false);
         mRemoteSettings.commentsRequireIdentity = settingsObject.optBoolean(REQUIRE_IDENTITY_KEY, false);
         mRemoteSettings.commentsRequireUserAccount = settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true);
-        mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(WHITELIST_KNOWN_USERS_KEY, false);
+        mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(ALLOWLIST_KNOWN_USERS_KEY, false);
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
-        mRemoteSettings.blacklist = new ArrayList<>();
+        mRemoteSettings.denylist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY,
                                                                       DEFAULT_SHARING_BUTTON_STYLE);
@@ -689,7 +694,15 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
         mRemoteSettings.dateFormat = settingsObject.optString(DATE_FORMAT_KEY, "");
         mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
-        mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
+
+        // Android returns manual offsets as gmt_offset and not as UTC
+        String remoteTimezone = settingsObject.optString(TIMEZONE_KEY, "");
+        String remoteGmtOffset = settingsObject.optString(GMT_OFFSET_KEY, "");
+        // UTC-7 comes back as gmt_offset: -7, UTC+7 as just gmt_offset: 7 without the +, hence adding prefix
+        String remoteGmtTimezone = remoteGmtOffset.startsWith("-") ? "UTC" + remoteGmtOffset : "UTC+" + remoteGmtOffset;
+        
+        mRemoteSettings.timezone = !TextUtils.isEmpty(remoteTimezone) ? remoteTimezone : remoteGmtTimezone;
+
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
         mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
         mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
@@ -705,9 +718,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (modKeys.length() > 0) {
             Collections.addAll(mRemoteSettings.holdForModeration, modKeys.split("\n"));
         }
-        String blacklistKeys = settingsObject.optString(BLACKLIST_KEYS_KEY, "");
-        if (blacklistKeys.length() > 0) {
-            Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
+        String denylistKeys = settingsObject.optString(DENYLIST_KEYS_KEY, "");
+        if (denylistKeys.length() > 0) {
+            Collections.addAll(mRemoteSettings.denylist, denylistKeys.split("\n"));
         }
 
         if (settingsObject.optString(COMMENT_SORT_ORDER_KEY, "").equals("asc")) {
@@ -716,14 +729,14 @@ class WPComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
         }
 
-        JSONObject jetpackProtectWhitelist = settingsObject.optJSONObject(JP_PROTECT_WHITELIST_KEY);
-        if (jetpackProtectWhitelist != null) {
-            JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
-            if (whitelistItems != null) {
-                for (int i = 0; i < whitelistItems.length(); ++i) {
-                    String item = whitelistItems.optString(i, "");
-                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                        mRemoteJpSettings.jetpackProtectWhitelist.add(item);
+        JSONObject jetpackProtectAllowlist = settingsObject.optJSONObject(JP_PROTECT_ALLOWLIST_KEY);
+        if (jetpackProtectAllowlist != null) {
+            JSONArray allowlistItems = jetpackProtectAllowlist.optJSONArray("local");
+            if (allowlistItems != null) {
+                for (int i = 0; i < allowlistItems.length(); ++i) {
+                    String item = allowlistItems.optString(i, "");
+                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectAllowlist.contains(item)) {
+                        mRemoteJpSettings.jetpackProtectAllowlist.add(item);
                     }
                 }
             }
@@ -737,7 +750,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     }
 
     /**
-     * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Whitelist)
+     * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Allowlist)
      */
     private JSONObject serializeWpComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
@@ -812,7 +825,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
             params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
         }
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
-            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+            params.put(ALLOWLIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
         }
         if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
@@ -830,16 +843,16 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 params.put(MODERATION_KEYS_KEY, "");
             }
         }
-        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+        if (mSettings.denylist != null && !mSettings.denylist.equals(mRemoteSettings.denylist)) {
             StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.blacklist) {
+            for (String key : mSettings.denylist) {
                 builder.append(key);
                 builder.append("\n");
             }
             if (builder.length() > 1) {
-                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+                params.put(DENYLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
             } else {
-                params.put(BLACKLIST_KEYS_KEY, "");
+                params.put(DENYLIST_KEYS_KEY, "");
             }
         }
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
@@ -914,9 +927,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
             params.put("protect", mJpSettings.jetpackProtectEnabled);
         }
-        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            String whitelistArray = TextUtils.join(",", mJpSettings.jetpackProtectWhitelist);
-            params.put("jetpack_protect_global_whitelist", whitelistArray);
+        if (!mJpSettings.allowlistMatches(mRemoteJpSettings.jetpackProtectAllowlist)) {
+            String allowlistArray = TextUtils.join(",", mJpSettings.jetpackProtectAllowlist);
+            params.put("jetpack_protect_global_whitelist", allowlistArray);
         }
         if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
             params.put("sso", mJpSettings.ssoActive);

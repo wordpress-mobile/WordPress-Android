@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="0dp"
+    android:layout_marginBottom="@dimen/margin_medium">
+
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/Scan.Footnote.Icon"
+        android:contentDescription="@string/jetpack_icon_content_description"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/footnote"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_plus_white_24dp"
+        tools:visibility="visible"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/footnote"
+        style="@style/Scan.Footnote"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/threat_fix_enter_server_creds_msg_singular" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

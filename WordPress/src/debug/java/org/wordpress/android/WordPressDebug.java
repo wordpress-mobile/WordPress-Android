@@ -12,7 +12,6 @@ import com.yarolegovich.wellsql.WellSql;
 import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.UploadWorker;
 
 public class WordPressDebug extends WordPress {
     @Override
@@ -29,7 +28,7 @@ public class WordPressDebug extends WordPress {
     protected void initWorkManager() {
         Configuration config = (new Configuration.Builder())
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setWorkerFactory(new UploadWorker.Factory(mUploadStarter, mSiteStore))
+                .setWorkerFactory(mWordPressWorkerFactory)
                 .build();
         WorkManager.initialize(this, config);
     }

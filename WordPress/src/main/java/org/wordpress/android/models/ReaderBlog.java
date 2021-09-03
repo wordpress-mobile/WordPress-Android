@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -18,6 +19,8 @@ public class ReaderBlog {
     public boolean isFollowing;
     public boolean isNotificationsEnabled;
     public int numSubscribers;
+    public int organizationId;
+    public int numUnseenPosts;
 
     private String mName;
     private String mDescription;
@@ -54,6 +57,7 @@ public class ReaderBlog {
             if (jsonIcon != null) {
                 blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
             }
+            blog.organizationId = jsonSite.optInt("organization_id");
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
             blog.setFeedUrl(JSONUtils.getString(jsonFeed, "feed_URL"));
@@ -77,6 +81,8 @@ public class ReaderBlog {
             blog.isFollowing = JSONUtils.getBool(json, "is_following");
             blog.numSubscribers = json.optInt("subscribers_count");
         }
+
+        blog.numUnseenPosts = json.optInt("unseen_count");
 
         // blogId will be empty for feeds, so set it to the feedId (consistent with /read/ endpoints)
         if (blog.blogId == 0 && blog.feedId != 0) {
@@ -158,6 +164,17 @@ public class ReaderBlog {
         return (feedId != 0);
     }
 
+    public Organization getOrganization() {
+        return Organization.fromOrgId(organizationId);
+    }
+
+    /*
+     * returns true if this is a P2 or A8C site
+     */
+    public boolean isP2orA8C() {
+        return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
+    }
+
     /*
      * returns the mshot url to use for this blog, ex:
      * http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
@@ -178,6 +195,7 @@ public class ReaderBlog {
                && this.isFollowing == blogInfo.isFollowing
                && this.isPrivate == blogInfo.isPrivate
                && this.numSubscribers == blogInfo.numSubscribers
+               && this.numUnseenPosts == blogInfo.numUnseenPosts
                && this.getName().equals(blogInfo.getName())
                && this.getDescription().equals(blogInfo.getDescription())
                && this.getUrl().equals(blogInfo.getUrl())

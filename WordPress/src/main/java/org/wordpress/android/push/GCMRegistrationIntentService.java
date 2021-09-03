@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -41,8 +41,18 @@ public class GCMRegistrationIntentService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         try {
-            String token = FirebaseInstanceId.getInstance().getToken();
-            sendRegistrationToken(token);
+            FirebaseMessaging
+                    .getInstance()
+                    .getToken()
+                    .addOnCompleteListener(task -> {
+                                if (!task.isSuccessful()) {
+                                    AppLog.e(T.NOTIFS, "Fetching FCM registration token failed: ", task.getException());
+                                    return;
+                                }
+                                String token = task.getResult();
+                                sendRegistrationToken(token);
+                            }
+                    );
         } catch (Exception e) {
             // SecurityException can happen on some devices without Google services (these devices probably strip
             // the AndroidManifest.xml and remove unsupported permissions).

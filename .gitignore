@@ -29,7 +29,7 @@ local.properties
 *.iml
 *.ipr
 *.iws
-/.idea/*
+.idea/
 
 # IntelliJ/Android Studio exceptions
 !/.idea/codeStyles/
@@ -39,7 +39,6 @@ local.properties
 !/.idea/codeStyleSettings.xml
 !/.idea/encodings.xml
 !/.idea/copyright/
-!/.idea/compiler.xml
 # Enforce plugins
 !/.idea/externalDependencies.xml
 # Checkstyle configuration
@@ -78,7 +77,6 @@ fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
 fastlane/screenshots
 default.profraw
-google-upload-credentials.json
 
 # Bundler
 /.bundle
@@ -90,3 +88,15 @@ sentry.properties
 WordPress/release.jks
 WordPress/debug.keystore
 WordPress/*.jks
+
+local-builds.gradle
+
+# Currently, the configure tool stores the encrypted files under
+# .configure-files. Everything in that folder without a .enc extension should
+# be ignored.
+.configure-files/*
+!.configure-files/*.enc
+# This secret is not part of the repository anymore, but we keep it in the
+# gitignore for retrocompatibility, so that it won't appear as a new file and
+# be accidentally checked in the repository.
+google-upload-credentials.json

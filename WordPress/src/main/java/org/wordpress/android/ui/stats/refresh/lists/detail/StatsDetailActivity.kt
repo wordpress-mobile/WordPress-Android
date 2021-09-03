@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.stats_detail_fragment.*
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.StatsDetailActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
@@ -22,12 +21,8 @@ const val POST_URL = "POST_URL"
 class StatsDetailActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.stats_detail_activity)
-        setSupportActionBar(toolbar)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
+        val binding = StatsDetailActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

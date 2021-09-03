@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 import dagger.Reusable
 import org.json.JSONArray
 import org.json.JSONObject
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -24,6 +25,20 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         return Pair(blogId, postId)
     }
 
+    fun parseSimplifiedRecommendedBlogsCard(recommendedBlogsCardJson: JSONObject): List<Pair<Long, Long>> {
+        return recommendedBlogsCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
+                ?.let { recommendedBlogsJson ->
+                    List(recommendedBlogsJson.length()) { index ->
+                        val recommendedBlog = recommendedBlogsJson.getJSONObject(index)
+                        Pair(
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_BLOG_ID),
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_FEED_ID)
+                        )
+                    }
+                }
+                ?: emptyList()
+    }
+
     fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList {
         val interestTags = ReaderTagList()
         if (interestCardJson == null) {
@@ -34,6 +49,16 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
             interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
         }
         return interestTags
+    }
+
+    fun parseRecommendedBlogsCard(cardJson: JSONObject): List<ReaderBlog> {
+        return cardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
+                ?.let { jsonRecommendedBlogs ->
+                    List(jsonRecommendedBlogs.length()) { index ->
+                        ReaderBlog.fromJson(jsonRecommendedBlogs.getJSONObject(index))
+                    }
+                }
+                ?: emptyList()
     }
 
     fun parseNextPageHandle(jsonObject: JSONObject): String =

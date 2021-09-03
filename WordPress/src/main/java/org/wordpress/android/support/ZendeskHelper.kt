@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
@@ -35,7 +37,6 @@ import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
-import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.Timer
@@ -48,7 +49,7 @@ class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val supportHelper: SupportHelper,
-    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
@@ -109,45 +110,6 @@ class ZendeskHelper(
     }
 
     /**
-     * This function shows the Zendesk Help Center. It doesn't require a valid identity. If the support identity is
-     * available it'll be used and the "New Ticket" button will be available, if not, it'll work with an anonymous
-     * identity. The configuration will only be passed in if the identity is available, as it's only required if
-     * the user contacts us through it.
-     */
-    fun showZendeskHelpCenter(
-        context: Context,
-        origin: Origin?,
-        selectedSite: SiteModel?,
-        extraTags: List<String>? = null
-    ) {
-        require(isZendeskEnabled) {
-            zendeskNeedsToBeEnabledError
-        }
-        val isIdentitySet = isIdentitySet()
-        val builder = HelpCenterActivity.builder()
-                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withContactUsButtonVisible(isIdentitySet)
-                .withLabelNames(ZendeskConstants.articleLabel)
-                .withShowConversationsMenuButton(isIdentitySet)
-        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-        if (isIdentitySet) {
-            builder.show(
-                context,
-                buildZendeskConfig(
-                    context,
-                    siteStore.sites,
-                    origin,
-                    selectedSite,
-                    extraTags,
-                    zendeskPlanFieldHelper
-                )
-            )
-        } else {
-            builder.show(context)
-        }
-    }
-
-    /**
      * This function creates a new ticket. It'll force a valid identity, so if the user doesn't have one set, a dialog
      * will be shown where the user will need to enter an email and a name. If they cancel the dialog, the ticket
      * creation will be canceled as well. A Zendesk configuration is passed in as it's required for ticket creation.
@@ -173,7 +135,7 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper
+                        buildConfigWrapper
                     )
                 )
         }
@@ -204,7 +166,7 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper
+                        buildConfigWrapper
                     )
                 )
         }
@@ -374,21 +336,23 @@ class ZendeskHelper(
 /**
  * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
  */
+@Suppress("LongParameterList")
 private fun buildZendeskConfig(
     context: Context,
     allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    buildConfigWrapper: BuildConfigWrapper
 ): Configuration {
+    val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
-            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
+            buildZendeskCustomFields(context, allSites, selectedSite, buildConfigWrapper)
         )
-        .withRequestSubject(ZendeskConstants.ticketSubject)
-        .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
+        .withRequestSubject(ticketSubject)
+        .withTags(buildZendeskTags(allSites, selectedSite, origin ?: Origin.UNKNOWN, extraTags))
         .config()
 }
 
@@ -400,12 +364,18 @@ private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
     selectedSite: SiteModel?,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    buildConfigWrapper: BuildConfigWrapper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
     } else {
         "not_selected"
+    }
+
+    val sourcePlatform = if (buildConfigWrapper.isJetpackApp) {
+        ZendeskConstants.jp_sourcePlatform
+    } else {
+        ZendeskConstants.wp_sourcePlatform
     }
 
     val customFields = arrayListOf(
@@ -416,18 +386,10 @@ private fun buildZendeskCustomFields(
         CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
         CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
         CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
-        CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
+        CustomField(TicketFieldIds.sourcePlatform, sourcePlatform)
     )
-    allSites?.let {
-        val planIds = it.map { site -> site.planId }.distinct()
-            .filter { planId -> planId != 0L }
-        if (planIds.isNotEmpty()) {
-            val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
-            if (highestPlan != UNKNOWN_PLAN) {
-                customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
-            }
-        }
-    }
+
+    selectedSite?.zendeskPlan?.let { customFields.add(CustomField(TicketFieldIds.highestPlan, it)) }
 
     return customFields
 }
@@ -470,7 +432,12 @@ private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String
  * This is a helper function which returns a set of pre-defined tags depending on some conditions. It accepts a list of
  * custom tags to be added for special cases.
  */
-private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
+private fun buildZendeskTags(
+    allSites: List<SiteModel>?,
+    selectedSite: SiteModel? = null,
+    origin: Origin,
+    extraTags: List<String>?
+): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -487,9 +454,20 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     tags.add(origin.toString())
     // Add Android tag to make it easier to filter tickets by platform
     tags.add(ZendeskConstants.platformTag)
+
     extraTags?.let {
         tags.addAll(it)
     }
+
+    selectedSite?.zendeskAddOns?.takeIf { it.isNotEmpty() }?.let { tags.addAll(it.split(",")) }
+
+    // Add selectedSiteSelfHostedTag if selected site is self-hosted irrespective of the connection type
+    selectedSite?.let {
+        val isSelectedSiteSelfHosted = !SiteUtils.isAccessedViaWPComRest(it) ||
+                (it.isJetpackConnected && !it.isWPComAtomic)
+        if (isSelectedSiteSelfHosted) tags.add(ZendeskConstants.selectedSiteSelfHostedTag)
+    }
+
     return tags
 }
 
@@ -520,20 +498,19 @@ private val wpcomPushNotificationDeviceToken: String?
     }
 
 private object ZendeskConstants {
-    const val articleLabel = "Android"
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
-    const val mobileCategoryId = 360000041586
+    const val selectedSiteSelfHostedTag = "selected_site_self_hosted"
     const val networkWifi = "WiFi"
     const val networkWWAN = "Mobile"
     const val networkTypeLabel = "Network Type:"
     const val networkCarrierLabel = "Carrier:"
     const val networkCountryCodeLabel = "Country Code:"
     const val noneValue = "none"
-    // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
+    // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
-    const val sourcePlatform = "mobile_-_android"
-    const val ticketSubject = "WordPress for Android Support"
+    const val jp_sourcePlatform = "mobile_-_jp_android"
+    const val wp_sourcePlatform = "mobile_-_android"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }

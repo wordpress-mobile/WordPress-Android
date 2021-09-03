@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtilsWrapper;
@@ -85,6 +86,7 @@ public class UploadService extends Service {
     @Inject UploadStore mUploadStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject PostUtilsWrapper mPostUtilsWrapper;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onCreate() {
@@ -205,10 +207,25 @@ public class UploadService extends Service {
             // if this media belongs to some post, register such Post
             registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
+            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>();
             for (MediaModel media : mediaList) {
+                MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                boolean notUploadedYet = localMedia != null
+                                         && (localMedia.getUploadState() == null
+                                             || MediaUploadState.fromString(localMedia.getUploadState())
+                                                != MediaUploadState.UPLOADED);
+                if (notUploadedYet) {
+                    toBeUploadedMediaList.add(media);
+                }
+            }
+
+            for (MediaModel media : toBeUploadedMediaList) {
                 mMediaUploadHandler.upload(media);
             }
-            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
+
+            if (!toBeUploadedMediaList.isEmpty()) {
+                mPostUploadNotifier.addMediaInfoToForegroundNotification(toBeUploadedMediaList);
+            }
         }
     }
 
@@ -609,7 +626,7 @@ public class UploadService extends Service {
 
             // actually replace the media ID with the media uri
             processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
+                    FluxCUtils.mediaFileFromMediaModel(media), site);
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
@@ -910,7 +927,7 @@ public class UploadService extends Service {
 
                 // if media has a local site id, use that. If not, default to currently selected site.
                 int siteLocalId = event.media.getLocalSiteId() > 0 ? event.media.getLocalSiteId()
-                        : AppPrefs.getSelectedSite();
+                        : mSelectedSiteRepository.getSelectedSiteLocalId(true);
                 SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
 
                 List<MediaModel> failedStandAloneMedia = getRetriableStandaloneMedia(selectedSite);
@@ -1055,17 +1072,16 @@ public class UploadService extends Service {
 
     private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
         // get all retriable media ? To retry or not to retry, that is the question
-        List<MediaModel> failedMedia = null;
         List<MediaModel> failedStandAloneMedia = new ArrayList<>();
         if (selectedSite != null) {
-            failedMedia = mMediaStore.getSiteMediaWithState(
+            List<MediaModel> failedMedia = mMediaStore.getSiteMediaWithState(
                     selectedSite, MediaUploadState.FAILED);
-        }
 
-        // only take into account those media items that do not belong to any Post
-        for (MediaModel media : failedMedia) {
-            if (media.getLocalPostId() == 0) {
-                failedStandAloneMedia.add(media);
+            // only take into account those media items that do not belong to any Post
+            for (MediaModel media : failedMedia) {
+                if (media.getLocalPostId() == 0) {
+                    failedStandAloneMedia.add(media);
+                }
             }
         }
 
@@ -1100,13 +1116,13 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String errorMessage;
 
-        UploadErrorEvent(PostModel post, String errorMessage) {
+        public UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
             this.mediaModelList = null;
             this.errorMessage = errorMessage;
         }
 
-        UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
+        public UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
             this.post = null;
             this.mediaModelList = mediaModelList;
             this.errorMessage = errorMessage;
@@ -1117,7 +1133,7 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String successMessage;
 
-        UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
+        public UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
             this.mediaModelList = mediaModelList;
             this.successMessage = successMessage;
         }

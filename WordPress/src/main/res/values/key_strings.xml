@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- layout tags - do not translate -->
-    <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
-    <string name="fragment_tag_comment_detail" translatable="false" tools:ignore="UnusedResources">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
-    <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
     <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
     <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
@@ -16,7 +13,7 @@
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
-    <string name="pref_key_feature_config" translatable="false">wp_pref_feature_config</string>
+    <string name="pref_key_debug_settings" translatable="false">wp_pref_debug_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
@@ -45,12 +42,15 @@
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_categories" translatable="false">wp_pref_site_categories</string>
     <string name="pref_key_site_tags" translatable="false">wp_pref_site_tags</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
     <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
+    <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
+    <string name="pref_key_site_domains" translatable="false">wp_pref_site_domains</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
@@ -78,10 +78,10 @@
     <string name="pref_key_site_paging" translatable="false">wp_pref_site_paging</string>
     <string name="pref_key_site_identity_required" translatable="false">wp_pref_site_identity_required</string>
     <string name="pref_key_site_user_account_required" translatable="false">wp_pref_site_user_account_required</string>
-    <string name="pref_key_site_whitelist" translatable="false">wp_pref_site_whitelist</string>
+    <string name="pref_key_site_allowlist" translatable="false">wp_pref_site_whitelist</string>
     <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
-    <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
+    <string name="pref_key_site_denylist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
     <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
@@ -129,14 +129,14 @@
     <string name="pref_key_jetpack_send_email_notifications" translatable="false">wp_pref_jetpack_send_email_notifications</string>
     <string name="pref_key_jetpack_send_wp_notifications" translatable="false">wp_pref_jetpack_send_wp_notifications</string>
     <string name="pref_key_jetpack_prevent_brute_force" translatable="false">wp_pref_jetpack_prevent_brute_force</string>
-    <string name="pref_key_jetpack_brute_force_whitelist" translatable="false">wp_pref_jetpack_brute_force_whitelist</string>
+    <string name="pref_key_jetpack_brute_force_allowlist" translatable="false">wp_pref_jetpack_brute_force_whitelist</string>
     <string name="pref_key_jetpack_allow_wpcom_sign_in" translatable="false">wp_pref_jetpack_allow_wpcom_sign_in</string>
     <string name="pref_key_jetpack_match_via_email" translatable="false">wp_pref_jetpack_match_via_email</string>
     <string name="pref_key_jetpack_require_two_factor" translatable="false">wp_pref_jetpack_require_two_factor</string>
     <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
-    <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
+    <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
     <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
     <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>

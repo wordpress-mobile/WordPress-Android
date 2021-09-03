@@ -6,8 +6,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -182,6 +182,7 @@ class SelectedDateProvider
     private fun buildStateKey(key: StatsSection) = SELECTED_DATE_STATE_KEY + key
 
     @Parcelize
+    @SuppressLint("ParcelCreator")
     data class SelectedDate(
         val dateValue: Date? = null,
         val availableDates: List<Date> = listOf(),

@@ -29,7 +29,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
         private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
-        private val suggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
+        private val nameSuggestion = itemView.findViewById<TextView>(R.id.name_suggestion)
+        private val domainSuggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
         private val suggestionRadioButton = itemView.findViewById<RadioButton>(R.id.domain_suggestion_radio_button)
         private val domainUnavailability = itemView.findViewById<TextView>(R.id.domain_unavailability)
         private var onDomainSelected: (() -> Unit)? = null
@@ -49,7 +50,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
             if (uiState.clickable) {
                 onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             }
-            suggestion.text = uiState.name
+            nameSuggestion.text = uiState.name
+            domainSuggestion.text = uiState.domain
             suggestionRadioButton.isChecked = uiState.checked
             suggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
             container.isEnabled = uiState.clickable

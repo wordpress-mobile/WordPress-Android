@@ -4,30 +4,60 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
+import org.wordpress.android.ui.accounts.LoginViewModel;
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
+import org.wordpress.android.ui.debug.DebugSettingsViewModel;
+import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
+import org.wordpress.android.ui.engagement.UserProfileViewModel;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
+import org.wordpress.android.ui.mysite.MySiteViewModel;
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
+import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
+import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
 import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -43,8 +73,9 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.ui.stories.StoryComposerViewModel;
+import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
+import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
-import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
@@ -52,7 +83,6 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
-import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -66,6 +96,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -113,6 +144,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderPostDetailViewModel.class)
+    abstract ViewModel readerPostDetailViewModel(ReaderPostDetailViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -211,11 +247,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SiteCreationSegmentsViewModel.class)
-    abstract ViewModel siteCreationSegmentsViewModel(SiteCreationSegmentsViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(SiteCreationDomainsViewModel.class)
     abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
 
@@ -241,13 +272,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(GifPickerViewModel.class)
-    abstract ViewModel gifPickerViewModel(GifPickerViewModel viewModel);
+    @ViewModelKey(PlansViewModel.class)
+    abstract ViewModel plansViewModel(PlansViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(PlansViewModel.class)
-    abstract ViewModel plansViewModel(PlansViewModel viewModel);
+    @ViewModelKey(DomainsDashboardViewModel.class)
+    abstract ViewModel domainsDashboardViewModel(DomainsDashboardViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -293,6 +324,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ModalLayoutPickerViewModel.class)
     abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomePagePickerViewModel.class)
+    abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -363,11 +399,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListCreateMenuViewModel.class)
     abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
-    
+
     @Binds
     @IntoMap
     @ViewModelKey(StoryComposerViewModel.class)
     abstract ViewModel storyComposerViewModel(StoryComposerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StoriesIntroViewModel.class)
+    abstract ViewModel storiesIntroViewModel(StoriesIntroViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -381,9 +422,154 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ManualFeatureConfigViewModel.class)
-    abstract ViewModel manualFeatureConfigViewModel(ManualFeatureConfigViewModel viewModel);
+    @ViewModelKey(DebugSettingsViewModel.class)
+    abstract ViewModel debugSettingsViewModel(DebugSettingsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingCategoriesViewModel.class)
+    abstract ViewModel prepublishingCategoriesViewModel(PrepublishingCategoriesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingAddCategoryViewModel.class)
+    abstract ViewModel prepublishingAddCategoryViewModel(PrepublishingAddCategoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SuggestionViewModel.class)
+    abstract ViewModel suggestionViewModel(SuggestionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ActivityLogTypeFilterViewModel.class)
+    abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanViewModel.class)
+    abstract ViewModel scanViewModel(ScanViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanHistoryViewModel.class)
+    abstract ViewModel scanHistoryViewModel(ScanHistoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanHistoryListViewModel.class)
+    abstract ViewModel scanHistoryListViewModel(ScanHistoryListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ThreatDetailsViewModel.class)
+    abstract ViewModel threatDetailsViewModel(ThreatDetailsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MySiteViewModel.class)
+    abstract ViewModel mySiteViewModel(MySiteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BasicDialogViewModel.class)
+    abstract ViewModel basicDialogViewModel(BasicDialogViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadViewModel.class)
+    abstract ViewModel backupDownloadViewModel(BackupDownloadViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RestoreViewModel.class)
+    abstract ViewModel restoreViewModel(RestoreViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DynamicCardMenuViewModel.class)
+    abstract ViewModel dynamicCardMenuViewModel(DynamicCardMenuViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PeopleInviteViewModel.class)
+    abstract ViewModel peopleInviteViewModel(PeopleInviteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EngagedPeopleListViewModel.class)
+    abstract ViewModel engagedPeopleListViewModel(EngagedPeopleListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserProfileViewModel.class)
+    abstract ViewModel userProfileViewModel(UserProfileViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteSettingsTimezoneViewModel.class)
+    abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginNoSitesViewModel.class)
+    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginPrologueViewModel.class)
+    abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel.class)
+    abstract ViewModel loginViewModel(LoginViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
+    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginSiteCheckErrorViewModel.class)
+    abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentListViewModel.class)
+    abstract ViewModel unifiedCommentListViewModel(UnifiedCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BloggingRemindersViewModel.class)
+    abstract ViewModel bloggingRemindersViewModel(BloggingRemindersViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoriesListViewModel.class)
+    abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentActivityViewModel.class)
+    abstract ViewModel unifiedCommentActivityViewModel(UnifiedCommentActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DebugCookiesViewModel.class)
+    abstract ViewModel debugCookiesViewModel(DebugCookiesViewModel viewModel);
 }

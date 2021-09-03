@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2020-07-06 12:41:50+0000
+Translation-Revision-Date: 2021-06-01 07:46:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -8,34 +8,50 @@ Language: el_GR
 <resources>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Η τρέχουσα τιμή είναι %2$s</string>
+    <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
+    <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
+    <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
+    <string name="user_profile_site_section_header">Ιστότοπος</string>
+    <string name="gutenberg_native_mention">Αναφορά</string>
+    <string name="gutenberg_native_cancel_search">Ακύρωση αναζήτησης</string>
+    <string name="gutenberg_native_error">Σφάλμα </string>
+    <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
+    <string name="button_copy">Διπλότυπο</string>
+    <string name="toast_edit_story_update_in_progress_title">Η ιστορία αποθηκευεται, παρακαλούμε περιμένετε…</string>
+    <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
+    <string name="gutenberg_native_choose_a_file">ΕΠΙΛΕΞΤΕ ΕΝΑ ΑΡΧΕΙΟ</string>
+    <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
+    <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
+    <string name="label_done_button">Ολοκληρώθηκε</string>
+    <string name="dialog_discard_story_title_edit">Απόρριψη αλλαγών;</string>
+    <string name="dialog_discard_story_ok_button_edit">Απόρριψη</string>
+    <string name="color_picker_label_background">Φόντο</string>
+    <string name="prepublishing_nudges_add_category_button">Προσθήκη κατηγορίας</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Προσθήκη Νέας Κατηγορίας</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Κατηγορίες</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Δεν έχει οριστεί</string>
+    <string name="prepublishing_nudges_categories_action">Κατηγορίες</string>
+    <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
+    <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
+    <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
+    <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>
     <string name="my_site_bottom_sheet_title">Προσθήκη νέου</string>
     <string name="post_settings_publish">Δημοσίευση</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_promo_viewpager_content_description">Εισαγωγή</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_filter_sites_title">Ιστότοποι</string>
-    <string name="reader_filter_tags_title">Ετικέτες</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
-    <string name="gutenberg_native_translate">Μετάφραση</string>
-    <string name="gutenberg_native_title">Τίτλος:</string>
+    <string name="reader_filter_tags_title">Θέματα</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_size">Μέγεθος</string>
-    <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">«%s» δεν υποστηρίζεται ακόμη στο WordPress για iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">«%s» δεν υποστηρίζεται ακόμη στο WordPress για Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
-    <string name="gutenberg_native_reset_block">Επαναφορά μπλοκ</string>
-    <string name="gutenberg_native_link_text">Κείμενο συνδέσμου</string>
     <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
-    <string name="gutenberg_native_content">Περιεχόμενο…</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -154,16 +170,13 @@ Language: el_GR
     <string name="quick_start_dialog_need_help_button_positive">Αποδοχή</string>
     <string name="quick_start_dialog_need_help_button_neutral">Ποτέ</string>
     <string name="quick_start_dialog_follow_sites_title">Ακολουθήστε άλλους ιστότοπους</string>
-    <string name="quick_start_dialog_customize_site_title">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_dialog_follow_sites_message">Βρείτε ιστοτόπους που σας ενδιαφέρουν και ακολουθήστε τους ώστε να λαμβάνετε ενημερώσεις όταν δημοσιεύουν.</string>
     <string name="quick_start_button_negative_short">Άκυρο</string>
     <string name="quick_start_button_positive">Μετάβαση</string>
-    <string name="quick_start_dialog_choose_theme_title">Επιλέξτε θέμα εμφάνισης</string>
     <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
-    <string name="reader_empty_followed_tags_title">Δεν ακολουθείτε ετικέτες</string>
-    <string name="quick_start_dialog_choose_theme_message">Περιηγηθείτε σε όλα μας τα θέματα για να βρείτε το ιδανικό για εσάς.</string>
     <string name="content_description_more">Περισσότερα</string>
+    <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
     <string name="install_jetpack_retry">Προσπαθήστε ξανά</string>
     <string name="jetpack">Jetpack</string>
@@ -201,14 +214,10 @@ Language: el_GR
     <string name="support_identity_input_dialog_enter_email">Παρακαλώ συμπληρώστε το email σας</string>
     <string name="reader_empty_search_title">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="sites">Ιστότοποι</string>
-    <string name="signup_email_screen_title">Εγγραφή με Email</string>
     <string name="signup_magic_link_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
     <string name="selfhosted_site_login_title">Στοιχεία εισόδου</string>
-    <string name="alternatively">Εναλλακτικά:</string>
     <string name="magic_link_sent_login_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
     <string name="reader_bookmark_snack_btn">Προβολή όλων</string>
-    <string name="reader_btn_bookmark">Αποθήκευση</string>
-    <string name="reader_btn_bookmarked">Αποθηκεύτηκε</string>
     <string name="removed">Αφαιρέθηκε</string>
     <string name="reader_save_for_later_title">Αποθηκευμένα άρθρα</string>
     <string name="my_site_icon_dialog_cancel_button">Άκυρο</string>
@@ -218,7 +227,6 @@ Language: el_GR
     <string name="reader_followed_blog_notifications_action">Ενεργοποίηση</string>
     <string name="my_site_icon_content_description">Αλλαγή εικονιδίου ιστότοπου</string>
     <string name="my_site_icon_dialog_add_message">Θα θέλατε να προσθέσετε ένα εικονίδιο ιστότοπου;</string>
-    <string name="activity">Δραστηριότητα</string>
     <string name="cookie_policy_learn_more_header">Πολιτική Cookies</string>
     <string name="privacy_policy_learn_more_header">Πολιτική Απορρήτου</string>
     <string name="activity_log_jetpack_icon">Εικονίδιο Jetpack</string>
@@ -229,7 +237,6 @@ Language: el_GR
     <string name="privacy_policy_read">Διαβάστε την πολιτική απορρήτου</string>
     <string name="activity_log_event">Συμβάν</string>
     <string name="post_submitted">Το άρθρο υποβλήθηκε</string>
-    <string name="login_email_button_signup">Δεν έχετε λογαριασμό; %1$sΕγγραφείτε%2$s</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Εγκατάσταση</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Hμερήσια</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">Μία φορά την εβδομάδα</string>
@@ -266,7 +273,6 @@ Language: el_GR
     <string name="comment_spam_talkback">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="login_prologue_screen_title">Είσοδος</string>
     <string name="signup_epilogue_screen_title">Νέος λογαριασμός</string>
     <string name="site_settings_quota_header">Εικόνες και Βίντεο</string>
     <string name="edit_photo_screen_title">Επεξεργασία φωτογραφίας</string>
@@ -294,7 +300,6 @@ Language: el_GR
     <string name="uploading_subtitle_mixed_page_singular_media_one">1 σελίδα και 1 αρχείο απομένουν</string>
     <string name="untitled_in_parentheses">(Χωρίς τίτλο)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Δημιουργία ενός ιστότοπου</string>
     <string name="username_changer_action">Αποθήκευση</string>
     <string name="username_changer_dismiss_button_positive">Απόρριψη</string>
@@ -309,8 +314,6 @@ Language: el_GR
     <string name="signup_epilogue_hint_username">Όνομα χρήστη  </string>
     <string name="signup_magic_link_error_button_negative">Κλείσιμο</string>
     <string name="signup_magic_link_error_button_positive">Προσπαθήστε ξανά</string>
-    <string name="sign_up">Εγγραφείτε για WordPress.com</string>
-    <string name="enter_username_instead">Συνδεθείτε με το όνομα χρήστη σας.</string>
     <string name="my_site_add_new_site">Προσθήκη ιστότοπου</string>
     <string name="plugin_caption_new">Νέο</string>
     <string name="plugin_caption_popular">Δημοφιλή</string>
@@ -398,7 +401,6 @@ Language: el_GR
     <string name="media_edit_file_details_card_caption">Λεπτομέρειες αρχείου</string>
     <string name="login_error_suffix">\nΊσως να δοκιμάσετε ένα διαφορετικό λογαριασμό;</string>
     <string name="login_error_button">Κλείσιμο</string>
-    <string name="login_google_button_suffix">Σύνδεση με Google.</string>
     <string name="post_settings_remove_featured_image">Αφαίρεση χαρακτηριστικής εικόνας</string>
     <string name="post_settings_choose_featured_image">Επιλέξτε χαρακτηρισμένη εικόνα</string>
     <string name="login_log_in_for_share_intent">Συνδεθείτε στο WordPress.com για να μοιραστείτε το περιεχόμενο.</string>
@@ -425,6 +427,7 @@ Language: el_GR
     <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
+    <string name="connect_site">Σύνδεση ιστότοπου</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Δόνηση συσκευής</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Επιλογή ήχου</string>
     <string name="notification_settings_category_sights_and_sounds">Εικόνες και Ήχοι</string>
@@ -433,9 +436,9 @@ Language: el_GR
     <string name="notification_settings_category_other">Άλλο</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Όλοι οι ιστότοποι μου</string>
     <string name="notification_settings_category_your_sites">Οι ιστότοποί σας</string>
-    <string name="notification_settings_master_hint_off">Ενεργοποίηση ενημερώσεων</string>
-    <string name="notification_settings_master_hint_on">Απενεργοποίηση ενημερώσεων</string>
-    <string name="notification_settings_master_status_off">Κλείσιμο</string>
+    <string name="notification_settings_main_hint_off">Ενεργοποίηση ενημερώσεων</string>
+    <string name="notification_settings_main_hint_on">Απενεργοποίηση ενημερώσεων</string>
+    <string name="notification_settings_main_status_off">Κλείσιμο</string>
     <string name="max_video_resolution">Μέγιστο μέγεθος βίντεο</string>
     <string name="max_thumbnail_px_size">Μέγιστο μέγεθος εικόνας</string>
     <string name="add_media_progress">Προσθήκη πολυμέσων</string>
@@ -452,6 +455,7 @@ Language: el_GR
     <string name="login_site_address_more_help">Χρειάζεστε περισσότερη βοήθεια;</string>
     <string name="login_site_address">Διεύθυνση ιστότοπου</string>
     <string name="login_continue">Συνέχεια</string>
+    <string name="connect_more">Συνδέστε Έναν Άλλο Ιστότοπο</string>
     <string name="next">Επόμενο</string>
     <string name="me_profile_photo">Φωτογραφία προφίλ</string>
     <string name="post_title">Τίτλος</string>
@@ -461,10 +465,7 @@ Language: el_GR
     <string name="post_status_draft">Προσχέδιο</string>
     <string name="post_status_pending_review">Εκκρεμής αναθεώρηση</string>
     <string name="post_status_post_private">Ιδιωτικό</string>
-    <string name="remove_location">Αφαίρεση Τοποθεσίας</string>
-    <string name="change_location">Αλλαγή Τοποθεσίας</string>
     <string name="post_status_publish_post">Δημοσίευση</string>
-    <string name="post_settings_location">Τοποθεσία</string>
     <string name="now">Τώρα</string>
     <string name="post_settings_tags">Ετικέτες</string>
     <string name="post_settings_slug">Σύντομο Όνομα</string>
@@ -597,9 +598,7 @@ Language: el_GR
     <string name="reader_toast_err_already_liked">Σας αρέσει ήδη αυτό το σχόλιο</string>
     <string name="reader_toast_err_comment_not_found">Το σχόλιο δεν βρέθηκε!</string>
     <string name="reader_toast_err_cannot_like_post">Δεν μπορέσατε να κάνετε \"like\" σε αυτό το άρθρο</string>
-    <string name="reader_title_post_detail_wpcom">Άρθρο του WordPress.com</string>
     <string name="error_notif_q_action_reply">Δεν μπορέσατε να απαντήσετε στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
-    <string name="reader_title_deeplink">WordPress Αναγνώστης</string>
     <string name="error_notif_q_action_approve">Σφάλμα κατά την έγκριση του σχολίου. Παρακαλώ δοκιμάστε αργότερα.</string>
     <string name="error_notif_q_action_like">Δεν μπορέσατε να κάνετε \"like\" στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
     <string name="notifications_label_new_notifications_subtitle">Αγγίξτε για να τα δείτε</string>
@@ -661,14 +660,9 @@ Language: el_GR
     <string name="invite_error_invalid_usernames_multiple">Αδυναμία αποστολής: Υπάρχουν μη έγκυρα ονόματα χρήστη ή ηλ. διευθύνσεις</string>
     <string name="invite_error_invalid_usernames_one">Αδυναμία αποστολής: Μη έγκυρο όνομα χρήστη ή ηλ. διεύθυνση</string>
     <string name="invite_error_no_usernames">Παρακαλώ προσθέστε τουλάχιστον ένα όνομα χρήστη</string>
-    <string name="invite_message_info">(Προαιρετικό) Μπορείτε να εισάγετε ένα προσαρμοσμένο μήνυμα με έως 500 χαρακτήρες που θα συμπεριλαμβάνεται στην πρόσκληση των χρηστών.</string>
-    <string name="invite_message_remaining_other">Απομένουν %d χαρακτήρες</string>
-    <string name="invite_message_remaining_one">Απομένει 1 χαρακτήρας</string>
-    <string name="invite_message_remaining_zero">Απομένουν 0 χαρακτήρες</string>
     <string name="invite_message_title">Προσαρμοσμένο Μήνυμα</string>
     <string name="invite">Πρόσκληση</string>
     <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
-    <string name="send_link">Αποστολή συνδέσμου</string>
     <string name="my_site_header_external">Εξωτερική</string>
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
@@ -694,7 +688,6 @@ Language: el_GR
     <string name="checking_email">Έλεγχος e-mail</string>
     <string name="magic_link_unavailable_error_message">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
     <string name="logging_in">Γίνεται σύνδεση</string>
-    <string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
     <string name="capture_or_pick_photo">Τραβήξτε ή επιλέξτε φωτογραφία</string>
     <string name="export_your_content_message">Τα άρθρα, οι σελίδες και οι ρυθμίσεις σας θα σας αποσταλούν με ηλ. ταχυδρομείο στο %s.</string>
@@ -717,6 +710,7 @@ Language: el_GR
     <string name="confirm_delete_site_prompt">Παρακαλούμε πληκτρολογήστε %1$s στο παρακάτω πεδίο για επιβεβαίωση. Ο ιστότοπός σας μετά θα εξαφανιστεί για πάντα.</string>
     <string name="site_settings_export_content_title">Εξαγωγή περιεχομένου</string>
     <string name="confirm_delete_site">Επιβεβαίωση Διαγραφής Ιστοτόπου</string>
+    <string name="contact_support">Επικοινωνήστε με την υποστήριξη</string>
     <string name="start_over_text">Αν θέλετε να διατηρήσετε έναν ιστότοπο αλλά δεν θέλετε κανένα από τα άρθρα και τις σελίδες που έχετε τώρα, η ομάδα υποστήριξής μας μπορεί να διαγράψει τα άρθρα, τις σελίδες τα πολυμέσα και τα σχόλια για λογαριασμό σας.\n\nΑυτό θα διατηρήσει ενεργά τον ιστότοπο και το URL σας αλλά θα σας επιτρέψει ένα νέο ξεκίνημα στη δημιουργία περιεχομένου. Απλά επικοινωνήστε μαζί μας για να γίνει εκκαθάριση του τρέχοντος περιεχομένου σας.</string>
     <string name="site_settings_start_over_hint">Ξεκινήστε τον ιστότοπό σας από την αρχή</string>
     <string name="let_us_help">Αφήστε μας να βοηθήσουμε</string>
@@ -814,7 +808,7 @@ Language: el_GR
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>
     <string name="site_settings_paging_dialog_header">Σχόλια ανά σελίδα</string>
     <string name="site_settings_close_after_dialog_title">Κλείσιμο σχολιασμού</string>
-    <string name="site_settings_blacklist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
+    <string name="site_settings_denylist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα παραμένει στην αναμονή προς έγκριση. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\" </string>
     <string name="site_settings_list_editor_input_hint">Εισάγετε μια λέξη ή φράση</string>
     <string name="site_settings_list_editor_no_items_text">Δεν υπάρχουν αντικείμενα</string>
@@ -829,10 +823,10 @@ Language: el_GR
     <string name="site_settings_rp_show_header_title">Προβολή Κεφαλίδας</string>
     <string name="site_settings_rp_switch_summary">Στα Σχετικά Άρθρα εμφανίζεται σχετικό περιεχόμενο από τον ιστότοπό σας κάτω από τα άρθρα σας.</string>
     <string name="site_settings_rp_switch_title">Εμφάνιση Σχετικών Άρθρων</string>
-    <string name="site_settings_blacklist_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο σημειώνονται ως ανεπιθύμητα</string>
+    <string name="site_settings_denylist_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο σημειώνονται ως ανεπιθύμητα</string>
     <string name="site_settings_moderation_hold_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο τοποθετούνται στην αναμονή προς έγκριση</string>
     <string name="site_settings_multiple_links_hint">Αγνόηση του ορίου συνδέσμου για γνωστούς χρήστες</string>
-    <string name="site_settings_whitelist_hint">Ο συντάκτης του σχολίου πρέπει να έχει προηγουμένως εγκεκριμένο σχόλιο</string>
+    <string name="site_settings_allowlist_hint">Ο συντάκτης του σχολίου πρέπει να έχει προηγουμένως εγκεκριμένο σχόλιο</string>
     <string name="site_settings_user_account_required_hint">Οι χρήστες πρέπει να είναι εγγεγραμμένοι και συνδεδεμένοι για να σχολιάσουν</string>
     <string name="site_settings_identity_required_hint">Ο συντάκτης του σχολίου θα πρέπει να συμπληρώσει όνομα και e-mail</string>
     <string name="site_settings_paging_hint">Εμφάνιση σχολίων σε ομάδες καθορισμένου μεγέθους</string>
@@ -855,17 +849,16 @@ Language: el_GR
     <string name="site_settings_address_hint">Η αλλαγή της διεύθυνσής σας δεν υποστηρίζεται προς το παρόν</string>
     <string name="site_settings_tagline_hint">Μια μικρή περιγραφή ή μια πιασάρικη φράση που περιγράφει το ιστολόγιό σας</string>
     <string name="site_settings_title_hint">Με λίγες λέξεις, εξηγήστε τι αφορά αυτός ο ιστότοπος</string>
-    <string name="site_settings_whitelist_known_summary">Σχόλια από γνωστούς χρήστες</string>
-    <string name="site_settings_whitelist_all_summary">Σχόλια από όλους τους χρήστες</string>
+    <string name="site_settings_allowlist_known_summary">Σχόλια από γνωστούς χρήστες</string>
+    <string name="site_settings_allowlist_all_summary">Σχόλια από όλους τους χρήστες</string>
     <string name="site_settings_threading_summary">%d επίπεδα</string>
     <string name="site_settings_privacy_private_summary">Ιδιωτικό</string>
     <string name="site_settings_privacy_hidden_summary">Κρυμμένο</string>
     <string name="site_settings_delete_site_title">Διαγραφή ιστοτόπου</string>
     <string name="site_settings_privacy_public_summary">Δημόσιο</string>
-    <string name="site_settings_blacklist_title">Μαύρη λίστα</string>
     <string name="site_settings_moderation_hold_title">Αναμονή για έλεγχο</string>
     <string name="site_settings_multiple_links_title">Σύνδεσμοι στα σχόλια</string>
-    <string name="site_settings_whitelist_title">Αυτόματη έγκριση</string>
+    <string name="site_settings_allowlist_title">Αυτόματη έγκριση</string>
     <string name="site_settings_paging_title">Σελιδοποίηση</string>
     <string name="site_settings_threading_title">Νήματα</string>
     <string name="site_settings_sort_by_title">Ταξινόμηση κατά</string>
@@ -940,6 +933,7 @@ Language: el_GR
     <string name="reader_discover_attribution_author_and_blog">Δημοσιεύτηκε αρχικά από %1$s στο %2$s</string>
     <string name="reader_short_like_count_multi">%s \"Like\"</string>
     <string name="reader_short_like_count_one">1 \"Like\"</string>
+    <string name="reader_label_follow_count">%,d ακόλουθοι</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
     <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
@@ -986,7 +980,6 @@ Language: el_GR
     <string name="my_site_btn_switch_site">Αλλαγή Ιστότοπου</string>
     <string name="my_site_btn_view_admin">Προβολή Διαχείρισης</string>
     <string name="site_picker_title">Επιλογή ιστότοπου</string>
-    <string name="my_site_btn_site_settings">Ρυθμίσεις</string>
     <string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
     <string name="my_site_header_publish">Δημοσιεύω</string>
     <string name="my_site_btn_blog_posts">Άρθρο ιστολογίου</string>
@@ -1010,7 +1003,6 @@ Language: el_GR
     <string name="pages_fetching">Ανάκτηση σελίδων…</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
-    <string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
     <string name="logs_copied_to_clipboard">Τα αρχεία καταγραφής της εφαρμογής έχουν αντιγραφεί στο πρόχειρο</string>
     <string name="reader_label_new_posts">Νέα άρθρα</string>
     <string name="error_copy_to_clipboard">Προέκυψε σφάλμα κατά την αντιγραφή κειμένου στο πρόχειρο</string>
@@ -1056,7 +1048,6 @@ Language: el_GR
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
     <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
     <string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
-    <string name="reader_label_liked_by">Έλαβε \"like\" από</string>
     <string name="comment_trashed">Το σχόλιο διαγράφηκε</string>
     <string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
     <string name="comment_reply_to_user">Απάντηση σε %s</string>
@@ -1077,7 +1068,6 @@ Language: el_GR
     <string name="reader_toast_err_unfollow_blog">Αδυναμία διακοπής παρακολούθησης αυτού του Ιστότοπου</string>
     <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενοι Ιστότοποι</string>
     <string name="help">Βοήθεια</string>
-    <string name="forgot_password">Έχασες τον κωδικό σου;</string>
     <string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
@@ -1186,6 +1176,7 @@ Language: el_GR
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>
     <string name="reader_label_removed_tag">Αφαιρέθηκε το %s</string>
+    <string name="sign_up_label">Εγγραφή</string>
     <string name="stats">Στατιστικά</string>
     <string name="themes">Θέμα</string>
     <string name="media_gallery_type_squares">Τετράγωνα</string>

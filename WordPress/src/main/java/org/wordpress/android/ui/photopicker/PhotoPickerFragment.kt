@@ -5,25 +5,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.photo_picker_fragment.*
-import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PhotoPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
@@ -41,16 +43,19 @@ import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}")
-class PhotoPickerFragment : Fragment() {
+@Deprecated(
+        "This class is being refactored, if you implement any change, please also update " +
+                "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}"
+)
+class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
         ANDROID_CHOOSE_VIDEO(true),
@@ -77,27 +82,15 @@ class PhotoPickerFragment : Fragment() {
 
     private var listener: PhotoPickerListener? = null
 
-    @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PhotoPickerViewModel
+    private var binding: PhotoPickerFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-                R.layout.photo_picker_fragment,
-                container,
-                false
-        )
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -114,67 +107,60 @@ class PhotoPickerFragment : Fragment() {
                 selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_POSITIONS)?.toList()
             }
         }
-        recycler.setEmptyView(actionable_empty_view)
-        recycler.setHasFixedSize(true)
+        with(PhotoPickerFragmentBinding.bind(view)) {
+            binding = this
+            recycler.setEmptyView(actionableEmptyView)
+            recycler.setHasFixedSize(true)
 
-        val layoutManager = GridLayoutManager(
-                activity,
-                NUM_COLUMNS
-        )
+            val layoutManager = GridLayoutManager(
+                    activity,
+                    NUM_COLUMNS
+            )
 
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            layoutManager.onRestoreInstanceState(it)
-        }
-
-        recycler.layoutManager = layoutManager
-
-        var isShowingActionMode = false
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            it?.let { uiState ->
-                setupPhotoList(uiState.photoListUiModel)
-                setupBottomBar(uiState.bottomBarUiModel)
-                setupSoftAskView(uiState.softAskViewUiModel)
-                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
-                    isShowingActionMode = true
-                    (activity as AppCompatActivity).startSupportActionMode(
-                            PhotoPickerActionModeCallback(
-                                    viewModel
-                            )
-                    )
-                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
-                    isShowingActionMode = false
-                }
-                uiState.fabUiModel.let(this::setupFab)
+            savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+                layoutManager.onRestoreInstanceState(it)
             }
-        })
 
-        viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
-        {
-            it.getContentIfNotHandled()?.let { uri ->
+            recycler.layoutManager = layoutManager
+
+            var isShowingActionMode = false
+            viewModel.uiState.observe(viewLifecycleOwner, Observer {
+                it?.let { uiState ->
+                    setupPhotoList(uiState.photoListUiModel)
+                    setupBottomBar(uiState.bottomBarUiModel)
+                    setupSoftAskView(uiState.softAskViewUiModel)
+                    if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                        isShowingActionMode = true
+                        (activity as AppCompatActivity).startSupportActionMode(
+                                PhotoPickerActionModeCallback(
+                                        viewModel
+                                )
+                        )
+                    } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                        isShowingActionMode = false
+                    }
+                    setupFab(uiState.fabUiModel)
+                }
+            })
+
+            viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
                 MediaPreviewActivity.showPreview(
                         requireContext(),
                         null,
                         uri.toString()
                 )
                 AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            }
-        })
+            })
 
-        viewModel.onInsert.observe(viewLifecycleOwner, Observer
-        { event ->
-            event.getContentIfNotHandled()?.let { selectedUris ->
+            viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
                 listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
-            }
-        })
+            })
 
-        viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { (icon, allowMultipleSelection) ->
+            viewModel.onIconClicked.observeEvent(viewLifecycleOwner, { (icon, allowMultipleSelection) ->
                 listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
-            }
-        })
+            })
 
-        viewModel.onShowPopupMenu.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { uiModel ->
+            viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
                 val popup = PopupMenu(activity, uiModel.view.view)
                 for (popupMenuItem in uiModel.items) {
                     val item = popup.menu
@@ -185,48 +171,54 @@ class PhotoPickerFragment : Fragment() {
                     }
                 }
                 popup.show()
-            }
-        })
+            })
 
-        viewModel.onPermissionsRequested.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                when (this) {
+            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
+                when (it) {
                     CAMERA -> requestCameraPermission()
                     STORAGE -> requestStoragePermission()
                 }
-            }
-        })
+            })
 
-        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+            setupProgressDialog()
+
+            viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+        }
     }
 
-    private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun PhotoPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {
         when (uiModel) {
             is SoftAskViewUiModel.Visible -> {
-                soft_ask_view.title.text = Html.fromHtml(uiModel.label)
-                soft_ask_view.button.setText(uiModel.allowId.stringRes)
-                soft_ask_view.button.setOnClickListener {
+                softAskView.title.text = Html.fromHtml(uiModel.label)
+                softAskView.button.setText(uiModel.allowId.stringRes)
+                softAskView.button.setOnClickListener {
                     if (uiModel.isAlwaysDenied) {
                         WPPermissionUtils.showAppSettings(requireActivity())
                     } else {
                         requestStoragePermission()
                     }
                 }
-                soft_ask_view.visibility = View.VISIBLE
+                softAskView.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
-                if (soft_ask_view.visibility == View.VISIBLE) {
-                    AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                if (softAskView.visibility == View.VISIBLE) {
+                    AniUtils.fadeOut(softAskView, MEDIUM)
                 }
             }
         }
     }
 
-    private fun setupPhotoList(uiModel: PhotoListUiModel) {
+    private fun PhotoPickerFragmentBinding.setupPhotoList(uiModel: PhotoListUiModel) {
         if (uiModel is PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
-                        imageManager
+                        imageManager,
+                        viewModel.viewModelScope
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter
@@ -236,43 +228,42 @@ class PhotoPickerFragment : Fragment() {
         }
     }
 
-    private fun setupFab(fabUiModel: FabUiModel) {
+    private fun PhotoPickerFragmentBinding.setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            wp_stories_take_picture.visibility = View.VISIBLE
-            wp_stories_take_picture.setOnClickListener {
+            wpStoriesTakePicture.visibility = View.VISIBLE
+            wpStoriesTakePicture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            wp_stories_take_picture.visibility = View.GONE
+            wpStoriesTakePicture.visibility = View.GONE
         }
     }
 
-    private fun setupBottomBar(uiModel: BottomBarUiModel) {
+    private fun PhotoPickerFragmentBinding.setupBottomBar(uiModel: BottomBarUiModel) {
         if (!canShowMediaSourceBottomBar(uiModel.hideMediaBottomBarInPortrait)) {
-            hideBottomBar(container_media_source_bar)
+            hideBottomBar(containerMediaSourceBar)
         } else {
             if (!uiModel.showCameraButton) {
-                container_media_source_bar.icon_camera.visibility = View.GONE
+                iconCamera.visibility = View.GONE
             } else {
-                container_media_source_bar.icon_camera.setOnClickListener {
+                iconCamera.setOnClickListener {
                     viewModel.onCameraClicked(ViewWrapper(it))
                 }
             }
-            container_media_source_bar.icon_picker
-                    ?.setOnClickListener {
+            iconPicker.setOnClickListener {
                         uiModel.onIconPickerClicked(ViewWrapper(it))
                     }
 
             if (uiModel.showWPMediaIcon) {
-                container_media_source_bar.icon_wpmedia.setOnClickListener {
+                iconWpmedia.setOnClickListener {
                     viewModel.clickIcon(WP_MEDIA)
                 }
             } else {
-                container_media_source_bar.icon_wpmedia.visibility = View.GONE
+                iconWpmedia.visibility = View.GONE
             }
         }
         if (uiModel.canShowInsertEditBottomBar) {
-            container_insert_edit_bar.text_edit
+            textEdit
                     .setOnClickListener {
                         val inputData = WPMediaUtils.createListOfEditImageInputData(
                                 requireContext(),
@@ -280,28 +271,57 @@ class PhotoPickerFragment : Fragment() {
                         )
                         ActivityLauncher.openImageEditor(activity, inputData)
                     }
-            container_insert_edit_bar.text_insert.setOnClickListener { viewModel.performInsertAction() }
+            textInsert.setOnClickListener { viewModel.performInsertAction() }
         }
         val editTextVisible = if (uiModel.insertEditTextBarVisible) View.VISIBLE else View.GONE
-        container_insert_edit_bar.text_edit.visibility = editTextVisible
+        textEdit.visibility = editTextVisible
         when (uiModel.type) {
             INSERT_EDIT -> {
-                hideBottomBar(container_media_source_bar)
-                showBottomBar(container_insert_edit_bar)
+                hideBottomBar(containerMediaSourceBar)
+                showBottomBar(containerInsertEditBar)
             }
             MEDIA_SOURCE -> {
                 if (canShowMediaSourceBottomBar(uiModel.hideMediaBottomBarInPortrait)) {
-                    showBottomBar(container_media_source_bar)
+                    showBottomBar(containerMediaSourceBar)
                 } else {
-                    hideBottomBar(container_media_source_bar)
+                    hideBottomBar(containerMediaSourceBar)
                 }
-                hideBottomBar(container_insert_edit_bar)
+                hideBottomBar(containerInsertEditBar)
             }
             NONE -> {
-                hideBottomBar(container_insert_edit_bar)
-                hideBottomBar(container_media_source_bar)
+                hideBottomBar(containerInsertEditBar)
+                hideBottomBar(containerMediaSourceBar)
             }
         }
+    }
+
+    private fun setupProgressDialog() {
+        var progressDialog: AlertDialog? = null
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.progressDialogUiModel?.apply {
+                when (this) {
+                    is Visible -> {
+                        if (progressDialog == null || progressDialog?.isShowing == false) {
+                            val builder: Builder = MaterialAlertDialogBuilder(requireContext())
+                            builder.setTitle(this.title)
+                            builder.setView(R.layout.media_picker_progress_dialog)
+                            builder.setNegativeButton(
+                                    R.string.cancel
+                            ) { _, _ -> this.cancelAction() }
+                            builder.setCancelable(false)
+                            progressDialog = builder.show()
+                        }
+                    }
+                    ProgressDialogUiModel.Hidden -> {
+                        progressDialog?.let { dialog ->
+                            if (dialog.isShowing) {
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun canShowMediaSourceBottomBar(
@@ -320,7 +340,7 @@ class PhotoPickerFragment : Fragment() {
         if (selectedIds != null && selectedIds.isNotEmpty()) {
             outState.putLongArray(KEY_SELECTED_POSITIONS, selectedIds.toLongArray())
         }
-        recycler.layoutManager?.let {
+        binding!!.recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
     }
@@ -356,10 +376,6 @@ class PhotoPickerFragment : Fragment() {
 
     private fun isBottomBarShowing(bottomBar: View): Boolean {
         return bottomBar.visibility == View.VISIBLE
-    }
-
-    private fun hasAdapter(): Boolean {
-        return recycler.adapter != null
     }
 
     /*
@@ -431,6 +447,14 @@ class PhotoPickerFragment : Fragment() {
 
     fun doIconClicked(wpMedia: PhotoPickerIcon) {
         viewModel.clickIcon(wpMedia)
+    }
+
+    fun urisSelectedFromSystemPicker(uris: List<Uri>) {
+        viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
+    }
+
+    fun mediaIdsSelectedFromWPMediaPicker(mediaIds: List<Long>) {
+        viewModel.mediaIdsSelectedFromWPMediaPicker(mediaIds)
     }
 
     companion object {

@@ -26,17 +26,20 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
+@Suppress("MultiLineIfElse")
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
@@ -53,6 +56,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
         private val pageSubtitle = itemView.findViewById<TextView>(R.id.page_subtitle)
+        private val pageSubtitleIcon = itemView.findViewById<ImageView>(R.id.page_subtitle_icon)
+        private val pageSubtitleSuffix = itemView.findViewById<TextView>(R.id.page_subtitle_suffix)
         private val labels = itemView.findViewById<TextView>(R.id.labels)
         private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
         private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
@@ -80,7 +85,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 else
                     page.title
 
-                showSubtitle(page.date, page.author, page.subtitle)
+                showSubtitle(page.date, page.author, page.subtitle, page.icon)
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it).toString() }.sorted()
                         .joinToString(separator = " · ")
@@ -95,7 +100,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
-                itemView.setOnClickListener { onItemTapped(page) }
+                itemView.setOnClickListener {
+                    QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                    onItemTapped(page)
+                }
 
                 pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =
@@ -106,6 +114,21 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
                 updateProgressBarState(page.progressBarUiState)
+
+                // Clean up focus tip if there
+                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                if (page.showQuickStartFocusPoint) {
+                    pageItemContainer.post {
+                        val horizontalOffset = pageItemContainer.width / 2
+                        val verticalOffset = (pageItemContainer.height)
+                        QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                                pageItemContainer,
+                                pageMore,
+                                horizontalOffset,
+                                -verticalOffset
+                        )
+                    }
+                }
             }
         }
 
@@ -165,41 +188,43 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         @ExperimentalStdlibApi
-        private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?) {
+        private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?, icon: Int?) {
             val date = if (inputDate == Date(0)) Date() else inputDate
             val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
                     .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
-            /** The subtitle can use 2 or 3 placeholders
-            * Date - Only (author & subtitle are null)
-            * Date - Author (author != null && subtitle == null)
-            * Date - subtitle (author == null && subtitle != null)
-            * Date - Author - subtitle (all have values)
-            */
-            pageSubtitle.text = if (author == null && subtitle == null) {
-                stringDate
-            } else if (author != null && subtitle == null) {
-                String.format(
-                        Locale.getDefault(),
-                        parent.context.getString(R.string.pages_item_subtitle),
-                        stringDate,
-                        author)
-            } else if (author == null && subtitle != null) {
-                String.format(
-                        Locale.getDefault(),
-                        parent.context.getString(R.string.pages_item_subtitle),
-                        stringDate,
-                        parent.context.getString(subtitle))
-            } else {
-                subtitle?.let {
+            /** The subtitle is split in two TextViews:
+             * - Date and Author (if not null) occupy the [pageSubtitle] TextView
+             * - Subtitle fills the [pageSubtitleSuffix] TextView
+             */
+            if (subtitle != null) {
+                pageSubtitle.text = author?.let {
                     String.format(
                             Locale.getDefault(),
-                            parent.context.getString(R.string.pages_item_subtitle_date_author),
+                            parent.context.getString(R.string.pages_item_date_author_subtitle),
                             stringDate,
-                            author,
-                            parent.context.getString(it))
-                }
+                            it
+                    )
+                } ?: String.format(
+                        Locale.getDefault(),
+                        parent.context.getString(R.string.pages_item_date_subtitle),
+                        stringDate
+                )
+                pageSubtitleSuffix.text = parent.context.getString(subtitle)
+            } else {
+                pageSubtitle.text = author?.let {
+                    String.format(
+                            Locale.getDefault(),
+                            parent.context.getString(R.string.pages_item_date_author),
+                            stringDate,
+                            it
+                    )
+                } ?: stringDate
+                pageSubtitleSuffix.text = ""
             }
+
+            icon?.let { pageSubtitleIcon.setImageResource(it) }
+            pageSubtitleIcon.setVisible(icon != null)
         }
     }
 

@@ -26,11 +26,12 @@ class OptimizeMediaUseCase @Inject constructor(
     suspend fun optimizeMediaIfSupportedAsync(
         site: SiteModel,
         freshlyTaken: Boolean,
-        uriList: List<Uri>
+        uriList: List<Uri>,
+        trackEvent: Boolean = true
     ): OptimizeMediaResult {
         return withContext(bgDispatcher) {
             uriList
-                    .map { async { optimizeMediaAndTrackEvent(it, freshlyTaken, site) } }
+                    .map { async { optimizeMedia(it, freshlyTaken, site, trackEvent) } }
                     .map { it.await() }
                     .let {
                         OptimizeMediaResult(
@@ -41,7 +42,7 @@ class OptimizeMediaUseCase @Inject constructor(
         }
     }
 
-    private fun optimizeMediaAndTrackEvent(mediaUri: Uri, freshlyTaken: Boolean, site: SiteModel): Uri? {
+    private fun optimizeMedia(mediaUri: Uri, freshlyTaken: Boolean, site: SiteModel, trackEvent: Boolean): Uri? {
         val path = mediaUtilsWrapper.getRealPathFromURI(mediaUri) ?: return null
         val isVideo = mediaUtilsWrapper.isVideo(mediaUri.toString())
         /**
@@ -56,7 +57,9 @@ class OptimizeMediaUseCase @Inject constructor(
                     mediaUri
                 }
 
-        editorTracker.trackAddMediaFromDevice(site, freshlyTaken, isVideo, updatedMediaUri)
+        if (trackEvent) {
+            editorTracker.trackAddMediaFromDevice(site, freshlyTaken, isVideo, updatedMediaUri)
+        }
 
         return updatedMediaUri
     }

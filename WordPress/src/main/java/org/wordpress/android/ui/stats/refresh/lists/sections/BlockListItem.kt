@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
+import org.wordpress.android.ui.utils.ListItemInteraction
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -88,7 +89,7 @@ sealed class BlockListItem(val type: Type) {
     data class ReferredItem(
         @StringRes val label: Int,
         val itemTitle: String,
-        val navigationAction: NavigationAction? = null
+        val navigationAction: ListItemInteraction? = null
     ) : BlockListItem(REFERRED_ITEM)
 
     data class ValueItem(
@@ -123,7 +124,8 @@ sealed class BlockListItem(val type: Type) {
         val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
-        val navigationAction: NavigationAction? = null,
+        val navigationAction: ListItemInteraction? = null,
+        val longClickAction: ((View) -> Boolean)? = null,
         val contentDescription: String,
         @ColorRes val tint: Int? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
@@ -155,7 +157,7 @@ sealed class BlockListItem(val type: Type) {
             BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
-            val navigationAction: NavigationAction
+            val navigationAction: ListItemInteraction
         )
     }
 
@@ -173,14 +175,14 @@ sealed class BlockListItem(val type: Type) {
     data class Link(
         @DrawableRes val icon: Int? = null,
         @StringRes val text: Int,
-        val navigateAction: NavigationAction
+        val navigateAction: ListItemInteraction
     ) : BlockListItem(LINK)
 
     data class DialogButtons(
         @StringRes val positiveButtonText: Int,
-        val positiveAction: NavigationAction,
+        val positiveAction: ListItemInteraction,
         @StringRes val negativeButtonText: Int,
-        val negativeAction: NavigationAction
+        val negativeAction: ListItemInteraction
     ) : BlockListItem(DIALOG_BUTTONS)
 
     data class BarChartItem(
@@ -242,36 +244,5 @@ sealed class BlockListItem(val type: Type) {
 
         override val itemId: Int
             get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
-    }
-
-    interface NavigationAction {
-        fun click()
-
-        companion object {
-            fun create(action: () -> Unit): NavigationAction {
-                return NoParams(action)
-            }
-
-            fun <T> create(data: T, action: (T) -> Unit): NavigationAction {
-                return OneParam(data, action)
-            }
-        }
-
-        private data class OneParam<T>(
-            val data: T,
-            val action: (T) -> Unit
-        ) : NavigationAction {
-            override fun click() {
-                action(data)
-            }
-        }
-
-        private data class NoParams(
-            val action: () -> Unit
-        ) : NavigationAction {
-            override fun click() {
-                action()
-            }
-        }
     }
 }

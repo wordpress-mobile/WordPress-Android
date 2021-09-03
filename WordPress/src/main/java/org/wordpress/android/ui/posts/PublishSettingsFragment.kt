@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context.ALARM_SERVICE
@@ -17,9 +18,8 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
@@ -29,6 +29,7 @@ import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
@@ -62,25 +63,21 @@ abstract class PublishSettingsFragment : Fragment() {
 
         setupContent(rootView, viewModel)
 
-        viewModel.onDatePicked.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                showPostTimeSelectionDialog()
-            }
+        viewModel.onDatePicked.observeEvent(viewLifecycleOwner, {
+            showPostTimeSelectionDialog()
         })
-        viewModel.onPublishedDateChanged.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { date ->
-                viewModel.updatePost(date, getPostRepository())
-                trackPostScheduled()
-            }
+        viewModel.onPublishedDateChanged.observeEvent(viewLifecycleOwner, { date ->
+            viewModel.updatePost(date, getPostRepository())
+            trackPostScheduled()
         })
-        viewModel.onNotificationTime.observe(viewLifecycleOwner, Observer {
+        viewModel.onNotificationTime.observe(viewLifecycleOwner, {
             it?.let { notificationTime ->
                 getPostRepository()?.let { postRepository ->
                     viewModel.scheduleNotification(postRepository, notificationTime)
                 }
             }
         })
-        viewModel.onUiModel.observe(viewLifecycleOwner, Observer {
+        viewModel.onUiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
                 publishNotificationTitle.isEnabled = uiModel.notificationEnabled
@@ -108,53 +105,45 @@ abstract class PublishSettingsFragment : Fragment() {
                 addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
-        viewModel.onShowNotificationDialog.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { notificationTime ->
-                showNotificationTimeSelectionDialog(notificationTime)
-            }
+        viewModel.onShowNotificationDialog.observeEvent(viewLifecycleOwner, { notificationTime ->
+            showNotificationTimeSelectionDialog(notificationTime)
         })
-        viewModel.onToast.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                ToastUtils.showToast(
-                        context,
-                        this,
-                        SHORT,
-                        Gravity.TOP
+        viewModel.onToast.observeEvent(viewLifecycleOwner, {
+            ToastUtils.showToast(
+                    context,
+                    it,
+                    SHORT,
+                    Gravity.TOP
+            )
+        })
+        viewModel.onNotificationAdded.observeEvent(viewLifecycleOwner, { notification ->
+            activity?.let {
+                NotificationManagerCompat.from(it).cancel(notification.id)
+                val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
+                notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
+                val pendingIntent = PendingIntent.getBroadcast(
+                        it,
+                        notification.id,
+                        notificationIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT
+                )
+
+                val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
+                alarmManager.set(
+                        AlarmManager.RTC_WAKEUP,
+                        notification.scheduledTime,
+                        pendingIntent
                 )
             }
         })
-        viewModel.onNotificationAdded.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { notification ->
-                activity?.let {
-                    NotificationManagerCompat.from(it).cancel(notification.id)
-                    val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
-                    notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
-                    val pendingIntent = PendingIntent.getBroadcast(
-                            it,
-                            notification.id,
-                            notificationIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT
-                    )
-
-                    val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
-                    alarmManager.set(
-                            AlarmManager.RTC_WAKEUP,
-                            notification.scheduledTime,
-                            pendingIntent
-                    )
-                }
-            }
-        })
-        viewModel.onAddToCalendar.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { calendarEvent ->
-                val calIntent = Intent(Intent.ACTION_INSERT)
-                calIntent.data = Events.CONTENT_URI
-                calIntent.type = "vnd.android.cursor.item/event"
-                calIntent.putExtra(Events.TITLE, calendarEvent.title)
-                calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
-                calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
-                startActivity(calIntent)
-            }
+        viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner, { calendarEvent ->
+            val calIntent = Intent(Intent.ACTION_INSERT)
+            calIntent.data = Events.CONTENT_URI
+            calIntent.type = "vnd.android.cursor.item/event"
+            calIntent.putExtra(Events.TITLE, calendarEvent.title)
+            calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
+            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
+            startActivity(calIntent)
         })
         viewModel.start(getPostRepository())
         return rootView
@@ -217,6 +206,7 @@ abstract class PublishSettingsFragment : Fragment() {
 }
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 enum class PublishSettingsFragmentType : Parcelable {
     EDIT_POST,
     PREPUBLISHING_NUDGES

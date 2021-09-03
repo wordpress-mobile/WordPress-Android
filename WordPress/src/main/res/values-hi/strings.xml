@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2017-12-02 23:45:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -32,10 +32,6 @@ Language: hi_IN
     <string name="notification_settings_category_other">अन्य </string>
     <string name="notification_settings_item_your_sites_all_your_sites">मेरे सभी साईट </string>
     <string name="notification_settings_category_your_sites">आपके साइट </string>
-    <string name="notification_settings_master_hint_off">सूचना सक्रिय करें </string>
-    <string name="notification_settings_master_hint_on">सूचना असक्रिये करें </string>
-    <string name="notification_settings_master_status_off">बंद करें </string>
-    <string name="notification_settings_master_status_on">ऑन </string>
     <string name="max_video_resolution">अधिकतम वीडियो साइज</string>
     <string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
     <string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>
@@ -57,7 +53,6 @@ Language: hi_IN
     <string name="login_site_address">साइट का पता</string>
     <string name="login_continue">जारी रखें</string>
     <string name="next">अगला</string>
-    <string name="open_mail">मेल खोलें</string>
     <string name="turn_on">चालू करें</string>
     <string name="leave_off">छोड़ दें</string>
     <string name="post_title">शीर्षक</string>
@@ -78,8 +73,6 @@ Language: hi_IN
     <string name="reader_toast_err_already_liked">आपने पहले से ही उस टिप्पणी को पसंद किया हुआ हैI</string>
     <string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com पोस्ट</string>
-    <string name="reader_title_deeplink">वर्डप्रेस रीडर</string>
     <string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
@@ -168,7 +161,6 @@ Language: hi_IN
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
     <string name="my_site_header_publish">प्रकाशित</string>
     <string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
-    <string name="my_site_btn_site_settings">सेटिंग्स</string>
     <string name="show">दिखाएँ</string>
     <string name="hide">छुपाएँ</string>
     <string name="select_all">सभी चुनें</string>
@@ -201,12 +193,9 @@ Language: hi_IN
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
-    <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
-    <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
-    <string name="forgot_password">आपका पासवर्ड खो गया?</string>
     <string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
     <string name="email_invalid">मान्य ईमेल पता दर्ज करें</string>
     <string name="error_generic">एक त्रुटि हुई</string>
@@ -253,8 +242,6 @@ Language: hi_IN
     <string name="mnu_comment_trash">कचरा पेटी</string>
     <string name="trash">कचरा पेटी</string>
     <string name="comment_status_trash">कचरा पेटी में डाला गया</string>
-    <string name="reader_toast_err_add_tag">इस टैग को जोड़ने में असमर्थ</string>
-    <string name="reader_toast_err_remove_tag">इस टैग को हटाने में असमर्थ</string>
     <string name="mnu_comment_unapprove">अस्वीकृत</string>
     <string name="dlg_unapproving_comments">अस्वीकृत किया जा रहा</string>
     <string name="mnu_comment_approve">स्वीकृत करे</string>
@@ -302,9 +289,7 @@ Language: hi_IN
     <string name="reader_toast_err_url_intent">खोलने में असमर्थ %s</string>
     <string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>
     <string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
-    <string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
     <string name="empty_list_default">इस सूची खाली है</string>
-    <string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
     <string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे…</string>
     <string name="media_edit_title_text">शीर्षक</string>
     <string name="stats_timeframe_today">आज</string>

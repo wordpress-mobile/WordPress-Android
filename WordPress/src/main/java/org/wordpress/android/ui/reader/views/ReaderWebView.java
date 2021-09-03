@@ -3,23 +3,26 @@ package org.wordpress.android.ui.reader.views;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -189,6 +192,36 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
+    /***
+     * Checks if the tapped image is a child of an anchor tag we want to respect.
+     * If so, we want to ignore the image click so that the wrapping src gets handled.
+     * The additional URL grab is an additional check for the appropriate host or URL structure.
+     *
+     * Cases:
+     * 1. Instagram
+     * 2. The Story block
+     *
+     * @param hr - the HitTestResult
+     * @return true if the image click should be ignored and deferred to the parent anchor tag
+     */
+    private boolean isValidEmbeddedImageClick(HitTestResult hr) {
+        // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
+        if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            Handler handler = new Handler();
+            Message message = handler.obtainMessage();
+
+            this.requestFocusNodeHref(message);
+            String url = message.getData().getString("url");
+            if (url == null) {
+                return false;
+            }
+
+            return url.contains("ig_embed") || url.contains("wp-story");
+        } else {
+            return false;
+        }
+    }
+
     /*
      * detect when a link is tapped
      */
@@ -200,11 +233,15 @@ public class ReaderWebView extends WPWebView {
             if (hr != null) {
                 if (isValidClickedUrl(hr.getExtra())) {
                     if (UrlUtils.isImageUrl(hr.getExtra())) {
-                        return mUrlClickListener.onImageUrlClick(
-                                hr.getExtra(),
-                                this,
-                                (int) event.getX(),
-                                (int) event.getY());
+                        if (isValidEmbeddedImageClick(hr)) {
+                            return super.onTouchEvent(event);
+                        } else {
+                            return mUrlClickListener.onImageUrlClick(
+                                    hr.getExtra(),
+                                    this,
+                                    (int) event.getX(),
+                                    (int) event.getY());
+                        }
                     } else {
                         return mUrlClickListener.onUrlClick(hr.getExtra());
                     }
@@ -228,6 +265,8 @@ public class ReaderWebView extends WPWebView {
             }
             mReaderWebView = readerWebView;
         }
+
+
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -281,12 +320,13 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
-    private static class ReaderWebChromeClient extends WebChromeClient {
+    private static class ReaderWebChromeClient extends WebChromeClientWithVideoPoster {
         private final ReaderWebView mReaderWebView;
         private View mCustomView;
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
+            super(readerWebView, R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }

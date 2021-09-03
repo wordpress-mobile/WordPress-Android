@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Scan.TextView" parent="android:Widget.TextView">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+    </style>
+
+    <style name="Scan.Footnote" parent="Jetpack.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Scan.Footnote.Icon" parent="">
+        <item name="android:layout_width">@dimen/scan_footnote_icon_size</item>
+        <item name="android:layout_height">@dimen/scan_footnote_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">@color/colorPrimary</item>
+    </style>
+
+    <!--Threats List Header-->
+    <style name="Scan.Threats.Header" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:clickable">false</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--Threats List Header-->
+    <style name="Scan.Threats.Date" parent="Scan.Threats.Header" >
+        <item name="android:paddingTop">@dimen/margin_large</item>
+    </style>
+
+    <!--Threat List Item-->
+    <style name="Scan.Threat.Icon" parent="">
+        <item name="android:layout_width">@dimen/scan_threat_item_icon_size</item>
+        <item name="android:layout_height">@dimen/scan_threat_item_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+    </style>
+
+    <style name="Scan.Threat.Header" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    </style>
+
+    <style name="Scan.Threat.SecondaryHeader" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <!--Threat Details: ContextLine-->
+    <style name="Scan.ThreatDetails.ContextLine" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+    </style>
+
+    <style name="Scan.ThreatDetails.ContextLine.LineNumber" parent="Scan.ThreatDetails.ContextLine">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
+        <item name="android:background">@color/gray_20</item>
+        <item name="android:textAlignment">viewEnd</item>
+    </style>
+
+    <style name="Scan.ThreatDetails.ContextLine.Content" parent="Scan.ThreatDetails.ContextLine">
+        <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
+        <item name="android:background">@color/gray_5</item>
+    </style>
+
+    <!--Threat Details - FileName-->
+    <style name="Scan.ThreatDetails.FileName" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:padding">@dimen/margin_large</item>
+        <item name="android:background">@drawable/bg_rectangle_on_surface_emphasis_lowest</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <!-- Threat Details -->
+    <style name="Scan.ThreatDetails.Icon" parent="Scan.Threat.Icon">
+        <item name="android:layout_marginStart">0dp</item>
+    </style>
+    <style name="Scan.ThreatDetails.Header" parent="Jetpack.Header"/>
+    <style name="Scan.ThreatDetails.Description" parent="Jetpack.Description"/>
+</resources>

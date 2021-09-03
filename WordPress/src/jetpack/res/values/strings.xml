@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Jetpack</string>
+    <string name="widgets_enabled" translatable="false">false</string>
+
+    <!-- About View -->
+    <string name="app_title">Jetpack for Android</string>
+
+    <!-- Login Prologue -->
+    <string name="app_tagline">Site security and performance from your pocket</string>
+    <string name="continue_with_wpcom_no_signup">Log in with WordPress.com</string>
+
+    <!-- Login Magic Link -->
+    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from Jetpack.com.</string>
+
+    <!-- Contact us -->
+    <!--Note: Support ticket subject, only visible to the end users of the Zendesk support portal, doesn't need a translation -->
+    <string name="support_ticket_subject">Jetpack for Android Support</string>
+
+    <!-- Log out actions in Me -->
+    <string name="me_disconnect_from_wordpress_com">Log out of Jetpack</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Log out of Jetpack?</string>
+</resources>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
@@ -34,8 +34,6 @@ Language: cy_GB
     <string name="reader_toast_err_already_liked">Rydych eisoes wedi hoffi\'r sylw hwnnw</string>
     <string name="reader_toast_err_comment_not_found">Heb ganfod y sylw!</string>
     <string name="reader_toast_err_cannot_like_post">Methwyd hoffi\'r cofnod hwn</string>
-    <string name="reader_title_post_detail_wpcom">Cofnod WordPress.com</string>
-    <string name="reader_title_deeplink">Darllenydd WordPress</string>
     <string name="error_notif_q_action_reply">Methu ateb sylw. Ceisiwch eto.</string>
     <string name="error_notif_q_action_approve">Methu cymeradwyo sylw. Ceisiwch eto.</string>
     <string name="error_notif_q_action_like">Methu hoffi sylw. Ceisiwch eto.</string>
@@ -50,7 +48,6 @@ Language: cy_GB
     <string name="signout">Allgofnodi</string>
     <string name="sign_in_wpcom">Mewngofnodi i WordPress.com</string>
     <string name="reader_label_global_related_posts">Rhagor am WordPress.com</string>
-    <string name="reader_label_local_related_posts">Rhagor yn %s</string>
     <string name="preference_open_device_settings">Agor gosodiadau\'r ddyfais</string>
     <string name="invite_invalid_email">%s: E-bost annilys</string>
     <string name="invite_user_blocked_invites">%s: Mae\'r defnyddiwr wedi rhwystro gwahoddiadau</string>
@@ -98,14 +95,7 @@ Language: cy_GB
     <string name="invite_error_invalid_usernames_multiple">Methu anfon: Mae yna enwau defnyddwyr neu e-bost annilys</string>
     <string name="invite_error_invalid_usernames_one">Methu anfon: Mae yna enw defnyddiwr neu e-bost annilys</string>
     <string name="invite_error_no_usernames">Ychwanegwch o leiaf un enw defnyddiwr</string>
-    <string name="invite_message_info">(Dewisol) Gallwch gynnwys neges bersonol o hyd at 500 nod a fydd yn cael ei gynnwys yn y gwahoddiad i\'r defnyddiwr.</string>
-    <string name="invite_message_remaining_other">%d nod yn weddill</string>
-    <string name="invite_message_remaining_one">1 nod yn weddill</string>
-    <string name="invite_message_remaining_zero">0 nod yn weddill</string>
-    <string name="invite_message_title">Neges Bersonol</string>
     <string name="invite">Gwahodd</string>
-    <string name="invite_names_title">Enwau defnyddwyr neu E-byst</string>
-    <string name="send_link">Anfon dolen</string>
     <string name="my_site_header_external">Allanol</string>
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
@@ -129,7 +119,6 @@ Language: cy_GB
     <string name="checking_email">Gwirio e-bost</string>
     <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
-    <string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
@@ -241,7 +230,6 @@ Language: cy_GB
     <string name="site_settings_paging_dialog_description">Torri\'r edefyn sylw i dudalennau lluosog.</string>
     <string name="site_settings_paging_dialog_header">Sylwadau fesul tudalen</string>
     <string name="site_settings_close_after_dialog_title">Cau sylwadau</string>
-    <string name="site_settings_blacklist_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost, neu IP, bydd yn cael ei farcio fel sbam. Gallwch gynnig geiriau rhannol, felly bydd \"press\" yn canfod \"WordPress\"</string>
     <string name="site_settings_hold_for_moderation_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost neu IP, bydd yn cael ei gadw yn y rhes cymedroli. Gallwch gynnig geiriau rhannol, felly bydd \"press\" yn canfod \"WordPress\"</string>
     <string name="site_settings_list_editor_input_hint">Teipiwch air neu ymadrodd</string>
     <string name="site_settings_list_editor_no_items_text">Dim eitemau</string>
@@ -256,10 +244,8 @@ Language: cy_GB
     <string name="site_settings_rp_show_header_title">Dangos Pennyn</string>
     <string name="site_settings_rp_switch_summary">Mae Cofnodion Perthynol yn dangos cynnwys perthnasol o\'ch gwefan islaw eich cofnodion.</string>
     <string name="site_settings_rp_switch_title">Dangos Cofnodion sy\'n Perthyn</string>
-    <string name="site_settings_blacklist_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael eu marcio fel sbam</string>
     <string name="site_settings_moderation_hold_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael gosod yn y rhes cymedroli</string>
     <string name="site_settings_multiple_links_hint">Anwybyddu terfyn dolen gan ddefnyddwyr hysbys</string>
-    <string name="site_settings_whitelist_hint">Rhaid i awdur y sylw fod wedi cyfrannu sylw cymeradwy yn y gorffennol</string>
     <string name="site_settings_user_account_required_hint">Rhaid i ddefnyddwyr fod wedi\'u cofrestru ac wedi mewngofnodi cyn cynnig sylw</string>
     <string name="site_settings_identity_required_hint">Rhaid i awdur sylw rhoi enw ac e-bost</string>
     <string name="site_settings_paging_hint">Dangos sylwadau mewn darnau o faint penodol</string>
@@ -282,17 +268,13 @@ Language: cy_GB
     <string name="site_settings_address_hint">Nid yw newid eich cyfeiriad yn cael ei gynnal ar hyn o bryd</string>
     <string name="site_settings_tagline_hint">Disgrifiad byr neu ymadrodd bachog i ddisgrifio eich blog</string>
     <string name="site_settings_title_hint">Mewn ychydig eiriau, yn esboniwch beth yw natur y wefan hon</string>
-    <string name="site_settings_whitelist_known_summary">Sylwadau gan ddefnyddwyr hysbys</string>
-    <string name="site_settings_whitelist_all_summary">Sylwadau gan pob defnyddiwr</string>
     <string name="site_settings_threading_summary">%d lefel</string>
     <string name="site_settings_privacy_private_summary">Preifat</string>
     <string name="site_settings_privacy_hidden_summary">Cudd</string>
     <string name="site_settings_delete_site_title">Dileu Gwefan</string>
     <string name="site_settings_privacy_public_summary">Cyhoeddus</string>
-    <string name="site_settings_blacklist_title">Rhestr ddu</string>
     <string name="site_settings_moderation_hold_title">Dal ar gyfer Cymedroli</string>
     <string name="site_settings_multiple_links_title">Dolenni mewn sylwadau</string>
-    <string name="site_settings_whitelist_title">Gymeradwyo\'n awtomatig</string>
     <string name="site_settings_threading_title">Edafu</string>
     <string name="site_settings_paging_title">Tudalennu</string>
     <string name="site_settings_sort_by_title">Trefnu yn ôl</string>
@@ -399,7 +381,6 @@ Language: cy_GB
     <string name="site_picker_title">Dewis gwefan</string>
     <string name="my_site_btn_switch_site">Newid Gwefan</string>
     <string name="my_site_btn_blog_posts">Cofnodion Blog</string>
-    <string name="my_site_btn_site_settings">Gosodiadau</string>
     <string name="my_site_header_look_and_feel">Golwg a Theimlad</string>
     <string name="my_site_header_publish">Cyhoeddi</string>
     <string name="my_site_header_configuration">Ffurfweddiad</string>
@@ -425,7 +406,6 @@ Language: cy_GB
     <string name="logs_copied_to_clipboard">Cofnodion y rhaglen wedi\'u copïo i\'r clipfwrdd</string>
     <string name="reader_label_new_posts">Cofnodion newydd</string>
     <string name="error_copy_to_clipboard">Digwyddodd gwall wrth gopïo testun i\'r clipfwrdd</string>
-    <string name="reader_page_recommended_blogs">Gwefannau fyddech chi\'n eu hoffi</string>
     <string name="stats_followers_months">%1$d mis</string>
     <string name="stats_followers_a_year">Blwyddyn</string>
     <string name="stats_followers_years">%1$d blwyddyn</string>
@@ -468,17 +448,12 @@ Language: cy_GB
     <string name="comment_trashed">Gosod y sylw yn y sbwriel</string>
     <string name="posts_empty_list">Dim cofnod eto. Beth am greu un?</string>
     <string name="comment_reply_to_user">Ateb %s</string>
-    <string name="reader_empty_posts_in_tag">Dim cofnod gyda\'r tag hwn</string>
     <string name="signing_out">Allgofnodi…</string>
-    <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
-    <string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
-    <string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
     <string name="help">Cymorth</string>
-    <string name="forgot_password">Wedi colli eich cyfrinair?</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>
     <string name="no_network_message">Nid oes rhwydwaith ar gael</string>
@@ -549,8 +524,6 @@ Language: cy_GB
     <string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
-    <string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
-    <string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
     <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>
@@ -574,8 +547,6 @@ Language: cy_GB
     <string name="reader_likes_one">Mae un person yn hoffi hwn</string>
     <string name="reader_likes_only_you">Rydych chi\'n hoffi hwn</string>
     <string name="reader_toast_err_comment_failed">Methu cofnodi\'ch sylw</string>
-    <string name="reader_toast_err_tag_exists">Rydych eisoes yn dilyn y tag hwn</string>
-    <string name="reader_toast_err_tag_invalid">Nid yw\'n dag dilys</string>
     <string name="reader_toast_err_share_intent">Methu â rhannu</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>

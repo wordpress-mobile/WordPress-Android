@@ -48,7 +48,8 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         site: SiteModel,
         freshlyTaken: Boolean,
         editorMediaListener: EditorMediaListener,
-        doUploadAfterAdding: Boolean = true
+        doUploadAfterAdding: Boolean = true,
+        trackEvent: Boolean = true
     ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
         val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
@@ -58,13 +59,22 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 .optimizeMediaIfSupportedAsync(
                         site,
                         freshlyTaken,
-                        copyFilesResult.permanentlyAccessibleUris
+                        copyFilesResult.permanentlyAccessibleUris,
+                        trackEvent
                 )
 
         // Transform Uris to MediaModels
         val createMediaModelsResult: CreateMediaModelsResult = getMediaModelUseCase.createMediaModelFromUri(
                 site.id,
                 optimizeMediaResult.optimizedMediaUris
+        )
+
+        // here we pass a map of "old" (before optimisation) Uris to the new MediaModels which contain
+        // both the mediaModel ids and the optimized media URLs.
+        // this way, the listener will be able to process from other models pointing to the old URLs
+        // and make any needed updates
+        editorMediaListener.onMediaModelsCreatedFromOptimizedUris(
+                uriList.zip(createMediaModelsResult.mediaModels).toMap()
         )
 
         // Add media to editor and optionally initiate upload

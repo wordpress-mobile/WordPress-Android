@@ -8,6 +8,27 @@
     android:background="?attr/colorSurface"
     android:contentDescription="@string/reader_choose_interests_content_description">
 
+    <RelativeLayout
+        android:id="@+id/back_button"
+        android:visibility="gone"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:tint="?attr/colorOnSurface"
+            android:contentDescription="@string/reader_label_toolbar_back"/>
+    </RelativeLayout>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="0dp"
@@ -15,7 +36,7 @@
         android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_button"
         app:layout_constraintBottom_toTopOf="@id/bottom_bar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,37 +66,28 @@
             <com.google.android.material.textview.MaterialTextView
                 style="@style/ReaderTextView.Interests.Title"
                 android:id="@+id/title"
-                android:text="@string/reader_label_discover_follow_tags"
+                android:text="@string/reader_label_choose_your_interests"
+                android:visibility="gone"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/subtitle"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Discover and follow tags you love" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/subtitle"
-                style="@style/ReaderTextView.Interests.SubTitle"
-                android:text="@string/reader_label_choose_your_interests"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-                app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintBottom_toTopOf="@+id/interests_chip_group"
-                tools:text="Choose your interests" />
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Choose your interests"
+                tools:visibility="visible" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/interests_chip_group"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layoutDirection="locale"
                 app:chipSpacing="@dimen/margin_small_medium"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintTop_toBottomOf="@+id/subtitle"
+                app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -117,6 +129,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <include
+        android:id="@+id/include_error_layout"
         layout="@layout/reader_fullscreen_error_with_retry"
         android:visibility="gone"/>
 

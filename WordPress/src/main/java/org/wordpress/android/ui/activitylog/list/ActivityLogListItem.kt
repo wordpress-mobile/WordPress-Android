@@ -3,14 +3,14 @@ package org.wordpress.android.ui.activitylog.list
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.MORE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.NOTICE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
 import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
 import java.util.Date
 
 sealed class ActivityLogListItem(val type: ViewType) {
@@ -30,32 +30,44 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val rewindId: String?,
         val date: Date,
         override val isButtonVisible: Boolean,
-        val buttonIcon: Icon = HISTORY,
-        val isProgressBarVisible: Boolean = false
+        val buttonIcon: Icon,
+        val isRestoreHidden: Boolean
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
-        val formattedTime: String = date.toFormattedTimeString()
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
 
-        constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
-                model.activityID,
-                model.summary,
-                model.content?.text ?: "",
-                model.gridicon,
-                model.status,
-                model.rewindable ?: false,
-                model.rewindID,
-                model.published,
-                isButtonVisible = !rewindDisabled && model.rewindable ?: false)
+        constructor(
+            model: ActivityLogModel,
+            rewindDisabled: Boolean,
+            isRestoreHidden: Boolean
+        ) : this(
+                activityId = model.activityID,
+                title = model.summary,
+                description = model.content?.text ?: "",
+                gridIcon = model.gridicon,
+                eventStatus = model.status,
+                isRewindable = model.rewindable ?: false,
+                rewindId = model.rewindID,
+                date = model.published,
+                isButtonVisible = !rewindDisabled && model.rewindable ?: false,
+                buttonIcon = MORE,
+                isRestoreHidden = isRestoreHidden
+        )
 
         override fun longId(): Long = activityId.hashCode().toLong()
     }
 
     data class Progress(
         val title: String,
-        val description: String
-    ) : ActivityLogListItem(PROGRESS)
+        val description: String,
+        val progressType: Type
+    ) : ActivityLogListItem(PROGRESS) {
+        enum class Type {
+            RESTORE,
+            BACKUP_DOWNLOAD
+        }
+    }
 
     data class Header(val text: String) : ActivityLogListItem(HEADER)
 
@@ -63,12 +75,19 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
     object Loading : ActivityLogListItem(LOADING)
 
+    data class Notice(
+        val label: String,
+        val primaryAction: () -> Unit,
+        val secondaryAction: () -> Unit
+    ) : ActivityLogListItem(NOTICE)
+
     enum class ViewType(val id: Int) {
         EVENT(0),
         PROGRESS(1),
         HEADER(2),
         FOOTER(3),
-        LOADING(4)
+        LOADING(4),
+        NOTICE(5)
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {
@@ -110,11 +129,17 @@ sealed class ActivityLogListItem(val type: ViewType) {
         THEMES("themes", R.drawable.ic_themes_white_24dp),
         TRASH("trash", R.drawable.ic_trash_white_24dp),
         USER("user", R.drawable.ic_user_white_24dp),
+        MORE("more", R.drawable.ic_ellipsis_vertical_white_24dp),
         DEFAULT("", R.drawable.ic_notice_white_24dp);
 
         companion object {
             private val map = values().associateBy(Icon::value)
             fun fromValue(value: String?) = map[value] ?: DEFAULT
         }
+    }
+
+    enum class SecondaryAction(val itemId: Long) {
+        RESTORE(0),
+        DOWNLOAD_BACKUP(1);
     }
 }

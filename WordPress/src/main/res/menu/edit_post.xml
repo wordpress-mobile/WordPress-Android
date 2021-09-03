@@ -14,11 +14,6 @@
         android:orderInCategory="1" >
 
         <item
-            android:id="@+id/menu_switch_to_aztec"
-            android:title="@string/menu_switch_to_aztec_editor">
-        </item>
-
-        <item
             android:id="@+id/menu_switch_to_gutenberg"
             android:title="@string/menu_switch_to_gutenberg_editor">
         </item>
@@ -51,6 +46,11 @@
         <item
             android:id="@+id/menu_post_settings"
             android:title="@string/post_settings" >
+        </item>
+
+        <item
+            android:id="@+id/menu_editor_help"
+            android:title="@string/help" >
         </item>
 
     </group>

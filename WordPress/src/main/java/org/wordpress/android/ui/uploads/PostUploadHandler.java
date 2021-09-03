@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -82,6 +83,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @Inject UiHelpers mUiHelpers;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject AutoSavePostIfNotDraftUseCase mAutoSavePostIfNotDraftUseCase;
+    @Inject PostMediaHandler mPostMediaHandler;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -195,6 +197,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD, AUTO_SAVE_OR_UPDATE_DRAFT
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;
 
@@ -276,6 +279,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+            payload.isFirstTimePublish = sFirstPublishPosts.contains(mPost.getId());
 
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
@@ -670,6 +674,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             if (site != null) {
                 mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
+                mPostMediaHandler.updateMediaWithoutPostId(site, event.post);
             } else {
                 AppLog.e(T.POSTS, "Cannot update notification success without a site");
             }

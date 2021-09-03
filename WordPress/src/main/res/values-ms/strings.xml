@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
@@ -31,7 +31,6 @@ Language: ms
     <string name="media_edit_file_details_card_caption">Perincian Fail</string>
     <string name="login_error_suffix">\nMungkin cuba akaun yang lain?</string>
     <string name="login_error_generic">Terdapat kesusahan bersambung dengan akaun Google.</string>
-    <string name="login_google_button_suffix">Log masuk dengan Google.</string>
     <string name="login_error_button">Tutup</string>
     <string name="enter_wpcom_password_google">Untuk teruskan dengan akaun Google ini, sila berikan kata laluan WordPress.com yang sepadan. Ianya hanya akan diminta sekali.</string>
     <string name="error_generic_network">Ralat rangkaian terjadi. Sila periksa sambungan anda dan cuba lagi.</string>
@@ -44,12 +43,10 @@ Language: ms
     <string name="jetpack_disconnect_confirmation_message">Anda pasti anda ingin memutuskan Jetpack daripada laman?</string>
     <string name="jetpack_disconnect_confirm">Putuskan</string>
     <string name="jetpack_disconnect_pref_title">\"Putuskan daripada WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">Anda boleh menyenarai putih suatu alamat IP atau siri alamat yang mengelakkannya daripada dihalang oleh Jetpack. IPv4 dan IPv6 diterima. Untuk menyatakan julat tertentu, masukkan nilai rendah dan nilai tinggi dipisahkan oleh tanda sengkang. Contoh: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Perlukan pengesahan dua-langkah</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Benarkan log masuk WordPress.com</string>
     <string name="jetpack_match_wpcom_via_email_title">Padankan akaun menggunakan emel</string>
     <string name="jetpack_wpcom_sign_in_category_title">Log masuk WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">Alamat-alamat IP yang disenarai putih</string>
     <string name="jetpack_prevent_brute_force_title">Halang cubaan log masuk berniat jahat</string>
     <string name="jetpack_prevent_brute_force_category_title">Perlindungan serangan kekerasan</string>
     <string name="jetpack_send_wp_notifications_title">Hantar pemberitahuan tolak</string>
@@ -89,13 +86,7 @@ Language: ms
     <string name="notification_settings_item_your_sites_all_your_sites">Semua Laman Saya</string>
     <string name="notification_settings_category_other">Lain</string>
     <string name="notification_settings_category_your_sites">Laman-Laman Anda</string>
-    <string name="notification_settings_master_off_message">Mematikan Tetapan Pemberitahuan akan melumpuhkan semua pemberitahuan dari aplikasi ini tidak kira jenis. Anda boleh membuat talaan kecil pada jenis pemberitahuan yang anda terima selepas menghidupkan Tetapan Pemberitahuan</string>
-    <string name="notification_settings_master_off_title">Untuk menerima pemberitahuan pada peranti ini, hidupkan Tetapan Pemberitahuan.</string>
-    <string name="notification_settings_master_hint_off">Bolehkan pemberitahuan</string>
-    <string name="notification_settings_master_hint_on">Lumpuhkan pemberitahuan</string>
-    <string name="notification_settings_master_status_off">Mati</string>
     <string name="max_video_resolution">Saiz Video Maksimum</string>
-    <string name="notification_settings_master_status_on">Hidup</string>
     <string name="max_thumbnail_px_size">Saiz Imej Maksimum</string>
     <string name="error_upload_post_media_param">Terdapat ralat memuat naik media dalam kiriman ini: %s.</string>
     <string name="error_upload_post_param">Terdapat ralat memuat naik kiriman ini: %s.</string>
@@ -131,7 +122,6 @@ Language: ms
     <string name="login_site_address_more_help">Perlukan bantuan lebih lanjut?</string>
     <string name="login_site_address_help_content">Alamat laman anda muncul dalam palang pada atas skrin apabila anda melawat laman anda dalam Chrome.</string>
     <string name="login_site_address_help_title">Apa alamat laman saya?</string>
-    <string name="login_site_address_help">Perlu bantuan mencari alamat laman anda?</string>
     <string name="login_site_address">Alamat laman</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
     <string name="login_continue">Teruskan</string>
@@ -142,7 +132,6 @@ Language: ms
     <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
-    <string name="open_mail">Buka surat</string>
     <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>
     <string name="image_optimization_promo_title">Hidupkan pengoptimuman imej?</string>
     <string name="leave_off">Biarkan mati</string>
@@ -162,11 +151,7 @@ Language: ms
     <string name="post_status_draft">Draf</string>
     <string name="post_status_pending_review">Menunggu tinjauan</string>
     <string name="post_status_post_private">Persendirian</string>
-    <string name="change_location">Tukar Lokasi</string>
     <string name="post_status_publish_post">Terbit</string>
-    <string name="remove_location">Buang Lokasi</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Tidak boleh membuka Pemetik Lokasi, Google Play Service tidak didapati</string>
-    <string name="post_settings_location">Lokasi</string>
     <string name="now">Sekarang</string>
     <string name="post_settings_password_dialog_hint">Hanya mereka dengan kata laluan ini boleh melihat kiriman ini</string>
     <string name="post_settings_excerpt_dialog_hint">Petikan adalah ringkasan kandungan anda yang dibuat sendiri dan tidak diwajibkan.</string>
@@ -333,8 +318,6 @@ Language: ms
     <string name="reader_toast_err_already_liked">Anda sudahpun menyukai ulasan itu</string>
     <string name="reader_toast_err_comment_not_found">Ulasan tidak dijumpai!</string>
     <string name="reader_toast_err_cannot_like_post">Gagal untuk menyukai kiriman ini</string>
-    <string name="reader_title_post_detail_wpcom">Kiriman WordPress.com</string>
-    <string name="reader_title_deeplink">Pembaca WordPress</string>
     <string name="error_notif_q_action_reply">Tidak dapat membalas ulasan. Sila cuba sebentar lagi.</string>
     <string name="error_notif_q_action_approve">Tidak dapat meluluskan ulasan. Sila cuba sebentar lagi.</string>
     <string name="error_notif_q_action_like">Tidak boleh menyukai ulasan. Sila cuba sebentar lagi.</string>
@@ -349,7 +332,6 @@ Language: ms
     <string name="signout">Log keluar</string>
     <string name="sign_in_wpcom">Log masuk ke WordPress.com</string>
     <string name="reader_label_global_related_posts">Selanjutnya tentang WordPress.com</string>
-    <string name="reader_label_local_related_posts">Selanjutnya dalam %s</string>
     <string name="preference_open_device_settings">Buka tetapan peranti</string>
     <string name="invite_invalid_email">%s: Emel tidak sah</string>
     <string name="invite_user_blocked_invites">%s: Pengguna menghalang jemputan</string>
@@ -397,14 +379,7 @@ Language: ms
     <string name="invite_error_invalid_usernames_multiple">Tidak dapat menghantar: Terdapat nama pengguna atau emel yang tidak sah</string>
     <string name="invite_error_invalid_usernames_one">Tidak dapat menghantar: Nama pengguna atau emel adalah tidak sah</string>
     <string name="invite_error_no_usernames">Sila tambah sekurang-kurangnya satu nama pengguna</string>
-    <string name="invite_message_info">(Pilihan) Anda boleh memasukkan mesej tersuai sehingga 500 aksara yang akan disertakan dalam jemputan kepada pengguna.</string>
-    <string name="invite_message_remaining_other">Tinggal %d aksara</string>
-    <string name="invite_message_remaining_one">Tinggal 1 aksara</string>
-    <string name="invite_message_remaining_zero">Tinggal 0 aksara</string>
-    <string name="invite_message_title">Mesej Tersuai</string>
     <string name="invite">Jemput</string>
-    <string name="invite_names_title">Nama Pengguna atau Emel</string>
-    <string name="send_link">Hantar pautan</string>
     <string name="my_site_header_external">Luaran</string>
     <string name="invite_people">Jemput Orang</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
@@ -428,7 +403,6 @@ Language: ms
     <string name="checking_email">Menyemak emel</string>
     <string name="magic_link_unavailable_error_message">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
     <string name="logging_in">Melog masuk</string>
-    <string name="enter_your_password_instead">Sebaliknya masukkan kata laluan anda</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
     <string name="capture_or_pick_photo">Tangkap atau pilih gambar</string>
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
@@ -542,7 +516,6 @@ Language: ms
     <string name="site_settings_paging_dialog_description">Pecahkan jalur ulasan kepada berbilang halaman.</string>
     <string name="site_settings_paging_dialog_header">Ulasan setiap halaman</string>
     <string name="site_settings_close_after_dialog_title">Tutup pengulasan</string>
-    <string name="site_settings_blacklist_description">Apabila ulasan mengandungi mana-mana perkataan berikut dalam kandungan, nama, URL, emel, atau IP, ia akan ditanda sebagai spam. Anda boleh mengisi sebahagian perkataan, oleh itu \"press\" akan padan dengan \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Apabila ulasan mengandungi mana-mana perkataan ini dalam kandungan, nama, URL, emel atau IP, ia akan ditahan dibawah barisan penyederhanaan. Anda boleh mengisi sebahagian perkataan, oleh itu \"press\" akan padan dengan \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Masukkan perkataan atau frasa</string>
     <string name="site_settings_list_editor_no_items_text">Tiada butiran</string>
@@ -557,10 +530,8 @@ Language: ms
     <string name="site_settings_rp_show_header_title">Tunjukkan Pengepala</string>
     <string name="site_settings_rp_switch_summary">Kiriman Berkaitan memaparkan kandungan yang berkenaan daripada laman anda di bawah kiriman anda.</string>
     <string name="site_settings_rp_switch_title">Tunjukkan Kiriman Berkaitan</string>
-    <string name="site_settings_blacklist_hint">Ulasan yang sepadan dengan penapis ditanda sebagai spam</string>
     <string name="site_settings_moderation_hold_hint">Ulasan yang sepadan dengan penapis diletakkan dalam barisan penyederhanaan</string>
     <string name="site_settings_multiple_links_hint">Abaikan had pautan daripada pengguna dikenali</string>
-    <string name="site_settings_whitelist_hint">Ulasan pengarang mesti mempunyai ulasan terdahulu yang diluluskan</string>
     <string name="site_settings_user_account_required_hint">Pengguna mestilah berdaftar dan log masuk untuk mengulas</string>
     <string name="site_settings_identity_required_hint">Penulis ulasan mesti mengisi nama dan emel</string>
     <string name="site_settings_paging_hint">Papar ulsan dalam ketulan saiz yang ditetapkan</string>
@@ -583,17 +554,13 @@ Language: ms
     <string name="site_settings_address_hint">Menukar alamat anda pada masa ini tidak disokong</string>
     <string name="site_settings_tagline_hint">Huraian pendek atau frasa menarik untuk menggambarkan blog anda</string>
     <string name="site_settings_title_hint">Dalam beberapa perkataan, jelaskan apa laman ini berkenaan dengan</string>
-    <string name="site_settings_whitelist_known_summary">Ulasan daripada pengguna yang diketahui</string>
-    <string name="site_settings_whitelist_all_summary">Ulasan daripada semua pengguna</string>
     <string name="site_settings_threading_summary">%d paras</string>
     <string name="site_settings_privacy_private_summary">Sulit</string>
     <string name="site_settings_privacy_hidden_summary">Tersembunyi</string>
     <string name="site_settings_privacy_public_summary">Umum</string>
     <string name="site_settings_delete_site_title">Hapuskan Laman</string>
-    <string name="site_settings_blacklist_title">Senarai hitam</string>
     <string name="site_settings_moderation_hold_title">Tahan untuk Penyederhanaan</string>
     <string name="site_settings_multiple_links_title">Pautan dalam ulasan</string>
-    <string name="site_settings_whitelist_title">Luluskan secara automatik</string>
     <string name="site_settings_threading_title">Penjaluran</string>
     <string name="site_settings_paging_title">Menomborkan Halaman</string>
     <string name="site_settings_sort_by_title">Isih berdasarkan</string>
@@ -705,7 +672,6 @@ Language: ms
     <string name="my_site_btn_blog_posts">Kiriman Blog</string>
     <string name="my_site_header_look_and_feel">Rupa dan Bentuk</string>
     <string name="my_site_header_publish">Terbit</string>
-    <string name="my_site_btn_site_settings">Tetapan</string>
     <string name="my_site_header_configuration">Konfigurasi</string>
     <string name="reader_label_new_posts_subtitle">Tap untuk menunjukkannya</string>
     <string name="deselect_all">Nyahpilih semua</string>
@@ -729,7 +695,6 @@ Language: ms
     <string name="error_copy_to_clipboard">Ralat berlaku semasa menyalin teks ke papan keratan</string>
     <string name="logs_copied_to_clipboard">Log aplikasi telah disalin ke papan keratan</string>
     <string name="reader_label_new_posts">Kiriman baharu</string>
-    <string name="reader_page_recommended_blogs">Laman yang anda mungkin suka</string>
     <string name="post_uploading">Memuat naik kiriman</string>
     <string name="stats_followers_days">%1$d hari</string>
     <string name="stats_followers_hours">%1$d jam</string>
@@ -769,23 +734,18 @@ Language: ms
     <string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
     <string name="comment_reply_to_user">Balasan kepada %s</string>
     <string name="signing_out">Melog keluar…</string>
-    <string name="reader_empty_posts_in_tag">Tiada kiriman dengan tag ini</string>
     <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak mempunyai kebenaran melihat atau menyunting halaman</string>
     <string name="error_refresh_unauthorized_comments">Anda tidak mempunyai kebenaran melihat atau menyunting ulasan</string>
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
-    <string name="reader_label_liked_by">Disukai oleh</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
     <string name="update_verb">Kemas kini</string>
     <string name="schedule_verb">Jadual</string>
-    <string name="reader_page_followed_tags">Tag yang diikuti</string>
-    <string name="reader_hint_add_tag_or_url">Masukkan tag atau URL untuk diikuti</string>
     <string name="reader_page_followed_blogs">Laman yang diikuti</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika anda biasanya berhubung ke laman ini tanpa masalah, ralat ini mungkin bermakna bahawa seseorang sedang cuba menyamar sebagai laman ini, dan anda tidak sepatutnya teruskan. Adakah anda masih ingin mempercayai sijil ini?</string>
-    <string name="forgot_password">Hilang kata laluan anda?</string>
     <string name="adding_cat_success">Kategori berjaya ditambah</string>
     <string name="cat_name_required">Medan nama kategori dikehendaki</string>
     <string name="notifications_empty_list">Tiada notifikasi</string>
@@ -839,8 +799,6 @@ Language: ms
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="reader_toast_err_add_tag">Tidak dapat menambah tag ini</string>
-    <string name="reader_toast_err_remove_tag">Tidak dapat membuang tag ini</string>
     <string name="http_authorization_required">Kebenaran diperlukan</string>
     <string name="new_post">Kiriman baharu</string>
     <string name="new_media">Media baharu</string>
@@ -883,8 +841,6 @@ Language: ms
     <string name="reader_likes_one">Seorang menyukainya</string>
     <string name="reader_likes_only_you">Anda menyukainya</string>
     <string name="reader_toast_err_comment_failed">Tidak dapat mengirim komen anda</string>
-    <string name="reader_toast_err_tag_exists">Anda telahpun mengikut tag ini</string>
-    <string name="reader_toast_err_tag_invalid">Ianya bukan tag yang sah</string>
     <string name="reader_toast_err_share_intent">Tidak dapat dikongsi</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat imej</string>
     <string name="reader_hint_comment_on_comment">Balas ulasan…</string>

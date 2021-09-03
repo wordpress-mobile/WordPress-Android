@@ -12,6 +12,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.editor.gutenberg.DialogVisibility
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,6 +39,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     @Mock lateinit var postRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var context: Context
 
     private lateinit var viewModel: StorePostViewModel
@@ -57,7 +62,8 @@ class StorePostViewModelTest : BaseUnitTest() {
                 postUtils,
                 uploadService,
                 savePostToDbUseCase,
-                networkUtils
+                networkUtils,
+                dispatcher
         )
         postModel.setId(postId)
         postModel.setTitle(title)
@@ -228,5 +234,27 @@ class StorePostViewModelTest : BaseUnitTest() {
         assertThat(result).isEqualTo(SAVED_ONLINE)
         verify(postUtils).trackSavePostAnalytics(postModel, site)
         verify(uploadService).uploadPost(context, postId, isFirstTimePublish)
+    }
+
+    @Test
+    fun `updates progress dialog LiveData appropriately`() {
+        val actual = mutableListOf<DialogVisibility>()
+        val expected = mutableListOf<DialogVisibility>()
+        viewModel.savingInProgressDialogVisibility.observeForever {
+            actual.add(it)
+        }
+
+        // is Hidden upon initialization
+        expected.add(Hidden)
+        assertThat(actual).isEqualTo(expected)
+
+        viewModel.showSavingProgressDialog()
+        expected.add(Showing)
+        assertThat(actual).isEqualTo(expected)
+
+        val randomNonNullFinishState = SAVED_LOCALLY
+        viewModel.finish(randomNonNullFinishState)
+        expected.add(Hidden)
+        assertThat(actual).isEqualTo(expected)
     }
 }

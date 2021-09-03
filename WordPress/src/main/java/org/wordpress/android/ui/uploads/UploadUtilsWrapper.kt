@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
+import org.wordpress.android.ui.uploads.UploadUtils.OnPublishingCallback
 import org.wordpress.android.util.SnackbarSequencer
 import javax.inject.Inject
 
@@ -47,24 +48,32 @@ class UploadUtilsWrapper @Inject constructor(
             sequencer
     )
 
+    @JvmOverloads
+    @Suppress("LongParameterList")
     fun onPostUploadedSnackbarHandler(
         activity: Activity?,
         snackbarAttachView: View?,
         isError: Boolean,
+        isFirstTimePublish: Boolean,
         post: PostModel?,
         errorMessage: String?,
-        site: SiteModel?
+        site: SiteModel?,
+        onPublishingCallback: OnPublishingCallback? = null
     ) = UploadUtils.onPostUploadedSnackbarHandler(
             activity,
             snackbarAttachView,
             isError,
+            isFirstTimePublish,
             post,
             errorMessage,
             site,
             dispatcher,
-            sequencer
+            sequencer,
+            onPublishingCallback
     )
 
+    @JvmOverloads
+    @Suppress("LongParameterList")
     fun handleEditPostResultSnackbars(
         activity: Activity,
         snackbarAttachView: View,
@@ -72,7 +81,8 @@ class UploadUtilsWrapper @Inject constructor(
         post: PostModel,
         site: SiteModel,
         uploadAction: UploadAction,
-        publishPostListener: OnClickListener?
+        publishPostListener: OnClickListener?,
+        onPublishingCallback: OnPublishingCallback? = null
     ) = UploadUtils.handleEditPostModelResultSnackbars(
             activity,
             dispatcher,
@@ -82,7 +92,8 @@ class UploadUtilsWrapper @Inject constructor(
             site,
             uploadAction,
             sequencer,
-            publishPostListener
+            publishPostListener,
+            onPublishingCallback
     )
 
     fun showSnackbarError(
@@ -126,6 +137,10 @@ class UploadUtilsWrapper @Inject constructor(
             isEligibleForAutoUpload
     )
 
-    fun publishPost(activity: Activity, post: PostModel, site: SiteModel) =
-            UploadUtils.publishPost(activity, post, site, dispatcher)
+    fun publishPost(
+        activity: Activity,
+        post: PostModel,
+        site: SiteModel,
+        onPublishingCallback: OnPublishingCallback? = null
+    ) = UploadUtils.publishPost(activity, post, site, dispatcher, onPublishingCallback)
 }

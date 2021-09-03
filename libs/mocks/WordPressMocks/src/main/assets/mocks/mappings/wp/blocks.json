@@ -1,0 +1,24 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/wp/v2/sites/181851495/blocks",
+        "queryParameters": {
+            "context": {
+                "equalTo": "edit"
+            },
+            "locale": {
+                "matches": "(.*)"
+            },
+            "_locale": {
+                "equalTo": "user"
+            },
+            "per_page": {
+                "equalTo": "100"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": []
+    }
+}

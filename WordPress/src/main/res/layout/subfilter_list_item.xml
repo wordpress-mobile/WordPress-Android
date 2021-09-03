@@ -10,11 +10,12 @@
         style="@style/SiteTagFilteredTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/item_selected"
+        app:layout_constraintEnd_toStartOf="@+id/unseen_count"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/item_url"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginBottom="@dimen/margin_large"
+        app:layout_goneMarginEnd="0dp"
         tools:text="Unknown" />
 
     <TextView
@@ -23,23 +24,32 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/item_selected"
+        app:layout_constraintEnd_toStartOf="@+id/unseen_count"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_title"
         android:visibility="visible"
+        app:layout_goneMarginEnd="0dp"
         tools:text="www.unknown.com" />
 
-    <ImageView
-        android:id="@+id/item_selected"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/unseen_count"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_done_white_24dp"
-        app:tint="?attr/colorPrimary"
+        android:layout_height="@dimen/reader_subfilter_unseen_count_height"
+        android:background="@drawable/bg_rectangle_surface_overlay_emphasis_lowest"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/material_on_surface_emphasis_high_type"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:contentDescription="@string/reader_btn_selected_filter_tick_content_description" />
+        tools:text="10"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

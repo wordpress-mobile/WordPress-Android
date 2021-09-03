@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
@@ -18,7 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
@@ -40,10 +41,7 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.login.SignupBottomSheetDialogFragment;
-import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.SignupConfirmationFragment;
-import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.support.ZendeskExtraTags;
@@ -53,12 +51,16 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -68,7 +70,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -83,18 +84,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
-        HasSupportFragmentInjector, BasicDialogPositiveClickInterface {
+        Callback, LoginListener, GoogleListener, LoginPrologueListener,
+        HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
-    private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
     private static final String KEY_SIGNUP_FROM_LOGIN_ENABLED = "KEY_SIGNUP_FROM_LOGIN_ENABLED";
     private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
@@ -122,12 +124,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private boolean mIsSiteLoginAvailableFromPrologue;
 
     private LoginMode mLoginMode;
+    private LoginViewModel mViewModel;
 
-    @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
+    @Inject protected ViewModelProvider.Factory mViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,14 +156,15 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mIsSignupFromLoginEnabled = true;
                     loginFromPrologue();
                     break;
+                case JETPACK_LOGIN_ONLY:
+                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
+                    mIsSignupFromLoginEnabled = false;
+                    loginFromPrologue();
+                    break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
                     mIsSignupFromLoginEnabled = true;
-                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-                        checkSmartLockPasswordAndStartLogin();
-                    } else {
-                        loginFromPrologue();
-                    }
+                    checkSmartLockPasswordAndStartLogin();
                     break;
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
@@ -182,6 +187,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mUnifiedLoginTracker.setSource(Source.SHARE);
                     checkSmartLockPasswordAndStartLogin();
                     break;
+                case WOO_LOGIN_MODE:
+                    break;
             }
         } else {
             mSmartLockHelperState = SmartLockHelperState.valueOf(
@@ -200,21 +207,34 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
         }
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
+
+        // initObservers
+        mViewModel.getNavigationEvents().observe(this, event -> {
+            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
+            if (loginEvent instanceof ShowSiteAddressError) {
+                showSiteAddressError((ShowSiteAddressError) loginEvent);
+            } else if (loginEvent instanceof ShowNoJetpackSites) {
+                showNoJetpackSites();
+            }
+        });
     }
 
     private void loginFromPrologue() {
         showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            mIsSmartLockTriggeredFromPrologue = true;
-            mIsSiteLoginAvailableFromPrologue = true;
-            initSmartLockIfNotFinished(true);
-        }
+        mIsSmartLockTriggeredFromPrologue = true;
+        mIsSiteLoginAvailableFromPrologue = true;
+        initSmartLockIfNotFinished(true);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
         outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
@@ -284,6 +304,15 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
+            case JETPACK_LOGIN_ONLY:
+                if (!mSiteStore.hasSite()) {
+                    handleNoJetpackSites();
+                } else {
+                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
+                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
@@ -295,11 +324,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 finish();
                 break;
             case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
@@ -313,7 +342,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 if (newSitesIds.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSitesIds.get(0));
+                    intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
@@ -324,6 +353,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
+                break;
+            case WOO_LOGIN_MODE:
                 break;
         }
     }
@@ -409,17 +440,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
-                    true, BuildConfig.UNIFIED_LOGIN_AVAILABLE), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
             }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
-                    !mIsSiteLoginAvailableFromPrologue, BuildConfig.UNIFIED_LOGIN_AVAILABLE), true,
-                    LoginEmailFragment.TAG);
+            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), true, LoginEmailFragment.TAG);
         }
     }
 
@@ -431,57 +459,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void doStartSignup() {
-        // This stat is part of a funnel that provides critical information.  Before
-        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        SignupBottomSheetDialogFragment signupFragment = SignupBottomSheetDialogFragment.newInstance();
-        signupFragment.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
-    }
-
-    @Override
-    public void onSignupSheetCanceled() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
-    }
-
-    @Override
-    public void onSignupSheetEmailClicked() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
-        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_EMAIL);
-        dismissSignupSheet();
-        slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
-    }
-
-    @Override
-    public void onSignupSheetGoogleClicked() {
-        dismissSignupSheet();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
-        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_GOOGLE);
-
-        if (NetworkUtils.checkConnection(this)) {
-            addGoogleFragment(new SignupGoogleFragment(), SignupGoogleFragment.TAG);
-        }
-    }
-
-    @Override
-    public void onSignupSheetTermsOfServiceClicked() {
+    public void onTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         mUnifiedLoginTracker.trackClick(Click.TERMS_OF_SERVICE_CLICKED);
         ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
-    }
-
-    @Override
-    public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds, false);
-    }
-
-    @Override
-    public void newUserCreatedButErrored(String email, String password) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
-        slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
     // LoginListener implementation methods
@@ -515,7 +496,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void showMagicLinkRequestScreen(String email, boolean verifyEmail, boolean allowPassword,
                                             boolean forceRequestAtStart) {
-        AuthEmailPayloadScheme scheme = AuthEmailPayloadScheme.WORDPRESS;
+        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
         String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
         LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
                 .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail, allowPassword,
@@ -525,8 +506,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotUnregisteredEmail(String email) {
-        SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
-        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
+        showSignupMagicLink(email);
     }
 
     @Override
@@ -545,7 +525,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
-        dismissSignupSheet();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
@@ -628,7 +607,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
-        dismissSignupSheet();
         mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup,
@@ -657,7 +635,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotWpcomSiteInfo(String siteAddress) {
-        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true, siteAddress);
+        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(siteAddress);
         slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
     }
 
@@ -865,14 +843,18 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     public void onGoogleEmailSelected(String email) {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.setGoogleEmail(email);
+        if (loginEmailFragment != null) {
+            loginEmailFragment.setGoogleEmail(email);
+        }
     }
 
     @Override
     public void onGoogleLoginFinished() {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.finishLogin();
+        if (loginEmailFragment != null) {
+            loginEmailFragment.finishLogin();
+        }
     }
 
     @Override
@@ -914,19 +896,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         }
     }
 
-    private void dismissSignupSheet() {
-        SignupBottomSheetDialogFragment signupFragment =
-                (SignupBottomSheetDialogFragment) getSupportFragmentManager()
-                        .findFragmentByTag(SignupBottomSheetDialogFragment.TAG);
-
-        if (signupFragment != null) {
-            signupFragment.dismiss();
-        }
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
     }
 
-    @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mFragmentInjector;
+    @Override public void startOver() {
+        // Not used in WordPress app
     }
 
     @Override
@@ -967,5 +942,27 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void loginViaSiteCredentials(String inputSiteAddress) {
         // Not used in WordPress app
+    }
+
+    @Override
+    public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
+        mViewModel.onHandleSiteAddressError(siteInfo);
+    }
+
+    public void handleNoJetpackSites() {
+        // hide keyboard if you can
+        hideKeyboard(this);
+        mViewModel.onHandleNoJetpackSites();
+    }
+
+
+    private void showSiteAddressError(ShowSiteAddressError event) {
+        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
+        slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
+    }
+
+    private void showNoJetpackSites() {
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
+        slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }

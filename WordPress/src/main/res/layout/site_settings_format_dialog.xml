@@ -34,6 +34,7 @@
             android:hint="@string/site_settings_format_hint_custom"
             android:imeOptions="flagNoExtractUi"
             android:inputType="text"
+            android:paddingEnd="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -45,6 +46,7 @@
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical|start"
+            android:paddingEnd="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:text="@string/site_settings_format_help"
             android:textAlignment="viewStart"

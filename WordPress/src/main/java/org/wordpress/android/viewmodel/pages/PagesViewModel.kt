@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -34,6 +34,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -157,8 +158,8 @@ class PagesViewModel
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
 
-    private val _uploadFinishedAction = SingleLiveEvent<Pair<PageModel, Boolean>>()
-    val uploadFinishedAction: LiveData<Pair<PageModel, Boolean>> = _uploadFinishedAction
+    private val _uploadFinishedAction = SingleLiveEvent<Triple<PageModel, Boolean, Boolean>>()
+    val uploadFinishedAction: LiveData<Triple<PageModel, Boolean, Boolean>> = _uploadFinishedAction
 
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
@@ -440,6 +441,7 @@ class PagesViewModel
             CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
+            COPY -> onCopyPage(page)
         }
         return true
     }
@@ -531,6 +533,43 @@ class PagesViewModel
         }
     }
 
+    private fun onCopyPage(page: Page) {
+        launch(defaultDispatcher) {
+            trackMenuSelectionEvent(COPY)
+            copyPage(page.remoteId, performChecks = true)
+        }
+    }
+
+    private fun copyPage(pageId: Long, performChecks: Boolean = false) {
+        pageMap[pageId]?.let {
+            if (performChecks && autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
+                pageListDialogHelper.showCopyConflictDialog(it.post)
+                return
+            }
+
+            val post = postStore.instantiatePostModel(
+                    site,
+                    true,
+                    it.title,
+                    it.post.content,
+                    PostStatus.DRAFT.toString(),
+                    it.post.categoryIdList,
+                    it.post.postFormat,
+                    false
+            )
+
+            _editPage.postValue(Triple(site, post, false))
+        }
+    }
+
+    private fun onCopyPageLocal(pageId: RemoteId) {
+        copyPage(pageId.value, performChecks = false)
+    }
+
+    private fun onEditPageFirst(pageId: RemoteId) {
+        pageMap[pageId.value]?.let { checkAndEdit(it) }
+    }
+
     private fun performIfNetworkAvailable(performAction: () -> Unit): Boolean {
         return if (networkUtils.isNetworkAvailable()) {
             performAction()
@@ -557,6 +596,7 @@ class PagesViewModel
             SET_PARENT -> "set_parent"
             MOVE_TO_DRAFT -> "move_to_draft"
             MOVE_TO_TRASH -> "move_to_bin"
+            COPY -> "copy"
             else -> return
         }
         val properties = mutableMapOf("option_name" to menu as Any)
@@ -580,14 +620,22 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        pageMap[pageItem.remoteId]?.let {
-            if (autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
-                pageListDialogHelper.showAutoSaveRevisionDialog(it.post)
-                return
+        if (pageItem.remoteId == site.pageForPosts) {
+            launch(defaultDispatcher) {
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.page_is_posts_page_warning)))
             }
-
-            editPage(RemoteId(it.remoteId))
+        } else {
+            pageMap[pageItem.remoteId]?.let { checkAndEdit(it) }
         }
+    }
+
+    private fun checkAndEdit(page: PageModel) {
+        if (autoSaveConflictResolver.hasUnhandledAutoSave(page.post)) {
+            pageListDialogHelper.showAutoSaveRevisionDialog(page.post)
+            return
+        }
+
+        editPage(RemoteId(page.remoteId))
     }
 
     fun onNewPageButtonTapped() {
@@ -874,14 +922,16 @@ class PagesViewModel
         pageListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
                 editPage = this::editPage,
-                deletePage = this::onDeleteConfirmed
+                deletePage = this::onDeleteConfirmed,
+                editPageFirst = this::onEditPageFirst
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         pageListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                editPage = this::editPage
+                editPage = this::editPage,
+                copyPage = this::onCopyPageLocal
         )
     }
 
@@ -922,9 +972,9 @@ class PagesViewModel
         }
     }
 
-    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean) {
+    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean, isFirstTimePublish: Boolean) {
         pageMap[remoteId.value]?.let {
-            _uploadFinishedAction.postValue(Pair(it, isError))
+            _uploadFinishedAction.postValue(Triple(it, isError, isFirstTimePublish))
         }
     }
 
@@ -935,7 +985,7 @@ class PagesViewModel
         }
     }
 
-    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(coroutineContext) {
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiDispatcher) {
         setValue(value)
     }
 

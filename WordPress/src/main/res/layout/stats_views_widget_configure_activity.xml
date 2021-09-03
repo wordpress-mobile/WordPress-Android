@@ -19,7 +19,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:viewType="views" />
 
-        <include layout="@layout/toolbar_main" />
+        <include android:id="@+id/toolbar" layout="@layout/toolbar_main" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

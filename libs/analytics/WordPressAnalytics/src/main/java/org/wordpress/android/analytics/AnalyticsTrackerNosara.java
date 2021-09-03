@@ -20,13 +20,15 @@ public class AnalyticsTrackerNosara extends Tracker {
     @SuppressWarnings("checkstyle:RegexpSingleline")
     private static final String WPCOM_USER = "dotcom_user";
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
+    private static final String APP_SCHEME = "app_scheme";
 
-    private static final String EVENTS_PREFIX = "wpandroid_";
+    private final String mEventsPrefix;
 
-    private TracksClient mNosaraClient;
+    private final TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+    public AnalyticsTrackerNosara(Context context, String eventsPrefix) throws IllegalArgumentException {
         super(context);
+        mEventsPrefix = eventsPrefix;
         mNosaraClient = TracksClient.getClient(context);
     }
 
@@ -229,6 +231,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+            case COMMENT_QUICK_ACTION_LIKED:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_APPROVED:
                 predefinedEventProperties.put("is_quick_action", true);
                 break;
             case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
@@ -285,9 +290,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
-            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
-                predefinedEventProperties.put("type", "positive");
-                break;
             case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -333,12 +335,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "view_site");
                 break;
-            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
-                predefinedEventProperties.put("task_name", "browse_themes");
-                break;
-            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
-                predefinedEventProperties.put("task_name", "customize_site");
-                break;
             case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
                 predefinedEventProperties.put("task_name", "share_site");
                 break;
@@ -351,9 +347,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
                 predefinedEventProperties.put("task_name", "upload_icon");
                 break;
-            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
-                predefinedEventProperties.put("task_name", "create_page");
-                break;
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
                 predefinedEventProperties.put("task_name", "check_stats");
                 break;
@@ -362,12 +355,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "view_site");
-                break;
-            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
-                predefinedEventProperties.put("task_name", "browse_themes");
-                break;
-            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
-                predefinedEventProperties.put("task_name", "customize_site");
                 break;
             case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
                 predefinedEventProperties.put("task_name", "share_site");
@@ -380,9 +367,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
                 predefinedEventProperties.put("task_name", "upload_icon");
-                break;
-            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
-                predefinedEventProperties.put("task_name", "create_page");
                 break;
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
                 predefinedEventProperties.put("task_name", "check_stats");
@@ -399,12 +383,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "view_site");
                 break;
-            case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
-                predefinedEventProperties.put("task_name", "browse_themes");
-                break;
-            case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:
-                predefinedEventProperties.put("task_name", "customize_site");
-                break;
             case QUICK_START_SHARE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "share_site");
                 break;
@@ -417,14 +395,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_UPLOAD_ICON_COMPLETED:
                 predefinedEventProperties.put("task_name", "upload_icon");
                 break;
-            case QUICK_START_CREATE_PAGE_COMPLETED:
-                predefinedEventProperties.put("task_name", "create_page");
-                break;
             case QUICK_START_CHECK_STATS_COMPLETED:
                 predefinedEventProperties.put("task_name", "check_stats");
                 break;
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
                 predefinedEventProperties.put("task_name", "explore_plans");
+                break;
+            case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
+            case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
+            case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "edit_homepage");
+                break;
+            case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
+            case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "review_pages");
                 break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
@@ -476,6 +461,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
                 predefinedEventProperties.put("button", "find_out_more");
+                break;
+            case READER_ARTICLE_COMMENTED_ON:
+                predefinedEventProperties.put("replying_to", "post");
+                break;
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
+                predefinedEventProperties.put("replying_to", "comment");
                 break;
         }
 
@@ -541,11 +532,11 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
             String jsonString = propertiesToJSON.toString();
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
@@ -575,6 +566,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
+            properties.put(APP_SCHEME, metadata.getAppScheme());
             // Only add the editor information if it was set before.
             // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
             if (metadata.isGutenbergEnabledVariableSet()) {
@@ -635,6 +627,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ACCESSED:
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
                 return "reader_article_commented_on";
             case READER_ARTICLE_COMMENTS_OPENED:
                 return "reader_article_comments_opened";
@@ -666,6 +659,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_SUGGESTED_SITE_VISITED:
+                return "reader_suggested_site_visited";
+            case READER_SUGGESTED_SITE_TOGGLE_FOLLOW:
+                return "reader_suggested_site_toggle_follow";
             case READER_ARTICLE_VISITED:
                 return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
@@ -684,6 +681,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_reader_tag_followed";
             case READER_TAG_LOADED:
                 return "reader_tag_loaded";
+            case READER_P2_SHOWN:
+                return "reader_p2_shown";
+            case READER_A8C_SHOWN:
+                return "reader_a8c_shown";
             case READER_TAG_PREVIEWED:
                 return "reader_tag_previewed";
             case READER_SEARCH_LOADED:
@@ -749,8 +750,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_session_switch_editor";
             case EDITOR_SESSION_TEMPLATE_APPLY:
                 return "editor_session_template_apply";
-            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                return "editor_session_template_preview";
             case EDITOR_SESSION_END:
                 return "editor_session_end";
             case EDITOR_GUTENBERG_ENABLED:
@@ -825,8 +824,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_post_slug_changed";
             case EDITOR_POST_EXCERPT_CHANGED:
                 return "editor_post_excerpt_changed";
-            case EDITOR_POST_LOCATION_CHANGED:
-                return "editor_post_location_changed";
             case EDITOR_TAPPED_BLOCKQUOTE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
@@ -884,6 +881,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_UNDO:
             case EDITOR_TAPPED_REDO:
                 return "editor_button_tapped";
+            case EDITOR_SETTINGS_FETCHED:
+                return "editor_settings_fetched";
             case REVISIONS_LIST_VIEWED:
                 return "revisions_list_viewed";
             case REVISIONS_DETAIL_VIEWED_FROM_LIST:
@@ -1125,12 +1124,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_referrers_view_more_tapped";
             case STATS_REFERRERS_ITEM_TAPPED:
                 return "stats_referrers_item_tapped";
+            case STATS_REFERRERS_ITEM_LONG_PRESSED:
+                return "stats_referrers_item_long_pressed";
+            case STATS_REFERRERS_ITEM_MARKED_AS_SPAM:
+                return "stats_referrers_item_marked_as_spam";
+            case STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM:
+                return "stats_referrers_item_marked_as_not_spam";
             case STATS_CLICKS_VIEW_MORE_TAPPED:
                 return "stats_clicks_view_more_tapped";
             case STATS_COUNTRIES_VIEW_MORE_TAPPED:
                 return "stats_countries_view_more_tapped";
             case STATS_OVERVIEW_BAR_CHART_TAPPED:
                 return "stats_overview_bar_chart_tapped";
+            case STATS_OVERVIEW_ERROR:
+                return "stats_overview_error";
             case STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED:
                 return "stats_video_plays_view_more_tapped";
             case STATS_VIDEO_PLAYS_VIDEO_TAPPED:
@@ -1205,6 +1212,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
+            case LOGIN_PROLOGUE_PAGED_JETPACK:
+                return "login_prologue_paged_jetpack";
+            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
+                return "login_prologue_paged_notifications";
+            case LOGIN_PROLOGUE_PAGED_POST:
+                return "login_prologue_paged_post";
+            case LOGIN_PROLOGUE_PAGED_READER:
+                return "login_prologue_paged_reader";
+            case LOGIN_PROLOGUE_PAGED_STATS:
+                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -1359,6 +1376,42 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_error_shown";
             case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
                 return "enhanced_site_creation_background_service_updated";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED:
+                return "enhanced_site_creation_site_design_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_thumbnail_mode_button_tapped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED:
+                return "enhanced_site_creation_site_design_selected";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED:
+                return "enhanced_site_creation_site_design_skipped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED:
+                return "enhanced_site_creation_site_design_preview_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_preview_mode_button_tapped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED:
+                return "enhanced_site_creation_site_design_preview_mode_changed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING:
+                return "enhanced_site_creation_site_design_preview_loading";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
+                return "enhanced_site_creation_site_design_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
+                return "layout_picker_preview_mode_changed";
+            case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "layout_picker_thumbnail_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_MODE_BUTTON_TAPPED:
+                return "layout_picker_preview_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_LOADING:
+                return "layout_picker_preview_loading";
+            case LAYOUT_PICKER_PREVIEW_LOADED:
+                return "layout_picker_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_VIEWED:
+                return "layout_picker_preview_viewed";
+            case LAYOUT_PICKER_ERROR_SHOWN:
+                return "layout_picker_error_shown";
+            case CATEGORY_FILTER_SELECTED:
+                return "category_filter_selected";
+            case CATEGORY_FILTER_DESELECTED:
+                return "category_filter_deselected";
             case SITE_CREATED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
@@ -1481,10 +1534,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_error";
             case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
                 return "site_settings_optimize_images_changed";
+            case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
+                return "jetpack_settings_viewed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED:
+                return "jetpack_allowlisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED:
+                return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
-            case FEATURE_FLAG_SET:
-                return "feature_flag_set";
+            case FEATURE_FLAG_VALUE:
+                return "feature_flag_value";
+            case FEATURE_FLAGS_SYNCED_STATE:
+                return "feature_flags_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
@@ -1511,10 +1572,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_service_upload_canceled";
             case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
                 return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_SYSTEM_PICKER:
+                return "media_picker_open_system_picker";
             case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
                 return "media_picker_device_library_opened";
             case MEDIA_PICKER_OPEN_WP_MEDIA:
                 return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_OPEN_STOCK_LIBRARY:
+                return "media_picker_open_stock_library";
+            case MEDIA_PICKER_OPEN_GIF_LIBRARY:
+                return "media_picker_open_gif_library";
             case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
                 return "media_picker_stories_capture_opened";
             case MEDIA_PICKER_OPEN_FOR_STORIES:
@@ -1523,6 +1590,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
                 return "media_picker_preview_opened";
+            case MEDIA_PICKER_SEARCH_EXPANDED:
+                return "media_picker_search_expanded";
+            case MEDIA_PICKER_SEARCH_COLLAPSED:
+                return "media_picker_search_collapsed";
+            case MEDIA_PICKER_SEARCH_TRIGGERED:
+                return "media_picker_search_triggered";
+            case MEDIA_PICKER_SHOW_PERMISSIONS_SCREEN:
+                return "media_picker_show_permissions_screen";
+            case MEDIA_PICKER_ITEM_SELECTED:
+                return "media_picker_item_selected";
+            case MEDIA_PICKER_ITEM_UNSELECTED:
+                return "media_picker_item_unselected";
+            case MEDIA_PICKER_SELECTION_CLEARED:
+                return "media_picker_selection_cleared";
+            case MEDIA_PICKER_OPENED:
+                return "media_picker_opened";
             case APP_PERMISSION_GRANTED:
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
@@ -1597,6 +1680,54 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_detail_opened";
             case ACTIVITY_LOG_REWIND_STARTED:
                 return "activity_log_rewind_started";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "activitylog_filterbar_range_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED:
+                return "activitylog_filterbar_type_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "activitylog_filterbar_select_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED:
+                return "activitylog_filterbar_select_type";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET:
+                return "activitylog_filterbar_reset_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
+                return "activitylog_filterbar_reset_type";
+            case JETPACK_BACKUP_LIST_OPENED:
+                return "jetpack_backup_list_opened";
+            case JETPACK_BACKUP_REWIND_STARTED:
+                return "jetpack_backup_rewind_started";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "jetpack_backup_filterbar_range_button_tapped";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "jetpack_backup_filterbar_select_range";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_RESET:
+                return "jetpack_backup_filterbar_reset_range";
+            case JETPACK_SCAN_ACCESSED:
+                return "jetpack_scan_accessed";
+            case JETPACK_SCAN_HISTORY_ACCESSED:
+                return "jetpack_scan_history_accessed";
+            case JETPACK_SCAN_HISTORY_FILTER:
+                return "jetpack_scan_history_filter";
+            case JETPACK_SCAN_THREAT_LIST_ITEM_TAPPED:
+                return "jetpack_scan_threat_list_item_tapped";
+            case JETPACK_SCAN_THREAT_CODEABLE_ESTIMATE_TAPPED:
+                return "jetpack_scan_threat_codeable_estimate_tapped";
+            case JETPACK_SCAN_RUN_TAPPED:
+                return "jetpack_scan_run_tapped";
+            case JETPACK_SCAN_IGNORE_THREAT_DIALOG_OPEN:
+                return "jetpack_scan_ignorethreat_dialogopen";
+            case JETPACK_SCAN_THREAT_IGNORE_TAPPED:
+                return "jetpack_scan_threat_ignore_tapped";
+            case JETPACK_SCAN_FIX_THREAT_DIALOG_OPEN:
+                return "jetpack_scan_fixthreat_dialogopen";
+            case JETPACK_SCAN_THREAT_FIX_TAPPED:
+                return "jetpack_scan_threat_fix_tapped";
+            case JETPACK_SCAN_ALL_THREATS_OPEN:
+                return "jetpack_scan_allthreats_open";
+            case JETPACK_SCAN_ALL_THREATS_FIX_TAPPED:
+                return "jetpack_scan_allthreats_fix_tapped";
+            case JETPACK_SCAN_ERROR:
+                return "jetpack_scan_error";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:
@@ -1611,13 +1742,11 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
+            case QUICK_START_STARTED:
+                return "quick_start_started";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
-            case QUICK_START_MIGRATION_DIALOG_VIEWED:
-                return "quick_start_migration_dialog_viewed";
-            case QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED:
-                return "quick_start_migration_dialog_button_tapped";
             case QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_remove_dialog_button_tapped";
@@ -1636,41 +1765,38 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
-            case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
-            case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
             case QUICK_START_LIST_ADD_SOCIAL_SKIPPED:
             case QUICK_START_LIST_PUBLISH_POST_SKIPPED:
             case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
             case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
-            case QUICK_START_LIST_CREATE_PAGE_SKIPPED:
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+            case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
-            case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
-            case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
             case QUICK_START_LIST_ADD_SOCIAL_TAPPED:
             case QUICK_START_LIST_PUBLISH_POST_TAPPED:
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
             case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
-            case QUICK_START_LIST_CREATE_PAGE_TAPPED:
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
+            case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
-            case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
-            case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:
             case QUICK_START_SHARE_SITE_TASK_COMPLETED:
             case QUICK_START_PUBLISH_POST_TASK_COMPLETED:
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
             case QUICK_START_UPLOAD_ICON_COMPLETED:
-            case QUICK_START_CREATE_PAGE_COMPLETED:
             case QUICK_START_CHECK_STATS_COMPLETED:
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
+            case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
+            case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
@@ -1686,6 +1812,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_notification_sent";
             case QUICK_START_NOTIFICATION_TAPPED:
                 return "quick_start_notification_tapped";
+            case QUICK_START_HIDE_CARD_TAPPED:
+                return "quick_start_hide_card_tapped";
+            case QUICK_START_REMOVE_CARD_TAPPED:
+                return "quick_start_remove_card_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
             case INSTALLATION_REFERRER_FAILED:
@@ -1755,6 +1885,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "featured_image_set_clicked_post_settings";
             case FEATURED_IMAGE_PICKED_POST_SETTINGS:
                 return "featured_image_picked_post_settings";
+            case FEATURED_IMAGE_PICKED_GUTENBERG_EDITOR:
+                return "featured_image_picked_gutenberg_editor";
+            case FEATURED_IMAGE_REMOVED_GUTENBERG_EDITOR:
+                return "featured_image_removed_gutenberg_editor";
             case FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS:
                 return "featured_image_upload_canceled_post_settings";
             case FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS:
@@ -1777,6 +1911,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_error_snackbar_manage_tapped";
             case STORY_POST_PUBLISH_TAPPED:
                 return "story_post_publish_tapped";
+            case STORY_TEXT_CHANGED:
+                return "story_text_changed";
+            case STORY_INTRO_SHOWN:
+                return "story_intro_shown";
+            case STORY_INTRO_DISMISSED:
+                return "story_intro_dismissed";
+            case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
+                return "story_intro_create_story_button_tapped";
+            case STORY_BLOCK_ADD_MEDIA_TAPPED:
+                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1791,6 +1935,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_unsupported_block_webview_shown";
             case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
                 return "gutenberg_unsupported_block_webview_closed";
+            case EDITOR_HELP_SHOWN:
+                return "editor_help_shown";
             case PREPUBLISHING_BOTTOM_SHEET_OPENED:
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
@@ -1819,6 +1965,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_pull_to_refresh";
             case POST_CARD_MORE_TAPPED:
                 return "post_card_more_tapped";
+            case READER_ARTICLE_DETAIL_MORE_TAPPED:
+                return "reader_article_detail_more_tapped";
             case READER_CHIPS_MORE_TOGGLED:
                 return "reader_chips_more_toggled";
             case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
@@ -1827,6 +1975,135 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case SUGGESTION_SESSION_FINISHED:
+                return "suggestion_session_finished";
+            case COMMENT_APPROVED:
+            case COMMENT_QUICK_ACTION_APPROVED:
+                return "comment_approved";
+            case COMMENT_UNAPPROVED:
+                return "comment_unapproved";
+            case COMMENT_SPAMMED:
+                return "comment_spammed";
+            case COMMENT_UNSPAMMED:
+                return "comment_unspammed";
+            case COMMENT_LIKED:
+            case COMMENT_QUICK_ACTION_LIKED:
+                return "comment_liked";
+            case COMMENT_UNLIKED:
+                return "comment_unliked";
+            case COMMENT_TRASHED:
+                return "comment_trashed";
+            case COMMENT_UNTRASHED:
+                return "comment_untrashed";
+            case COMMENT_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+                return "comment_replied_to";
+            case COMMENT_EDITED:
+                return "comment_edited";
+            case COMMENT_VIEWED:
+                return "comment_viewed";
+            case COMMENT_DELETED:
+                return "comment_deleted";
+            case COMMENT_FOLLOW_CONVERSATION:
+                return "comment_follow_conversation";
+            case COMMENT_BATCH_APPROVED:
+                return "comment_batch_approved";
+            case COMMENT_BATCH_UNAPPROVED:
+                return "comment_batch_unapproved";
+            case COMMENT_BATCH_SPAMMED:
+                return "comment_batch_spammed";
+            case COMMENT_BATCH_TRASHED:
+                return "comment_batch_trashed";
+            case COMMENT_BATCH_DELETED:
+                return "comment_batch_deleted";
+            case COMMENT_EDITOR_OPENED:
+                return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
+            case READER_POST_MARKED_AS_SEEN:
+                return "reader_mark_as_seen";
+            case READER_POST_MARKED_AS_UNSEEN:
+                return "reader_mark_as_unseen";
+            case JETPACK_RESTORE_OPENED:
+                return "jetpack_restore_opened";
+            case JETPACK_RESTORE_CONFIRMED:
+                return "jetpack_restore_confirmed";
+            case JETPACK_RESTORE_ERROR:
+                return "jetpack_restore_error";
+            case JETPACK_BACKUP_DOWNLOAD_OPENED:
+                return "jetpack_backup_download_opened";
+            case JETPACK_BACKUP_DOWNLOAD_CONFIRMED:
+                return "jetpack_backup_download_confirmed";
+            case JETPACK_BACKUP_DOWNLOAD_ERROR:
+                return "jetpack_backup_download_error";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED:
+                return "jetpack_backup_download_share_link_tapped";
+            case MY_SITE_CREATE_SHEET_SHOWN:
+                return "my_site_create_sheet_shown";
+            case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
+                return "my_site_create_sheet_action_tapped";
+            case POST_LIST_CREATE_SHEET_SHOWN:
+                return "post_list_create_sheet_shown";
+            case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
+                return "post_list_create_sheet_action_tapped";
+            case INVITE_LINKS_GET_STATUS:
+                return "invite_links_get_status";
+            case INVITE_LINKS_GENERATE:
+                return "invite_links_generate";
+            case INVITE_LINKS_DISABLE:
+                return "invite_links_disable";
+            case INVITE_LINKS_SHARE:
+                return "invite_links_share";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_notice_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "jetpack_backup_download_file_notice_dismissed_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "activity_log_download_file_notice_download_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "activity_log_download_file_notice_dismissed_tapped";
+            case USER_PROFILE_SHEET_SHOWN:
+                return "user_profile_sheet_shown";
+            case USER_PROFILE_SHEET_SITE_SHOWN:
+                return "user_profile_sheet_site_shown";
+            case BLOG_URL_PREVIEWED:
+                return "blog_url_previewed";
+            case LIKE_LIST_OPENED:
+                return "like_list_opened";
+            case LIKE_LIST_FETCHED_MORE:
+                return "like_list_fetched_more";
+            case STORAGE_WARNING_SHOWN:
+                return "storage_warning_shown";
+            case STORAGE_WARNING_ACKNOWLEDGED:
+                return "storage_warning_acknowledged";
+            case STORAGE_WARNING_CANCELED:
+                return "storage_warning_canceled";
+            case STORAGE_WARNING_DONT_SHOW_AGAIN:
+                return "storage_warning_dont_show_again";
+            case BLOGGING_REMINDERS_SCREEN_SHOWN:
+                return "blogging_reminders_screen_shown";
+            case BLOGGING_REMINDERS_BUTTON_PRESSED:
+                return "blogging_reminders_button_pressed";
+            case BLOGGING_REMINDERS_FLOW_START:
+                return "blogging_reminders_flow_start";
+            case BLOGGING_REMINDERS_FLOW_DISMISSED:
+                return "blogging_reminders_flow_dismissed";
+            case BLOGGING_REMINDERS_FLOW_COMPLETED:
+                return "blogging_reminders_flow_completed";
+            case BLOGGING_REMINDERS_SCHEDULED:
+                return "blogging_reminders_scheduled";
+            case BLOGGING_REMINDERS_CANCELLED:
+                return "blogging_reminders_cancelled";
+            case BLOGGING_REMINDERS_NOTIFICATION_RECEIVED:
+                return "blogging_reminders_notification_received";
+            case LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED:
+                return "login_epilogue_choose_site_tapped";
+            case LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED:
+                return "login_epilogue_create_new_site_tapped";
+            case CREATE_SITE_NOTIFICATION_SCHEDULED:
+                return "create_site_notification_scheduled";
         }
         return null;
     }

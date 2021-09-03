@@ -12,6 +12,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
 @InternalCoroutinesApi
@@ -24,6 +25,7 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+    @Mock private lateinit var readerSeenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
     private lateinit var viewModel: ReaderPostListViewModel
 
@@ -33,6 +35,7 @@ class ReaderPostListViewModelTest {
                 readerPostCardActionsHandler,
                 reblogUseCase,
                 readerTracker,
+                readerSeenStatusToggleUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

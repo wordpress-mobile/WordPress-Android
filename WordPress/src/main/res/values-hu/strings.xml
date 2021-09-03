@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2019-01-17 19:17:56+0000
+Translation-Revision-Date: 2021-02-17 12:52:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: hu
@@ -9,12 +9,14 @@ Language: hu
     <string name="timespan_now">most</string>
     <string name="role_follower">Követő</string>
     <string name="language">Nyelv</string>
+    <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
     <string name="publisher">Közzétevő:</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="pages_fetching">Oldalak betöltése…</string>
     <string name="media_fetching">Média betöltése…</string>
     <string name="comments_fetching">Hozzászólások betöltése…</string>
     <string name="posts_fetching">Bejegyzések betöltése…</string>
+    <string name="reader_empty_posts_in_blog">Ez az oldal üres</string>
     <string name="stats_followers_years">%1$d év</string>
     <string name="stats_followers_a_month">Egy hónap</string>
     <string name="stats_followers_a_year">Egy év</string>
@@ -28,7 +30,6 @@ Language: hu
     <string name="cab_selected">%d kiválasztva</string>
     <string name="browse_our_faq_button">GYIK tallózása</string>
     <string name="reader_empty_comments">Vélemény?</string>
-    <string name="reader_empty_posts_in_tag">Ezzel a címkével nincs bejegyzés jelölve</string>
     <string name="error_refresh_unauthorized_posts">A bejegyzés megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
     <string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
     <string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
@@ -39,9 +40,7 @@ Language: hu
     <string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
     <string name="update_verb">Frissítést</string>
     <string name="schedule_verb">Időzítés</string>
-    <string name="reader_page_followed_tags">Követett címkék</string>
     <string name="help">Segítség</string>
-    <string name="forgot_password">Elfelejtett jelszó?</string>
     <string name="ssl_certificate_error">Érvénytelen SSL hitelesítés</string>
     <string name="mnu_comment_unspam">Nem spam</string>
     <string name="no_network_message">Nincs elérehtő hálózat</string>
@@ -103,6 +102,7 @@ Language: hu
     <string name="anonymous">Névtelen</string>
     <string name="posts">Bejegyzés</string>
     <string name="ok">OK</string>
+    <string name="done">kész</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Szolgáltatási feltételek</string>
     <string name="version">verzió</string>

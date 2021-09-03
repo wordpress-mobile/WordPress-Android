@@ -22,6 +22,13 @@ class ReaderUtilsWrapper @Inject constructor(
     fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
             ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
 
+    fun getResizedImageUrl(
+        imageUrl: String?,
+        width: Int,
+        height: Int,
+        siteAccessibilityInfo: SiteAccessibilityInfo
+    ): String? = ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
+
     fun getTagFromTagName(tagName: String, tagType: ReaderTagType): ReaderTag =
             ReaderUtils.getTagFromTagName(tagName, tagType)
 
@@ -34,4 +41,16 @@ class ReaderUtilsWrapper @Inject constructor(
     fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
 
     fun getReportPostUrl(blogUrl: String): String = ReaderUtils.getReportPostUrl(blogUrl)
+
+    fun postAndCommentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
+        return ReaderUtils.postAndCommentExists(blogId, postId, commentId)
+    }
+
+    fun postExists(blogId: Long, postId: Long) = ReaderUtils.postExists(blogId, postId)
+
+    fun commentExists(
+        blogId: Long,
+        postId: Long,
+        commentId: Long
+    ) = ReaderUtils.commentExists(blogId, postId, commentId)
 }

@@ -1,0 +1,351 @@
+{
+    "request": {
+        "urlPattern": "/wpcom/v2/read/tags/cards(/)?($|\\?.*)",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "success": true,
+            "tags": [
+                "android"
+            ],
+            "sort": "popularity",
+            "lang": "en",
+            "page": 1,
+            "refresh": 1,
+            "cards": [
+                {
+                    "type": "interests_you_may_like",
+                    "data": [
+                        {
+                            "slug": "google",
+                            "title": "Google",
+                            "score": 4
+                        },
+                        {
+                            "slug": "social-media",
+                            "title": "Social Media",
+                            "score": 3
+                        },
+                        {
+                            "slug": "wordpress",
+                            "title": "WordPress",
+                            "score": 3
+                        },
+                        {
+                            "slug": "programming",
+                            "title": "Programming",
+                            "score": 3
+                        }
+                    ]
+                },
+                {
+                    "type": "post",
+                    "data": {
+                        "ID": 381,
+                        "site_ID": 179863948,
+                        "author": {
+                            "ID": 189322726,
+                            "login": "shivamchoudhary1911",
+                            "email": false,
+                            "name": "Shivam Choudhary",
+                            "first_name": "Shivam",
+                            "last_name": "Choudhary",
+                            "nice_name": "shivamchoudhary1911",
+                            "URL": "https://bestinformationavailable.wordpress.com/",
+                            "avatar_URL": "https://2.gravatar.com/avatar/8df388309ebb33505f3404b524807586?s=96&d=identicon&r=G",
+                            "profile_URL": "https://en.gravatar.com/shivamchoudhary1911",
+                            "site_ID": 179868076,
+                            "has_avatar": true
+                        },
+                        "date": "2020-09-28T12:34:06+01:00",
+                        "modified": "2020-09-28T12:34:06+01:00",
+                        "title": "Google removes 17 Android apps caught engaging in WAP billing&nbsp;fraud",
+                        "URL": "https://technicalworled.tech.blog/2020/09/28/google-removes-17-android-apps-caught-engaging-in-wap-billing-fraud/",
+                        "short_URL": "https://wp.me/pcaGPq-69",
+                        "content": "\n<ul class=\"wp-block-social-links\"><li class=\"wp-social-link wp-social-link-wordpress wp-block-social-link-wordpress\"><a href=\"https://ashivamchoudharyblogger.wordpress.com/\" aria-label=\"\"> <svg width=\"24\" height=\"24\" viewbox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12.158,12.786L9.46,20.625c0.806,0.237,1.657,0.366,2.54,0.366c1.047,0,2.051-0.181,2.986-0.51 c-0.024-0.038-0.046-0.079-0.065-0.124L12.158,12.786z M3.009,12c0,3.559,2.068,6.634,5.067,8.092L3.788,8.341 C3.289,9.459,3.009,10.696,3.009,12z M18.069,11.546c0-1.112-0.399-1.881-0.741-2.48c-0.456-0.741-0.883-1.368-0.883-2.109 c0-0.826,0.627-1.596,1.51-1.596c0.04,0,0.078,0.005,0.116,0.007C16.472,3.904,14.34,3.009,12,3.009 c-3.141,0-5.904,1.612-7.512,4.052c0.211,0.007,0.41,0.011,0.579,0.011c0.94,0,2.396-0.114,2.396-0.114 C7.947,6.93,8.004,7.642,7.52,7.699c0,0-0.487,0.057-1.029,0.085l3.274,9.739l1.968-5.901l-1.401-3.838 C9.848,7.756,9.389,7.699,9.389,7.699C8.904,7.67,8.961,6.93,9.446,6.958c0,0,1.484,0.114,2.368,0.114 c0.94,0,2.397-0.114,2.397-0.114c0.485-0.028,0.542,0.684,0.057,0.741c0,0-0.488,0.057-1.029,0.085l3.249,9.665l0.897-2.996 C17.841,13.284,18.069,12.316,18.069,11.546z M19.889,7.686c0.039,0.286,0.06,0.593,0.06,0.924c0,0.912-0.171,1.938-0.684,3.22 l-2.746,7.94c2.673-1.558,4.47-4.454,4.47-7.771C20.991,10.436,20.591,8.967,19.889,7.686z M12,22C6.486,22,2,17.514,2,12 C2,6.486,6.486,2,12,2c5.514,0,10,4.486,10,10C22,17.514,17.514,22,12,22z\"></path></svg></a></li>\n\n\n\n\n\n\n\n<li class=\"wp-social-link wp-social-link-instagram wp-block-social-link-instagram\"><a href=\"https://www.instagram.com/technical_world1999/\" aria-label=\"\"> <svg width=\"24\" height=\"24\" viewbox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12,4.622c2.403,0,2.688,0.009,3.637,0.052c0.877,0.04,1.354,0.187,1.671,0.31c0.42,0.163,0.72,0.358,1.035,0.673 c0.315,0.315,0.51,0.615,0.673,1.035c0.123,0.317,0.27,0.794,0.31,1.671c0.043,0.949,0.052,1.234,0.052,3.637 s-0.009,2.688-0.052,3.637c-0.04,0.877-0.187,1.354-0.31,1.671c-0.163,0.42-0.358,0.72-0.673,1.035 c-0.315,0.315-0.615,0.51-1.035,0.673c-0.317,0.123-0.794,0.27-1.671,0.31c-0.949,0.043-1.233,0.052-3.637,0.052 s-2.688-0.009-3.637-0.052c-0.877-0.04-1.354-0.187-1.671-0.31c-0.42-0.163-0.72-0.358-1.035-0.673 c-0.315-0.315-0.51-0.615-0.673-1.035c-0.123-0.317-0.27-0.794-0.31-1.671C4.631,14.688,4.622,14.403,4.622,12 s0.009-2.688,0.052-3.637c0.04-0.877,0.187-1.354,0.31-1.671c0.163-0.42,0.358-0.72,0.673-1.035 c0.315-0.315,0.615-0.51,1.035-0.673c0.317-0.123,0.794-0.27,1.671-0.31C9.312,4.631,9.597,4.622,12,4.622 M12,3 C9.556,3,9.249,3.01,8.289,3.054C7.331,3.098,6.677,3.25,6.105,3.472C5.513,3.702,5.011,4.01,4.511,4.511 c-0.5,0.5-0.808,1.002-1.038,1.594C3.25,6.677,3.098,7.331,3.054,8.289C3.01,9.249,3,9.556,3,12c0,2.444,0.01,2.751,0.054,3.711 c0.044,0.958,0.196,1.612,0.418,2.185c0.23,0.592,0.538,1.094,1.038,1.594c0.5,0.5,1.002,0.808,1.594,1.038 c0.572,0.222,1.227,0.375,2.185,0.418C9.249,20.99,9.556,21,12,21s2.751-0.01,3.711-0.054c0.958-0.044,1.612-0.196,2.185-0.418 c0.592-0.23,1.094-0.538,1.594-1.038c0.5-0.5,0.808-1.002,1.038-1.594c0.222-0.572,0.375-1.227,0.418-2.185 C20.99,14.751,21,14.444,21,12s-0.01-2.751-0.054-3.711c-0.044-0.958-0.196-1.612-0.418-2.185c-0.23-0.592-0.538-1.094-1.038-1.594 c-0.5-0.5-1.002-0.808-1.594-1.038c-0.572-0.222-1.227-0.375-2.185-0.418C14.751,3.01,14.444,3,12,3L12,3z M12,7.378 c-2.552,0-4.622,2.069-4.622,4.622S9.448,16.622,12,16.622s4.622-2.069,4.622-4.622S14.552,7.378,12,7.378z M12,15 c-1.657,0-3-1.343-3-3s1.343-3,3-3s3,1.343,3,3S13.657,15,12,15z M16.804,6.116c-0.596,0-1.08,0.484-1.08,1.08 s0.484,1.08,1.08,1.08c0.596,0,1.08-0.484,1.08-1.08S17.401,6.116,16.804,6.116z\"></path></svg></a></li>\n\n<li class=\"wp-social-link wp-social-link-wordpress wp-block-social-link-wordpress\"><a href=\"https://ashivamchoudharyblogger.wordpress.com/\" aria-label=\"\"> <svg width=\"24\" height=\"24\" viewbox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12.158,12.786L9.46,20.625c0.806,0.237,1.657,0.366,2.54,0.366c1.047,0,2.051-0.181,2.986-0.51 c-0.024-0.038-0.046-0.079-0.065-0.124L12.158,12.786z M3.009,12c0,3.559,2.068,6.634,5.067,8.092L3.788,8.341 C3.289,9.459,3.009,10.696,3.009,12z M18.069,11.546c0-1.112-0.399-1.881-0.741-2.48c-0.456-0.741-0.883-1.368-0.883-2.109 c0-0.826,0.627-1.596,1.51-1.596c0.04,0,0.078,0.005,0.116,0.007C16.472,3.904,14.34,3.009,12,3.009 c-3.141,0-5.904,1.612-7.512,4.052c0.211,0.007,0.41,0.011,0.579,0.011c0.94,0,2.396-0.114,2.396-0.114 C7.947,6.93,8.004,7.642,7.52,7.699c0,0-0.487,0.057-1.029,0.085l3.274,9.739l1.968-5.901l-1.401-3.838 C9.848,7.756,9.389,7.699,9.389,7.699C8.904,7.67,8.961,6.93,9.446,6.958c0,0,1.484,0.114,2.368,0.114 c0.94,0,2.397-0.114,2.397-0.114c0.485-0.028,0.542,0.684,0.057,0.741c0,0-0.488,0.057-1.029,0.085l3.249,9.665l0.897-2.996 C17.841,13.284,18.069,12.316,18.069,11.546z M19.889,7.686c0.039,0.286,0.06,0.593,0.06,0.924c0,0.912-0.171,1.938-0.684,3.22 l-2.746,7.94c2.673-1.558,4.47-4.454,4.47-7.771C20.991,10.436,20.591,8.967,19.889,7.686z M12,22C6.486,22,2,17.514,2,12 C2,6.486,6.486,2,12,2c5.514,0,10,4.486,10,10C22,17.514,17.514,22,12,22z\"></path></svg></a></li>\n\n<li class=\"wp-social-link wp-social-link-chain wp-block-social-link-chain\"><a href=\"https://technicalworled.tech.blog/\" aria-label=\"\"> <svg width=\"24\" height=\"24\" viewbox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M19.647,16.706a1.134,1.134,0,0,0-.343-.833l-2.549-2.549a1.134,1.134,0,0,0-.833-.343,1.168,1.168,0,0,0-.883.392l.233.226q.2.189.264.264a2.922,2.922,0,0,1,.184.233.986.986,0,0,1,.159.312,1.242,1.242,0,0,1,.043.337,1.172,1.172,0,0,1-1.176,1.176,1.237,1.237,0,0,1-.337-.043,1,1,0,0,1-.312-.159,2.76,2.76,0,0,1-.233-.184q-.073-.068-.264-.264l-.226-.233a1.19,1.19,0,0,0-.4.895,1.134,1.134,0,0,0,.343.833L15.837,19.3a1.13,1.13,0,0,0,.833.331,1.18,1.18,0,0,0,.833-.318l1.8-1.789a1.12,1.12,0,0,0,.343-.821Zm-8.615-8.64a1.134,1.134,0,0,0-.343-.833L8.163,4.7a1.134,1.134,0,0,0-.833-.343,1.184,1.184,0,0,0-.833.331L4.7,6.473a1.12,1.12,0,0,0-.343.821,1.134,1.134,0,0,0,.343.833l2.549,2.549a1.13,1.13,0,0,0,.833.331,1.184,1.184,0,0,0,.883-.38L8.728,10.4q-.2-.189-.264-.264A2.922,2.922,0,0,1,8.28,9.9a.986.986,0,0,1-.159-.312,1.242,1.242,0,0,1-.043-.337A1.172,1.172,0,0,1,9.254,8.079a1.237,1.237,0,0,1,.337.043,1,1,0,0,1,.312.159,2.761,2.761,0,0,1,.233.184q.073.068.264.264l.226.233a1.19,1.19,0,0,0,.4-.895ZM22,16.706a3.343,3.343,0,0,1-1.042,2.488l-1.8,1.789a3.536,3.536,0,0,1-4.988-.025l-2.525-2.537a3.384,3.384,0,0,1-1.017-2.488,3.448,3.448,0,0,1,1.078-2.561l-1.078-1.078a3.434,3.434,0,0,1-2.549,1.078,3.4,3.4,0,0,1-2.5-1.029L3.029,9.794A3.4,3.4,0,0,1,2,7.294,3.343,3.343,0,0,1,3.042,4.806l1.8-1.789A3.384,3.384,0,0,1,7.331,2a3.357,3.357,0,0,1,2.5,1.042l2.525,2.537a3.384,3.384,0,0,1,1.017,2.488,3.448,3.448,0,0,1-1.078,2.561l1.078,1.078a3.551,3.551,0,0,1,5.049-.049l2.549,2.549A3.4,3.4,0,0,1,22,16.706Z\"></path></svg></a></li>\n\n<li class=\"wp-social-link wp-social-link-google wp-block-social-link-google\"><a href=\"https://technicalworled.tech.blog/\" aria-label=\"\"> <svg width=\"24\" height=\"24\" viewbox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12.02,10.18v3.72v0.01h5.51c-0.26,1.57-1.67,4.22-5.5,4.22c-3.31,0-6.01-2.75-6.01-6.12s2.7-6.12,6.01-6.12 c1.87,0,3.13,0.8,3.85,1.48l2.84-2.76C16.99,2.99,14.73,2,12.03,2c-5.52,0-10,4.48-10,10s4.48,10,10,10c5.77,0,9.6-4.06,9.6-9.77 c0-0.83-0.11-1.42-0.25-2.05H12.02z\"></path></svg></a></li></ul>\n\n\n\n<figure class=\"wp-block-image size-large\"><a href=\"https://technicalworled.tech.blog/2020/09/25/google-maps-adds-covid-19-layer-for-safe-travel-in-220-nations/\" target=\"_blank\"><img data-attachment-id=\"380\" data-permalink=\"https://technicalworled.tech.blog/mon_28_09_2020_16_58_45/\" data-orig-file=\"https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png\" data-orig-size=\"291,291\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"Mon_28_09_2020_16_58_45.png\" data-image-description=\"\" data-medium-file=\"https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png?w=291\" data-large-file=\"https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png?w=291\" src=\"https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png?w=291\" alt=\"Google removes 17 app, Google, playstore\" class=\"wp-image-380\" srcset=\"https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png 291w, https://technicalworledtech.files.wordpress.com/2020/09/mon_28_09_2020_16_58_45.png?w=150 150w\" sizes=\"(max-width: 291px) 100vw, 291px\" /></a></figure>\n\n\n\n<h3><strong>Android apps</strong>: Tech giant <strong>Google</strong> last week <strong>removed</strong> as many as <strong>17 apps</strong> from its <strong>Play Store</strong>, after they were found to be infected with malware. Security researchers from Zscaler found that the <strong>17 apps</strong> were infected by Joker or Bread malware.</h3>\n\n\n\n<ul><li>Google has deleted 17 apps in total from Google Play Store.</li><li>The removed 17 Android apps were infected with Joker malware.</li><li>As per reports, there were around 120,000 downloads for these malicious apps.</li></ul>\n\n\n\n<p>As soon as Google was notified about the 17 malicious apps that intend to gain unauthorised access to the users&#8217; data, the company&#8217;s Android Security team took prompt action to remove the apps from the <strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/25/google-maps-adds-covid-19-layer-for-safe-travel-in-220-nations/\" target=\"_blank\">Play Store.</a></strong></p>\n\n\n\n<p>In that time, Google has removed more than 1700 apps that have been plagued by the Joker malware. These 17 apps were downloaded 120,000 times before being detected. <strong>The list of 17 apps is as follows. </strong></p>\n\n\n\n<ul class=\"brandwireUL\"><li>All Good PDF Scanner</li><li>Mint Leaf Message-Your Private Message</li><li>Unique Keyboard &#8211; Fancy Fonts &amp; Free Emoticons</li><li>Tangram App Lock</li><li>Direct Messenger</li><li>Private SMS</li><li>One Sentence Translator &#8211; Multifunctional Translator</li><li>Style Photo Collage</li><li>Meticulous Scanner</li><li>Desire Translate</li><li>Talent Photo Editor &#8211; Blur focus</li><li>Care Message</li><li>Part Message</li><li>Paper Doc Scanner</li><li>Blue Scanner</li><li>Hummingbird PDF Converter &#8211; Photo to PDF</li><li>All Good PDF Scanner</li></ul>\n\n\n\n<p>Following its internal procedures, Google removed the apps from the Play Store, used the Play <strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/18/paytm-says-your-money-is-safe-and-the-app-will-be-back-soon-on-play-store/\" target=\"_blank\">Protect service</a></strong> to disable the apps on infected devices, but users still need to manually intervene and remove the apps from their devices.</p>\n\n\n\n<p>The Joker malware has remained a persistent threat for the Android security theme. Despite Google’s efforts, the malware has been popping up on various apps on the Play Store at regular intervals.</p>\n\n\n\n<p>Earlier this month, Google had removed six apps containing the malware that were spotted by cybersecurity firm Pradeo and accounted for nearly 2 lakh installs.</p>\n\n\n\n<p>Zscaler, giving its word of caution, told users to keep an eye on the permissions that any apps were seeking, and look out for suspicious permissions like SMS messages, contacts or call logs, as it could be an indicator of a malicious app</p>\n\n\n\n<h3>Other links </h3>\n\n\n\n<p><strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/18/paytm-says-your-money-is-safe-and-the-app-will-be-back-soon-on-play-store/\" target=\"_blank\">1</a></strong><em><strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/18/paytm-says-your-money-is-safe-and-the-app-will-be-back-soon-on-play-store/\" target=\"_blank\"> Deltases </a></strong></em></p>\n\n\n\n<p><strong>2 </strong><strong><a rel=\"noreferrer noopener\" href=\"https://ashivamchoudharyblogger.wordpress.com/\" target=\"_blank\">best information available </a></strong></p>\n\n\n\n<h3>Internal link </h3>\n\n\n\n<p><strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/25/google-maps-adds-covid-19-layer-for-safe-travel-in-220-nations/\" target=\"_blank\">1 GOOGLE</a></strong> </p>\n\n\n\n<p><strong>2 </strong><strong><a rel=\"noreferrer noopener\" href=\"https://technicalworled.tech.blog/2020/09/11/facebook-launches-college-only-space-facebook-campus-in-us/\" target=\"_blank\">Facebook launches </a></strong></p>\n\n\n\n<p><a href=\"https://ashivamchoudharyblogger.wordpress.com/2020/09/25/rejection/\" rel=\"nofollow\">https://ashivamchoudharyblogger.wordpress.com/2020/09/25/rejection/</a></p>\n\n\n\n<p><a href=\"https://ashivamchoudharyblogger.wordpress.com/2020/09/23/follow-your-dreams/\" rel=\"nofollow\">https://ashivamchoudharyblogger.wordpress.com/2020/09/23/follow-your-dreams/</a></p>\n",
+                        "excerpt": "<p>Android apps: Tech giant Google last week removed as many as 17 apps from its Play Store, after they were found to be infected with malware. Security researchers from Zscaler found that the 17 apps were infected by Joker or Bread malware. Google has deleted 17 apps in total from Google Play Store. The removed 17 Android apps were infected with Joker malware. As [&hellip;]</p>\n",
+                        "slug": "google-removes-17-android-apps-caught-engaging-in-wap-billing-fraud",
+                        "guid": "http://technicalworled.tech.blog/2020/09/28/google-removes-17-android-apps-caught-engaging-in-wap-billing-fraud/",
+                        "status": "publish",
+                        "discussion": {
+                            "comments_open": true,
+                            "comment_status": "open",
+                            "pings_open": true,
+                            "ping_status": "open",
+                            "comment_count": 2
+                        },
+                        "likes_enabled": true,
+                        "sharing_enabled": true,
+                        "like_count": 39,
+                        "i_like": false,
+                        "is_reblogged": false,
+                        "is_following": false,
+                        "global_ID": "50db85259bbfda01afdddba25a4c2648",
+                        "featured_image": "",
+                        "post_thumbnail": null,
+                        "format": "standard",
+                        "tags": {
+                            "Android": {
+                                "ID": 641922,
+                                "name": "Android",
+                                "slug": "android",
+                                "description": "",
+                                "post_count": 1,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/tags/slug:android",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/179863948/tags/slug:android/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/179863948"
+                                    }
+                                }
+                            },
+                            "Google": {
+                                "ID": 81,
+                                "name": "Google",
+                                "slug": "google",
+                                "description": "",
+                                "post_count": 2,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/tags/slug:google",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/179863948/tags/slug:google/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/179863948"
+                                    }
+                                }
+                            },
+                            "play store": {
+                                "ID": 18995645,
+                                "name": "play store",
+                                "slug": "play-store",
+                                "description": "",
+                                "post_count": 2,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/tags/slug:play-store",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/179863948/tags/slug:play-store/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/179863948"
+                                    }
+                                }
+                            }
+                        },
+                        "categories": {
+                            "Uncategorized": {
+                                "ID": 97,
+                                "name": "Uncategorized",
+                                "slug": "uncategorized",
+                                "description": "",
+                                "post_count": 52,
+                                "parent": 0,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/categories/slug:uncategorized",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/179863948/categories/slug:uncategorized/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/179863948"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {},
+                        "attachment_count": 0,
+                        "metadata": [],
+                        "meta": {
+                            "links": {
+                                "self": "https://public-api.wordpress.com/rest/v1.1/read/sites/179863948/posts/381",
+                                "help": "https://public-api.wordpress.com/rest/v/sites/179863948/posts/381/help",
+                                "site": "https://public-api.wordpress.com/rest/v1.2/sites/179863948",
+                                "replies": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/posts/381/replies/",
+                                "likes": "https://public-api.wordpress.com/rest/v1.1/sites/179863948/posts/381/likes/"
+                            }
+                        },
+                        "capabilities": {
+                            "publish_post": true,
+                            "delete_post": true,
+                            "edit_post": true
+                        },
+                        "is_seen": false,
+                        "feed_ID": 107310609,
+                        "feed_URL": "http://technicalworled.tech.blog",
+                        "pseudo_ID": "50db85259bbfda01afdddba25a4c2648",
+                        "is_external": false,
+                        "site_name": "Technical World",
+                        "site_URL": "https://technicalworled.tech.blog",
+                        "site_is_private": false,
+                        "featured_media": {},
+                        "use_excerpt": false
+                    }
+                },
+                {
+                    "type": "post",
+                    "data": {
+                        "ID": 3060,
+                        "site_ID": 49375289,
+                        "author": {
+                            "ID": 47980790,
+                            "login": "torgrimorde",
+                            "email": false,
+                            "name": "grimorde",
+                            "first_name": "",
+                            "last_name": "",
+                            "nice_name": "torgrimorde",
+                            "URL": "http://grimordedotcom.wordpress.com",
+                            "avatar_URL": "https://1.gravatar.com/avatar/73c5d0a420f105af39cce3fe2e677e10?s=96&d=retro&r=R",
+                            "profile_URL": "https://en.gravatar.com/torgrimorde",
+                            "site_ID": 49375289,
+                            "has_avatar": true
+                        },
+                        "date": "2020-10-11T10:40:07+00:00",
+                        "modified": "2020-10-11T10:40:07+00:00",
+                        "title": "New and Improved DDO Puzzle&nbsp;App",
+                        "URL": "https://grimorde.com/2020/10/11/new-and-improved-ddo-puzzle-app/",
+                        "short_URL": "https://wp.me/p3laLD-Nm",
+                        "content": "\n<p>Finally! It&#8217;s done! The new version of the DDO Puzzle App is now available for Android. Er&#8230; *cough* it&#8217;s actually been out for about a month but I forgot to post the blog&#8230;</p>\n\n\n\n<p>There is not a great deal of new content in terms of quest puzzles, but I have expanded the &#8216;Prove your Worth&#8217; to include the answers to the questions on the Heroic version of the quest and added the Sir Raleigh questions &amp; answers for the Prison of the Planes room. I also added the Memory Lapse book order to a release going out for testing today, so that should be available in the next few days.</p>\n\n\n\n<p>There is new functionality though.</p>\n\n\n\n\n\n\n\n<p></p>\n\n\n\n<p>The app now supports light and dark mode. This can be accessed via the Settings icon on the Menu screen.</p>\n\n\n\n<div class=\"wp-block-image is-style-default\"><figure class=\"aligncenter size-large\"><img data-attachment-id=\"3065\" data-permalink=\"https://grimorde.com/app_menu/\" data-orig-file=\"https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png\" data-orig-size=\"503,478\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"app_menu\" data-image-description=\"\" data-medium-file=\"https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png?w=300\" data-large-file=\"https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png?w=503\" src=\"https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png\" alt=\"\" class=\"wp-image-3065\" /></figure></div>\n\n\n\n<p>There is also better support for portrait and landscape mode.</p>\n\n\n\n<div class=\"wp-block-image is-style-default\"><figure class=\"aligncenter size-large\"><img data-attachment-id=\"3068\" data-permalink=\"https://grimorde.com/layouts/\" data-orig-file=\"https://grimordedotcom.files.wordpress.com/2020/07/layouts.png\" data-orig-size=\"733,431\" data-comments-opened=\"1\" data-image-meta=\"{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}\" data-image-title=\"layouts\" data-image-description=\"\" data-medium-file=\"https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=300\" data-large-file=\"https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=733\" src=\"https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=670\" alt=\"\" class=\"wp-image-3068\" srcset=\"https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=670 670w, https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=150 150w, https://grimordedotcom.files.wordpress.com/2020/07/layouts.png?w=300 300w, https://grimordedotcom.files.wordpress.com/2020/07/layouts.png 733w\" sizes=\"(max-width: 670px) 100vw, 670px\" /></figure></div>\n\n\n\n<p>Version 1 of the app is currently still available in the store. You can install v2 alongside and see which version you prefer &#8211; but v1 will not have any future updates to it. I should mention that if you really like the interactive &#8216;Enter the Kobold&#8217; map on version 1, you should keep that version as I have not implemented it on version 2. If a whole buttload of you ask for it though, I&#8217;ll start work on it 😀</p>\n\n\n\n<p>For Windows users, I haven&#8217;t forgotten you! I hope to get this new version out to you in the next few weeks.</p>\n\n\n\n<p></p>\n\n\n\n<p>I also intended to have this released on iOS but unfortunately Apple do not like me using images taken from DDO so I&#8217;m going to have to revisit the tiles etc to get that sorted out. iOS users may just get buttons with the puzzle names on 😛</p>\n\n\n\n<p>Please get in touch if you find any issues with the app, or if you have suggestions for new entries to be added.</p>\n",
+                        "excerpt": "<p>Finally! It&#8217;s done! The new version of the DDO Puzzle App is now available for Android. Er&#8230; *cough* it&#8217;s actually been out for about a month but I forgot to post the blog&#8230; There is not a great deal of new content in terms of quest puzzles, but I have expanded the &#8216;Prove your Worth&#8217; [&hellip;]</p>\n",
+                        "slug": "new-and-improved-ddo-puzzle-app",
+                        "guid": "http://grimorde.com/?p=3060",
+                        "status": "publish",
+                        "discussion": {
+                            "comments_open": true,
+                            "comment_status": "open",
+                            "pings_open": true,
+                            "ping_status": "open",
+                            "comment_count": 3
+                        },
+                        "likes_enabled": true,
+                        "sharing_enabled": true,
+                        "like_count": 2,
+                        "i_like": false,
+                        "is_reblogged": false,
+                        "is_following": false,
+                        "global_ID": "d4597690941dac67a393ea218642e1dc",
+                        "featured_image": "https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png",
+                        "post_thumbnail": {
+                            "ID": 3065,
+                            "URL": "https://grimordedotcom.files.wordpress.com/2020/07/app_menu.png",
+                            "guid": "http://grimordedotcom.files.wordpress.com/2020/07/app_menu.png",
+                            "mime_type": "image/png",
+                            "width": 503,
+                            "height": 478
+                        },
+                        "format": "standard",
+                        "tags": {
+                            "Android": {
+                                "ID": 641922,
+                                "name": "Android",
+                                "slug": "android",
+                                "description": "",
+                                "post_count": 1,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/tags/slug:android",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/49375289/tags/slug:android/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289"
+                                    }
+                                }
+                            },
+                            "DDO Puzzle App": {
+                                "ID": 705009421,
+                                "name": "DDO Puzzle App",
+                                "slug": "ddo-puzzle-app",
+                                "description": "",
+                                "post_count": 1,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/tags/slug:ddo-puzzle-app",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/49375289/tags/slug:ddo-puzzle-app/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289"
+                                    }
+                                }
+                            },
+                            "iOS": {
+                                "ID": 324281,
+                                "name": "iOS",
+                                "slug": "ios",
+                                "description": "",
+                                "post_count": 1,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/tags/slug:ios",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/49375289/tags/slug:ios/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289"
+                                    }
+                                }
+                            }
+                        },
+                        "categories": {
+                            "apps": {
+                                "ID": 4213,
+                                "name": "apps",
+                                "slug": "apps",
+                                "description": "",
+                                "post_count": 5,
+                                "parent": 0,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/categories/slug:apps",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/49375289/categories/slug:apps/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289"
+                                    }
+                                }
+                            },
+                            "DDO": {
+                                "ID": 556555,
+                                "name": "DDO",
+                                "slug": "ddo",
+                                "description": "",
+                                "post_count": 69,
+                                "parent": 0,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/categories/slug:ddo",
+                                        "help": "https://public-api.wordpress.com/rest/v/sites/49375289/categories/slug:ddo/help",
+                                        "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289"
+                                    }
+                                }
+                            }
+                        },
+                        "attachments": {},
+                        "attachment_count": 0,
+                        "metadata": [],
+                        "meta": {
+                            "links": {
+                                "self": "https://public-api.wordpress.com/rest/v1.1/read/sites/49375289/posts/3060",
+                                "help": "https://public-api.wordpress.com/rest/v/sites/49375289/posts/3060/help",
+                                "site": "https://public-api.wordpress.com/rest/v1.2/sites/49375289",
+                                "replies": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/posts/3060/replies/",
+                                "likes": "https://public-api.wordpress.com/rest/v1.1/sites/49375289/posts/3060/likes/"
+                            }
+                        },
+                        "capabilities": {
+                            "publish_post": true,
+                            "delete_post": true,
+                            "edit_post": true
+                        },
+                        "is_seen": false,
+                        "feed_ID": 9701699,
+                        "feed_URL": "http://grimorde.com",
+                        "pseudo_ID": "d4597690941dac67a393ea218642e1dc",
+                        "is_external": false,
+                        "site_name": "grimordes blog",
+                        "site_URL": "https://grimorde.com",
+                        "site_is_private": false,
+                        "featured_media": {
+                            "uri": "https://grimordedotcom.files.wordpress.com/2020/07/layouts.png",
+                            "width": 0,
+                            "height": 0,
+                            "type": "image"
+                        },
+                        "use_excerpt": false
+                    }
+                }
+            ],
+            "next_page_handle": "ZnJvbT04JnJlZnJlc2g9MQ=="
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}

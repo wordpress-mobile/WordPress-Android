@@ -30,6 +30,18 @@
         android:layout_above="@+id/divider_list"
         android:layout_below="@+id/appbar" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/divider_list"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:contentDescription="@string/add"
+        android:src="@drawable/ic_plus_white_24dp"
+        app:borderWidth="0dp" />
+
     <View
         android:id="@+id/divider_list"
         android:layout_width="match_parent"
@@ -60,19 +72,17 @@
             android:paddingEnd="@dimen/margin_medium"
             android:textAlignment="viewStart" />
 
-        <ImageButton
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/btn_add"
+            style="@style/Reader.Follow.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/edit_add"
             android:layout_alignBottom="@+id/edit_add"
             android:layout_alignParentEnd="true"
-            android:background="?android:selectableItemBackground"
             android:contentDescription="@string/add"
-            android:paddingStart="@dimen/margin_extra_medium_large"
-            android:paddingEnd="@dimen/margin_extra_medium_large"
-            android:src="@drawable/ic_reader_follow_white_24dp"
-            app:tint="?attr/colorPrimary" />
+            android:layout_marginStart="@dimen/margin_extra_medium_large"
+            android:layout_marginEnd="@dimen/margin_extra_medium_large"/>
 
     </RelativeLayout>
 

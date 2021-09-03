@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -102,7 +103,7 @@ class PostListViewModel @Inject constructor(
 
     private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(
             offset = EMPTY_VIEW_THROTTLE,
-            coroutineScope = this,
+            coroutineScope = viewModelScope,
             mainDispatcher = uiDispatcher,
             backgroundDispatcher = bgDispatcher
     )
@@ -395,8 +396,7 @@ class PostListViewModel @Inject constructor(
                     featuredImageUrl,
                     photonWidth,
                     photonHeight,
-                    !SiteUtils.isPhotonCapable(connector.site),
-                    connector.site.isPrivateWPComAtomic
+                    SiteUtils.getAccessibilityInfoFromSite(connector.site)
             )
 
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {

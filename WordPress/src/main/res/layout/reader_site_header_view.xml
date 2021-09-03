@@ -14,7 +14,7 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_extra_large"
@@ -29,9 +29,9 @@
                 android:id="@+id/image_blavatar"
                 style="@style/ReaderImageView.Avatar.ExtraLarge"
                 android:layout_marginEnd="@dimen/reader_site_header_avatar_margin_end"
-                android:padding="@dimen/reader_site_header_avatar_padding"
+                android:background="@drawable/bg_oval_placeholder"
                 android:contentDescription="@null"
-                android:background="@drawable/bg_oval_stroke_placeholder_1dp"
+                android:padding="@dimen/reader_site_header_avatar_padding"
                 android:src="@drawable/bg_oval_placeholder_globe_no_border_24dp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
             tools:text="Chronicling the adventures of Buddy the Cat and his various criminal activities" />
 

@@ -5,7 +5,7 @@ Our code style guidelines are based on the [Android Code Style Guidelines for Co
 * Line length is 120 characters
 * FIXME must not be committed in the repository use TODO instead. FIXME can be used in your own local repository only.
 
-On top of the Android linter rules (best run for this project using `./gradlew lintVanillaRelease`), we use two linters: [Checkstyle](http://checkstyle.sourceforge.net/) (for Java and some language-independent custom project rules), and [ktlint](https://github.com/pinterest/ktlint) (for Kotlin).
+On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](http://checkstyle.sourceforge.net/) (for Java and some language-independent custom project rules), and [ktlint](https://github.com/pinterest/ktlint) (for Kotlin).
 
 ## Checkstyle
 
@@ -25,10 +25,32 @@ You can install the CheckStyle-IDEA plugin in Android Studio here:
 
 Once installed, you can configure the plugin here:
 
-`Android Studio > Preferences... > Other Settings > Checkstyle`
+`Android Studio > Preferences... > Tools > Checkstyle`
 
 From there, add and enable the custom configuration file, located at [config/checkstyle.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/checkstyle.xml).
 
 ## ktlint
 
 You can run ktlint using `./gradlew ktlint`, and you can also run `./gradlew ktlintFormat` for auto-formatting. There is no IDEA plugin (like Checkstyle's) at this time.
+
+## Detekt
+
+You can run detekt via a gradle command:
+
+```
+$ ./gradlew WordPress:detekt
+```
+
+It generates an HTML report in `WordPress/build/reports/detekt/detekt.html`.
+
+You can also view errors and warnings in realtime with the Detekt plugin.
+
+You can install the detekt plugin in Android Studio here:
+
+`Android Studio > Preferences... > Plugins > detekt`
+
+Once installed, you can configure the plugin here:
+
+`Android Studio > Preferences... > Tools > Detekt`
+
+From there, add and enable the custom configuration file, located at [config/detekt/detekt.yml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/detekt/detekt.yml).

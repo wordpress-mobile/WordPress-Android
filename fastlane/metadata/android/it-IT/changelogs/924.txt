@@ -1,5 +1,0 @@
-15.7:
-Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
-
-Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
-

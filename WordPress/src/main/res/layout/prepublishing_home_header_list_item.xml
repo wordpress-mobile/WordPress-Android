@@ -55,6 +55,8 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceBody1"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="@id/site_icon_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/site_icon_layout"

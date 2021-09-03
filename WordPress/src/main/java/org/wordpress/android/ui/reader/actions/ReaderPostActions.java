@@ -272,7 +272,7 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestFeedPost(final long feedId, final long feedItemId,
-                                       final ReaderActions.OnRequestListener requestListener) {
+                                       final ReaderActions.OnRequestListener<String> requestListener) {
         String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
     }
@@ -282,13 +282,13 @@ public class ReaderPostActions {
      **/
     public static void requestBlogPost(final String blogSlug,
                                        final String postSlug,
-                                       final ReaderActions.OnRequestListener requestListener) {
+                                       final ReaderActions.OnRequestListener<String> requestListener) {
         String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
     private static void requestPost(RestClientUtils restClientUtils, String path, final ReaderActions
-            .OnRequestListener requestListener) {
+            .OnRequestListener<String> requestListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -296,7 +296,7 @@ public class ReaderPostActions {
                 ReaderPostTable.addPost(post);
                 handlePostLikes(post, jsonObject);
                 if (requestListener != null) {
-                    requestListener.onSuccess();
+                    requestListener.onSuccess(post.getBlogUrl());
                 }
             }
         };
@@ -403,6 +403,13 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "updateRelatedPosts failed");
                 AppLog.e(T.READER, volleyError);
+                EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(
+                        sourcePost,
+                        new ReaderSimplePostList(),
+                        new ReaderSimplePostList(),
+                        false
+                    )
+                );
             }
         };
 
@@ -438,7 +445,7 @@ public class ReaderPostActions {
                         }
                     }
                     EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts,
-                                                                                    globalRelatedPosts));
+                                                                                    globalRelatedPosts, true));
                 }
             }
         }.start();

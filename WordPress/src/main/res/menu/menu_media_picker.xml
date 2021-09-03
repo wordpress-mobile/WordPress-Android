@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="always|collapseActionView"
+        android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:title="@string/search"/>
+        app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/mnu_browse_item"
         android:icon="@drawable/ic_image_white_24dp"
         android:title="@string/media_browse_for_items"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/mnu_choose_from_media_library"
+        android:icon="@drawable/ic_wordpress_white_24dp"
+        android:title="@string/photo_picker_wordpress_media_library"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
+    <item
+        android:id="@+id/mnu_choose_from_device"
+        android:title="@string/photo_picker_choose_file"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mnu_choose_from_stock_library"
+        android:title="@string/photo_picker_stock_media"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mnu_choose_from_tenor_library"
+        android:title="@string/photo_picker_gif"
+        app:showAsAction="never" />
 </menu>

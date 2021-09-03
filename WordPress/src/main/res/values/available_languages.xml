@@ -1,208 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Warning: Auto-generated file, don't edit it.-->
+<!--Warning: Auto-generated file, do not edit.-->
 <resources>
-<string-array name="available_languages" translatable="false">
-
-<item>
-en_US
-</item>
-
-<item>
-az
-</item>
-
-<item>
-de
-</item>
-
-<item>
-el
-</item>
-
-<item>
-es
-</item>
-
-<item>
-es_MX
-</item>
-
-<item>
-es_CL
-</item>
-
-<item>
-fr
-</item>
-
-<item>
-gd
-</item>
-
-<item>
-hi
-</item>
-
-<item>
-hu
-</item>
-
-<item>
-id
-</item>
-
-<item>
-it
-</item>
-
-<item>
-ja
-</item>
-
-<item>
-ko
-</item>
-
-<item>
-nb
-</item>
-
-<item>
-nl
-</item>
-
-<item>
-pl
-</item>
-
-<item>
-ru
-</item>
-
-<item>
-sv
-</item>
-
-<item>
-th
-</item>
-
-<item>
-uz
-</item>
-
-<item>
-zh_CN
-</item>
-
-<item>
-zh_TW
-</item>
-
-<item>
-zh_HK
-</item>
-
-<item>
-en_GB
-</item>
-
-<item>
-tr
-</item>
-
-<item>
-eu
-</item>
-
-<item>
-he
-</item>
-
-<item>
-pt_BR
-</item>
-
-<item>
-ar
-</item>
-
-<item>
-ro
-</item>
-
-<item>
-mk
-</item>
-
-<item>
-en_AU
-</item>
-
-<item>
-sr
-</item>
-
-<item>
-sk
-</item>
-
-<item>
-cy
-</item>
-
-<item>
-da
-</item>
-
-<item>
-bg
-</item>
-
-<item>
-sq
-</item>
-
-<item>
-hr
-</item>
-
-<item>
-cs
-</item>
-
-<item>
-en_CA
-</item>
-
-<item>
-ms
-</item>
-
-<item>
-es_VE
-</item>
-
-<item>
-gl
-</item>
-
-<item>
-vi
-</item>
-
-<item>
-is
-</item>
-
-<item>
-es_CO
-</item>
-
-<item>
-kmr
-</item>
-
-</string-array>
+  <string-array name="available_languages" translatable="false">
+    <item>en_US</item>
+    <item>ar</item>
+    <item>de</item>
+    <item>en_GB</item>
+    <item>es</item>
+    <item>fr_CA</item>
+    <item>fr</item>
+    <item>he</item>
+    <item>id</item>
+    <item>it</item>
+    <item>ja</item>
+    <item>ko</item>
+    <item>nl</item>
+    <item>pl</item>
+    <item>pt_BR</item>
+    <item>ru</item>
+    <item>sr</item>
+    <item>sv</item>
+    <item>th</item>
+    <item>tr</item>
+    <item>vi</item>
+    <item>zh_CN</item>
+    <item>zh_TW</item>
+    <item>az</item>
+    <item>el</item>
+    <item>es_MX</item>
+    <item>es_CL</item>
+    <item>gd</item>
+    <item>hi</item>
+    <item>hu</item>
+    <item>nb</item>
+    <item>pl</item>
+    <item>th</item>
+    <item>uz</item>
+    <item>zh_HK</item>
+    <item>eu</item>
+    <item>ro</item>
+    <item>mk</item>
+    <item>en_AU</item>
+    <item>sr</item>
+    <item>sk</item>
+    <item>cy</item>
+    <item>da</item>
+    <item>bg</item>
+    <item>sq</item>
+    <item>hr</item>
+    <item>cs</item>
+    <item>pt_BR</item>
+    <item>en_CA</item>
+    <item>ms</item>
+    <item>es_VE</item>
+    <item>gl</item>
+    <item>is</item>
+    <item>es_CO</item>
+    <item>kmr</item>
+  </string-array>
 </resources>
-

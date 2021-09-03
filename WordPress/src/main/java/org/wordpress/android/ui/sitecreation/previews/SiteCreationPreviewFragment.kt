@@ -4,30 +4,25 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.OnLayoutChangeListener
-import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.webkit.WebView
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
-import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
-import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
-import kotlinx.android.synthetic.main.site_creation_preview_web_view_container.*
-import kotlinx.android.synthetic.main.site_creation_progress_creating_site.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
+import org.wordpress.android.databinding.SiteCreationFormScreenBinding
+import org.wordpress.android.databinding.SiteCreationPreviewScreenBinding
+import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
+import org.wordpress.android.databinding.SiteCreationProgressCreatingSiteBinding
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -45,12 +40,12 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
-import org.wordpress.android.util.getColorFromAttribute
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
+@Suppress("TooManyFunctions")
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         ErrorManagedWebViewClientListener {
     /**
@@ -58,13 +53,15 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
      * automatically shows system notifications when site creation is in progress and the app is in the background.
      */
     private var serviceEventConnection: ServiceEventConnection? = null
-
     private lateinit var viewModel: SitePreviewViewModel
-
     private var animatorSet: AnimatorSet? = null
+    private val isLandscape: Boolean
+        get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+
+    private var binding: SiteCreationPreviewScreenBinding? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,168 +70,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        serviceEventConnection?.disconnect(context, viewModel)
-    }
-
-    @LayoutRes
-    override fun getContentLayout(): Int {
-        return R.layout.site_creation_preview_screen
-    }
-
-    override fun setupContent(rootView: ViewGroup) {
-        initViewModel()
-        initRetryButton()
-        initOkButton()
-        initCancelWizardButton()
-        initContactSupportButton()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(SitePreviewViewModel::class.java)
-        viewModel.uiState.observe(this, Observer { uiState ->
-            uiState?.let {
-                when (uiState) {
-                    is SitePreviewContentUiState -> updateContentLayout(uiState.data)
-                    is SitePreviewWebErrorUiState -> updateContentLayout(uiState.data)
-                    is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
-                    is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
-                    is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
-                }
-                uiHelpers.updateVisibility(progress_layout, uiState.fullscreenProgressLayoutVisibility)
-                uiHelpers.updateVisibility(content_layout, uiState.contentLayoutVisibility)
-                uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
-                uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
-                uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
-                uiHelpers.updateVisibility(error_layout, uiState.fullscreenErrorLayoutVisibility)
-            }
-        })
-        viewModel.preloadPreview.observe(this, Observer { url ->
-            url?.let {
-                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
-                sitePreviewWebView.loadUrl(url)
-            }
-        })
-        viewModel.hideGetStartedBar.observe(this, Observer<Unit> {
-            hideGetStartedBar(sitePreviewWebView)
-        })
-        viewModel.startCreateSiteService.observe(this, Observer { startServiceData ->
-            startServiceData?.let {
-                SiteCreationService.createSite(
-                        requireNotNull(activity),
-                        startServiceData.previousState,
-                        startServiceData.serviceData
-                )
-            }
-        })
-        viewModel.onHelpClicked.observe(this, Observer {
-            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
-        })
-        viewModel.onSiteCreationCompleted.observe(this, Observer {
-            (requireActivity() as SitePreviewScreenListener).onSiteCreationCompleted()
-        })
-        viewModel.onOkButtonClicked.observe(this, Observer { createSiteState ->
-            createSiteState?.let {
-                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
-            }
-        })
-        viewModel.onCancelWizardClicked.observe(this, Observer { createSiteState ->
-            createSiteState?.let {
-                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
-            }
-        })
-
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState)
-    }
-
-    private fun initRetryButton() {
-        error_retry.setOnClickListener { viewModel.retry() }
-    }
-
-    private fun initContactSupportButton() {
-        contact_support.setOnClickListener { viewModel.onHelpClicked() }
-    }
-
-    private fun initCancelWizardButton() {
-        cancel_wizard_button.setOnClickListener { viewModel.onCancelWizardClicked() }
-    }
-
-    private fun initOkButton() {
-        okButton.setOnClickListener { viewModel.onOkButtonClicked() }
-    }
-
-    private fun updateContentLayout(sitePreviewData: SitePreviewData) {
-        sitePreviewData.apply {
-            sitePreviewWebUrlTitle.text = createSpannableUrl(
-                    requireNotNull(activity),
-                    shortUrl,
-                    subDomainIndices,
-                    domainIndices
-            )
-        }
-        // The view is about to become visible
-        if (content_layout.visibility == View.GONE) {
-            animateContentTransition()
-            view?.announceForAccessibility(
-                    getString(R.string.new_site_creation_preview_title) +
-                            getString(R.string.new_site_creation_site_preview_content_description)
-            )
-        }
-    }
-
-    private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
-        progressUiState.apply {
-            val newText = uiHelpers.getTextOfUiString(progress_text.context, loadingTextResId)
-            AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
-            if (animate) {
-                updateLoadingTextWithFadeAnimation(newText)
-            } else {
-                progress_text.text = newText
-            }
-        }
-    }
-
-    private fun updateLoadingTextWithFadeAnimation(newText: CharSequence) {
-        val animationDuration = AniUtils.Duration.SHORT
-        val fadeOut = AniUtils.getFadeOutAnim(progress_text_layout, animationDuration, View.VISIBLE)
-        val fadeIn = AniUtils.getFadeInAnim(progress_text_layout, animationDuration)
-
-        // update the text when the view isn't visible
-        fadeIn.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator) {
-                progress_text.text = newText
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                super.onAnimationEnd(animation)
-                animatorSet = null
-            }
-        })
-        // Start the fadein animation right after the view fades out
-        fadeIn.startDelay = animationDuration.toMillis(progress_text_layout.context)
-
-        animatorSet = AnimatorSet().apply {
-            playSequentially(fadeOut, fadeIn)
-            start()
-        }
-    }
-
-    private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
-        errorUiStateState.apply {
-            uiHelpers.setTextOrHide(error_title, titleResId)
-            uiHelpers.setTextOrHide(error_subtitle, subtitleResId)
-            uiHelpers.updateVisibility(contact_support, errorUiStateState.showContactSupport)
-            uiHelpers.updateVisibility(cancel_wizard_button, errorUiStateState.showCancelWizardButton)
         }
     }
 
@@ -248,10 +83,214 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (animatorSet?.isRunning == true) {
-            animatorSet?.cancel()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+    }
+
+    override fun getContentLayout(): Int {
+        return R.layout.site_creation_preview_screen
+    }
+
+    override val screenTitle: String
+        get() = arguments?.getString(EXTRA_SCREEN_TITLE)
+                ?: throw IllegalStateException("Required argument screen title is missing.")
+
+    override fun setBindingViewStubListener(parentBinding: SiteCreationFormScreenBinding) {
+        parentBinding.siteCreationFormContentStub.setOnInflateListener { _, inflated ->
+            binding = SiteCreationPreviewScreenBinding.bind(inflated)
+        }
+    }
+
+    override fun setupContent() {
+        binding?.siteCreationPreviewScreenDefault?.initViewModel()
+        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initRetryButton()
+        binding?.siteCreationPreviewScreenDefault?.initOkButton()
+        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initCancelWizardButton()
+        binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry?.initContactSupportButton()
+    }
+
+    private fun SiteCreationPreviewScreenDefaultBinding.initViewModel() {
+        viewModel = ViewModelProvider(
+                this@SiteCreationPreviewFragment,
+                viewModelFactory
+        ).get(SitePreviewViewModel::class.java)
+        viewModel.uiState.observe(this@SiteCreationPreviewFragment, { uiState ->
+            uiState?.let {
+                when (uiState) {
+                    is SitePreviewContentUiState -> updateContentLayout(uiState.data)
+                    is SitePreviewWebErrorUiState -> updateContentLayout(uiState.data)
+                    is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
+                    is SitePreviewFullscreenProgressUiState ->
+                        siteCreationProgressCreatingSite.updateLoadingLayout(uiState)
+                    is SitePreviewFullscreenErrorUiState ->
+                        fullscreenErrorWithRetry.updateErrorLayout(uiState)
+                }
+                uiHelpers.updateVisibility(
+                        siteCreationProgressCreatingSite.progressLayout,
+                        uiState.fullscreenProgressLayoutVisibility
+                )
+
+                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(
+                        siteCreationPreviewWebViewContainer.sitePreviewWebView,
+                        uiState.webViewVisibility
+                )
+                uiHelpers.updateVisibility(
+                        siteCreationPreviewWebViewContainer.sitePreviewWebError,
+                        uiState.webViewErrorVisibility
+                )
+                uiHelpers.updateVisibility(
+                        siteCreationPreviewWebViewContainer.sitePreviewWebViewShimmerLayout,
+                        uiState.shimmerVisibility
+                )
+                uiHelpers.updateVisibility(
+                        fullscreenErrorWithRetry.errorLayout,
+                        uiState.fullscreenErrorLayoutVisibility
+                )
+            }
+        })
+
+        viewModel.preloadPreview.observe(this@SiteCreationPreviewFragment, { url ->
+            url?.let { urlString ->
+                siteCreationPreviewWebViewContainer.sitePreviewWebView.webViewClient =
+                        URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
+                siteCreationPreviewWebViewContainer.sitePreviewWebView.settings.userAgentString =
+                        WordPress.getUserAgent()
+                siteCreationPreviewWebViewContainer.sitePreviewWebView.loadUrl(urlString)
+            }
+        })
+
+        viewModel.startCreateSiteService.observe(this@SiteCreationPreviewFragment, { startServiceData ->
+            startServiceData?.let {
+                SiteCreationService.createSite(
+                        requireNotNull(activity),
+                        startServiceData.previousState,
+                        startServiceData.serviceData
+                )
+            }
+        })
+
+        initClickObservers()
+    }
+
+    private fun initClickObservers() {
+        viewModel.onHelpClicked.observe(this, {
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+        })
+        viewModel.onSiteCreationCompleted.observe(this, {
+            (requireActivity() as SitePreviewScreenListener).onSiteCreationCompleted()
+        })
+        viewModel.onOkButtonClicked.observe(this, { createSiteState ->
+            createSiteState?.let {
+                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
+            }
+        })
+        viewModel.onCancelWizardClicked.observe(this, { createSiteState ->
+            createSiteState?.let {
+                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
+            }
+        })
+    }
+
+    private fun FullscreenErrorWithRetryBinding.initRetryButton() {
+        errorRetry.setOnClickListener { viewModel.retry() }
+    }
+
+    private fun SiteCreationPreviewScreenDefaultBinding.initOkButton() {
+        okButton.setOnClickListener { viewModel.onOkButtonClicked() }
+    }
+
+    private fun FullscreenErrorWithRetryBinding.initCancelWizardButton() {
+        cancelWizardButton.setOnClickListener { viewModel.onCancelWizardClicked() }
+    }
+
+    private fun FullscreenErrorWithRetryBinding.initContactSupportButton() {
+        contactSupport.setOnClickListener { viewModel.onHelpClicked() }
+    }
+
+    private fun SiteCreationPreviewScreenDefaultBinding.updateContentLayout(sitePreviewData: SitePreviewData) {
+        sitePreviewData.apply {
+            siteCreationPreviewWebViewContainer.sitePreviewWebUrlTitle.text = createSpannableUrl(
+                    requireNotNull(activity),
+                    shortUrl,
+                    subDomainIndices,
+                    domainIndices
+            )
+        }
+        if (contentLayout.visibility == View.GONE) {
+            animateContentTransition()
+            view?.announceForAccessibility(
+                    getString(R.string.new_site_creation_preview_title) +
+                            getString(R.string.new_site_creation_site_preview_content_description)
+            )
+        }
+    }
+
+    private fun SiteCreationProgressCreatingSiteBinding.updateLoadingLayout(
+        progressUiState: SitePreviewFullscreenProgressUiState
+    ) {
+        progressUiState.apply {
+            val newText = uiHelpers.getTextOfUiString(progressText.context, loadingTextResId)
+            AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
+            if (animate) {
+                updateLoadingTextWithFadeAnimation(newText)
+            } else {
+                progressText.text = newText
+            }
+        }
+    }
+
+    private fun SiteCreationProgressCreatingSiteBinding.updateLoadingTextWithFadeAnimation(newText: CharSequence) {
+        val animationDuration = AniUtils.Duration.SHORT
+        val fadeOut = AniUtils.getFadeOutAnim(
+                progressTextLayout,
+                animationDuration,
+                View.VISIBLE
+        )
+        val fadeIn = AniUtils.getFadeInAnim(
+                progressTextLayout,
+                animationDuration
+        )
+
+        // update the text when the view isn't visible
+        fadeIn.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                progressText.text = newText
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                animatorSet = null
+            }
+        })
+        // Start the fade-in animation right after the view fades out
+        fadeIn.startDelay = animationDuration.toMillis(progressTextLayout.context)
+
+        animatorSet = AnimatorSet().apply {
+            playSequentially(fadeOut, fadeIn)
+            start()
+        }
+    }
+
+    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(
+        errorUiStateState: SitePreviewFullscreenErrorUiState
+    ) {
+        errorUiStateState.apply {
+            uiHelpers.setTextOrHide(errorTitle, titleResId)
+            uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
+            uiHelpers.updateVisibility(contactSupport, errorUiStateState.showContactSupport)
+            uiHelpers.updateVisibility(cancelWizardButton, errorUiStateState.showCancelWizardButton)
         }
     }
 
@@ -279,18 +318,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableTitle.setSpan(
-                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)),
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.neutral_40)),
                 domainSpan.first,
                 domainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         return spannableTitle
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
     }
 
     override fun onWebViewPageLoaded() {
@@ -301,62 +334,58 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.onWebViewError()
     }
 
-    // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
-    // Ideally we would hide "get started" bar on server side
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun hideGetStartedBar(webView: WebView) {
-        webView.settings.javaScriptEnabled = true
-        val javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n" +
-                "document.getElementById('wpadminbar').style.display = 'none';\n"
-
-        webView.evaluateJavascript(
-                javascript
-        ) { webView.settings.javaScriptEnabled = false }
-    }
-
     override fun onHelp() {
         viewModel.onHelpClicked()
     }
 
-    override fun getScreenTitle(): String {
-        return arguments?.getString(EXTRA_SCREEN_TITLE)
-                ?: throw IllegalStateException("Required argument screen title is missing.")
+    private fun SiteCreationPreviewScreenDefaultBinding.animateContentTransition() {
+        contentLayout.addOnLayoutChangeListener(
+                object : OnLayoutChangeListener {
+                    override fun onLayoutChange(
+                        v: View?,
+                        left: Int,
+                        top: Int,
+                        right: Int,
+                        bottom: Int,
+                        oldLeft: Int,
+                        oldTop: Int,
+                        oldRight: Int,
+                        oldBottom: Int
+                    ) {
+                        if (meetsHeightWidthForAnimation()) {
+                            contentLayout.removeOnLayoutChangeListener(this)
+                            val contentHeight = contentLayout.measuredHeight.toFloat()
+                            val titleAnim = createFadeInAnimator(siteCreationPreviewHeaderItem.sitePreviewTitle)
+                            val webViewAnim = createSlideInFromBottomAnimator(
+                                    siteCreationPreviewWebViewContainer.webViewContainer,
+                                    contentHeight
+                            )
+
+                            // OK button should slide in if the container exists and fade in otherwise
+                            // difference between land & portrait
+                            val okAnim = if (isLandscape) {
+                                createFadeInAnimator(okButton)
+                            } else {
+                                createSlideInFromBottomAnimator(sitePreviewOkButtonContainer as View, contentHeight)
+                            }
+
+                            // There is a chance that either of the following fields can be null,
+                            // so to avoid a NPE, we only execute playTogether if they are both not null
+                            if (titleAnim != null && okAnim != null) {
+                                AnimatorSet().apply {
+                                    interpolator = DecelerateInterpolator()
+                                    duration = SLIDE_IN_ANIMATION_DURATION
+                                    playTogether(titleAnim, webViewAnim, okAnim)
+                                    start()
+                                }
+                            }
+                        }
+                    }
+                })
     }
 
-    private fun animateContentTransition() {
-        content_layout.addOnLayoutChangeListener(object : OnLayoutChangeListener {
-            override fun onLayoutChange(
-                v: View?,
-                left: Int,
-                top: Int,
-                right: Int,
-                bottom: Int,
-                oldLeft: Int,
-                oldTop: Int,
-                oldRight: Int,
-                oldBottom: Int
-            ) {
-                if (content_layout.measuredWidth > 0 && content_layout.measuredHeight > 0) {
-                    content_layout.removeOnLayoutChangeListener(this)
-                    val contentHeight = content_layout.measuredHeight.toFloat()
-
-                    val titleAnim = createFadeInAnimator(sitePreviewTitle)
-                    val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
-                    // OK button should slide in if the container exists and fade in otherwise
-                    val okAnim = sitePreviewOkButtonContainer?.let {
-                        createSlideInFromBottomAnimator(it, contentHeight)
-                    }
-                            ?: createFadeInAnimator(okButton)
-                    AnimatorSet().apply {
-                        interpolator = DecelerateInterpolator()
-                        duration = SLIDE_IN_ANIMATION_DURATION
-                        playTogether(titleAnim, webViewAnim, okAnim)
-                        start()
-                    }
-                }
-            }
-        })
-    }
+    private fun SiteCreationPreviewScreenDefaultBinding.meetsHeightWidthForAnimation() =
+            contentLayout.measuredWidth > 0 && contentLayout.measuredHeight > 0
 
     private fun createSlideInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(
@@ -369,6 +398,28 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun createFadeInAnimator(view: View) = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+
+    override fun onResume() {
+        super.onResume()
+        serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        serviceEventConnection?.disconnect(context, viewModel)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (animatorSet?.isRunning == true) {
+            animatorSet?.cancel()
+        }
+    }
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"

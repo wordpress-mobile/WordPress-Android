@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/add_category_content">
+
+    <include android:id="@+id/prepublishing_toolbar" layout="@layout/prepublishing_toolbar" />
+
+    <include android:id="@+id/add_category" layout="@layout/add_category" />
+
+</LinearLayout>

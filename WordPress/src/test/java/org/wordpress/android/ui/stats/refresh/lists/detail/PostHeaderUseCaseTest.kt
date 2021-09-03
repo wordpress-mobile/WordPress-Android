@@ -13,6 +13,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
@@ -27,6 +28,8 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     private val postTitle: String = "Post title"
     private val postId: Long = 1L
     private val postUrl: String = "post_url.com"
+    private val postPostType: String = StatsConstants.ITEM_TYPE_POST
+    private val attachmentPostType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
     @InternalCoroutinesApi
     @Before
     fun setUp() {
@@ -55,10 +58,11 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds item with link when ID and URL are present`() = test {
+    fun `builds item with link when ID and URL are present with post postType`() = test {
         whenever(statsPostProvider.postTitle).thenReturn(postTitle)
         whenever(statsPostProvider.postId).thenReturn(postId)
         whenever(statsPostProvider.postUrl).thenReturn(postUrl)
+        whenever(statsPostProvider.postType).thenReturn(postPostType)
 
         val result = loadData(refresh = true, forced = false)
 
@@ -75,6 +79,32 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
                 assertThat(viewPost.postId).isEqualTo(postId)
                 assertThat(viewPost.postUrl).isEqualTo(postUrl)
                 assertThat(viewPost.postType).isEqualTo(StatsConstants.ITEM_TYPE_POST)
+            }
+        }
+    }
+
+    @Test
+    fun `builds item with link when ID and URL are present with attachment postType`() = test {
+        whenever(statsPostProvider.postTitle).thenReturn(postTitle)
+        whenever(statsPostProvider.postId).thenReturn(postId)
+        whenever(statsPostProvider.postUrl).thenReturn(postUrl)
+        whenever(statsPostProvider.postType).thenReturn(attachmentPostType)
+
+        val result = loadData(refresh = true, forced = false)
+
+        assertThat(result.data).isNotNull
+        (result.data!![0] as ReferredItem).let { referredItem ->
+            assertThat(referredItem.navigationAction).isNotNull
+
+            var navigationTarget: NavigationTarget? = null
+            useCase.navigationTarget.observeForever { navigationTarget = it?.getContentIfNotHandled() }
+            referredItem.navigationAction!!.click()
+
+            assertThat(navigationTarget).isNotNull
+            (navigationTarget as ViewAttachment).let { viewAttachment ->
+                assertThat(viewAttachment.postId).isEqualTo(postId)
+                assertThat(viewAttachment.postUrl).isEqualTo(postUrl)
+                assertThat(viewAttachment.postType).isEqualTo(StatsConstants.ITEM_TYPE_ATTACHMENT)
             }
         }
     }

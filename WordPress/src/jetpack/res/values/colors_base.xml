@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryVariant">@color/primary_40</color>
+    <color name="colorSecondary">@color/primary</color>
+    <color name="colorSecondaryVariant">@color/primary_40</color>
+
+    <color name="primary">@color/jetpack_green_50</color>
+    <color name="primary_0">@color/jetpack_green_0</color>
+    <color name="primary_5">@color/jetpack_green_5</color>
+    <color name="primary_10">@color/jetpack_green_10</color>
+    <color name="primary_20">@color/jetpack_green_20</color>
+    <color name="primary_30">@color/jetpack_green_30</color>
+    <color name="primary_40">@color/jetpack_green_40</color>
+    <color name="primary_50">@color/jetpack_green_50</color>
+    <color name="primary_60">@color/jetpack_green_60</color>
+    <color name="primary_70">@color/jetpack_green_70</color>
+    <color name="primary_80">@color/jetpack_green_80</color>
+    <color name="primary_90">@color/jetpack_green_90</color>
+    <color name="primary_100">@color/jetpack_green_100</color>
+    <color name="primary_dark">@color/jetpack_green_80</color>
+    <color name="primary_light">@color/jetpack_green_30</color>
+
+    <color name="nav_bar">@color/black</color>
+</resources>

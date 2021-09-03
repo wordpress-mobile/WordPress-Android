@@ -1,6 +1,19 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.CHOSEN_DOMAIN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.FILTER
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.LOCATION
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
 import javax.inject.Inject
@@ -11,8 +24,28 @@ enum class SiteCreationErrorType {
     UNKNOWN;
 }
 
+private const val DESIGN_ERROR_CONTEXT = "design"
+private const val SITE_CREATION_LOCATION = "site_creation"
+
 @Singleton
-class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) {
+class SiteCreationTracker @Inject constructor(
+    val tracker: AnalyticsTrackerWrapper
+) : LayoutPickerTracker {
+    private enum class PROPERTY(val key: String) {
+        TEMPLATE("template"),
+        SEGMENT_NAME("segment_name"),
+        SEGMENT_ID("segment_id"),
+        CHOSEN_DOMAIN("chosen_domain"),
+        SEARCH_TERM("search_term"),
+        THUMBNAIL_MODE("thumbnail_mode"),
+        PREVIEW_MODE("preview_mode"),
+        LOCATION("location"),
+        FILTER("filter"),
+        SELECTED_FILTERS("selected_filters")
+    }
+
+    private var designSelectionSkipped: Boolean = false
+
     fun trackSiteCreationAccessed() {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED)
     }
@@ -25,8 +58,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
                 mapOf(
-                        "segment_name" to segmentName,
-                        "segment_id" to segmentId
+                        SEGMENT_NAME.key to segmentName,
+                        SEGMENT_ID.key to segmentId
                 )
         )
     }
@@ -39,22 +72,43 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
                 mapOf(
-                        "chosen_domain" to chosenDomain,
-                        "search_term" to searchTerm
+                        CHOSEN_DOMAIN.key to chosenDomain,
+                        SEARCH_TERM.key to searchTerm
                 )
         )
     }
 
-    fun trackPreviewLoading() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+    fun trackPreviewLoading(template: String?) {
+        if (template == null || designSelectionSkipped) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
+                    mapOf(TEMPLATE.key to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewShown() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+    fun trackPreviewWebviewShown(template: String?) {
+        if (template == null || designSelectionSkipped) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
+                    mapOf(TEMPLATE.key to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewFullyLoaded() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+    fun trackPreviewWebviewFullyLoaded(template: String?) {
+        if (template == null || designSelectionSkipped) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                    mapOf(TEMPLATE.key to template)
+            )
+        }
     }
 
     fun trackPreviewOkButtonTapped() {
@@ -65,8 +119,15 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
      * This stat is part of a funnel that provides critical information.  Before
      * making ANY modification to this stat please refer to: p4qSXL-35X-p2
      */
-    fun trackSiteCreated() {
-        tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+    fun trackSiteCreated(template: String?) {
+        if (template == null || designSelectionSkipped) {
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.SITE_CREATED,
+                    mapOf(TEMPLATE.key to template)
+            )
+        }
     }
 
     fun trackFlowExited() {
@@ -88,5 +149,94 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteCreationServiceStateUpdated(props: Map<String, *>) {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED, props)
+    }
+
+    fun trackSiteDesignViewed(previewMode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED,
+                mapOf(THUMBNAIL_MODE.key to previewMode)
+        )
+    }
+
+    override fun trackThumbnailModeTapped(mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED,
+                mapOf(PREVIEW_MODE.key to mode)
+        )
+    }
+
+    fun trackSiteDesignSkipped() {
+        designSelectionSkipped = true
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
+    }
+
+    fun trackSiteDesignSelected(template: String) {
+        designSelectionSkipped = false
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
+                mapOf(TEMPLATE.key to template)
+        )
+    }
+
+    override fun trackPreviewViewed(template: String, mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackPreviewLoading(template: String, mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackPreviewLoaded(template: String, mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackPreviewModeTapped(mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED,
+                mapOf(PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackPreviewModeChanged(mode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
+                mapOf(PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackNoNetworkErrorShown(message: String) =
+            trackErrorShown(DESIGN_ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
+
+    override fun trackErrorShown(message: String) = trackErrorShown(DESIGN_ERROR_CONTEXT, UNKNOWN, message)
+
+    override fun filterSelected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
+    }
+
+    override fun filterDeselected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
     }
 }

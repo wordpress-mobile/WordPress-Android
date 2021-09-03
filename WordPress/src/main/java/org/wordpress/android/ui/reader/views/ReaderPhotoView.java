@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -14,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
+
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
@@ -21,8 +23,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * used by ReaderPhotoViewerActivity to show full-width images - based on Volley's ImageView
@@ -37,7 +37,7 @@ public class ReaderPhotoView extends RelativeLayout {
     private String mLoResImageUrl;
     private String mHiResImageUrl;
 
-    private final ImageView mImageView;
+    private final PhotoView mImageView;
     private final ProgressBar mProgress;
     private final TextView mTxtError;
     private boolean mIsInitialLayout = true;
@@ -134,25 +134,19 @@ public class ReaderPhotoView extends RelativeLayout {
         hideProgress();
         hideError();
         // attach the pinch/zoom handler
-        setAttacher();
+        setupOnTapListeners();
     }
 
-    private void setAttacher() {
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v2) {
-                if (mPhotoViewListener != null) {
-                    mPhotoViewListener.onTapPhotoView();
-                }
+    private void setupOnTapListeners() {
+        PhotoViewAttacher attacher = mImageView.getAttacher();
+        attacher.setOnPhotoTapListener((view, v, v2) -> {
+            if (mPhotoViewListener != null) {
+                mPhotoViewListener.onTapPhotoView();
             }
         });
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float v, float v2) {
-                if (mPhotoViewListener != null) {
-                    mPhotoViewListener.onTapPhotoView();
-                }
+        attacher.setOnViewTapListener((view, v, v2) -> {
+            if (mPhotoViewListener != null) {
+                mPhotoViewListener.onTapPhotoView();
             }
         });
     }

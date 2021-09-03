@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2019-12-25 16:34:28+0000
 Plural-Forms: nplurals=1; plural=0;
@@ -41,12 +41,8 @@ Language: vi_VN
     <string name="quick_start_dialog_need_help_title">Muốn 1 chút trợ giúp khi bắt đầu?</string>
     <string name="quick_start_dialog_need_help_button_positive">Có</string>
     <string name="quick_start_dialog_need_help_button_neutral">Không bao giờ</string>
-    <string name="quick_start_dialog_need_help_button_negative">Không</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các site khác</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Nhấp %1$s Tìm kiếm %2$s để tìm các site với các quan tâm tương tự</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấp %1$s Ngước đọc %2$s để tiếp tục</string>
-    <string name="quick_start_dialog_customize_site_title">Tùy chỉnh size của bạn</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Nhấp %1$s Chủ đề %2$s để tiếp tục</string>
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
     <string name="cannot_add_duplicate_site">Site này đã có trong ứng dụng, bạn không thể thêm nó.</string>
@@ -59,7 +55,6 @@ Language: vi_VN
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
     <string name="reader_toast_err_already_liked">Bạn đã thích bình luận đó rồi</string>
-    <string name="reader_title_post_detail_wpcom">Bài viết trên WordPress.com</string>
     <string name="notifications_label_new_notifications_subtitle">Chạm để hiện chúng</string>
     <string name="notifications_label_new_notifications">Thông báo mới</string>
     <string name="comment_q_action_replying">Đang trả lời…</string>
@@ -95,14 +90,7 @@ Language: vi_VN
     <string name="invite_error_invalid_usernames_multiple">Không thể gửi: Có tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_invalid_usernames_one">Không thể gửi: Một tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_no_usernames">Vui lòng thêm ít nhất 1 tên người dùng</string>
-    <string name="invite_message_info">(Tùy chọn) Bạn có thể nhập một tin nhắn tùy chỉnh lên tới 500 kí tự mà sẽ được bao gồm trong lời mời tới người dùng.</string>
-    <string name="invite_message_remaining_other">%d kí tự còn lại</string>
-    <string name="invite_message_remaining_one">1 kí tự còn lại</string>
-    <string name="invite_message_remaining_zero">0 kí tự còn lại</string>
-    <string name="invite_message_title">Tin nhắn tùy chỉnh</string>
     <string name="invite">Mời</string>
-    <string name="invite_names_title">Tên người dùng hoặc Email</string>
-    <string name="send_link">Gửi liên kết</string>
     <string name="invite_people">Mời mọi người</string>
     <string name="my_site_header_external">Mở rộng</string>
     <string name="label_clear_search_history">Xóa lịch sử tìm kiếm</string>
@@ -128,7 +116,6 @@ Language: vi_VN
     <string name="checking_email">Đang kiểm tra email</string>
     <string name="magic_link_unavailable_error_message">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
-    <string name="enter_your_password_instead">Nhập mật khẩu thay thế của bạn</string>
     <string name="web_address_dialog_hint">Được hiển thị công khai khi bạn bình luận.</string>
     <string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
     <string name="plan">Gói dịch vụ</string>
@@ -245,7 +232,6 @@ Language: vi_VN
     <string name="site_settings_paging_dialog_description">Ngắt chuỗi bình luận thành nhiều trang.</string>
     <string name="site_settings_paging_dialog_header">Bình luận trên mỗi trang</string>
     <string name="site_settings_close_after_dialog_title">Đóng bình luận</string>
-    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Nhập một từ hoặc cụm từ</string>
     <string name="site_settings_list_editor_no_items_text">Không có mục</string>
@@ -260,10 +246,8 @@ Language: vi_VN
     <string name="site_settings_rp_show_header_title">Hiện đầu trang</string>
     <string name="site_settings_rp_switch_summary">Bài viết liên quan hiển thị nội dung có liên quan từ trang web của bạn bên dưới bài viết của bạn.</string>
     <string name="site_settings_rp_switch_title">Hiện các bài viết liên quan</string>
-    <string name="site_settings_blacklist_hint">Các bình luận khớp với bộ lọc được đánh dấu là rác</string>
     <string name="site_settings_moderation_hold_hint">Nhận xét phù hợp với một bộ lọc được đặt trong hàng đợi kiểm duyệt</string>
     <string name="site_settings_multiple_links_hint">Bỏ qua giới hạn liên kết từ những người dùng đã biết</string>
-    <string name="site_settings_whitelist_hint">Tác giả bình luận phải có 1 bình luận được phê duyệt trước đó</string>
     <string name="site_settings_user_account_required_hint">Người dùng phải được đăng kí và đăng nhập để bình luận</string>
     <string name="site_settings_identity_required_hint">Tác giả bình luận phải điền đủ tên và email</string>
     <string name="site_settings_paging_hint">Hiển thị bình luận trong khối có kích thước quy định</string>
@@ -286,17 +270,13 @@ Language: vi_VN
     <string name="site_settings_address_hint">Thay đổi địa chỉ của bạn hiện thời không được hỗ trợ</string>
     <string name="site_settings_tagline_hint">Một mô tả ngắn hoặc cụm từ dễ nhớ để miêu tả về blog của bạn</string>
     <string name="site_settings_title_hint">Trong một vài từ, giải thích site này nói về điều gì</string>
-    <string name="site_settings_whitelist_known_summary">Bình luận từ người dùng đã biết</string>
-    <string name="site_settings_whitelist_all_summary">Bình luận từ tất cả người dùng</string>
     <string name="site_settings_threading_summary">%d mức</string>
     <string name="site_settings_privacy_private_summary">Riêng tư</string>
     <string name="site_settings_privacy_hidden_summary">Ẩn đi</string>
     <string name="site_settings_privacy_public_summary">Công khai</string>
     <string name="site_settings_delete_site_title">Xóa Site</string>
-    <string name="site_settings_blacklist_title">Danh sách đen</string>
     <string name="site_settings_moderation_hold_title">Giữ cho Kiểm duyệt</string>
     <string name="site_settings_multiple_links_title">Liên kết trong bình luận</string>
-    <string name="site_settings_whitelist_title">Tự động phê duyệt</string>
     <string name="site_settings_threading_title">Luồng</string>
     <string name="site_settings_paging_title">Trang</string>
     <string name="site_settings_sort_by_title">Xếp theo</string>
@@ -368,7 +348,6 @@ Language: vi_VN
     <string name="reader_short_like_count_multi">%s thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
     <string name="reader_short_like_count_none">Thích</string>
-    <string name="reader_menu_tags">Sửa các tag và site</string>
     <string name="reader_title_post_detail">Người đọc bài viết</string>
     <string name="notifications_push_summary">Thiết đặt thông báo xuất hiện trên thiết bị của bạn.</string>
     <string name="notifications_email_summary">Cài đặt cho các thông báo được gửi đến email gắn với tài khoản của bạn.</string>
@@ -414,7 +393,6 @@ Language: vi_VN
     <string name="site_picker_title">Chọn Site</string>
     <string name="my_site_btn_switch_site">Chuyển Site</string>
     <string name="my_site_btn_blog_posts">Bài viết Blog</string>
-    <string name="my_site_btn_site_settings">Thiết đặt</string>
     <string name="my_site_header_look_and_feel">Nhìn và Cảm nhận</string>
     <string name="my_site_header_publish">Xuất bản</string>
     <string name="my_site_header_configuration">Cấu hình</string>
@@ -438,7 +416,6 @@ Language: vi_VN
     <string name="publisher">Người xuất bản:</string>
     <string name="stats_search_terms_unknown_search_terms">Không biết Điều kiện tìm kiếm</string>
     <string name="error_copy_to_clipboard">Một lỗi đã xảy ra trong khi sao chép văn bản vào bộ nhớ tạm</string>
-    <string name="reader_page_recommended_blogs">Các site bạn có thể thích</string>
     <string name="reader_label_new_posts">Bài viết mới</string>
     <string name="logs_copied_to_clipboard">Bản ghi ứng dụng đã được sao chép vào clipboard</string>
     <string name="reader_empty_posts_in_blog">Site này không có gì</string>
@@ -467,7 +444,6 @@ Language: vi_VN
     <string name="ssl_certificate_details">Chi tiết</string>
     <string name="cab_selected">%d đã chọn</string>
     <string name="reader_empty_comments">Chưa có bình luận</string>
-    <string name="reader_empty_posts_in_tag">Không có bài viết với thẻ này</string>
     <string name="reader_label_view_original">Xem bài viết gốc</string>
     <string name="reader_label_like">Thích</string>
     <string name="reader_label_comments_closed">Bình luận đã được đóng</string>
@@ -490,11 +466,8 @@ Language: vi_VN
     <string name="reader_toast_err_generic">khong lam duoc</string>
     <string name="update_verb">Cập nhật</string>
     <string name="schedule_verb">Lich trinh</string>
-    <string name="reader_page_followed_tags">Thẻ được theo dõi</string>
     <string name="reader_page_followed_blogs">Site được theo dõi</string>
-    <string name="reader_hint_add_tag_or_url">Nhập một URL hoặc thẻ để theo dõi</string>
     <string name="reader_toast_err_already_follow_blog">Bạn đã theo dõi site này</string>
-    <string name="forgot_password">Quên mật khẩu?</string>
     <string name="help">Trợ giúp</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối với trang web này mà không có vấn đề nào, lỗi này có thể có nghĩa rằng ai đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có muốn tin tưởng chứng chỉ không?</string>
@@ -544,8 +517,6 @@ Language: vi_VN
     <string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
     <string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="reader_title_applog">Nhật kí ứng dụng</string>
-    <string name="reader_toast_err_add_tag">Không thể thêm thẻ này</string>
-    <string name="reader_toast_err_remove_tag">Không thể loại bỏ thẻ này</string>
     <string name="add_new_category">Thêm danh mục mới</string>
     <string name="category_name">Tên danh mục</string>
     <string name="file_error_create">Không thể tạo tập tin tạm cho tải lên media. Hãy chắc chắn có đủ không gian trống trên thiết bị của bạn.</string>
@@ -597,9 +568,7 @@ Language: vi_VN
     <string name="reader_likes_one">Một người thích điều này</string>
     <string name="reader_likes_only_you">Bạn thích điều này</string>
     <string name="reader_toast_err_comment_failed">Không thể đăng bình luận của bạn</string>
-    <string name="reader_toast_err_tag_invalid">Đó không phải một thẻ hợp lệ</string>
     <string name="reader_toast_err_share_intent">Không thể chia sẻ</string>
-    <string name="reader_toast_err_tag_exists">Bạn đã theo dõi thẻ này rồi</string>
     <string name="empty_list_default">Danh sách này trống rỗng</string>
     <string name="reader_untitled_post">(Chưa có tiêu đề)</string>
     <string name="comments_empty_list">Chưa có bình luận</string>

@@ -36,6 +36,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.ResourceProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,10 +70,10 @@ import javax.inject.Inject;
  * - Comment Sort Order
  * - Comment Threading
  * - Comment Paging
- * - Comment User Whitelist
+ * - Comment User Allowlist
  * - Comment Link Limit
  * - Comment Moderation Hold Filter
- * - Comment Blacklist Filter
+ * - Comment Denylist Filter
  * <p>
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
@@ -165,7 +166,6 @@ public abstract class SiteSettingsInterface {
      */
     protected abstract void fetchRemoteData();
 
-    protected Context mContext;
     protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
@@ -177,11 +177,11 @@ public abstract class SiteSettingsInterface {
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+    @Inject ResourceProvider mResourceProvider;
 
     protected SiteSettingsInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         ((WordPress) host.getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
-        mContext = host;
         mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
@@ -199,7 +199,6 @@ public abstract class SiteSettingsInterface {
 
     public void clear() {
         mDispatcher.unregister(this);
-        mContext = null;
     }
 
     public void saveSettings() {
@@ -231,15 +230,13 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getPrivacyDescription() {
-        if (mContext != null) {
-            switch (getPrivacy()) {
-                case -1:
-                    return mContext.getString(R.string.site_settings_privacy_private_summary);
-                case 0:
-                    return mContext.getString(R.string.site_settings_privacy_hidden_summary);
-                case 1:
-                    return mContext.getString(R.string.site_settings_privacy_public_summary);
-            }
+        switch (getPrivacy()) {
+            case -1:
+                return mResourceProvider.getString(R.string.site_settings_privacy_private_summary);
+            case 0:
+                return mResourceProvider.getString(R.string.site_settings_privacy_hidden_summary);
+            case 1:
+                return mResourceProvider.getString(R.string.site_settings_privacy_public_summary);
         }
         return "";
     }
@@ -258,8 +255,8 @@ public abstract class SiteSettingsInterface {
 
     public @NonNull Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
-        String[] postFormatDisplayNames = mContext.getResources().getStringArray(R.array.post_format_display_names);
-        String[] postFormatKeys = mContext.getResources().getStringArray(R.array.post_format_keys);
+        String[] postFormatDisplayNames = mResourceProvider.getStringArray(R.array.post_format_display_names);
+        String[] postFormatKeys = mResourceProvider.getStringArray(R.array.post_format_keys);
         // Add standard post format (only for .com)
         mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
         // Add default post formats
@@ -337,10 +334,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getRelatedPostsDescription() {
-        if (mContext == null) {
-            return "";
-        }
-        String desc = mContext.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
+        String desc = mResourceProvider.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
         return StringUtils.capitalize(desc);
     }
 
@@ -377,16 +371,12 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
-        if (mContext == null) {
-            return "";
-        }
-
         if (!getShouldCloseAfter()) {
-            return mContext.getString(R.string.never);
+            return mResourceProvider.getString(R.string.never);
         }
 
-        return StringUtils.getQuantityString(mContext, R.string.never, R.string.days_quantity_one,
-                                             R.string.days_quantity_other, period);
+        return mResourceProvider.getQuantityString(R.string.never, R.string.days_quantity_one,
+                R.string.days_quantity_other, period);
     }
 
     public int getCommentSorting() {
@@ -394,18 +384,14 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getSortingDescription() {
-        if (mContext == null) {
-            return "";
-        }
-
         int order = getCommentSorting();
         switch (order) {
             case SiteSettingsInterface.ASCENDING_SORT:
-                return mContext.getString(R.string.oldest_first);
+                return mResourceProvider.getString(R.string.oldest_first);
             case SiteSettingsInterface.DESCENDING_SORT:
-                return mContext.getString(R.string.newest_first);
+                return mResourceProvider.getString(R.string.newest_first);
             default:
-                return mContext.getString(R.string.unknown);
+                return mResourceProvider.getString(R.string.unknown);
         }
     }
 
@@ -426,14 +412,14 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getThreadingDescriptionForLevel(int level) {
-        if (mContext == null) {
+        if (mResourceProvider == null) {
             return "";
         }
 
         if (level <= 1) {
-            return mContext.getString(R.string.none);
+            return mResourceProvider.getString(R.string.none);
         }
-        return String.format(mContext.getString(R.string.site_settings_threading_summary), level);
+        return String.format(mResourceProvider.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -449,17 +435,13 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getPagingDescription() {
-        if (mContext == null) {
-            return "";
-        }
-
         if (!getShouldPageComments()) {
-            return mContext.getString(R.string.disabled);
+            return mResourceProvider.getString(R.string.disabled);
         }
 
         int count = getPagingCountForDescription();
-        return StringUtils.getQuantityString(mContext, R.string.none, R.string.site_settings_paging_summary_one,
-                                             R.string.site_settings_paging_summary_other, count);
+        return mResourceProvider.getQuantityString(R.string.none, R.string.site_settings_paging_summary_one,
+                R.string.site_settings_paging_summary_other, count);
     }
 
     public boolean getManualApproval() {
@@ -474,7 +456,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsRequireUserAccount;
     }
 
-    public boolean getUseCommentWhitelist() {
+    public boolean getUseCommentAllowlist() {
         return mSettings.commentAutoApprovalKnownUsers;
     }
 
@@ -493,19 +475,19 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getModerationKeys().size());
     }
 
-    public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) {
-            mSettings.blacklist = new ArrayList<>();
+    public @NonNull List<String> getDenylistKeys() {
+        if (mSettings.denylist == null) {
+            mSettings.denylist = new ArrayList<>();
         }
-        return mSettings.blacklist;
+        return mSettings.denylist;
     }
 
-    public @NonNull String getBlacklistDescription() {
-        return getKeysDescription(getBlacklistKeys().size());
+    public @NonNull String getDenylistDescription() {
+        return getKeysDescription(getDenylistKeys().size());
     }
 
-    public @NonNull String getJetpackProtectWhitelistSummary() {
-        return getKeysDescription(getJetpackWhitelistKeys().size());
+    public @NonNull String getJetpackProtectAllowlistSummary() {
+        return getKeysDescription(getJetpackAllowlistKeys().size());
     }
 
     public String getSharingLabel() {
@@ -554,13 +536,13 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getKeysDescription(int count) {
-        if (mContext == null) {
+        if (mResourceProvider == null) {
             return "";
         }
 
-        return StringUtils.getQuantityString(mContext, R.string.site_settings_list_editor_no_items_text,
-                                             R.string.site_settings_list_editor_summary_one,
-                                             R.string.site_settings_list_editor_summary_other, count);
+        return mResourceProvider.getQuantityString(R.string.site_settings_list_editor_no_items_text,
+                R.string.site_settings_list_editor_summary_one,
+                R.string.site_settings_list_editor_summary_other, count);
     }
 
     public String getStartOfWeek() {
@@ -667,13 +649,13 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectEnabled = enabled;
     }
 
-    public @NonNull List<String> getJetpackWhitelistKeys() {
-        return mJpSettings.jetpackProtectWhitelist;
+    public @NonNull List<String> getJetpackAllowlistKeys() {
+        return mJpSettings.jetpackProtectAllowlist;
     }
 
-    public void setJetpackWhitelistKeys(@NonNull List<String> whitelistKeys) {
-        mJpSettings.jetpackProtectWhitelist.clear();
-        mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
+    public void setJetpackAllowlistKeys(@NonNull List<String> allowlistKeys) {
+        mJpSettings.jetpackProtectAllowlist.clear();
+        mJpSettings.jetpackProtectAllowlist.addAll(allowlistKeys);
     }
 
     public void enableJetpackSsoMatchEmail(boolean enabled) {
@@ -847,8 +829,8 @@ public abstract class SiteSettingsInterface {
         mSettings.commentsRequireUserAccount = required;
     }
 
-    public void setUseCommentWhitelist(boolean useWhitelist) {
-        mSettings.commentAutoApprovalKnownUsers = useWhitelist;
+    public void setUseCommentAllowlist(boolean useAllowlist) {
+        mSettings.commentAutoApprovalKnownUsers = useAllowlist;
     }
 
     public void setMultipleLinks(int count) {
@@ -859,8 +841,8 @@ public abstract class SiteSettingsInterface {
         mSettings.holdForModeration = keys;
     }
 
-    public void setBlacklistKeys(List<String> keys) {
-        mSettings.blacklist = keys;
+    public void setDenylistKeys(List<String> keys) {
+        mSettings.denylist = keys;
     }
 
     public void setSharingLabel(String sharingLabel) {
@@ -933,10 +915,10 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Determines if the current Blacklist list contains a given value.
+     * Determines if the current Denylist list contains a given value.
      */
-    public boolean blacklistListContains(String value) {
-        return getBlacklistKeys().contains(value);
+    public boolean denylistListContains(String value) {
+        return getDenylistKeys().contains(value);
     }
 
     /**
@@ -1069,21 +1051,23 @@ public abstract class SiteSettingsInterface {
         // Quota information always comes from the main site table
         if (mSite.hasDiskSpaceQuotaInformation()) {
             String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
-            final String[] units = new String[] {mContext.getString(R.string.file_size_in_bytes),
-                    mContext.getString(R.string.file_size_in_kilobytes),
-                    mContext.getString(R.string.file_size_in_megabytes),
-                    mContext.getString(R.string.file_size_in_gigabytes),
-                    mContext.getString(R.string.file_size_in_terabytes) };
+            final String[] units = new String[]{mResourceProvider.getString(R.string.file_size_in_bytes),
+                    mResourceProvider.getString(R.string.file_size_in_kilobytes),
+                    mResourceProvider.getString(R.string.file_size_in_megabytes),
+                    mResourceProvider.getString(R.string.file_size_in_gigabytes),
+                    mResourceProvider.getString(R.string.file_size_in_terabytes)};
 
             String quotaAvailableSentence;
             if (mSite.getPlanId() == PlansConstants.BUSINESS_PLAN_ID) {
                 String usedSpace = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
-                quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_unlimited),
-                        usedSpace);
+                quotaAvailableSentence =
+                        String.format(mResourceProvider.getString(R.string.site_settings_quota_space_unlimited),
+                                usedSpace);
             } else {
                 String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
-                quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
-                        percentage, spaceAllowed);
+                quotaAvailableSentence =
+                        String.format(mResourceProvider.getString(R.string.site_settings_quota_space_value),
+                                percentage, spaceAllowed);
             }
             setQuotaDiskSpace(quotaAvailableSentence);
         }
@@ -1103,7 +1087,7 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that credentials have been validated or are incorrect.
      */
     private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
-        if (mContext == null || mListener == null) {
+        if (mResourceProvider == null || mListener == null) {
             return;
         }
 

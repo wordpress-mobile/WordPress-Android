@@ -28,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
@@ -162,7 +162,7 @@ class FollowersUseCase(
                     items.add(
                             Link(
                                     text = buttonText,
-                                    navigateAction = NavigationAction.create(uiState.selectedTab, this::onLinkClick)
+                                    navigateAction = ListItemInteraction.create(uiState.selectedTab, this::onLinkClick)
                             )
                     )
                 } else if (wpComModel.followers.size >= VIEW_ALL_PAGE_SIZE && uiState.selectedTab == 0 ||

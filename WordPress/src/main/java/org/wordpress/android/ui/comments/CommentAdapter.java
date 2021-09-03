@@ -1,39 +1,34 @@
 package org.wordpress.android.ui.comments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import androidx.core.graphics.ColorUtils;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.comments.CommentListItem.Comment;
+import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType;
+import org.wordpress.android.ui.comments.CommentListItem.SubHeader;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ViewUtilsKt;
-import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -41,7 +36,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam
+ */
+@Deprecated
+public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> {
     interface OnDataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
@@ -54,26 +55,14 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         void onSelectedItemsChanged();
     }
 
-    interface OnCommentPressedListener {
+    public interface OnCommentPressedListener {
         void onCommentPressed(int position, View view);
 
         void onCommentLongPressed(int position, View view);
     }
 
-    private final LayoutInflater mInflater;
-    private final Context mContext;
-
-    private final CommentList mComments = new CommentList();
+    private final ArrayList<CommentListItem> mComments = new ArrayList<>();
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-
-    private final int mStatusColorSpam;
-    private final int mStatusColorUnapproved;
-
-    private int mSelectedItemBackground;
-
-    private final int mAvatarSz;
-    private final String mStatusTextSpam;
-    private final String mStatusTextUnapproved;
 
     private OnDataLoadedListener mOnDataLoadedListener;
     private OnCommentPressedListener mOnCommentPressedListener;
@@ -83,71 +72,17 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private boolean mEnableSelection;
 
     private SiteModel mSite;
+    private Context mContext;
 
     @Inject CommentStore mCommentStore;
     @Inject ImageManager mImageManager;
-
-    class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        private final TextView mTxtTitle;
-        private final TextView mTxtComment;
-        private final TextView mTxtStatus;
-        private final TextView mTxtDate;
-        private final ImageView mImgAvatar;
-        private final ImageView mImgCheckmark;
-        private final ViewGroup mContainerView;
-
-        CommentHolder(View view) {
-            super(view);
-            mTxtTitle = view.findViewById(R.id.title);
-            mTxtComment = view.findViewById(R.id.comment);
-            mTxtStatus = view.findViewById(R.id.status);
-            mTxtDate = view.findViewById(R.id.text_date);
-            mImgCheckmark = view.findViewById(R.id.image_checkmark);
-            mImgAvatar = view.findViewById(R.id.avatar);
-            mContainerView = view.findViewById(R.id.layout_container);
-
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mOnCommentPressedListener != null) {
-                mOnCommentPressedListener.onCommentPressed(getAdapterPosition(), v);
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            if (mOnCommentPressedListener != null) {
-                mOnCommentPressedListener.onCommentLongPressed(getAdapterPosition(), v);
-            }
-            return true;
-        }
-    }
+    @Inject AccountStore mAccountStore;
+    @Inject UiHelpers mUiHelpers;
 
     CommentAdapter(Context context, SiteModel site) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
-
-        mInflater = LayoutInflater.from(context);
-        mContext = context;
-
         mSite = site;
-
-        mStatusColorSpam = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorError);
-        mStatusColorUnapproved = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorWarningDark);
-
-
-        mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
-        mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
-
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-
-        mSelectedItemBackground = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
-                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
-
+        mContext = context;
         setHasStableIds(true);
     }
 
@@ -169,112 +104,40 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        //noinspection InflateParams
-        View view = mInflater.inflate(R.layout.comment_listitem, null);
-        CommentHolder holder = new CommentHolder(view);
-        view.setTag(holder);
-        return holder;
-    }
-
-    private String getFormattedTitle(CommentModel comment) {
-        String formattedTitle;
-        Context context = WordPress.getContext();
-
-        String author = context.getString(R.string.anonymous);
-        if (!TextUtils.isEmpty(comment.getAuthorName())) {
-            author = comment.getAuthorName().trim();
+    public CommentListViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        switch (CommentListItemType.fromOrdinal(viewType)) {
+            case HEADER:
+                return new CommentSubHeaderViewHolder(parent);
+            case COMMENT:
+                return new CommentViewHolder(parent, mOnCommentPressedListener, mImageManager, mUiHelpers);
+            default:
+                throw new IllegalArgumentException("Unexpected view holder in CommentListAdapter");
         }
-
-        if (!TextUtils.isEmpty(comment.getPostTitle())) {
-            formattedTitle = context.getString(R.string.comment_title, author, comment.getPostTitle().trim());
-        } else {
-            formattedTitle = author;
-        }
-        return formattedTitle;
     }
 
-    private String getAvatarForDisplay(CommentModel comment, int avatarSize) {
-        String avatarForDisplay = "";
-        if (!TextUtils.isEmpty(comment.getAuthorProfileImageUrl())) {
-            avatarForDisplay = GravatarUtils.fixGravatarUrl(comment.getAuthorProfileImageUrl(), avatarSize);
-        } else if (!TextUtils.isEmpty(comment.getAuthorEmail())) {
-            avatarForDisplay = GravatarUtils.gravatarFromEmail(comment.getAuthorEmail(), avatarSize);
-        }
-        return avatarForDisplay;
+    @Override
+    public int getItemViewType(int position) {
+        return getItem(position).getType().ordinal();
     }
 
-    private Spanned getSpannedContent(CommentModel comment) {
-        String content = StringUtils.notNullStr(comment.getContent());
-        return WPHtml.fromHtml(content, null, null, mContext, null, 0);
-    }
-
-    private String getFormattedDate(CommentModel comment, Context context) {
+    private String getFormattedDate(CommentModel comment) {
         if (comment.getDatePublished() != null) {
-            return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(comment.getDatePublished()), context);
+            return DateTimeUtils
+                    .javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(comment.getDatePublished()), mContext);
         }
         return "";
     }
 
     @Override
-    public void onBindViewHolder(@NotNull RecyclerView.ViewHolder viewHolder, int position) {
-        CommentModel comment = mComments.get(position);
-        CommentHolder holder = (CommentHolder) viewHolder;
-
-        // Note: following operation can take some time, we could maybe cache the calculated objects (title, spanned
-        // content) to make the list scroll smoother.
-        holder.mTxtTitle.setText(Html.fromHtml(getFormattedTitle(comment)));
-        holder.mTxtComment.setText(getSpannedContent(comment));
-        holder.mTxtDate.setText(getFormattedDate(comment, mContext));
-
-        // status is only shown for comments that haven't been approved
-        final boolean showStatus;
-        CommentStatus commentStatus = CommentStatus.fromString(comment.getStatus());
-        switch (commentStatus) {
-            case SPAM:
-                showStatus = true;
-                holder.mTxtStatus.setText(mStatusTextSpam);
-                holder.mTxtStatus.setTextColor(mStatusColorSpam);
-                break;
-            case UNAPPROVED:
-                showStatus = true;
-                holder.mTxtStatus.setText(mStatusTextUnapproved);
-                holder.mTxtStatus.setTextColor(mStatusColorUnapproved);
-                break;
-            default:
-                showStatus = false;
-                break;
+    public void onBindViewHolder(@NonNull CommentListViewHolder viewHolder, int position,
+                                 @NonNull List<Object> payloads) {
+        if (viewHolder instanceof CommentSubHeaderViewHolder) {
+            ((CommentSubHeaderViewHolder) viewHolder).bind((SubHeader) mComments.get(position));
+        } else if (viewHolder instanceof CommentViewHolder) {
+            ((CommentViewHolder) viewHolder).bind(
+                    (Comment) mComments.get(position),
+                    mEnableSelection && isItemSelected(position));
         }
-        holder.mTxtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
-
-        int checkmarkVisibility;
-        if (mEnableSelection && isItemSelected(position)) {
-            checkmarkVisibility = View.VISIBLE;
-            mImageManager.cancelRequestAndClearImageView(holder.mImgAvatar);
-            holder.mContainerView.setBackgroundColor(mSelectedItemBackground);
-        } else {
-            checkmarkVisibility = View.GONE;
-            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
-                    getAvatarForDisplay(comment, mAvatarSz));
-            holder.mContainerView.setBackground(null);
-        }
-
-        if (holder.mImgCheckmark.getVisibility() != checkmarkVisibility) {
-            holder.mImgCheckmark.setVisibility(checkmarkVisibility);
-        }
-
-        // comment text needs to be to the left of date/status when the title is a single line and
-        // the status is displayed or else the status may overlap the comment text - note that
-        // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
-        // check getLineCount() <= 1
-        boolean adjustComment = (showStatus && holder.mTxtTitle.getLineCount() <= 1);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mTxtComment.getLayoutParams();
-        if (adjustComment) {
-            params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
-        } else {
-            params.addRule(RelativeLayout.LEFT_OF, 0);
-        }
-
         // request to load more comments when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
             && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
@@ -282,7 +145,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public CommentModel getItem(int position) {
+    @Override
+    public void onBindViewHolder(@NotNull CommentListViewHolder viewHolder, int position) {
+        onBindViewHolder(viewHolder, position, new ArrayList<>());
+    }
+
+    public CommentListItem getItem(int position) {
         if (isPositionValid(position)) {
             return mComments.get(position);
         } else {
@@ -292,12 +160,22 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public long getItemId(int position) {
-        return mComments.get(position).getRemoteCommentId();
+        return getItem(position).getId();
     }
 
     @Override
     public int getItemCount() {
         return mComments.size();
+    }
+
+    public int getNumberOfComments() {
+        int counter = 0;
+        for (CommentListItem subHeader : mComments) {
+            if (subHeader instanceof Comment) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
     private boolean isEmpty() {
@@ -310,9 +188,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         mEnableSelection = enable;
-        if (mEnableSelection) {
-            notifyDataSetChanged();
-        } else {
+        if (!mEnableSelection) {
             clearSelectedComments();
         }
     }
@@ -339,7 +215,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         for (Integer position : mSelectedPositions) {
             if (isPositionValid(position)) {
-                comments.add(mComments.get(position));
+                comments.add(((Comment) mComments.get(position)).getComment());
             }
         }
 
@@ -363,13 +239,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         notifyItemChanged(position);
 
-        if (view != null && view.getTag() instanceof CommentHolder) {
-            CommentHolder holder = (CommentHolder) view.getTag();
-            // animate the selection change
-            AniUtils.startAnimation(holder.mImgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-            holder.mImgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        }
-
         if (mOnSelectedChangeListener != null) {
             mOnSelectedChangeListener.onSelectedItemsChanged();
         }
@@ -380,7 +249,15 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private int indexOfCommentId(long commentId) {
-        return mComments.indexOfCommentId(commentId);
+        for (int i = 0; i < getItemCount(); i++) {
+            CommentListItem commentListItem = getItem(i);
+            if (commentListItem instanceof Comment) {
+                if (((Comment) commentListItem).getComment().getRemoteCommentId() == commentId) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     private boolean isPositionValid(int position) {
@@ -395,15 +272,35 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    void loadInitialCachedComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, true, false));
+    }
+
+    void reloadComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, false, true));
+    }
+
+    void loadMoreComments(CommentStatus statusFilter, int offset) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(offset, false, false));
+    }
+
     /*
      * load comments using an AsyncTask
      */
-    void loadComments(CommentStatus statusFilter) {
+    private void loadComments(CommentStatus statusFilter, LoadCommentsTaskParameters params) {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
-            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
+    }
+
+    public void loadData(ArrayList<CommentListItem> commentListItems) {
+        DiffResult diffResult = DiffUtil.calculateDiff(
+                new CommentListItemDiffCallback(mComments, commentListItems));
+        mComments.clear();
+        mComments.addAll(commentListItems);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     /*
@@ -411,8 +308,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private boolean mIsLoadTaskRunning = false;
 
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
-        private CommentList mTmpComments;
+    @SuppressLint("StaticFieldLeak")
+    private class LoadCommentsTask extends AsyncTask<LoadCommentsTaskParameters, Void, Boolean> {
+        private ArrayList<CommentListItem> mTmpComments;
         final CommentStatus mStatusFilter;
 
         LoadCommentsTask(CommentStatus statusFilter) {
@@ -430,37 +328,117 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            List<CommentModel> comments;
-            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
-                // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-                comments = mCommentStore.getCommentsForSite(mSite, false,
-                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+        protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
+            LoadCommentsTaskParameters parameters = params[0];
+            int numOfCommentsToFetch;
+            // UNREPLIED filter has no paging, so we always request MAX_COMMENTS_IN_RESPONSE
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                numOfCommentsToFetch = CommentsListFragment.MAX_COMMENTS_IN_RESPONSE;
+            } else if (parameters.mIsLoadingCache) {
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
+            } else if (parameters.mIsReloadingContent) {
+                // round up to nearest page size (eg. 30, 60, 90, etc.)
+                numOfCommentsToFetch = ((getNumberOfComments() + CommentsListFragment.COMMENTS_PER_PAGE - 1)
+                                        / CommentsListFragment.COMMENTS_PER_PAGE)
+                                       * CommentsListFragment.COMMENTS_PER_PAGE;
             } else {
-                comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE + parameters.mOffset;
             }
 
-            mTmpComments = new CommentList();
-            mTmpComments.addAll(comments);
+            List<CommentModel> comments;
+            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL
+                || mStatusFilter == CommentStatus.UNREPLIED) {
+                // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch, CommentStatus.APPROVED,
+                        CommentStatus.UNAPPROVED);
+            } else {
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch,
+                        mStatusFilter);
+            }
 
-            return !mComments.isSameList(mTmpComments);
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                comments = getUnrepliedComments(comments);
+            }
+
+            // Sort by date
+            Collections.sort(comments, (commentModelX, commentModelY) -> {
+                Date d0 = DateTimeUtils.dateFromIso8601(commentModelX.getDatePublished());
+                Date d1 = DateTimeUtils.dateFromIso8601(commentModelY.getDatePublished());
+                if (d0 == null || d1 == null) {
+                    return 0;
+                }
+                return d1.compareTo(d0);
+            });
+
+            mTmpComments = new ArrayList<>();
+            for (CommentModel comment : comments) {
+                Comment commentListItem = new Comment(comment);
+
+                if (!mTmpComments.isEmpty()) {
+                    Comment lastItem = (Comment) mTmpComments.get(mTmpComments.size() - 1);
+                    if (lastItem == null || !getFormattedDate(lastItem.getComment())
+                            .equals(getFormattedDate(comment))) {
+                        mTmpComments.add(
+                                new SubHeader(getFormattedDate(comment), comment.getPublishedTimestamp() * -10));
+                    }
+                } else {
+                    mTmpComments.add(
+                            new SubHeader(getFormattedDate(comment), comment.getPublishedTimestamp() * -10));
+                }
+
+                mTmpComments.add(commentListItem);
+            }
+
+            return true;
+        }
+
+        private ArrayList<CommentModel> getUnrepliedComments(List<CommentModel> comments) {
+            CommentLeveler leveler = new CommentLeveler(comments);
+            ArrayList<CommentModel> leveledComments = leveler.createLevelList();
+
+            ArrayList<CommentModel> topLevelComments = new ArrayList<>();
+            for (CommentModel comment : leveledComments) {
+                // only check top level comments
+                if (comment.level == 0) {
+                    ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
+                    // comment is not mine and has no replies
+                    if (!isMyComment(comment) && childrenComments.isEmpty()) {
+                        topLevelComments.add(comment);
+                    } else if (!isMyComment(comment)) {  // comment is not mine and has replies
+                        boolean hasMyReplies = false;
+                        for (CommentModel childrenComment : childrenComments) { // check if any replies are mine
+                            if (isMyComment(childrenComment)) {
+                                hasMyReplies = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasMyReplies) {
+                            topLevelComments.add(comment);
+                        }
+                    }
+                }
+            }
+            return topLevelComments;
+        }
+
+        private boolean isMyComment(CommentModel comment) {
+            String myEmail;
+            // if site is self hosted, we want to use email associate with it, even if we are logged into wpcom
+            if (!mSite.isUsingWpComRestApi()) {
+                myEmail = mSite.getEmail();
+            } else {
+                AccountModel account = mAccountStore.getAccount();
+                myEmail = account.getEmail();
+            }
+
+            return comment.getAuthorEmail().equals(myEmail);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mComments.clear();
-                mComments.addAll(mTmpComments);
-                // Sort by date
-                Collections.sort(mComments, (commentModel, t1) -> {
-                    Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
-                    Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
-                    if (d0 == null || d1 == null) {
-                        return 0;
-                    }
-                    return d1.compareTo(d0);
-                });
-                notifyDataSetChanged();
+                loadData(mTmpComments);
             }
 
             if (mOnDataLoadedListener != null) {
@@ -468,6 +446,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             mIsLoadTaskRunning = false;
+        }
+    }
+
+    static class LoadCommentsTaskParameters {
+        int mOffset;
+        boolean mIsLoadingCache;
+        boolean mIsReloadingContent;
+
+        LoadCommentsTaskParameters(int offset, boolean isLoadingCache, boolean isReloadingContent) {
+            mOffset = offset;
+            mIsLoadingCache = isLoadingCache;
+            mIsReloadingContent = isReloadingContent;
         }
     }
 }

@@ -207,14 +207,19 @@ public class ReaderEvents {
         private final long mSourceSiteId;
         private final ReaderSimplePostList mLocalRelatedPosts;
         private final ReaderSimplePostList mGlobalRelatedPosts;
+        private final boolean mDidSucceed;
 
-        public RelatedPostsUpdated(@NonNull ReaderPost sourcePost,
-                                   @NonNull ReaderSimplePostList localRelatedPosts,
-                                   @NonNull ReaderSimplePostList globalRelatedPosts) {
+        public RelatedPostsUpdated(
+            @NonNull ReaderPost sourcePost,
+            @NonNull ReaderSimplePostList localRelatedPosts,
+            @NonNull ReaderSimplePostList globalRelatedPosts,
+            boolean didSucceed
+        ) {
             mSourcePostId = sourcePost.postId;
             mSourceSiteId = sourcePost.blogId;
             mLocalRelatedPosts = localRelatedPosts;
             mGlobalRelatedPosts = globalRelatedPosts;
+            mDidSucceed = didSucceed;
         }
 
         public long getSourcePostId() {
@@ -239,6 +244,10 @@ public class ReaderEvents {
 
         public boolean hasGlobalRelatedPosts() {
             return mGlobalRelatedPosts.size() > 0;
+        }
+
+        public boolean didSucceed() {
+            return mDidSucceed;
         }
     }
 

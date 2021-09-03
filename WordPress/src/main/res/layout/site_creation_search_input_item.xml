@@ -21,12 +21,15 @@
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:drawablePadding="@dimen/margin_extra_large"
             android:background="@android:color/transparent"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionSearch|flagNoExtractUi"
             android:importantForAutofill="noExcludeDescendants"
             android:inputType="text"
             android:singleLine="true"
             android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:hint="Type a keyword for more ideas"
             tools:ignore="RtlSymmetry"
             tools:targetApi="o" />
@@ -37,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="?attr/colorSurface"
+        android:background="?attr/layoutPickerBackground"
         tools:visibility="invisible">
 
         <ProgressBar
@@ -68,7 +71,7 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
+        android:layout_height="0dp"
         android:layout_alignBottom="@+id/input_container"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"

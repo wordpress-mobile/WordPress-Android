@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
@@ -34,7 +34,6 @@ Language: th
     <string name="site_settings_rp_preview1_site">ใน \"มือถือ\"</string>
     <string name="site_settings_rp_show_images_title">แสดงรูปภาพ</string>
     <string name="site_settings_rp_show_header_title">แสดงส่วนหัว</string>
-    <string name="site_settings_whitelist_hint">ผู้เขียนความเห็นต้องมีความเห็นก่อนหน้าที่ได้รับอนุมัติแล้ว</string>
     <string name="site_settings_user_account_required_hint">ผู้ใช้ต้องลงทะเบียนและเข้าสู่ระบบเพื่อจะเขียนความเห็น</string>
     <string name="site_settings_identity_required_hint">ผู้เขียนความเห็นต้องใส่ชื่อและอีเมล</string>
     <string name="site_settings_sort_by_hint">กำหนดลำดับความเห็นที่จะแสดง</string>
@@ -50,17 +49,13 @@ Language: th
     <string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
     <string name="site_settings_username_hint">บัญชีผู้ใช้ปัจจุบัน</string>
     <string name="site_settings_privacy_hint">กำหนดว่าใครสามารถเห็นเว็บของคุณได้</string>
-    <string name="site_settings_whitelist_known_summary">ความเห็นจากผู้ใช้ที่รู้จัก</string>
-    <string name="site_settings_whitelist_all_summary">ความเห็นจากผู้ใช้ทั้งหมด</string>
     <string name="site_settings_threading_summary">%d ระดับ</string>
     <string name="site_settings_privacy_private_summary">ส่วนตัว</string>
     <string name="site_settings_privacy_hidden_summary">ซ่อน</string>
     <string name="site_settings_delete_site_title">ลบเว็บ</string>
     <string name="site_settings_privacy_public_summary">สาธารณะ</string>
-    <string name="site_settings_blacklist_title">บัญชีดำ</string>
     <string name="site_settings_moderation_hold_title">กดค้างเพื่อจัดการ</string>
     <string name="site_settings_multiple_links_title">ลิงก์ในความเห็น</string>
-    <string name="site_settings_whitelist_title">อนุมัติอัตโนมัติ</string>
     <string name="site_settings_sort_by_title">เรียงตาม</string>
     <string name="site_settings_account_required_title">ผู้ใช้ต้องเข้าสู่ระบบ</string>
     <string name="site_settings_identity_required_title">ต้องประกอบด้วยชื่อและอีเมล</string>
@@ -165,7 +160,6 @@ Language: th
     <string name="site_picker_title">เลือกเว็บไซต์</string>
     <string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
     <string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
-    <string name="my_site_btn_site_settings">ตั้งค่า</string>
     <string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
     <string name="my_site_header_publish">เผยแพร่</string>
     <string name="my_site_header_configuration">การปรับแต่ง</string>
@@ -191,7 +185,6 @@ Language: th
     <string name="reader_label_new_posts">เรื่องใหม่</string>
     <string name="error_copy_to_clipboard">มีความผิดพลาดเกิดขึ้นขณะกำลังคัดลอกข้อความไปยังคลิปบอร์ด</string>
     <string name="logs_copied_to_clipboard">ปูมแอพพลิเคชั่นถูกคัดลอกลงคลิปบอร์ด</string>
-    <string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
     <string name="stats_view_top_posts_and_pages">เรื่องและหน้า</string>
     <string name="stats_view_videos">วีดีโอ</string>
     <string name="stats_view_followers">ผู้ติดตาม</string>
@@ -232,19 +225,14 @@ Language: th
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
-    <string name="reader_empty_posts_in_tag">ไม่มีเรื่องกับป้ายกำกับนี้</string>
     <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
     <string name="signing_out">กำลังออกจากระบบ…</string>
-    <string name="reader_label_liked_by">ชื่นชอบโดย</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
-    <string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>
     <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
-    <string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
     <string name="help">ช่วยเหลือ</string>
-    <string name="forgot_password">จำรหัสผ่านของคุณไม่ได้?</string>
     <string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
     <string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
     <string name="mnu_comment_unspam">ไม่ใช่สแปม</string>
@@ -268,8 +256,6 @@ Language: th
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
     <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
-    <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
-    <string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
     <string name="image_settings">การตั้งค่ารูปภาพ</string>
@@ -334,8 +320,6 @@ Language: th
     <string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
     <string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
     <string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>
-    <string name="reader_toast_err_tag_exists">คุณติดตามป้ายกำกับนี้แล้ว</string>
-    <string name="reader_toast_err_tag_invalid">นี่ไม่ใช่ป้ายกำกับที่ใช้งานได้</string>
     <string name="reader_toast_err_share_intent">ไม่สามารถแบ่งปันได้</string>
     <string name="reader_label_added_tag">เพิ่ม %s แล้ว</string>
     <string name="reader_label_removed_tag">ลบ %s แล้ว</string>

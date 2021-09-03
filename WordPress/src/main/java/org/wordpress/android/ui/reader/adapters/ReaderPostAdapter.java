@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -44,12 +45,14 @@ import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuild
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.tracker.ReaderTab;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState;
-import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState.FollowButtonUiState;
+import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -58,12 +61,12 @@ import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.inject.Inject;
@@ -88,7 +91,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean mCanRequestMorePosts;
 
-    private final ReaderTypes.ReaderPostListType mPostListType;
+    @NonNull private final ReaderTypes.ReaderPostListType mPostListType;
+    @NonNull private String mSource;
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
@@ -112,16 +116,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
-    private static final long ITEM_ID_NEWS_CARD = -3L;
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
-    private boolean mIsMainReader;
+    private final boolean mIsMainReader;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
+    @Inject ReaderTracker mReaderTracker;
+
+    public String getSource() {
+        return mSource;
+    }
 
     /*
      * cross-post
@@ -242,7 +250,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostViewHolder(mUiHelpers, mImageManager, parent);
+                return new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
         }
     }
 
@@ -258,9 +266,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
             if (isDiscover()) {
-                siteHolder.mSiteHeaderView.loadBlogInfo(ReaderConstants.DISCOVER_SITE_ID, 0);
+                siteHolder.mSiteHeaderView.loadBlogInfo(
+                        ReaderConstants.DISCOVER_SITE_ID,
+                        0,
+                        mSource
+                );
             } else {
-                siteHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+                siteHolder.mSiteHeaderView.loadBlogInfo(
+                        mCurrentBlogId,
+                        mCurrentFeedId,
+                        mSource
+                );
             }
         } else if (holder instanceof TagHeaderViewHolder) {
             TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
@@ -272,9 +288,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void renderTagHeader(
-        ReaderTag currentTag,
-        TagHeaderViewHolder tagHolder,
-        Boolean isFollowButtonEnabled
+            ReaderTag currentTag,
+            TagHeaderViewHolder tagHolder,
+            Boolean isFollowButtonEnabled
     ) {
         if (currentTag == null) {
             return;
@@ -285,20 +301,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         ReaderTagHeaderUiState uiState = new ReaderTagHeaderUiState(
-            currentTag.getLabel(),
-            new FollowButtonUiState(
-                onFollowButtonClicked,
-                ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled
-            )
+                currentTag.getLabel(),
+                new FollowButtonUiState(
+                        onFollowButtonClicked,
+                        ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                        isFollowButtonEnabled,
+                        true
+                )
         );
         tagHolder.onBind(uiState);
     }
 
     private void toggleFollowButton(
-        Context context,
-        @NotNull ReaderTag currentTag,
-        TagHeaderViewHolder tagHolder
+            Context context,
+            @NotNull ReaderTag currentTag,
+            TagHeaderViewHolder tagHolder
     ) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
@@ -315,11 +332,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ToastUtils.showToast(context, errResId);
             } else {
                 if (isAskingToFollow) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                    mReaderTracker.trackTag(
+                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                            slugForTracking,
+                            mSource
+                    );
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                    mReaderTracker.trackTag(
+                            AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                            slugForTracking,
+                            mSource
+                    );
                 }
             }
             renderTagHeader(currentTag, tagHolder, true);
@@ -348,7 +371,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR_CIRCULAR,
+        mImageManager.loadIntoCircle(holder.mImgBlavatar,
+                SiteUtils.getSiteImageType(post.isP2orA8C(), BlavatarShape.CIRCULAR),
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -362,13 +386,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
+                ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post, position));
+        holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post));
     }
 
-    private void undoPostUnbookmarked(final ReaderPost post, final int position) {
+    private void undoPostUnbookmarked(final ReaderPost post) {
         if (!post.isBookmarked) {
             mOnPostListItemButtonListener.onButtonClicked(post, ReaderPostCardActionType.BOOKMARK);
         }
@@ -400,7 +424,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // to the rendered list and record the TrainTracks render event
             if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
                 mRenderedIds.add(post.getPseudoId());
-                AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
+                mReaderTracker.trackRailcar(post.getRailcarJson());
             }
             return Unit.INSTANCE;
         };
@@ -414,7 +438,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
                 case SITE_PICK:
                     if (discoverData.getBlogId() != 0) {
-                        ReaderActivityLauncher.showReaderBlogPreview(ctx, discoverData.getBlogId());
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                ctx,
+                                discoverData.getBlogId(),
+                                post.isFollowedByCurrentUser,
+                                mSource,
+                                mReaderTracker
+                        );
                     } else if (discoverData.hasBlogUrl()) {
                         ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
                     }
@@ -441,7 +471,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
-            ReaderActivityLauncher.showReaderBlogPreview(ctx, post);
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    post,
+                    mSource,
+                    mReaderTracker
+            );
             return Unit.INSTANCE;
         };
 
@@ -452,6 +487,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiStateBlocking(
+                        mSource,
                         post,
                         false,
                         mPhotonWidth,
@@ -467,7 +503,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, postListType, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -496,6 +532,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ((WordPress) context.getApplicationContext()).component().inject(this);
         this.mImageManager = imageManager;
         mPostListType = postListType;
+        mSource = mReaderTracker.getSource(mPostListType);
         mUiHelpers = uiHelpers;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
@@ -554,6 +591,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // used when the viewing tagged posts
     public void setCurrentTag(ReaderTag tag) {
+        mSource = mReaderTracker.getSource(mPostListType, ReaderTab.transformTagToTab(tag));
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
             mCurrentTag = tag;
             mRenderedIds.clear();
@@ -595,21 +633,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         loadPosts();
     }
 
-    public void removePostsInBlog(long blogId) {
-        int numRemoved = 0;
-        ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
-        for (ReaderPost post : postsInBlog) {
-            int index = mPosts.indexOfPost(post);
-            if (index > -1) {
-                numRemoved++;
-                mPosts.remove(index);
-            }
-        }
-        if (numRemoved > 0) {
-            notifyDataSetChanged();
-        }
-    }
-
     private void loadPosts() {
         if (mIsTaskRunning) {
             AppLog.w(AppLog.T.READER, "reader posts task already running");
@@ -641,8 +664,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private int getItemPositionOffset() {
-        int headersOffset = hasHeader() ? 1 : 0;
-        return headersOffset;
+        return hasHeader() ? 1 : 0;
     }
 
     private int getHeaderPosition() {
@@ -726,6 +748,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 

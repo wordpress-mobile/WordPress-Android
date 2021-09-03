@@ -2,15 +2,14 @@ package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 /**
@@ -18,15 +17,19 @@ import javax.inject.Inject
  * It updates the post in the database, tracks events, initiates pre-load content and shows snackbar/dialog.
  */
 class ReaderPostBookmarkUseCase @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
-    suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) = flow<BookmarkPostState> {
-        val bookmarked = updatePostInDb(blogId, postId)
-        trackEvent(bookmarked, isBookmarkList)
-        preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
+    suspend fun toggleBookmark(
+        post: ReaderPost,
+        isBookmarkList: Boolean,
+        source: String
+    ) = flow {
+        val bookmarked = updatePostInDb(post.blogId, post.postId)
+        trackEvent(bookmarked, isBookmarkList, post, source)
+        preloadPostContentIfNecessary(bookmarked, isBookmarkList, post.blogId, post.postId)
         emit(Success(bookmarked))
     }
 
@@ -56,15 +59,29 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         return setToBookmarked
     }
 
-    private fun trackEvent(bookmarked: Boolean, isBookmarkList: Boolean) {
+    private fun trackEvent(
+        bookmarked: Boolean,
+        isBookmarkList: Boolean,
+        post: ReaderPost,
+        source: String
+    ) {
+        val fromPostDetails = source == ReaderTracker.SOURCE_POST_DETAIL
         val trackingEvent = when {
-            bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
-            bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
-            !bookmarked && isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-            !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && bookmarked && isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
+            !fromPostDetails && !bookmarked && isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && !bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST
+            fromPostDetails && bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
+            fromPostDetails && !bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
-        analyticsTrackerWrapper.track(trackingEvent)
+        readerTracker.trackBlog(trackingEvent, post.blogId, post.feedId, post.isFollowedByCurrentUser, source)
     }
 }
 

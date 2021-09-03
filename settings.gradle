@@ -11,47 +11,82 @@ include ':photoeditor'
 project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
-include ':libs:utils:WordPressUtils'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
-include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
 
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
-include ':@wordpress_react-native-aztec'
-project(':@wordpress_react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
+gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
+gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
+gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
+gradle.ext.includedBuildGutenbergMobilePath = null
 
-include ':@wordpress_react-native-bridge'
-project(':@wordpress_react-native-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
+def localBuilds = new File('local-builds.gradle')
+if (localBuilds.exists()) {
+    apply from: localBuilds
 
-if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()) {
-    include ':react-native-linear-gradient'
-    project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-linear-gradient/android')
-    include ':react-native-svg'
-    project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-svg/android')
-    include ':react-native-aztec'
-    project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
-    include ':react-native-gutenberg-bridge'
-    project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
-    include ':react-native-video'
-    project(':react-native-video').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-video/android-exoplayer')
-    include ':@react-native-community_slider'
-    project(':@react-native-community_slider').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/@react-native-community/slider/src/android')
-    include ':react-native-get-random-values'
-    project(':react-native-get-random-values').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-get-random-values/android')
-    include ':@react-native-community_masked-view'
-    project(':@react-native-community_masked-view').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/@react-native-community/masked-view/android')
-    include ':react-native-gesture-handler'
-    project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-gesture-handler/android')
-    include ':react-native-screens'
-    project(':react-native-screens').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-screens/android')
-    include ':react-native-safe-area-context'
-    project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-safe-area-context/android')
-    include ':react-native-reanimated'
-    project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-reanimated/android')
+    /*
+    In order to add a new included build:
+    1. Define a property for its path in the `local-builds.gradle-example` file.
+    2. Check if that property exists in `ext` since it may be commented out.
+    3. Include the build using the property.
+    4. Add dependencySubstitution block and substitute the binary module with the project.
+
+    Note that `project` dependencies are resolved in the context of the included build.
+    https://docs.gradle.org/current/javadoc/org/gradle/api/initialization/ConfigurableIncludedBuild.html#dependencySubstitution-org.gradle.api.Action-
+    */
+
+    if (ext.has("localFluxCPath")) {
+        includeBuild(ext.localFluxCPath) {
+            dependencySubstitution {
+                println "Substituting fluxc with the local build"
+                substitute module("$gradle.ext.fluxCBinaryPath") with project(':fluxc')
+            }
+        }
+    }
+
+    if (ext.has("localWPUtilsPath")) {
+        includeBuild(ext.localWPUtilsPath) {
+            dependencySubstitution {
+                println "Substituting wputils with the local build"
+                substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
+            }
+        }
+    }
+
+    if (ext.has("localGutenbergMobilePath")) {
+        gradle.ext.includedBuildGutenbergMobilePath = ext.localGutenbergMobilePath
+        includeBuild("$ext.localGutenbergMobilePath/gutenberg/packages/react-native-bridge/android") {
+            dependencySubstitution {
+                println "Substituting gutenberg-mobile with the local build"
+                substitute module("$gradle.ext.gutenbergMobileBinaryPath") with project(':react-native-bridge')
+            }
+        }
+    }
+
+    if (ext.has("localLoginFlowPath")) {
+        includeBuild(ext.localLoginFlowPath) {
+            dependencySubstitution {
+                println "Substituting login-flow with the local build"
+                substitute module("$gradle.ext.loginFlowBinaryPath") with project(':WordPressLoginFlow')
+            }
+        }
+    }
 }
 
+// Build cache is only enabled for CI, at least for now
+if (System.getenv().containsKey("CI")) {
+    buildCache {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.215:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+        }
+    }
+}

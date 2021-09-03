@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+    android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+    android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
+    android:background="@drawable/bg_site_creation_domain_example"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/site_creation_domains_example_top_cell_height"
+        android:layout_gravity="start"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/bg_site_creation_domain_example_cell" />
+    <TextView
+        style="@style/SiteCreationDomainExample"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/new_site_creation_search_domain_example" />
+    <View
+        android:layout_width="@dimen/site_creation_domains_example_right_cell_width"
+        android:layout_height="@dimen/site_creation_domains_example_middle_cell_height"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/site_creation_domains_example_middle_cell_top_margin"
+        android:background="@drawable/bg_site_creation_domain_example_cell" />
+    <View
+        android:layout_width="@dimen/site_creation_domains_example_left_cell_width"
+        android:layout_height="@dimen/site_creation_domains_example_middle_cell_height"
+        android:layout_marginTop="@dimen/site_creation_domains_example_middle_cell_top_margin"
+        android:background="@drawable/bg_site_creation_domain_example_cell" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/site_creation_domains_example_bottom_cell_top_margin"
+        android:background="@drawable/bg_site_creation_domain_example_bottomcell" />
+</FrameLayout>

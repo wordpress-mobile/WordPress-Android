@@ -32,7 +32,7 @@ public class ReaderInterfaces {
      * used by adapters to notify when follow button has been tapped
      */
     public interface OnFollowListener {
-        void onFollowTapped(View view, String blogName, long blogId);
+        void onFollowTapped(View view, String blogName, long blogId, long feedId);
 
         void onFollowingTapped();
     }

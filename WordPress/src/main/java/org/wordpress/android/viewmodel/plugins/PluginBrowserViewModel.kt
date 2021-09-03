@@ -336,7 +336,7 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
 
-        site = mSiteStore.getSiteBySiteId(site.siteId)
+        site = requireNotNull(mSiteStore.getSiteBySiteId(site.siteId))
     }
 
     // Keeping the data up to date

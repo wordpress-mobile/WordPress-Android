@@ -1,7 +1,6 @@
 package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
@@ -13,13 +12,11 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
-import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
     @Mock lateinit var remoteConfig: RemoteConfig
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    @Mock lateinit var featureConfig: FeatureConfig
     @Mock lateinit var experimentConfig: ExperimentConfig
     @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     private lateinit var appConfig: AppConfig
@@ -30,7 +27,6 @@ class AppConfigTest {
     @Before
     fun setUp() {
         appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
-        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(false)
     }
 
     @Test
@@ -38,76 +34,6 @@ class AppConfigTest {
         appConfig.refresh()
 
         verify(remoteConfig).refresh()
-    }
-
-    @Test
-    fun `returns feature as enabled when the build config value is enabled and tracks the event`() {
-        setupFeatureConfig(buildConfigValue = true, remoteConfigValue = false)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
-    }
-
-    @Test
-    fun `returns feature as enabled when the remote config value is enabled and tracks the event`() {
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = true)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
-    }
-
-    @Test
-    fun `returns feature as disabled when the remote config value is disabled and tracks the event`() {
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isFalse()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to false))
-    }
-
-    @Test
-    fun `returns feature as enabled when the manual config is enabled and does not track the event`() {
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
-        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(true)
-        whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(true)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-        verifyZeroInteractions(analyticsTracker)
-    }
-
-    @Test
-    fun `returns feature as disabled when the manual config is disabled and does not track the event`() {
-        setupFeatureConfig(buildConfigValue = true, remoteConfigValue = false)
-        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(true)
-        whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(false)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isFalse()
-        verifyZeroInteractions(analyticsTracker)
-    }
-
-    @Test
-    fun `returns cached true value and tracks only once`() {
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = true)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
-    }
-
-    @Test
-    fun `returns cached false value and tracks only once`() {
-        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isFalse()
-
-        setupFeatureConfig(buildConfigValue = true, remoteConfigValue = true)
-
-        assertThat(appConfig.isEnabled(featureConfig)).isFalse()
-
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to false))
     }
 
     @Test
@@ -150,12 +76,6 @@ class AppConfigTest {
                 Stat.EXPERIMENT_VARIANT_SET,
                 mapOf(remoteField to experimentVariantA)
         )
-    }
-
-    private fun setupFeatureConfig(buildConfigValue: Boolean, remoteConfigValue: Boolean) {
-        whenever(featureConfig.buildConfigValue).thenReturn(buildConfigValue)
-        whenever(featureConfig.remoteField).thenReturn(remoteField)
-        whenever(remoteConfig.isEnabled(remoteField)).thenReturn(remoteConfigValue)
     }
 
     private fun setupExperimentConfig(remoteConfigValue: String, experimentVariants: List<Variant>) {

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/bottom_sheet_handle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginEnd="@dimen/margin_extra_large" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_small_medium">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="@string/navigate_back_desc"
+                android:src="@drawable/ic_arrow_left_white_24dp"
+                android:tint="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/ModalLayoutPickerHeader"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:text="@string/mlp_preview_page" />
+
+            <ImageButton
+                android:id="@+id/previewTypeSelectorButton"
+                style="@style/WebPreviewNavbarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:contentDescription="@string/preview_type_desc"
+                android:src="@drawable/ic_devices_white_24dp" />
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/negative_margin_medium"
+        android:layout_weight="1">
+
+        <org.wordpress.android.widgets.NestedWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/desktopPreviewHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/preview_mode_indicator_background"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/web_preview_desktop"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevImageHiddenInLandscape="true"
+        app:aevSubtitle="@string/hpp_error_subtitle"
+        app:aevTitle="@string/hpp_error_title" />
+
+    <FrameLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mlp_bottom_shadow_height"
+            android:background="@drawable/modal_layout_picker_bottom_shadow" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/layoutPickerBackground"
+            android:gravity="center"
+            android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
+            android:paddingTop="@dimen/picker_bottom_button_vertical_margin">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chooseButton"
+                style="@style/Widget.ModalLayoutPicker.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_margin"
+                android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

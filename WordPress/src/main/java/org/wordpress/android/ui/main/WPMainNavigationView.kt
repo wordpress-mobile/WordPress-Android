@@ -19,11 +19,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
+import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
@@ -77,6 +79,8 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         // overlay each item with our custom view
         val menuView = getChildAt(0) as BottomNavigationMenuView
+        if (BuildConfig.IS_JETPACK_APP) hideReaderTab()
+
         val inflater = LayoutInflater.from(context)
         for (i in 0 until menu.size()) {
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
@@ -95,6 +99,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
+    }
+
+    private fun hideReaderTab() {
+        menu.removeItem(R.id.nav_reader)
     }
 
     private fun disableShiftMode() {
@@ -184,7 +192,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
         getTitleViewForPosition(position)?.setTextColor(
                 context.getColorStateListFromAttribute(
-                        if (isSelected) R.attr.colorPrimary else R.attr.wpColorOnSurfaceMedium
+                        if (isSelected) R.attr.wpColorNavBar else R.attr.wpColorOnSurfaceMedium
                 )
         )
     }
@@ -259,7 +267,7 @@ class WPMainNavigationView @JvmOverloads constructor(
      * show or hide the badge on the 'pageId' icon in the bottom bar
      */
     private fun showBadge(pageId: Int, showBadge: Boolean) {
-        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.badge)
+        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.nav_badge)
 
         val currentVisibility = badgeView?.visibility
         val newVisibility = if (showBadge) View.VISIBLE else View.GONE
@@ -305,7 +313,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = listOf(MY_SITE, READER, NOTIFS)
+        private val pages = if (BuildConfig.IS_JETPACK_APP) listOf(MY_SITE, NOTIFS) else listOf(MY_SITE, READER, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"

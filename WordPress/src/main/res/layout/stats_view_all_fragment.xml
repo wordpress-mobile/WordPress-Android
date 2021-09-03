@@ -13,15 +13,18 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:layout_below="@id/toolbar"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
                 android:id="@+id/pullToRefresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                android:layout_height="match_parent">
 
-                <include layout="@layout/stats_list_fragment" />
+                <include
+                    android:id="@+id/stats_list_fragment"
+                    layout="@layout/stats_list_fragment" />
 
             </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 

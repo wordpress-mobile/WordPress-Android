@@ -1,0 +1,17 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/wpcom/v2/sites/0/rewind/capabilities(/)?($|\\?.*)"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "capabilities": []
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}

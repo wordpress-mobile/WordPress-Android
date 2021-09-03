@@ -1,28 +1,28 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.animation.StateListAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
@@ -34,12 +34,13 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
+class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
@@ -49,18 +50,26 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
 
     private var restorePreviousSearch = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.stats_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-
-        initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
-        initializeViews(nonNullActivity)
+        with(StatsFragmentBinding.bind(view)) {
+            with(nonNullActivity as AppCompatActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.let {
+                    it.setHomeButtonEnabled(true)
+                    it.setDisplayHomeAsUpEnabled(true)
+                }
+            }
+            initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
+            initializeViews(nonNullActivity)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -69,7 +78,7 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(activity: FragmentActivity) {
+    private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
         statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
@@ -78,14 +87,18 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
+        disabledView.statsDisabledView.button.setOnClickListener {
+            viewModel.onEnableStatsModuleClick()
+        }
     }
 
-    private fun initializeViewModels(
+    @SuppressLint("ClickableViewAccessibility")
+    private fun StatsFragmentBinding.initializeViewModels(
         activity: FragmentActivity,
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
 
         viewModel.onRestoreInstanceState(savedInstanceState)
 
@@ -106,100 +119,112 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
         }
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+    private fun StatsFragmentBinding.setupObservers(activity: FragmentActivity) {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitle == null) {
-                    WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val snackbar = WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    )
-                    snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
-                        holder.buttonAction()
-                    }
-                    snackbar.show()
-                }
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
+            showSnackbar(activity, holder)
+        })
+
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
+            appBarLayout.showShadow(hasShadow == true)
+        })
+
+        viewModel.siteChanged.observeEvent(viewLifecycleOwner, { siteUpdateResult ->
+            when (siteUpdateResult) {
+                is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
+                is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed(
-                    {
-                        if (app_bar_layout != null) {
-                            val originalStateListAnimator = app_bar_layout.stateListAnimator
-                            if (originalStateListAnimator != null) {
-                                app_bar_layout.setTag(
-                                        R.id.appbar_layout_original_animator_tag_key,
-                                        originalStateListAnimator
-                                )
-                            }
-
-                            if (hasShadow == true) {
-                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
-                                        R.id.appbar_layout_original_animator_tag_key
-                                ) as StateListAnimator
-                            } else {
-                                app_bar_layout.stateListAnimator = null
-                            }
-                        }
-                    },
-                    100
-            )
+        viewModel.hideToolbar.observeEvent(viewLifecycleOwner, { hideToolbar ->
+            appBarLayout.setExpanded(!hideToolbar, true)
         })
 
-        viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
-            siteChangedEvent?.applyIfNotHandled {
-                when (this) {
-                    is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
-                    is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
-                }
-            }
-        })
-
-        viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { hideToolbar ->
-                app_bar_layout.setExpanded(!hideToolbar, true)
-            }
-        })
-
-        viewModel.selectedSection.observe(viewLifecycleOwner, Observer { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
             selectedSection?.let {
-                val position = when (selectedSection) {
-                    INSIGHTS -> 0
-                    DAYS -> 1
-                    WEEKS -> 2
-                    MONTHS -> 3
-                    YEARS -> 4
-                    DETAIL -> null
-                    ANNUAL_STATS -> null
-                }
-                position?.let {
-                    if (statsPager.currentItem != position) {
-                        tabLayout.removeOnTabSelectedListener(selectedTabListener)
-                        statsPager.setCurrentItem(position, false)
-                        tabLayout.addOnTabSelectedListener(selectedTabListener)
-                    }
-                }
+                handleSelectedSection(selectedSection)
             }
+        })
+
+        viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
+            updateUi(event)
         })
     }
 
+    private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {
+        if (statsModuleUiModel.disabledStatsViewVisible) {
+            disabledView.statsDisabledView.visibility = View.VISIBLE
+            tabLayout.visibility = View.GONE
+            pullToRefresh.visibility = View.GONE
+
+            if (statsModuleUiModel.disabledStatsProgressVisible) {
+                disabledView.statsDisabledView.progressBar.visibility = View.VISIBLE
+                disabledView.statsDisabledView.button.visibility = View.GONE
+            } else {
+                disabledView.statsDisabledView.progressBar.visibility = View.GONE
+                disabledView.statsDisabledView.button.visibility = View.VISIBLE
+            }
+        } else {
+            disabledView.statsDisabledView.visibility = View.GONE
+            tabLayout.visibility = View.VISIBLE
+            pullToRefresh.visibility = View.VISIBLE
+        }
+    }
+
+    private fun StatsFragmentBinding.handleSelectedSection(
+        selectedSection: StatsSection
+    ) {
+        val position = when (selectedSection) {
+            INSIGHTS -> 0
+            DAYS -> 1
+            WEEKS -> 2
+            MONTHS -> 3
+            YEARS -> 4
+            DETAIL -> null
+            ANNUAL_STATS -> null
+        }
+        position?.let {
+            if (statsPager.currentItem != position) {
+                tabLayout.removeOnTabSelectedListener(selectedTabListener)
+                statsPager.setCurrentItem(position, false)
+                tabLayout.addOnTabSelectedListener(selectedTabListener)
+            }
+        }
+    }
+
+    private fun showSnackbar(
+        activity: FragmentActivity,
+        holder: SnackbarMessageHolder?
+    ) {
+        val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+        if (holder != null && parent != null) {
+            if (holder.buttonTitle == null) {
+                WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                val snackbar = WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                )
+                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                    holder.buttonAction()
+                }
+                snackbar.show()
+            }
+        }
+    }
+
     override fun onScrollableViewInitialized(containerId: Int) {
-        app_bar_layout.liftOnScrollTargetViewId = containerId
+        StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
     }
 }
 

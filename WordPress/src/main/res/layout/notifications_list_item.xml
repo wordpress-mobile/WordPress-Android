@@ -51,7 +51,7 @@
                 android:layout_marginEnd="@dimen/activity_log_icon_margin"
                 android:layout_marginTop="@dimen/margin_small"
                 android:contentDescription="@null"
-                app:badgeBackground="@drawable/bg_oval_primary"
+                app:badgeBackground="@drawable/bg_note_avatar_badge"
                 app:badgeBackgroundBorderWidth="@dimen/notification_icon_bg_border_width"
                 app:badgeBackgroundSize="@dimen/note_icon_sz"
                 app:badgeHorizontalOffset="@dimen/notifications_note_icon_horizontal_offset"

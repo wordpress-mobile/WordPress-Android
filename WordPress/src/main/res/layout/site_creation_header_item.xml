@@ -4,19 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SiteCreationHeaderLinearLayoutStyle"
     android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
-    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical"
     android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
     android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
-        style="@style/SiteCreationHeaderTitle"
+        style="@style/ModalLayoutPickerTitle"
         app:fixWidowWords="true"
         tools:text="What's the focus of your business?" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
-        style="@style/SiteCreationHeaderSubtitle"
+        style="@style/ModalLayoutPickerSubtitle"
         app:fixWidowWords="true"
         tools:text="We’ll use your answer to add sections to your website." />
 </LinearLayout>

@@ -12,5 +12,11 @@ class BuildConfigWrapper @Inject constructor() {
         return BuildConfig.VERSION_NAME
     }
 
-    fun isManualFeatureConfigEnabled(): Boolean = BuildConfig.ENABLE_FEATURE_CONFIGURATION
+    fun isDebug(): Boolean {
+        return BuildConfig.DEBUG
+    }
+
+    fun isDebugSettingsEnabled(): Boolean = BuildConfig.ENABLE_DEBUG_SETTINGS
+
+    val isJetpackApp = BuildConfig.IS_JETPACK_APP
 }

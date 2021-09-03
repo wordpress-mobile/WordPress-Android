@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +28,6 @@ import androidx.core.provider.FontRequest;
 import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.text.EmojiCompat.InitCallback;
 import androidx.emoji.text.FontRequestEmojiCompatConfig;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -38,6 +36,7 @@ import androidx.multidex.MultiDexApplication;
 import androidx.work.WorkManager;
 
 import com.android.volley.RequestQueue;
+import com.automattic.android.tracks.crashlogging.CrashLogging;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -83,6 +82,8 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.debug.cookies.DebugCookieManager;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -101,7 +102,6 @@ import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EncryptedLogging;
 import org.wordpress.android.util.FluxCUtils;
@@ -112,14 +112,15 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.AppConfig;
+import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.workers.WordPressWorkersFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,18 +132,17 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasServiceInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
 
-import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
-
-public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
-        LifecycleObserver {
+public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
+    public static final String REMOTE_SITE_ID = "REMOTE_SITE_ID";
     public static String versionName;
     public static WordPressDB wpDB;
     public static boolean sAppIsInTheBackground = true;
@@ -164,8 +164,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static GoogleApiClient mCredentialsClient;
 
-    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
-    @Inject DispatchingAndroidInjector<Fragment> mSupportFragmentInjector;
+    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -185,7 +184,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
-    @Inject @Named(DEFAULT_SCOPE) CoroutineScope mDefaultScope;
+    @Inject ExPlat mExPlat;
+    @Inject WordPressWorkersFactory mWordPressWorkerFactory;
+    @Inject DebugCookieManager mDebugCookieManager;
+    @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -209,7 +212,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
@@ -221,14 +224,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+            int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+            if (site != null) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
                 // Reload editor details from the remote backend
                 if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
                     // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(site));
                 }
             }
             return true;
@@ -261,9 +264,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
+        mAppConfig.init();
 
-        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
-        mCrashLogging.start(getContext());
+        // Upload any encrypted logs that were queued but not yet uploaded
         mEncryptedLogging.start();
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
@@ -275,14 +278,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.enableLogFilePersistence(this.getBaseContext(), 30);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 5);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                mCrashLogging.log(sb.toString());
+                mCrashLogging.recordEvent(sb.toString(), null);
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -359,19 +362,22 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mImageManager,
                 mImageEditorTracker,
                 mImageEditorFileUtils,
-                mDefaultScope
+                mAppScope
         );
 
         initEmojiCompat();
         mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
+
+        mExPlat.forceRefresh();
+
+        mDebugCookieManager.sync();
     }
 
     protected void initWorkManager() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
         androidx.work.Configuration config =
-                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(mWordPressWorkerFactory).build();
         WorkManager.initialize(this, config);
     }
 
@@ -387,13 +393,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     private void sanitizeMediaUploadStateForSite() {
-        int siteLocalId = AppPrefs.getSelectedSite();
-        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (selectedSite != null) {
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+        final SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        if (site != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, site);
                 }
             }).start();
         }
@@ -621,6 +627,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(this,
                     new Intent(this, GCMRegistrationIntentService.class));
+
+            // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
+            mExPlat.forceRefresh();
         }
     }
 
@@ -649,8 +658,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         for (SiteModel site : mSiteStore.getSites()) {
             mDispatcher.dispatch(ThemeActionBuilder.newRemoveSiteThemesAction(site));
         }
-        // delete wpcom and jetpack sites
-        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+
+        if (!BuildConfig.IS_JETPACK_APP || mSiteStore.hasSite()) {
+            // delete wpcom and jetpack sites
+            mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+        }
         // remove all lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveAllListsAction());
         // remove all posts
@@ -674,6 +686,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Remove private Atomic cookie
         mPrivateAtomicCookie.clearCookie();
+
+        // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
+        mExPlat.clear();
     }
 
     private static String mDefaultUserAgent;
@@ -855,13 +870,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mStoryNotificationTrackerProvider;
     }
 
-    @Override
-    public AndroidInjector<Service> serviceInjector() {
-        return mServiceDispatchingAndroidInjector;
-    }
-
-    @Override public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mSupportFragmentInjector;
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -997,6 +1007,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
             SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mAccountStore, mSiteStore, mDispatcher);
+
+            if (!mFirstActivityResumed) {
+                // Since we're force refreshing on app startup, we don't need to try refreshing again
+                // when starting our first Activity.
+                mExPlat.refreshIfNeeded();
+            }
 
             if (mFirstActivityResumed) {
                 deferredInit();

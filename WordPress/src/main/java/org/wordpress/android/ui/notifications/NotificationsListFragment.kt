@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,13 +17,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import kotlinx.android.synthetic.main.notifications_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
+import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS
@@ -52,16 +50,18 @@ import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import java.util.HashMap
 import javax.inject.Inject
 
-class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener {
+class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
 
     @Inject lateinit var accountStore: AccountStore
 
+    private var binding: NotificationsListFragmentBinding? = null
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, TAB_POSITION_ALL))
+            binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, TAB_POSITION_ALL))
         }
     }
 
@@ -71,46 +71,44 @@ class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener 
         shouldRefreshNotifications = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.notifications_list_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        toolbar_main.setTitle(R.string.notifications_screen_title)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_main)
+        binding = NotificationsListFragmentBinding.bind(view).apply {
+            toolbarMain.setTitle(R.string.notifications_screen_title)
+            (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
-        tab_layout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: Tab) {
-                val properties: MutableMap<String, String?> = HashMap(1)
-                when (tab.position) {
-                    TAB_POSITION_ALL -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
-                    TAB_POSITION_COMMENT -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
-                    TAB_POSITION_FOLLOW -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_FOLLOW.toString()
-                    TAB_POSITION_LIKE -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_LIKE.toString()
-                    TAB_POSITION_UNREAD -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_UNREAD.toString()
-                    else -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
+            tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+                override fun onTabSelected(tab: Tab) {
+                    val properties: MutableMap<String, String?> = HashMap(1)
+                    when (tab.position) {
+                        TAB_POSITION_ALL -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
+                        TAB_POSITION_COMMENT -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
+                        TAB_POSITION_FOLLOW -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_FOLLOW.toString()
+                        TAB_POSITION_LIKE -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_LIKE.toString()
+                        TAB_POSITION_UNREAD -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_UNREAD.toString()
+                        else -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
+                    }
+                    AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties)
+                    lastTabPosition = tab.position
                 }
-                AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties)
-                lastTabPosition = tab.position
+
+                override fun onTabUnselected(tab: Tab) {}
+                override fun onTabReselected(tab: Tab) {}
+            })
+            viewPager.adapter = NotificationsFragmentAdapter(childFragmentManager, buildTitles())
+            viewPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+            tabLayout.setupWithViewPager(viewPager)
+
+            jetpackTermsAndConditions.text = Html.fromHtml(
+                    String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
+            )
+            jetpackTermsAndConditions.setOnClickListener {
+                WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(context))
             }
-
-            override fun onTabUnselected(tab: Tab) {}
-            override fun onTabReselected(tab: Tab) {}
-        })
-        view_pager.adapter = NotificationsFragmentAdapter(childFragmentManager, buildTitles())
-        view_pager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-        tab_layout.setupWithViewPager(view_pager)
-
-        jetpack_terms_and_conditions.text = Html.fromHtml(
-                String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
-        )
-        jetpack_terms_and_conditions.setOnClickListener {
-            WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(context))
-        }
-        jetpack_faq.setOnClickListener {
-            WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
+            jetpackFaq.setOnClickListener {
+                WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
+            }
         }
     }
 
@@ -129,23 +127,30 @@ class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener 
         shouldRefreshNotifications = true
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (!accountStore.hasAccessToken()) {
-            showConnectJetpackView()
-            connect_jetpack.visibility = View.VISIBLE
-            tab_layout.visibility = View.GONE
-            view_pager.visibility = View.GONE
-        } else {
-            connect_jetpack.visibility = View.GONE
-            tab_layout.visibility = View.VISIBLE
-            view_pager.visibility = View.VISIBLE
-            if (shouldRefreshNotifications) {
-                fetchNotesFromRemote()
+        binding?.apply {
+            if (!accountStore.hasAccessToken()) {
+                showConnectJetpackView()
+                connectJetpack.visibility = View.VISIBLE
+                tabLayout.visibility = View.GONE
+                viewPager.visibility = View.GONE
+            } else {
+                connectJetpack.visibility = View.GONE
+                tabLayout.visibility = View.VISIBLE
+                viewPager.visibility = View.VISIBLE
+                if (shouldRefreshNotifications) {
+                    fetchNotesFromRemote()
+                }
             }
+            setSelectedTab(lastTabPosition)
         }
-        setSelectedTab(lastTabPosition)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -153,9 +158,9 @@ class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener 
         super.onSaveInstanceState(outState)
     }
 
-    private fun clearToolbarScrollFlags() {
-        if (toolbar_main.layoutParams is LayoutParams) {
-            val params = toolbar_main.layoutParams as LayoutParams
+    private fun NotificationsListFragmentBinding.clearToolbarScrollFlags() {
+        if (toolbarMain.layoutParams is LayoutParams) {
+            val params = toolbarMain.layoutParams as LayoutParams
             params.scrollFlags = 0
         }
     }
@@ -167,20 +172,20 @@ class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener 
         NotificationsUpdateServiceStarter.startService(activity)
     }
 
-    private fun setSelectedTab(position: Int) {
+    private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
         lastTabPosition = position
-        tab_layout.getTabAt(lastTabPosition)?.select()
+        tabLayout.getTabAt(lastTabPosition)?.select()
     }
 
-    private fun showConnectJetpackView() {
+    private fun NotificationsListFragmentBinding.showConnectJetpackView() {
         clearToolbarScrollFlags()
-        jetpack_setup.setOnClickListener {
-            val siteModel = (requireActivity() as? WPMainActivity)?.selectedSite
-            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, siteModel, false)
+        jetpackSetup.setOnClickListener {
+            val selectedSite = (requireActivity() as? WPMainActivity)?.selectedSite
+            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, selectedSite, false)
         }
     }
 
-    private class NotificationsFragmentAdapter internal constructor(
+    private class NotificationsFragmentAdapter(
         fragmentManager: FragmentManager,
         private val titles: List<String>
     ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -281,6 +286,6 @@ class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener 
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        app_bar.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
     }
 }

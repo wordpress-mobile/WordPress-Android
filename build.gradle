@@ -1,73 +1,54 @@
 buildscript {
-    ext.kotlinVersion = '1.3.61'
-    ext.serializationVersion = '0.14.0'
-    ext.navComponentVersion = '2.0.0'
-    ext.kotlin_coroutines_version = '1.3.3'
+    ext.kotlinVersion = '1.4.20'
+    ext.serializationVersion = '1.0-M1-1.4.0-rc'
+    ext.navComponentVersion = '2.3.5'
+    ext.kotlin_coroutines_version = '1.3.9'
+    ext.coroutinesVersion = '1.3.9'
     ext.kotlin_ktx_version = '1.2.0'
-    ext.androidx_work_version = "2.0.1"
-    ext.buildGutenbergMobileJSBundle = 1
+    ext.wordPressUtilsVersion = 'develop-f98c841225fbc61031f32426aaef4e347b34f717'
+    ext.wordPressLoginVersion = '0.0.4'
+    ext.detektVersion = '1.15.0'
+    ext.gutenbergMobileVersion = 'v1.61.0-alpha1'
 
     repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+            }
+        }
         google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
-}
-
-ext {
-    buildGutenbergMobileJSBundle = 1
 }
 
 apply plugin: 'com.automattic.android.fetchstyle'
 
-project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
-def suppressJSBundle =  System.getenv('SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD').asBoolean()
-project.ext.buildGutenbergMobileJSBundle = !(suppressJSBundle || project.ext.buildGutenbergFromSource)
-
-if (project.ext.buildGutenbergFromSource) {
-    def nodeModulesDir = new File('libs/gutenberg-mobile/node_modules')
-    if (!nodeModulesDir.exists()) {
-        def message = "Attempting to build Gutenberg from source without a libs/gutenberg-mobile/node_modules directory. \
-Either run `npm install` manually within libs/gutenberg-mobile or disable building Gutenberg from source by \
-setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
-        throw new GradleException(message)
-    }
-}
-
 allprojects {
     apply plugin: 'checkstyle'
+    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
         jcenter()
-        maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
         maven { url "https://jitpack.io" }
-
-        if (rootProject.ext.buildGutenbergFromSource) {
-            // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
-
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/libs/gutenberg-mobile/gutenberg/node_modules/react-native/android"
-            }
-        } else {
-            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
-        }
 
         flatDir {
             dirs '../aars'
         }
     }
 
-    task checkstyle(type: Checkstyle) {
+    tasks.register("checkstyle", Checkstyle) {
         source 'src'
 
         classpath = files()
@@ -76,6 +57,27 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+
+    detekt {
+        config = files("${project.rootDir}/config/detekt/detekt.yml")
+        autoCorrect = false
+        buildUponDefaultConfig = false
+        disableDefaultRuleSets = false
+        ignoreFailures = false
+        parallel = false
+        debug = false
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            txt.enabled = true
+        }
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 
@@ -89,19 +91,19 @@ subprojects {
         ktlint 'com.github.shyiko:ktlint:0.29.0'
     }
 
-    task ktlint(type: JavaExec) {
+    tasks.register("ktlint", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt"
     }
 
-    task ktlintFormat(type: JavaExec) {
+    tasks.register("ktlintFormat", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
     }
 
-    task ciktlint(type: JavaExec) {
+    tasks.register("ciktlint", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
@@ -115,6 +117,8 @@ buildScan {
         termsOfServiceAgree = 'yes'
         tag 'CI'
         publishAlways()
+        // Otherwise CI might shut down before it's uploaded
+        uploadInBackground = false
     }
 }
 
@@ -122,21 +126,28 @@ ext {
     compileSdkVersion = 29
     buildToolVersion = '29.0.2'
 
-    minSdkVersion = 21
+    minSdkVersion = 24
     targetSdkVersion = 29
 
-    coroutinesVersion = '1.3.3'
-    androidxWorkVersion = "2.0.1"
+    coroutinesVersion = '1.3.9'
+    androidxWorkVersion = "2.4.0"
 
-    daggerVersion = '2.22.1'
-    fluxCVersion = '1.6.22'
+    daggerVersion = '2.29.1'
+    fluxCVersion = 'develop-a471f6245ea15181c3463a1892a3a586ac546c83'
 
     appCompatVersion = '1.0.2'
-    coreVersion = '1.2.0'
+    coreVersion = '1.3.2'
+    lifecycleVersion = '2.2.0'
     constraintLayoutVersion = '1.1.3'
-    materialVersion = '1.1.0'
+    materialVersion = '1.2.1'
+    preferenceVersion = '1.1.0'
+    swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
+    tracksVersion = '2.1.0'
+    roomVersion = '2.3.0'
+
+    coreLibraryDesugaringVersion = '1.1.5'
 
     exoPlayerVersion = '2.12.0'
 
@@ -151,7 +162,7 @@ ext {
 }
 
 // Onboarding and dev env setup tasks
-task checkBundler(type:Exec) {
+tasks.register("checkBundler", Exec) {
     doFirst {
         println "Check Bundler"
     }
@@ -169,7 +180,8 @@ task checkBundler(type:Exec) {
     }
 }
 
-task checkBundle(type:Exec, dependsOn:checkBundler) {
+tasks.register("checkBundle", Exec) {
+    dependsOn tasks.named("checkBundler")
     doFirst {
         println "Check Bundle"
     }
@@ -187,7 +199,8 @@ task checkBundle(type:Exec, dependsOn:checkBundler) {
     }
 }
 
-task applyCredentials(type:Exec, dependsOn:checkBundle) {
+tasks.register("applyCredentials", Exec) {
+    dependsOn tasks.named("checkBundle")
     doFirst {
         println "Apply credentials for this branch"
     }
@@ -205,9 +218,9 @@ task applyCredentials(type:Exec, dependsOn:checkBundle) {
     }
 }
 
-tasks.register("prodDeps") {
+tasks.register("configureApply") {
     group = 'Onboarding'
-    description = 'Install dependencies for production builds'
+    description = 'Install dependencies for debug and production builds'
     dependsOn applyCredentials
     doLast {
         println("Done")

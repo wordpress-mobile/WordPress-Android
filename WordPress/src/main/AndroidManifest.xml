@@ -60,16 +60,11 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
         tools:ignore="UnusedAttribute">
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/com_google_android_geo_api_key"/>
-
-        <meta-data android:name="io.sentry.auto-init" android:value="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -103,7 +98,7 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/Theme.LoginFlow"
+            android:theme="@style/LoginTheme.TransparentStatusBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -116,24 +111,24 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="magic-login"
-                    android:scheme="wordpress" />
+                    android:scheme="${magicLinkScheme}" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.accounts.LoginEpilogueActivity"
             android:label="@string/login_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.PostSignupInterstitialActivity"
             android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/Theme.LoginFlow"
+            android:theme="@style/LoginTheme"
             />
 
         <activity
@@ -217,12 +212,18 @@
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
+            android:name=".ui.comments.unified.UnifiedCommentsActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/comments"/>
+        <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
 
         <!-- Posts activities -->
@@ -371,7 +372,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.DeepLinkingIntentReceiverActivity"
+            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true">
             <intent-filter>
@@ -438,6 +439,16 @@
                     android:pathPattern="/pages/..*"
                     android:scheme="http" />
 
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/notifications/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/notifications/.*"
+                    android:scheme="http" />
+
             </intent-filter>
 
         </activity>
@@ -456,10 +467,13 @@
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
-            android:label="@string/reader_title_deeplink"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.TranslucentStatus"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        <activity
+            android:name=".ui.engagement.EngagedPeopleListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            />
         <activity-alias
             android:name=".WPComPostReaderActivity"
             android:targetActivity=".ui.reader.ReaderPostPagerActivity">
@@ -512,6 +526,7 @@
                     android:scheme="http" >
                 </data>
 
+                <action android:name="org.wordpress.android.action.VIEW_POST" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -545,10 +560,14 @@
             android:name=".ui.reader.ReaderVideoViewerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/ReaderMediaViewerTheme" />
+        <activity
+            android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
+            android:label="@string/reader_title_interests"
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Gutenberg activities -->
         <activity
-            android:name=".ui.SuggestUsersActivity"
+            android:name=".ui.suggestion.SuggestionActivity"
             android:theme="@style/WordPressNoDisplay"
             android:windowSoftInputMode="adjustResize"
             />
@@ -580,7 +599,8 @@
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -605,12 +625,14 @@
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
             android:theme="@style/WordPress.NoActionBar" />
+
         <activity
-            android:name=".ui.gif.GifPickerActivity"
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
-            android:name=".util.config.manual.ManualFeatureConfigActivity"
+            android:name="org.wordpress.android.ui.debug.DebugSettingsActivity"
             android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.debug.cookies.DebugCookiesActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->
@@ -645,7 +667,29 @@
             android:label="@string/activity_log_event"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!-- Jetpack - Scan-->
+        <activity
+            android:name=".ui.jetpack.scan.ScanActivity"
+            android:label="@string/scan"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.jetpack.scan.history.ScanHistoryActivity"
+            android:label="@string/scan_history"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack - Threat Details-->
+        <activity
+            android:name=".ui.jetpack.scan.details.ThreatDetailsActivity"
+            android:label="@string/threat_details"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!--Domain Registration-->
+        <activity
+            android:name=".ui.domains.DomainsDashboardActivity"
+            android:label="@string/site_settings_site_domains_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
@@ -661,6 +705,28 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:label="@string/edit_photo_screen_title"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.posts.JetpackSecuritySettingsActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack backup -->
+        <activity
+            android:name=".ui.jetpack.backup.download.BackupDownloadActivity"
+            android:label="@string/backup_download"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack restore -->
+        <activity
+            android:name=".ui.jetpack.restore.RestoreActivity"
+            android:label="@string/restore"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Site Settings Categories -->
+        <activity
+            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:label="@string/categories"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
@@ -783,7 +849,8 @@
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
-            android:label="@string/stats_widget_weekly_views_name">
+            android:label="@string/stats_widget_weekly_views_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -794,7 +861,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
-            android:label="@string/stats_widget_all_time_insights_name">
+            android:label="@string/stats_widget_all_time_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -805,7 +873,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
-            android:label="@string/stats_widget_today_insights_name">
+            android:label="@string/stats_widget_today_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -816,7 +885,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
-            android:label="@string/stats_widget_minified_name">
+            android:label="@string/stats_widget_minified_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

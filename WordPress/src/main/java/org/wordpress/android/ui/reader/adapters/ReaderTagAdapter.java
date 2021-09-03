@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -152,6 +153,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {

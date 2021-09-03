@@ -8,9 +8,11 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
@@ -20,12 +22,15 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+
+import static org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT;
 
 public class ReaderActivityLauncher {
     /*
@@ -44,6 +49,16 @@ public class ReaderActivityLauncher {
                                             int commentId,
                                             boolean isRelatedPost,
                                             String interceptedUri) {
+        Intent intent =
+                buildReaderPostDetailIntent(context, isFeed, blogId, postId, directOperation, commentId, isRelatedPost,
+                        interceptedUri);
+        context.startActivity(intent);
+    }
+
+    @NotNull
+    public static Intent buildReaderPostDetailIntent(Context context, boolean isFeed, long blogId, long postId,
+                                                      DirectOperation directOperation, int commentId,
+                                                      boolean isRelatedPost, String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
@@ -53,7 +68,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        context.startActivity(intent);
+        return intent;
     }
 
     /*
@@ -93,13 +108,22 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog or feed
      */
-    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId) {
+    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId,
+                                                   @Nullable Boolean isFollowed, String source,
+                                                   ReaderTracker readerTracker) {
         if (siteId == 0 && feedId == 0) {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
+                siteId,
+                feedId,
+                isFollowed,
+                source
+        );
         Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
@@ -112,28 +136,48 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderBlogPreview(Context context, ReaderPost post) {
+    public static void showReaderBlogPreview(Context context, ReaderPost post,
+                                             String source,
+                                             ReaderTracker readerTracker) {
         if (post == null) {
             return;
         }
-        showReaderBlogOrFeedPreview(context, post.blogId, post.feedId);
+        showReaderBlogOrFeedPreview(
+                context,
+                post.blogId,
+                post.feedId,
+                post.isFollowedByCurrentUser,
+                source,
+                readerTracker
+        );
     }
 
-    public static void showReaderBlogPreview(Context context, long siteId) {
-        showReaderBlogOrFeedPreview(context, siteId, 0);
+    public static void showReaderBlogPreview(Context context, long siteId,
+                                             @Nullable Boolean isFollowed, String source,
+                                             ReaderTracker readerTracker) {
+        showReaderBlogOrFeedPreview(
+                context,
+                siteId,
+                0,
+                isFollowed,
+                source,
+                readerTracker
+        );
     }
 
     /*
      * show a list of posts with a specific tag
      */
-    public static void showReaderTagPreview(Context context, ReaderTag tag) {
-        if (tag == null) {
-            return;
-        }
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
+    public static void showReaderTagPreview(Context context, @NonNull ReaderTag tag,
+                                            String source,
+                                            ReaderTracker readerTracker) {
+        readerTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
+                tag.getTagSlug(),
+                source
+        );
         Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
@@ -162,12 +206,12 @@ public class ReaderActivityLauncher {
     /**
      * Show comments for passed Ids and directly perform an action on a specifc comment
      *
-     * @param context context to use to start the activity
-     * @param blogId blog id
-     * @param postId post id
+     * @param context         context to use to start the activity
+     * @param blogId          blog id
+     * @param postId          post id
      * @param directOperation operation to perform on the specific comment. Can be null for no operation.
-     * @param commentId specific comment id to perform an action on
-     * @param interceptedUri URI to fall back into (i.e. to be able to open in external browser)
+     * @param commentId       specific comment id to perform an action on
+     * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri) {
@@ -212,6 +256,12 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderSubsActivity.class);
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
         context.startActivity(intent);
+    }
+
+    public static void showReaderInterests(Activity activity) {
+        Intent intent = new Intent(activity, ReaderInterestsActivity.class);
+        intent.putExtra(READER_INTEREST_ENTRY_POINT, EntryPoint.SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS);
     }
 
     /*

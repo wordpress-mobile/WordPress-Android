@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.AlreadyRunning
@@ -16,24 +13,26 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Unchanged
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class PostLikeUseCase @Inject constructor(
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()
 
-    suspend fun perform(post: ReaderPost, isAskingToLike: Boolean) = flow<PostLikeState> {
+    suspend fun perform(
+        post: ReaderPost,
+        isAskingToLike: Boolean,
+        source: String
+    ) = flow {
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
@@ -48,17 +47,35 @@ class PostLikeUseCase @Inject constructor(
             return@flow
         }
 
-        // track like action
+        // track like event
+        trackEvent(request, post, source)
+
+        handleLocalDb(post, request)
+    }
+
+    private fun trackEvent(
+        request: PostLikeRequest,
+        post: ReaderPost,
+        source: String
+    ) {
         if (request.isAskingToLike) {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_LIKED, post)
+            val likedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
+            } else {
+                AnalyticsTracker.Stat.READER_ARTICLE_LIKED
+            }
+            readerTracker.trackPost(likedStat, post, source)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
             readerPostActionsWrapper.bumpPageViewForPost(post)
         } else {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_UNLIKED, post)
+            val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
+            } else {
+                AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
+            }
+            readerTracker.trackPost(unLikedStat, post, source)
         }
-
-        handleLocalDb(post, request)
     }
 
     private suspend fun FlowCollector<PostLikeState>.handleLocalDb(

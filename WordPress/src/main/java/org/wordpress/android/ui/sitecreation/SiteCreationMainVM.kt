@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
@@ -28,12 +28,14 @@ import javax.inject.Inject
 
 const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
 const val KEY_CURRENT_STEP = "key_current_step"
+const val KEY_SITE_CREATION_COMPLETED = "key_site_creation_completed"
 const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val segmentId: Long? = null,
+    val siteDesign: String? = null,
     val domain: String? = null
 ) : WizardState, Parcelable
 
@@ -75,6 +77,7 @@ class SiteCreationMainVM @Inject constructor(
             tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
         } else {
+            siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
             siteCreationState = requireNotNull(savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
@@ -87,12 +90,13 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun writeToBundle(outState: Bundle) {
+        outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
-    fun onSegmentSelected(segmentId: Long) {
-        siteCreationState = siteCreationState.copy(segmentId = segmentId)
+    fun onSiteDesignSelected(siteDesign: String) {
+        siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
     }
 
@@ -117,10 +121,10 @@ class SiteCreationMainVM @Inject constructor(
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SEGMENTS -> siteCreationState.segmentId?.let {
-                siteCreationState = siteCreationState.copy(segmentId = null) }
+            SEGMENTS -> { }
             DOMAINS -> siteCreationState.domain?.let {
-                siteCreationState = siteCreationState.copy(domain = null) }
+                siteCreationState = siteCreationState.copy(domain = null)
+            }
             SITE_PREVIEW -> {} // intentionally left empty
         }
     }
@@ -140,7 +144,7 @@ class SiteCreationMainVM @Inject constructor(
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
             lastStep -> ScreenTitleEmpty
-            singleInBetweenStepDomains -> ScreenTitleGeneral(R.string.my_site_select_domains_page_title)
+            singleInBetweenStepDomains -> ScreenTitleGeneral(R.string.new_site_creation_domain_header_title)
             else -> ScreenTitleStepCount(
                     R.string.new_site_creation_screen_title_step_count,
                     stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title

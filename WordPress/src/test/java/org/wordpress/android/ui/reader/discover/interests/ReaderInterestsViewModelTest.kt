@@ -23,10 +23,10 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
-
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
@@ -35,17 +35,18 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 private const val CURRENT_LANGUAGE = "en"
+
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @ExperimentalCoroutinesApi
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
@@ -53,435 +54,555 @@ class ReaderInterestsViewModelTest {
     @Mock lateinit var parentViewModel: ReaderViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
-    @Mock lateinit var trackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository, trackerWrapper)
+        viewModel = ReaderInterestsViewModel(readerTagRepository, readerTracker)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `getUserTags invoked on start`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
+                // When
+                initViewModel()
 
-            // Then
-            verify(readerTagRepository, times(1)).getUserTags()
-        }
+                // Then
+                verify(readerTagRepository, times(1)).getUserTags()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `getInterests invoked if empty user tags received from repo`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
+                // When
+                initViewModel()
 
-            // Then
-            verify(readerTagRepository, times(1)).getInterests()
-        }
+                // Then
+                verify(readerTagRepository, times(1)).getInterests()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `close reader screen triggered if non empty user tags are received from repo`() =
-        testWithNonEmptyUserTags {
-            // When
-            initViewModel()
+    fun `discover close reader screen triggered if non empty user tags are received from repo`() =
+            testWithNonEmptyUserTags {
+                // When
+                initViewModel(EntryPoint.DISCOVER)
 
-            // Then
-            verify(parentViewModel, times(1)).onCloseReaderInterests()
-        }
+                // Then
+                verify(parentViewModel, times(1)).onCloseReaderInterests()
+            }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `settings does not close reader screen triggered if non empty user tags are received from repo`() =
+            testWithNonEmptyUserTags {
+                // When
+                initViewModel(EntryPoint.SETTINGS)
+
+                // Then
+                verify(parentViewModel, times(0)).onCloseReaderInterests()
+            }
+
     @Test
     fun `progress bar shown on start hides on successful interests data load`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // Pause dispatcher so we can verify progress bar initial state
-            coroutineScope.pauseDispatcher()
+                // Pause dispatcher so we can verify progress bar initial state
+                coroutineScope.pauseDispatcher()
 
-            // Trigger data load
-            initViewModel()
+                // Trigger data load
+                initViewModel()
 
-            assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
+                assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(true)
 
-            // Resume pending coroutines execution
-            coroutineScope.resumeDispatcher()
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
 
-            assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
-        }
+                assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `title hidden on start become visible on successful interests data load`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // Pause dispatcher so we can verify title initial state
-            coroutineScope.pauseDispatcher()
+                // Pause dispatcher so we can verify title initial state
+                coroutineScope.pauseDispatcher()
 
-            // Trigger data load
-            initViewModel()
+                // Trigger data load
+                initViewModel()
 
-            assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(false)
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(false)
 
-            // Resume pending coroutines execution
-            coroutineScope.resumeDispatcher()
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
 
-            assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
-        }
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `subtitle hidden on start become visible on successful interests data load`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+    fun `interests correctly shown on successful interests data load without excluded interests`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // Pause dispatcher so we can verify subtitle initial state
-            coroutineScope.pauseDispatcher()
+                // When
+                initViewModel()
 
-            // Trigger data load
-            initViewModel()
+                // Then
+                assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                        .isEqualTo(interests)
 
-            assertThat(requireNotNull(viewModel.uiState.value).subtitleVisible).isEqualTo(false)
+                val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+                assertThat(uiState.interests).isEqualTo(interests)
+                assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
+                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
+            }
 
-            // Resume pending coroutines execution
-            coroutineScope.resumeDispatcher()
-
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
-        }
-
-    @ExperimentalCoroutinesApi
     @Test
-    fun `interests correctly shown on successful interests data load`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+    fun `interests correctly shown on successful interests data load with excluded interests`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                val excludedInterests = getExcludedInterests()
+                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(excludedInterests))
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
+                // When
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
 
-            // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
-            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
-                .isEqualTo(mockInterests)
+                // Then
+                interests.removeAll(excludedInterests)
+                assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                        .isEqualTo(interests)
 
-            val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
-            assertThat(uiState.interests).isEqualTo(mockInterests)
-            assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
-            assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
-        }
+                val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+                assertThat(uiState.interests).isEqualTo(interests)
+                assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
+                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `done button hidden on start switches to disabled state when interests tags received from repo`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+    fun `discover title shown on start when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // Pause dispatcher so we can verify done button initial state
-            coroutineScope.pauseDispatcher()
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
 
-            // Trigger data load
-            initViewModel()
+                // Trigger data load
+                initViewModel(EntryPoint.DISCOVER)
 
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                .isInstanceOf(DoneButtonHiddenUiState::class.java)
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
 
-            // Resume pending coroutines execution
-            coroutineScope.resumeDispatcher()
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isTrue
+            }
 
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                .isInstanceOf(DoneButtonDisabledUiState::class.java)
-        }
+    @Test
+    fun `settings title hidden on start when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-    @ExperimentalCoroutinesApi
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(EntryPoint.SETTINGS)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isFalse
+            }
+
+    @Test
+    fun `discover done button hidden on start switches to disabled state when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(EntryPoint.DISCOVER)
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonHiddenUiState::class.java)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_select_few_interests)
+            }
+
+    @Test
+    fun `settings done button hidden on start switches to disabled state when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(EntryPoint.SETTINGS)
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonHiddenUiState::class.java)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_done)
+            }
+
     @Test
     fun `interest selected if onInterestAtIndexToggled invoked on a deselected interest`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            val selectedIndex = 0
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                val selectedIndex = 0
 
-            // When
-            initViewModel()
-            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
+                // When
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
 
-            // Then
-            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
-                .interestsUiState[selectedIndex].isChecked)
-                .isEqualTo(true)
-        }
+                // Then
+                assertThat(
+                        requireNotNull(viewModel.uiState.value as ContentUiState)
+                                .interestsUiState[selectedIndex].isChecked
+                )
+                        .isEqualTo(true)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `interest deselected if onInterestAtIndexToggled invoked on a selected interest`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            val selectedIndex = 0
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                val selectedIndex = 0
 
-            // When
-            initViewModel()
-            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
-            viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
+                // When
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
+                viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
 
-            // Then
-            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
-                .interestsUiState[selectedIndex].isChecked)
-                .isEqualTo(false)
-        }
+                // Then
+                assertThat(
+                        requireNotNull(viewModel.uiState.value as ContentUiState)
+                                .interestsUiState[selectedIndex].isChecked
+                )
+                        .isEqualTo(false)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
-            viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
+                // When
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
 
-            // Then
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                .isInstanceOf(DoneButtonEnabledUiState::class.java)
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_done)
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
-                .isEqualTo(true)
-        }
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonEnabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_done)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
+                        .isEqualTo(true)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `done button shown in disabled state if no interests are in selected state`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+    fun `discover done button shown in disabled state if no interests are in selected state`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
+                // When
+                initViewModel(EntryPoint.DISCOVER)
 
-            // Then
-            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                .isInstanceOf(DoneButtonDisabledUiState::class.java)
-        }
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_select_few_interests)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `close reader interests screen triggered when interests are saved successfully`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+    fun `settings done button shown in disabled state if no interests are in selected state`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
-            // When
-            initViewModel()
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel(EntryPoint.SETTINGS)
 
-            // Then
-            verify(parentViewModel, times(1)).onCloseReaderInterests()
-        }
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_done)
+            }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `discover close reader interests screen triggered when interests are saved successfully`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+
+                // When
+                initViewModel(EntryPoint.DISCOVER)
+                viewModel.onDoneButtonClick()
+
+                // Then
+                verify(parentViewModel, times(1)).onCloseReaderInterests()
+            }
+
+    @Test
+    fun `settings close reader interests screen triggered when interests are saved successfully`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+
+                // When
+                initViewModel(EntryPoint.SETTINGS)
+                viewModel.onDoneButtonClick()
+
+                // Then
+                assertThat(viewModel.closeReaderInterests.value).isNotNull
+            }
+
     @Test
     fun `selected interests saved on done button click`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            val selectInterestAtIndex = 2
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                val selectInterestAtIndex = 2
 
-            // When
-            initViewModel()
-            viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+                viewModel.onDoneButtonClick()
 
-            // Then
-            verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
-        }
+                // Then
+                verify(readerTagRepository, times(1)).saveInterests(eq(listOf(interests[selectInterestAtIndex])))
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get interests triggered on retry`() =
-        testWithEmptyUserTags {
-            // When
-            viewModel.onRetryButtonClick()
+            testWithEmptyUserTags {
+                // When
+                viewModel.onRetryButtonClick()
 
-            // Then
-            verify(readerTagRepository, times(1)).getInterests()
-        }
+                // Then
+                verify(readerTagRepository, times(1)).getInterests()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get user tags re-triggered on retry if user tags request had failed earlier`() =
-        testWithFailedUserTags {
-            // When
-            initViewModel()
-            viewModel.onRetryButtonClick()
+            testWithFailedUserTags {
+                // When
+                initViewModel()
+                viewModel.onRetryButtonClick()
 
-            // Then
-            verify(readerTagRepository, times(2)).getUserTags()
-        }
+                // Then
+                verify(readerTagRepository, times(2)).getUserTags()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get user tags not re-triggered on retry if user tags request had not failed earlier`() =
-        testWithEmptyUserTags {
-            // When
-            initViewModel()
-            viewModel.onRetryButtonClick()
+            testWithEmptyUserTags {
+                // When
+                initViewModel()
+                viewModel.onRetryButtonClick()
 
-            // Then
-            verify(readerTagRepository, times(1)).getUserTags()
-        }
+                // Then
+                verify(readerTagRepository, times(1)).getUserTags()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `error layout is shown on interests load error`() =
-        testWithEmptyUserTags {
-            // Given
-            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+            testWithEmptyUserTags {
+                // Given
+                whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
 
-            // When
-            initViewModel()
+                // When
+                initViewModel()
 
-            // Then
-            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
-            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
-        }
+                // Then
+                val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+                assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `network error shown when internet access not available on interests load`() =
-        testWithEmptyUserTags {
-            // Given
-            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+            testWithEmptyUserTags {
+                // Given
+                whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
 
-            // When
-            initViewModel()
+                // When
+                initViewModel()
 
-            // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
-            val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
-            assertThat(errorUiState.titleResId).isEqualTo(R.string.no_network_message)
-        }
+                // Then
+                assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
+                val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+                assertThat(errorUiState.titleRes).isEqualTo(R.string.no_network_message)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `request failed error shown on load interests remote request failure`() =
-        testWithEmptyUserTags {
-            // Given
-            whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
+            testWithEmptyUserTags {
+                // Given
+                whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
 
-            // When
-            initViewModel()
+                // When
+                initViewModel()
 
-            // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
-            val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
-            assertThat(errorUiState.titleResId).isEqualTo(R.string.reader_error_request_failed_title)
-        }
+                // Then
+                assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
+                val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
+                assertThat(errorUiState.titleRes).isEqualTo(R.string.reader_error_request_failed_title)
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `snackbar is shown on save interests error`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
-            // When
-            initViewModel()
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel()
+                viewModel.onDoneButtonClick()
 
-            // Then
-            assertThat(viewModel.snackbarEvents.value).isNotNull
-        }
+                // Then
+                assertThat(viewModel.snackbarEvents.value).isNotNull
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `snackbar is not shown when interests are saved successfully`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
-            // When
-            initViewModel()
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel()
+                viewModel.onDoneButtonClick()
 
-            // Then
-            assertThat(viewModel.snackbarEvents.value).isNull()
-        }
+                // Then
+                assertThat(viewModel.snackbarEvents.value).isNull()
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `network error shown when internet access not available on save interests`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
-            // When
-            initViewModel()
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel()
+                viewModel.onDoneButtonClick()
 
-            // Then
-            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                    .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
-        }
+                // Then
+                assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+            }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `request failed error shown on save interests remote request failure`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-            whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
 
-            // When
-            initViewModel()
-            viewModel.onDoneButtonClick()
+                // When
+                initViewModel()
+                viewModel.onDoneButtonClick()
 
-            // Then
-            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
-        }
+                // Then
+                assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+            }
 
-    private fun initViewModel() = viewModel.start(
-        parentViewModel = parentViewModel,
-        currentLanguage = CURRENT_LANGUAGE
+    @Test
+    fun `discover close reader screen on back button click`() {
+        // When
+        initViewModel(EntryPoint.DISCOVER)
+
+        viewModel.onBackButtonClick()
+
+        // Then
+        verify(parentViewModel, times(1)).onCloseReaderInterests()
+    }
+
+    @Test
+    fun `settings close reader screen on back button click`() {
+        // When
+        initViewModel(EntryPoint.SETTINGS)
+
+        viewModel.onBackButtonClick()
+
+        // Then
+        assertThat(viewModel.closeReaderInterests.value).isNotNull
+    }
+
+    private fun initViewModel(
+        entryPoint: EntryPoint = EntryPoint.DISCOVER
+    ) = viewModel.start(
+            entryPoint = entryPoint,
+            currentLanguage = CURRENT_LANGUAGE,
+            parentViewModel = parentViewModel
     )
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
@@ -489,7 +610,6 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
@@ -497,7 +617,6 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             val nonEmptyUserTags = ReaderTagList().apply {
@@ -509,15 +628,27 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    private fun getMockInterests() =
-        ReaderTagList().apply {
-            for (c in 'A'..'Z')
-                (add(
-                    ReaderTag(
-                        c.toString(), c.toString(), c.toString(),
-                        "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
-                        ReaderTagType.DEFAULT
-                    )
-                ))
-        }
+    private fun getInterests() =
+            ReaderTagList().apply {
+                for (c in 'A'..'Z')
+                    (add(
+                            ReaderTag(
+                                    c.toString(), c.toString(), c.toString(),
+                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                                    ReaderTagType.DEFAULT
+                            )
+                    ))
+            }
+
+    private fun getExcludedInterests() =
+            ReaderTagList().apply {
+                for (c in 'A'..'C')
+                    (add(
+                            ReaderTag(
+                                    c.toString(), c.toString(), c.toString(),
+                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                                    ReaderTagType.DEFAULT
+                            )
+                    ))
+            }
 }

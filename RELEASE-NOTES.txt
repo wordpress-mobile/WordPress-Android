@@ -1,6 +1,216 @@
+*** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
+
+18.2
+-----
+* [*] When you like a post from the reader post details, your avatar is gracefully added to the list of people who liked that post through an animation [https://github.com/wordpress-mobile/WordPress-Android/pull/15248]
+
+18.1
+-----
+* [**] Added a time selection feature to Blogging Reminders: users can now choose at what time they will receive the reminders [#15128]
+* [**] Block editor: Embed block: Add "Resize for smaller devices" setting. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3753]
+* [***] Weekly Roundup: users will receive a weekly notification that presents a summary of the activity on their most used sites [#15195]
+
+18.0
+-----
+* [*] Need a little help after login? We're here for you. We've made a few changes to the login flow that will make it easier for you to start managing your site or create a new one.
+* [*] Fixed the error flow for fetching post formats that was causing a crash [https://github.com/wordpress-mobile/WordPress-Android/issues/15071]
+* [*] Unified Comments: as part of the comments experience unification effort filtered comment was replaced with a new version [https://github.com/wordpress-mobile/WordPress-Android/pull/15107/]
+* [*] Enables Support for Global Style Colors with Full Site Editing Themes [https://github.com/wordpress-mobile/WordPress-Android/pull/15002]
+* [***] Adjusted the image size of Theme Images for more optimal download speeds. [https://github.com/wordpress-mobile/WordPress-Android/pull/15060]
+* [*] Block editor: Fix UBE's inaccessible "more" toolbar item. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3771]
+
+17.9
+-----
+* [***] Block editor: New Block: Embed block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3727]
+* [*] Added webp image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/15068]
+
+17.8
+-----
+* [*] Fixed a bug where the web version of the editor did not load when using an account created before December 2018. [#14762]
+* [*] Block editor: Update loading and failed screens for web version of the editor [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3573]
+* [**] Block editor: Added color/background customization for text blocks. [https://github.com/WordPress/gutenberg/pull/33250]
+
+17.7
+-----
+* [*] Block editor: Tablet view fixes for inserter button. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3602]
+* [**] Block editor: Fixed an issue where pressing enter inside a text-based block was not creating a new block when using Gboard [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3590]
+* [*] Block editor: Tweaks to the badge component's styling, including change of background color and reduced padding. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3642]
+* [***] Block editor: New block Layout grid. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3513]
+* [***] Added blogging reminders to site settings and after a new post has been created
+* [*] Fixed Reader duplicate post issue [https://github.com/wordpress-mobile/WordPress-Android/issues/12938]
+
+17.6
+-----
+* [*] Disables the ability to open the editor for Post Pages [#14523]
+* [*] Block Editor: "Set as featured" button within image block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3116]
+* [***] Block Editor: Audio block now available on WP.com sites on the free plan. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3523]
+* [*] Block Editor: Improve unsupported block message for reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3621]
+* [**] Block Editor: Fix incorrect block insertion point after blurring the post title field. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3640]
+
+17.5
+-----
+* [**] Block Editor: Audio block: Add Insert from URL functionality. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3031]
+* [***] Block Editor: Slash command to insert new blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3250]
+* [***] Block Editor: New Block: Reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3490]
+* [***] Block Editor: Add reusable blocks to the block inserter menu. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3054]
+
+17.3.2
+-----
+* [***] Me Screen: Fixed an issue with the Change Photo flow that was causing a crash. [https://github.com/wordpress-mobile/WordPress-Android/pull/14701]
+
+17.4
+-----
+* [*] Stories: Improved reliability of retrying slides that failed to upload. [https://github.com/wordpress-mobile/WordPress-Android/pull/14579]
+* [*] Stories: Adding story block from block editor now opens media picker first. [https://github.com/wordpress-mobile/WordPress-Android/pull/14588]
+* [*] Stories: Fixed story preview rendering in the Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/14656]
+
+17.3
+-----
+* [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
+* [***]  Block Editor: New Block: Search Block [#https://github.com/wordpress-mobile/gutenberg-mobile/pull/3210]
+* [**]  Block Editor: The media upload options of the Image, Video and Gallery block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2700]
+* [*] Block Editor: Image block: Add a "featured" banner [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3371]
+* [**]  Block Editor: The media upload options of the File and Audio block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3399]
+* [*]  Block Editor: Remove visual feedback from non-interactive bottom-sheet cell sections [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3404]
+* [**] Likes Enhancements: the full list of people who liked a post or comment is now shown in notifications and reader post detail. A user profile bottom sheet shows info about a liker. [https://github.com/wordpress-mobile/WordPress-Android/pull/14563]
+
+
+17.2
+-----
+* [**] Added transform block capability [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3321]
+* [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
+* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
+* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
+* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
+* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
+
+17.1
+-----
+* [**] Comments: added an Unreplied comments filter [https://github.com/wordpress-mobile/WordPress-Android/pull/14373]
+* [***] Block Editor: Improved the accessibility of range and step-type block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3255]
+* [**] Updated the app icon to match the new color scheme within the app. [#14391]
+* [**] Colors: Replaced pink with blue as the accent color of the app [https://github.com/wordpress-mobile/WordPress-Android/pull/14376]
+* [*] Colors: Updated color palette to 2.5.0 [https://github.com/wordpress-mobile/WordPress-Android/pull/14370]
+* [*] Colors: Replaced wordpress_blue with blue color [https://github.com/wordpress-mobile/WordPress-Android/pull/14369]
+
+17.0
+-----
+* [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
+* [*] [Block Editor] Remove the cancel button from settings options [https://github.com/WordPress/gutenberg/pull/29599]
+* [**] Stories: enabled pinch to zoom on your slides background images! [https://github.com/wordpress-mobile/WordPress-Android/pull/14284]
+
+16.9
+-----
+* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
+* [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
+* [**] The classic editor will no longer be available for new posts soon, but this won’t affect editing any existing posts or pages. Users should consider switching over to the Block Editor now. [#14205]
+* [**] My Site: Quick Start was completely redesigned and is now always shown after creating a site [https://github.com/wordpress-mobile/WordPress-Android/pull/14122]
+
+16.8.1
+------
+* [**] Block Editor: Reduce the number of items per page when fetching reusable blocks to prevent a crash. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3227]
+
+16.8
+-----
+* [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
+* [**] Block Editor: Add support for setting Cover block focal point. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3028]
+* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
+* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
+* [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
+
+16.7
+-----
+* [*] Adds tablet mode in site and post/page previews [https://github.com/wordpress-mobile/WordPress-Android/pull/13787]
+* [*] Reader: show post menu for posts in Blog Preview and Search results [https://github.com/wordpress-mobile/WordPress-Android/pull/13897]
+* [**] Site Creation: Enables dot blog subdomains for each site design. [https://github.com/wordpress-mobile/WordPress-Android/pull/13917]
+* [***] Block Editor: New Block: Audio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2854, https://github.com/wordpress-mobile/gutenberg-mobile/pull/3070]
+* [**] Block Editor: Add support for setting heading anchors [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2947]
+* [**] Block Editor: Disable Unsupported Block Editor for Reusable blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3067]
+* [**] Block Editor: Add proper handling for single use blocks such as the more block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3042]
+* [***] Jetpack: Jetpack site owners, you can now run scans, fix threats, restore your site and download backup files directly from within the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/13267]
+* [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet [https://github.com/wordpress-mobile/WordPress-Android/pull/13625]
+* [**] Reader: added functionality for marking reader posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13901]
+* [**] Block Editor: Make inserter long-press options "add to beginning" and "add to end" always available. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3074]
+* [*] Block Editor: Fix crash when Column block width attribute was empty. [https://github.com/WordPress/gutenberg/pull/29015]
+
+16.6
+-----
+* [**] Reader: adds site filter capability to Followed P2s tab page. Now the sites listed in the filters are only those relevant to the page (Following/Followed P2s) [https://github.com/wordpress-mobile/WordPress-Android/pull/13766]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
+* [*] Quick Start: Removed the browse theme step and added guidance for reviewing pages and editing your Homepage. [#13855]
+
+16.5
+-----
+* [***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
+* [***] Block Editor: Full-width and wide alignment support for Columns (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2919)
+* [**] Block Editor: Image block - Add link picker to the block settings and enhance link settings with auto-hide options (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2841)
+* [*] Block Editor: Fix button link setting, rel link will not be overwritten if modified by the user (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2894)
+* [**] Block Editor: Added move to top/bottom when long pressing on respective block movers (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2872)
+* [***] Activity Log: Adds support for Date Range and Activity Type filters. [https://github.com/wordpress-mobile/WordPress-Android/issues/13268]
+* [**] Page List: Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
+* [**] Block Editor: Fix crash in text-based blocks with custom font size [https://github.com/WordPress/gutenberg/pull/28121]
+
+16.4
+-----
+* [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
+* [**] Posts List: Adds duplicate post functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13521]
+* [*] Block Editor: Fix Gallery block uploads when the editor is closed [https://github.com/wordpress-mobile/WordPress-Android/pull/13570]
+* [*] Block Editor: Remove popup informing user that they will be using the block editor by default [https://github.com/wordpress-mobile/WordPress-Android/pull/13593]
+* [**] Block Editor: Fixed an issue where a block would disappear when deleting all of the text inside without requiring the extra backspace to remove the block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2877]
+* [***] Block Editor: New Block: File [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2835]
+
+
+16.3
+-----
+* [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
+* [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
+* [**] Block Editor: Button block - Add link picker to the block settings [https://github.com/WordPress/gutenberg/pull/26206]
+* [***] Block Editor: Adding support for selecting different unit of value in Cover and Columns blocks [https://github.com/WordPress/gutenberg/pull/26161]
+* [*] Block Editor: Fix theme colors syncing with the editor [https://github.com/WordPress/gutenberg/pull/26821]
+* [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
+* [**] Reader: introduced a Follow/Unfollow button in comments screen to follow a post conversation and get notified by e-mail. Not supported for self-hosted sites not Jetpack connected. [https://github.com/wordpress-mobile/WordPress-Android/pull/13473]
+
+16.2
+-----
+* [***] Block Editor: Faster editor start and overall operation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2780]
+* [*] Block Editor: Enable multiple upload support for Image block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2530]
+* [*] Posts List: fixed bug that prevented showing the Featured Image of a post for pure self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/13323]
+* [**] Media picker: New media picker is now used in all the places where the user selects any kind of file (featured image, site icon, gravatar, in posts or media library) except stories [https://github.com/wordpress-mobile/WordPress-Android/pull/13368]
+* [*] Reader: Fixes an infinite loading indicator on Discover tab in Reader.
+* [*] My Site: Hide Activity Log, Themes and Plans for P2 sites.
+
+16.1
+-----
+* [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.
+
+16.0
+-----
+* [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
+* [***] Block Editor: Full-width and wide alignment support for Video, Latest-posts, Gallery, Media & text, and Pullquote block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2605]
+* [***] Block Editor: Fix unsupported block bottom sheet is triggered when device is rotated. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2710]
+* [***] Block Editor: Unsupported Block Editor: Fixed issue when cannot view or interact with the classic block on Jetpack site. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2709]
+* [**] Reader: Allow users to access Reader even when they do not follow any tags/topics.
+* [***] Reader: The new redesigned Reader detail shows your post as beautiful as ever. And if you add a featured image it would be twice as beautiful! [https://github.com/wordpress-mobile/WordPress-Android/pull/13151]
+
+15.9.2
+-----
+* [*] Block Editor: Fix for a crash that can occur when activity is null during capabilities update[https://github.com/wordpress-mobile/WordPress-Android/issues/13248]
+
 15.9
 -----
 * [*] Block Editor: Add message that mentions are unavailable when device is offline. [https://github.com/wordpress-mobile/WordPress-Android/pull/12968]
+* [**] Block Editor: Increase tap-target of primary action on unsupported blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2608]
+* [***] Block Editor: On Jetpack connected sites, Unsupported Block Editor can be enabled via enabling Jetpack SSO setting directly from within the missing block alert. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2610]
+* [***] Block Editor: Add support for selecting user's post when configuring the link [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2484]
+* [**] Block Editor: Fix for a crash that can occur when long pressing selected images [https://github.com/wordpress-mobile/AztecEditor-Android/pull/924]
+* [***] Block Editor: Added expected double tap for focus behavior for text fields in accessibility mode [https://github.com/WordPress/gutenberg/pull/25384]
+* [*] Improved My Site layout on devices with big screens. [https://github.com/wordpress-mobile/WordPress-Android/pull/13026]
+* [***] Block Editor: Unsupported Block Editor: Fixed issue when cannot view or interact with the classic block on Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/issues/2695]
+
+15.8.1
+-----
+* [***] Login: Fixed an issue where some users would be prevented to login with a Jetpack site address.
 
 15.8
 -----
@@ -8,8 +218,8 @@
 * [***] Block Editor: Full-width and wide alignment support for Group, Cover and Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2559]
 * [**] Block Editor: Add support for rounded style in Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2591]
 * [**] Improved AppBar and Site Picker design.
-* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573] 
- 
+* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573]
+
 15.7
 -----
 * [**] Block Editor: New block: Pullquote

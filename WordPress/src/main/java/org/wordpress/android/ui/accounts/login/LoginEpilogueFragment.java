@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -15,9 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
@@ -25,11 +28,16 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
+import org.wordpress.android.ui.main.SitePickerAdapter.OnSiteClickListener;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
@@ -43,8 +51,10 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
+    private static final int EXPANDED_UI_THRESHOLD = 3;
+
     private RecyclerView mSitesList;
-    private View mBottomShadow;
+    @Nullable private View mBottomShadow;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
@@ -55,6 +65,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
+
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -89,25 +102,51 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+        return (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
+    }
+
+    @LayoutRes
+    private int loginEpilogueScreenResource() {
+        if (isNewLoginEpilogueScreenEnabled()) {
+            if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                return R.layout.login_epilogue_screen_new;
+            } else {
+                return R.layout.login_epilogue_screen_new_expanded;
+            }
+        } else {
+            return R.layout.login_epilogue_screen;
+        }
+    }
+
+    private boolean isNewLoginEpilogueScreenEnabled() {
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     @Override
     protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
         mSitesList = rootView.findViewById(R.id.recycler_view);
-        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSitesList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mSitesList.setItemAnimator(null);
-        mSitesList.setAdapter(getAdapter());
+        mSitesList.setAdapter(mAdapter);
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        primaryButton.setOnClickListener(v -> {
-            mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
-                mLoginEpilogueListener.onContinue();
+                if (isNewLoginEpilogueScreenEnabled()) {
+                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED);
+                    mUnifiedLoginTracker.trackClick(Click.CREATE_NEW_SITE);
+                    mLoginEpilogueListener.onCreateNewSite();
+                } else {
+                    mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+                    mLoginEpilogueListener.onContinue();
+                }
             }
         });
     }
@@ -115,11 +154,13 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
-        mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
-        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
-        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+        mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
+        mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
+        mOldSitesIds = requireArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+
+        initAdapter();
     }
 
     @Override
@@ -132,62 +173,118 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    private void initAdapter() {
         if (mAdapter == null) {
             setNewAdapter();
         }
-        return mAdapter;
     }
 
     private void setNewAdapter() {
         mAdapter = new SitePickerAdapter(
-                getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
-                new SitePickerAdapter.OnDataLoadedListener() {
-                    @Override
-                    public void onBeforeLoad(boolean isEmpty) {
+                requireActivity(),
+                R.layout.login_epilogue_sites_listitem,
+                0,
+                "",
+                false,
+                dataLoadedListener(),
+                headerHandler(),
+                footerHandler(),
+                mOldSitesIds,
+                SitePickerMode.DEFAULT_MODE,
+                mShowAndReturn
+        );
+        setOnSiteClickListener();
+    }
+
+    @NonNull
+    private OnDataLoadedListener dataLoadedListener() {
+        return new OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {
+            }
+
+            @Override
+            public void onAfterLoad() {
+                mSitesList.post(() -> {
+                    if (!isAdded()) {
+                        return;
                     }
 
-                    @Override
-                    public void onAfterLoad() {
-                        mSitesList.post(() -> {
-                            if (!isAdded()) {
-                                return;
-                            }
+                    if (mBottomShadow != null) {
+                        if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                            mBottomShadow.setVisibility(View.VISIBLE);
+                        } else {
+                            mBottomShadow.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        };
+    }
 
-                            if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                                mBottomShadow.setVisibility(View.VISIBLE);
-                            } else {
-                                mBottomShadow.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-                },
-                new SitePickerAdapter.ViewHolderHandler<LoginHeaderViewHolder>() {
-                    @Override
-                    public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                                    boolean attachToRoot) {
-                        return new LoginHeaderViewHolder(
-                                layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
-                    }
+    @NonNull
+    private ViewHolderHandler<LoginHeaderViewHolder> headerHandler() {
+        return new ViewHolderHandler<LoginHeaderViewHolder>() {
+            @Override
+            public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                            boolean attachToRoot) {
+                if (isNewLoginEpilogueScreenEnabled()) {
+                    return new LoginHeaderViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
+                            true
+                    );
+                } else {
+                    return new LoginHeaderViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_header, parent, false),
+                            false
+                    );
+                }
+            }
 
-                    @Override
-                    public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
-                        bindHeaderViewHolder(holder, sites);
-                    }
-                },
-                new ViewHolderHandler<LoginFooterViewHolder>() {
-                    @Override
-                    public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                                    boolean attachToRoot) {
-                        return new LoginFooterViewHolder(
-                                layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
-                    }
+            @Override
+            public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
+                bindHeaderViewHolder(holder, sites);
+            }
+        };
+    }
 
-                    @Override
-                    public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-                        bindFooterViewHolder(holder, sites);
-                    }
-                }, mOldSitesIds, SitePickerMode.DEFAULT_MODE);
+    @Nullable
+    private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
+        if (isNewLoginEpilogueScreenEnabled()) {
+            return null;
+        } else {
+            return new ViewHolderHandler<LoginFooterViewHolder>() {
+                @Override
+                public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                                boolean attachToRoot) {
+                    return new LoginFooterViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
+                }
+
+                @Override
+                public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+                    bindFooterViewHolder(holder, sites);
+                }
+            };
+        }
+    }
+
+    private void setOnSiteClickListener() {
+        if (isNewLoginEpilogueScreenEnabled()) {
+            mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
+                @Override
+                public void onSiteClick(SiteRecord site) {
+                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED);
+                    mUnifiedLoginTracker.trackClick(Click.CHOOSE_SITE);
+                    mLoginEpilogueListener.onSiteClick(site.getLocalId());
+                }
+
+                @Override
+                public boolean onSiteLongClick(SiteRecord site) {
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -210,6 +307,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
+    @Override
+    protected boolean isJetpackAppLogin() {
+        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
+    }
+
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
@@ -227,16 +329,24 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
 
         if (hasSites) {
-            holder.showSitesHeading(StringUtils.getQuantityString(
-                    getActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
-                    R.string.login_epilogue_mysites_other, sites.size()));
+            if (isNewLoginEpilogueScreenEnabled()) {
+                holder.showSitesHeading();
+            } else {
+                holder.showSitesHeading(StringUtils.getQuantityString(
+                        requireActivity(),
+                        R.string.login_epilogue_mysites_one,
+                        R.string.login_epilogue_mysites_one,
+                        R.string.login_epilogue_mysites_other,
+                        sites.size())
+                );
+            }
         } else {
             holder.hideSitesHeading();
         }
     }
 
     private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-        holder.itemView.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK_APP) ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
                 mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);

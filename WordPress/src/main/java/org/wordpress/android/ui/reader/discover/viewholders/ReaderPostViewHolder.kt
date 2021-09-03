@@ -5,18 +5,17 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
-import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_CARD_TAPPED
+import org.wordpress.android.databinding.ReaderCardviewPostBinding
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -27,62 +26,59 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
 import org.wordpress.android.util.image.ImageType.VIDEO
+import org.wordpress.android.util.viewBinding
 
 class ReaderPostViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
+    private val readerTracker: ReaderTracker,
     parentView: ViewGroup
-) : ReaderViewHolder(parentView, R.layout.reader_cardview_post) {
-    val viewContext: Context = post_container.context
+) : ReaderViewHolder<ReaderCardviewPostBinding>(parentView.viewBinding(ReaderCardviewPostBinding::inflate)) {
+    val viewContext: Context = binding.postContainer.context
 
     init {
-        layout_discover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
-        image_more.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+        with(binding) {
+            layoutDiscover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
+            imageMore.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+        }
     }
 
-    override fun onBind(uiState: ReaderCardUiState) {
+    override fun onBind(uiState: ReaderCardUiState) = with(binding) {
         val state = uiState as ReaderPostUiState
 
         // Expandable tags section
-        uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
-        expandable_tags_view.updateUi(state.tagItems)
+        uiHelpers.updateVisibility(expandableTagsView, state.expandableTagsViewVisibility)
+        expandableTagsView.updateUi(state.tagItems)
 
-        // Header section
-        updateAvatarOrBlavatar(state)
-        uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogName)
-        uiHelpers.setTextOrHide(text_blog_url, state.blogUrl)
-        uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
-        uiHelpers.setTextOrHide(text_dateline, state.dateLine)
-        uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
-        layout_post_header.setBackgroundResource(
-                layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
-        )
-        uiState.postHeaderClickData?.onPostHeaderViewClicked?.let {
-            layout_post_header.setOnClickListener {
-                uiState.postHeaderClickData.onPostHeaderViewClicked.invoke(uiState.postId, uiState.blogId)
-            }
-        } ?: run {
-            layout_post_header.setOnClickListener(null)
-            layout_post_header.isClickable = false
-        }
+        // Blog section
+        updateBlogSection(state)
+
+        // More menu
+        uiHelpers.updateVisibility(imageMore, state.moreMenuVisibility)
+        imageMore.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
 
         // Featured image section
         updateFeaturedImage(state)
-        uiHelpers.updateVisibility(image_video_overlay, state.videoOverlayVisibility)
-        uiHelpers.setTextOrHide(text_photo_title, state.photoTitle)
-        uiHelpers.updateVisibility(thumbnail_strip, state.thumbnailStripSection != null)
+        uiHelpers.updateVisibility(imageVideoOverlay, state.videoOverlayVisibility)
+        uiHelpers.setTextOrHide(textPhotoTitle, state.photoTitle)
+        uiHelpers.updateVisibility(thumbnailStrip, state.thumbnailStripSection != null)
         state.thumbnailStripSection?.let {
-            thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
+            thumbnailStrip.loadThumbnails(it.images, it.isPrivate, it.content)
         }
         loadVideoThumbnail(state)
-        image_video_overlay.setOnClickListener { state.onVideoOverlayClicked(uiState.postId, uiState.blogId) }
+        imageVideoOverlay.setOnClickListener { state.onVideoOverlayClicked(uiState.postId, uiState.blogId) }
 
         // Content section
-        uiHelpers.setTextOrHide(text_title, state.title)
-        uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
-        post_container.setOnClickListener {
-            AnalyticsTracker.track(READER_POST_CARD_TAPPED)
+        uiHelpers.setTextOrHide(textTitle, state.title)
+        uiHelpers.setTextOrHide(textExcerpt, state.excerpt)
+        postContainer.setOnClickListener {
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+                    state.blogId,
+                    state.feedId,
+                    state.isFollowed,
+                    state.source
+            )
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
 
@@ -90,25 +86,47 @@ class ReaderPostViewHolder(
         updateDiscoverSection(state)
 
         // Action buttons section
-        updateActionButton(uiState.postId, uiState.blogId, uiState.likeAction, count_likes)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.likeAction, countLikes)
         updateActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
-        updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, countComments)
         updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
 
         state.moreMenuItems?.let {
-            renderMoreMenu(state, state.moreMenuItems, image_more)
+            renderMoreMenu(state, state.moreMenuItems, imageMore)
         }
 
         state.onItemRendered.invoke(uiState)
     }
 
-    private fun updateFeaturedImage(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_featured, state.featuredImageVisibility)
+    private fun updateBlogSection(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
+        updateAvatarOrBlavatar(state)
+        uiHelpers.setTextOrHide(textAuthorAndBlogName, state.blogSection.blogName)
+        uiHelpers.setTextOrHide(textBlogUrl, state.blogSection.blogUrl)
+        uiHelpers.updateVisibility(dotSeparator, state.blogSection.dotSeparatorVisibility)
+        uiHelpers.setTextOrHide(textDateline, state.blogSection.dateLine)
+
+        root.setBackgroundResource(
+                root.context.getDrawableResIdFromAttribute(
+                        state.blogSection.blogSectionClickData?.background ?: 0
+                )
+        )
+        state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
+            root.setOnClickListener {
+                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
+            }
+        } ?: run {
+            root.setOnClickListener(null)
+            root.isClickable = false
+        }
+    }
+
+    private fun updateFeaturedImage(state: ReaderPostUiState) = with(binding) {
+        uiHelpers.updateVisibility(imageFeatured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
-            imageManager.cancelRequestAndClearImageView(image_featured)
+            imageManager.cancelRequestAndClearImageView(imageFeatured)
         } else {
             imageManager.loadImageWithCorners(
-                    image_featured,
+                    imageFeatured,
                     PHOTO_ROUNDED_CORNERS,
                     state.featuredImageUrl,
                     uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
@@ -116,33 +134,42 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun updateAvatarOrBlavatar(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_avatar_or_blavatar, state.avatarOrBlavatarUrl != null)
-        if (state.avatarOrBlavatarUrl == null) {
-            imageManager.cancelRequestAndClearImageView(image_avatar_or_blavatar)
+    private fun updateAvatarOrBlavatar(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
+        uiHelpers.updateVisibility(imageAvatarOrBlavatar, state.blogSection.avatarOrBlavatarUrl != null)
+        if (state.blogSection.avatarOrBlavatarUrl == null) {
+            imageManager.cancelRequestAndClearImageView(imageAvatarOrBlavatar)
         } else {
             imageManager.loadIntoCircle(
-                    image_avatar_or_blavatar,
-                    BLAVATAR_CIRCULAR, state.avatarOrBlavatarUrl
+                    imageAvatarOrBlavatar,
+                    state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
             )
+        }
+
+        val canShowAuthorsAvatar = state.blogSection.authorAvatarUrl != null && state.blogSection.isAuthorAvatarVisible
+        uiHelpers.updateVisibility(authorsAvatar, canShowAuthorsAvatar)
+
+        if (!canShowAuthorsAvatar) {
+            imageManager.cancelRequestAndClearImageView(authorsAvatar)
+        } else {
+            imageManager.loadIntoCircle(authorsAvatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl!!)
         }
     }
 
-    private fun updateDiscoverSection(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_discover_avatar, state.discoverSection?.discoverAvatarUrl != null)
-        uiHelpers.updateVisibility(layout_discover, state.discoverSection != null)
-        uiHelpers.setTextOrHide(text_discover, state.discoverSection?.discoverText)
+    private fun updateDiscoverSection(state: ReaderPostUiState) = with(binding) {
+        uiHelpers.updateVisibility(imageDiscoverAvatar, state.discoverSection?.discoverAvatarUrl != null)
+        uiHelpers.updateVisibility(layoutDiscover, state.discoverSection != null)
+        uiHelpers.setTextOrHide(textDiscover, state.discoverSection?.discoverText)
         if (state.discoverSection?.discoverAvatarUrl == null) {
-            imageManager.cancelRequestAndClearImageView(image_discover_avatar)
+            imageManager.cancelRequestAndClearImageView(imageDiscoverAvatar)
         } else {
             // TODO do we need to use `imagemanager.load` for blavatar?
             imageManager.loadIntoCircle(
-                    image_discover_avatar,
+                    imageDiscoverAvatar,
                     state.discoverSection.imageType,
                     state.discoverSection.discoverAvatarUrl
             )
         }
-        layout_discover.setOnClickListener {
+        layoutDiscover.setOnClickListener {
             state.discoverSection?.onDiscoverClicked?.invoke(state.postId, state.blogId)
         }
     }
@@ -157,14 +184,14 @@ class ReaderPostViewHolder(
         view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
     }
 
-    private fun loadVideoThumbnail(state: ReaderPostUiState) {
+    private fun loadVideoThumbnail(state: ReaderPostUiState) = with(binding) {
         /* TODO ideally, we'd be passing just a thumbnail url in the UiState. However, the code for retrieving
             thumbnail from full video URL needs to be fully refactored. */
         state.fullVideoUrl?.let { videoUrl ->
             ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
                 override fun showThumbnail(thumbnailUrl: String) {
                     imageManager.loadImageWithCorners(
-                            image_featured,
+                            imageFeatured,
                             PHOTO_ROUNDED_CORNERS,
                             thumbnailUrl,
                             uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
@@ -172,7 +199,7 @@ class ReaderPostViewHolder(
                 }
 
                 override fun showPlaceholder() {
-                    imageManager.load(image_featured, VIDEO)
+                    imageManager.load(imageFeatured, VIDEO)
                 }
 
                 override fun cacheThumbnailUrl(thumbnailUrl: String) {
@@ -182,8 +209,8 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
-        AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
+    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<ReaderPostCardAction>, v: View) {
+        readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
@@ -193,7 +220,7 @@ class ReaderPostViewHolder(
         listPopup.setOnItemClickListener { _, _, position, _ ->
             listPopup.dismiss()
             val item = actions[position]
-            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+            item.onClicked?.invoke(uiState.postId, uiState.blogId, item.type)
         }
         listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
         listPopup.show()

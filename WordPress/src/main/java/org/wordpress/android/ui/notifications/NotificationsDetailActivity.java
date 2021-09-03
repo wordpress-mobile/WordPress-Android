@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -41,6 +43,8 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
+import org.wordpress.android.ui.engagement.ListScenarioUtils;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -50,11 +54,15 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -80,6 +88,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject ReaderTracker mReaderTracker;
+    @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
+    @Inject ListScenarioUtils mListScenarioUtils;
 
     private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -88,6 +99,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
     private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
 
     @Override
     public void onBackPressed() {
@@ -109,8 +121,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         setContentView(R.layout.notifications_detail_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
 
         mAppBarLayout = findViewById(R.id.appbar_main);
 
@@ -143,6 +155,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        }
+        // track initial comment note view
+        if (savedInstanceState == null && note != null) {
+            trackCommentNote(note);
         }
     }
 
@@ -213,6 +229,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void onPageSelected(int position) {
+                    Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
+                    boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
+                    showHideToolbar(hideToolbar);
+
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     // change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
@@ -220,6 +240,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         setActionBarTitleForNote(currentNote);
                         markNoteAsRead(currentNote);
                         NotificationsActions.updateSeenTimestamp(currentNote);
+                        // track subsequent comment note views
+                        trackCommentNote(currentNote);
                     }
                 }
 
@@ -229,6 +251,26 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             };
         }
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
+
+    private void trackCommentNote(@NotNull Note note) {
+        if (note.isCommentType()) {
+            SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.NOTIFICATIONS, site);
+        }
+    }
+
+    public void showHideToolbar(boolean hide) {
+        if (getSupportActionBar() != null) {
+            if (hide) {
+                getSupportActionBar().hide();
+            } else {
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().show();
+            }
+            getSupportActionBar().setDisplayShowTitleEnabled(!hide);
+        }
     }
 
     @Override
@@ -372,18 +414,30 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                     note.getPostId()
             );
         } else {
-            fragment = NotificationsDetailListFragment.newInstance(note.getId());
+            if (mLikesEnhancementsFeatureConfig.isEnabled() && note.isLikeType()) {
+                fragment = EngagedPeopleListFragment.newInstance(
+                        mListScenarioUtils.mapLikeNoteToListScenario(note, this)
+                );
+            } else {
+                fragment = NotificationsDetailListFragment.newInstance(note.getId());
+            }
         }
 
         return fragment;
     }
 
-    public void showBlogPreviewActivity(long siteId) {
+    public void showBlogPreviewActivity(long siteId, @Nullable Boolean isFollowed) {
         if (isFinishing()) {
             return;
         }
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
+        ReaderActivityLauncher.showReaderBlogPreview(
+                this,
+                siteId,
+                isFollowed,
+                ReaderTracker.SOURCE_NOTIFICATION,
+                mReaderTracker
+        );
     }
 
     public void showPostActivity(long siteId, long postId) {
@@ -394,15 +448,36 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
+    public void showScanActivityForSite(long siteId) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            ActivityLauncher.viewScan(this, site);
+        }
+    }
+
     public void showStatsActivityForSite(long siteId, FormattableRangeType rangeType) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            showStatsActivityForSite(site, rangeType);
+        }
+    }
+
+    public void showBackupForSite(long siteId) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            showBackupActivityForSite(site);
+        }
+    }
+
+    @Nullable
+    private SiteModel getSiteOrToast(long siteId) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
         if (site == null) {
             // One way the site can be null: new site created, receive a notification from this site,
             // but the site list is not yet updated in the app.
             ToastUtils.showToast(this, R.string.blog_not_found);
-            return;
         }
-        showStatsActivityForSite(site, rangeType);
+        return site;
     }
 
     private void showStatsActivityForSite(@NonNull SiteModel site, FormattableRangeType rangeType) {
@@ -416,6 +491,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }
+    }
+
+    private void showBackupActivityForSite(@NonNull SiteModel site) {
+        if (isFinishing()) {
+            return;
+        }
+
+        ActivityLauncher.viewBackupList(this, site);
     }
 
     public void showWebViewActivityForUrl(String url) {

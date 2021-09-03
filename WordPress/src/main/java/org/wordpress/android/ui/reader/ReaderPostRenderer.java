@@ -8,7 +8,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderEmbedScanner;
@@ -19,7 +18,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
@@ -49,12 +47,10 @@ public class ReaderPostRenderer {
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
-    private FeaturedImageUtils mFeaturedImageUtils;
     private ReaderCssProvider mCssProvider;
 
     @SuppressLint("SetJavaScriptEnabled")
-    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, FeaturedImageUtils featuredImageUtils,
-                              ReaderCssProvider cssProvider) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -65,7 +61,6 @@ public class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
-        mFeaturedImageUtils = featuredImageUtils;
         mCssProvider = cssProvider;
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
@@ -256,27 +251,12 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * returns true if the post has a featured image and the featured image is not found in the post body
-     */
-    private boolean shouldAddFeaturedImage() {
-        return mPost.hasFeaturedImage()
-               && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())
-               && mFeaturedImageUtils.showFeaturedImage(mPost.getFeaturedImage(), mPost.getText());
-    }
-
-    /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
         String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
-
-        // add the featured image (if any)
-        if (shouldAddFeaturedImage()) {
-            AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
-            content = getFeaturedImageHtml() + content;
-        }
 
         // if this is a Discover post, add a link which shows the blog preview
         if (mPost.isDiscoverPost()) {
@@ -302,20 +282,6 @@ public class ReaderPostRenderer {
      */
     String getRenderedHtml() {
         return mRenderedHtml;
-    }
-
-    /*
-     * returns the HTML to use when inserting a featured image into the rendered content
-     */
-    private String getFeaturedImageHtml() {
-        String imageUrl = ReaderUtils.getResizedImageUrl(
-                mPost.getFeaturedImage(),
-                mResourceVars.mFullSizeImageWidthPx,
-                mResourceVars.mFeaturedImageHeightPx,
-                mPost.isPrivate,
-                mPost.isPrivateAtomic);
-
-        return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
     /*
@@ -396,9 +362,9 @@ public class ReaderPostRenderer {
               .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
               .append(" p:first-child { margin-top: 0px; }")
-              // add background color, fontsize and padding to pre blocks, and add overflow scrolling
-              // so user can scroll the block if it's wider than the display
-              .append(" pre { overflow-x: scroll;")
+              // add background color, fontsize and padding to pre blocks, and wrap the text
+              // so the user can see full block.
+              .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
               .append(" background-color: var(--color-neutral-20);")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
               .append(" line-height: 1.2em; font-size: 14px; }")
@@ -522,6 +488,10 @@ public class ReaderPostRenderer {
                 "(gallery-group) ([\\s\"'])",
                 "(tiled-gallery-item) ([\\s\"'])");
         String contentCustomised = content;
+
+        // removes background-color property from original content
+        contentCustomised = contentCustomised.replaceAll("\\s*(background-color)\\s*:\\s*.+?\\s*;\\s*", "");
+
         for (String classToAmend : classAmendRegexes) {
             contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
         }
@@ -545,6 +515,7 @@ public class ReaderPostRenderer {
           .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
           .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
           .append("} ");
     }
 

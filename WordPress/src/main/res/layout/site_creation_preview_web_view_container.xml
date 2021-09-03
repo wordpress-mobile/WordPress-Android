@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/webViewContainer"
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,10 +26,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
                 android:background="@drawable/bg_rectangle_neutral_0_radius_margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingBottom="@dimen/margin_medium">
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_medium">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/sitePreviewWebUrlTitle"
@@ -42,7 +43,7 @@
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <org.wordpress.android.ui.WPWebView
+        <org.wordpress.android.widgets.NestedWebView
             android:id="@+id/sitePreviewWebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

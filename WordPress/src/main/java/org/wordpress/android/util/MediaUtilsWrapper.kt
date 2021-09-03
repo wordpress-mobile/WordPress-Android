@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import javax.inject.Inject
 
 /**
@@ -35,8 +37,8 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isInMediaStore(mediaUri: Uri?): Boolean =
             MediaUtils.isInMediaStore(mediaUri)
 
-    fun copyFileToAppStorage(imageUri: Uri): Uri? =
-            MediaUtils.downloadExternalMedia(appContext, imageUri)
+    fun copyFileToAppStorage(imageUri: Uri, headers: Map<String, String>? = null): Uri? =
+            MediaUtils.downloadExternalMedia(appContext, imageUri, headers)
 
     fun shouldAdvertiseImageOptimization(): Boolean =
             WPMediaUtils.shouldAdvertiseImageOptimization(appContext)
@@ -49,4 +51,11 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
 
     fun getExtensionForMimeType(mimeType: String?): String = MediaUtils.getExtensionForMimeType(mimeType)
+
+    fun isFile(mediaUri: Uri): Boolean = MediaUtils.isFile(mediaUri)
+
+    fun getSitePlanForMimeTypes(site: SiteModel?): Plan = WPMediaUtils.getSitePlanForMimeTypes(site)
+
+    fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
+            WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 }

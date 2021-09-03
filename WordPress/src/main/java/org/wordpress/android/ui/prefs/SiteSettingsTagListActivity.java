@@ -140,7 +140,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
         mActionableEmptyView.button.setOnClickListener(view -> showDetailFragment(null));
 
-        mRecycler = findViewById(R.id.recycler);
+        mRecycler = findViewById(R.id.tags_recycler_view);
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setEmptyView(mActionableEmptyView);

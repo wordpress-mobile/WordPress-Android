@@ -3,29 +3,34 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.mlp.CategoryListItemUiState
-import org.wordpress.android.ui.mlp.ButtonsUiState
-import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
-import org.wordpress.android.ui.mlp.GutenbergPageLayouts
-import org.wordpress.android.ui.mlp.LayoutListItemUiState
-import org.wordpress.android.ui.mlp.LayoutCategoryUiState
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.layoutpicker.LayoutModel
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
+import org.wordpress.android.ui.layoutpicker.toLayoutCategories
+import org.wordpress.android.ui.layoutpicker.toLayoutModels
+import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
+import org.wordpress.android.ui.mlp.SupportedBlocksProvider
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,29 +40,45 @@ import javax.inject.Named
 class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) {
-    private lateinit var layouts: GutenbergPageLayouts
-
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val supportedBlocksProvider: SupportedBlocksProvider,
+    private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
+    override val networkUtils: NetworkUtilsWrapper,
+    private val analyticsTracker: ModalLayoutPickerTracker,
+    @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
+) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     /**
      * Tracks the Modal Layout Picker visibility state
      */
     private val _isModalLayoutPickerShowing = MutableLiveData<Event<Boolean>>()
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
-    private val _onCategorySelected = MutableLiveData<Event<Unit>>()
-    val onCategorySelected: LiveData<Event<Unit>> = _onCategorySelected
-
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
-    val uiState: LiveData<UiState> = _uiState
-
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
-    val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
+    val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
+
+    private val site: SiteModel by lazy {
+        requireNotNull(siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId()))
+    }
+
+    override val useCachedData: Boolean = true
+
+    override val selectedLayout: LayoutModel?
+        get() = (uiState.value as? Content)?.let { state ->
+            state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+        }
+
+    sealed class PageRequest(val template: String?) {
+        open class Create(template: String?, val title: String) : PageRequest(template)
+        object Blank : Create(null, "")
+        class Preview(template: String?, val content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
+                template
+        )
+    }
 
     init {
         dispatcher.register(this)
@@ -68,94 +89,62 @@ class ModalLayoutPickerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun init() {
-        fetchLayouts()
-    }
-
-    private fun fetchLayouts() {
-        updateUiState(LoadingUiState)
-        launch(bgDispatcher) {
-            val siteId = appPrefsWrapper.getSelectedSite()
-            val site = siteStore.getSiteByLocalId(siteId)
-            if (site.isWPCom) {
-                dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
-            } else {
-                handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
-            }
+    override fun fetchLayouts(preferCache: Boolean) {
+        if (!networkUtils.isNetworkAvailable()) {
+            setErrorState()
+            return
+        }
+        if (!preferCache) {
+            updateUiState(Loading)
+        }
+        launch {
+            val payload = FetchBlockLayoutsPayload(
+                    site,
+                    supportedBlocksProvider.fromAssets().supported,
+                    thumbDimensionProvider.previewWidth.toFloat(),
+                    thumbDimensionProvider.previewHeight.toFloat(),
+                    thumbDimensionProvider.scale.toFloat(),
+                    BuildConfig.DEBUG,
+                    preferCache
+            )
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            updateUiState(ErrorUiState(event.error.message))
+            setErrorState()
         } else {
-            handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
+            handleResponse(
+                    (event.layouts ?: listOf()).toLayoutModels(),
+                    (event.categories ?: listOf()).toLayoutCategories()
+            )
         }
     }
 
-    private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
-        layouts = response
-        loadCategories()
-    }
-
-    private fun loadLayouts() {
-        val state = uiState.value as? ContentUiState ?: ContentUiState()
-        launch(bgDispatcher) {
-            val listItems = ArrayList<LayoutCategoryUiState>()
-
-            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
-                layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
-            else layouts.categories
-
-            selectedCategories.sortedBy { it.title }.forEach { category ->
-
-                val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
-                    val selected = layout.slug == state.selectedLayoutSlug
-                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected,
-                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
-                            onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
-                    )
-                }
-                listItems.add(
-                        LayoutCategoryUiState(
-                                category.slug,
-                                category.title,
-                                category.description,
-                                layouts
-                        )
-                )
-            }
-            withContext(mainDispatcher) {
-                updateUiState(state.copy(layoutCategories = listItems))
-            }
-        }
-    }
-
-    private fun loadCategories() {
-        val state = uiState.value as? ContentUiState ?: ContentUiState()
-        launch(bgDispatcher) {
-            val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
-                CategoryListItemUiState(
-                        it.slug,
-                        it.title,
-                        it.emoji,
-                        state.selectedCategoriesSlugs.contains(it.slug)
-                ) { onCategoryTapped(it.slug) }
-            }
-            withContext(mainDispatcher) {
-                updateUiState(state.copy(categories = listItems))
-            }
-            loadLayouts()
+    private fun setErrorState() {
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(Error(string.mlp_error_title, string.mlp_error_subtitle))
+        } else {
+            updateUiState(Error(string.mlp_network_error_title, string.mlp_network_error_subtitle))
         }
     }
 
     /**
-     * Shows the MLP
+     * Checks if the Modal Layout Picker can be shown
+     * at this point the only requirement is to have the block editor enabled
+     * @return true if the Modal Layout Picker can be shown
      */
-    fun show() {
-        init()
+    fun canShowModalLayoutPicker() = SiteUtils.isBlockEditorDefaultForNewPost(site)
+
+    /**
+     * Triggers the create page flow and shows the MLP
+     */
+    fun createPageFlowTriggered() {
         _isModalLayoutPickerShowing.value = Event(true)
+        initializePreviewMode(displayUtilsWrapper.isTablet())
+        fetchLayouts()
     }
 
     /**
@@ -163,127 +152,30 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
-        updateUiState(ContentUiState())
+        updateUiState(Content())
     }
 
     /**
-     * Notifies the VM to start passing the orientation
-     * @param landscapeMode app operates in landscape mode
+     * Create page tapped
      */
-    fun start(landscapeMode: Boolean) {
-        setHeaderTitleVisibility(landscapeMode)
+    fun onCreatePageClicked() {
+        createPage()
+        dismiss()
+    }
+
+    override fun onPreviewChooseTapped() {
+        super.onPreviewChooseTapped()
+        onCreatePageClicked()
     }
 
     /**
-     * Sets the header and title visibility
-     * @param headerShouldBeVisible if true the header is shown and the title hidden
+     * Triggers the creation of a new page
      */
-    private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        (uiState.value as? ContentUiState)?.let { state ->
-            if (state.isHeaderVisible == headerShouldBeVisible) return // No change
-            updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+    private fun createPage() {
+        selectedLayout?.let { layout ->
+            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.title)
+            return
         }
-    }
-
-    /**
-     * Layout thumbnail is ready
-     * @param layoutSlug the slug of the tapped layout
-     */
-    fun onThumbnailReady(layoutSlug: String) {
-        (uiState.value as? ContentUiState)?.let { state ->
-            updateUiState(state.copy(loadedThumbnailSlugs = state.loadedThumbnailSlugs.apply { add(layoutSlug) }))
-        }
-    }
-
-    /**
-     * Appbar scrolled event
-     * @param verticalOffset the scroll state vertical offset
-     * @param scrollThreshold the scroll threshold
-     */
-    fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
-        setHeaderTitleVisibility(verticalOffset < scrollThreshold)
-    }
-
-    /**
-     * Category tapped
-     * @param categorySlug the slug of the tapped category
-     */
-    fun onCategoryTapped(categorySlug: String) {
-        (uiState.value as? ContentUiState)?.let { state ->
-            if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
-                updateUiState(
-                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
-                            remove(categorySlug)
-                        })
-                )
-            } else {
-                updateUiState(
-                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
-                )
-            }
-            loadCategories()
-            _onCategorySelected.postValue(Event(Unit))
-        }
-    }
-
-    /**
-     * Layout tapped
-     * @param layoutSlug the slug of the tapped layout
-     */
-    fun onLayoutTapped(layoutSlug: String) {
-        (uiState.value as? ContentUiState)?.let { state ->
-            if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
-            if (layoutSlug == state.selectedLayoutSlug) { // deselect
-                updateUiState(state.copy(selectedLayoutSlug = null))
-            } else {
-                updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
-            }
-            updateButtonsUiState()
-            loadLayouts()
-        }
-    }
-
-    /**
-     * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
-     */
-    private fun updateButtonsUiState() {
-        (uiState.value as? ContentUiState)?.let { state ->
-            val selection = state.selectedLayoutSlug != null
-            updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
-        }
-    }
-
-    /**
-     * Triggers the creation of a new blank page
-     */
-    fun createPage() {
-        _onCreateNewPageRequested.call()
-    }
-
-    private fun updateUiState(uiState: UiState) {
-        _uiState.value = uiState
-    }
-
-    sealed class UiState(
-        open val isHeaderVisible: Boolean = false,
-        val loadingSkeletonVisible: Boolean = false
-    ) {
-        object LoadingUiState : UiState(loadingSkeletonVisible = true)
-
-        data class ContentUiState(
-            override val isHeaderVisible: Boolean = false,
-            val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
-            val selectedLayoutSlug: String? = null,
-            val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
-            val categories: List<CategoryListItemUiState> = listOf(),
-            val layoutCategories: List<LayoutCategoryUiState> = listOf(),
-            val buttonsUiState: ButtonsUiState = ButtonsUiState(
-                    createBlankPageVisible = true,
-                    previewVisible = false,
-                    createPageVisible = false
-            )
-        ) : UiState()
-
-        data class ErrorUiState(val message: String) : UiState()
+        _onCreateNewPageRequested.value = PageRequest.Blank
     }
 }

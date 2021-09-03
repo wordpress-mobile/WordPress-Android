@@ -25,51 +25,45 @@ class UnifiedLoginTracker
     ) {
         currentFlow = flow
         currentStep = step
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                analyticsTracker.track(
-                        stat = UNIFIED_LOGIN_STEP,
-                        properties = buildDefaultParams()
-                )
-            } else {
-                handleMissingFlowOrStep("step: ${step.value}")
-            }
+        if (currentFlow != null && currentStep != null) {
+            analyticsTracker.track(
+                    stat = UNIFIED_LOGIN_STEP,
+                    properties = buildDefaultParams()
+            )
+        } else {
+            handleMissingFlowOrStep("step: ${step.value}")
         }
     }
 
     fun trackFailure(error: String?) {
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                currentFlow?.let {
-                    analyticsTracker.track(
-                            stat = UNIFIED_LOGIN_FAILURE,
-                            properties = buildDefaultParams().apply {
-                                error?.let {
-                                    put(FAILURE, error)
-                                }
+        if (currentFlow != null && currentStep != null) {
+            currentFlow?.let {
+                analyticsTracker.track(
+                        stat = UNIFIED_LOGIN_FAILURE,
+                        properties = buildDefaultParams().apply {
+                            error?.let {
+                                put(FAILURE, error)
                             }
-                    )
-                }
-            } else {
-                handleMissingFlowOrStep("failure: $error")
+                        }
+                )
             }
+        } else {
+            handleMissingFlowOrStep("failure: $error")
         }
     }
 
     fun trackClick(click: Click) {
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                currentFlow?.let {
-                    analyticsTracker.track(
-                            stat = UNIFIED_LOGIN_INTERACTION,
-                            properties = buildDefaultParams().apply {
-                                put(CLICK, click.value)
-                            }
-                    )
-                }
-            } else {
-                handleMissingFlowOrStep("click: ${click.value}")
+        if (currentFlow != null && currentStep != null) {
+            currentFlow?.let {
+                analyticsTracker.track(
+                        stat = UNIFIED_LOGIN_INTERACTION,
+                        properties = buildDefaultParams().apply {
+                            put(CLICK, click.value)
+                        }
+                )
             }
+        } else {
+            handleMissingFlowOrStep("click: ${click.value}")
         }
     }
 
@@ -105,6 +99,10 @@ class UnifiedLoginTracker
 
     fun setFlow(value: String?) {
         currentFlow = Flow.values().find { it.value == value }
+    }
+
+    fun setStep(step: Step) {
+        currentStep = step
     }
 
     fun setFlowAndStep(flow: Flow, step: Step) {
@@ -147,7 +145,9 @@ class UnifiedLoginTracker
         HELP("help"),
         TWO_FACTOR_AUTHENTICATION("2fa"),
         SHOW_EMAIL_HINTS("show_email_hints"),
-        PASSWORD_CHALLENGE("password_challenge")
+        PASSWORD_CHALLENGE("password_challenge"),
+        NOT_A_JETPACK_SITE("not_a_jetpack_site"),
+        NO_JETPACK_SITES("no_jetpack_sites")
     }
 
     enum class Click(val value: String) {
@@ -175,7 +175,8 @@ class UnifiedLoginTracker
         HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
         SELECT_EMAIL_FIELD("select_email_field"),
         PICK_EMAIL_FROM_HINT("pick_email_from_hint"),
-        CREATE_ACCOUNT("create_account")
+        CREATE_ACCOUNT("create_account"),
+        CHOOSE_SITE("choose_site")
     }
 
     companion object {

@@ -2,24 +2,21 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.post_prepublishing_home_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class PrepublishingHomeFragment : Fragment() {
+class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
 
@@ -43,21 +40,14 @@ class PrepublishingHomeFragment : Fragment() {
         actionClickedListener = null
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.post_prepublishing_home_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actions_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
-        actions_recycler_view.adapter = PrepublishingHomeAdapter(requireActivity())
+        with(PostPrepublishingHomeFragmentBinding.bind(view)) {
+            actionsRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+            actionsRecyclerView.adapter = PrepublishingHomeAdapter(requireActivity())
 
-        initViewModel()
+            initViewModel()
+        }
     }
 
     override fun onResume() {
@@ -70,29 +60,25 @@ class PrepublishingHomeFragment : Fragment() {
         super.onResume()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+    private fun PostPrepublishingHomeFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.storyTitleUiState.observe(viewLifecycleOwner, Observer { storyTitleUiState ->
-            uiHelpers.updateVisibility(story_title_header_view, true)
-            story_title_header_view.init(uiHelpers, imageManager, storyTitleUiState)
+        viewModel.storyTitleUiState.observe(viewLifecycleOwner, { storyTitleUiState ->
+            uiHelpers.updateVisibility(storyTitleHeaderView, true)
+            storyTitleHeaderView.init(uiHelpers, imageManager, storyTitleUiState)
         })
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-            (actions_recycler_view.adapter as PrepublishingHomeAdapter).update(uiState)
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+            (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(uiState)
         })
 
-        viewModel.onActionClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { actionType ->
-                actionClickedListener?.onActionClicked(actionType)
-            }
+        viewModel.onActionClicked.observeEvent(viewLifecycleOwner, { actionType ->
+            actionClickedListener?.onActionClicked(actionType)
         })
 
-        viewModel.onSubmitButtonClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { publishPost ->
-                actionClickedListener?.onSubmitButtonClicked(publishPost)
-            }
+        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner, { publishPost ->
+            actionClickedListener?.onSubmitButtonClicked(publishPost)
         })
 
         val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {

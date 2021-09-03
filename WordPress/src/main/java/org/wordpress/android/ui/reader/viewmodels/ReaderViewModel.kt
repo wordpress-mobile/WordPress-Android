@@ -18,21 +18,19 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
+const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
 class ReaderViewModel @Inject constructor(
@@ -42,11 +40,10 @@ class ReaderViewModel @Inject constructor(
     private val dateProvider: DateProvider,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
     private val readerTracker: ReaderTracker,
-    private val accountStore: AccountStore,
-    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    private val accountStore: AccountStore
+        // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
-    private var isReaderInterestsShown: Boolean = false
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
 
@@ -62,6 +59,9 @@ class ReaderViewModel @Inject constructor(
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
+    private val _showSettings = MutableLiveData<Event<Unit>>()
+    val showSettings: LiveData<Event<Unit>> = _showSettings
+
     private val _showReaderInterests = MutableLiveData<Event<Unit>>()
     val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
 
@@ -73,10 +73,9 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (isReaderInterestsShown) return
-        isReaderInterestsShown = true
-        _uiState.value = InitialUiState
-        _showReaderInterests.value = Event(Unit)
+        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+        if (initialized) return
+        loadTabs()
     }
 
     private fun loadTabs() {
@@ -86,7 +85,8 @@ class ReaderViewModel @Inject constructor(
                 _uiState.value = ContentUiState(
                         tagList.map { it.label },
                         tagList,
-                        searchIconVisible = isSearchSupported()
+                        searchIconVisible = isSearchSupported(),
+                        settingsIconVisible = isSettingsSupported()
                 )
                 if (!initialized) {
                     initialized = true
@@ -118,45 +118,30 @@ class ReaderViewModel @Inject constructor(
         }
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
-
-        // Show interests picker if tag changed to discover and no followed tags found for user
-        if (selectedTag?.isDiscover == true) {
-            launch {
-                val userTags = getFollowedTagsUseCase.get()
-                if (userTags.isEmpty()) {
-                    isReaderInterestsShown = true
-                    initialized = false
-                    _uiState.value = InitialUiState
-                    _showReaderInterests.value = Event(Unit)
-                }
-            }
-        }
     }
 
     fun onCloseReaderInterests() {
-        isReaderInterestsShown = false
         _closeReaderInterests.value = Event(Unit)
-        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-        loadTabs()
+    }
+
+    fun onShowReaderInterests() {
+        _showReaderInterests.value = Event(Unit)
     }
 
     sealed class ReaderUiState(
         open val searchIconVisible: Boolean,
+        open val settingsIconVisible: Boolean,
         val appBarExpanded: Boolean = false,
         val tabLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : ReaderUiState(
-                searchIconVisible = false,
-                appBarExpanded = false,
-                tabLayoutVisible = false
-        )
-
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
-            override val searchIconVisible: Boolean
+            override val searchIconVisible: Boolean,
+            override val settingsIconVisible: Boolean
         ) : ReaderUiState(
                 searchIconVisible = searchIconVisible,
+                settingsIconVisible = settingsIconVisible,
                 appBarExpanded = true,
                 tabLayoutVisible = true
         )
@@ -195,15 +180,19 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    fun onSettingsActionClicked() {
+        if (isSettingsSupported()) {
+            _showSettings.value = Event(Unit)
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
+        }
+    }
+
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        if (_uiState.value == InitialUiState && isReaderInterestsShown) {
-            return
-        } else {
-            loadTabs()
-        }
+        loadTabs()
     }
 
     fun onScreenInForeground() {
@@ -219,6 +208,8 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
+
+    private fun isSettingsSupported() = accountStore.hasAccessToken()
 
     private fun trackReaderTabShownIfNecessary(it: ReaderTag) {
         trackReaderTabJob?.cancel()

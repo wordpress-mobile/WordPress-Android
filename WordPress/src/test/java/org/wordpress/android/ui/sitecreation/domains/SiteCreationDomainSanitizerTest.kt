@@ -36,4 +36,16 @@ class SiteCreationDomainSanitizerTest {
         val result = domainSanitizer.sanitizeDomainQuery("test_this-site.wordpress.com")
         assertEquals(result, "testthissite")
     }
+
+    @Test
+    fun `Get first domain part`() {
+        val result = domainSanitizer.getName("https://test_this-site.wordpress.com")
+        assertEquals(result, "test_this-site")
+    }
+
+    @Test
+    fun `Get second domain part`() {
+        val result = domainSanitizer.getDomain("https://test_this-site.wordpress.com")
+        assertEquals(result, ".wordpress.com")
+    }
 }

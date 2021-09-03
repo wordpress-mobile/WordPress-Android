@@ -18,6 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -28,9 +29,13 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient
+import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
@@ -39,6 +44,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
@@ -77,18 +83,29 @@ class PagesViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var postSqlUtils: PostSqlUtils
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
     private lateinit var authorSelectionUpdated: MutableLiveData<AuthorFilterSelection>
     private lateinit var authorUIState: MutableLiveData<PagesAuthorFilterUIState>
+    private lateinit var postStore: PostStore
+
+    private val mockedPageId = 1
+    private val copyPageId = 2
 
     @Before
     fun setUp() {
+        postStore = PostStore(
+                dispatcher,
+                Mockito.mock(PostRestClient::class.java),
+                Mockito.mock(PostXMLRPCClient::class.java),
+                postSqlUtils
+        )
         viewModel = PagesViewModel(
                 pageStore = pageStore,
-                postStore = mock(),
+                postStore = postStore,
                 dispatcher = dispatcher,
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
@@ -118,6 +135,9 @@ class PagesViewModelTest {
         viewModel.authorSelectionUpdated.observeForever { if (it != null) authorSelectionUpdated.value = it }
         viewModel.authorUIState.observeForever { if (it != null) authorUIState.value = it }
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(postSqlUtils.insertPostForResult(any())).thenAnswer { invocation ->
+            (invocation.arguments[0] as PostModel).apply { setId(copyPageId) }
+        }
     }
 
     @Test
@@ -249,6 +269,23 @@ class PagesViewModelTest {
     }
 
     @Test
+    fun `duplicate menu action opens a copy of the page for edit`() = test {
+        // Given
+        val pageModel = setUpPageStoreWithASinglePage(site)
+        val page: PageItem.Page = mock()
+        whenever(page.remoteId).thenReturn(pageModel.remoteId)
+        whenever(pageStore.getPagesFromDb(anyOrNull())).thenReturn(listOf(pageModel))
+        viewModel.start(site)
+        // When
+        viewModel.onMenuAction(COPY, page)
+        // Then
+        val newPage: PostModel = requireNotNull(viewModel.editPage.value?.second)
+        assertThat(newPage.id).isNotEqualTo(pageModel.post.id)
+        assertThat(newPage.title).isEqualTo(pageModel.title)
+        assertThat(newPage.content).isEqualTo(pageModel.post.content)
+    }
+
+    @Test
     fun `scrollToPage is invoked on edit post activity result`() = test {
         // Given
         val intent = mock<Intent>()
@@ -371,6 +408,7 @@ class PagesViewModelTest {
     ) {
         val site = SiteModel()
         site.showOnFront = showOnFront.value
+        site.pageForPosts = updatedPageForPostsId
         setUpPageStoreWithASinglePage(site)
         viewModel.start(site)
         val settings = StaticPage(updatedPageForPostsId, -1)
@@ -419,7 +457,7 @@ class PagesViewModelTest {
     }
 
     private suspend fun setUpPageStoreWithASinglePage(site: SiteModel): PageModel {
-        val pageModel = PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0)
+        val pageModel = PageModel(PostModel(), site, mockedPageId, "title", DRAFT, Date(), false, 1, null, 0)
 
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
         whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(
@@ -488,5 +526,26 @@ class PagesViewModelTest {
 
         // Assert
         assertThat(viewModel.authorUIState.value?.authorFilterSelection).isEqualTo(EVERYONE)
+    }
+
+    @Test
+    fun `when the user taps on the posts page a warning is shown`() = test {
+        // Arrange
+        val pageForPostsId = 1L
+        val page: PageItem.Page = mock()
+        whenever(page.remoteId).thenReturn(pageForPostsId)
+        val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
+        setupPageForPostsUpdate(
+                snackbarMessages = snackbarMessages,
+                showOnFront = PAGE,
+                updatedPageForPostsId = pageForPostsId
+        )
+
+        // Act
+        viewModel.onItemTapped(page)
+
+        // Assert
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_is_posts_page_warning)
     }
 }

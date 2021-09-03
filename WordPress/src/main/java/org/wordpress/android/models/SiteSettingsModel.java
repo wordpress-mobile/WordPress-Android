@@ -51,9 +51,9 @@ public class SiteSettingsModel {
     private static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
     private static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
     private static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
-    private static final String WHITELIST_COLUMN_NAME = "whitelist";
+    private static final String ALLOWLIST_COLUMN_NAME = "whitelist";
     private static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
-    private static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
+    private static final String DENYLIST_KEYS_COLUMN_NAME = "blacklistKeys";
     private static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
     private static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
     private static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
@@ -137,9 +137,9 @@ public class SiteSettingsModel {
             + MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, "
             + IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, "
             + USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, "
-            + WHITELIST_COLUMN_NAME + " BOOLEAN, "
+            + ALLOWLIST_COLUMN_NAME + " BOOLEAN, "
             + MODERATION_KEYS_COLUMN_NAME + " TEXT, "
-            + BLACKLIST_KEYS_COLUMN_NAME + " TEXT"
+            + DENYLIST_KEYS_COLUMN_NAME + " TEXT"
             + ");";
 
     public boolean isInLocalTable;
@@ -178,7 +178,7 @@ public class SiteSettingsModel {
     public boolean commentAutoApprovalKnownUsers;
     public int maxLinks;
     public List<String> holdForModeration;
-    public List<String> blacklist;
+    public List<String> denylist;
     public String sharingLabel;
     public String sharingButtonStyle;
     public boolean allowReblogButton;
@@ -242,7 +242,7 @@ public class SiteSettingsModel {
                && equals(defaultPostFormat, otherModel.defaultPostFormat)
                && holdForModeration != null
                && holdForModeration.equals(otherModel.holdForModeration)
-               && blacklist != null && blacklist.equals(otherModel.blacklist)
+               && denylist != null && denylist.equals(otherModel.denylist)
                && sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel)
                && sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle)
                && allowReblogButton == otherModel.allowReblogButton
@@ -306,8 +306,8 @@ public class SiteSettingsModel {
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
-        if (other.blacklist != null) {
-            blacklist = new ArrayList<>(other.blacklist);
+        if (other.denylist != null) {
+            denylist = new ArrayList<>(other.denylist);
         }
         if (other.sharingLabel != null) {
             sharingLabel = other.sharingLabel;
@@ -357,7 +357,7 @@ public class SiteSettingsModel {
         commentApprovalRequired = getBooleanFromCursor(cursor, MANUAL_APPROVAL_COLUMN_NAME);
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
-        commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, ALLOWLIST_COLUMN_NAME);
         startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
         dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
         timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
@@ -369,14 +369,14 @@ public class SiteSettingsModel {
         jetpackSearchEnabled = getBooleanFromCursor(cursor, JETPACK_SEARCH_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
-        String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
+        String denylistKeys = getStringFromCursor(cursor, DENYLIST_KEYS_COLUMN_NAME);
         holdForModeration = new ArrayList<>();
-        blacklist = new ArrayList<>();
+        denylist = new ArrayList<>();
         if (!TextUtils.isEmpty(moderationKeys)) {
             Collections.addAll(holdForModeration, moderationKeys.split("\n"));
         }
-        if (!TextUtils.isEmpty(blacklistKeys)) {
-            Collections.addAll(blacklist, blacklistKeys.split("\n"));
+        if (!TextUtils.isEmpty(denylistKeys)) {
+            Collections.addAll(denylist, denylistKeys.split("\n"));
         }
 
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME);
@@ -449,7 +449,7 @@ public class SiteSettingsModel {
         values.put(MANUAL_APPROVAL_COLUMN_NAME, commentApprovalRequired);
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
-        values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+        values.put(ALLOWLIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
         values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
         values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
         values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
@@ -460,20 +460,20 @@ public class SiteSettingsModel {
         values.put(JETPACK_SEARCH_SUPPORTED_COLUMN_NAME, jetpackSearchSupported);
         values.put(JETPACK_SEARCH_ENABLED_COLUMN_NAME, jetpackSearchEnabled);
 
-        String moderationKeys = "";
+        StringBuilder moderationKeys = new StringBuilder();
         if (holdForModeration != null) {
             for (String key : holdForModeration) {
-                moderationKeys += key + "\n";
+                moderationKeys.append(key).append("\n");
             }
         }
-        String blacklistKeys = "";
-        if (blacklist != null) {
-            for (String key : blacklist) {
-                blacklistKeys += key + "\n";
+        StringBuilder denylistKeys = new StringBuilder();
+        if (denylist != null) {
+            for (String key : denylist) {
+                denylistKeys.append(key).append("\n");
             }
         }
-        values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
-        values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
+        values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys.toString());
+        values.put(DENYLIST_KEYS_COLUMN_NAME, denylistKeys.toString());
         values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
         values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);

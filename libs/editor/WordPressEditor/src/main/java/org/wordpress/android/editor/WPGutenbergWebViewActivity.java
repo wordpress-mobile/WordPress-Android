@@ -24,7 +24,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     public static final String ARG_USER_ID = "authenticated_user_id";
     public static final String ARG_BLOCK_ID = "block_id";
-    public static final String ARG_BLOCK_NAME = "block_name";
+    public static final String ARG_BLOCK_TITLE = "block_title";
     public static final String ARG_BLOCK_CONTENT = "block_content";
 
     private boolean mIsJetpackSsoEnabled;
@@ -73,9 +73,9 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     @Override
     protected String getToolbarTitle() {
-        String blockName = getIntent().getExtras().getString(ARG_BLOCK_NAME);
-        if (blockName != null) {
-            return String.format(getString(R.string.menu_toolbar_title), blockName);
+        String blockTitle = getIntent().getExtras().getString(ARG_BLOCK_TITLE);
+        if (blockTitle != null) {
+            return String.format(getString(R.string.menu_toolbar_title), blockTitle);
         }
         return "";
     }
@@ -140,13 +140,13 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     @Override
     protected List<String> getOnGutenbergReadyExternalSources() {
-        String file = getFileContentFromAssets("unsupported-block-editor/remove-nux.js");
+        String file = getFileContentFromAssets("remove-nux.js");
         return Arrays.asList(file);
     }
 
     @Override protected List<String> getOnPageLoadExternalSources() {
         long userId = getIntent().getExtras().getLong(ARG_USER_ID, 0);
-        String file = getFileContentFromAssets("unsupported-block-editor/extra-localstorage-entries.js")
+        String file = getFileContentFromAssets("extra-localstorage-entries.js")
                 .replace("%@", Long.toString(userId));
         return Arrays.asList(file);
     }

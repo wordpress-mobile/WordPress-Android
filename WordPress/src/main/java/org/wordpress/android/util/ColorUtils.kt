@@ -4,12 +4,16 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.FloatRange
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.ImageViewCompat
+import kotlin.math.roundToInt
 
 object ColorUtils {
     @JvmStatic
@@ -29,4 +33,11 @@ object ColorUtils {
                 AppCompatResources.getColorStateList(imageView.context, colorResId)
         )
     }
+
+    @JvmStatic
+    @ColorInt
+    fun applyEmphasisToColor(
+        @ColorInt color: Int,
+        @FloatRange(from = 0.0, to = 1.0) emphasisAlpha: Float
+    ) = ColorUtils.setAlphaComponent(color, (emphasisAlpha * 255).roundToInt())
 }

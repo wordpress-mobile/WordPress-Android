@@ -3,27 +3,26 @@ package org.wordpress.android.ui.main
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.me_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
@@ -33,8 +32,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
+import org.wordpress.android.databinding.MeFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
@@ -44,30 +43,37 @@ import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
+import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
+import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
-class MeFragment : Fragment(), OnScrollToTopListener {
+class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
+    private var binding: MeFragmentBinding? = null
 
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
@@ -76,6 +82,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
+    @Inject lateinit var sequencer: SnackbarSequencer
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,47 +94,52 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.me_fragment, container, false) as ViewGroup
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = MeFragmentBinding.bind(view).apply { onBind(savedInstanceState) }
+    }
+
+    private fun MeFragmentBinding.onBind(savedInstanceState: Bundle?) {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(toolbarMain)
+            supportActionBar?.apply {
+                setHomeButtonEnabled(true)
+                setDisplayHomeAsUpEnabled(true)
+                // We need to set the title this way so it can be updated on locale change
+                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+            }
+        }
+
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
         }
-        avatar_container.setOnClickListener(showPickerListener)
-        change_photo.setOnClickListener(showPickerListener)
-        row_my_profile.setOnClickListener {
-            ActivityLauncher.viewMyProfile(
-                    activity
-            )
+        avatarContainer.setOnClickListener(showPickerListener)
+        changePhoto.setOnClickListener(showPickerListener)
+        rowMyProfile.setOnClickListener {
+            ActivityLauncher.viewMyProfile(activity)
         }
-        row_account_settings.setOnClickListener {
-            ActivityLauncher.viewAccountSettings(
-                    activity
-            )
+        rowAccountSettings.setOnClickListener {
+            ActivityLauncher.viewAccountSettings(activity)
         }
-        row_app_settings.setOnClickListener {
-            ActivityLauncher.viewAppSettingsForResult(
-                    activity
-            )
+        rowAppSettings.setOnClickListener {
+            ActivityLauncher.viewAppSettingsForResult(activity)
         }
-        row_support.setOnClickListener {
-            ActivityLauncher
-                    .viewHelpAndSupport(
-                            requireContext(),
-                            ME_SCREEN_HELP,
-                            selectedSite,
-                            null
-                    )
+        rowSupport.setOnClickListener {
+            ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
-        row_logout.setOnClickListener {
+
+        initRecommendUiState()
+
+        rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
             } else {
-                ActivityLauncher.showSignInForResult(activity, true)
+                if (BuildConfig.IS_JETPACK_APP) {
+                    ActivityLauncher.showSignInForResultJetpackOnly(activity)
+                } else {
+                    ActivityLauncher.showSignInForResultWpComOnly(activity)
+                }
             }
         }
         if (savedInstanceState != null) {
@@ -138,15 +151,73 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
         }
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MeViewModel::class.java)
-        viewModel.showDisconnectDialog.observe(viewLifecycleOwner, Observer {
-            it.applyIfNotHandled {
-                when (this) {
-                    true -> showDisconnectDialog()
-                    false -> hideDisconnectDialog()
-                }
+        viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
+        viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
+            when (it) {
+                true -> showDisconnectDialog()
+                false -> hideDisconnectDialog()
             }
         })
+
+        viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
+            if (!isAdded) return@observeEvent
+
+            manageRecommendUiState(it)
+        })
+    }
+
+    private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
+        recommendTheAppShimmer.let {
+            it.isEnabled = !startShimmer
+
+            if (startShimmer) {
+                if (it.isShimmerVisible) {
+                    it.startShimmer()
+                } else {
+                    it.showShimmer(true)
+                }
+            } else {
+                it.hideShimmer()
+            }
+        }
+    }
+
+    private fun MeFragmentBinding.initRecommendUiState() {
+        // Limiting the feature to WordPress only in this v1
+        if (recommendTheAppFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            setRecommendLoadingState(false)
+            recommendTheAppContainer.visibility = View.VISIBLE
+            rowRecommendTheApp.setOnClickListener {
+                viewModel.onRecommendTheApp()
+            }
+        } else {
+            recommendTheAppContainer.visibility = View.GONE
+        }
+    }
+
+    private fun manageRecommendUiState(state: RecommendAppUiState) {
+        binding?.setRecommendLoadingState(state.showLoading)
+
+        if (!state.showLoading) {
+            if (state.isError()) {
+                view?.let { view ->
+                    sequencer.enqueue(
+                            SnackbarItem(
+                                    Info(view, UiStringText(state.error!!), Snackbar.LENGTH_LONG),
+                                    null,
+                                    null
+                            )
+                    )
+                }
+            } else {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "${state.message}\n${state.link}")
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.recommend_app_subject))
+
+                startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_link)))
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -159,7 +230,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onScrollToTop() {
         if (isAdded) {
-            scroll_view.smoothScrollTo(0, 0)
+            binding?.scrollView?.smoothScrollTo(0, 0)
         }
     }
 
@@ -177,7 +248,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onResume() {
         super.onResume()
-        refreshAccountDetails()
+        binding?.refreshAccountDetails()
     }
 
     override fun onDestroy() {
@@ -186,50 +257,50 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         super.onDestroy()
     }
 
-    private fun refreshAccountDetails() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun MeFragmentBinding.refreshAccountDetails() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
             return
         }
         // we only want to show user details for WordPress.com users
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
-            me_display_name.visibility = View.VISIBLE
-            me_username.visibility = View.VISIBLE
-            card_avatar.visibility = View.VISIBLE
-            row_my_profile.visibility = View.VISIBLE
+            meDisplayName.visibility = View.VISIBLE
+            meUsername.visibility = View.VISIBLE
+            cardAvatar.visibility = View.VISIBLE
+            rowMyProfile.visibility = View.VISIBLE
             loadAvatar(null)
-            me_username.text = getString(R.string.at_username, defaultAccount.userName)
-            me_login_logout_text_view.setText(R.string.me_disconnect_from_wordpress_com)
-            val displayName = defaultAccount.displayName
-            if (!TextUtils.isEmpty(displayName)) {
-                me_display_name.text = displayName
-            } else {
-                me_display_name.text = defaultAccount.userName
-            }
+            meUsername.text = getString(R.string.at_username, defaultAccount.userName)
+            meLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com)
+            meDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
         } else {
-            me_display_name.visibility = View.GONE
-            me_username.visibility = View.GONE
-            card_avatar.visibility = View.GONE
-            avatar_progress.visibility = View.GONE
-            row_my_profile.visibility = View.GONE
-            row_account_settings.visibility = View.GONE
-            me_login_logout_text_view.setText(R.string.me_connect_to_wordpress_com)
+            meDisplayName.visibility = View.GONE
+            meUsername.visibility = View.GONE
+            cardAvatar.visibility = View.GONE
+            avatarProgress.visibility = View.GONE
+            rowMyProfile.visibility = View.GONE
+            rowAccountSettings.visibility = View.GONE
+            meLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com)
         }
     }
 
-    private fun showGravatarProgressBar(isUpdating: Boolean) {
-        avatar_progress.visibility = if (isUpdating) View.VISIBLE else View.GONE
+    private fun MeFragmentBinding.showGravatarProgressBar(isUpdating: Boolean) {
+        avatarProgress.visibility = if (isUpdating) View.VISIBLE else View.GONE
         isUpdatingGravatar = isUpdating
     }
 
-    private fun loadAvatar(injectFilePath: String?) {
+    private fun MeFragmentBinding.loadAvatar(injectFilePath: String?) {
         val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
                 newAvatarUploaded,
                 avatarUrl,
                 injectFilePath,
-                me_avatar,
+                meAvatar,
                 AVATAR_WITHOUT_BACKGROUND,
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
@@ -375,7 +446,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showPhotoPickerForGravatar() {
-        mediaPickerLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
+        mediaPickerLauncher.showGravatarPicker(this)
     }
 
     private fun startCropActivity(uri: Uri) {
@@ -411,7 +482,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             )
             return
         }
-        showGravatarProgressBar(true)
+        binding?.showGravatarProgressBar(true)
         GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
                 object : GravatarUploadListener {
                     override fun onSuccess() {
@@ -428,10 +499,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: GravatarUploadFinished) {
-        showGravatarProgressBar(false)
+        binding?.showGravatarProgressBar(false)
         if (event.success) {
             AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
-            loadAvatar(event.filePath)
+            binding?.loadAvatar(event.filePath)
         } else {
             ToastUtils.showToast(
                     activity,
@@ -443,13 +514,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged?) {
-        refreshAccountDetails()
+        binding?.refreshAccountDetails()
     }
-
-    private val selectedSite: SiteModel?
-        get() {
-            return (activity as? WPMainActivity)?.selectedSite
-        }
 
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"

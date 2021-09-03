@@ -2,19 +2,16 @@ package org.wordpress.android.ui.pages
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PagesListFragmentBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -22,7 +19,7 @@ import org.wordpress.android.viewmodel.pages.SearchListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class SearchListFragment : Fragment() {
+class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SearchListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -36,18 +33,16 @@ class SearchListFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.pages_list_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
-        initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity)
+        with(PagesListFragmentBinding.bind(view)) {
+            initializeViews(savedInstanceState)
+            initializeViewModels(nonNullActivity)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -57,16 +52,16 @@ class SearchListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
-        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+    private fun PagesListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
+        val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchListViewModel::class.java)
+        viewModel = ViewModelProvider(this@SearchListFragment, viewModelFactory).get(SearchListViewModel::class.java)
         viewModel.start(pagesViewModel)
 
         setupObservers()
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun PagesListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -78,13 +73,13 @@ class SearchListFragment : Fragment() {
         recyclerView.id = R.id.pages_search_recycler_view_id
     }
 
-    private fun setupObservers() {
+    private fun PagesListFragmentBinding.setupObservers() {
         viewModel.searchResult.observe(viewLifecycleOwner, Observer { data ->
             data?.let { setSearchResult(data) }
         })
     }
 
-    private fun setSearchResult(pages: List<PageItem>) {
+    private fun PagesListFragmentBinding.setSearchResult(pages: List<PageItem>) {
         val adapter: PageSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageSearchAdapter(

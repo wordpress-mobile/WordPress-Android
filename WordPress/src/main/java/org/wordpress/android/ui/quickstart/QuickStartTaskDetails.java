@@ -25,18 +25,6 @@ public enum QuickStartTaskDetails {
             R.string.quick_start_list_view_site_subtitle,
             R.drawable.ic_external_white_24dp
     ),
-    CHOSE_THEME_TUTORIAL(
-            QuickStartTask.CHOOSE_THEME,
-            R.string.quick_start_list_browse_themes_title,
-            R.string.quick_start_list_browse_themes_subtitle,
-            R.drawable.ic_themes_white_24dp
-    ),
-    CUSTOMIZE_SITE_TUTORIAL(
-            QuickStartTask.CUSTOMIZE_SITE,
-            R.string.quick_start_list_customize_site_title,
-            R.string.quick_start_list_customize_site_subtitle,
-            R.drawable.ic_customize_white_24dp
-    ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
             R.string.quick_start_list_enable_sharing_title,
@@ -61,12 +49,6 @@ public enum QuickStartTaskDetails {
             R.string.quick_start_list_upload_icon_subtitle,
             R.drawable.ic_globe_white_24dp
     ),
-    CREATE_NEW_PAGE(
-            QuickStartTask.CREATE_NEW_PAGE,
-            R.string.quick_start_list_create_page_title,
-            R.string.quick_start_list_create_page_subtitle,
-            R.drawable.ic_pages_white_24dp
-    ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,
             R.string.quick_start_list_check_stats_title,
@@ -78,6 +60,18 @@ public enum QuickStartTaskDetails {
             R.string.quick_start_list_explore_plans_title,
             R.string.quick_start_list_explore_plans_subtitle,
             R.drawable.ic_plans_white_24dp
+    ),
+    EDIT_HOMEPAGE(
+            QuickStartTask.EDIT_HOMEPAGE,
+            R.string.quick_start_list_edit_homepage_title,
+            R.string.quick_start_list_edit_homepage_subtitle,
+            R.drawable.ic_homepage_16dp
+    ),
+    REVIEW_PAGES(
+            QuickStartTask.REVIEW_PAGES,
+            R.string.quick_start_list_review_pages_title,
+            R.string.quick_start_list_review_pages_subtitle,
+            R.drawable.ic_pages_white_24dp
     );
 
     QuickStartTaskDetails(QuickStartTask task, int titleResId, int subtitleResId, int iconResId) {

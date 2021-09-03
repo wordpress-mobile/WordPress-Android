@@ -14,4 +14,10 @@
         android:title="@string/share_action"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_more"
+        android:icon="@drawable/ic_ellipsis_vertical_white_24dp"
+        android:title="@string/more"
+        app:showAsAction="always" />
+
 </menu>

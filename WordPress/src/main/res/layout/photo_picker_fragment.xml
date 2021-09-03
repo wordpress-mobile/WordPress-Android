@@ -12,10 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:visibility="gone"
+        android:layout_marginBottom="@dimen/fab_margin_stories"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:contentDescription="@string/photo_picker_camera_desc"
         android:src="@drawable/ic_photo_camera_24px"
-        android:layout_margin="@dimen/fab_margin"
-        tools:ignore="InconsistentLayout"/>
+        android:visibility="gone"
+        tools:ignore="InconsistentLayout" />
 
     <RelativeLayout
         android:layout_width="match_parent"

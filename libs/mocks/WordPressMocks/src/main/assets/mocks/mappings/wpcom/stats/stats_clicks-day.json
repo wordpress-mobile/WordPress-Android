@@ -1,7 +1,21 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/stats/clicks/"
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/clicks/",
+        "queryParameters": {
+            "period": {
+                "equalTo": "day"
+            },
+            "max": {
+                "matches": "[0-9]+"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
     },
     "response": {
         "status": 200,

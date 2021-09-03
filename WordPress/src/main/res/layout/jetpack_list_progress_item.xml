@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_extra_medium_large">
+
+    <FrameLayout
+        android:id="@+id/progress_container"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/activity_progress_bar_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
+            android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
+            android:background="@color/neutral_10"
+            android:indeterminate="true"
+            android:theme="@style/LinearProgress" />
+
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/progress_state_label"
+        style="@style/Jetpack.ListItem.Progress.Label"
+        android:textAlignment="viewEnd"
+        app:layout_constraintBottom_toTopOf="@id/progress_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/progress_label"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/threat_fixing" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/progress_label"
+        style="@style/Jetpack.ListItem.Progress.Label"
+        android:layout_width="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/progress_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="40%" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/progress_info_label"
+        style="@style/Jetpack.ListItem.Progress.Label.Info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progress_container"
+        tools:text="@string/threat_item_header_vulnerable_plugin" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

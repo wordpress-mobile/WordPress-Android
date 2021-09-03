@@ -3,10 +3,10 @@
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Material theme -->
-        <item name="colorPrimary">@color/blue_50</item>
-        <item name="colorPrimaryVariant">@color/blue_70</item>
-        <item name="colorSecondary">@color/pink_50</item>
-        <item name="colorSecondaryVariant">@color/pink_70</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="colorSurface">@android:color/white</item>
         <item name="colorError">@color/red_50</item>
@@ -18,7 +18,7 @@
         <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorControlActivated">@color/primary_30</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
 
         <item name="toolbarIconNormalColor">@color/grey_darken_20</item>
         <item name="toolbarIconHighlightColor">@color/almost_black</item>
@@ -27,7 +27,9 @@
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
-        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+        <item name="snackbarStyle">@style/WordPress.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/WordPress.SnackbarButton</item>
+        <item name="snackbarTextViewStyle">@style/WordPress.SnackbarText</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
@@ -39,10 +41,12 @@
         <item name="wpColorSuccess">@color/green_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/yellow_20</item>
+        <item name="wpColorNavBar">@color/nav_bar</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
+        <item name="wpColorLoginPrologueBg">@color/blue_0</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
@@ -91,7 +95,77 @@
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background</item>
         <item name="categoriesButtonBackgroundSelected">@color/grey_900</item>
         <item name="mlpDividerColor">@color/grey_300</item>
-        <item name="categoriesBackground">@color/white</item>
+        <item name="layoutPickerBackground">@color/white</item>
+
+        <!-- Material Date Range Picker -->
+        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
+        <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
+        <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
+        <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
+        <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
+        <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
+        <!--    Days of week header    -->
+        <item name="textAppearanceBody2">@style/WordPress.TextAppearance.MaterialCalendarDaysOfWeek</item>
+        <!-- Grid day items  -->
+        <item name="materialCalendarDay">@style/WordPress.MaterialCalendarDayTextView</item>
+        <!-- Used to color the cancel button which doesn't use any overridable styles -->
+        <item name="colorOnPrimary">?attr/colorOnSurface</item>
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar.Fullscreen">
+        <!-- Grid selected day item  -->
+        <item name="daySelectedStyle">@style/WordPress.MaterialCalendarSelectedDay</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderTitle" parent="Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderLayout" parent="Widget.MaterialComponents.MaterialCalendar.HeaderLayout">
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection.Fullscreen">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderConfirmButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderConfirmButton">
+        <item name="android:textColor">@color/on_surface_button_selector</item>
+        <item name="rippleColor">@color/on_surface_button_selector</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
+        <item name="android:visibility">visible</item>
+        <item name="android:background">?attr/wpColorSurfaceSecondary</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.MaterialCalendarDaysOfWeek" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarDayTextView" parent="Widget.MaterialComponents.MaterialCalendar.DayTextView">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarSelectedDay" parent="Widget.MaterialComponents.MaterialCalendar.Day.Selected">
+        <item name="itemTextColor">?attr/colorOnSecondary</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -140,21 +214,19 @@
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
-    <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="colorControlNormal">?attr/colorOnPrimary</item>
-    </style>
-
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
-        <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
+        </item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -251,15 +323,6 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
-    <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="android:background">@null</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.DayNight</item>
-        <item name="titleTextAppearance">@style/WordPress.ToolBar.Title</item>
-        <item name="android:elevation">0dp</item>
-        <item name="colorControlNormal">?attr/colorOnSurface</item>
-    </style>
-
     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="android:background">?attr/colorSurface</item>
         <item name="liftOnScroll">true</item>
@@ -273,11 +336,6 @@
         <item name="android:textColorHint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="WordPress.ToolBar.Title" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">serif</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
@@ -289,7 +347,23 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
-    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+    <style name="WordPress.Snackbar" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">@dimen/margin_medium</item>
+        <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:paddingStart">@dimen/margin_small</item>
+        <item name="android:paddingEnd">@dimen/margin_small</item>
+    </style>
+
+    <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">@color/blue_30</item>
+    </style>
+
+    <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:maxLines">5</item>
+    </style>
+
+    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@drawable/tab_layout_background</item>
         <item name="android:elevation">0dp</item>
         <item name="android:duplicateParentState">true</item>
@@ -307,6 +381,8 @@
 
     <style name="WordPress.NoActionBar.TranslucentStatus" parent="WordPress.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="MediaSettings.Divider">
@@ -385,29 +461,34 @@
         <item name="iconSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">25</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="borderWidth">0dp</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="borderWidth">1dp</item>
+        <item name="elevation">0dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="backgroundTint">@color/on_surface_divider</item>
+        <item name="android:outlineProvider">none</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
     </style>
 
     <style name="MySiteListRowLayout">
@@ -427,6 +508,15 @@
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginEnd">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="UpdatedMySiteListRowIcon">
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_centerVertical">true</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -456,6 +546,16 @@
         <item name="android:paddingEnd">0dp</item>
     </style>
 
+    <style name="UpdatedMySiteListRowTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    </style>
+
     <style name="MySiteListRowDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -473,7 +573,7 @@
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
@@ -633,16 +733,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_large</item>
-        <item name="android:paddingStart">@dimen/margin_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
-    </style>
-
-    <style name="QuickStartTypeIcon">
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_height">@dimen/quick_start_type_icon</item>
-        <item name="android:layout_marginEnd">@dimen/margin_large</item>
-        <item name="android:layout_width">@dimen/quick_start_type_icon</item>
     </style>
 
     <style name="QuickStartTypeTitle">
@@ -652,7 +743,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <style name="QuickStartTypeSubtitle">
@@ -662,8 +753,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
+    <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
     </style>
 
     <!--People Management Styles-->
@@ -678,11 +774,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-    </style>
-
-
-    <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/primary_40</item>
     </style>
 
     <!--Post Settings Styles-->
@@ -729,8 +820,8 @@
         <item name="android:background">?android:listDivider</item>
     </style>
 
-    <!--Promo Dialog Styles-->
-    <style name="PromoDialogTitle">
+    <!--Quick Start Prompt Dialog Styles (Old) -->
+    <style name="QuickStartPromptDialogTitle">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -738,7 +829,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogDescription">
+    <style name="QuickStartPromptDialogDescription">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
@@ -746,18 +837,37 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="PromoDialogLink">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-    </style>
-
-    <style name="PromoDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+    <style name="QuickStartPromptDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:letterSpacing">-0.005</item>
+    </style>
+
+    <!--Quick Start Prompt Dialog Styles (New)-->
+    <style name="QuickStartPromptDialogTitleNew">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="QuickStartPromptDialogDescriptionNew">
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="QuickStartPromptDialogPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="QuickStartPromptDialogSecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
     <!--Plugin Styles-->
@@ -903,7 +1013,9 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
+    <style name="ActionableEmptyStateButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Invite.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:layout_marginEnd">
             @dimen/actionable_empty_view_text_margin_horizontal
         </item>
@@ -939,6 +1051,16 @@
         <item name="android:enabled">false</item>
     </style>
 
+    <!-- Site Creation: Domain Search Example-->
+    <style name="SiteCreationDomainExample">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/gray_40</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:drawableStart">@drawable/ic_gridicons_lock</item>
+    </style>
+
     <!--Site Preview -->
     <style name="SiteCreationHeaderLinearLayoutStyle">
         <item name="android:layout_width">match_parent</item>
@@ -956,16 +1078,13 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
+    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:text">@string/new_site_creation_preview_title</item>
     </style>
@@ -1016,23 +1135,71 @@
 
     <!-- To use with the LoginFlow Theme -->
     <style name="Widget.LoginFlow.TextView.PromoTitle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:maxLines">2</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
-        <item name="fixWidowWords">true</item>
-    </style>
-
-    <style name="Widget.LoginFlow.TextView.PromoSubtitle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
         <item name="fixWidowWords">true</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="android:alpha">0.9</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Card.ImageOnly" parent="Widget.LoginFlow.Prologue.Card">
+        <item name="android:alpha">1</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:selectable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Small" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="iconSize">20dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Medium" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Large" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="iconSize">28dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">
+            @style/Widget.LoginFlow.Prologue.Chip.TextAppearance
+        </item>
+        <item name="chipEndPadding">3dp</item>
+        <item name="chipStartPadding">3dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Chip.TextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">9sp</item>
     </style>
 
     <!-- Main actions styles -->
@@ -1100,6 +1267,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SubfilterDividerItem">
@@ -1172,6 +1340,10 @@
         <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
     </style>
 
+    <style name="WordPress.FullscreenDialog">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <!-- Overload of Aztec theme -->
     <style name="FormatBarButton">
         <item name="android:minWidth">@dimen/format_bar_height</item>
@@ -1217,31 +1389,6 @@
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
     </style>
 
-    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="fontFamily">serif</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="fontFamily">serif</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPress.CollapsedToolbarLayout">
-        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
-        <item name="collapsedTitleTextAppearance">
-            @style/TextAppearance.App.CollapsingToolbar.Collapsed
-        </item>
-        <item name="expandedTitleTextAppearance">
-            @style/TextAppearance.App.CollapsingToolbar.Expanded
-        </item>
-        <item name="expandedTitleMarginBottom">@dimen/collapsible_toolbar_expanded_bottom_margin
-        </item>
-        <item name="expandedTitleMarginStart">16dp</item>
-    </style>
-
     <!-- Modal Layout Picker Styles -->
 
     <style name="ModalLayoutPickerText">
@@ -1255,6 +1402,11 @@
 
     <style name="ModalLayoutPickerHeader" parent="ModalLayoutPickerText">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_extra_large</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_extra_extra_small</item>
+        <item name="autoSizeTextType">uniform</item>
     </style>
 
     <style name="ModalLayoutPickerTitle" parent="ModalLayoutPickerText">
@@ -1262,16 +1414,23 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+        <item name="android:maxLines">3</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
-        <item name="android:layout_margin">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/mlp_titles_bottom_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">normal</item>
         <item name="android:alpha">0.6</item>
         <item name="android:maxLines">5</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -1291,6 +1450,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">
@@ -1308,7 +1468,9 @@
     <style name="ModalLayoutPickerCategoryEmoji" parent="ModalLayoutPickerText">
         <item name="android:layout_width">@dimen/mlp_categories_emoji_size</item>
         <item name="android:layout_height">@dimen/mlp_categories_emoji_size</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_extra_extra_small</item>
+        <item name="autoSizeTextType">uniform</item>
         <item name="android:layout_marginStart">@dimen/mlp_category_horizontal_margin</item>
         <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_central_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
@@ -1320,4 +1482,122 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <style name="WordPress.PrepubPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Home Page Picker Styles -->
+    <style name="HomePagePickerSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/blue_50</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <!-- Invite Links -->
+    <style name="WordPress.Invite.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Invite.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.Invite.Button.Secondary" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="WordPress.Invite.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="WordPress.Button.Invite.DisruptiveAction" parent="WordPress.Invite.Button.Secondary">
+        <item name="android:textColor">?attr/wpColorError</item>
+    </style>
+
+    <!-- ActivityLog List Backup Download Notice Item -->
+    <style name="ActivityLogList.Notice.Item.Label" parent="android:Widget.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_small</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+    </style>
+
+    <style name="ActivityLogList.Notice.Item.PrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    </style>
+
+    <style name="ActivityLogList.Notice.Item.SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="textAllCaps">false</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.SecondaryButton.OnSurface</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:layout_marginLeft">@dimen/margin_medium</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    </style>
+
+    <style name="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="BloggingRemindersText.MediumEmphasis" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersText.Title" parent="BloggingRemindersText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
+    <style name="BloggingRemindersCaption" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+
+    <style name="BloggingRemindersDayBubble">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_extra_low</item>
+        <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+    </style>
+
+    <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipTitle">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipMessage">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
 </resources>

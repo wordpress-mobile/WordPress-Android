@@ -104,6 +104,12 @@ public class InstallationReferrerServiceLogic {
                         // if this is retried but the error persists
                         AppLog.i(T.UTILS, "installation referrer: service unavailable");
                         break;
+                    case InstallReferrerResponse.PERMISSION_ERROR:
+                        // Fix for this issue https://github.com/wordpress-mobile/WordPress-Android/issues/10532 was
+                        // added to Referrer Service library, and currently instead of crashing we should get this
+                        // response. For now we will ignore it and log for informational purposes.
+                        AppLog.i(T.UTILS, "installation referrer: app is not allowed to bind to the Service");
+                        break;
                     case InstallReferrerResponse.DEVELOPER_ERROR:
                         break;
                     case InstallReferrerResponse.SERVICE_DISCONNECTED:

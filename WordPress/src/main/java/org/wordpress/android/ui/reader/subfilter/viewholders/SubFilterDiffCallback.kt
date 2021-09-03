@@ -38,5 +38,19 @@ class SubFilterDiffCallback(
     override fun areContentsTheSame(
         oldItemPosition: Int,
         newItemPosition: Int
-    ): Boolean = oldList[oldItemPosition].isSelected == newList[newItemPosition].isSelected
+    ): Boolean {
+        val areBothSites = oldList[oldItemPosition].type == SITE && newList[newItemPosition].type == SITE
+        val isSelectedStateSame = oldList[oldItemPosition].isSelected == newList[newItemPosition].isSelected
+
+        return if (areBothSites) {
+            val oldSiteContent = oldList[oldItemPosition] as Site
+            val newSiteContent = newList[newItemPosition] as Site
+
+            isSelectedStateSame &&
+            oldSiteContent.showUnseenCount == newSiteContent.showUnseenCount &&
+            oldSiteContent.unseenCount == newSiteContent.unseenCount
+        } else {
+            isSelectedStateSame
+        }
+    }
 }

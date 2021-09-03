@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.store.ReactNativeStore
 import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
-@Config(application = TestApplication::class, sdk = [VERSION_CODES.LOLLIPOP])
+@Config(application = TestApplication::class, sdk = [VERSION_CODES.N])
 @RunWith(RobolectricTestRunner::class)
 class ReactNativeRequestHandlerTest {
     private val reactNativeStore = mock<ReactNativeStore>()
@@ -62,7 +62,7 @@ class ReactNativeRequestHandlerTest {
         val fetchResponse = ReactNativeFetchResponse.Success(successfulResponseJson)
         whenever(reactNativeStore.executeRequest(site, pathWithParams)).thenReturn(fetchResponse)
 
-        subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
+        subject.performGetRequest(pathWithParams, site, true, successHandler, errorHandler)
 
         assertTrue(calledSuccess)
     }
@@ -87,7 +87,7 @@ class ReactNativeRequestHandlerTest {
         val fetchResponse = getFetchResponseError(errorMessage, statusCode)
         whenever(reactNativeStore.executeRequest(site, pathWithParams)).thenReturn(fetchResponse)
 
-        subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
+        subject.performGetRequest(pathWithParams, site, true, successHandler, errorHandler)
 
         assertTrue(calledError)
     }

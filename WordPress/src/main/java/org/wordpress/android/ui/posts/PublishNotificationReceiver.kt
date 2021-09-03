@@ -28,7 +28,7 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                     .setContentTitle(uiModel.title)
                     .setContentText(uiModel.message)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
+                    .setSmallIcon(R.drawable.ic_app_white_24dp)
                     .setDeleteIntent(
                             NotificationsProcessingService.getPendingIntentForNotificationDismiss(
                                     context,

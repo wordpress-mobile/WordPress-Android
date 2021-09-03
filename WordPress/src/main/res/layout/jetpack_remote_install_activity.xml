@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_main" />
+    <include android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_main" />
 
     <fragment
         android:id="@+id/fragment_container"

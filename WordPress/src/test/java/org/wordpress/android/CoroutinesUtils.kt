@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Dispatchers.Unconfined
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito
@@ -24,7 +23,7 @@ fun <T : Any, R> KStubbing<T>.onBlocking(methodCall: suspend T.() -> R): Ongoing
     return runBlocking { Mockito.`when`(mock.methodCall()) }
 }
 
-@ExperimentalCoroutinesApi val TEST_SCOPE = CoroutineScope(Unconfined)
+fun testScope() = CoroutineScope(Unconfined)
 @InternalCoroutinesApi val TEST_DISPATCHER: CoroutineDispatcher = TestDispatcher()
 
 @InternalCoroutinesApi

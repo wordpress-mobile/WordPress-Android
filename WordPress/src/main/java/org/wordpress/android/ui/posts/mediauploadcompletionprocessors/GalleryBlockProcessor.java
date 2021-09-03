@@ -9,7 +9,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class GalleryBlockProcessor extends BlockProcessor {
+    private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
     private String mAttachmentPageUrl;
     private String mLinkTo;
 
@@ -18,8 +22,18 @@ public class GalleryBlockProcessor extends BlockProcessor {
      */
     private String mGalleryImageQuerySelector;
 
-    public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl) {
+    /**
+     * Template pattern used to match and splice inner image blocks in the refactored gallery format
+     */
+    private static final Pattern PATTERN_GALLERY_INNER = Pattern.compile(new StringBuilder()
+            .append("(^.*?<figure class=\"[^\"]*?wp-block-gallery[^\"]*?\">\\s*)")
+            .append("(.*)") // inner block contents
+            .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
+
+    public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl, MediaUploadCompletionProcessor
+            mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
+        mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
         mGalleryImageQuerySelector = new StringBuilder()
                 .append("img[data-id=\"")
                 .append(localId)
@@ -48,10 +62,10 @@ public class GalleryBlockProcessor extends BlockProcessor {
             Element parent = targetImg.parent();
             if (parent != null && parent.is("a") && mLinkTo != null) {
                 switch (mLinkTo) {
-                    case "media":
+                    case "file":
                         parent.attr("href", mRemoteUrl);
                         break;
-                    case "attachment":
+                    case "post":
                         parent.attr("href", mAttachmentPageUrl);
                         break;
                     default:
@@ -67,6 +81,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+        // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {
             return false;
@@ -83,5 +98,22 @@ public class GalleryBlockProcessor extends BlockProcessor {
             }
         }
         return false;
+    }
+
+    @Override String processInnerBlock(String block) {
+        Matcher innerMatcher = PATTERN_GALLERY_INNER.matcher(block);
+        boolean innerCapturesFound = innerMatcher.find();
+
+        // process inner contents recursively
+        if (innerCapturesFound) {
+            String innerProcessed = mMediaUploadCompletionProcessor.processContent(innerMatcher.group(2)); //
+            return new StringBuilder()
+                    .append(innerMatcher.group(1))
+                    .append(innerProcessed)
+                    .append(innerMatcher.group(3))
+                    .toString();
+        }
+
+        return block;
     }
 }

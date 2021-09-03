@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.CustomTarget
@@ -32,10 +33,14 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
+import org.wordpress.android.networking.MShot
+import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,7 +50,10 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
+class ImageManager @Inject constructor(
+    private val placeholderManager: ImagePlaceholderManager,
+    private val videoLoader: VideoLoader?
+) {
     interface RequestListener<T> {
         /**
          * Called when an exception occurs during a load
@@ -54,6 +62,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
          * @param model The model we were trying to load when the exception occurred.
          */
         fun onLoadFailed(e: Exception?, model: Any?)
+
         /**
          * Called when a load completes successfully
          *
@@ -99,6 +108,48 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .applyScaleType(scaleType)
                 .into(imageView)
                 .clearOnDetach()
+    }
+
+    /**
+     * Loads the first frame from the "videoUrl" as an image into the ImageView.
+     * Adds a placeholder and an error placeholder depending on the ImageType.
+     *
+     * If no URL is provided, it only loads the placeholder
+     */
+    @JvmOverloads
+    fun loadThumbnailFromVideoUrl(
+        scope: CoroutineScope,
+        imageView: ImageView,
+        videoUrl: String = "",
+        scaleType: ScaleType = CENTER,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        val imageType = VIDEO
+        if (!context.isAvailable()) return
+        videoLoader?.runIfMediaNotTooBig(scope,
+                videoUrl,
+                loadAction = {
+                    if (!context.isAvailable()) return@runIfMediaNotTooBig
+                    GlideApp.with(context)
+                            .load(videoUrl)
+                            .addFallback(imageType)
+                            .addPlaceholder(imageType)
+                            .applyScaleType(scaleType)
+                            .attachRequestListener(requestListener)
+                            .apply(RequestOptions().frame(0))
+                            .into(imageView)
+                            .clearOnDetach()
+                },
+                fallbackAction = {
+                    if (!context.isAvailable()) return@runIfMediaNotTooBig
+                    GlideApp.with(context)
+                            .load(placeholderManager.getErrorResource(imageType))
+                            .addPlaceholder(imageType)
+                            .addFallback(imageType)
+                            .into(imageView)
+                            .clearOnDetach()
+                }) ?: throw java.lang.IllegalArgumentException("Video loader has to be set")
     }
 
     /**
@@ -238,6 +289,25 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .applyScaleType(scaleType)
                 .attachRequestListener(requestListener)
                 .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads an [MShot] into an [ImageView] and attaches a [RequestListener].
+     *
+     * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
+     * The loading is handled by [org.wordpress.android.networking.GlideMShotsLoader]
+     */
+    fun loadWithResultListener(view: ImageView, design: MShot, requestListener: RequestListener<Drawable>) {
+        val context = view.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(design)
+                .addFallback(ImageType.THEME)
+                .addPlaceholder(ImageType.THEME)
+                .applyScaleType(FIT_CENTER)
+                .attachRequestListener(requestListener)
+                .into(view)
                 .clearOnDetach()
     }
 
@@ -382,6 +452,10 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
      * loaded for the view.
      */
     fun cancelRequestAndClearImageView(imageView: ImageView) {
+        val context = imageView.context
+        if (context is Activity && (context.isFinishing || context.isDestroyed)) {
+            return
+        }
         GlideApp.with(imageView.context).clear(imageView)
     }
 
@@ -506,6 +580,6 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     companion object {
         @JvmStatic
         @Deprecated("Use injected ImageManager")
-        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
+        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager(), null) }
     }
 }

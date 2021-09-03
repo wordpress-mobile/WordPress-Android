@@ -5,12 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.domain_suggestions_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -29,29 +27,33 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+    private lateinit var binding: DomainSuggestionsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.domain_suggestions_activity)
+        with(DomainSuggestionsActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
 
-        domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                as DomainRegistrationPurpose
+            domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
+                    as DomainRegistrationPurpose
 
-        setSupportActionBar(toolbar_main)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
+            setSupportActionBar(toolbarDomain)
+            supportActionBar?.let {
+                it.setHomeButtonEnabled(true)
+                it.setDisplayHomeAsUpEnabled(true)
+            }
+            setupViewModel()
         }
-        setupViewModel()
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel.start()
 
-        viewModel.domainSuggestionsVisible.observe(this, Observer { isVisible ->
+        viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
                 if (fragment == null) {
@@ -66,7 +68,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.selectedDomain.observe(this, Observer { selectedDomain ->
+        viewModel.selectedDomain.observe(this, { selectedDomain ->
             selectedDomain?.let {
                 var fragment = supportFragmentManager.findFragmentByTag(
                         DomainRegistrationDetailsFragment.TAG
@@ -79,7 +81,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.domainRegistrationCompleted.observe(this, Observer { event ->
+        viewModel.domainRegistrationCompleted.observe(this, { event ->
             event?.let {
                 if (shouldShowCongratsScreen()) {
                     var fragment = supportFragmentManager.findFragmentByTag(
@@ -140,18 +142,20 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        if (containerId == R.id.domain_suggestions_list) {
-            appbar_main.post {
-                appbar_main.isLiftOnScroll = false
-                appbar_main.setLifted(false)
-                appbar_main.elevation = 0F
-                appbar_main.requestLayout()
-            }
-        } else {
-            appbar_main.post {
-                appbar_main.isLiftOnScroll = true
-                appbar_main.liftOnScrollTargetViewId = containerId
-                appbar_main.requestLayout()
+        binding.appbarMain.apply {
+            if (containerId == R.id.domain_suggestions_list) {
+                post {
+                    isLiftOnScroll = false
+                    setLifted(false)
+                    elevation = 0F
+                    requestLayout()
+                }
+            } else {
+                post {
+                    isLiftOnScroll = true
+                    liftOnScrollTargetViewId = containerId
+                    requestLayout()
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -27,7 +28,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
 import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
@@ -40,6 +44,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -209,13 +214,46 @@ public class WPMediaUtils {
             case GENERIC_ERROR:
                 return context.getString(R.string.error_generic_error);
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
-                return context.getString(R.string.error_media_quota_exceeded);
+                return context.getString(R.string.error_media_not_enough_storage);
             case XMLRPC_OPERATION_NOT_ALLOWED:
                 return context.getString(R.string.error_media_xmlrpc_not_allowed);
             case XMLRPC_UPLOAD_ERROR:
                 return context.getString(R.string.error_media_xmlrcp_server_error);
+            case MALFORMED_MEDIA_ARG:
+                return getMalformedMediaArgErrorMessage(context, error.mErrorSubType);
         }
         return null;
+    }
+
+    private static @Nullable String getMalformedMediaArgErrorMessage(
+            final Context context,
+            @Nullable final MediaErrorSubType errorSubType
+    ) {
+        if (!(errorSubType instanceof MalformedMediaArgSubType)) return null;
+
+        String errorMessage = null;
+
+        switch (((MalformedMediaArgSubType) errorSubType).getType()) {
+            case MEDIA_WAS_NULL:
+                errorMessage = context.getString(R.string.error_media_unexpected_null_value);
+                break;
+            case UNSUPPORTED_MIME_TYPE:
+                errorMessage = context.getString(R.string.error_media_file_type_not_allowed);
+                break;
+            case NOT_VALID_LOCAL_FILE_PATH:
+                errorMessage = context.getString(R.string.error_media_unexpected_empty_media_file_path);
+                break;
+            case MEDIA_FILE_NOT_FOUND_LOCALLY:
+                errorMessage = context.getString(R.string.error_media_could_not_find_media_in_path);
+                break;
+            case DIRECTORY_PATH_SUPPLIED_FILE_NEEDED:
+                errorMessage = context.getString(R.string.error_media_path_is_directory);
+                break;
+            case NO_ERROR:
+                errorMessage = null;
+                break;
+        }
+        return errorMessage;
     }
 
     private static void showSDCardRequiredDialog(Context context) {
@@ -241,48 +279,56 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
-    public static void launchFileLibrary(Activity activity, boolean multiSelect) {
-        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
-                RequestCodes.FILE_LIBRARY);
+    public static Plan getSitePlanForMimeTypes(SiteModel site) {
+        if (site.isWPCom()) {
+            if (SiteUtils.onFreePlan(site)) {
+                return Plan.WP_COM_FREE;
+            } else {
+                return Plan.WP_COM_PAID;
+            }
+        } else {
+            return Plan.SELF_HOSTED;
+        }
+    }
+
+    public static boolean isMimeTypeSupportedBySitePlan(SiteModel site, String mimeType) {
+        return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
     }
 
     public static void launchChooserWithContext(
             Activity activity,
             OpenSystemPicker openSystemPicker,
-            UiHelpers uiHelpers
+            UiHelpers uiHelpers,
+            int requestCode
     ) {
         activity.startActivityForResult(prepareChooserIntent(activity, openSystemPicker, uiHelpers),
-                openSystemPicker.getChooserContext().getRequestCode());
+                requestCode);
+    }
+
+    private static Intent preparePictureLibraryIntent(Context context, boolean multiSelect) {
+        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "image/*",
+                new MimeTypes().getImageTypesOnly(), R.string.pick_photo);
     }
 
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("video/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoTypesOnly());
-        if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
-        return Intent.createChooser(intent, context.getString(R.string.pick_video));
+        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "video/*",
+                new MimeTypes().getVideoTypesOnly(), R.string.pick_video);
     }
 
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoAndImageTypesOnly());
-        if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
-        return Intent.createChooser(intent, context.getString(R.string.pick_media));
+        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
+                new MimeTypes().getVideoAndImageTypesOnly(), R.string.pick_media);
     }
 
-    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAllTypes());
+    private static Intent prepareIntent(Context context, boolean multiSelect, String action, String intentType,
+                                        String[] mimeTypes, @StringRes int title) {
+        Intent intent = new Intent(action);
+        intent.setType(intentType);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
-        return Intent.createChooser(intent, context.getString(R.string.pick_file));
+        return Intent.createChooser(intent, context.getString(title));
     }
 
     private static Intent prepareChooserIntent(
@@ -310,18 +356,8 @@ public class WPMediaUtils {
 
     public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
         activity.startActivityForResult(
-                preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
+                preparePictureLibraryIntent(activity, multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
-    }
-
-    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
-        if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
-        return Intent.createChooser(intent, title);
     }
 
     private static Intent prepareGalleryIntent(String title) {

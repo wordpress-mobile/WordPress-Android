@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Jetpack settings -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/jetpack_security_settings_screen"
+    android:key="@string/pref_key_jetpack_security_screen"
+    android:title="@string/jetpack_security_setting_title">
+
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:id="@+id/pref_monitor_uptime"
+        android:key="@string/pref_key_jetpack_monitor_uptime"
+        android:title="@string/jetpack_monitor_uptime_title" />
+
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:id="@+id/pref_jetpack_send_email_notifications"
+        android:dependency="@string/pref_key_jetpack_monitor_uptime"
+        android:key="@string/pref_key_jetpack_send_email_notifications"
+        android:title="@string/jetpack_send_email_notifications_title" />
+
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:id="@+id/pref_jetpack_send_wp_notifications"
+        android:dependency="@string/pref_key_jetpack_monitor_uptime"
+        android:key="@string/pref_key_jetpack_send_wp_notifications"
+        android:title="@string/jetpack_send_wp_notifications_title" />
+
+    <PreferenceCategory
+        android:id="@+id/pref_category_jetpack_brute_force"
+        android:title="@string/jetpack_prevent_brute_force_category_title">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_prevent_brute_force"
+            android:key="@string/pref_key_jetpack_prevent_brute_force"
+            android:title="@string/jetpack_prevent_brute_force_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:id="@+id/pref_category_jetpack_wpcom_sign_in"
+        android:title="@string/jetpack_wpcom_sign_in_category_title">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_allow_wpcom_sign_in"
+            android:key="@string/pref_key_jetpack_allow_wpcom_sign_in"
+            android:title="@string/jetpack_allow_wpcom_sign_in_title" />
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_jetpack_match_wpcom_email"
+            android:dependency="@string/pref_key_jetpack_allow_wpcom_sign_in"
+            android:key="@string/pref_key_jetpack_match_via_email"
+            android:title="@string/jetpack_match_wpcom_via_email_title" />
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_jetpack_require_two_factor"
+            android:dependency="@string/pref_key_jetpack_allow_wpcom_sign_in"
+            android:key="@string/pref_key_jetpack_require_two_factor"
+            android:title="@string/jetpack_require_two_factor_title" />
+
+        <org.wordpress.android.ui.prefs.LearnMorePreference
+            android:id="@+id/pref_jetpack_learn_more"
+            android:key="@string/pref_key_jetpack_learn_more"
+            android:title="@string/site_settings_learn_more_header"
+            app:layout="@layout/learn_more_pref_old"
+            app:openInDialog="true"
+            app:url="https://jetpack.com/support/sso/"
+            app:useCustomJsFormatting="false" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

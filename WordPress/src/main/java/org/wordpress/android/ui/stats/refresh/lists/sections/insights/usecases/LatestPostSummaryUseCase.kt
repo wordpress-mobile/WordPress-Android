@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
@@ -131,11 +131,11 @@ class LatestPostSummaryUseCase
             model == null -> Link(
                     R.drawable.ic_create_white_24dp,
                     R.string.stats_insights_create_post,
-                    navigateAction = NavigationAction.create(this::onAddNewPostClick)
+                    navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
             )
             model.hasData() -> Link(
                     text = R.string.stats_insights_view_more,
-                    navigateAction = NavigationAction.create(
+                    navigateAction = ListItemInteraction.create(
                             ViewMoreParams(model.postId, model.postTitle, model.postURL),
                             this::onViewMore
                     )
@@ -143,7 +143,7 @@ class LatestPostSummaryUseCase
             else -> Link(
                     R.drawable.ic_share_white_24dp,
                     R.string.stats_insights_share_post,
-                    navigateAction = NavigationAction.create(
+                    navigateAction = ListItemInteraction.create(
                             SharePostParams(model.postURL, model.postTitle),
                             this::onSharePost
                     )

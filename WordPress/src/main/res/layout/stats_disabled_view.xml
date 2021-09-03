@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.ui.ActionableEmptyView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statsDisabledView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    app:aevButton="@string/stats_disabled_enable_stats_button"
+    app:aevImage="@drawable/img_illustration_stats_226dp"
+    app:aevSubtitle="@string/stats_disabled_subtitle"
+    app:aevTitle="@string/stats_disabled_title"
+    tools:visibility="visible" />

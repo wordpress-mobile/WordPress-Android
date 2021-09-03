@@ -1,5 +1,6 @@
 package org.wordpress.android.editor.gutenberg;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -9,23 +10,28 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
-import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 
 import java.util.ArrayList;
 
@@ -51,33 +57,46 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
-                                  OnReattachQueryListener onReattachQueryListener,
+                                  OnReattachMediaUploadQueryListener onReattachQueryListener,
+                                  OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
+                                  OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
                                   RequestExecutor fetchExecutor,
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
-                                  OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
-                                  AddMentionUtil addMentionUtil,
-                                  OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
+                                  OnGutenbergDidSendButtonPressedActionListener
+                                          onGutenbergDidSendButtonPressedActionListener,
+                                  ShowSuggestionsUtil showSuggestionsUtil,
+                                  OnMediaFilesCollectionBasedBlockEditorListener
+                                          onMediaFilesCollectionBasedBlockEditorListener,
+                                  OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
+                                  OnGutenbergDidRequestPreviewListener
+                                          onGutenbergDidRequestPreviewListener,
+                                  OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
+                    onStorySavingReattachQueryListener,
+                    onSetFeaturedImageListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
                     onAuthHeaderRequestedListener,
                     fetchExecutor,
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
-                    onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
-                    addMentionUtil,
-                    onSPTTooltipShownEventListener,
+                    onGutenbergDidSendButtonPressedActionListener,
+                    showSuggestionsUtil,
+                    onMediaFilesCollectionBasedBlockEditorListener,
+                    onFPPTooltipShownEventListener,
+                    onGutenbergDidRequestPreviewListener,
+                    onBlockTypeImpressionsListener,
                     isDarkMode);
     }
 
@@ -101,7 +120,6 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext(),
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,
@@ -203,12 +221,57 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.replaceUnsupportedBlock(content, blockId);
     }
 
+    public void replaceStoryEditedBlock(String mediaFiles, String blockId) {
+        mWPAndroidGlueCode.replaceMediaFilesEditedBlock(mediaFiles, blockId);
+    }
+
     public void updateTheme(Bundle editorTheme) {
         mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 
+    public void showNotice(String message) {
+        mWPAndroidGlueCode.showNotice(message);
+    }
+
+    public void showEditorHelp() {
+        mWPAndroidGlueCode.showEditorHelp();
+    }
+
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
-        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
-        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        // We want to make sure that activity isn't null
+        // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248
+        final Activity activity = getActivity();
+        if (activity != null) {
+            GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(activity, mHtmlModeEnabled);
+            mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        }
+    }
+
+    public void clearFileSaveStatus(final String mediaId) {
+        mWPAndroidGlueCode.clearFileSaveStatus(mediaId);
+    }
+
+    public void mediaFileSaveProgress(final String mediaId, final float progress) {
+        mWPAndroidGlueCode.mediaFileSaveProgress(mediaId, progress);
+    }
+
+    public void mediaFileSaveFailed(final String mediaId) {
+        mWPAndroidGlueCode.mediaFileSaveFailed(mediaId);
+    }
+
+    public void mediaFileSaveSucceeded(final String mediaId, final String mediaUrl) {
+        mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl);
+    }
+
+    public void onStorySaveResult(final String storyFirstMediaId, final boolean success) {
+        mWPAndroidGlueCode.mediaCollectionFinalSaveResult(storyFirstMediaId, success);
+    }
+
+    public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+        mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
+    }
+
+    public void sendToJSFeaturedImageId(int mediaId) {
+        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
     }
 }

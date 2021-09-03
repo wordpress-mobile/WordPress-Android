@@ -22,6 +22,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.Mp4ComposerVideoOptimizationFeatureConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,13 +33,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
-public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
+public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizationListener {
     private static List<MediaModel> sPendingUploads = new ArrayList<>();
     private static List<MediaModel> sInProgressUploads = new ArrayList<>();
     private static ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject Mp4ComposerVideoOptimizationFeatureConfig mMp4ComposerVideoOptimizationFeatureConfig;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -196,6 +198,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("error_type", event.error.type.name());
+        properties.put("error_message", event.error.message);
+        properties.put("error_log", event.error.logMessage);
+        properties.put("error_status_code", event.error.statusCode);
         trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
 
         completeUploadWithId(event.media.getId());
@@ -279,7 +284,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private void prepareForUpload(@NonNull MediaModel media) {
         if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
             addUniqueMediaToInProgressUploads(media);
-            new VideoOptimizer(media, this).start();
+
+            if (mMp4ComposerVideoOptimizationFeatureConfig.isEnabled()) {
+                new Mp4ComposerVideoOptimizer(media, this).start();
+            } else {
+                new VideoOptimizer(media, this).start();
+            }
         } else {
             dispatchUploadAction(media);
         }
@@ -440,7 +450,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
         sOptimizationProgressByMediaId.put(media.getId(), progress);
         // fire an event so EditPostActivity and PostsListFragment can show progress
-        VideoOptimizer.ProgressEvent event = new VideoOptimizer.ProgressEvent(media, progress);
+        ProgressEvent event = new ProgressEvent(media, progress);
         EventBus.getDefault().post(event);
     }
 

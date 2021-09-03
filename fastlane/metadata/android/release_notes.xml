@@ -1,98 +1,102 @@
+<ar>
+18.0:
+لقد قمنا بتحسين تدفق تسجيل الدخول لتسهيل إنشاء مواقعك وإدارتها.
+
+لقد قمنا كذلك بتحسين صور القالب للاستمتاع بتنزيلات أسرع وتأثير أقل في خطة بياناتك، وأضفنا ألوان النمط العالمي إلى قوالب تحرير الموقع بالكامل، وقمنا بالتخلص من الخطأ الذي كان يمنع شريط أدوات "المزيد" من الظهور في محرِّر المكوِّن غير المدعوم.
+</ar>
+<de-DE>
+18.0:
+Wir haben den Anmeldevorgang verbessert, damit du deine Websites leichter erstellen und verwalten kannst.
+
+Wir haben auch die Theme-Bilder für schnelleres Herunterladen und weniger Auswirkungen auf deinen Datentarif optimiert, Farben für globale Stile zu den Full Site Editing-Themes hinzugefügt und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.
+</de-DE>
 <en-US>
-15.7:
-Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
+18.0:
+We’ve improved the login flow to make it easier for you to create and manage your sites.
 
-Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
-
+We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
 </en-US>
 <es-ES>
-15.7:
-Mejoras en el lector: Una nueva pestaña «Descubrir» que puedes adaptar a tus intereses y un botón «(No) Seguir» a las pantallas de detalles del sitio y del tema.
+18.0:
+Hemos mejorado el flujo de acceso para hacerte más fácil crear y gestionar tus sitios.
 
-Mejoras en el editor de bloques: Un nuevo bloque de «Cita» que te permite añadir énfasis a una pieza de texto elegida. Ahora, cualquier cambio realizado en los carruseles del menú también se refleja inmediatamente en los ajustes del bloque.
-
+También hemos optimizado las imágenes de los temas para que se descarguen más rápido y tengan un menor impacto en tu plan de datos, hemos añadido colores de estilo globales a los temas de la edición completa de sitios y hemos liquidado un fallo que impedía que apareciera la barra de herramientas «Más» en el editor de bloques no compatibles.
 </es-ES>
 <fr-CA>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
+18.0 :
+Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
 
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
 </fr-CA>
 <fr-FR>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
+18.0 :
+Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
 
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
 </fr-FR>
 <iw-IL>
-15.7:
-שיפורים ב-Reader: לשונית חדשה של 'לגלות' שניתנת להתאמה לפי תחומי העניין וכפתורי מעקב או ביטול מעקב במסכי הפרטים של האתרים והנושאים.
+18.0:
+שיפרנו את תהליך ההתחברות לאתר כדי שיהיה פשוט יותר ליצור ולנהל אתרים.
 
-שיפורים בעורך הבלוקים: בלוק ציטוט חדש מאפשר לך להוסיף הדגשות לחלק מסוים מהטקסט. כל שינוי שמבוצע בסליידר של התפריט יחול כעת באופן מיידי בהגדרות הבלוק.
-
+בנוסף, שיפרנו את הפעילות של התמונות בערכת העיצוב כדי לאפשר הורדות מהירות יותר ולצמצם את ההשפעה על חבילת הנתונים בנייד, הוספנו את האפשרות של צבעי סגנון גלובליים לערכות עיצוב עם עריכה של אתר מלא, ומחצנו באג שמנע מסרגל הכלים 'עוד' להופיע בעורך של בלוקים שאינם נתמכים.
 </iw-IL>
-<in>
-15.7:
-Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
+<id>
+18.0:
+Kami telah meningkatkan alur login untuk memudahkan Anda membuat dan mengelola situs.
 
-Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
-
-</in>
+Kami juga telah mengoptimalkan gambar tema agar pengunduhan bisa dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda, menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, dan menghilangkan bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.
+</id>
 <it-IT>
-15.7:
-Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
+18.0:
+Abbiamo migliorato il flusso di accesso per agevolare la creazione e la gestione dei siti.
 
-Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
-
+Abbiamo inoltre ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati, aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
 </it-IT>
 <ja-JP>
-15.7:
- Reader の改善 : 新しいディスカバータブで、サイトやトピックの詳細画面における、興味や「フォロー (解除)」ボタンをカスタマイズできます。
+18.0:
+ログインプロセスが改善されたことで、サイトの作成と管理がやりやすくなりました。
 
-ブロックエディターの改善 : 新しいプルクオートブロックで選択したテキストを強調できるようになりました。 メニューのスライダーの変更もすぐにブロック設定に反映されるようになりました。
-
+また、ダウンロード時間を短縮し、お使いのデータプランへの影響を抑えられるよう、テーマ画像を最適化しました。さらに、グローバルスタイルカラーをフルサイト編集テーマに追加し、サポート対象外のブロックエディターで「その他」ツールバーが表示されないバグを修正しました。
 </ja-JP>
 <ko-KR>
-15.7:
-리더의 개선: 관심에 따라 재단할 수 있는 새 발견 탭과 사이트와 주제 세부 화면에서 “(언)팔로우” 가 있습니다.
+18.0:
+사이트를 더 쉽게 생성하고 관리할 수 있도록 로그인 절차를 개선했습니다.
 
-블록 편집기 개선: 본문의 일부를 선택하여 강조할 수 있게 하는 새 내부인용이 있습니다. 또한 메뉴 슬라이더에서 만든 어떤 변경사항이든 이제 블록 설정에 즉각 볬영합니다.
-
+또한 다운로드 속도가 단축되고 데이터 요금제에 미치는 영향이 적어지도록 테마 이미지를 최적화했고, 전체 스타일 색상을 전체 사이트 편집 테마에 추가했으며, 지원되지 않는 블록 편집기에 '더 보기' 도구 모음이 표시되지 않는 버그를 수정했습니다.
 </ko-KR>
 <nl-NL>
-15.7:
-Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
+18.0:
+We hebben de login flow verbeterd om het gemakkelijker voor je te maken je sites te maken en te beheren.
 
-Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
-
+We hebben ook thema-afbeeldingen geoptimaliseerd voor snellere downloads en een lichter effect op je gegevensabonnement, globale stijlkleuren toegevoegd aan full site editing thema's, en een bug verholpen die verhinderde dat de 'Meer' toolbar verscheen in de niet ondersteunde blok-editor.
 </nl-NL>
-<pt-BR>
-15.7:
-Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
-
-Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
-
-
-</pt-BR>
 <ru-RU>
-15.7:
-Улучшения "Чтива": Новая вкладка поиска позволяет вам найти и подписаться (или отписаться) на сайты по интересам (на экране подробностей).
+18.0:
+Мы улучшили процесс входа в систему, чтобы вам было проще создавать свои сайты и управлять ими.
 
-Улучшения редактора блоков: Новый блок выдержки, позволяет акцентировать выделенный фрагмент текста. Изменения внесенные слайдерами в меню будут применены немедленно к настройкам блоков.
-
-
+Мы также оптимизировали изображения тем для более быстрой загрузки и меньшего использования вашего мобильного трафика, добавили глобальные цвета стиля к темам полного редактирования сайта и устранили ошибку, из-за которой панель инструментов «дополнительно» не отображалась в неподдерживаемом блоке.
 </ru-RU>
 <sv-SE>
-15.7:
-Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
+18.0:
+Vi har förbättrat inloggningsflödet för att göra det enklare att skapa och hantera dina webbplatser.
 
-Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
-
+Vi har också optimerat temans bilder så att du får snabbare nedladdningar och lägre förbrukning av mobildata, lagt till globala stilfärger i teman för redigering av hela webbplatsen och rättat ett fel som gjorde att verktygsfältet ”Mer” inte visades i redigeraren för ej stödda block.
 </sv-SE>
+<tr-TR>
+18.0:
+Sitelerinizi oluşturmanızı ve yönetmenizi kolaylaştırmak için giriş akışını iyileştirdik.
+
+Ayrıca, indirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik, Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı ortadan kaldırdık.
+</tr-TR>
+<zh-CN>
+18.0：
+我们改进了登录流程，让您更容易创建和管理您的站点。
+
+我们还优化了主题图片，以加快下载速度并降低对您的数据套餐的影响；向“全站编辑”主题添加了“全局样式颜色”；修复了阻止“不支持的区块编辑器”中显示“更多”工具栏的错误。
+</zh-CN>
 <zh-TW>
-15.7：
-閱讀器改善功能：你可以依自己的興趣量身打造全新「探索」分頁，並在網站和主題詳細資料畫面點選「關注/取消關注」按鈕。
+18.0：
+我們已改善登入流程，讓你更輕鬆建立及管理網站。
 
-區塊編輯器增強功能：推出可突顯所選文字段落的全新「重要引述」區塊。 選單投影片中的任何變更現在也會隨即反映在區塊設定中。
-
+我們也最佳化了佈景主題圖片，加快下載速度並減輕對行動數據方案的影響、為「完整網站編輯」佈景主題新增「全域樣式顏色」，並修復導致「更多」工具列在不受支援區塊編輯器中無法顯示的錯誤。
 </zh-TW>

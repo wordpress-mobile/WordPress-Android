@@ -2,17 +2,25 @@ package org.wordpress.android.ui.photopicker
 
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
 import org.wordpress.android.R
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.PHOTO
 
 /*
  * ViewHolder containing a device thumbnail
  */
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.PhotoThumbnailViewHolder}")
-class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils: ThumbnailViewUtils) :
-        ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
+@Deprecated(
+        "This class is being refactored, if you implement any change, please also update " +
+                "{@link org.wordpress.android.ui.mediapicker.PhotoThumbnailViewHolder}"
+)
+class PhotoThumbnailViewHolder(
+    parent: ViewGroup,
+    private val thumbnailViewUtils: ThumbnailViewUtils,
+    private val imageManager: ImageManager
+) : ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
@@ -29,12 +37,17 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
         if (updateCount) {
             return
         }
-        thumbnailViewUtils.setupThumbnailImage(
+        imageManager.cancelRequestAndClearImageView(imgThumbnail)
+        imageManager.load(
                 imgThumbnail,
+                PHOTO,
                 item.uri.toString(),
-                item.isSelected,
-                item.clickAction,
+                FIT_CENTER
+        )
+        thumbnailViewUtils.setupListeners(
+                imgThumbnail, item.isSelected,
                 item.toggleAction,
+                item.clickAction,
                 animateSelection
         )
     }

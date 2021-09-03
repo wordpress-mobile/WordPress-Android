@@ -13,6 +13,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
+import org.wordpress.android.ui.stats.refresh.lists.VIEW_ALL_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -24,7 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
@@ -37,9 +39,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
@@ -128,7 +127,7 @@ class TagsAndCategoriesUseCase
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = ListItemInteraction.create(this::onLinkClick)
                         )
                 )
             }
@@ -150,7 +149,7 @@ class TagsAndCategoriesUseCase
                 value = statsUtils.toFormattedString(tag.views),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
                 contentDescription = contentDescriptionHelper.buildContentDescription(
                         header,
                         item.name,
@@ -192,7 +191,7 @@ class TagsAndCategoriesUseCase
                 textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                navigationAction = ListItemInteraction.create(item.link, this::onTagClick),
                 contentDescription = contentDescriptionHelper.buildContentDescription(
                         header.startLabel,
                         item.name

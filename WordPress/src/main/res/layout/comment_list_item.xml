@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        tools:ignore="RtlSymmetry,UselessParent">
+
+        <RelativeLayout
+            android:id="@+id/status_indicator_container"
+            android:layout_width="@dimen/comment_status_dot_sz"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/frame_avatar"
+            android:layout_alignTop="@+id/frame_avatar"
+            android:layout_marginEnd="@dimen/margin_small_medium"
+            android:layout_marginStart="@dimen/margin_small_medium">
+
+            <View
+                android:id="@+id/status_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/comment_status_dot_sz"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_oval_warning_light" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_toEndOf="@+id/status_indicator_container">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/comment_avatar_sz"
+                android:layout_height="@dimen/comment_avatar_sz"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/image_checkmark"
+                android:layout_width="@dimen/comment_avatar_sz"
+                android:layout_height="@dimen/comment_avatar_sz"
+                android:background="@drawable/bg_oval_primary_40"
+                android:contentDescription="@string/comment_checkmark_desc"
+                android:padding="@dimen/margin_medium"
+                android:src="@drawable/ic_checkmark_white_24dp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title"
+            android:includeFontPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/frame_avatar"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_toEndOf="@+id/frame_avatar"
+            android:alpha="@dimen/material_emphasis_high_type"
+            android:ellipsize="end"
+            android:importantForAccessibility="no"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:ignore="RtlSymmetry"
+            tools:text="comment " />
+
+    </RelativeLayout>
+
+</RelativeLayout>

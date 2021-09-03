@@ -16,6 +16,7 @@ import java.lang.NullPointerException
 
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_DELETE_PAGE_DIALOG_TAG = "CONFIRM_DELETE_PAGE_DIALOG_TAG"
+private const val CONFIRM_COPY_CONFLICT_DIALOG_TAG = "CONFIRM_COPY_CONFLICT_DIALOG_TAG"
 private const val POST_TYPE = "post_type"
 
 class PageListDialogHelper(
@@ -24,6 +25,7 @@ class PageListDialogHelper(
 ) {
     private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
     private var pageIdForDeleteDialog: RemoteId? = null
+    private var pageIdForCopyDialog: RemoteId? = null
 
     fun showAutoSaveRevisionDialog(page: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "page"))
@@ -53,10 +55,23 @@ class PageListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    fun showCopyConflictDialog(page: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_COPY_CONFLICT_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_copy_local_title),
+                message = UiStringRes(R.string.dialog_confirm_copy_local_message),
+                positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
+                negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
+        )
+        pageIdForCopyDialog = RemoteId(page.remotePostId)
+        showDialog.invoke(dialogHolder)
+    }
+
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         deletePage: (RemoteId) -> Unit,
-        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit
+        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit,
+        editPageFirst: (RemoteId) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog?.let {
@@ -73,14 +88,18 @@ class PageListDialogHelper(
                 )
             }
                     ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
-
+            CONFIRM_COPY_CONFLICT_DIALOG_TAG -> pageIdForCopyDialog?.let {
+                pageIdForCopyDialog = null
+                editPageFirst(it)
+            } ?: throw NullPointerException("pageIdForCopyDialog shouldn't be null.")
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
 
     fun onNegativeClickedForBasicDialog(
         instanceTag: String,
-        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit
+        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit,
+        copyPage: (RemoteId) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_PAGE_DIALOG_TAG -> pageIdForDeleteDialog = null
@@ -93,7 +112,10 @@ class PageListDialogHelper(
                 )
             }
                     ?: throw NullPointerException("pageIdForAutosaveRevisionResolutionDialog shouldn't be null.")
-
+            CONFIRM_COPY_CONFLICT_DIALOG_TAG -> pageIdForCopyDialog?.let {
+                pageIdForCopyDialog = null
+                copyPage(it)
+            } ?: throw NullPointerException("pageIdForCopyDialog shouldn't be null.")
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }

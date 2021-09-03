@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import androidx.annotation.StringRes
@@ -14,13 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-import kotlinx.android.synthetic.main.notifications_list_fragment_page.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
+import org.wordpress.android.databinding.NotificationsListFragmentPageBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
@@ -57,7 +56,9 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
-class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener, DataLoadedListener {
+class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
+        OnScrollToTopListener,
+        DataLoadedListener {
     private var notesAdapter: NotesAdapter? = null
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
@@ -69,9 +70,11 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
 
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
-            notifications_list.addOnScrollListener(mOnScrollListener)
+            binding?.notificationsList?.addOnScrollListener(mOnScrollListener)
         }
     }
+
+    private var binding: NotificationsListFragmentPageBinding? = null
 
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
@@ -80,7 +83,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val adapter = createOrGetNotesAdapter()
-        notifications_list.adapter = adapter
+        binding?.notificationsList?.adapter = adapter
         if (savedInstanceState != null) {
             tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
@@ -113,31 +116,30 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
         shouldRefreshNotifications = true
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.notifications_list_fragment_page, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
-        notifications_list.layoutManager = LinearLayoutManager(activity)
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
-            hideNewNotificationsBar()
-            fetchNotesFromRemote()
+        binding = NotificationsListFragmentPageBinding.bind(view).apply {
+            notificationsList.layoutManager = LinearLayoutManager(activity)
+            swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
+                hideNewNotificationsBar()
+                fetchNotesFromRemote()
+            }
+            layoutNewNotificatons.visibility = View.GONE
+            layoutNewNotificatons.setOnClickListener { onScrollToTop() }
         }
-        layout_new_notificatons.visibility = View.GONE
-        layout_new_notificatons.setOnClickListener { onScrollToTop() }
     }
 
     override fun onDestroyView() {
-        notesAdapter!!.cancelReloadNotesTask()
-        swipeToRefreshHelper = null
-        notifications_list.adapter = null
-        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
-        notesAdapter = null
         super.onDestroyView()
+        notesAdapter?.cancelReloadNotesTask()
+        notesAdapter = null
+        swipeToRefreshHelper = null
+        binding?.notificationsList?.adapter = null
+        binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
+        binding = null
     }
 
     override fun onDataLoaded(itemsCount: Int) {
@@ -145,10 +147,12 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
             AppLog.d(T.NOTIFS,
                     "NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
         }
-        if (itemsCount > 0) {
-            hideEmptyView()
-        } else {
-            showEmptyViewForCurrentFilter()
+        binding?.apply {
+            if (itemsCount > 0) {
+                hideEmptyView()
+            } else {
+                showEmptyViewForCurrentFilter()
+            }
         }
     }
 
@@ -158,12 +162,12 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View? {
-        return notifications_list
+        return binding?.notificationsList
     }
 
     override fun onResume() {
         super.onResume()
-        hideNewNotificationsBar()
+        binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (accountStore.hasAccessToken()) {
             notesAdapter!!.reloadNotesFromDBAsync()
@@ -182,10 +186,12 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
         if (!isAdded) {
             return
         }
-        clearPendingNotificationsItemsOnUI()
-        val layoutManager = notifications_list.layoutManager as LinearLayoutManager
-        if (layoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
-            layoutManager.smoothScrollToPosition(notifications_list, null, 0)
+        binding?.apply {
+            clearPendingNotificationsItemsOnUI()
+            val layoutManager = notificationsList.layoutManager as LinearLayoutManager
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
+                layoutManager.smoothScrollToPosition(notificationsList, null, 0)
+            }
         }
     }
 
@@ -217,16 +223,16 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            notifications_list.removeOnScrollListener(this)
-            clearPendingNotificationsItemsOnUI()
+            binding?.notificationsList?.removeOnScrollListener(this)
+            binding?.clearPendingNotificationsItemsOnUI()
         }
     }
 
-    private fun clearPendingNotificationsItemsOnUI() {
+    private fun NotificationsListFragmentPageBinding.clearPendingNotificationsItemsOnUI() {
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         NotificationsActions.updateNotesSeenTimestamp()
-        Thread(Runnable { gcmMessageHandler.removeAllNotifications(activity) }).start()
+        Thread { gcmMessageHandler.removeAllNotifications(activity) }.start()
     }
 
     private fun fetchNotesFromRemote() {
@@ -243,14 +249,14 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
     val selectedSite: SiteModel?
         get() = (activity as? WPMainActivity)?.selectedSite
 
-    private fun hideEmptyView() {
+    private fun NotificationsListFragmentPageBinding.hideEmptyView() {
         if (isAdded) {
-            actionable_empty_view.visibility = View.GONE
-            notifications_list.visibility = View.VISIBLE
+            actionableEmptyView.visibility = View.GONE
+            notificationsList.visibility = View.VISIBLE
         }
     }
 
-    private fun hideNewNotificationsBar() {
+    private fun NotificationsListFragmentPageBinding.hideNewNotificationsBar() {
         if (!isAdded || !isNewNotificationsBarShowing || isAnimatingOutNewNotificationsBar) {
             return
         }
@@ -259,18 +265,18 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
             override fun onAnimationStart(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
                 if (isAdded) {
-                    layout_new_notificatons.visibility = View.GONE
+                    layoutNewNotificatons.visibility = View.GONE
                     isAnimatingOutNewNotificationsBar = false
                 }
             }
 
             override fun onAnimationRepeat(animation: Animation) {}
         }
-        AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_out, listener)
+        AniUtils.startAnimation(layoutNewNotificatons, R.anim.notifications_bottom_bar_out, listener)
     }
 
     private val isNewNotificationsBarShowing: Boolean
-        get() = layout_new_notificatons != null && layout_new_notificatons.visibility == View.VISIBLE
+        get() = binding?.layoutNewNotificatons?.visibility == View.VISIBLE
 
     private fun performActionForActiveFilter() {
         if (!isAdded) {
@@ -287,89 +293,97 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
         }
     }
 
-    private fun showEmptyView(
+    private fun NotificationsListFragmentPageBinding.showEmptyView(
         @StringRes titleResId: Int,
         @StringRes descriptionResId: Int = 0,
         @StringRes buttonResId: Int = 0
     ) {
         if (isAdded) {
-            actionable_empty_view.visibility = View.VISIBLE
-            notifications_list.visibility = View.GONE
-            actionable_empty_view.title.setText(titleResId)
+            actionableEmptyView.visibility = View.VISIBLE
+            notificationsList.visibility = View.GONE
+            actionableEmptyView.title.setText(titleResId)
             if (descriptionResId != 0) {
-                actionable_empty_view.subtitle.setText(descriptionResId)
-                actionable_empty_view.subtitle.visibility = View.VISIBLE
+                actionableEmptyView.subtitle.setText(descriptionResId)
+                actionableEmptyView.subtitle.visibility = View.VISIBLE
             } else {
-                actionable_empty_view.subtitle.visibility = View.GONE
+                actionableEmptyView.subtitle.visibility = View.GONE
             }
             if (buttonResId != 0) {
-                actionable_empty_view.button.setText(buttonResId)
-                actionable_empty_view.button.visibility = View.VISIBLE
+                actionableEmptyView.button.setText(buttonResId)
+                actionableEmptyView.button.visibility = View.VISIBLE
             } else {
-                actionable_empty_view.button.visibility = View.GONE
+                actionableEmptyView.button.visibility = View.GONE
             }
-            actionable_empty_view.button.setOnClickListener { performActionForActiveFilter() }
+            actionableEmptyView.button.setOnClickListener { performActionForActiveFilter() }
         }
     }
 
     // Show different empty view message and action button based on selected tab.
-    private fun showEmptyViewForCurrentFilter() {
+    private fun NotificationsListFragmentPageBinding.showEmptyViewForCurrentFilter() {
         if (!accountStore.hasAccessToken()) {
             return
         }
+        val titleResId: Int
+        var descriptionResId = 0
+        var buttonResId = 0
         when (tabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> showEmptyView(
-                    R.string.notifications_empty_all,
-                    R.string.notifications_empty_action_all,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_COMMENT -> showEmptyView(
-                    R.string.notifications_empty_comments,
-                    R.string.notifications_empty_action_comments,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> showEmptyView(
-                    R.string.notifications_empty_followers,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_LIKE -> showEmptyView(
-                    R.string.notifications_empty_likes,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_UNREAD -> if (selectedSite == null) {
-                showEmptyView(R.string.notifications_empty_unread)
-            } else {
-                showEmptyView(
-                        R.string.notifications_empty_unread,
-                        R.string.notifications_empty_action_unread,
-                        R.string.posts_empty_list_button
-                )
+            NotificationsListFragment.TAB_POSITION_ALL -> {
+                titleResId = R.string.notifications_empty_all
+                descriptionResId = R.string.notifications_empty_action_all
+                buttonResId = R.string.notifications_empty_view_reader
             }
-            else -> showEmptyView(R.string.notifications_empty_list)
+            NotificationsListFragment.TAB_POSITION_COMMENT -> {
+                titleResId = R.string.notifications_empty_comments
+                descriptionResId = R.string.notifications_empty_action_comments
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_FOLLOW -> {
+                titleResId = R.string.notifications_empty_followers
+                descriptionResId = R.string.notifications_empty_action_followers_likes
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_LIKE -> {
+                titleResId = R.string.notifications_empty_likes
+                descriptionResId = R.string.notifications_empty_action_followers_likes
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_UNREAD -> {
+                if (selectedSite == null) {
+                    titleResId = R.string.notifications_empty_unread
+                } else {
+                    titleResId = R.string.notifications_empty_unread
+                    descriptionResId = R.string.notifications_empty_action_unread
+                    buttonResId = R.string.posts_empty_list_button
+                }
+            }
+            else -> titleResId = R.string.notifications_empty_list
         }
-        actionable_empty_view.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
+        if (BuildConfig.IS_JETPACK_APP) {
+            showEmptyView(titleResId)
+        } else {
+            showEmptyView(titleResId, descriptionResId, buttonResId)
+        }
+        actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }
 
-    private fun showNewNotificationsBar() {
+    private fun NotificationsListFragmentPageBinding.showNewNotificationsBar() {
         if (!isAdded || isNewNotificationsBarShowing) {
             return
         }
-        AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_in)
-        layout_new_notificatons.visibility = View.VISIBLE
+        AniUtils.startAnimation(layoutNewNotificatons, R.anim.notifications_bottom_bar_in)
+        layoutNewNotificatons.visibility = View.VISIBLE
     }
 
-    private fun showNewUnseenNotificationsUI() {
-        if (!isAdded || notifications_list.layoutManager == null) {
+    private fun NotificationsListFragmentPageBinding.showNewUnseenNotificationsUI() {
+        if (!isAdded || notificationsList.layoutManager == null) {
             return
         }
-        notifications_list.clearOnScrollListeners()
-        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
-        notifications_list.postDelayed(showNewUnseenNotificationsRunnable, 1000L)
-        val first = notifications_list.layoutManager!!.getChildAt(0)
+        notificationsList.clearOnScrollListeners()
+        notificationsList.removeCallbacks(showNewUnseenNotificationsRunnable)
+        notificationsList.postDelayed(showNewUnseenNotificationsRunnable, 1000L)
+        val first = notificationsList.layoutManager!!.getChildAt(0)
         // Show new notifications bar if first item is not visible on the screen.
-        if (first != null && notifications_list.layoutManager!!.getPosition(first) > 0) {
+        if (first != null && notificationsList.layoutManager!!.getPosition(first) > 0) {
             showNewNotificationsBar()
         }
     }
@@ -414,7 +428,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
         }
         notesAdapter!!.reloadNotesFromDBAsync()
         if (event.hasUnseenNotes) {
-            showNewUnseenNotificationsUI()
+            binding?.showNewUnseenNotificationsUI()
         }
     }
 
@@ -439,10 +453,12 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
         if (!isAdded) {
             return
         }
-        if (event.hasUnseenNotes) {
-            showNewUnseenNotificationsUI()
-        } else {
-            hideNewNotificationsBar()
+        binding?.apply {
+            if (event.hasUnseenNotes) {
+                showNewUnseenNotificationsUI()
+            } else {
+                hideNewNotificationsBar()
+            }
         }
     }
 

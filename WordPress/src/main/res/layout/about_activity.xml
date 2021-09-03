@@ -4,7 +4,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/wpColorAppBar"
+    android:background="?attr/colorPrimarySurface"
     android:fillViewport="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:background="?attr/colorPrimarySurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -49,7 +49,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_my_sites_white_24dp" />
+                    android:src="@drawable/ic_app_white_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/about_first_line"

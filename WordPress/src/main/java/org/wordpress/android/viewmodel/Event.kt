@@ -1,5 +1,8 @@
 package org.wordpress.android.viewmodel
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */
@@ -27,4 +30,8 @@ open class Event<out T>(private val content: T) {
      * Returns the content, even if it's already been handled.
      */
     fun peekContent(): T = content
+}
+
+fun <T> LiveData<Event<T>>.observeEvent(owner: LifecycleOwner, block: (T) -> Unit) {
+    this.observe(owner, { it?.getContentIfNotHandled()?.let(block) })
 }

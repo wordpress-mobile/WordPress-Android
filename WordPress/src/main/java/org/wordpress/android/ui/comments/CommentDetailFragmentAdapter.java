@@ -11,6 +11,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     private final SiteModel mSite;
     private final CommentAdapter.OnLoadMoreListener mOnLoadMoreListener;

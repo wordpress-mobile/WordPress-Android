@@ -19,27 +19,18 @@
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
+    <color name="p2_author_bg_stroke">#1E1E1E</color>
 
-    <!-- Stats -->
-
-    <color name="stats_activity_very_low">@color/gray_80</color>
-    <color name="stats_activity_low">@color/blue_70</color>
-    <color name="stats_activity_medium">@color/blue_50</color>
-    <color name="stats_activity_high">@color/blue_30</color>
-    <color name="stats_activity_very_high">@color/blue_10</color>
-    <color name="stats_value_bar_color">@color/gray_60</color>
-    <color name="stats_bar_chart_bottom">@color/blue_30</color>
-    <color name="stats_bar_chart_top">@color/blue_60</color>
-    <color name="stats_bar_chart_accent_top">@color/pink_60</color>
-    <color name="stats_bar_chart_accent_bottom">@color/pink_30</color>
-    <color name="stats_bar_chart_gridline">@color/gray_80</color>
-    <color name="stats_map_activity_low">@color/pink_80</color>
-    <color name="stats_map_activity_high">@color/pink_30</color>
-    <color name="stats_map_activity_empty">@color/gray_80</color>
-
-    <!-- Login -->
+    <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
-    <color name="login_promo_footer_background_color">#11ffffff</color>
+    <color name="login_prologue_background_circle_purple">@color/green_60</color>
+    <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
+    <color name="login_prologue_background_circle_blue">@color/blue_60</color>
+    <color name="login_prologue_background_circle_light_blue">@color/blue_60</color>
+    <color name="login_prologue_background_circle_green">@color/green_60</color>
+    <color name="login_prologue_background_circle_yellow">@color/yellow_60</color>
+    <color name="login_prologue_background_circle_orange">@color/red_60</color>
+    <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
     <!-- Post History -->
 
@@ -68,4 +59,41 @@
     <color name="prepublishing_action_type_disabled_color">@color/gray_50</color>
     <color name="prepublishing_action_result_disabled_color">@color/gray_50</color>
 
+    <!-- Collapsing Toolbar Custom Scrim Color -->
+    <color name="collapsing_toolbar_custom_scrim_color">@color/black_translucent_50</color>
+
+    <!-- Scan Threat Context Line Custom Colors -->
+    <color name="context_line_highlighted_row_background">@color/red_80</color>
+
+    <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
+    <color name="quick_start_task_card_illustration_surface">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_details">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_line">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_area">@color/gray_40</color>
+    <color name="quick_start_task_card_illustration_mountain">@color/gray_60</color>
+
+    <color name="quick_start_task_card_illustration_check_site_stats_stroke">@color/gray_60</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_area">@color/white</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_fill">@color/gray_10</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_stroke">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_follow_other_sites_fill">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_header">@color/gray_10</color>
+    <color name="quick_start_task_card_illustration_set_site_title_body">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_visit_your_site_star">@color/purple_30</color>
+
+    <!-- Reader Topics You Might Like Chips -->
+    <color name="reader_topics_you_might_like_chip_green_stroke">@color/green_100</color>
+    <color name="reader_topics_you_might_like_chip_green_font">@color/green_40</color>
+    <color name="reader_topics_you_might_like_chip_green_fill">@color/green_90</color>
+    <color name="reader_topics_you_might_like_chip_purple_stroke">@color/purple_100</color>
+    <color name="reader_topics_you_might_like_chip_purple_font">@color/purple_40</color>
+    <color name="reader_topics_you_might_like_chip_purple_fill">@color/purple_90</color>
+    <color name="reader_topics_you_might_like_chip_yellow_stroke">@color/yellow_100</color>
+    <color name="reader_topics_you_might_like_chip_yellow_font">@color/yellow_40</color>
+    <color name="reader_topics_you_might_like_chip_yellow_fill">@color/yellow_90</color>
+    <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_100</color>
+    <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_40</color>
+    <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_90</color>
 </resources>

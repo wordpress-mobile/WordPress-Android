@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.R
@@ -28,7 +27,7 @@ class FeatureAnnouncementListAdapter(
 
     init {
         (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(fragment, viewModelFactory)
+        viewModel = ViewModelProvider(fragment, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
     }
 

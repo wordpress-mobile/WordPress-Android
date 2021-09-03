@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.post_signup_interstitial_default.*
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
@@ -26,19 +25,28 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(theme)
 
-        setContentView(R.layout.post_signup_interstitial_activity)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PostSignupInterstitialViewModel::class.java)
+        val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        with(binding) {
+            viewModel.onInterstitialShown()
+            createNewSiteButton().setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
+            addSelfHostedSiteButton().setOnClickListener { viewModel.onAddSelfHostedSiteButtonPressed() }
+            dismissButton().setOnClickListener { viewModel.onDismissButtonPressed() }
+        }
 
-        viewModel.onInterstitialShown()
-
-        create_new_site_button.setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
-        add_self_hosted_site_button.setOnClickListener { viewModel.onAddSelfHostedSiteButtonPressed() }
-        dismiss_button.setOnClickListener { viewModel.onDismissButtonPressed() }
-
-        viewModel.navigationAction.observe(this, Observer { executeAction(it) })
+        viewModel.navigationAction.observe(this, { executeAction(it) })
     }
+
+    private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
+            root.findViewById<MaterialButton>(R.id.create_new_site_button)
+
+    private fun PostSignupInterstitialActivityBinding.addSelfHostedSiteButton() =
+            root.findViewById<MaterialButton>(R.id.add_self_hosted_site_button)
+
+    private fun PostSignupInterstitialActivityBinding.dismissButton() =
+            root.findViewById<MaterialButton>(R.id.dismiss_button)
 
     override fun onBackPressed() {
         viewModel.onBackButtonPressed()

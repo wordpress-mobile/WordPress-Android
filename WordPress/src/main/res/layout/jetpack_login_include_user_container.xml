@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large">
+
+    <ImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="@dimen/login_empty_view_avatar_width"
+        android:layout_height="@dimen/login_empty_view_avatar_height"
+        android:layout_marginBottom="@dimen/login_empty_view_avatar_margin_bottom"
+        android:contentDescription="@string/login_empty_view_avatar_content_description"
+        tools:srcCompat="@drawable/ic_user_circle_no_padding_grey_24dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_display_name"
+        style="@style/Login.EmptyView.TextView.DisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        tools:text="Droid Tester" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_username"
+        style="@style/Login.EmptyView.TextView.Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="\@droidtester2021" />
+</LinearLayout>

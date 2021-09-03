@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -18,6 +19,7 @@ import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -27,6 +29,28 @@ import javax.inject.Inject
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SubFilterViewModel
+
+    companion object {
+        const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
+        const val SUBFILTER_TITLE_KEY = "subfilter_title_key"
+        const val SUBFILTER_CATEGORIES_KEY = "subfilter_categories_key"
+
+        @JvmStatic
+        fun newInstance(
+            subfilterViewModelKey: String,
+            categories: List<SubfilterCategory>,
+            title: CharSequence
+        ): SubfilterBottomSheetFragment {
+            val fragment = SubfilterBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putString(SUBFILTER_VIEW_MODEL_KEY, subfilterViewModelKey)
+            bundle.putCharSequence(SUBFILTER_TITLE_KEY, title)
+            bundle.putParcelableArrayList(SUBFILTER_CATEGORIES_KEY, ArrayList(categories))
+
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,12 +63,24 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(SubFilterViewModel::class.java)
+        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
+        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
+        val categories: ArrayList<SubfilterCategory> = requireArguments()
+                .getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
+
+        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
+                .get(subfilterVmKey, SubFilterViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        pager.adapter = SubfilterPagerAdapter(requireActivity(), childFragmentManager)
+        val title = view.findViewById<TextView>(R.id.title)
+        title.text = bottomSheetTitle
+        pager.adapter = SubfilterPagerAdapter(
+                requireActivity(),
+                childFragmentManager,
+                subfilterVmKey,
+                categories.toList()
+        )
         tabLayout.setupWithViewPager(pager)
         pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
             is Tag -> TAGS.ordinal

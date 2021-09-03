@@ -2,6 +2,7 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.content.Context
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,8 +11,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
+import java.lang.ref.SoftReference
 import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
@@ -30,6 +31,8 @@ class SnackbarSequencer @Inject constructor(
     private var job: Job = Job()
 
     private val snackBarQueue: Queue<SnackbarItem> = LinkedList()
+
+    private var lastSnackBarReference: SoftReference<Snackbar?>? = null
 
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
@@ -56,7 +59,13 @@ class SnackbarSequencer @Inject constructor(
             if (context != null && isContextAlive(context)) {
                 prepareSnackBar(context, item)?.show()
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
-                delay(item.getSnackbarDurationMs())
+                /**
+                 * Delay showing the next snackbar only if the current snack bar is important.
+                 * For more details on adding a delay at this point, see
+                 * https://github.com/wordpress-mobile/WordPress-Android/pull/10856#issuecomment-604452148
+                 * https://issuetracker.google.com/issues/37069975
+                 */
+                if (item?.info?.isImportant == true) delay(item.getSnackbarDurationMs())
                 AppLog.d(T.UTILS, "SnackbarSequencer > after delay")
             } else {
                 AppLog.d(T.UTILS,
@@ -77,11 +86,13 @@ class SnackbarSequencer @Inject constructor(
         return !activity.isFinishing
     }
 
-    private fun prepareSnackBar(context: Context, item: SnackbarItem): WPSnackbar? {
+    private fun prepareSnackBar(context: Context, item: SnackbarItem): Snackbar? {
         return item.info.view.get()?.let { view ->
             val message = uiHelper.getTextOfUiString(context, item.info.textRes)
 
             val snackbar = wpSnackbarWrapper.make(view, message, item.info.duration)
+
+            lastSnackBarReference = SoftReference(snackbar)
 
             item.action?.let { actionInfo ->
                 snackbar.setAction(
@@ -100,5 +111,9 @@ class SnackbarSequencer @Inject constructor(
         } ?: null.also {
             AppLog.e(T.UTILS, "SnackbarSequencer > prepareSnackBar Unexpected null view")
         }
+    }
+
+    fun dismissLastSnackbar() {
+        lastSnackBarReference?.get()?.dismiss()
     }
 }

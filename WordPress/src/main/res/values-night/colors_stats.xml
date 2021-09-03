@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stats_activity_very_low">@color/gray_80</color>
+    <color name="stats_activity_low">@color/blue_70</color>
+    <color name="stats_activity_medium">@color/blue_50</color>
+    <color name="stats_activity_high">@color/blue_30</color>
+    <color name="stats_activity_very_high">@color/blue_10</color>
+    <color name="stats_value_bar_color">@color/gray_60</color>
+    <color name="stats_bar_chart_bottom">@color/blue_30</color>
+    <color name="stats_bar_chart_top">@color/blue_60</color>
+    <color name="stats_bar_chart_accent_top">@color/pink_60</color>
+    <color name="stats_bar_chart_accent_bottom">@color/pink_30</color>
+    <color name="stats_bar_chart_gridline">@color/gray_80</color>
+    <color name="stats_map_activity_low">@color/blue_80</color>
+    <color name="stats_map_activity_high">@color/blue_30</color>
+    <color name="stats_map_activity_empty">@color/gray_80</color>
+</resources>

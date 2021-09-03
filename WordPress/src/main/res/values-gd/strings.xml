@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
@@ -51,7 +51,6 @@ Language: gd_GB
     <string name="my_site_btn_switch_site">Leum gu làrach eile</string>
     <string name="my_site_btn_view_admin">Seall an rianachd</string>
     <string name="my_site_btn_blog_posts">Puist bloga</string>
-    <string name="my_site_btn_site_settings">Roghainnean</string>
     <string name="my_site_header_look_and_feel">Coltas</string>
     <string name="my_site_header_publish">Foillsich</string>
     <string name="my_site_header_configuration">Rèiteachadh</string>
@@ -76,7 +75,6 @@ Language: gd_GB
     <string name="logs_copied_to_clipboard">Chaidh lethbhreac de logaichean na h-aplacaid a chur air an stòr-bhòrd</string>
     <string name="reader_label_new_posts">Puist ùra</string>
     <string name="error_copy_to_clipboard">Thachair mearachd nuair a chaidh lethbhreac dha na faidhlichean a chur air an stòr-bhòrd</string>
-    <string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
     <string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
     <string name="stats_followers_months">%1$d mìos(an)</string>
     <string name="stats_followers_a_year">Bliadhna</string>
@@ -102,7 +100,6 @@ Language: gd_GB
     <string name="cab_selected">%d air a thaghadh</string>
     <string name="browse_our_faq_button">Rùraich na CÀBHA agam</string>
     <string name="reader_empty_comments">Chan eil beachd ann fhathast</string>
-    <string name="reader_empty_posts_in_tag">Chan eil an taga seo aig post sam bith</string>
     <string name="reader_label_view_original">Seall an t-artaigil tùsail</string>
     <string name="reader_label_like">’S toil</string>
     <string name="reader_label_comments_closed">Tha na beachdan dùinte</string>
@@ -123,11 +120,8 @@ Language: gd_GB
     <string name="reader_toast_err_generic">Cha ghabh seo a dhèanamh</string>
     <string name="update_verb">Ùraich</string>
     <string name="schedule_verb">Cuir air an sgeideal</string>
-    <string name="reader_page_followed_tags">Tagaichean a tha thu a’ leantainn</string>
     <string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
-    <string name="reader_hint_add_tag_or_url">Cuir a-steach URL no taga gus a leantainn</string>
     <string name="help">Cobhair</string>
-    <string name="forgot_password">Na chaill thu am facal-faire agad?</string>
     <string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
     <string name="ssl_certificate_ask_trust">Ma gheibh thu cothrom air an làrach seo gun duilgheadas sam bith a ghnàth, dh’fhaoidte gu bheil a’ mhearachd seo a’ ciallachadh gu bheil cuideigin a’ leigeil orra gur iad-san an làrach cheart is cha bu chòir dhut leantainn air adhart. A bheil thu airson gabhail ris an teisteanas co-dhiù?</string>
     <string name="no_network_message">Chan eil lìonra ri làimh</string>
@@ -198,8 +192,6 @@ Language: gd_GB
     <string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a-rithist.</string>
     <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
-    <string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
-    <string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
     <string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
     <string name="share_link">Co-roinn an ceangal</string>
@@ -222,8 +214,6 @@ Language: gd_GB
     <string name="reader_likes_one">Tha aon duine ag ràdh gur toigh leotha seo</string>
     <string name="reader_likes_only_you">\'S toigh leat seo</string>
     <string name="reader_toast_err_comment_failed">Cha b\' urrainn dhuinn do bheachd a phostadh</string>
-    <string name="reader_toast_err_tag_exists">Tha thu a\' leantainn an taga seo mu thràth</string>
-    <string name="reader_toast_err_tag_invalid">Cha e taga dligheach a tha seo</string>
     <string name="reader_toast_err_share_intent">Cha ghabh a cho-roinneadh</string>
     <string name="reader_toast_err_view_image">Cha ghabh an dealbh seo a shealltainn</string>
     <string name="reader_toast_err_url_intent">Cha ghabh %s fhosgladh</string>

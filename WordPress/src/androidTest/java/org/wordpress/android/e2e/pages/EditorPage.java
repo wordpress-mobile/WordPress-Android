@@ -1,9 +1,15 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.View;
+
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
+import com.google.android.material.snackbar.SnackbarContentLayout;
+
+import org.hamcrest.Matcher;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -13,6 +19,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
@@ -33,13 +40,19 @@ public class EditorPage {
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
     private static ViewInteraction publishConfirmation = onView(allOf(
-            withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
+            withText("Post published"), isDescendantOfA(isAssignableFrom(SnackbarContentLayout.class))));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
 
 
     public EditorPage() {
+        onView(withText("Dismiss")).withFailureHandler(new FailureHandler() {
+            @Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+                // Deprecation Dialog only shows up the first time this test is run because of SharedPreference
+            }
+        }).check(matches(isDisplayed())).perform(click());
+
         editor.check(matches(isDisplayed()));
     }
 
@@ -73,7 +86,7 @@ public class EditorPage {
         waitForElementToBeDisplayed(onView(withText("WordPress media")));
         // wait for images to load before clicking
         idleFor(2000);
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
 
         // Click the confirm button
         clickOn(confirmButton);
@@ -106,8 +119,11 @@ public class EditorPage {
 
     public void setFeaturedImage() {
         clickOn(onView(withId(R.id.post_add_featured_image_button)));
-        clickOn(onView(withId(R.id.icon_wpmedia)));
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
+        clickOn(onView(withText(R.string.photo_picker_wordpress_media_library)));
+        idleFor(2000);
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        clickOn(confirmButton);
     }
 
     public boolean publishPost() {

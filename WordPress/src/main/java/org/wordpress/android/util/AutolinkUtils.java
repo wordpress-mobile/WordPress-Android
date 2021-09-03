@@ -80,16 +80,16 @@ public class AutolinkUtils {
         while (matcher.find()) {
             String whitespaces = matcher.group(1);
             String url = matcher.group(2);
-            boolean blacklisted = false;
-            // Check if the URL is blacklisted
+            boolean denylisted = false;
+            // Check if the URL is denylisted
             for (Pattern providerPattern : PROVIDERS) {
                 Matcher providerMatcher = providerPattern.matcher(url);
                 if (providerMatcher.matches()) {
-                    blacklisted = true;
+                    denylisted = true;
                 }
             }
             // Create a <a href> HTML tag for the link
-            if (!blacklisted) {
+            if (!denylisted) {
                 matcher.appendReplacement(stringBuffer, whitespaces + "<a href=\"" + url + "\">" + url + "</a>");
             } else {
                 matcher.appendReplacement(stringBuffer, whitespaces + url);

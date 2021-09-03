@@ -1,5 +1,7 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.ViewGroup;
+
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,6 +24,13 @@ public class PostsListPage {
 
     private static RecyclerView getRecyclerView() {
         ViewPager pager = getCurrentActivity().findViewById(R.id.postPager);
-        return (RecyclerView) pager.getChildAt(pager.getCurrentItem()).findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) pager.getChildAt(pager.getCurrentItem())
+                                                        .findViewById(R.id.recycler_view);
+        if (recyclerView == null) {
+            // Workaround for cases when recyclerview id missing
+            recyclerView = (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem()))
+                    .findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
+        }
+        return recyclerView;
     }
 }

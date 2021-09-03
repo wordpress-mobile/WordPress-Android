@@ -1,9 +1,6 @@
 *{
-	font-family: 'Noto Sans';
-	color: white;
+	font-family: 'Noto Serif';
+	color: #0E3049;
 	text-align: center;
-}
-
-strong{
-	font-family: 'NotoSans-Bold';
+	font-size: 80px;
 }

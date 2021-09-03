@@ -15,7 +15,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderBlogList;
-import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
@@ -39,15 +38,14 @@ public class ReaderUpdateLogic {
     /***
      * This class holds the business logic for Reader Updates, serving both ReaderUpdateService (<API26)
      * and ReaderUpdateJobService (API26+).
-     * Updates followed/recommended tags and blogs for the Reader, relies
+     * Updates followedtags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
 
     public enum UpdateTask {
         TAGS,
         INTEREST_TAGS,
-        FOLLOWED_BLOGS,
-        RECOMMENDED_BLOGS
+        FOLLOWED_BLOGS
     }
     private static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
@@ -80,9 +78,6 @@ public class ReaderUpdateLogic {
         }
         if (tasks.contains(UpdateTask.FOLLOWED_BLOGS)) {
             updateFollowedBlogs();
-        }
-        if (tasks.contains(UpdateTask.RECOMMENDED_BLOGS)) {
-            updateRecommendedBlogs();
         }
     }
 
@@ -317,7 +312,7 @@ public class ReaderUpdateLogic {
 
         AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
         // request using ?meta=site,feed to get extra info
-        WordPress.getRestClientUtilsV1_1().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
 
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {
@@ -342,48 +337,6 @@ public class ReaderUpdateLogic {
                 }
 
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
-            }
-        }.start();
-    }
-
-    /***
-     * request the latest recommended blogs, replaces all local ones
-     */
-    private void updateRecommendedBlogs() {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleRecommendedBlogsResponse(jsonObject);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.READER, volleyError);
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
-            }
-        };
-
-        AppLog.d(AppLog.T.READER, "reader service > updating recommended blogs");
-        String path = "read/recommendations/mine/"
-                      + "?source=mobile"
-                      + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
-    }
-
-    private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
-
-                if (!localBlogs.isSameList(serverBlogs)) {
-                    ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                    EventBus.getDefault().post(new ReaderEvents.RecommendedBlogsChanged());
-                }
-
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
             }
         }.start();
     }

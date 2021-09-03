@@ -1,5 +1,0 @@
-15.7:
-Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
-
-Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
-

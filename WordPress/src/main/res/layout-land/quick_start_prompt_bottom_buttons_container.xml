@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_start_prompt_dialog_buttons"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/quick_start_prompt_dialog_button_positive"
+        style="@style/QuickStartPromptDialogPrimaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        app:layout_constraintEnd_toStartOf="@id/quick_start_prompt_dialog_button_negative"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_button_positive" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/quick_start_prompt_dialog_button_negative"
+        style="@style/QuickStartPromptDialogSecondaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/quick_start_prompt_dialog_button_positive"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/quick_start_dialog_need_help_button_negative"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

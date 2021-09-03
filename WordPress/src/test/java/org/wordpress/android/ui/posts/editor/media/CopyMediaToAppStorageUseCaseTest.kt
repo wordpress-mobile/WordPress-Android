@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -9,14 +10,17 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.AdditionalMatchers.or
+import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
+@InternalCoroutinesApi
 class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
     fun `do NOT copy files which are present in media store`() = test {
@@ -28,7 +32,21 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
                 .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
-        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any())
+        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
+        assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(uris[0])
+    }
+
+    @Test
+    fun `do NOT copy files which are local to the device`() = test {
+        // Arrange
+        val uris = listOf<Uri>(mock())
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForIsFile = true)
+        // Act
+        val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
+                .copyFilesToAppStorageIfNecessary(uris)
+
+        // Assert
+        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
         assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(uris[0])
     }
 
@@ -46,7 +64,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
                 .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
-        verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0])
+        verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0], null)
         assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(expectedCopiedFileUri)
     }
 
@@ -88,21 +106,34 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
-        fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()) =
-                CopyMediaToAppStorageUseCase(mediaUtilsWrapper, TEST_DISPATCHER)
+        @InternalCoroutinesApi
+        fun createCopyMediaToAppStorageUseCase(
+            mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
+            authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
+        ) =
+                CopyMediaToAppStorageUseCase(mediaUtilsWrapper, authenticationUtils, TEST_DISPATCHER)
 
         fun createMediaUtilsWrapper(
             resultForIsInMediaStore: Boolean = false,
+            resultForIsFile: Boolean = false,
             resultForCopiedFileUri: Pair<Uri, Uri?>? = null
         ) =
                 mock<MediaUtilsWrapper> {
                     on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
-                    on { copyFileToAppStorage(any()) }.thenReturn(mock())
+                    on { isFile(any()) }.thenReturn(resultForIsFile)
+                    on { copyFileToAppStorage(any(), or(isNull(), anyMap())) }.thenReturn(mock())
                     resultForCopiedFileUri?.let {
-                        on { copyFileToAppStorage(resultForCopiedFileUri.first) }.thenReturn(
+                        on { copyFileToAppStorage(resultForCopiedFileUri.first, null) }.thenReturn(
                                 resultForCopiedFileUri.second
                         )
                     }
+                }
+
+        fun createAuthenticationUtils(
+            resultForAuthHeader: Map<String, String>? = null
+        ) =
+                mock<AuthenticationUtils> {
+                    on { getAuthHeaders(any()) }.thenReturn(resultForAuthHeader)
                 }
     }
 }

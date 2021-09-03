@@ -87,22 +87,50 @@
                     android:textColor="?attr/colorOnSurface"
                     tools:ignore="RelativeOverlap"
                     tools:text="11:32 PM" />
+
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/activityRewindButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/activityType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                tools:text="Plugin autoupdated" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/activityMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:focusable="true"
+                android:linksClickable="true"
+                android:textAppearance="?attr/textAppearanceBody1"
+                tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activityRestoreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:contentDescription="@string/rewind"
+            android:contentDescription="@string/restore"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
@@ -113,29 +141,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/rewind"
+                android:text="@string/restore"
                 android:textAllCaps="true"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorPrimary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activityDownloadBackupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/backup_download_details_page_title"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_download_white_24dp"
+                app:tint="?attr/colorPrimary" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/backup_download_details_page_title"
+                android:textAllCaps="true"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary" />
+
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/activityType"
+            android:id="@+id/multisiteMessage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            tools:text="Plugin autoupdated" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/activityMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="24dp"
-            android:focusable="true"
-            android:linksClickable="true"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:visibility="gone"
+            tools:text="Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information visit our documentation page."
+            tools:visibility="visible" />
+
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>

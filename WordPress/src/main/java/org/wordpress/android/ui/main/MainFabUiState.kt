@@ -5,5 +5,6 @@ import androidx.annotation.StringRes
 data class MainFabUiState(
     val isFabVisible: Boolean,
     val isFabTooltipVisible: Boolean,
-    @StringRes val CreateContentMessageId: Int
+    @StringRes val CreateContentMessageId: Int,
+    val isFocusPointVisible: Boolean = false
 )

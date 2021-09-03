@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -42,7 +42,6 @@ Language: az
     <string name="site_picker_title">Sayt seç</string>
     <string name="my_site_btn_switch_site">Saytı Dəyişdir</string>
     <string name="my_site_btn_blog_posts">Bloq Yazıları</string>
-    <string name="my_site_btn_site_settings">Parametrlər</string>
     <string name="my_site_header_look_and_feel">Əsas Görünüş</string>
     <string name="my_site_header_publish">Dərc et</string>
     <string name="my_site_header_configuration">Konfiqurasiya</string>
@@ -100,7 +99,6 @@ Language: az
     <string name="comment">Şərh</string>
     <string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
     <string name="browse_our_faq_button">SVS səhifəmizə göz atın</string>
-    <string name="reader_empty_posts_in_tag">Bu etiketə sahib olan yazı yoxdur</string>
     <string name="error_publish_empty_post">Boş bir yazı dərc edilə bilməz</string>
     <string name="error_refresh_unauthorized_pages">Səhifələrə baxma və ya redaktə etmə izniniz yoxdur</string>
     <string name="error_refresh_unauthorized_comments">Şərhlərə baxma və ya redaktə etmə izniniz yoxdur</string>
@@ -113,12 +111,9 @@ Language: az
     <string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
     <string name="update_verb">Yenilə</string>
     <string name="schedule_verb">Planla</string>
-    <string name="reader_page_followed_tags">İzlənilən etiketlər</string>
-    <string name="reader_hint_add_tag_or_url">İzləmək üçün etiket və ya URL daxil edin</string>
     <string name="reader_page_followed_blogs">İzlənilən saytlar</string>
     <string name="ssl_certificate_error">Yanlış SSL sertifikatı</string>
     <string name="help">Yardım</string>
-    <string name="forgot_password">Parolunuzu itirdinizmi?</string>
     <string name="ssl_certificate_ask_trust">Əgər bu sayta əsasən problemsiz şəkildə qoşula bilirsinizsə, bu xəta başqalarının saytı təqlid etdiyi mənasına gəlir. yenə də sertifikata etibar etmək istəyirsinizmi?</string>
     <string name="mnu_comment_unspam">Spam deyil</string>
     <string name="no_network_message">Uyğun vəziyyətdə şəbəkə yoxdur</string>
@@ -147,8 +142,6 @@ Language: az
     <string name="new_post">Yeni yazı</string>
     <string name="new_media">Yeni media</string>
     <string name="reader_title_applog">Proqram jurnalı</string>
-    <string name="reader_toast_err_add_tag">Bu etiket əlavə edilə bilmir</string>
-    <string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
     <string name="privacy_policy">Gizlilik siyasəti</string>
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="image_settings">Təsvir parametrləri</string>
@@ -212,8 +205,6 @@ Language: az
     <string name="reader_likes_one">Bir nəfər bunu bəyənir</string>
     <string name="reader_likes_only_you">Bunu bəyənirsiniz</string>
     <string name="reader_toast_err_comment_failed">Şərhi dərc etmək baş tutmadı</string>
-    <string name="reader_toast_err_tag_exists">Siz artıq bu etiketi izləyirsiniz</string>
-    <string name="reader_toast_err_tag_invalid">Bu keçərli bir etiket deyil</string>
     <string name="reader_toast_err_share_intent">Paylaşma baş tutmadı</string>
     <string name="reader_toast_err_view_image">Təsviri görüntüləmək baş tutmadı</string>
     <string name="reader_toast_err_url_intent">%s açmaq baş tutmadı</string>

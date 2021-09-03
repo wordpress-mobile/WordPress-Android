@@ -20,13 +20,9 @@
     <string name="stop_upload_dialog_title">Stop uploading?</string>
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
-    <string name="format_bar_tag_bold" translatable="false">bold</string>
-    <string name="format_bar_tag_italic" translatable="false">italic</string>
-    <string name="format_bar_tag_blockquote" translatable="false">blockquote</string>
-    <string name="format_bar_tag_unorderedList" translatable="false">unorderedList</string>
-    <string name="format_bar_tag_orderedList" translatable="false">orderedList</string>
-    <string name="format_bar_tag_strikethrough" translatable="false">strikeThrough</string>
-    <string name="format_bar_tag_link" translatable="false">link</string>
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>
@@ -71,25 +67,6 @@
         <item>@string/alignment_center</item>
         <item>@string/alignment_right</item>
     </string-array>
-
-    <!-- Accessibility - format bar button descriptions -->
-    <string name="format_bar_description_media">Media</string>
-    <string name="format_bar_description_heading">Heading</string>
-    <string name="format_bar_description_list">List</string>
-    <string name="format_bar_description_ol">Ordered List</string>
-    <string name="format_bar_description_ul">Unordered List</string>
-    <string name="format_bar_description_quote">Block Quote</string>
-    <string name="format_bar_description_bold">Bold</string>
-    <string name="format_bar_description_italic">Italic</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_underline">Underline</string>
-    <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
-    <string name="format_bar_description_more">Read More</string>
-    <string name="format_bar_description_page">Page Break</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
-    <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
 
     <string name="media_bar_description_camera">Take Photo or Video with camera</string>
     <string name="media_bar_description_gallery">Pick a media from gallery</string>
@@ -143,5 +120,20 @@
     <string name="long_post_dlg_saving">Saving</string>
 
     <string name="menu_toolbar_title">Edit %s block"</string>
+
+    <!-- Aztec Try Block Editor Dialog -->
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
+
+    <!-- Featured image replacement -->
+    <string name="featured_image_replace_dialog_title">Featured Image Already Set</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace</string>
+    <string name="featured_image_replace_dialog_cancel">Cancel</string>
+
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
 
 </resources>

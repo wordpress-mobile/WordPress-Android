@@ -1,5 +1,0 @@
-15.7:
-Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
-
-Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
-

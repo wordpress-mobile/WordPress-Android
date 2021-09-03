@@ -126,7 +126,7 @@ class FollowerTotalsUseCase
 
     private fun getIcon(type: FollowerType): Int {
         return when (type) {
-            WP_COM -> R.drawable.ic_my_sites_white_24dp
+            WP_COM -> R.drawable.ic_wordpress_white_24dp
             EMAIL -> R.drawable.ic_mail_white_24dp
             SOCIAL -> R.drawable.ic_share_white_24dp
         }

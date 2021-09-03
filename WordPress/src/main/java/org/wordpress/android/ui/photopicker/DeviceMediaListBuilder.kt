@@ -7,7 +7,6 @@ import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.Video
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.util.AppLog
@@ -18,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.DeviceListBuilder}")
+        "{@link org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder}")
 class DeviceMediaListBuilder
 @Inject constructor(
     val context: Context,
@@ -71,9 +70,7 @@ class DeviceMediaListBuilder
                         UriWrapper(completeUri),
                         isVideo
                 )
-                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(completeUri))) {
-                    result.add(item)
-                }
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)

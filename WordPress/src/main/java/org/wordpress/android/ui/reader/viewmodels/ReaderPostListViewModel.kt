@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
@@ -20,13 +20,15 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -39,6 +41,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
     private val readerTracker: ReaderTracker,
+    private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -63,8 +66,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
-    private val _updateFollowStatus = MediatorLiveData<PostFollowStatusChanged>()
-    val updateFollowStatus: LiveData<PostFollowStatusChanged> = _updateFollowStatus
+    private val _updateFollowStatus = MediatorLiveData<FollowStatusChanged>()
+    val updateFollowStatus: LiveData<FollowStatusChanged> = _updateFollowStatus
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -78,6 +81,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun init() {
+        readerPostCardActionsHandler.initScope(viewModelScope)
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {
@@ -108,47 +112,135 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param post post to reblog
      */
-    fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onReblogButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch {
-            readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    REBLOG,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onBlockSiteButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onBlockSiteButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch {
-            readerPostCardActionsHandler.onAction(post, BLOCK_SITE, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    BLOCK_SITE,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+    fun onBookmarkButtonClicked(
+        blogId: Long,
+        postId: Long,
+        isBookmarkList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        BOOKMARK,
+                        isBookmarkList,
+                        source = source
+                )
+            }
         }
     }
 
-    fun onFollowSiteClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onFollowSiteClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    FOLLOW,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onSiteNotificationMenuClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+    fun onSiteNotificationMenuClicked(
+        blogId: Long,
+        postId: Long,
+        isBookmarkList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, SITE_NOTIFICATIONS, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        SITE_NOTIFICATIONS,
+                        isBookmarkList,
+                        source = source
+                )
+            }
         }
     }
 
-    fun onLikeButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onLikeButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, LIKE, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    LIKE,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onReportPostButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onReportPostButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, REPORT_POST, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    REPORT_POST,
+                    bookmarksList,
+                    source = source
+            )
+        }
+    }
+
+    fun onToggleSeenStatusClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    TOGGLE_SEEN_STATUS,
+                    bookmarksList,
+                    source = source
+            )
+        }
+    }
+
+    fun onExternalPostOpened(post: ReaderPost) {
+        launch(bgDispatcher) {
+            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post)
         }
     }
 
@@ -178,7 +270,7 @@ class ReaderPostListViewModel @Inject constructor(
     fun onFragmentResume(
         isTopLevelFragment: Boolean,
         isSearch: Boolean,
-        isFollowing: Boolean,
+        isFilterable: Boolean,
         subfilterListItem: SubfilterListItem?
     ) {
         AppLog.d(
@@ -191,13 +283,13 @@ class ReaderPostListViewModel @Inject constructor(
         }
         // TODO check if the subfilter is set to a value and uncomment this code
 
-        if (isFollowing && subfilterListItem?.isTrackedItem == true) {
+        if (isFilterable && subfilterListItem?.isTrackedItem == true) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
             readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }
 
-    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFollowing: Boolean) {
+    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFilterable: Boolean) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
@@ -207,7 +299,7 @@ class ReaderPostListViewModel @Inject constructor(
             readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
         }
 
-        if (isFollowing) {
+        if (isFilterable) {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }

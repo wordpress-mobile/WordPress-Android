@@ -35,11 +35,11 @@ class ImageEditorInitializer {
             imageManager: ImageManager,
             imageEditorTracker: ImageEditorTracker,
             imageEditorFileUtils: ImageEditorFileUtils,
-            defaultScope: CoroutineScope
+            appScope: CoroutineScope
         ) {
             // Delete old output images
             val mediaEditingDirectoryPath = WordPress.getContext().cacheDir.path + "/" + MEDIA_EDITING
-            defaultScope.launch {
+            appScope.launch {
                 imageEditorFileUtils.deleteFilesOlderThanDurationFromDirectory(mediaEditingDirectoryPath, ONE_WEEK)
             }
 

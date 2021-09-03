@@ -22,8 +22,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -41,7 +41,7 @@ class PageListEventListener(
     private val siteStore: SiteStore,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-    private val handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
+    private val handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit,
     private val handleHomepageSettingsChange: (SiteModel) -> Unit
 ) : CoroutineScope {
@@ -118,7 +118,7 @@ class PageListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError)
+            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError, event.isFirstTimePublish)
         }
     }
 
@@ -154,7 +154,7 @@ class PageListEventListener(
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
-    fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
+    fun onEventBackgroundThread(event: ProgressEvent) {
         if (event.media != null && site.id == event.media.localSiteId) {
             uploadStatusChanged(LocalId(event.media.localPostId))
         }
@@ -173,12 +173,13 @@ class PageListEventListener(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        if (!event.isError) {
-            val updatedSite = siteStore.getSiteByLocalId(site.id)
-            if (updatedSite.showOnFront != site.showOnFront ||
-                    updatedSite.pageForPosts != site.pageForPosts ||
-                    updatedSite.pageOnFront != site.pageForPosts) {
-                handleHomepageSettingsChange(updatedSite)
+        if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {
+            siteStore.getSiteByLocalId(site.id)?.let { updatedSite ->
+                if (updatedSite.showOnFront != site.showOnFront ||
+                        updatedSite.pageForPosts != site.pageForPosts ||
+                        updatedSite.pageOnFront != site.pageForPosts) {
+                    handleHomepageSettingsChange(updatedSite)
+                }
             }
         }
     }
@@ -197,7 +198,7 @@ class PageListEventListener(
             site: SiteModel,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
+            handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
             handleHomepageSettingsChange: (SiteModel) -> Unit
         ): PageListEventListener {
             return PageListEventListener(

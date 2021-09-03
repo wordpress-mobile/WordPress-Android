@@ -8,6 +8,7 @@ public class AnalyticsMetadata {
     private int mNumBlogs;
     private String mUsername = "";
     private String mEmail = "";
+    private String mAppScheme = "";
     private boolean mIsGutenbergEnabled;
     private boolean mIsGutenbergEnabledVariableSet;
 
@@ -68,6 +69,14 @@ public class AnalyticsMetadata {
 
     public void setEmail(String email) {
         this.mEmail = email;
+    }
+
+    public String getAppScheme() {
+        return mAppScheme;
+    }
+
+    public void setAppScheme(String scheme) {
+        this.mAppScheme = scheme;
     }
 
     public boolean isGutenbergEnabled() {

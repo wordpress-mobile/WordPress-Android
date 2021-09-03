@@ -23,11 +23,15 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_EDITOR = "editor";
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
     private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
+    private static final String KEY_CAN_VIEW_EDITOR_ONBOARDING = "can_view_editor_onboarding";
+    private static final String KEY_GALLERY_WITH_IMAGE_BLOCKS = "unstableGalleryWithImageBlocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
     private static final String KEY_STARTUP_TIME = "startup_time_ms";
     private static final String KEY_TEMPLATE = "template";
+    private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
+    private static final String KEY_ENDPOINT = "endpoint";
 
     private String mSessionId = UUID.randomUUID().toString();
     private String mPostType;
@@ -94,12 +98,20 @@ public class PostEditorAnalyticsSession implements Serializable {
         return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
     }
 
-    public void start(ArrayList<Object> unsupportedBlocksList) {
+    public void start(ArrayList<Object> unsupportedBlocksList,
+                      Boolean canViewEditorOnboarding,
+                      Boolean galleryWithImageBlocks) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
+            if (canViewEditorOnboarding != null) {
+                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
+            }
+            if (galleryWithImageBlocks != null) {
+                properties.put(KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks);
+            }
             // Note that start time only counts when the analytics session was created and not when the editor
             // activity started. We are mostly interested in measuring the loading times for the block editor,
             // where the main bottleneck seems to be initializing React Native and doing the initial load of Gutenberg.
@@ -131,12 +143,6 @@ public class PostEditorAnalyticsSession implements Serializable {
         mOutcome = newOutcome;
     }
 
-    public void previewTemplate(String template) {
-        final Map<String, Object> properties = getCommonProperties();
-        properties.put(KEY_TEMPLATE, template);
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_PREVIEW, properties);
-    }
-
     public void applyTemplate(String template) {
         mTemplate = template;
         final Map<String, Object> properties = getCommonProperties();
@@ -144,7 +150,14 @@ public class PostEditorAnalyticsSession implements Serializable {
         AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
     }
 
-    public void end() {
+    public void editorSettingsFetched(Boolean fullSiteEditing, String endpoint) {
+        final Map<String, Object> properties = getCommonProperties();
+        properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
+        properties.put(KEY_ENDPOINT, endpoint);
+        AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
+    }
+
+    public void end(Boolean canViewEditorOnboarding) {
         // don't try to send an "end" event if the session wasn't started in the first place
         if (mStarted) {
             if (mOutcome == null) {
@@ -154,6 +167,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
+            if (canViewEditorOnboarding != null) {
+                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
+            }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");

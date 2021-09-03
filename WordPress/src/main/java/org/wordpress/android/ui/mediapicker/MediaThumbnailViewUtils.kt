@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
@@ -15,26 +14,17 @@ import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import java.util.Locale
 
 class MediaThumbnailViewUtils(val imageManager: ImageManager) {
-    fun setupThumbnailImage(
+    fun setupListeners(
         imgThumbnail: ImageView,
-        url: String,
         isSelected: Boolean,
-        clickAction: ClickAction,
         toggleAction: ToggleAction,
+        clickAction: ClickAction,
         animateSelection: Boolean
     ) {
-        imageManager.cancelRequestAndClearImageView(imgThumbnail)
-        imageManager.load(
-                imgThumbnail,
-                PHOTO,
-                url,
-                FIT_CENTER
-        )
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()

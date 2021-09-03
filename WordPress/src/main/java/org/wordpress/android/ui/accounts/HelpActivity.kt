@@ -2,13 +2,14 @@ package org.wordpress.android.ui.accounts
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.help_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.databinding.HelpActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -28,6 +29,7 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
     @Inject lateinit var zendeskHelper: ZendeskHelper
+    private lateinit var binding: HelpActivityBinding
 
     private val originFromExtras by lazy {
         (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
@@ -42,48 +44,48 @@ class HelpActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        with(HelpActivityBinding.inflate(layoutInflater)) {
+            binding = this
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
 
-        setContentView(R.layout.help_activity)
-
-        setSupportActionBar(toolbar_main)
-
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true)
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.elevation = 0f // remove shadow
-        }
-
-        contact_us_button.setOnClickListener { createNewZendeskTicket() }
-        faq_button.setOnClickListener { showZendeskFaq() }
-        my_tickets_button.setOnClickListener { showZendeskTickets() }
-        applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-        application_log_button.setOnClickListener { v ->
-            startActivity(Intent(v.context, AppLogViewerActivity::class.java))
-        }
-
-        contactEmailContainer.setOnClickListener {
-            var emailSuggestion = AppPrefs.getSupportEmail()
-            if (emailSuggestion.isNullOrEmpty()) {
-                emailSuggestion = supportHelper
-                        .getSupportEmailAndNameSuggestion(
-                                accountStore.account,
-                                selectedSiteFromExtras
-                        ).first
+            val actionBar = supportActionBar
+            if (actionBar != null) {
+                actionBar.setHomeButtonEnabled(true)
+                actionBar.setDisplayHomeAsUpEnabled(true)
+                actionBar.elevation = 0f // remove shadow
             }
 
-            supportHelper.showSupportIdentityInputDialog(
-                    this,
-                    emailSuggestion,
-                    isNameInputHidden = true
-            ) { email, _ ->
-                zendeskHelper.setSupportEmail(email)
-                refreshContactEmailText()
-                AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
+            contactUsButton.setOnClickListener { createNewZendeskTicket() }
+            faqButton.setOnClickListener { showFaq() }
+            myTicketsButton.setOnClickListener { showZendeskTickets() }
+            applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
+            applicationLogButton.setOnClickListener { v ->
+                startActivity(Intent(v.context, AppLogViewerActivity::class.java))
             }
-            AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
-        }
 
+            contactEmailContainer.setOnClickListener {
+                var emailSuggestion = AppPrefs.getSupportEmail()
+                if (emailSuggestion.isNullOrEmpty()) {
+                    emailSuggestion = supportHelper
+                            .getSupportEmailAndNameSuggestion(
+                                    accountStore.account,
+                                    selectedSiteFromExtras
+                            ).first
+                }
+
+                supportHelper.showSupportIdentityInputDialog(
+                        this@HelpActivity,
+                        emailSuggestion,
+                        isNameInputHidden = true
+                ) { email, _ ->
+                    zendeskHelper.setSupportEmail(email)
+                    refreshContactEmailText()
+                    AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
+                }
+                AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
+            }
+        }
         /**
          * If the user taps on a Zendesk notification, we want to show them the `My Tickets` page. However, this
          * should only be triggered when the activity is first created, otherwise if the user comes back from
@@ -98,7 +100,7 @@ class HelpActivity : LocaleAwareActivity() {
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
-        refreshContactEmailText()
+        binding.refreshContactEmailText()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,17 +129,13 @@ class HelpActivity : LocaleAwareActivity() {
         )
     }
 
-    private fun showZendeskFaq() {
-        zendeskHelper
-                .showZendeskHelpCenter(
-                        this,
-                        originFromExtras,
-                        selectedSiteFromExtras,
-                        extraTagsFromExtras
-                )
+    private fun showFaq() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
+        startActivity(intent)
+        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
-    private fun refreshContactEmailText() {
+    private fun HelpActivityBinding.refreshContactEmailText() {
         val supportEmail = AppPrefs.getSupportEmail()
         contactEmailAddress.text = if (!supportEmail.isNullOrEmpty()) {
             supportEmail
@@ -172,7 +170,8 @@ class HelpActivity : LocaleAwareActivity() {
         SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
         SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
         SITE_CREATION_DOMAINS("origin:site-create-domains"),
-        SITE_CREATION_SITE_INFO("origin:site-create-site-info");
+        SITE_CREATION_SITE_INFO("origin:site-create-site-info"),
+        SCAN_SCREEN_HELP("origin:scan-screen-help");
 
         override fun toString(): String {
             return stringValue

@@ -3,17 +3,15 @@ package org.wordpress.android.ui.domains
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.domain_registration_result_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.DomainRegistrationResultFragmentBinding
 
-class DomainRegistrationResultFragment : Fragment() {
+class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {
     private var domainName: String? = null
     private var email: String? = null
 
@@ -39,28 +37,25 @@ class DomainRegistrationResultFragment : Fragment() {
         email = arguments?.getString(EXTRA_REGISTERED_DOMAIN_EMAIL, "")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.domain_registration_result_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         checkNotNull((activity?.application as WordPress).component())
+        with(DomainRegistrationResultFragmentBinding.bind(view)) {
+            continueButton.setOnClickListener {
+                val intent = Intent()
+                intent.putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email)
+                val nonNullActivity = requireActivity()
+                nonNullActivity.setResult(RESULT_OK, intent)
+                nonNullActivity.finish()
+            }
 
-        continue_button.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email)
-            val nonNullActivity = requireActivity()
-            nonNullActivity.setResult(RESULT_OK, intent)
-            nonNullActivity.finish()
+            domainRegistrationResultMessage.text = HtmlCompat.fromHtml(
+                    getString(
+                            R.string.domain_registration_result_description,
+                            domainName
+                    ), FROM_HTML_MODE_COMPACT
+            )
         }
-
-        domain_registration_result_message.text = HtmlCompat.fromHtml(
-                getString(
-                        R.string.domain_registration_result_description,
-                        domainName
-                ), FROM_HTML_MODE_COMPACT
-        )
     }
 }

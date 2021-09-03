@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <dimen name="min_touch_target_sz">48dp</dimen>
 
@@ -9,6 +9,7 @@
 
     <dimen name="tab_height">48dp</dimen>
     <dimen name="me_menu_width">64dp</dimen>
+    <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="prominent_toolbar_height">112dp</dimen>
     <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
@@ -18,6 +19,7 @@
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
+    <dimen name="fab_margin_stories">64dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
@@ -28,7 +30,8 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
-    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_low" format="float" type="dimen">0.08</item>
 
     <dimen name="divider_size">1dp</dimen>
     <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
@@ -65,6 +68,8 @@
 
     <dimen name="default_cardview_radius">2dp</dimen>
 
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
@@ -78,11 +83,7 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
     <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_end_tablet">@dimen/content_margin_tablet</dimen>
-    <dimen name="content_margin_site_row_end_tablet_big">@dimen/content_margin_tablet_big</dimen>
     <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
-    <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
-    <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -119,7 +120,7 @@
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
-    <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
+    <dimen name="margin_my_site_quick_actions_bottom">24dp</dimen>
 
     <!-- left/right margin for reader interests content -->
     <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
@@ -139,10 +140,6 @@
     <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_detail_header_avatar">48dp</dimen>
-    <dimen name="reader_detail_header_blavatar">56dp</dimen>
-    <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
-
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
@@ -159,10 +156,22 @@
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
+    <!-- reader follow unfollow comments dimensions -->
+    <dimen name="reader_follow_button_min_height">32dp</dimen>
+    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
+    <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
+    <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
+
+    <!-- reader more menu spacer height -->
+    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
+    <!-- collapsing toolbar scrim visible height trigger -->
+    <dimen name="scrim_visible_height_trigger">130dp</dimen>
+
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
-        @dimen/emphasis_extra_low
+        @dimen/emphasis_extra_extra_low
     </item>
 
+    <dimen name="text_sz_extra_extra_small">7sp</dimen>
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
@@ -177,6 +186,7 @@
     <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
@@ -191,7 +201,7 @@
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
-    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
+    <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
@@ -201,13 +211,15 @@
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
     <dimen name="reader_image_featured_border_width">1dp</dimen>
 
-    <dimen name="reader_simple_post_image_width">72dp</dimen>
+    <dimen name="reader_related_post_image_width">150dp</dimen>
 
-    <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
+    <dimen name="reader_subfilter_end_guideline_margin">16dp</dimen>
 
     <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
 
     <dimen name="reader_subfilter_component_height">48dp</dimen>
+
+    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
 
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
@@ -239,6 +251,11 @@
     <!-- editor -->
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
     <dimen name="post_settings_featured_image_height_max">300dp</dimen>
+
+    <!-- comments -->
+    <dimen name="comment_avatar_sz">40dp</dimen>
+    <dimen name="comment_status_dot_sz">8dp</dimen>
+    <dimen name="comment_list_divider_start_offset">72dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">16dp</dimen>
@@ -294,6 +311,10 @@
     <dimen name="my_site_bottom_spacing">64dp</dimen>
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
+    <dimen name="my_site_content_area">500dp</dimen>
+    <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
+    <dimen name="my_site_card_row_padding">16dp</dimen>
+    <dimen name="my_site_card_row_top_padding">12dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -346,6 +367,8 @@
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
+    <dimen name="people_chips_min_target">40dp</dimen>
+    <dimen name="people_default_margin_top">5dp</dimen>
 
     <!-- photo picker -->
     <dimen name="photo_picker_item_padding">2dp</dimen>
@@ -366,23 +389,14 @@
 
     <!-- login -->
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-    <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
-    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
     <dimen name="prologue_intro_content_max_width">0dp</dimen>
 
-    <dimen name="prologue_logo_size">50dp</dimen>
-    <dimen name="prologue_logo_margin">16dp</dimen>
+    <dimen name="prologue_promo_title_size">24sp</dimen>
 
-    <dimen name="prologue_promo_title_size">34sp</dimen>
-    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
-
-    <dimen name="prologue_promo_text_size">20sp</dimen>
-    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
-
-    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
+    <dimen name="prologue_promo_illustration_margin_bottom">88dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
@@ -408,13 +422,37 @@
     <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
     <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>
     <dimen name="quick_start_focus_point_size">40dp</dimen>
-    <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
-    <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
+    <dimen name="quick_start_focus_point_small_size">30dp</dimen>
+    <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
+    <dimen name="quick_start_focus_point_elevation">100dp</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
+
+    <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
+    <dimen name="quick_start_task_card_width">168dp</dimen>
+    <dimen name="quick_start_task_card_elevation">0dp</dimen>
+    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
+    <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- jetpack -->
+    <dimen name="jetpack_icon_size">32dp</dimen>
+    <dimen name="jetpack_icon_margin">0dp</dimen>
+    <dimen name="jetpack_button_icon_size">16dp</dimen>
+
+    <!-- jetpack backup restore last bullet bottom margin-->
+    <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
+    <dimen name="jetpack_backup_restore_footnote_icon_size">24dp</dimen>
+    <dimen name="jetpack_backup_restore_footnote_enter_server_creds_icon_size">18dp</dimen>
+
+    <!-- scan -->
+    <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
+    <dimen name="scan_icon_size">48dp</dimen>
+    <dimen name="scan_icon_margin">16dp</dimen>
+    <dimen name="scan_threat_item_icon_size">40dp</dimen>
+    <dimen name="scan_footnote_icon_size">18dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
@@ -459,7 +497,7 @@
     <!--site creation-->
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
     <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
-    <dimen name="site_creation_segments_content_padding_vertical">24dp</dimen>
+    <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
     <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
     <dimen name="site_creation_verticals_clear_search_icon_size">24dp</dimen>
@@ -470,6 +508,14 @@
     <dimen name="site_creation_container_elevation">6dp</dimen>
 
     <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
+
+    <dimen name="site_creation_domains_example_top_cell_height">28dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_height">23dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_top_margin">44dp</dimen>
+    <dimen name="site_creation_domains_example_bottom_cell_top_margin">75dp</dimen>
+    <dimen name="site_creation_domains_example_left_cell_width">97dp</dimen>
+    <dimen name="site_creation_domains_example_right_cell_width">49dp</dimen>
+    <dimen name="site_creation_domains_example_top_margin">40dp</dimen>
 
     <dimen name="site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="site_creation_preview_skeleton_large_block_height">136dp</dimen>
@@ -514,7 +560,7 @@
     <!--settings username changer-->
     <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
-    <!--preferences master switch -->
+    <!--preferences main switch -->
     <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
     <dimen name="notifications_settings_dialog_divider_height">1dp</dimen>
 
@@ -548,22 +594,24 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">72dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_width">48dp</dimen>
     <dimen name="story_thumbnail_margin">6dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
-    <!-- Modal Layout Picker Styles -->
-    <dimen name="mlp_header_scroll_snap_threshold">-24dp</dimen>
-    <dimen name="mlp_layouts_handle_margin_bottom">@dimen/margin_medium</dimen>
-    <dimen name="mlp_layouts_row_height">281dp</dimen>
+    <!-- Common Picker resources -->
+    <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
+    <dimen name="picker_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="picker_header_selection_overlay_width">2dp</dimen>
+
+    <!-- Modal Layout Picker -->
+    <dimen name="mlp_layouts_row_height">317dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
-    <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
-    <dimen name="mlp_categories_bar_height">52dp</dimen>
-    <dimen name="mlp_layout_card_height">204dp</dimen>
-    <dimen name="mlp_layout_card_width">136dp</dimen>
+    <dimen name="mlp_categories_bar_height">44dp</dimen>
+    <dimen name="mlp_layout_card_height">240dp</dimen>
+    <dimen name="mlp_layout_card_width">160dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
@@ -571,12 +619,55 @@
     <dimen name="mlp_category_horizontal_central_margin">@dimen/margin_medium</dimen>
     <dimen name="mlp_categories_margin">@dimen/margin_medium</dimen>
     <dimen name="mlp_categories_emoji_size">18dp</dimen>
+    <dimen name="mlp_titles_top_margin">14dp</dimen>
+    <dimen name="mlp_titles_bottom_margin">28dp</dimen>
     <dimen name="mlp_layout_card_margin_end">@dimen/margin_medium</dimen>
     <dimen name="mlp_layout_card_margin_top">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_layout_card_elevation">@dimen/margin_small</dimen>
     <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>
-    <dimen name="mlp_layouts_margin_bottom">84dp</dimen>
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
+
+    <!-- Home Page Picker -->
+    <dimen name="hpp_button_max_width">244dp</dimen>
+    <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+
+    <!-- Login Prologue -->
+    <dimen name="login_prologue_content_area">320dp</dimen>
+    <dimen name="login_prologue_background_circle_size">140dp</dimen>
+    <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
+
+    <!-- edit text with chips view -->
+    <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
+    <dimen name="edit_text_with_chips_padding">12dp</dimen>
+    <dimen name="edit_text_with_chips_edit_view_min_height">32dp</dimen>
+    <dimen name="edit_text_with_chips_label_text_size">12sp</dimen>
+    <dimen name="edit_text_with_chips_hint_text_size">16sp</dimen>
+    <dimen name="edit_with_chips_outline_radius">4dp</dimen>
+    <dimen name="edit_with_chips_outline_default_width">1dp</dimen>
+    <dimen name="edit_with_chips_outline_focused_width">2dp</dimen>
+    <dimen name="edit_with_chips_outline_default_alpha" format="float" type="dimen">0.38</dimen>
+    <dimen name="edit_with_chips_outline_focused_alpha" format="float" type="dimen">1.0</dimen>
+    <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
+
+    <!-- Hack to make snackbar padding smaller -->
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+        @dimen/design_snackbar_padding_vertical
+    </dimen>
+
+    <!-- likes list and user profile bottom sheet -->
+    <dimen name="reader_like_faces_padding">2dp</dimen>
+    <dimen name="liker_faces_section_min_height">80dp</dimen>
+    <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
+    <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
+
+    <!-- Login empty views-->
+    <dimen name="login_empty_view_avatar_width">72dp</dimen>
+    <dimen name="login_empty_view_avatar_height">72dp</dimen>
+    <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
+    <dimen name="login_empty_view_line_spacing">2sp</dimen>
+
+    <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
+    <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
 </resources>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
-        <item name="colorPrimary">@color/blue_30</item>
-        <item name="colorPrimaryVariant">@color/blue_50</item>
-        <item name="colorSecondary">@color/pink_30</item>
-        <item name="colorSecondaryVariant">@color/pink_50</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="android:colorBackground">@color/background_dark</item>
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>
@@ -22,10 +22,12 @@
         <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/yellow_20</item>
+        <item name="wpColorNavBar">@color/nav_bar</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
+        <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
@@ -52,7 +54,9 @@
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
-        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+        <item name="snackbarStyle">@style/WordPress.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/WordPress.SnackbarButton</item>
+        <item name="snackbarTextViewStyle">@style/WordPress.SnackbarText</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
@@ -77,7 +81,12 @@
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background_dark</item>
         <item name="categoriesButtonBackgroundSelected">@color/mlp_categories_button_background_selected_dark</item>
         <item name="mlpDividerColor">@color/mlp_divider_dark</item>
-        <item name="categoriesBackground">@color/mlp_categories_background_dark</item>
+        <item name="layoutPickerBackground">@color/mlp_categories_background_dark</item>
+
+        <!-- Material Date Range Picker -->
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -88,12 +97,6 @@
 
     <style name="WordPress" parent="Base.Wordpress">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-    </style>
-
-    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:elevation">0dp</item>
-        <item name="android:background">@drawable/tab_layout_background</item>
-        <item name="android:duplicateParentState">true</item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -118,18 +121,19 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="ZendeskSdkTheme.Dark" />
-
-    <!-- Overload of Zendesk FAB style -->
-    <style name="zs_contact_us_fab">
-        <item name="android:gravity">bottom|end</item>
-        <item name="android:layout_margin">@dimen/zs_fab_margin</item>
-        <item name="android:contentDescription">
-            @string/zs_general_contact_us_button_label_accessibility
+    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
+        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
         </item>
-        <item name="android:visibility">gone</item>
-        <item name="android:src">@drawable/zs_create_ticket_fab</item>
-        <item name="android:backgroundTint">@color/pink_50</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
 </resources>

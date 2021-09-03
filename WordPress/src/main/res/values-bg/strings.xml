@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -65,7 +65,6 @@ Language: bg
     <string name="quick_start_dialog_need_help_title">Искате ли малко помощ, за да започнете?</string>
     <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
-    <string name="login_google_button_suffix">Вход с Google.</string>
     <string name="login_error_button">Затваряне</string>
     <string name="post_settings_remove_featured_image">Премахване картинката на публикацията</string>
     <string name="post_settings_choose_featured_image">Избор на картинка за публикацията</string>
@@ -92,13 +91,7 @@ Language: bg
     <string name="notification_settings_category_other">Други</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Всички мои сайтове</string>
     <string name="notification_settings_category_your_sites">Вашите сайтове</string>
-    <string name="notification_settings_master_off_message">Изключване на състемата за известия, ще спре изпращането на известия, независимо от типа им. Може да донастройте системата за известия като я включите.</string>
-    <string name="notification_settings_master_off_title">За да получавате известия на устройството, активирайте системата за известия.</string>
-    <string name="notification_settings_master_hint_off">Включване на известията</string>
-    <string name="notification_settings_master_hint_on">Изключване на известията</string>
-    <string name="notification_settings_master_status_off">Изключено</string>
     <string name="max_video_resolution">Максимален размер на видеото</string>
-    <string name="notification_settings_master_status_on">Включено</string>
     <string name="max_thumbnail_px_size">Максимален размер на изображенията</string>
     <string name="error_upload_post_media_param">Възникна грешка при качване на медиата в тази публикация %s.</string>
     <string name="error_upload_post_param">Възникна грешка при качването на тази публикация: %s.</string>
@@ -124,7 +117,6 @@ Language: bg
     <string name="login_checking_site_address">Проверяване на адреса на сайта</string>
     <string name="login_site_address_more_help">Имате нужда от помощ?</string>
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
-    <string name="login_site_address_help">Трябва ви помощ, за да намерите адреса на сайта си?</string>
     <string name="login_site_address">Адрес на сайта</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
@@ -144,11 +136,7 @@ Language: bg
     <string name="post_status_pending_review">Очаква коментар</string>
     <string name="post_status_post_private">Лична</string>
     <string name="post_status_draft">Чернова</string>
-    <string name="change_location">Промяна на местоположението</string>
-    <string name="remove_location">Премахване на местоположението</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Не мога да отворя избора на местоположение, Google Play Services не са достъпни.</string>
     <string name="post_status_publish_post">Публикуване</string>
-    <string name="post_settings_location">Местоположение</string>
     <string name="now">Сега</string>
     <string name="post_settings_password_dialog_hint">Само тези с паролата ще могат да видят публикацията</string>
     <string name="post_settings_excerpt_dialog_hint">Откъсът е незадължително кратко резюме на текста.</string>
@@ -270,9 +258,7 @@ Language: bg
     <string name="reader_toast_err_already_liked">Вече сте харесали този коментар</string>
     <string name="reader_toast_err_comment_not_found">Коментарът не е открит.</string>
     <string name="reader_toast_err_cannot_like_post">Неуспешно харесване на публикацията.</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com публикация</string>
     <string name="error_notif_q_action_reply">Неуспешен отговор на коментара. Моля, опитайте по-късно.</string>
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="error_notif_q_action_approve">Неуспешно одобряване на коментара. Моля, опитайте по-късно.</string>
     <string name="error_notif_q_action_like">Неуспешно харесване на коментара. Моля, опитайте по-късно.</string>
     <string name="notifications_label_new_notifications_subtitle">Натиснете, за да ги покажете</string>
@@ -286,7 +272,6 @@ Language: bg
     <string name="sign_in_wpcom">Влизане в WordPress.com</string>
     <string name="signout">Излизане</string>
     <string name="reader_label_global_related_posts">Още на WordPress.com</string>
-    <string name="reader_label_local_related_posts">Още в %s</string>
     <string name="preference_open_device_settings">Настройки на устройството</string>
     <string name="invite_invalid_email">%s: Невалиден имейл</string>
     <string name="invite_user_blocked_invites">%s: потребителят е забранил поканите</string>
@@ -334,16 +319,9 @@ Language: bg
     <string name="invite_error_invalid_usernames_multiple">Има невалидни имена или имейл адреси.</string>
     <string name="invite_error_invalid_usernames_one">Неуспешно изпращане: Невалиден имейл адрес или име</string>
     <string name="invite_error_no_usernames">Нужно е поне едно потребителско име</string>
-    <string name="invite_message_info">(По желание) Тук може да добавите съобщение до 500 символа, което ще бъде включено в поканата до потербителите.</string>
-    <string name="invite_message_remaining_other">Оставащи символи: %d</string>
-    <string name="invite_message_remaining_one">Оставащи символи: 1</string>
-    <string name="invite_message_remaining_zero">0 оставащи символи</string>
-    <string name="invite_message_title">Съобщение</string>
     <string name="invite">Покана</string>
-    <string name="invite_names_title">Имена или имейл адреси</string>
     <string name="my_site_header_external">Външна</string>
     <string name="invite_people">Покана</string>
-    <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
@@ -365,7 +343,6 @@ Language: bg
     <string name="checking_email">Проверяване на имейл</string>
     <string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
-    <string name="enter_your_password_instead">Въведете паролата си</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
     <string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
     <string name="plan">План</string>
@@ -479,7 +456,6 @@ Language: bg
     <string name="site_settings_paging_dialog_description">Разделяне на коментарите на няколко страници.</string>
     <string name="site_settings_paging_dialog_header">Коментари на страница</string>
     <string name="site_settings_close_after_dialog_title">Затваряне на коментарите</string>
-    <string name="site_settings_blacklist_description">Когато коментар съдържа която и да е от тези думи в съдържанието, името, адрес или IP адреса си, той ще бъде отбелязан като спам. Частични думи също работят, може да въведете „press“, което ще съвпадне с „WordPress“.</string>
     <string name="site_settings_hold_for_moderation_description">Когато коментар съдържа която и да е от тези думи в съдържанието, името, адрес или IP адреса си, той ще бъде изпращан за модерация. Частични думи също работят, може да въведете „press“, което ще съвпадне с „WordPress“.</string>
     <string name="site_settings_list_editor_input_hint">Въведете дума или фраза</string>
     <string name="site_settings_list_editor_no_items_text">Няма елементи</string>
@@ -494,10 +470,8 @@ Language: bg
     <string name="site_settings_rp_show_header_title">Показване на заглавката</string>
     <string name="site_settings_rp_switch_summary">Показва подобно съдържание от вашия сайт под вашите публикации.</string>
     <string name="site_settings_rp_switch_title">Показване на подобни публикации</string>
-    <string name="site_settings_blacklist_hint">Коментарите, които съвпаднат с термин за филтриране, ще бъдат отбелязани като спам.</string>
     <string name="site_settings_moderation_hold_hint">Коментарите, които отговарят на този филтър, ще бъдат добавени в опашката за модериране.</string>
     <string name="site_settings_multiple_links_hint">Игнорира лимита за връзки от познати потребители</string>
-    <string name="site_settings_whitelist_hint">Авторът на коментара трябва да има поне един одобрен коментар</string>
     <string name="site_settings_user_account_required_hint">Потребителите трябва да са регистрирани и влезли за да коментират</string>
     <string name="site_settings_identity_required_hint">Авторът на коментара трябва да попълни своите име и имейл</string>
     <string name="site_settings_paging_hint">Показване на коментарите в части с определен размер</string>
@@ -520,17 +494,13 @@ Language: bg
     <string name="site_settings_address_hint">В момента не можете да променяте вашия адрес</string>
     <string name="site_settings_tagline_hint">Кратък текст или привлекателна фраза, описваща вашия блог</string>
     <string name="site_settings_title_hint">Описание на сайта</string>
-    <string name="site_settings_whitelist_known_summary">Коментари от познати потребители</string>
-    <string name="site_settings_whitelist_all_summary">Коментари от всички потребители</string>
     <string name="site_settings_threading_summary">%d нива</string>
     <string name="site_settings_privacy_private_summary">Частен</string>
     <string name="site_settings_privacy_hidden_summary">Скрит</string>
     <string name="site_settings_delete_site_title">Изтриване на сайт</string>
     <string name="site_settings_privacy_public_summary">Публичен</string>
-    <string name="site_settings_blacklist_title">Черен списък</string>
     <string name="site_settings_moderation_hold_title">За модерация</string>
     <string name="site_settings_multiple_links_title">Връзки в коментарите</string>
-    <string name="site_settings_whitelist_title">Автоматично одобряване</string>
     <string name="site_settings_paging_title">Страниране</string>
     <string name="site_settings_threading_title">Опашка</string>
     <string name="site_settings_sort_by_title">Сортиране по</string>
@@ -639,7 +609,6 @@ Language: bg
     <string name="site_picker_title">Избор на сайт</string>
     <string name="my_site_btn_view_site">Преглед на сайта</string>
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
-    <string name="my_site_btn_site_settings">Настройки</string>
     <string name="my_site_header_look_and_feel">Изглед</string>
     <string name="my_site_header_publish">Публикуване</string>
     <string name="my_site_btn_blog_posts">Публикации</string>
@@ -666,7 +635,6 @@ Language: bg
     <string name="reader_label_new_posts">Нови публикации</string>
     <string name="post_uploading">Качване</string>
     <string name="error_copy_to_clipboard">Възникна грешка при копиране на текста в clipboard-а</string>
-    <string name="reader_page_recommended_blogs">Блогове които бихте харесали</string>
     <string name="logs_copied_to_clipboard">Логовете на приложението бяха копирани в буфера за обмен на данни</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_followers_a_day">Ден</string>
@@ -692,9 +660,7 @@ Language: bg
     <string name="ssl_certificate_details">Информация</string>
     <string name="cab_selected">%d избрани</string>
     <string name="older_two_days">По-стари от 2 дена</string>
-    <string name="reader_label_liked_by">Харесано от</string>
     <string name="reader_empty_comments">Все още няма коментари</string>
-    <string name="reader_empty_posts_in_tag">Няма публикации с този таг</string>
     <string name="older_last_week">По-стари от седмица</string>
     <string name="signing_out">Излизане…</string>
     <string name="older_month">По-стари от месец</string>
@@ -716,12 +682,9 @@ Language: bg
     <string name="reader_toast_err_generic">Действието беше неуспешно</string>
     <string name="update_verb">Актуализиране</string>
     <string name="schedule_verb">Планиране</string>
-    <string name="reader_page_followed_tags">Следени етикети</string>
     <string name="reader_page_followed_blogs">Следени сайтове</string>
-    <string name="reader_hint_add_tag_or_url">Въведете етикет или адрес за следване</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
-    <string name="forgot_password">Изгубена парола?</string>
     <string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
     <string name="mnu_comment_unspam">Не е спам</string>
     <string name="error_refresh_pages">Страниците не могат да бъдат обновени в момента</string>
@@ -792,8 +755,6 @@ Language: bg
     <string name="privacy_policy">Политика за поверителност</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
-    <string name="reader_toast_err_add_tag">Етикетът не може да бъде добавен</string>
-    <string name="reader_toast_err_remove_tag">Етикетът не може да бъде махнат</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
     <string name="share_link">Споделяне на връзка</string>
@@ -811,7 +772,6 @@ Language: bg
     <string name="reader_likes_one">Едно лице хареса това</string>
     <string name="reader_toast_err_url_intent">%s не може да се отвори</string>
     <string name="reader_untitled_post">(Неозаглавен)</string>
-    <string name="reader_toast_err_tag_invalid">Това не е валиден етикет</string>
     <string name="reader_hint_comment_on_comment">Отговор на коментар…</string>
     <string name="empty_list_default">Списъкът е празен</string>
     <string name="reader_btn_share">Споделяне</string>
@@ -820,7 +780,6 @@ Language: bg
     <string name="reader_label_added_tag">%s е добавен</string>
     <string name="reader_label_removed_tag">%s е премахнат</string>
     <string name="reader_toast_err_comment_failed">Коментарът не беше публикуван</string>
-    <string name="reader_toast_err_tag_exists">Вече следвате този етикет</string>
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>

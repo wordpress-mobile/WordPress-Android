@@ -1,5 +1,6 @@
 package org.wordpress.android.editor;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -8,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -114,6 +117,7 @@ import java.util.UUID;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
+@SuppressLint("ClickableViewAccessibility")
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
         AztecText.OnImageTappedListener,
@@ -418,6 +422,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
+        }
+
+        // Existing Posts have title set before onResume is called
+        if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
+            showClassicEditorDeprecationDialog();
         }
 
         addOverlayToGifs();
@@ -1202,16 +1211,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
     }
 
-    @Override
-    public boolean showSavingProgressDialogIfNeeded() {
-        return false;
-    }
-
-    @Override
-    public boolean hideSavingProgressDialog() {
-        return false;
-    }
-
     @Override public void mediaSelectionCancelled() {
         // noop implementation for shared interface with block editor
     }
@@ -1656,6 +1655,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
         attrs.setValue(idName, localMediaId);
         mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
+    }
+
+    @Override
+    public void showNotice(String message) {
+        ToastUtils.showToast(getActivity(), message).show();
+    }
+
+    @Override public void showEditorHelp() {
     }
 
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
@@ -2382,5 +2389,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void disableHWAcceleration() {
         mFragmentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    }
+
+    /**
+     * Methods for showing Classic Editor Deprecation notice
+     */
+    private boolean isEmptyPost() {
+        return TextUtils.isEmpty(mTitle.getText())
+                          && TextUtils.isEmpty(mContent.getText());
+    }
+
+    private boolean hasSeenClassicEditorDeprecationDialog() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), false);
+    }
+
+    private void showClassicEditorDeprecationDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        builder.setTitle(getString(R.string.dialog_title_try_block_editor));
+        builder.setMessage(getString(R.string.dialog_body_try_block_editor));
+        builder.setNegativeButton(getString(R.string.dialog_dismiss_try_block_editor), null);
+        builder.show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.edit().putBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), true).apply();
     }
 }

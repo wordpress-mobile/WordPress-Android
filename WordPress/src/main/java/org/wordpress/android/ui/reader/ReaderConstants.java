@@ -32,13 +32,14 @@ public class ReaderConstants {
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
 
     // intent arguments / keys
+    static final String ARG_SOURCE = "source";
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
-    static final String ARG_IS_FEED = "is_feed";
+    public static final String ARG_IS_FEED = "is_feed";
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";
     static final String ARG_POST_ID = "post_id";
-    static final String ARG_INTERCEPTED_URI = "intercepted_uri";
+    public static final String ARG_INTERCEPTED_URI = "intercepted_uri";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_DIRECT_OPERATION = "direct_operation";
     static final String ARG_IMAGE_URL = "image_url";
@@ -55,7 +56,6 @@ public class ReaderConstants {
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
-    static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION = "restore_position";
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";
@@ -73,7 +73,7 @@ public class ReaderConstants {
     // JSON key names
     public static final String JSON_TAG_TAGS_ARRAY = "tags";
     public static final String JSON_TAG_TITLE = "title";
-    public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
+    public static final String JSON_TAG_DISPLAY_NAME = "display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
     public static final String JSON_CARDS = "cards";
@@ -81,6 +81,7 @@ public class ReaderConstants {
     public static final String JSON_CARD_INTERESTS_YOU_MAY_LIKE = "interests_you_may_like";
     public static final String JSON_CARD_POST = "post";
     public static final String JSON_CARD_DATA = "data";
+    public static final String JSON_CARD_RECOMMENDED_BLOGS = "recommended_blogs";
     public static final String JSON_NEXT_PAGE_HANDLE = "next_page_handle";
 
     // JSON Post key names
@@ -92,4 +93,11 @@ public class ReaderConstants {
     public static final String KEY_DISCOVER = "discover";
     public static final String KEY_LIKES = "likes";
     public static final String KEY_SAVED = "saved";
+
+    // JSON Recommended blog key names
+    public static final String RECOMMENDED_BLOG_ID = "ID";
+    public static final String RECOMMENDED_FEED_ID = "feed_ID";
+
+    // Custom action to handle post deeplinks
+    public static final String ACTION_VIEW_POST = "org.wordpress.android.action.VIEW_POST";
 }

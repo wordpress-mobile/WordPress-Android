@@ -2,7 +2,7 @@
 
 # These are the default Gradle properties for WordPress-Android
 # Feel free to tweak them for your machine (e.g. change -Xmx value below)
-org.gradle.jvmargs=-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError
+org.gradle.jvmargs=-Xmx6g -XX:+HeapDumpOnOutOfMemoryError
 org.gradle.parallel=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
@@ -26,11 +26,9 @@ wp.zendesk.domain=https://www.google.com/
 wp.zendesk.oauth_client_id=wordpress
 wp.reset_db_on_downgrade = false
 wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
+jp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 wp.tenor.api_key=wordpress
-wp.encrypted_logging_key=abcabcabcabcabcabcabcabcabcabcabcabcabcabcab
-
-# Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
-wp.res.com.google.android.geo.api.key = geo-api-key
+wp.encrypted_logging_key=z0g+oVkqR4kWNUTxJfTozOZQjfXI7W9f6bD0uMJ5VkA=
 
 # Uncomment and edit the line below to use a local copy of WordPressMocks
 # You should specify a relative path to the root of your WordPressMocks repo
@@ -41,6 +39,7 @@ wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com
 wp.e2e.wp_com_user.password=mocked_password
 wp.e2e.wp_com_user.site_address=e2eflowtestingmobile.wordpress.com
 wp.e2e.wp_com_user.username=e2eflowtestingmobile
+wp.e2e.wp_com_passwordless_user.email=e2eflowtestingmobile+passwordless@example.com
 wp.e2e.self_hosted_user.username=e2eflowtestingmobile
 wp.e2e.self_hosted_user.password=mocked_password
 wp.e2e.self_hosted_user.site_address=127.0.0.1:8080

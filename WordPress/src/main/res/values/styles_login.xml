@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LoginTheme" parent="Theme.LoginFlow">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+    </style>
+
+    <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Login.EmptyView.TextView.Username" parent="android:Widget.TextView">
+        <item name="android:textSize">@null</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="Login.EmptyView.TextView.DisplayName" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.EmptyView.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="Login.EmptyView.Title" parent="">
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
+        <item name="android:layout_marginStart">
+            @dimen/actionable_empty_view_text_margin_horizontal
+        </item>
+        <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:lineSpacingExtra">@dimen/login_empty_view_line_spacing</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Login.EmptyView.SubTitle" parent="@style/Login.EmptyView.Title">
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:lineSpacingExtra">@dimen/login_empty_view_line_spacing</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <!-- Login Prologue -->
+    <style name="Widget.LoginFlow.Prologue" parent=""/>
+    <style name="Widget.LoginFlow.Button.Primary.Prologue" parent="Widget.LoginFlow.Button.Primary"/>
+    <style name="Widget.LoginFlow.Button.Secondary.Prologue" parent="Widget.LoginFlow.Button.Secondary"/>
+</resources>

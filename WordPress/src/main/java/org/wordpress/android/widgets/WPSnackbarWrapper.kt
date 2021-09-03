@@ -1,6 +1,7 @@
 package org.wordpress.android.widgets
 
 import android.view.View
+import com.google.android.material.snackbar.Snackbar
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -12,5 +13,5 @@ import javax.inject.Inject
  */
 @Reusable
 class WPSnackbarWrapper @Inject constructor() {
-    fun make(view: View, text: CharSequence, duration: Int): WPSnackbar = WPSnackbar.make(view, text, duration)
+    fun make(view: View, text: CharSequence, duration: Int): Snackbar = WPSnackbar.make(view, text, duration)
 }

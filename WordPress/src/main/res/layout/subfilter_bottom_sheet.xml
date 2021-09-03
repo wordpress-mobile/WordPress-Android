@@ -33,8 +33,7 @@
             app:tabIndicatorColor="?attr/colorPrimary"
             app:tabMode="scrollable"
             app:tabPaddingEnd="@dimen/content_bottom_sheet_tab_padding"
-            app:tabPaddingStart="@dimen/content_bottom_sheet_tab_padding"
-            app:tabTextColor="@color/primary_on_surface_selector" />
+            app:tabPaddingStart="@dimen/content_bottom_sheet_tab_padding" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"

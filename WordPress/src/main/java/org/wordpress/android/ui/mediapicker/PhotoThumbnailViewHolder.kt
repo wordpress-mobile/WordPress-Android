@@ -2,14 +2,20 @@ package org.wordpress.android.ui.mediapicker
 
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
 import org.wordpress.android.R
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.PHOTO
 
 /*
  * ViewHolder containing a device thumbnail
  */
-class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
-        ThumbnailViewHolder(parent, R.layout.media_picker_thumbnail_item) {
+class PhotoThumbnailViewHolder(
+    parent: ViewGroup,
+    private val mediaThumbnailViewUtils: MediaThumbnailViewUtils,
+    private val imageManager: ImageManager
+) : ThumbnailViewHolder(parent, R.layout.media_picker_thumbnail_item) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
@@ -26,12 +32,17 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         if (updateCount) {
             return
         }
-        mediaThumbnailViewUtils.setupThumbnailImage(
+        imageManager.cancelRequestAndClearImageView(imgThumbnail)
+        imageManager.load(
                 imgThumbnail,
+                PHOTO,
                 item.url,
-                item.isSelected,
-                item.clickAction,
+                FIT_CENTER
+        )
+        mediaThumbnailViewUtils.setupListeners(
+                imgThumbnail, item.isSelected,
                 item.toggleAction,
+                item.clickAction,
                 animateSelection
         )
     }

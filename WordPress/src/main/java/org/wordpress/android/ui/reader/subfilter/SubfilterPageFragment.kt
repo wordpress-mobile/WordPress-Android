@@ -2,6 +2,9 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +16,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
@@ -29,7 +30,9 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -37,6 +40,8 @@ import javax.inject.Inject
 class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    @Inject lateinit var statsUtils: StatsUtils
 
     private lateinit var subFilterViewModel: SubFilterViewModel
     private lateinit var viewModel: SubfilterPageViewModel
@@ -47,11 +52,13 @@ class SubfilterPageFragment : DaggerFragment() {
 
     companion object {
         const val CATEGORY_KEY = "category_key"
+        const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
 
-        fun newInstance(category: SubfilterCategory): SubfilterPageFragment {
+        fun newInstance(category: SubfilterCategory, subfilterViewModelKey: String): SubfilterPageFragment {
             val fragment = SubfilterPageFragment()
             val bundle = Bundle()
             bundle.putSerializable(CATEGORY_KEY, category)
+            bundle.putString(SUBFILTER_VIEW_MODEL_KEY, subfilterViewModelKey)
             fragment.arguments = bundle
             return fragment
         }
@@ -64,21 +71,24 @@ class SubfilterPageFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val category = arguments?.getSerializable(CATEGORY_KEY) as SubfilterCategory
+        val category = requireArguments().getSerializable(CATEGORY_KEY) as SubfilterCategory
+        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
         viewModel.start(category)
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = SubfilterListAdapter(uiHelpers)
+        recyclerView.adapter = SubfilterListAdapter(uiHelpers, statsUtils, seenUnseenWithCounterFeatureConfig)
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        subFilterViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(SubFilterViewModel::class.java)
+        subFilterViewModel = ViewModelProvider(
+                requireParentFragment().parentFragment as ViewModelStoreOwner,
+                viewModelFactory
+        ).get(subfilterVmKey, SubFilterViewModel::class.java)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
@@ -123,14 +133,19 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 }
 
-class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    private val filterCategory = listOf(SITES, TAGS)
+class SubfilterPagerAdapter(
+    val context: Context,
+    val fm: FragmentManager,
+    val subfilterViewModelKey: String,
+    categories: List<SubfilterCategory>
+) : FragmentPagerAdapter(fm) {
+    private val filterCategory = categories
     private val fragments = mutableMapOf<SubfilterCategory, WeakReference<SubfilterPageFragment>>()
 
     override fun getCount(): Int = filterCategory.size
 
     override fun getItem(position: Int): Fragment {
-        val fragment = SubfilterPageFragment.newInstance(filterCategory[position])
+        val fragment = SubfilterPageFragment.newInstance(filterCategory[position], subfilterViewModelKey)
         fragments[filterCategory[position]] = WeakReference(fragment)
         return fragment
     }
@@ -149,7 +164,25 @@ class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager) : Fra
     }
 }
 
-enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) {
+enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) : Parcelable {
     SITES(R.string.reader_filter_sites_title, SITE),
-    TAGS(R.string.reader_filter_tags_title, TAG)
+    TAGS(R.string.reader_filter_tags_title, TAG);
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(type.ordinal)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Creator<SubfilterCategory> {
+        override fun createFromParcel(parcel: Parcel): SubfilterCategory {
+            return values()[parcel.readInt()]
+        }
+
+        override fun newArray(size: Int): Array<SubfilterCategory?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

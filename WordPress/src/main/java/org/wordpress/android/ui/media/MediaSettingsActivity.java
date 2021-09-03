@@ -267,7 +267,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         collapsingToolbar.setCollapsedTitleTextColor(
                 AppCompatResources.getColorStateList(this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnPrimarySurface)));
+                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnSurface)));
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
@@ -275,7 +275,6 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         int elevatedColor = elevationOverlayProvider
                 .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
                         appbarElevation);
-
         collapsingToolbar.setContentScrimColor(elevatedColor);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -841,6 +840,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
         if (allGranted && requestCode == WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE) {

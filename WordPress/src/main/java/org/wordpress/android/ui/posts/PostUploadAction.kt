@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtils.OnPublishingCallback
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 
 sealed class PostUploadAction {
@@ -27,6 +28,7 @@ sealed class PostUploadAction {
         val site: SiteModel,
         val post: PostModel,
         val isError: Boolean,
+        val isFirstTimePublish: Boolean,
         val errorMessage: String?
     ) : PostUploadAction()
 
@@ -47,12 +49,14 @@ sealed class PostUploadAction {
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
 
+@Suppress("LongParameterList")
 fun handleUploadAction(
     action: PostUploadAction,
     activity: Activity,
     snackbarAttachView: View,
     uploadActionUseCase: UploadActionUseCase,
-    uploadUtilsWrapper: UploadUtilsWrapper
+    uploadUtilsWrapper: UploadUtilsWrapper,
+    onPublishingCallback: OnPublishingCallback
 ) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
@@ -63,7 +67,8 @@ fun handleUploadAction(
                     action.post,
                     action.site,
                     uploadActionUseCase.getUploadAction(action.post),
-                    View.OnClickListener { action.publishAction() }
+                    { action.publishAction() },
+                    onPublishingCallback
             )
         }
         is PostUploadAction.PublishPost -> {
@@ -71,7 +76,8 @@ fun handleUploadAction(
                     activity,
                     action.post,
                     action.site,
-                    action.dispatcher
+                    action.dispatcher,
+                    onPublishingCallback
             )
         }
         is PostUploadAction.PostUploadedSnackbar -> {
@@ -79,9 +85,11 @@ fun handleUploadAction(
                     activity,
                     snackbarAttachView,
                     action.isError,
+                    action.isFirstTimePublish,
                     action.post,
                     action.errorMessage,
-                    action.site
+                    action.site,
+                    onPublishingCallback
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {

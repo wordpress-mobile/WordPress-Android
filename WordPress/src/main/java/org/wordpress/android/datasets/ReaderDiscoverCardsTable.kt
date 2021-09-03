@@ -21,14 +21,9 @@ object ReaderDiscoverCardsTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_discover_cards")
     }
 
-    fun reset() {
-        reset(getWritableDb())
-    }
-
-    fun reset(db: SQLiteDatabase) {
-        AppLog.i(AppLog.T.READER, "resetting ReaderDiscoverCardsTable")
-        dropTables(db)
-        createTable(db)
+    fun clear() {
+        AppLog.i(AppLog.T.READER, "clearing ReaderDiscoverCardsTable")
+        getWritableDb().delete(DISCOVER_CARDS_TABLE, null, null)
     }
 
     private fun getReadableDb(): SQLiteDatabase {

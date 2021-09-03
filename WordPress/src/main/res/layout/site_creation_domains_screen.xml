@@ -7,11 +7,11 @@
     android:animateLayoutChanges="true">
 
     <include
-        android:id="@+id/header_layout"
+        android:id="@+id/site_creation_header_item"
         layout="@layout/site_creation_header_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/search_input_layout"
+        app:layout_constraintBottom_toTopOf="@+id/site_creation_search_input_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <include
-        android:id="@+id/search_input_layout"
+        android:id="@+id/site_creation_search_input_item"
         layout="@layout/site_creation_search_input_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        app:layout_constraintTop_toBottomOf="@+id/site_creation_header_item"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -41,13 +41,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/site_creation_search_input_item" />
 
-    <com.google.android.material.card.MaterialCardView
+    <include
+        android:id="@+id/site_creation_domains_screen_example"
+        layout="@layout/site_creation_domains_screen_example"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/site_creation_search_input_item" />
+
+    <View
+        android:id="@+id/create_site_button_shaddow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mlp_bottom_shadow_height"
+        android:background="@drawable/modal_layout_picker_bottom_shadow"
+        app:layout_constraintBottom_toTopOf="@id/create_site_button_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
         android:id="@+id/create_site_button_container"
-        style="@style/Widget.LoginFlow.CardView.BottomBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="?attr/layoutPickerBackground"
+        android:gravity="center"
+        android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
+        android:paddingTop="@dimen/picker_bottom_button_vertical_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,13 +81,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/create_site_button"
-            style="@style/Widget.LoginFlow.Button.Primary"
-            android:layout_width="wrap_content"
+            style="@style/Widget.ModalLayoutPicker.Button.Primary"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_margin"
+            android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin"
             android:text="@string/new_site_creation_create_site_button" />
-    </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/domain_list_empty_view"

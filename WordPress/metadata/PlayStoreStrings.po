@@ -11,22 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_158"
+msgctxt "release_note_181"
 msgid ""
-"15.8:\n"
-"- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.\n"
-"- Reader update: Preview images are now displayed on posts when no featured image is set.\n"
-"\n"
-"\n"
+"18.1:\n"
+"-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.\n"
+"-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.\n"
+"-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.\n"
 msgstr ""
 
-msgctxt "release_note_157"
+msgctxt "release_note_180"
 msgid ""
-"15.7:\n"
-"Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.\n"
+"18.0:\n"
+"We’ve improved the login flow to make it easier for you to create and manage your sites.\n"
 "\n"
-"Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.\n"
-"\n"
+"We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
@@ -139,6 +137,18 @@ msgstr ""
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_5"
 msgid "Keep tabs on your site"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_6"
+msgid "Reply in real time"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_7"
+msgid "Upload on the go"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.

@@ -45,5 +45,20 @@
             android:layout_height="wrap_content"
             app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
             tools:listitem="@layout/wp_simple_list_item_1" />
+
+        <!-- Submit button -->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submit_button"
+            style="@style/WordPress.PrepubPrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:enabled="false"
+            android:text="@string/prepublishing_nudges_add_category_button"
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

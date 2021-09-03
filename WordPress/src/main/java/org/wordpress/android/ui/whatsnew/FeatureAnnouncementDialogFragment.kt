@@ -2,8 +2,6 @@ package org.wordpress.android.ui.whatsnew
 
 import android.app.Dialog
 import android.content.Context
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +11,6 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -38,17 +35,15 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
 
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            val window: Window? = dialog.window
-            window?.let {
-                window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-                if (!resources.configuration.isDarkTheme()) {
-                    window.decorView.systemUiVisibility = window.decorView
-                            .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                }
+        val window: Window? = dialog.window
+        window?.let {
+            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
+            if (!resources.configuration.isDarkTheme()) {
+                window.decorView.systemUiVisibility = window.decorView
+                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }
         return dialog

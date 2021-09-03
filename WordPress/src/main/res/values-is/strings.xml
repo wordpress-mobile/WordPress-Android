@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
@@ -67,9 +67,7 @@ Language: is
     <string name="reader_toast_err_already_liked">Þú hefur nú þegar líkað við þessa athugasemd</string>
     <string name="reader_toast_err_comment_not_found">Athugasemd fannst ekki!</string>
     <string name="reader_toast_err_cannot_like_post">Tókst ekki að líka við þessa færslu</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com færsla</string>
     <string name="error_notif_q_action_reply">Gat ekki svarað athugasemd. Vinsamlegast reyndu aftur síðar.</string>
-    <string name="reader_title_deeplink">WordPress lesari</string>
     <string name="error_notif_q_action_approve">Gat ekki samþykkt athugasemd. Vinsamlegast reyndu aftur síðar.</string>
     <string name="error_notif_q_action_like">Gat ekki líkað við athugasemd. Vinsamlegast reyndu aftur síðar.</string>
     <string name="notifications_label_new_notifications_subtitle">Ýttu til þess að birta þær</string>
@@ -83,7 +81,6 @@ Language: is
     <string name="comment_liked">Líkar við athugasemd</string>
     <string name="sign_in_wpcom">WordPress.com innskráning</string>
     <string name="reader_label_global_related_posts">Meira á WordPress.com</string>
-    <string name="reader_label_local_related_posts">Meira í %s</string>
     <string name="preference_open_device_settings">Opna stillingar tækis</string>
     <string name="invite_invalid_email">%s: Ógilt netfang</string>
     <string name="invite_user_blocked_invites">%s: Notandi lokaði á öll boð</string>
@@ -131,15 +128,8 @@ Language: is
     <string name="invite_error_invalid_usernames_multiple">Get ekki sent: Ógild notandanöfn eða netföng</string>
     <string name="invite_error_invalid_usernames_one">Get ekki sent: Ógilt notandanafn eða netfang</string>
     <string name="invite_error_no_usernames">Vinsamlegast bættu við a.m.k einu notandanafni</string>
-    <string name="invite_message_info">(Valkvæmt) Þú getur slegið inn sérsniðin skilaboð allt að 500 stafir að lengd sem fylgja boðum til notanda/notenda.</string>
-    <string name="invite_message_remaining_other">%d stafir eftir</string>
-    <string name="invite_message_remaining_one">1 stafur eftir</string>
-    <string name="invite_message_remaining_zero">0 stafir eftir</string>
-    <string name="invite_message_title">Sérsniðin skilaboð</string>
     <string name="invite">Bjóða</string>
-    <string name="invite_names_title">Notendanöfn eða netföng</string>
     <string name="invite_people">Bjóða fólki</string>
-    <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
@@ -162,7 +152,6 @@ Language: is
     <string name="checking_email">Athuga tölvupóst</string>
     <string name="magic_link_unavailable_error_message">Ekki tiltækt í augnablikinu. Vinsamlegast sláðu inn lykilorðið þitt.</string>
     <string name="logging_in">Skrá inn</string>
-    <string name="enter_your_password_instead">Sláðu inn lykilorðið þitt í staðinn</string>
     <string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
     <string name="capture_or_pick_photo">Taka eða velja mynd</string>
     <string name="plan">Plön</string>
@@ -274,7 +263,6 @@ Language: is
     <string name="site_settings_paging_dialog_description">Skipta umræðuþráðum niður á síður.</string>
     <string name="site_settings_paging_dialog_header">Athugasemdir á síðu</string>
     <string name="site_settings_close_after_dialog_title">Loka fyrir athuagsemdir</string>
-    <string name="site_settings_blacklist_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún merkt sem amapóstur. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún flutt í biðröð. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Sláðu inn orð eða setningu</string>
     <string name="site_settings_list_editor_no_items_text">Engin atriði</string>
@@ -289,10 +277,8 @@ Language: is
     <string name="site_settings_rp_show_header_title">Sýna haus</string>
     <string name="site_settings_rp_switch_summary">Tengdar færslur birta viðeigandi efni af vefnum þínum fyrir neðan færsluna þína.</string>
     <string name="site_settings_rp_switch_title">Sýna tengdar færslur</string>
-    <string name="site_settings_blacklist_hint">Athugasemdir sem passa við síu verða merktar sem amapóstur</string>
     <string name="site_settings_moderation_hold_hint">Athugasemdir sem passa við síu verða settar í biðröð fyrir samþykki</string>
     <string name="site_settings_multiple_links_hint">Hundsar takmörkun fjölda tengla fyrir þekkta notendur</string>
-    <string name="site_settings_whitelist_hint">Höfundur verður að hafa fengið athugasemd samþykkta a.m.k. einu sinni áður</string>
     <string name="site_settings_user_account_required_hint">Gestir verða að vera skráðir inn með notandanafni til þess að taka þátt í umræðum</string>
     <string name="site_settings_identity_required_hint">Höfundur athugasemdar verður að tilgreina nafn og netfang</string>
     <string name="site_settings_paging_hint">Birta athugasemdir í skömmtum af tilgreindri stærð</string>
@@ -315,17 +301,13 @@ Language: is
     <string name="site_settings_address_hint">Það er ekki hægt að breyta veffangi eins og er</string>
     <string name="site_settings_tagline_hint">Stutt lýsing eða grípandi setning til þess að lýsa blogginu þínu</string>
     <string name="site_settings_title_hint">Í fáeinum orðum, segðu hvað þessi vefur fjallar um</string>
-    <string name="site_settings_whitelist_known_summary">Athugasemdir frá þekktum notendum</string>
-    <string name="site_settings_whitelist_all_summary">Athugasemdir frá öllum notendum</string>
     <string name="site_settings_threading_summary">%d stig</string>
     <string name="site_settings_privacy_private_summary">Einkamál</string>
     <string name="site_settings_privacy_hidden_summary">Falinn</string>
     <string name="site_settings_delete_site_title">Eyða vef</string>
     <string name="site_settings_privacy_public_summary">Birt</string>
-    <string name="site_settings_blacklist_title">Svartlisti</string>
     <string name="site_settings_moderation_hold_title">Setja á bið eftir samþykki</string>
     <string name="site_settings_multiple_links_title">Tenglar í athugasemdum</string>
-    <string name="site_settings_whitelist_title">Samþykkja sjálfkrafa</string>
     <string name="site_settings_paging_title">Síðuskipting</string>
     <string name="site_settings_threading_title">Þræðir</string>
     <string name="site_settings_sort_by_title">Raða eftir</string>
@@ -432,7 +414,6 @@ Language: is
     <string name="my_site_btn_switch_site">Skipta um vef</string>
     <string name="site_picker_title">Veldu vef</string>
     <string name="my_site_btn_view_admin">Skoða stjórnborð</string>
-    <string name="my_site_btn_site_settings">Stillingar</string>
     <string name="my_site_header_publish">Birta</string>
     <string name="my_site_btn_blog_posts">Færslur</string>
     <string name="my_site_header_look_and_feel">Útlit og áferð</string>
@@ -458,7 +439,6 @@ Language: is
     <string name="reader_empty_posts_request_failed">Gat ekki sótt færslur</string>
     <string name="logs_copied_to_clipboard">Atburðarskrá forritsins hefur verið afrituð í klemmuspjaldið</string>
     <string name="error_copy_to_clipboard">Villa kom upp við að afrita texta í klemmuspjaldið</string>
-    <string name="reader_page_recommended_blogs">Vefir sem þér gæti líkað við</string>
     <string name="reader_label_new_posts">Nýjar færslur</string>
     <string name="stats_followers_months">%1$d mánuðir</string>
     <string name="stats_followers_a_year">Á ári</string>
@@ -496,7 +476,6 @@ Language: is
     <string name="error_refresh_unauthorized_pages">Þú hefur ekki heimild til að skoða eða breyta síðum</string>
     <string name="error_refresh_unauthorized_posts">Þú hefur ekki heimild til að skoða eða breyta færslum</string>
     <string name="signing_out">Skrái út…</string>
-    <string name="reader_label_liked_by">Líkað af</string>
     <string name="mnu_comment_liked">Líkar við</string>
     <string name="older_last_week">Eldri en vika</string>
     <string name="older_month">Eldri en mánuður</string>
@@ -504,15 +483,11 @@ Language: is
     <string name="posts_empty_list">Engar færslur enn. Hví ekki rita eina?</string>
     <string name="reader_empty_comments">Engar athugasemdir enn</string>
     <string name="reader_label_view_original">Skoða upprunalega grein</string>
-    <string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
     <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
-    <string name="reader_page_followed_tags">Merki sem ég fylgi</string>
-    <string name="reader_hint_add_tag_or_url">Sláðu inn vefslóð eða merki til þess að fylgja</string>
     <string name="help">Hjálp</string>
-    <string name="forgot_password">Tapað lykilorð?</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
     <string name="ssl_certificate_ask_trust">Ef þú getur vanalega tengst þessum vef án vandræða, þá gæti þessi villa þýtt að einhver er að reyna að þykjast vera vefurinn og þú ættir ekki að halda áfram. Viltu treysta þessu skírteini samt sem áður?</string>
     <string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
@@ -571,7 +546,6 @@ Language: is
     <string name="new_media">Ný skrá</string>
     <string name="new_post">Ný færsla</string>
     <string name="privacy_policy">Persónuverndarstefna</string>
-    <string name="reader_toast_err_remove_tag">Gat ekki fjarlægt þetta merki</string>
     <string name="remove_account">Fjarlægja vef</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
@@ -581,7 +555,6 @@ Language: is
     <string name="local_changes">Staðværar breytingar</string>
     <string name="post_settings">Stillingar færslu</string>
     <string name="wordpress_blog">WordPress blogg</string>
-    <string name="reader_toast_err_add_tag">Gat ekki bætt þessu merki við</string>
     <string name="file_error_create">Gat ekki búið til tímabundna skrá fyrir skráarupphal. Vinsamlegast gakktu úr skugga um að það sé nægilegt geymslupláss eftir á tækinu þínu.</string>
     <string name="view_in_browser">Skoða í vafra</string>
     <string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
@@ -608,8 +581,6 @@ Language: is
     <string name="reader_likes_one">Einni manneskju líkar við þetta</string>
     <string name="reader_hint_comment_on_comment">Svara athugasemd…</string>
     <string name="reader_toast_err_share_intent">Gat ekki deild</string>
-    <string name="reader_toast_err_tag_exists">Þú fylgir þessu merki nú þegar</string>
-    <string name="reader_toast_err_tag_invalid">Þetta er ekki gilt merki</string>
     <string name="reader_toast_err_url_intent">Gat ekki opnað %s</string>
     <string name="reader_toast_err_view_image">Gat ekki skoðað mynd</string>
     <string name="reader_label_removed_tag">Fjarlægja %s</string>

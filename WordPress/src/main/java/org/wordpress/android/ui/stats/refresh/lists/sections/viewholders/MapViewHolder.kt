@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.http.SslError
+import android.util.Base64
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.SslErrorHandler
@@ -10,6 +12,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
+import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.util.getColorFromAttribute
 
@@ -26,41 +32,22 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 ) {
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val webView: WebView = itemView.findViewById(R.id.web_view)
+
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
         coroutineScope.launch {
             delay(100)
-            // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-            // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
-            // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
-            // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-            val colorLow = Integer.toHexString(
-                    ContextCompat.getColor(
-                            itemView.context,
-                            R.color.stats_map_activity_low
-                    ) and 0xffffff
-            )
-            val colorHigh = Integer.toHexString(
-                    ContextCompat.getColor(
-                            itemView.context,
-                            R.color.stats_map_activity_high
-                    ) and 0xffffff
-            )
-            val backgroundColor = Integer.toHexString(
-                    itemView.context.getColorFromAttribute(R.attr.colorSurface) and 0xffffff
-            )
-            val emptyColor = Integer.toHexString(
-                    ContextCompat.getColor(
-                            itemView.context,
-                            R.color.stats_map_activity_empty
-                    ) and 0xffffff
-            )
+            val context = itemView.context
+            val colorLow = toHexString(color.stats_map_activity_low, context)
+            val colorHigh = toHexString(color.stats_map_activity_high, context)
+            val backgroundColor = toHexString(context.getColorFromAttribute(attr.colorSurface))
+            val emptyColor = toHexString(color.stats_map_activity_empty, context)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                     "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                     "<script type=\"text/javascript\">" +
-                    " google.charts.load('42', {'packages':['geochart']});" +
+                    " google.charts.load('current', {'packages':['geochart']});" +
                     " google.charts.setOnLoadCallback(drawRegionsMap);" +
                     " function drawRegionsMap() {" +
                     " var data = google.visualization.arrayToDataTable(" +
@@ -119,8 +106,17 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 }
                 webView.settings.javaScriptEnabled = true
                 webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                webView.loadData(htmlPage, "text/html", "UTF-8")
+                val base64version: String = Base64.encodeToString(htmlPage.toByteArray(), Base64.DEFAULT)
+                webView.loadData(base64version, "text/html; charset=UTF-8", "base64")
             }
         }
+    }
+
+    private fun toHexString(@ColorRes colorId: Int, context: Context): String {
+        return toHexString(ContextCompat.getColor(context, colorId))
+    }
+
+    private fun toHexString(@ColorInt color: Int): String {
+        return String.format("%06X", (color and 0xffffff))
     }
 }

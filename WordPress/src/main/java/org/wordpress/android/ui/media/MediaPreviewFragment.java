@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
+
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -72,7 +75,7 @@ public class MediaPreviewFragment extends Fragment {
 
     private SiteModel mSite;
 
-    private ImageView mImageView;
+    private PhotoView mImageView;
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
@@ -275,10 +278,7 @@ public class MediaPreviewFragment extends Fragment {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (isAdded()) {
-                            // assign the photo attacher to enable pinch/zoom - must come before
-                            // setImageBitmap
-                            // for it to be correctly resized upon loading
-                            PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
+                            PhotoViewAttacher attacher = mImageView.getAttacher();
                             attacher.setOnViewTapListener((view, x, y) -> {
                                 if (mMediaTapListener != null) {
                                     mMediaTapListener.onMediaTapped();

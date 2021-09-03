@@ -20,9 +20,13 @@ import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.ICON
 
 open class BlockListItemViewHolder(
-    parent: ViewGroup,
-    @LayoutRes layout: Int
-) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+    view: View
+) : ViewHolder(view) {
+    constructor(parent: ViewGroup, @LayoutRes layout: Int) : this(
+            LayoutInflater.from(parent.context)
+                    .inflate(layout, parent, false)
+    )
+
     protected fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
         this.visibility = View.VISIBLE
         when {
@@ -49,6 +53,7 @@ open class BlockListItemViewHolder(
                 imageManager.load(this, item.icon)
             }
             item.iconUrl != null -> {
+                this.imageTintList = null
                 this.visibility = View.VISIBLE
                 imageManager.load(this, ICON, item.iconUrl)
             }
@@ -82,7 +87,7 @@ open class BlockListItemViewHolder(
                 this.visibility = View.VISIBLE
                 when (item.iconStyle) {
                     NORMAL -> {
-                        findViewById<ImageView>(R.id.avatar).visibility = View.GONE
+                        avatar.visibility = View.GONE
                         icon.setImageOrLoad(item, imageManager)
                     }
                     AVATAR -> {

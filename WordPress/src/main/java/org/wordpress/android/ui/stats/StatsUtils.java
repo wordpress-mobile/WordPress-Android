@@ -6,8 +6,11 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.viewmodel.ResourceProvider;
@@ -71,7 +74,8 @@ public class StatsUtils {
                                                       final long remoteBlogID,
                                                       final String remoteItemID,
                                                       @Nullable final String itemType,
-                                                      final String itemURL) {
+                                                      final String itemURL,
+                                                      final ReaderTracker readerTracker) {
         final long blogID = remoteBlogID;
         final long itemID = Long.parseLong(remoteItemID);
         if (itemType == null) {
@@ -82,9 +86,13 @@ public class StatsUtils {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
+                ReaderPost post = ReaderPostTable.getBlogPost(blogID, itemID, true);
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
-                        blogID
+                        blogID,
+                        post != null ? post.isFollowedByCurrentUser : null,
+                        ReaderTracker.SOURCE_STATS,
+                        readerTracker
                 );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
@@ -94,11 +102,17 @@ public class StatsUtils {
                 );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
+            ReaderPost post = ReaderPostTable.getBlogPost(blogID, itemID, true);
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
-                    blogID
+                    blogID,
+                    post != null ? post.isFollowedByCurrentUser : null,
+                    ReaderTracker.SOURCE_STATS,
+                    readerTracker
             );
         } else {
+            // For now, itemType.ATTACHMENT falls down this path. No need to repeat unless we
+            // want to handle attachments differently in the future.
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
         }

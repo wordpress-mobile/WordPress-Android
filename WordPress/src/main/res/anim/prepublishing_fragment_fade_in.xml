@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillAfter="true" >
-
     <alpha
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:fromAlpha="0"
-        android:toAlpha="1"
-        android:startOffset="200"
-        android:duration="200" />
+        android:toAlpha="1" />
 </set>

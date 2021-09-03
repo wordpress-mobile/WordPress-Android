@@ -62,6 +62,8 @@ sealed class PrepublishingHomeItemUiState {
 
     enum class ActionType(val textRes: UiStringRes) {
         PUBLISH(UiStringRes(R.string.prepublishing_nudges_publish_action)),
-        TAGS(UiStringRes(R.string.prepublishing_nudges_tags_action))
+        TAGS(UiStringRes(R.string.prepublishing_nudges_tags_action)),
+        CATEGORIES(UiStringRes(R.string.prepublishing_nudges_categories_action)),
+        ADD_CATEGORY(UiStringRes(R.string.prepublishing_nudges_categories_action))
     }
 }

@@ -23,11 +23,11 @@
             tools:src="@drawable/ic_create_white_24dp" />
 
         <View
-            android:id="@+id/badge"
+            android:id="@+id/nav_badge"
             android:layout_width="@dimen/bottom_nav_bar_badge_size"
             android:layout_height="@dimen/bottom_nav_bar_badge_size"
             android:layout_gravity="top"
-            android:background="@drawable/bg_oval_accent_stroke_white"
+            android:background="@drawable/bg_nav_badge"
             android:visibility="gone"
             tools:visibility="visible" />
 

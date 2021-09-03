@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -21,6 +21,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -36,6 +37,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -44,7 +46,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -54,19 +58,19 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
 /**
- * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, followed blogs, and recommended blogs
+ * activity which shows the user's subscriptions - includes
+ * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
         implements ReaderTagAdapter.TagDeletedListener {
     private EditText mEditAdd;
-    private ImageButton mBtnAdd;
+    private FloatingActionButton mFabButton;
+    private ReaderFollowButton mBtnAdd;
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
 
@@ -79,9 +83,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     public static final int TAB_IDX_FOLLOWED_TAGS = 0;
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
-    public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Inject AccountStore mAccountStore;
+    @Inject ReaderTracker mReaderTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,23 +95,18 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
         mViewPager.setAdapter(getPageAdapter());
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -125,24 +124,19 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         bottomBar.setBackgroundColor(elevatedColor);
 
-        mEditAdd = (EditText) findViewById(R.id.edit_add);
-        mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addCurrentEntry();
-                }
-                return false;
-            }
-        });
-
-        mBtnAdd = (ImageButton) findViewById(R.id.btn_add);
-        mBtnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mEditAdd = findViewById(R.id.edit_add);
+        mEditAdd.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 addCurrentEntry();
             }
+            return false;
         });
+
+        mFabButton = findViewById(R.id.fab_button);
+        mFabButton.setOnClickListener(view -> ReaderActivityLauncher.showReaderInterests(this));
+
+        mBtnAdd = findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(v -> addCurrentEntry());
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
@@ -191,18 +185,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
-        AppLog.d(AppLog.T.READER, "reader subs > recommended blogs changed");
-        getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-    }
-
     private void performUpdate() {
         performUpdate(EnumSet.of(
                 UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS,
-                UpdateTask.RECOMMENDED_BLOGS));
+                UpdateTask.FOLLOWED_BLOGS));
     }
 
     private void performUpdate(EnumSet<UpdateTask> tasks) {
@@ -227,7 +213,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
             fragments.add(ReaderTagFragment.newInstance());
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
-            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
             FragmentManager fm = getSupportFragmentManager();
             mPageAdapter = new SubsPageAdapter(fm, fragments);
@@ -342,25 +327,25 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         showProgress();
         final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
+        ReaderActions.ActionListener actionListener = succeeded -> {
+            if (isFinishing()) {
+                return;
+            }
 
-                hideProgress();
-                getPageAdapter().refreshFollowedTagFragment();
+            hideProgress();
+            getPageAdapter().refreshFollowedTagFragment();
 
-                if (succeeded) {
-                    showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
-                    mLastAddedTagName = tag.getTagSlug();
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            new HashMap<String, String>() { { put("tag", mLastAddedTagName); }});
-                } else {
-                    showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
-                    mLastAddedTagName = null;
-                }
+            if (succeeded) {
+                showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                mLastAddedTagName = tag.getTagSlug();
+                mReaderTracker.trackTag(
+                        AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                        mLastAddedTagName,
+                        ReaderTracker.SOURCE_SETTINGS
+                );
+            } else {
+                showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
+                mLastAddedTagName = null;
             }
         };
 
@@ -380,9 +365,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         showProgress();
 
-        ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
+        ReaderActions.OnRequestListener<Void> requestListener = new ReaderActions.OnRequestListener<Void>() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Void result) {
                 if (!isFinishing()) {
                     followBlogUrl(blogUrl);
                 }
@@ -402,8 +387,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                             errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer
-                                    .toString(statusCode) + ")";
+                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + statusCode + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);
@@ -414,35 +398,41 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     }
 
     private void followBlogUrl(String normUrl) {
-        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
-                hideProgress();
-                if (succeeded) {
-                    // clear the edit text and hide the soft keyboard
-                    mEditAdd.setText(null);
-                    EditTextUtils.hideSoftInput(mEditAdd);
-                    showInfoSnackbar(getString(R.string.reader_label_followed_blog));
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                } else {
-                    showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
-                }
+        ReaderActions.ActionListener followListener = succeeded -> {
+            if (isFinishing()) {
+                return;
+            }
+            hideProgress();
+            if (succeeded) {
+                // clear the edit text and hide the soft keyboard
+                mEditAdd.setText(null);
+                EditTextUtils.hideSoftInput(mEditAdd);
+                showInfoSnackbar(getString(R.string.reader_label_followed_blog));
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                // update tags if the site we added belongs to a tag we don't yet have
+                // also update followed blogs so lists are ready in case we need to present them
+                // in bottom sheet reader filtering
+                performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+            } else {
+                showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
         // likely to point to a feed than a wp blog (and the endpoint should internally
         // follow it as a blog if it is one)
-        ReaderBlogActions.followFeedByUrl(normUrl, followListener);
+        ReaderBlogActions.followFeedByUrl(
+                normUrl,
+                followListener,
+                ReaderTracker.SOURCE_SETTINGS,
+                mReaderTracker
+        );
     }
 
     /*
      * called prior to following to show progress and disable controls
      */
     private void showProgress() {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
+        final ProgressBar progress = findViewById(R.id.progress_follow);
         progress.setVisibility(View.VISIBLE);
         mEditAdd.setEnabled(false);
         mBtnAdd.setEnabled(false);
@@ -452,7 +442,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
      * called after following to hide progress and re-enable controls
      */
     private void hideProgress() {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
+        final ProgressBar progress = findViewById(R.id.progress_follow);
         progress.setVisibility(View.GONE);
         mEditAdd.setEnabled(true);
         mBtnAdd.setEnabled(true);
@@ -464,7 +454,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     private void showInfoSnackbar(String text) {
         View bottomView = findViewById(R.id.layout_bottom);
 
-        WPSnackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
         snackbar.setAnchorView(bottomView);
         snackbar.show();
     }
@@ -475,8 +465,11 @@ public class ReaderSubsActivity extends LocaleAwareActivity
      */
     @Override
     public void onTagDeleted(ReaderTag tag) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                new HashMap<String, String>() { { put("tag", tag.getTagSlug()); }});
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                tag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
+        );
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
@@ -515,6 +508,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.READER_INTERESTS) {
+            performUpdate(EnumSet.of(UpdateTask.TAGS));
+        }
+    }
+
     private class SubsPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments;
 
@@ -528,8 +529,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
                     return getString(R.string.reader_page_followed_tags);
-                case TAB_IDX_RECOMMENDED_BLOGS:
-                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs);
                 default:
@@ -545,6 +544,13 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         @Override
         public int getCount() {
             return mFragments.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object ret = super.instantiateItem(container, position);
+            mFragments.set(position, (Fragment) ret);
+            return ret;
         }
 
         private void refreshFollowedTagFragment() {

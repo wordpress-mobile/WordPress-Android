@@ -21,7 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -31,12 +30,13 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -48,6 +48,7 @@ import javax.inject.Inject;
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 public class ReaderPostListActivity extends LocaleAwareActivity {
+    private String mSource;
     private ReaderPostListType mPostListType;
     private long mSiteId;
 
@@ -56,6 +57,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ReaderTracker mReaderTracker;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
         if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
             mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
@@ -143,8 +147,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     /*
-    * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
-    * */
+     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
+     */
     private void disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
@@ -228,7 +232,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
 
             try {
-                AnalyticsTracker.track(Stat.READER_SITE_SHARED);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SITE_SHARED,
+                        blog.blogId,
+                        blog.feedId,
+                        blog.isFollowing,
+                        mSource
+                );
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
                 ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
@@ -241,7 +251,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final ReaderTag tag, ReaderPostListType listType) {
+    private void showListFragmentForTag(@NonNull final ReaderTag tag, ReaderPostListType listType) {
         if (isFinishing()) {
             return;
         }
@@ -349,13 +359,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        int siteLocalId = AppPrefs.getSelectedSite();
-        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,
                     findViewById(R.id.coordinator),
                     event.isError(),
+                    event.isFirstTimePublish,
                     event.post,
                     null,
                     site);

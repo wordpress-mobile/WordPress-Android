@@ -15,7 +15,9 @@ enum MediaBlockType {
     VIDEO("video"),
     MEDIA_TEXT("media-text"),
     GALLERY("gallery"),
-    COVER("cover");
+    COVER("cover"),
+    FILE("file"),
+    AUDIO("audio");
 
     private static final Map<String, MediaBlockType> MAP = new HashMap<>();
     private static final String MATCHING_GROUP;

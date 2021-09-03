@@ -4,8 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -25,14 +27,22 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mAvatarImageView;
     private final TextView mDisplayNameTextView;
     private final TextView mUsernameTextView;
-    private final TextView mMySitesHeadingTextView;
 
-    LoginHeaderViewHolder(View view) {
+    private final boolean mIsOnboardingImprovementsEnabled;
+    @Nullable private TextView mMySitesHeadingTextView;
+    @Nullable private LinearLayout mMySitesHeadingContainer;
+
+    LoginHeaderViewHolder(View view, boolean isOnboardingImprovementsEnabled) {
         super(view);
+        mIsOnboardingImprovementsEnabled = isOnboardingImprovementsEnabled;
         mAvatarImageView = view.findViewById(R.id.login_epilogue_header_avatar);
         mDisplayNameTextView = view.findViewById(R.id.login_epilogue_header_title);
         mUsernameTextView = view.findViewById(R.id.login_epilogue_header_subtitle);
-        mMySitesHeadingTextView = view.findViewById(R.id.login_epilogue_header_sites_subheader);
+        if (isOnboardingImprovementsEnabled) {
+            mMySitesHeadingContainer = view.findViewById(R.id.login_epilogue_header_sites_header);
+        } else {
+            mMySitesHeadingTextView = view.findViewById(R.id.login_epilogue_header_sites_subheader);
+        }
     }
 
     void updateLoggedInAsHeading(Context context, ImageManager imageManager, AccountModel account) {
@@ -62,12 +72,24 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     void showSitesHeading(String text) {
-        mMySitesHeadingTextView.setVisibility(View.VISIBLE);
-        mMySitesHeadingTextView.setText(text);
+        if (!mIsOnboardingImprovementsEnabled) {
+            mMySitesHeadingTextView.setVisibility(View.VISIBLE);
+            mMySitesHeadingTextView.setText(text);
+        }
+    }
+
+    void showSitesHeading() {
+        if (mIsOnboardingImprovementsEnabled) {
+            mMySitesHeadingContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     void hideSitesHeading() {
-        mMySitesHeadingTextView.setVisibility(View.GONE);
+        if (mIsOnboardingImprovementsEnabled) {
+            mMySitesHeadingContainer.setVisibility(View.VISIBLE);
+        } else {
+            mMySitesHeadingTextView.setVisibility(View.GONE);
+        }
     }
 
     private int getAvatarSize(Context context) {

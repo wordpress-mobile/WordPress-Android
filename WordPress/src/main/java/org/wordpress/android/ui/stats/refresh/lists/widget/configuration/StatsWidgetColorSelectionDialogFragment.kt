@@ -7,7 +7,6 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
@@ -23,7 +22,7 @@ class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
     private lateinit var viewModel: StatsColorSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
         val view = requireActivity().layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup

@@ -4,38 +4,39 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.page_parent_fragment.*
-import kotlinx.android.synthetic.main.pages_list_fragment.recyclerView
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PageParentFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
-import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
-class PageParentFragment : Fragment() {
+class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
@@ -46,6 +47,7 @@ class PageParentFragment : Fragment() {
 
     private var pageId: Long? = null
     private var restorePreviousSearch = false
+    private var binding: PageParentFragmentBinding? = null
 
     companion object {
         fun newInstance(): PageParentFragment {
@@ -88,10 +90,10 @@ class PageParentFragment : Fragment() {
             "Menu does not contain mandatory search item"
         }
 
-        initializeSearchView()
+        binding!!.initializeSearchView()
     }
 
-    private fun initializeSearchView() {
+    private fun PageParentFragmentBinding.initializeSearchView() {
         searchAction.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
@@ -122,25 +124,17 @@ class PageParentFragment : Fragment() {
             }
         })
 
-        val searchEditFrame = searchAction?.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
+        val searchEditFrame = searchAction.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
-        viewModel.isSearchExpanded.observe(this, Observer {
+        viewModel.isSearchExpanded.observe(this@PageParentFragment, Observer {
             if (it == true) {
                 showSearchList(searchAction)
             } else {
                 hideSearchList(searchAction)
             }
         })
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.page_parent_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -152,12 +146,19 @@ class PageParentFragment : Fragment() {
         val nonNullActivity = requireActivity()
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
-
-        initializeViews(nonNullActivity, savedInstanceState)
-        initializeViewModels(nonNullActivity, nonNullPageId, savedInstanceState == null)
+        with(PageParentFragmentBinding.bind(view)) {
+            binding = this
+            initializeViews(nonNullActivity, savedInstanceState)
+            initializeViewModels(nonNullActivity, nonNullPageId, savedInstanceState == null)
+        }
     }
 
-    private fun initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun PageParentFragmentBinding.initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -174,12 +175,12 @@ class PageParentFragment : Fragment() {
                 .commit()
     }
 
-    private fun initializeViewModels(
+    private fun PageParentFragmentBinding.initializeViewModels(
         activity: FragmentActivity,
         pageId: Long,
         isFirstStart: Boolean
     ) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        viewModel = ViewModelProvider(activity, viewModelFactory)
                 .get(PageParentViewModel::class.java)
 
         setupObservers()
@@ -193,16 +194,16 @@ class PageParentFragment : Fragment() {
         }
     }
 
-    private fun setupObservers() {
-        viewModel.pages.observe(viewLifecycleOwner, Observer { pages ->
+    private fun PageParentFragmentBinding.setupObservers() {
+        viewModel.pages.observe(viewLifecycleOwner, { pages ->
             pages?.let { setPages(pages) }
         })
 
-        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner, Observer { isVisible ->
+        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner, { isVisible ->
             isVisible?.let { saveButton?.isVisible = isVisible }
         })
 
-        viewModel.saveParent.observe(viewLifecycleOwner, Observer {
+        viewModel.saveParent.observe(viewLifecycleOwner, {
             returnParentChoiceAndExit()
         })
     }
@@ -212,10 +213,10 @@ class PageParentFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun setPages(pages: List<PageItem>) {
+    private fun PageParentFragmentBinding.setPages(pages: List<PageItem>) {
         val adapter: PageParentAdapter
         if (recyclerView.adapter == null) {
-            adapter = PageParentAdapter({ page -> viewModel.onParentSelected(page) }, uiScope)
+            adapter = PageParentAdapter({ page -> viewModel.onParentSelected(page) }, this@PageParentFragment)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PageParentAdapter
@@ -223,7 +224,7 @@ class PageParentFragment : Fragment() {
         adapter.update(pages)
     }
 
-    private fun hideSearchList(myActionMenuItem: MenuItem) {
+    private fun PageParentFragmentBinding.hideSearchList(myActionMenuItem: MenuItem) {
         recyclerView.visibility = View.VISIBLE
         frameSearch.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
@@ -235,11 +236,16 @@ class PageParentFragment : Fragment() {
         }
     }
 
-    private fun showSearchList(myActionMenuItem: MenuItem) {
+    private fun PageParentFragmentBinding.showSearchList(myActionMenuItem: MenuItem) {
         frameSearch.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

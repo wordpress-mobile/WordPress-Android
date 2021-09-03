@@ -444,8 +444,8 @@ public class PostUtils {
     public static boolean isMediaInGutenbergPostBody(@NonNull String postContent,
                                             String localMediaId) {
         List<String> patterns = new ArrayList<>();
-        // Regex for Image and Video blocks
-        patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
+        // Regex for Image, Video, Audio and File blocks
+        patterns.add("<!-- wp:(?:image|video|audio|file){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
         // Regex for Media&Text block
         patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s([^\\d\\}][^\\}]*)*\\} -->");
         // Regex for Gallery block

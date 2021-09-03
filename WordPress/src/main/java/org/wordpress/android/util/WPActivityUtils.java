@@ -6,15 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -163,5 +167,39 @@ public class WPActivityUtils {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    public static void setLightStatusBar(Window window, boolean showInLightMode) {
+        Context context = window.getContext();
+        boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
+        if (!isDarkTheme) {
+            int systemVisibility = window.getDecorView().getSystemUiVisibility();
+            int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    : systemVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.getDecorView().setSystemUiVisibility(newSystemVisibility);
+        }
+    }
+
+    public static void setLightNavigationBar(Window window, boolean showInLightMode) {
+        Context context = window.getContext();
+        boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
+        if (!isDarkTheme) {
+            if (VERSION.SDK_INT >= VERSION_CODES.O) {
+                int systemVisibility = window.getDecorView().getSystemUiVisibility();
+                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                        : systemVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
+
+                int newColor = showInLightMode ? ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface)
+                        : ContextCompat.getColor(context, R.color.black);
+                window.setNavigationBarColor(newColor);
+            }
+        }
+    }
+
+    public static void showFullScreen(View decorView) {
+        int flags = decorView.getSystemUiVisibility();
+        flags = flags | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        decorView.setSystemUiVisibility(flags);
     }
 }

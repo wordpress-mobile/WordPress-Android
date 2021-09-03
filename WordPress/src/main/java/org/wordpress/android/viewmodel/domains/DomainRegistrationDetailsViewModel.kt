@@ -284,7 +284,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val updatedSite = siteStore.getSiteByLocalId(site.id)
 
         // New domain is not is not reflected in SiteModel yet, try refreshing a site until we get it
-        if (updatedSite.url.endsWith(".wordpress.com") && siteCheckTries < MAX_SITE_CHECK_TRIES) {
+        if (updatedSite?.url?.endsWith(".wordpress.com") == true && siteCheckTries < MAX_SITE_CHECK_TRIES) {
             AppLog.v(
                     T.DOMAIN_REGISTRATION,
                     "Newly registered domain is still not reflected in site model. Refreshing site model..."

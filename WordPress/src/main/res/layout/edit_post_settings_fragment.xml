@@ -278,23 +278,6 @@
 
             </LinearLayout>
 
-            <View style="@style/PostSettingsDivider" />
-
-            <LinearLayout
-                android:id="@+id/post_location_container"
-                style="@style/PostSettingsContainer">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/PostSettingsTitle"
-                    android:text="@string/post_settings_location" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/post_location"
-                    style="@style/PostSettingsSubtitle"
-                    android:hint="@string/post_settings_not_set" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </LinearLayout>

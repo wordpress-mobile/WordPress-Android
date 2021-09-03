@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 class PostListMainViewModelTest : BaseUnitTest() {
@@ -35,11 +33,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
     private lateinit var viewModel: PostListMainViewModel
 
     @InternalCoroutinesApi
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val prefs = mock<AppPrefsWrapper> {
@@ -63,8 +59,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 postListEventListenerFactory = mock(),
                 uploadStarter = uploadStarter,
                 uploadActionUseCase = mock(),
-                savePostToDbUseCase = savePostToDbUseCase,
-                wpStoriesFeatureConfig = wpStoriesFeatureConfig
+                savePostToDbUseCase = savePostToDbUseCase
         )
     }
 
@@ -192,8 +187,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if stories is enabled and onFabClicked then _onFabClicked is called`() {
-        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+    fun `if onFabClicked then _onFabClicked is called`() {
         whenever(site.isWPCom).thenReturn(true)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
@@ -203,33 +197,12 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if stories is disabled and onFabClicked then _onFabClicked is not called`() {
-        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-        viewModel.fabClicked()
-
-        assertThat(viewModel.onFabClicked.value?.peekContent()).isNull()
-    }
-
-    @Test
-    fun `if stories is enabled and onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
-        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+    fun `if onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
         whenever(site.isWPCom).thenReturn(true)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         viewModel.onFabLongPressed()
 
         assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
-    }
-
-    @Test
-    fun `if stories is disabled and onFabLongPressed then onFabLongPressedForPostList is called`() {
-        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-        viewModel.onFabLongPressed()
-
-        assertThat(viewModel.onFabLongPressedForPostList.value?.peekContent()).isNotNull
     }
 }

@@ -15,8 +15,12 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewModeHandler
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
@@ -24,9 +28,10 @@ import javax.inject.Inject
 
 class WPWebViewViewModel
 @Inject constructor(
+    private val displayUtils: DisplayUtilsWrapper,
     private val networkUtils: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel() {
+) : ViewModel(), PreviewModeHandler {
     private var isStarted = false
     private var wpWebViewUsageCategory: WPWebViewUsageCategory = WPWebViewUsageCategory.WEBVIEW_STANDARD
 
@@ -61,6 +66,9 @@ class WPWebViewViewModel
         override fun getLifecycle(): Lifecycle = lifecycleRegistry
     }
 
+    private val defaultPreviewMode: PreviewMode
+        get() = if (displayUtils.isTablet()) TABLET else MOBILE
+
     init {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
         connectionStatus.observe(lifecycleOwner, Observer {
@@ -79,13 +87,14 @@ class WPWebViewViewModel
         _navbarUiState.value = NavBarUiState(
                 forwardNavigationEnabled = false,
                 backNavigationEnabled = false,
-                desktopPreviewHintVisible = false
+                previewModeHintVisible = false,
+                reviewHintResId = getPreviewHintResId(defaultPreviewMode)
         )
-        _previewMode.value = DEFAULT
+        _previewMode.value = defaultPreviewMode
         _previewModeSelector.value = PreviewModeSelectorStatus(
                 isVisible = false,
                 isEnabled = false,
-                selectedPreviewMode = DEFAULT
+                selectedPreviewMode = defaultPreviewMode
         )
 
         if (WPWebViewUsageCategory.isActionableDirectUsage(wpWebViewUsageCategory)) {
@@ -179,21 +188,26 @@ class WPWebViewViewModel
         if (previewMode.value != selectedPreviewMode) {
             _previewMode.value = selectedPreviewMode
             _navbarUiState.value =
-                    navbarUiState.value!!.copy(desktopPreviewHintVisible = selectedPreviewMode == DESKTOP)
+                    navbarUiState.value!!.copy(
+                            previewModeHintVisible = selectedPreviewMode != MOBILE,
+                            reviewHintResId = getPreviewHintResId(selectedPreviewMode)
+                    )
             updateUiState(WebPreviewFullscreenProgressUiState)
         }
+    }
+
+    private fun getPreviewHintResId(previewMode: PreviewMode) = when (previewMode) {
+        MOBILE -> R.string.web_preview_mobile
+        TABLET -> R.string.web_preview_tablet
+        DESKTOP -> R.string.web_preview_desktop
     }
 
     data class NavBarUiState(
         val forwardNavigationEnabled: Boolean,
         val backNavigationEnabled: Boolean,
-        val desktopPreviewHintVisible: Boolean
+        val previewModeHintVisible: Boolean,
+        val reviewHintResId: Int
     )
-
-    enum class PreviewMode {
-        DEFAULT,
-        DESKTOP
-    }
 
     data class PreviewModeSelectorStatus(
         val isVisible: Boolean,
@@ -233,5 +247,12 @@ class WPWebViewViewModel
                 override val buttonVisibility: Boolean = false
             }
         }
+    }
+
+    override fun selectedPreviewMode(): PreviewMode = _previewMode.value ?: defaultPreviewMode
+
+    override fun onPreviewModeChanged(mode: PreviewMode) {
+        togglePreviewModeSelectorVisibility(false)
+        selectPreviewMode(mode)
     }
 }

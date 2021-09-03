@@ -35,6 +35,6 @@
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/remove"
         android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_cross_white_24dp"
+        android:src="@drawable/ic_reader_following_white_24dp"
         app:tint="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>

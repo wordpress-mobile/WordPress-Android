@@ -9,12 +9,13 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 ## Build Instructions ##
 
 1. Make sure you've installed [Android Studio](https://developer.android.com/studio/index.html).
+1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/tutorials/devenv/#quickstart)
 1. `git clone --recurse-submodules git@github.com:wordpress-mobile/WordPress-Android.git` in the folder of your preference.
 Or if you already have the project cloned, initialize and update the submodules:
-```
-git submodule init
-git submodule update
-```
+    ```
+    git submodule init
+    git submodule update
+    ```
 1. `cd WordPress-Android` to enter the working directory.
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
 1. `git submodule update --init --recursive`  to pull the submodules (optionally use `--depth=1 --recommend-shallow` flags to skip pulling full submodules' history).
@@ -45,32 +46,32 @@ Once you've created your application in the [applications manager][5], you'll
 need to edit the `./gradle.properties` file and change the
 `wp.oauth.app_id` and `wp.oauth.app_secret` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
-account. Note that authenticating to WordPress.com via Google is not supported 
+account. Note that authenticating to WordPress.com via Google is not supported
 in development builds of the app, only in the official release.
 
-Note that credentials created with our [WordPress.com applications manager][5] 
-allow login only and not signup. New accounts must be created using the [official app][1] 
-or [on the web](https://wordpress.com/start). Login is restricted to the WordPress.com 
-account with which the credentials were created. In other words, if the credentials 
-were created with foo@email.com, you will only be able to login with foo@email.com. 
-Using another account like bar@email.com will cause the `Client cannot use "password" grant_type` error. 
+Note that credentials created with our [WordPress.com applications manager][5]
+allow login only and not signup. New accounts must be created using the [official app][1]
+or [on the web](https://wordpress.com/start). Login is restricted to the WordPress.com
+account with which the credentials were created. In other words, if the credentials
+were created with foo@email.com, you will only be able to login with foo@email.com.
+Using another account like bar@email.com will cause the `Client cannot use "password" grant_type` error.
 
-For security reasons, some account-related actions aren't supported for development 
+For security reasons, some account-related actions aren't supported for development
 builds when using a WordPress.com account with 2-factor authentication enabled.
 
 Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
-## Build and Test ## 
+## Build and Test ##
 
 To build, install, and test the project from the command line:
 
-    $ ./gradlew assembleVanillaDebug                        # assemble the debug .apk
-    $ ./gradlew installVanillaDebug                         # install the debug .apk if you have an
-                                                            # emulator or an Android device connected
-    $ ./gradlew :WordPress:testVanillaDebugUnitTest         # assemble, install and run unit tests
-    $ ./gradlew :WordPress:connectedVanillaDebugAndroidTest # assemble, install and run Android tests
+    $ ./gradlew assembleWordPressVanillaDebug                        # assemble the debug .apk
+    $ ./gradlew installWordPressVanillaDebug                         # install the debug .apk if you have an
+                                                                     # emulator or an Android device connected
+    $ ./gradlew :WordPress:testWordPressVanillaDebugUnitTest         # assemble, install and run unit tests
+    $ ./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest # assemble, install and run Android tests
 
-## Directory structure ## 
+## Directory structure ##
     .
     ├── libs                    # dependencies used to build debug variants
     ├── tools                   # script collection
@@ -113,7 +114,7 @@ If you have questions or just want to say hi, join the [WordPress Slack](https:/
 - [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests
 - [Subtree'd Library Projects](docs/subtreed-library-projects.md) - how to deal with subtree dependencies
 
-Please read the [docs](docs/) for more. 
+Please read the [docs](docs/) for more.
 
 ## Resources
 

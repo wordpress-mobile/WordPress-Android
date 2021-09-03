@@ -1,22 +1,26 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -28,15 +32,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
+    public static final int SELECTED_SITE_UNAVAILABLE = -1;
+
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
+
+    private static final Gson GSON = new Gson();
 
     public interface PrefKey {
         String name();
@@ -81,9 +90,6 @@ public class AppPrefs {
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
 
-        // index of the last active status type in Comments activity
-        COMMENTS_STATUS_TYPE_INDEX,
-
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
 
@@ -126,7 +132,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
-        GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
+        GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -155,7 +161,12 @@ public class AppPrefs {
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
 
         READER_DISCOVER_WELCOME_BANNER_SHOWN,
-        MANUAL_FEATURE_CONFIG
+        MANUAL_FEATURE_CONFIG,
+        SITE_JETPACK_CAPABILITIES,
+        REMOVED_QUICK_START_CARD_TYPE,
+        PINNED_DYNAMIC_CARD,
+        BLOGGING_REMINDERS_SHOWN,
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
     }
 
     /**
@@ -214,9 +225,6 @@ public class AppPrefs {
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
-        // quick start migration dialog is shown only once for all sites
-        HAS_QUICK_START_MIGRATION_SHOWN,
-
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -243,6 +251,22 @@ public class AppPrefs {
 
         // used to indicate that we do not need to show the Post List FAB tooltip
         IS_POST_LIST_FAB_TOOLTIP_DISABLED,
+
+        // Used to indicate whether or not the stories intro screen must be shown
+        SHOULD_SHOW_STORIES_INTRO,
+
+        // Used to determine if editor onboarding features should be displayed
+        HAS_LAUNCHED_GUTENBERG_EDITOR,
+
+        // Used to indicate whether or not the device running out of storage warning should be shown
+        SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
     }
 
     private static SharedPreferences prefs() {
@@ -401,26 +425,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static CommentStatusCriteria getCommentsStatusFilter() {
-        int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
-        CommentStatusCriteria[] commentStatusValues = CommentStatusCriteria.values();
-        if (commentStatusValues.length < idx) {
-            return commentStatusValues[0];
-        } else {
-            return commentStatusValues[idx];
-        }
-    }
-
-    public static void setCommentsStatusFilter(CommentStatusCriteria commentStatus) {
-        if (commentStatus != null) {
-            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
-                   .apply();
-        }
     }
 
     public static PeopleListFilter getPeopleListFilter() {
@@ -593,12 +597,26 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
+    /**
+     * This method should only be used by specific client classes that need access to the persisted selected site
+     * instance due to the fact that the in-memory selected site instance might not be yet available.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such access
+     * to this method is limited to this class.
+     */
     public static int getSelectedSite() {
-        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
-    public static void setSelectedSite(int selectedSite) {
-        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
+    /**
+     * This method should only be used by specific client classes that need to update the persisted selected site
+     * instance due to the fact that the in-memory selected site instance is updated as well.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such the
+     * update method should be limited to this class.
+     */
+    public static void setSelectedSite(int siteLocalId) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
@@ -879,12 +897,23 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
-    public static void setGutenbergStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        setBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, tooltipShown);
+    public static void setGutenbergFocalPointPickerTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, tooltipShown);
     }
 
-    public static boolean getGutenbergStarterPageTemplatesTooltipShown() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, false);
+    public static boolean getGutenbergFocalPointPickerTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
+    }
+
+    public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
+        String json = GSON.toJson(newImpressions);
+        setString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+    }
+
+    public static Map<String, Double> getGutenbergBlockTypeImpressions() {
+        String jsonString = getString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
+        return impressions;
     }
 
     /*
@@ -896,7 +925,7 @@ public class AppPrefs {
 
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
-        List<String> items = Arrays.asList(idsAsString.split(","));
+        String[] items = idsAsString.split(",");
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
@@ -991,15 +1020,6 @@ public class AppPrefs {
 
     public static boolean isPostListFabTooltipDisabled() {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
-    }
-
-
-    public static void setQuickStartMigrationDialogShown(Boolean shown) {
-        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
-    }
-
-    public static boolean hasQuickStartMigrationDialogShown() {
-        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
     }
 
     public static void setQuickStartNoticeRequired(Boolean shown) {
@@ -1194,6 +1214,40 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
     }
 
+    public static void setShouldShowStoriesIntro(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
+    }
+
+    public static boolean shouldShowStoriesIntro() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
+    }
+
+    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
+        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
+    }
+
+    public static boolean hasLaunchedGutenbergEditor() {
+        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
+    }
+
+    public static void setShouldShowStorageWarning(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
+    }
+
+    public static boolean shouldShowStorageWarning() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
+    }
+
+    public static void setBookmarkPostsPseudoIdsUpdated() {
+        setBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, false);
+    }
+
+    public static boolean shouldUpdateBookmarkPostsPseudoIds(ReaderTag tag) {
+        return tag != null
+               && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
+               && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
+    }
+
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
@@ -1226,6 +1280,26 @@ public class AppPrefs {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
+    public static void setBloggingRemindersShown(int siteId) {
+        prefs().edit().putBoolean(getBloggingRemindersConfigKey(siteId), true).apply();
+    }
+
+    public static boolean isBloggingRemindersShown(int siteId) {
+        return prefs().getBoolean(getBloggingRemindersConfigKey(siteId), false);
+    }
+
+    @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
+        return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
+    }
+
+    public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
+        setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
+    }
+
+    public static boolean shouldScheduleCreateSiteNotification() {
+        return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1247,9 +1321,32 @@ public class AppPrefs {
         }
         List<String> currentIds = getPostWithHWAccelerationOff();
         String key = localSiteId + "-" + localPostId;
-        if (currentIds.contains(key)) {
-            return true;
+        return currentIds.contains(key);
+    }
+
+    public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {
+        HashSet<String> capabilitiesSet = new HashSet(capabilities.size());
+        for (JetpackCapability item : capabilities) {
+            capabilitiesSet.add(item.toString());
         }
-        return false;
+
+        Editor editor = prefs().edit();
+        editor.putStringSet(
+                DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
+                capabilitiesSet
+        );
+        editor.apply();
+    }
+
+    public static List<JetpackCapability> getSiteJetpackCapabilities(long remoteSiteId) {
+        List<JetpackCapability> capabilities = new ArrayList<>();
+        Set<String> strings = prefs().getStringSet(
+                DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
+                new HashSet<>()
+        );
+        for (String item : strings) {
+            capabilities.add(JetpackCapability.Companion.fromString(item));
+        }
+        return capabilities;
     }
 }

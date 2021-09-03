@@ -9,23 +9,23 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import org.wordpress.android.R
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.util.setVisible
 
+/**
+ * Implements the preview/thumbnail mode popup adapter
+ */
 class PreviewModeMenuAdapter(context: Context, private val selectedPreviewMode: PreviewMode) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val menuItems = arrayOf(PreviewMode.DEFAULT, PreviewMode.DESKTOP)
+    private val menuItems = arrayOf(MOBILE, TABLET, DESKTOP)
 
-    override fun getCount(): Int {
-        return menuItems.size
-    }
+    override fun getCount() = menuItems.size
 
-    override fun getItem(position: Int): PreviewMode {
-        return menuItems[position]
-    }
+    override fun getItem(position: Int): PreviewMode = menuItems[position]
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var view = convertView
@@ -38,25 +38,21 @@ class PreviewModeMenuAdapter(context: Context, private val selectedPreviewMode: 
             holder = view.tag as PreviewModeMenuHolder
         }
 
-        val previewMode = menuItems[position]
+        val previewMode = getItem(position)
         val labelResId = when (previewMode) {
-            PreviewMode.DEFAULT -> R.string.web_preview_default
-            PreviewMode.DESKTOP -> R.string.web_preview_desktop
+            MOBILE -> R.string.web_preview_mobile
+            TABLET -> R.string.web_preview_tablet
+            DESKTOP -> R.string.web_preview_desktop
         }
 
         holder.label.setText(labelResId)
-
-        if (previewMode === selectedPreviewMode) {
-            holder.checkmark.visibility = View.VISIBLE
-        } else {
-            holder.checkmark.visibility = View.GONE
-        }
+        holder.checkMark.setVisible(previewMode === selectedPreviewMode)
 
         return view
     }
 
     internal inner class PreviewModeMenuHolder(view: View) {
         val label: TextView = view.findViewById(R.id.preview_mode_label)
-        val checkmark: ImageView = view.findViewById(R.id.checkmark)
+        val checkMark: ImageView = view.findViewById(R.id.checkmark)
     }
 }

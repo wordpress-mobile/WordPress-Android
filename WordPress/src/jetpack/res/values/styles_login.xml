@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Login Prologue -->
+    <style name="Widget.LoginFlow.Prologue" parent="">
+        <item name="android:background">@color/wordpress_blue_90</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Button.Primary.Prologue" parent="Widget.LoginFlow.Button.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.Secondary.Prologue</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Button.Secondary.Prologue" parent="Widget.LoginFlow.Button.Secondary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface.Prologue</item>
+    </style>
+
+    <style name="ThemeOverlay.LoginFlow.Button.Secondary.Prologue" parent="ThemeOverlay.LoginFlow.Button.Secondary">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="ThemeOverlay.LoginFlow.Button.OnSurface.Prologue" parent="ThemeOverlay.LoginFlow.Button.OnSurface">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+    </style>
+
+    <style name="Widget.LoginFlow.TextAppTagLine.Prologue" parent="">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Cards -->
+    <style name="Widget.LoginFlow.CardView.BottomBar.Prologue" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/wordpress_blue_90</item>
+    </style>
+</resources>

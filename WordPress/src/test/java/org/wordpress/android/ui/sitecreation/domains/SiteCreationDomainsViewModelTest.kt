@@ -3,7 +3,9 @@ package org.wordpress.android.ui.sitecreation.domains
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.firstValue
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.lastValue
 import com.nhaarman.mockitokotlin2.secondValue
 import com.nhaarman.mockitokotlin2.thirdValue
@@ -39,7 +41,6 @@ import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
-private const val SEGMENT_ID = 123L
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair(
         "multi_result_query",
         MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -88,10 +89,24 @@ class SiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
+            whenever(mSiteCreationDomainSanitizer.getName(any())).thenReturn(
+                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+            )
+            whenever(mSiteCreationDomainSanitizer.getDomain(any())).thenReturn(
+                    ".wordpress.com"
+            )
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
                     createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
-            whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first, SEGMENT_ID))
+            whenever(
+                    fetchDomainsUseCase.fetchDomains(
+                            eq(queryResultSizePair.first),
+                            isNull(),
+                            eq(true),
+                            eq(true),
+                            any()
+                    )
+            )
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
@@ -101,7 +116,15 @@ class SiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(ERROR_RESULT_FETCH_QUERY, SEGMENT_ID))
+            whenever(
+                    fetchDomainsUseCase.fetchDomains(
+                            eq(ERROR_RESULT_FETCH_QUERY),
+                            isNull(),
+                            eq(true),
+                            eq(true),
+                            any()
+                    )
+            )
                     .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY))
             block()
         }
@@ -112,7 +135,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
-        viewModel.start(SEGMENT_ID)
+        viewModel.start()
         verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
     }
 
@@ -121,7 +144,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.start(SEGMENT_ID)
+        viewModel.start()
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -134,7 +157,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() =
             testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
-                viewModel.start(SEGMENT_ID)
+                viewModel.start()
                 viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -150,7 +173,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() =
             testWithSuccessResponse {
-                viewModel.start(SEGMENT_ID)
+                viewModel.start()
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -164,7 +187,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
             testWithSuccessResponse(isDomainAvailableInSuggestions = false) {
-                viewModel.start(SEGMENT_ID)
+                viewModel.start()
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -178,7 +201,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
-        viewModel.start(SEGMENT_ID)
+        viewModel.start()
         viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -199,7 +222,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyClearQueryWithEmptyTitleInitialState() = testWithSuccessResponse {
-        viewModel.start(SEGMENT_ID)
+        viewModel.start()
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)

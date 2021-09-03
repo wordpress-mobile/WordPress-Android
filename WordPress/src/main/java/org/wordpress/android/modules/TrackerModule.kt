@@ -3,6 +3,7 @@ package org.wordpress.android.modules
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTrackerNosara
 import org.wordpress.android.analytics.Tracker
 
@@ -10,6 +11,6 @@ import org.wordpress.android.analytics.Tracker
 class TrackerModule {
     @Provides
     fun provideTracker(appContext: Context): Tracker {
-        return AnalyticsTrackerNosara(appContext)
+        return AnalyticsTrackerNosara(appContext, BuildConfig.TRACKS_EVENT_PREFIX)
     }
 }

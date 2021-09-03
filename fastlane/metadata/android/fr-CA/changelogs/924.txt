@@ -1,4 +1,0 @@
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.

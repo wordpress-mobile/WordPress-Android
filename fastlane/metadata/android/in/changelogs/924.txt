@@ -1,5 +1,0 @@
-15.7:
-Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
-
-Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
-

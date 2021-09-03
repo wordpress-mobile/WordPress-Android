@@ -6,8 +6,8 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.prepublishing_story_title_list_item.view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.PrepublishingStoryTitleListItemBinding
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.focusAndShowKeyboard
@@ -24,34 +24,34 @@ class StoryTitleHeaderView @JvmOverloads constructor(
                     .toInt()
 
     fun init(uiHelpers: UiHelpers, imageManager: ImageManager, uiState: StoryTitleUiState) {
-        LayoutInflater.from(context).inflate(R.layout.prepublishing_story_title_list_item, this, true)
+        with(PrepublishingStoryTitleListItemBinding.inflate(LayoutInflater.from(context), this, true)) {
+            imageManager.loadImageWithCorners(
+                    storyThumbnail,
+                    ImageType.IMAGE,
+                    uiState.storyThumbnailUrl,
+                    thumbnailCornerRadius
+            )
 
-        imageManager.loadImageWithCorners(
-                story_thumbnail,
-                ImageType.IMAGE,
-                uiState.storyThumbnailUrl,
-                thumbnailCornerRadius
-        )
-
-        uiState.storyTitle?.let { title ->
-            story_title.setText(uiHelpers.getTextOfUiString(context, title))
-            story_title.setSelection(title.text.length)
-        }
-
-        story_title.focusAndShowKeyboard()
-
-        story_title_content.setOnClickListener {
-            story_title.focusAndShowKeyboard()
-        }
-
-        story_title.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(view: Editable?) {
-                view?.let {
-                    uiState.onStoryTitleChanged.invoke(it.toString())
-                }
+            uiState.storyTitle?.let { title ->
+                storyTitle.setText(uiHelpers.getTextOfUiString(context, title))
+                storyTitle.setSelection(title.text.length)
             }
-        })
+
+            storyTitle.focusAndShowKeyboard()
+
+            storyTitleContent.setOnClickListener {
+                storyTitle.focusAndShowKeyboard()
+            }
+
+            storyTitle.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(view: Editable?) {
+                    view?.let {
+                        uiState.onStoryTitleChanged.invoke(it.toString())
+                    }
+                }
+            })
+        }
     }
 }

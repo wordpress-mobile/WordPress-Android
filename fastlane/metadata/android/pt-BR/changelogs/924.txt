@@ -1,6 +1,0 @@
-15.7:
-Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
-
-Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
-
-

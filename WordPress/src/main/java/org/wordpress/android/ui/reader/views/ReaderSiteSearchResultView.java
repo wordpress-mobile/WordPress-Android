@@ -11,9 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -21,18 +23,23 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import javax.inject.Inject;
+
 /**
  * single feed search result
  */
 public class ReaderSiteSearchResultView extends LinearLayout {
     public interface OnSiteFollowedListener {
         void onSiteFollowed(@NonNull ReaderSiteModel site);
+
         void onSiteUnFollowed(@NonNull ReaderSiteModel site);
     }
 
     private ReaderFollowButton mFollowButton;
     private ReaderSiteModel mSite;
     private OnSiteFollowedListener mFollowListener;
+
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderSiteSearchResultView(Context context) {
         this(context, null);
@@ -44,6 +51,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
 
     public ReaderSiteSearchResultView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
@@ -103,7 +111,14 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         // disable follow button until API call returns
         mFollowButton.setEnabled(false);
 
-        boolean result = ReaderBlogActions.followFeedById(mSite.getFeedId(), isAskingToFollow, listener);
+        boolean result = ReaderBlogActions.followFeedById(
+                mSite.getSiteId(),
+                mSite.getFeedId(),
+                isAskingToFollow,
+                listener,
+                ReaderTracker.SOURCE_SEARCH,
+                mReaderTracker
+        );
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
             mSite.setFollowing(isAskingToFollow);

@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="168dp"
+    android:height="94dp"
+    android:viewportWidth="168"
+    android:viewportHeight="94">
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_background"
+        android:pathData="M0 0h168v94H0z" />
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_edit_site_icon_area"
+        android:pathData="M58.5 29.5c0-4.42 3.58-8 8-8h35c4.42 0 8 3.58 8 8v35c0 4.42-3.58 8-8 8h-35c-4.42 0-8-3.58-8-8z" />
+    <group>
+        <clip-path android:pathData="M58.5 29.5c0-4.42 3.58-8 8-8h35c4.42 0 8 3.58 8 8v35c0 4.42-3.58 8-8 8h-35c-4.42 0-8-3.58-8-8z" />
+        <path
+            android:fillColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_fill"
+            android:pathData="M78.96 45.57L40.84 76.35h104.32v-8.03l-32.1-35.46L89 54.94l-10.03-9.37z" />
+        <path
+            android:pathData="M42.17 75.68l36.79-30.1 18.72 17.39"
+            android:strokeWidth="1"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="M72.94 55.6l-4.02-2 10.04-8.03 8.02 7.36-1.34 1.34-4.68-0.67-8.02 2z"
+            android:strokeWidth="1"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:pathData="M88.99 54.94l24.08-22.08 31.43 34.8"
+            android:strokeWidth="1"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="M108.38 42.9l-4.01-2.01 8.7-8.03 7.35 8.03-4.01 2-4.02-1.33-4 1.34z"
+            android:strokeWidth="0.63"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    </group>
+</vector>

@@ -189,7 +189,7 @@ public class HeaderNoteBlock extends NoteBlock {
         }
     };
 
-    private FormattableContent getHeader(int headerIndex) {
+    public FormattableContent getHeader(int headerIndex) {
         if (mHeadersList != null && headerIndex < mHeadersList.size()) {
             return mHeadersList.get(headerIndex);
         }

@@ -46,11 +46,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
-    public static boolean isAccessible(SiteModel site) {
-        // themes are only accessible to admin wordpress.com users
-        return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
-    }
-
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
 
@@ -161,9 +156,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Override
     public void onTryAndCustomizeSelected(String themeId) {
-        if (mThemeBrowserFragment != null) {
-            mThemeBrowserFragment.completeQuickStartCustomizeTask();
-        }
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 

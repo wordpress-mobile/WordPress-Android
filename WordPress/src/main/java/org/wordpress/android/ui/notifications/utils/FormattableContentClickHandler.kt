@@ -16,13 +16,16 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType.MEDIA
 import org.wordpress.android.fluxc.tools.FormattableRangeType.NOTICON
 import org.wordpress.android.fluxc.tools.FormattableRangeType.PAGE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
+import org.wordpress.android.fluxc.tools.FormattableRangeType.REWIND_DOWNLOAD_READY
 import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
 import org.wordpress.android.fluxc.tools.FormattableRangeType.UNKNOWN
 import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.util.AppLog
@@ -32,26 +35,32 @@ import javax.inject.Inject
 
 private const val DOMAIN_WP_COM = "wordpress.com"
 
-class FormattableContentClickHandler
-@Inject constructor(val siteStore: SiteStore) {
-    fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
+class FormattableContentClickHandler @Inject constructor(
+    val siteStore: SiteStore,
+    val readerTracker: ReaderTracker
+) {
+    fun onClick(
+        activity: FragmentActivity,
+        clickedSpan: FormattableRange,
+        source: String
+    ) {
         if (activity.isFinishing) {
             return
         }
         val id = clickedSpan.id ?: 0
         val siteId = clickedSpan.siteId ?: 0
+        val postId = clickedSpan.postId ?: 0
         when (val rangeType = clickedSpan.rangeType()) {
             SITE ->
                 // Show blog preview
-                showBlogPreviewActivity(activity, id)
+                showBlogPreviewActivity(activity, id, postId, source)
             USER ->
                 // Show blog preview
-                showBlogPreviewActivity(activity, siteId)
+                showBlogPreviewActivity(activity, siteId, postId, source)
             PAGE, POST ->
                 // Show post detail
                 showPostActivity(activity, siteId, id)
-            COMMENT ->
-            {
+            COMMENT -> {
                 // Load the comment in the reader list if it exists, otherwise show a webview
                 val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
@@ -68,6 +77,7 @@ class FormattableContentClickHandler
             } else {
                 showPostActivity(activity, siteId, id)
             }
+            REWIND_DOWNLOAD_READY -> showBackup(activity, siteId)
             BLOCKQUOTE,
             NOTICON,
             MATCH,
@@ -78,8 +88,20 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showBlogPreviewActivity(activity: FragmentActivity, siteId: Long) {
-        ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
+    private fun showBlogPreviewActivity(
+        activity: FragmentActivity,
+        siteId: Long,
+        postId: Long,
+        source: String
+    ) {
+        val post: ReaderPost? = ReaderPostTable.getBlogPost(siteId, postId, true)
+        ReaderActivityLauncher.showReaderBlogPreview(
+                activity,
+                siteId,
+                post?.isFollowedByCurrentUser,
+                source,
+                readerTracker
+        )
     }
 
     private fun showPostActivity(activity: FragmentActivity, siteId: Long, postId: Long) {
@@ -128,5 +150,10 @@ class FormattableContentClickHandler
 
     private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
         ReaderActivityLauncher.showReaderComments(activity, siteId, postId, commentId)
+    }
+
+    private fun showBackup(activity: FragmentActivity, siteId: Long) {
+        val site = siteStore.getSiteBySiteId(siteId)
+        ActivityLauncher.viewBackupList(activity, site)
     }
 }

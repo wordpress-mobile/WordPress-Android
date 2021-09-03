@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/wp/v2/sites/106707880/media/294",
+        "urlPathPattern": "/wp/v2/sites/([0-9]+)/media/294",
         "queryParameters": {
             "locale": {
                 "matches": "(.*)"

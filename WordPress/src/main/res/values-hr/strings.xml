@@ -1,33 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2020-08-26 21:31:09+0000
+Translation-Revision-Date: 2021-01-09 10:49:53+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: hr
 -->
 <resources>
+    <string name="color_picker_label_background">Pozadina</string>
+    <string name="color_picker_label_text">Tekst</string>
+    <string name="dialog_discard_story_ok_button_edit">Odbaci</string>
+    <string name="dialog_discard_story_message_edit">Sve izvršene promjene neće biti spremljene.</string>
+    <string name="dialog_discard_story_title_edit">Odbaciti promjene?</string>
+    <string name="label_done_button">Gotovo</string>
+    <string name="label_next_button">Sljedeće</string>
+    <string name="delete_button_alt">Izbrisati</string>
+    <string name="scan">Skeniraj</string>
+    <string name="reader_discover_empty_title">Dobro došli!</string>
+    <string name="hpp_skip_button">Preskoči</string>
+    <string name="hpp_choose_button">Odaberi</string>
+    <string name="hpp_title">Odaberite dizajn</string>
+    <string name="prepublishing_nudges_add_category_button">Dodaj Kategoriju</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj novu kategoriju</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorije</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nije postavljeno</string>
+    <string name="prepublishing_nudges_categories_action">Kategorije</string>
+    <string name="login_prologue_fifth_caption_three">Muzeji u Londonu</string>
+    <string name="login_prologue_fifth_tag_six">Politika</string>
+    <string name="login_prologue_fifth_tag_five">Glazba</string>
+    <string name="login_prologue_fifth_tag_four">Vrtlarstvo</string>
+    <string name="login_prologue_fifth_tag_three">Nogomet</string>
+    <string name="login_prologue_fifth_tag_two">Kuhanje</string>
+    <string name="login_prologue_fifth_tag_one">Umjetnost</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="media_loading_failed">Učitavanje sadržaja nije uspjelo</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Dajemo sve od sebe da uz svaku objavu dodajemo nove blokove.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nije u potpunosti podržan</string>
+    <string name="gutenberg_native_help_button">Gumb za pomoć</string>
+    <string name="gutenberg_native_edit_using_web_editor">Uređujte pomoću web uređivača</string>
+    <string name="gutenberg_native_choose_images">Odaberite slike</string>
+    <string name="stories_intro_create_story_post_label">Napravite članak o priči</string>
+    <string name="stories_intro_title_second">Članci priče ne nestaju</string>
+    <string name="stories_intro_title_first">Priče su sada za sve</string>
+    <string name="stories_intro_image_caption_second">Primjer naslova priče</string>
+    <string name="stories_intro_image_caption_first">Kako napraviti članak iz priče</string>
+    <string name="stories_intro_main_title">Predstavljamo vam članke priče</string>
+    <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
+    <string name="mlp_notice_page_created">Stranica kreirana</string>
+    <string name="reader_label_toolbar_back">Povratak</string>
+    <string name="reader_discover_empty_button_text">Započnite</string>
+    <string name="reader_post_details_header_by_author_name">Od</string>
+    <string name="mlp_selected_description">%s odabrano</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="reader_menu_report_post">Prijavi ovaj članak</string>
+    <string name="reader_welcome_banner">Dobrodošli u čitateljicu. Otkrijte milijune blogova na dohvat ruke.</string>
+    <string name="error_media_xmlrcp_server_error">Dogodila se interna pogreška poslužitelja</string>
+    <string name="error_media_xmlrpc_not_allowed">Vaša radnja nije dopuštena</string>
+    <string name="show_n_hidden_items_desc">Još %1$s stavki</string>
+    <string name="gutenberg_native_select_a_layout">Odaberite raspored</string>
+    <string name="create_post_story_fab_tooltip">Napravite članak ili priču</string>
+    <string name="create_page_fab_tooltip">Stvorite stranicu</string>
+    <string name="create_post_fab_tooltip">Napravite članak</string>
+    <string name="reader_discover_interests_header">Možda ti se sviđa</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
+    <string name="gutenberg_native_video_caption_empty">Video natpis. Prazan</string>
+    <string name="gutenberg_native_updates_the_title">Ažurira naslov.</string>
+    <string name="gutenberg_native_paste_block_after">Zalijepite blok nakon</string>
+    <string name="gutenberg_native_page_title_s">Naslov stranice. %s</string>
+    <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
+    <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
+    <string name="camera_error">Ovaj uređaj ne podržava API Camera2.</string>
+    <string name="toast_error_saving_video">Videozapis nije moguće spremiti</string>
+    <string name="toast_error_saving_image">Pogreška prilikom spremanja slike</string>
+    <string name="toast_capture_operation_in_progress">Operacija je u tijeku, pokušajte ponovo</string>
+    <string name="toast_story_page_not_found">Slajd Story nije pronađen</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">Pogledajte spremište</string>
     <string name="label_close_button">Zatvori</string>
-    <string name="label_control_publish">Sljedeće</string>
-    <string name="label_done">Gotovo</string>
     <string name="label_share_to">Podijeli</string>
     <string name="label_control_retry">Pokušaj ponovno</string>
     <string name="label_control_saved">Spremljeno</string>
     <string name="label_control_saving">Spremanje</string>
     <string name="sound_button_alt">Zvuk</string>
     <string name="text_button_alt">Tekst</string>
-    <string name="more_button_alt">Više</string>
     <string name="stickers_button_alt">Naljepnice</string>
     <string name="alignment_none">Ništa</string>
+    <string name="alignment_right">Desno</string>
+    <string name="alignment_left">Lijevo</string>
     <string name="title_follower">Sljedbenik</string>
     <string name="people_fetching">Dohvaćanje korisnika…</string>
     <string name="people_dropdown_item_viewers">Posjetitelji</string>
     <string name="people_dropdown_item_followers">Pratitelji</string>
+    <string name="image_width">Širina</string>
+    <string name="image_link_to">Poveznica za</string>
+    <string name="image_caption">Naslov</string>
+    <string name="image_settings_save_toast">Promijene spremljene.</string>
     <string name="invite">Pozovi</string>
     <string name="invite_people">Pozovi osobe</string>
     <string name="reader_title_related_post_detail">Vezana objava</string>
     <string name="send">Pošalji</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
+    <string name="plan">Plan</string>
+    <string name="plans">Planovi</string>
     <string name="show_purchases">Prikaži kupovine</string>
     <string name="delete_site_hint">Obriši web-stranicu</string>
     <string name="primary_domain">Primarna domena</string>
@@ -112,7 +185,6 @@ Language: hr
     <string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>
     <string name="site_settings_paging_dialog_header">Komentara po stranici</string>
     <string name="site_settings_close_after_dialog_title">Zatvori komentiranje</string>
-    <string name="site_settings_blacklist_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
     <string name="site_settings_hold_for_moderation_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
     <string name="site_settings_list_editor_input_hint">Unesite riječi ili frazu</string>
     <string name="site_settings_list_editor_no_items_text">Nema stavki</string>
@@ -127,10 +199,8 @@ Language: hr
     <string name="site_settings_rp_show_header_title">Prikaži zaglavlje</string>
     <string name="site_settings_rp_switch_summary">Srodne objave prikazuju srodni sadržaj sa vaše stranice ispod vaših objava.</string>
     <string name="site_settings_rp_switch_title">Prikaži srodne objave</string>
-    <string name="site_settings_blacklist_hint">Komentari koji odgovaraju filteru označeni su kao spam</string>
     <string name="site_settings_moderation_hold_hint">Komentari koji odgovaraju filteru stavljeni su na čekanje</string>
     <string name="site_settings_multiple_links_hint">Ignoriranje limita poveznica od poznatih korisnika</string>
-    <string name="site_settings_whitelist_hint">Autor komentara mora imati prethodno odobreni komentar</string>
     <string name="site_settings_user_account_required_hint">Korisnici moraju biti registrirani i prijavljeni kako bi objavili komentare</string>
     <string name="site_settings_identity_required_hint">Autor komentara mora popuniti ime i adresu e-pošte</string>
     <string name="site_settings_paging_hint">Prikaži komentare u grupama određene veličine</string>
@@ -153,17 +223,13 @@ Language: hr
     <string name="site_settings_address_hint">Promjena vaše adrese trenutno nije podržana</string>
     <string name="site_settings_tagline_hint">Kratki opis ili pamtljiva fraza koja opisuje vaš blog</string>
     <string name="site_settings_title_hint">U nekoliko riječi, objasnite o čemu govori ova web-stranice.</string>
-    <string name="site_settings_whitelist_known_summary">Komentari od nepoznatih korisnika</string>
-    <string name="site_settings_whitelist_all_summary">Komentari svih korisnika</string>
     <string name="site_settings_threading_summary">%d nivoa</string>
     <string name="site_settings_privacy_private_summary">Privatno</string>
     <string name="site_settings_privacy_hidden_summary">Skriveno</string>
     <string name="site_settings_privacy_public_summary">Javno</string>
     <string name="site_settings_delete_site_title">Obriši web-stranicu</string>
-    <string name="site_settings_blacklist_title">Crna lista</string>
     <string name="site_settings_moderation_hold_title">Zadržati za moderaciju</string>
     <string name="site_settings_multiple_links_title">Poveznice u komentarima</string>
-    <string name="site_settings_whitelist_title">Automatsko odobravanje</string>
     <string name="site_settings_threading_title">Grananje</string>
     <string name="site_settings_paging_title">Paging</string>
     <string name="site_settings_sort_by_title">Sortiraj po</string>
@@ -239,7 +305,6 @@ Language: hr
     <string name="reader_short_like_count_none">Lajkovi</string>
     <string name="reader_label_follow_count">%,d sljedbenika</string>
     <string name="reader_short_like_count_one">1 lajk</string>
-    <string name="reader_menu_tags">Uredi oznake i web-stranice</string>
     <string name="reader_title_post_detail">Objava u Čitaču</string>
     <string name="notifications_push_summary">Postavke za obavijesti na vašem uređaju</string>
     <string name="notifications_email_summary">Postavke za obavijesti koje će biti poslane na adresu e-pošte povezane s tvojim korisničkim računom</string>
@@ -284,7 +349,6 @@ Language: hr
     <string name="site_picker_title">Odaberi stranicu</string>
     <string name="my_site_btn_view_admin">Prikaži Admin</string>
     <string name="my_site_btn_switch_site">Promjeni web-stranicu</string>
-    <string name="my_site_btn_site_settings">Postavke</string>
     <string name="my_site_header_publish">Objavi</string>
     <string name="my_site_btn_blog_posts">Blog objave</string>
     <string name="my_site_header_look_and_feel">Izgled i dojam</string>
@@ -311,7 +375,6 @@ Language: hr
     <string name="error_copy_to_clipboard">Došlo je do pogreške prilikom kopiranja teksta u međuspremnik</string>
     <string name="reader_label_new_posts">Nove objave</string>
     <string name="logs_copied_to_clipboard">Zapisi aplikacije su kopirani međuspremnik</string>
-    <string name="reader_page_recommended_blogs">Web-stranice koje bi vam se mogle sviđati</string>
     <string name="post_uploading">Objava se prenosi</string>
     <string name="reader_empty_posts_in_blog">Ova web-stranica je prazna</string>
     <string name="stats_followers_an_hour_ago">Prije sat vremena</string>
@@ -357,16 +420,12 @@ Language: hr
     <string name="comment_reply_to_user">Odgovor na %s</string>
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="more">Više</string>
-    <string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
-    <string name="reader_label_liked_by">Sviđa se</string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web-stranicu</string>
     <string name="reader_toast_blog_blocked">Objave sa ove web-stranice više neće biti prikazane</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
-    <string name="reader_page_followed_tags">Praćene oznake</string>
-    <string name="reader_hint_add_tag_or_url">Unesite URL ili oznaku za praćenje</string>
     <string name="reader_page_followed_blogs">Praćene web-stranice</string>
     <string name="reader_toast_err_get_blog_info">Nije moguće prikazati web-stranicu</string>
     <string name="reader_toast_err_already_follow_blog">Već pratite ovu web-stranicu</string>
@@ -376,7 +435,6 @@ Language: hr
     <string name="reader_label_followed_blog">Pratite web-stranicu</string>
     <string name="reader_title_blog_preview">Web-stranica u Čitaču</string>
     <string name="help">Pomoć</string>
-    <string name="forgot_password">Izgubili ste lozinku?</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
     <string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web-stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
     <string name="notifications_empty_list">Nema obavijesti</string>
@@ -443,8 +501,6 @@ Language: hr
     <string name="local_changes">Lokalne promjene</string>
     <string name="image_settings">Postavke slike</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="reader_toast_err_add_tag">Nije moguće dodati ovu oznaku</string>
-    <string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
@@ -479,8 +535,6 @@ Language: hr
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
     <string name="reader_likes_only_you">Vama se ovo sviđa</string>
     <string name="reader_toast_err_comment_failed">Vaš komentar nije moguće objavaiti</string>
-    <string name="reader_toast_err_tag_exists">Već pratite ovu oznaku</string>
-    <string name="reader_toast_err_tag_invalid">To nije ispravna oznaka</string>
     <string name="reader_toast_err_share_intent">Nije moguće podijeliti</string>
     <string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>

@@ -3,83 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/wpColorLoginPrologueBg">
 
-    <View
-        android:id="@+id/footer_background"
+    <FrameLayout
+        android:importantForAccessibility="noHideDescendants"
+        android:id="@+id/promo_background_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/login_promo_footer_background_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/illustration_center_guide"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <View
-        android:id="@+id/illustration_center_guide"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/illustration_view"
-        app:layout_constraintTop_toTopOf="@+id/illustration_view" />
-
-    <ImageView
-        android:id="@+id/logo_view"
-        android:layout_width="@dimen/prologue_logo_size"
-        android:layout_height="@dimen/prologue_logo_size"
-        android:layout_margin="@dimen/prologue_logo_margin"
-        android:contentDescription="@string/content_description_logo"
-        app:layout_constraintBottom_toTopOf="@+id/promo_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/login_toolbar_icon"
-        app:tint="?attr/colorPrimary" />
+        android:layout_height="match_parent" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_title"
         style="@style/Widget.LoginFlow.TextView.PromoTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/prologue_promo_title_margin_vertical"
-        android:layout_marginEnd="@dimen/prologue_intro_content_margin_vertical"
-        android:layout_marginStart="@dimen/prologue_intro_content_margin_vertical"
-        app:layout_constraintBottom_toTopOf="@+id/promo_text"
-        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="24dp"
+        android:minHeight="126dp"
+        android:importantForAccessibility="yes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo_view"
-        tools:text="@string/login_promo_title_37_percent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/login_prologue_title_fifth" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/promo_text"
-        style="@style/Widget.LoginFlow.TextView.PromoSubtitle"
+    <FrameLayout
+        android:importantForAccessibility="noHideDescendants"
+        android:id="@+id/promo_layout_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/prologue_promo_text_margin_vertical"
-        android:layout_marginEnd="@dimen/prologue_intro_content_margin_vertical"
-        android:layout_marginStart="@dimen/prologue_intro_content_margin_vertical"
-        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
-        app:layout_constraintBottom_toTopOf="@+id/illustration_view"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/promo_title"
-        tools:text="@string/login_promo_text_unlock_the_power" />
-
-    <ImageView
-        android:id="@+id/illustration_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/promo_text"
-        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
         tools:ignore="ContentDescription"
         tools:src="@drawable/img_illustration_promo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

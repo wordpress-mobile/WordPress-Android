@@ -33,7 +33,8 @@ private const val NEW_SITE_REMOTE_ID = 1234L
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
-        "slug"
+        "slug",
+        "domain"
 )
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)
@@ -54,15 +55,15 @@ class SiteCreationServiceManagerTest {
 
     private lateinit var manager: SiteCreationServiceManager
 
-    private val successEvent = OnNewSiteCreated()
+    private lateinit var successEvent: OnNewSiteCreated
     private val genericErrorEvent = OnNewSiteCreated()
-    private val siteExistsErrorEvent = OnNewSiteCreated()
+    private lateinit var siteExistsErrorEvent: OnNewSiteCreated
 
     @Before
     fun setUp() {
         manager = SiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
-        successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
-        siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
+        successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID)
+        siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID)
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
         siteExistsErrorEvent.error = NewSiteError(SITE_NAME_EXISTS, "")
     }

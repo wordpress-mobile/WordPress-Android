@@ -1,2 +1,1 @@
-Recibe notificaciones
-en tiempo real
+Guarda las pestañas en tu sitio

@@ -3,14 +3,8 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 29
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-    }
-
-    lintOptions{
-        disable 'InvalidPackage'
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
     }
 }
 
@@ -24,3 +18,4 @@ dependencies {
     }
     implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
+

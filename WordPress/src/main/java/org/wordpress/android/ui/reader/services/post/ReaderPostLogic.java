@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -262,6 +263,10 @@ public class ReaderPostLogic {
                         }
                     }
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+                    if (AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)) {
+                        ReaderPostTable.updateBookmarkedPostPseudoId(serverPosts);
+                        AppPrefs.setBookmarkPostsPseudoIdsUpdated();
+                    }
 
                     // gap marker must be set after saving server posts
                     if (postWithGap != null) {

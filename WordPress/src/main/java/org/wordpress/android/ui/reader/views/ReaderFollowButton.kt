@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
+import org.wordpress.android.ui.reader.views.ReaderFollowButtonType.FOLLOW_SITE
 
 /**
  * Follow button used in reader detail
@@ -23,6 +24,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
     private var isFollowed = false
     private var showCaption = false
+    private var followButtonType = FOLLOW_SITE
 
     init {
         initView(context, attrs)
@@ -31,31 +33,42 @@ class ReaderFollowButton @JvmOverloads constructor(
     private fun initView(context: Context, attrs: AttributeSet?) {
         // default to showing caption, then read the value from passed attributes
         showCaption = true
-        if (attrs != null) {
+        attrs?.let {
             val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
-            array?.let {
-                showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
+            showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
+
+            try {
+                val buttonTypeValue = array.getInteger(R.styleable.ReaderFollowButton_wpReaderFollowButtonType, -1)
+                if (buttonTypeValue != -1) {
+                    followButtonType = ReaderFollowButtonType.fromInt(buttonTypeValue)
+                }
+            } finally {
+                array.recycle()
             }
         }
         if (!showCaption) {
             hideCaptionAndEnlargeIcon(context)
         }
+
+        updateFollowTextAndIcon()
     }
 
     private fun hideCaptionAndEnlargeIcon(context: Context) {
         text = null
         iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
+        iconPadding = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_padding_no_caption)
+        iconGravity = ICON_GRAVITY_TEXT_START
     }
 
     private fun updateFollowTextAndIcon() {
         if (showCaption) {
-            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
+            setText(if (isFollowed) followButtonType.captionFollowing else followButtonType.captionFollow)
         }
         isSelected = isFollowed
         val drawableId = if (isFollowed) {
-            R.drawable.ic_reader_following_white_24dp
+            followButtonType.iconFollowing
         } else {
-            R.drawable.ic_reader_follow_white_24dp
+            followButtonType.iconFollow
         }
         icon = context.resources.getDrawable(drawableId, context.theme)
     }

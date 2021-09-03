@@ -11,8 +11,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class ReaderExpandableTagsView @JvmOverloads constructor(
@@ -21,7 +21,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChipGroup(context, attrs, defStyleAttr) {
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var readerTracker: ReaderTracker
 
     private var tagsUiState: List<TagUiState>? = null
 
@@ -63,7 +63,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val chip = inflater.inflate(R.layout.reader_expandable_tags_view_overflow_chip, this, false) as Chip
         chip.setOnCheckedChangeListener { _, isChecked ->
-            analyticsTrackerWrapper.track(Stat.READER_CHIPS_MORE_TOGGLED)
+            readerTracker.track(Stat.READER_CHIPS_MORE_TOGGLED)
             expandLayout(isChecked)
         }
         addView(chip)
@@ -96,7 +96,9 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         requestLayout()
     }
 
-    private fun showAllTagChips() { tagChips.forEach { uiHelpers.updateVisibility(it, true) } }
+    private fun showAllTagChips() {
+        tagChips.forEach { uiHelpers.updateVisibility(it, true) }
+    }
 
     private fun hideTagChipsOutsideBounds() {
         tagChips.forEach { uiHelpers.updateVisibility(it, isChipWithinBounds(it)) }
@@ -109,7 +111,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             chip.left >= left + (paddingStart + chipSpacingHorizontal)
         }
     } else {
-        chip.bottom <= bottom - (paddingBottom + chipSpacingVertical)
+        chip.bottom <= bottom
     }
 
     private fun updateLastVisibleTagChip() {
@@ -130,8 +132,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
         overflowIndicatorChip.text = if (isSingleLine) {
             String.format(
-                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                hiddenTagChipsCount
+                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
+                    hiddenTagChipsCount
             )
         } else {
             resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)

@@ -17,6 +17,8 @@ import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 import android.graphics.Point
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AniUtils.Duration
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -44,10 +46,6 @@ class UiHelpers @Inject constructor() {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setInvisible(view: View, invisible: Boolean) {
-        view.visibility = if (invisible) View.INVISIBLE else View.VISIBLE
-    }
-
     fun setTextOrHide(view: TextView, uiString: UiString?) {
         val text = uiString?.let { getTextOfUiString(view.context, uiString) }
         setTextOrHide(view, text)
@@ -69,6 +67,21 @@ class UiHelpers @Inject constructor() {
         updateVisibility(imageView, resId != null)
         resId?.let {
             imageView.setImageResource(resId)
+        }
+    }
+
+    /**
+     * Sets the [firstView] visible and the [secondView] invisible with a fade in/out animation and vice versa
+     * @param visible if true the [firstView] is shown and the [secondView] is hidden else the other way round
+     */
+    fun fadeInfadeOutViews(firstView: View?, secondView: View?, visible: Boolean) {
+        if (firstView == null || secondView == null || visible == (firstView.visibility == View.VISIBLE)) return
+        if (visible) {
+            AniUtils.fadeIn(firstView, Duration.SHORT)
+            AniUtils.fadeOut(secondView, Duration.SHORT, View.INVISIBLE)
+        } else {
+            AniUtils.fadeIn(secondView, Duration.SHORT)
+            AniUtils.fadeOut(firstView, Duration.SHORT, View.INVISIBLE)
         }
     }
 

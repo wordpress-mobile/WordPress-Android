@@ -79,4 +79,12 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
             this.mCategoryRowText = view.findViewById(R.id.categoryRowText);
         }
     }
+
+    public void replaceItems(List<CategoryNode> categoryNodes) {
+        if (categoryNodes.size() != mObjects.size()) {
+            this.mObjects.clear();
+            this.mObjects.addAll(categoryNodes);
+            notifyDataSetChanged();
+        }
+    }
 }

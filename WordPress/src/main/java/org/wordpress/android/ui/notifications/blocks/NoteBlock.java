@@ -5,9 +5,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
+import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,6 +49,7 @@ public class NoteBlock {
     private boolean mIsBadge;
     private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
+    private boolean mIsViewMilestone;
 
     public interface OnNoteBlockTextClickListener {
         void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -113,6 +115,9 @@ public class NoteBlock {
         mIsBadge = true;
     }
 
+    public void setIsViewMilestone() {
+        mIsViewMilestone = true;
+    }
 
     public int getLayoutResourceId() {
         return R.layout.note_block_basic;
@@ -199,18 +204,17 @@ public class NoteBlock {
         if (!TextUtils.isEmpty(noteText)) {
             if (isPingBack()) {
                 noteBlockHolder.getTextView().setVisibility(View.GONE);
+                noteBlockHolder.getMaterialButton().setVisibility(View.GONE);
                 noteBlockHolder.getDivider().setVisibility(View.VISIBLE);
                 noteBlockHolder.getButton().setVisibility(View.VISIBLE);
                 noteBlockHolder.getButton().setText(noteText.toString());
-                noteBlockHolder.getButton().setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (getOnNoteBlockTextClickListener() != null) {
-                            getOnNoteBlockTextClickListener().showSitePreview(0, getMetaSiteUrl());
-                        }
+                noteBlockHolder.getButton().setOnClickListener(v -> {
+                    if (getOnNoteBlockTextClickListener() != null) {
+                        getOnNoteBlockTextClickListener().showSitePreview(0, getMetaSiteUrl());
                     }
                 });
             } else {
+                int textViewVisibility = View.VISIBLE;
                 if (mIsBadge) {
                     LinearLayout.LayoutParams params =
                             new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -218,11 +222,38 @@ public class NoteBlock {
                     params.gravity = Gravity.CENTER_HORIZONTAL;
                     noteBlockHolder.getTextView().setLayoutParams(params);
                     noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-                    noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+                    int padding;
+                    if (mIsViewMilestone) {
+                        padding = 40;
+                    } else {
+                        padding = 8;
+                    }
+                    noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), padding), 0, 0);
 
                     if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
                         noteBlockHolder.getTextView().setClickable(false);
                         noteBlockHolder.getTextView().setLongClickable(false);
+                    }
+                    if (mIsViewMilestone) {
+                        if (FormattableContentUtilsKt.isMobileButton(mNoteData)) {
+                            textViewVisibility = View.GONE;
+                            noteBlockHolder.getButton().setVisibility(View.GONE);
+                            noteBlockHolder.getMaterialButton().setVisibility(View.VISIBLE);
+                            noteBlockHolder.getMaterialButton().setText(noteText.toString());
+                            noteBlockHolder.getMaterialButton().setOnClickListener(v -> {
+                                FormattableRange buttonRange =
+                                        FormattableContentUtilsKt.getMobileButtonRange(mNoteData);
+                                if (getOnNoteBlockTextClickListener() != null && buttonRange != null) {
+                                    NoteBlockClickableSpan clickableSpan =
+                                            new NoteBlockClickableSpan(buttonRange, true, false);
+                                    getOnNoteBlockTextClickListener().onNoteBlockTextClicked(clickableSpan);
+                                }
+                            });
+                        } else {
+                            noteBlockHolder.getTextView().setTextSize(28);
+                            TypefaceSpan typefaceSpan = new TypefaceSpan("serif");
+                            noteText.setSpan(typefaceSpan, 0, noteText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
                     }
                 } else {
                     noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
@@ -234,9 +265,12 @@ public class NoteBlock {
                     span.enableColors(view.getContext());
                 }
                 noteBlockHolder.getTextView().setText(noteText);
-                noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
+                noteBlockHolder.getTextView().setVisibility(textViewVisibility);
             }
         } else {
+            noteBlockHolder.getButton().setVisibility(View.GONE);
+            noteBlockHolder.getDivider().setVisibility(View.GONE);
+            noteBlockHolder.getMaterialButton().setVisibility(View.GONE);
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
 
@@ -251,6 +285,7 @@ public class NoteBlock {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
         private final Button mButton;
+        private final Button mMaterialButton;
         private final View mDivider;
 
         private ImageView mImageView;
@@ -261,6 +296,7 @@ public class NoteBlock {
             mTextView = view.findViewById(R.id.note_text);
             mTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             mButton = view.findViewById(R.id.note_button);
+            mMaterialButton = view.findViewById(R.id.note_material_button);
             mDivider = view.findViewById(R.id.divider_view);
         }
 
@@ -270,6 +306,10 @@ public class NoteBlock {
 
         public Button getButton() {
             return mButton;
+        }
+
+        public Button getMaterialButton() {
+            return mMaterialButton;
         }
 
         public View getDivider() {

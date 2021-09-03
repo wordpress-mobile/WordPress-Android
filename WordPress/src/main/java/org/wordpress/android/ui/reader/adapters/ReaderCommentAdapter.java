@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -24,11 +25,13 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
+import org.wordpress.android.ui.reader.FollowCommentsUiState;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -42,7 +45,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -79,6 +82,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -88,6 +92,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private RequestReplyListener mReplyListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
+    private PostHeaderHolder mHeaderHolder;
+    private FollowCommentsUiState mFollowButtonState;
 
     class CommentHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mContainer;
@@ -175,6 +181,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mIsHeaderClickEnabled = true;
     }
 
+    public void updateFollowingState(FollowCommentsUiState followButtonState) {
+        mFollowButtonState = followButtonState;
+        if (mHeaderHolder != null && mHeaderHolder.mHeaderView != null) {
+            mHeaderHolder.mHeaderView.setFollowButtonState(followButtonState);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_COMMENT;
@@ -214,10 +227,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
-            PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
-            headerHolder.mHeaderView.setPost(mPost);
+            mHeaderHolder = (PostHeaderHolder) holder;
+            mHeaderHolder.mHeaderView.setPost(mPost, mFollowButtonState);
             if (mIsHeaderClickEnabled) {
-                headerHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
+                mHeaderHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         ReaderActivityLauncher.showReaderPostDetail(view.getContext(), mPost.blogId, mPost.postId);
@@ -251,7 +264,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            view.getContext(),
+                            comment.authorBlogId,
+                            mPost.isFollowedByCurrentUser,
+                            ReaderTracker.SOURCE_COMMENT,
+                            mReaderTracker
+                    );
                 }
             };
             commentHolder.mAuthorContainer.setOnClickListener(authorListener);
@@ -411,9 +430,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
-                ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
-                : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+        mReaderTracker.trackPost(isAskingToLike
+                        ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                        : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED,
+                mPost
+        );
+        mReaderTracker.trackPost(
+                isAskingToLike ? AnalyticsTracker.Stat.COMMENT_LIKED : AnalyticsTracker.Stat.COMMENT_UNLIKED,
+                mPost,
+                AnalyticsCommentActionSource.READER.toString()
+        );
     }
 
     public boolean refreshComment(long commentId) {
@@ -513,6 +539,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList mTmpComments;
         private boolean mTmpMoreCommentsExist;

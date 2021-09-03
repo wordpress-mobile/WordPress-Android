@@ -61,27 +61,6 @@
         app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="@dimen/divider_size"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toStartOf="@+id/filter_settings_button" />
-
-    <ImageView
-        android:id="@+id/filter_settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/reader_menu_tags"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:src="@drawable/ic_cog_white_24dp"
-        app:tint="?attr/wpColorOnSurfaceMedium"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"

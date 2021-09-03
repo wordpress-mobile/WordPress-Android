@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +33,6 @@ import static java.lang.String.format;
  * views the activity log (see utils/AppLog.java)
  */
 public class AppLogViewerActivity extends LocaleAwareActivity {
-    private static final int ID_SHARE = 1;
-    private static final int ID_COPY_TO_CLIPBOARD = 2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,14 +138,8 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        // Copy to clipboard button
-        MenuItem item = menu.add(Menu.NONE, ID_COPY_TO_CLIPBOARD, Menu.NONE, R.string.copy_text);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setIcon(R.drawable.ic_copy_white_24dp);
-        // Share button
-        item = menu.add(Menu.NONE, ID_SHARE, Menu.NONE, R.string.reader_btn_share);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setIcon(R.drawable.ic_share_white_24dp);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_log_viewer_menu, menu);
         return true;
     }
 
@@ -157,10 +149,10 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case ID_SHARE:
+            case R.id.app_log_share:
                 shareAppLog();
                 return true;
-            case ID_COPY_TO_CLIPBOARD:
+            case R.id.app_log_copy_to_clipboard:
                 copyAppLogToClipboard();
                 return true;
             default:

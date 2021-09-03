@@ -28,13 +28,14 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiMode
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -45,9 +46,10 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var uriWrapper1: UriWrapper
     @Mock lateinit var uriWrapper2: UriWrapper
     @Mock lateinit var permissionsHandler: PermissionsHandler
-    @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
+    @Mock lateinit var getMediaModelUseCase: GetMediaModelUseCase
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiStates = mutableListOf<PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -67,8 +69,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
-                tenorFeatureConfig,
-                resourceProvider
+                resourceProvider,
+                copyMediaToAppStorageUseCase,
+                getMediaModelUseCase
         )
         uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper1, false)
@@ -350,7 +353,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         browserType: MediaBrowserType,
         hasStoragePermissions: Boolean = true
     ) {
-        whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
+        whenever(permissionsHandler.hasWriteStoragePermission()).thenReturn(hasStoragePermissions)
         viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {

@@ -22,7 +22,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,7 +80,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PluginBrowserViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PluginBrowserViewModel.class);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
         mFeaturedPluginsRecycler = findViewById(R.id.featured_plugins_recycler);

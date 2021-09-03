@@ -19,8 +19,10 @@ import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
 import org.wordpress.android.push.NotificationType.AUTHENTICATION
 import org.wordpress.android.push.NotificationType.AUTOMATTCHER
 import org.wordpress.android.push.NotificationType.BADGE_RESET
+import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.push.NotificationType.COMMENT
 import org.wordpress.android.push.NotificationType.COMMENT_LIKE
+import org.wordpress.android.push.NotificationType.CREATE_SITE
 import org.wordpress.android.push.NotificationType.FOLLOW
 import org.wordpress.android.push.NotificationType.GROUP_NOTIFICATION
 import org.wordpress.android.push.NotificationType.LIKE
@@ -39,6 +41,7 @@ import org.wordpress.android.push.NotificationType.STORY_SAVE_ERROR
 import org.wordpress.android.push.NotificationType.STORY_SAVE_SUCCESS
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
+import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.push.NotificationType.ZENDESK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -75,8 +78,12 @@ class SystemNotificationsTrackerTest {
             STORY_FRAME_SAVE_SUCCESS to "story_frame_save_success",
             STORY_FRAME_SAVE_ERROR to "story_frame_save_error",
             PENDING_DRAFTS to "pending_draft",
-            ZENDESK to "zendesk_message"
+            ZENDESK to "zendesk_message",
+            BLOGGING_REMINDERS to "blogging_reminders",
+            CREATE_SITE to "create_site",
+            WEEKLY_ROUNDUP to "weekly_roundup"
     )
+
     @Before
     fun setUp() {
         systemNotificationsTracker = SystemNotificationsTracker(

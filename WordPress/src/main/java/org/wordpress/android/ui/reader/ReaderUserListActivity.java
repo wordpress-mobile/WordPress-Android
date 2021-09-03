@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
@@ -37,7 +38,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
         setContentView(R.layout.reader_activity_userlist);
         setTitle(null);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -60,7 +61,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
-        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mAppBarLayout = findViewById(R.id.appbar_main);
@@ -126,6 +127,10 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
                     public void run() {
                         if (!isFinishing()) {
                             setTitle(title);
+                            ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
+                            if (post != null) {
+                                getAdapter().setIsFollowed(post.isFollowedByCurrentUser);
+                            }
                             getAdapter().setUsers(users);
                         }
                     }

@@ -9,6 +9,15 @@ import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
+import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
+import org.wordpress.android.util.image.BlavatarShape.SQUARE
+import org.wordpress.android.util.image.BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES
+import org.wordpress.android.util.image.ImageType.BLAVATAR
+import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
+import org.wordpress.android.util.image.ImageType.BLAVATAR_ROUNDED_CORNERS
+import org.wordpress.android.util.image.ImageType.P2_BLAVATAR
+import org.wordpress.android.util.image.ImageType.P2_BLAVATAR_CIRCULAR
+import org.wordpress.android.util.image.ImageType.P2_BLAVATAR_ROUNDED_CORNERS
 
 class SiteUtilsTest {
     @Test
@@ -116,6 +125,42 @@ class SiteUtilsTest {
     }
 
     @Test
+    fun `checkMinimalWordPressVersion returns true when software version is higher than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.6"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns true when software version is equal to the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.5"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns false when software version is lower than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.4"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isFalse
+    }
+
+    @Test
     fun `isAccessedViaWPComRest return false when origin is not wpcom rest`() {
         val site = SiteModel()
         site.origin = SiteModel.ORIGIN_XMLRPC
@@ -167,6 +212,27 @@ class SiteUtilsTest {
         val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site)
 
         assertFalse(supportsStoriesFeature)
+    }
+
+    @Test
+    fun `getSiteIconType returns correct value for p2 and regular sites`() {
+        val squareP2Image = SiteUtils.getSiteImageType(true, SQUARE)
+        assertThat(squareP2Image).isEqualTo(P2_BLAVATAR)
+
+        val roundedCornersP2Image = SiteUtils.getSiteImageType(true, SQUARE_WITH_ROUNDED_CORNERES)
+        assertThat(roundedCornersP2Image).isEqualTo(P2_BLAVATAR_ROUNDED_CORNERS)
+
+        val circularP2Image = SiteUtils.getSiteImageType(true, CIRCULAR)
+        assertThat(circularP2Image).isEqualTo(P2_BLAVATAR_CIRCULAR)
+
+        val squareSiteImage = SiteUtils.getSiteImageType(false, SQUARE)
+        assertThat(squareSiteImage).isEqualTo(BLAVATAR)
+
+        val roundedCornersSiteImage = SiteUtils.getSiteImageType(false, SQUARE_WITH_ROUNDED_CORNERES)
+        assertThat(roundedCornersSiteImage).isEqualTo(BLAVATAR_ROUNDED_CORNERS)
+
+        val circularSiteImage = SiteUtils.getSiteImageType(false, CIRCULAR)
+        assertThat(circularSiteImage).isEqualTo(BLAVATAR_CIRCULAR)
     }
 
     private fun initJetpackSite(): SiteModel {

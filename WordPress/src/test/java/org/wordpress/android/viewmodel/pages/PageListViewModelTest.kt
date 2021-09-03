@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertNull
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,8 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -49,10 +52,12 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private lateinit var viewModel: PageListViewModel
     private val site = SiteModel()
     private val pageListState = MutableLiveData<PageListState>()
+
     @Before
     fun setUp() {
         viewModel = PageListViewModel(
@@ -64,11 +69,15 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 accountStore,
-                Dispatchers.Unconfined
+                Dispatchers.Unconfined,
+                quickStartRepository
         )
 
-        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(Pair(
-                ProgressBarUiState.Hidden, false))
+        whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
+                Pair(
+                        ProgressBarUiState.Hidden, false
+                )
+        )
 
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
@@ -335,7 +344,8 @@ class PageListViewModelTest : BaseUnitTest() {
         authorFilterState.value = PagesAuthorFilterUIState(
                 authorFilterSelection = EVERYONE,
                 authorFilterItems = listOf(),
-                isAuthorFilterVisible = true)
+                isAuthorFilterVisible = true
+        )
         authorFilterSelection.value = EVERYONE
 
         pageItems = pagesResult[1].first
@@ -367,7 +377,8 @@ class PageListViewModelTest : BaseUnitTest() {
         authorFilterState.value = PagesAuthorFilterUIState(
                 authorFilterSelection = ME,
                 authorFilterItems = listOf(),
-                isAuthorFilterVisible = true)
+                isAuthorFilterVisible = true
+        )
         authorFilterSelection.value = ME
 
         pageItems = pagesResult[1].first
@@ -390,14 +401,19 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.pages.observeForever { pagesResult.add(it) }
 
-        val pageModels = (0..1).map { buildPageModel(it, authorId = it.toLong(),
-                authorDisplayName = authorDisplayName) }
+        val pageModels = (0..1).map {
+            buildPageModel(
+                    it, authorId = it.toLong(),
+                    authorDisplayName = authorDisplayName
+            )
+        }
         pages.value = pageModels
 
         authorFilterState.value = PagesAuthorFilterUIState(
                 authorFilterSelection = EVERYONE,
                 authorFilterItems = listOf(),
-                isAuthorFilterVisible = true)
+                isAuthorFilterVisible = true
+        )
         authorFilterSelection.value = EVERYONE
 
         val pageItems = pagesResult[1].first
@@ -426,12 +442,50 @@ class PageListViewModelTest : BaseUnitTest() {
         authorFilterState.value = PagesAuthorFilterUIState(
                 authorFilterSelection = ME,
                 authorFilterItems = listOf(),
-                isAuthorFilterVisible = true)
+                isAuthorFilterVisible = true
+        )
         authorFilterSelection.value = ME
 
         val pageItems = pagesResult[1].first
         val pageItem = pageItems[0] as PublishedPage
         assertNull(pageItem.author)
+    }
+
+    @Test
+    fun `completes EDIT_HOMEPAGE task on homepage click`() {
+        initEmptyPagesViewModel()
+
+        whenever(pagesViewModel.site).thenReturn(site)
+        val pageRemoteId = 1L
+        site.pageOnFront = pageRemoteId
+
+        viewModel.onItemTapped(
+                pageItem = PublishedPage(
+                        pageRemoteId,
+                        2,
+                        "title",
+                        date = Date(),
+                        labels = listOf(),
+                        labelsColor = null,
+                        indent = 0,
+                        imageUrl = null,
+                        actions = setOf(),
+                        actionsEnabled = false,
+                        progressBarUiState = ProgressBarUiState.Hidden,
+                        author = null,
+                        showOverlay = false,
+                        showQuickStartFocusPoint = false
+                ), context = mock()
+        )
+
+        verify(quickStartRepository).completeTask(EDIT_HOMEPAGE)
+    }
+
+    private fun initEmptyPagesViewModel() {
+        val pages = MutableLiveData<List<PageModel>>()
+        whenever(pagesViewModel.pages).thenReturn(pages)
+
+        viewModel.start(PUBLISHED, pagesViewModel)
     }
 
     private fun buildPageModel(
@@ -444,11 +498,15 @@ class PageListViewModelTest : BaseUnitTest() {
         authorDisplayName: String? = null
     ): PageModel {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
-        return PageModel(PostModel().apply { this.setId(id)
-                this.setAuthorId(authorId ?: 0)
-                this.setAuthorDisplayName(authorDisplayName) },
+        return PageModel(
+                PostModel().apply {
+                    this.setId(id)
+                    this.setAuthorId(authorId ?: 0)
+                    this.setAuthorDisplayName(authorDisplayName)
+                },
                 site, id, title, status, date, false, id.toLong(),
-                parent, id.toLong())
+                parent, id.toLong()
+        )
     }
 
     private fun assertDivider(pageItem: PageItem) {

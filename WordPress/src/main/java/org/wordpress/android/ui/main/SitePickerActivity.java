@@ -16,7 +16,6 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -45,6 +44,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -75,7 +75,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {
-    public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_SITE_LOCAL_ID = "local_id";
     public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
 
     public static final String KEY_SITE_PICKER_MODE = "key_site_picker_mode";
@@ -101,7 +101,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private SitePickerMode mSitePickerMode;
-    private Debouncer mDebouncer = new Debouncer();
+    private final Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
 
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
@@ -122,7 +122,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(SitePickerViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 
         setContentView(R.layout.site_picker_activity);
         restoreSavedInstanceState(savedInstanceState);
@@ -198,7 +198,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
+        outState.putInt(KEY_SITE_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
@@ -241,7 +241,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(true);
+            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
         }
 
         // no point showing search if there aren't multiple blogs
@@ -293,7 +293,10 @@ public class SitePickerActivity extends LocaleAwareActivity
         switch (requestCode) {
             case RequestCodes.CREATE_SITE:
                 if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    int newSiteLocalID = data.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    );
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                 }
                 break;
@@ -356,7 +359,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 }
         );
     }
@@ -380,7 +383,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         String lastSearch = "";
 
         if (savedInstanceState != null) {
-            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            mCurrentLocalId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
             isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
             mSitePickerMode = (SitePickerMode) savedInstanceState.getSerializable(KEY_SITE_PICKER_MODE);
@@ -390,7 +393,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             mShowMenuEnabled = savedInstanceState.getBoolean(KEY_IS_SHOW_MENU_ENABLED);
             mHideMenuEnabled = savedInstanceState.getBoolean(KEY_IS_HIDE_MENU_ENABLED);
         } else if (getIntent() != null) {
-            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+            mCurrentLocalId = getIntent().getIntExtra(KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE);
             mSitePickerMode = (SitePickerMode) getIntent().getSerializableExtra(KEY_SITE_PICKER_MODE);
         }
 
@@ -646,7 +649,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private void selectSiteAndFinish(SiteRecord siteRecord) {
         hideSoftKeyboard();
         AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
-        setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
+        setResult(RESULT_OK, new Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.getLocalId()));
         // If the site is hidden, make sure to make it visible
         if (siteRecord.isHidden()) {
             siteRecord.setHidden(false);

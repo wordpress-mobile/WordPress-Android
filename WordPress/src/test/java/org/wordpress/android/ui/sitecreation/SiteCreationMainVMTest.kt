@@ -73,25 +73,9 @@ class SiteCreationMainVMTest {
     }
 
     @Test
-    fun segmentSelectedResultsInNextStep() {
-        viewModel.onSegmentSelected(SEGMENT_ID)
-        verify(wizardManager).showNextStep()
-    }
-
-    @Test
     fun domainSelectedResultsInNextStep() {
         viewModel.onDomainsScreenFinished(DOMAIN)
         verify(wizardManager).showNextStep()
-    }
-
-    @Test
-    fun siteCreationStateUpdatedWithSelectedSegment() {
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = SiteCreationStep.DOMAINS
-            Unit
-        }
-        viewModel.onSegmentSelected(SEGMENT_ID)
-        assertThat(currentWizardState(viewModel).segmentId).isEqualTo(SEGMENT_ID)
     }
 
     @Test

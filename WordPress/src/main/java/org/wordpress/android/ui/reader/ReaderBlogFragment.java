@@ -15,20 +15,23 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 
+import javax.inject.Inject;
+
 /*
- * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
+ * fragment hosted by ReaderSubsActivity which shows followed blogs
  */
 public class ReaderBlogFragment extends Fragment
         implements ReaderBlogAdapter.BlogClickListener {
@@ -37,6 +40,8 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogType mBlogType;
     private String mSearchFilter;
     private boolean mIgnoreNextSearch;
+
+    @Inject ReaderTracker mReaderTracker;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
@@ -59,6 +64,7 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.READER, "reader blog fragment > restoring instance state");
             mIgnoreNextSearch = true;
@@ -110,9 +116,6 @@ public class ReaderBlogFragment extends Fragment
             });
 
             switch (getBlogType()) {
-                case RECOMMENDED:
-                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
-                    break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
                         actionableEmptyView.updateLayoutForSearch(true, 0);
@@ -239,7 +242,12 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), mSearchFilter);
+            mAdapter = new ReaderBlogAdapter(
+                    getActivity(),
+                    getBlogType(),
+                    mSearchFilter,
+                    ReaderTracker.SOURCE_SETTINGS
+            );
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
@@ -257,12 +265,16 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     public void onBlogClicked(Object item) {
-        if (item instanceof ReaderRecommendedBlog) {
-            ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blog.blogId);
-        } else if (item instanceof ReaderBlog) {
+        if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
-            ReaderActivityLauncher.showReaderBlogOrFeedPreview(getActivity(), blog.blogId, blog.feedId);
+            ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    getActivity(),
+                    blog.blogId,
+                    blog.feedId,
+                    blog.isFollowing,
+                    ReaderTracker.SOURCE_SETTINGS,
+                    mReaderTracker
+            );
         }
     }
 }

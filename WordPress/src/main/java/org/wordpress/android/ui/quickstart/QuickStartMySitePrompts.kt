@@ -2,7 +2,7 @@ package org.wordpress.android.ui.quickstart
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.util.QuickStartUtils.Companion.ICON_NOT_SET
+import org.wordpress.android.util.QuickStartUtils
 
 /**
  * Static data about initial tutorial prompts you see when selecting one from Quick Start task list
@@ -16,36 +16,22 @@ enum class QuickStartMySitePrompts constructor(
 ) {
     UPDATE_SITE_TITLE_TUTORIAL(
             QuickStartTask.UPDATE_SITE_TITLE,
-            R.id.my_site_scroll_view_root,
+            -1,
             R.id.my_site_title_label,
             R.string.quick_start_dialog_update_site_title_message_short,
-            ICON_NOT_SET
+            QuickStartUtils.ICON_NOT_SET
     ),
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
-            R.id.my_site_scroll_view_root,
-            R.id.row_view_site,
+            -1,
+            -1,
             R.string.quick_start_dialog_view_site_message_short,
             R.drawable.ic_globe_white_24dp
     ),
-    CHOSE_THEME_TUTORIAL(
-            QuickStartTask.CHOOSE_THEME,
-            R.id.my_site_scroll_view_root,
-            R.id.row_themes,
-            R.string.quick_start_dialog_browse_themes_message_short,
-            R.drawable.ic_themes_white_24dp
-    ),
-    CUSTOMIZE_SITE_TUTORIAL(
-            QuickStartTask.CUSTOMIZE_SITE,
-            R.id.my_site_scroll_view_root,
-            R.id.row_themes,
-            R.string.quick_start_dialog_customize_site_message_short_themes,
-            R.drawable.ic_themes_white_24dp
-    ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
-            R.id.my_site_scroll_view_root,
-            R.id.row_sharing,
+            -1,
+            -1,
             R.string.quick_start_dialog_enable_sharing_message_short_sharing,
             R.drawable.ic_share_white_24dp
     ),
@@ -65,31 +51,38 @@ enum class QuickStartMySitePrompts constructor(
     ),
     UPLOAD_SITE_ICON(
             QuickStartTask.UPLOAD_SITE_ICON,
-            R.id.my_site_scroll_view_root,
+            -1,
             R.id.my_site_blavatar,
             R.string.quick_start_dialog_upload_site_icon_message_short,
-            ICON_NOT_SET
-    ),
-    CREATE_NEW_PAGE(
-            QuickStartTask.CREATE_NEW_PAGE,
-            R.id.my_site_scroll_view_root,
-            R.id.quick_action_pages_button,
-            R.string.quick_start_dialog_create_new_page_message_short,
-            ICON_NOT_SET
+            QuickStartUtils.ICON_NOT_SET
     ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,
-            R.id.my_site_scroll_view_root,
+            -1,
             R.id.quick_action_stats_button,
             R.string.quick_start_dialog_check_stats_message_short,
             R.drawable.ic_stats_alt_white_24dp
     ),
     EXPLORE_PLANS(
             QuickStartTask.EXPLORE_PLANS,
-            R.id.my_site_scroll_view_root,
-            R.id.row_plan,
+            -1,
+            -1,
             R.string.quick_start_dialog_explore_plans_message_short,
             R.drawable.ic_plans_white_24dp
+    ),
+    REVIEW_PAGES(
+            QuickStartTask.REVIEW_PAGES,
+            -1,
+            R.id.quick_action_pages_button,
+            R.string.quick_start_dialog_review_pages_message_short,
+            R.drawable.ic_pages_white_24dp
+    ),
+    EDIT_HOMEPAGE(
+            QuickStartTask.EDIT_HOMEPAGE,
+            -1,
+            R.id.quick_action_pages_button,
+            R.string.quick_start_dialog_edit_homepage_message_short,
+            R.drawable.ic_pages_white_24dp
     );
 
     companion object {
@@ -101,11 +94,6 @@ enum class QuickStartMySitePrompts constructor(
                 if (it.task == task) return it
             }
             return null
-        }
-
-        @JvmStatic
-        fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
-            return task == QuickStartTask.FOLLOW_SITE
         }
     }
 }

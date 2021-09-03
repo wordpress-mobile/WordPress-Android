@@ -39,6 +39,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
     @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Mock lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
+    @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
     @Mock lateinit var site: SiteModel
 
     @InternalCoroutinesApi
@@ -51,6 +52,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 mock(),
                 storyRepositoryWrapper,
                 updateStoryTitleUseCase,
+                getCategoriesUseCase,
                 TEST_DISPATCHER
         )
         whenever(
@@ -67,12 +69,13 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(site.name).thenReturn("")
         whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn("")
+        whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
     }
 
     @Test
     fun `verify that post home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 2
+        val expectedActionsAmount = 3
 
         // act
         viewModel.start(mock(), site, false)
@@ -86,7 +89,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 1
+        val expectedActionsAmount = 2
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
@@ -365,6 +368,26 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository, site, true)
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
 
+        verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
+    }
+
+    @Test
+    fun `verify story title is correctly updated when title is changed and publish is tapped `() {
+        // arrange
+        var event: Event<PublishPost>? = null
+        val storyTitle = "Story Title"
+        viewModel.onSubmitButtonClicked.observeForever {
+            event = it
+        }
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        val buttonUiState = getButtonUiState()
+        buttonUiState?.onButtonClicked?.invoke(true)
+
+        // assert
+        assertThat(event).isNotNull
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 

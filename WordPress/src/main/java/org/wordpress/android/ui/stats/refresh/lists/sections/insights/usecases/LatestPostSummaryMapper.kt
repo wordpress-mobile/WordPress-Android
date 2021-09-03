@@ -5,7 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
@@ -52,7 +52,7 @@ class LatestPostSummaryMapper
                 links = listOf(
                         Clickable(
                                 postTitle,
-                                navigationAction = NavigationAction.create(
+                                navigationAction = ListItemInteraction.create(
                                         LinkClickParams(model.postId, model.postURL),
                                         action = navigationAction
                                 )

@@ -6,6 +6,7 @@
     <!-- Semantic colors -->
     <attr name="wpColorError" format="reference|color" />
     <attr name="wpColorSuccess" format="reference|color" />
+    <attr name="wpColorNavBar" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
     <attr name="wpColorOnSurfaceMedium" format="reference|color" />
 
@@ -14,13 +15,14 @@
     <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <attr name="wpColorSurfaceSecondary" format="reference|color" />
+    <attr name="wpColorLoginPrologueBg" format="reference|color" />
 
     <!-- Gutenberg colors-->
     <attr name="colorGutenbergDivider" format="reference|color" />
     <attr name="colorGutenbergBackground" format="reference|color" />
 
     <!-- Modal layout picker colors-->
-    <attr name="categoriesBackground" format="reference|color" />
+    <attr name="layoutPickerBackground" format="reference|color" />
     <attr name="categoriesButtonBackground" format="reference|color" />
     <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
     <attr name="mlpDividerColor" format="reference|color" />
@@ -100,6 +102,10 @@
         ReaderFollowButton attributes
     -->
     <declare-styleable name="ReaderFollowButton">
+        <attr name="wpReaderFollowButtonType" format="enum">
+            <enum name="followSite" value="0" />
+            <enum name="followComments" value="1" />
+        </attr>
         <attr name="wpShowFollowButtonCaption" format="boolean" />
     </declare-styleable>
 
@@ -214,17 +220,17 @@
     </declare-styleable>
 
     <!--
-        Master Switch Toolbar View
+        Main Switch Toolbar View
     -->
-    <declare-styleable name="PrefMasterSwitchToolbarView">
-        <attr name="masterTitleOn" format="reference" />
-        <attr name="masterTitleOff" format="reference" />
-        <attr name="masterContentDescription" format="reference" />
-        <attr name="masterHintOn" format="reference" />
-        <attr name="masterHintOff" format="reference" />
-        <attr name="masterContentInsetStart" format="dimension" />
-        <attr name="masterOffsetEnd" format="dimension" />
-        <attr name="masterViewStyle" format="enum">
+    <declare-styleable name="PrefMainSwitchToolbarView">
+        <attr name="mainTitleOn" format="reference" />
+        <attr name="mainTitleOff" format="reference" />
+        <attr name="mainContentDescription" format="reference" />
+        <attr name="mainHintOn" format="reference" />
+        <attr name="mainHintOff" format="reference" />
+        <attr name="mainContentInsetStart" format="dimension" />
+        <attr name="mainOffsetEnd" format="dimension" />
+        <attr name="mainViewStyle" format="enum">
             <enum name="highlighted" value="0" />
             <enum name="normal" value="1" />
         </attr>
@@ -239,5 +245,24 @@
         <attr name="badgeIconSize" format="dimension" />
         <attr name="badgeHorizontalOffset" format="dimension" />
         <attr name="badgeVerticalOffset" format="dimension" />
+    </declare-styleable>
+
+    <!--
+    WPEditTextWithChipsOutlined
+    -->
+    <declare-styleable name="WPEditTextWithChipsOutlined">
+        <attr name="wpHint" format="reference"/>
+        <attr name="wpChipifyEnabled" format="boolean"/>
+        <attr name="wpMaxNumberChips" format="integer" />
+    </declare-styleable>
+
+    <!--
+        QuickStartFocusPoint attributes
+    -->
+    <declare-styleable name="QuickStartFocusPoint">
+        <attr name="size" format="enum">
+            <enum name="small" value="0" />
+            <enum name="normal" value="1" />
+        </attr>
     </declare-styleable>
 </resources>
