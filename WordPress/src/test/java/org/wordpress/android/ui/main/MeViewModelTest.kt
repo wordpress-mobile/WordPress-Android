@@ -22,6 +22,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
@@ -29,6 +30,7 @@ class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: MeViewModel
 
@@ -40,7 +42,8 @@ class MeViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 selectedSiteRepository,
-                recommendApiCallsProvider
+                recommendApiCallsProvider,
+                analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -144,6 +147,30 @@ class MeViewModelTest : BaseUnitTest() {
         ))
 
         verify(recommendApiCallsProvider, times(1)).getRecommendTemplate(anyString(), eq(RecommendAppSource.ME))
+    }
+
+    @Test
+    fun `recommend the app tracking is triggered when no error`() = test {
+        whenever(recommendApiCallsProvider.getRecommendTemplate(
+                anyString(),
+                eq(RecommendAppSource.ME)
+        )).thenReturn(DEFAULT_SUCCESS_API_RESPONSE)
+
+        viewModel.onRecommendTheApp()
+
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppEngaged(eq(RecommendAppSource.ME))
+    }
+
+    @Test
+    fun `recommend the app tracking is not triggered on error`() = test {
+        whenever(recommendApiCallsProvider.getRecommendTemplate(
+                anyString(),
+                eq(RecommendAppSource.ME)
+        )).thenReturn(DEFAULT_FAILURE_API_RESPONSE)
+
+        viewModel.onRecommendTheApp()
+
+        verify(analyticsUtilsWrapper, times(0)).trackRecommendAppEngaged(eq(RecommendAppSource.ME))
     }
 
     private fun setupObservers() {
