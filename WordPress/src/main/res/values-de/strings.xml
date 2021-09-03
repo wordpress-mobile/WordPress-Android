@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-22 10:26:56+0000
+Translation-Revision-Date: 2021-09-01 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
+    <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
+    <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Du erhältst &lt;b&gt;jeden Tag&lt;/b&gt; um &lt;b&gt;%s&lt;/b&gt; Uhr eine Erinnerung zum Bloggen.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s Mal pro Woche um %2$s Uhr.</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Die Textformatierungskontrollen findest du beim Bearbeiten eines Text-Blocks in der Toolbar über der Tastatur.</string>
+    <string name="gutenberg_native_selected_s">Ausgewählt %s</string>
+    <string name="gutenberg_native_select_a_color_above">Wähle oben eine Farbe aus</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navigiert zur Auswahl von %s</string>
+    <string name="gutenberg_native_move_blocks">Blocks verschieben</string>
+    <string name="gutenberg_native_how_to_edit_your_post">So bearbeitest du deinen Beitrag</string>
+    <string name="gutenberg_native_how_to_edit_your_page">So bearbeitest du deine Seite</string>
+    <string name="gutenberg_native_customize_blocks">Blocks anpassen</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Änderungen am Beitragsbild sind nicht von den Buttons zum Rückgängigmachen/Wiederholen betroffen.</string>
+    <string name="gutenberg_native_applies_the_setting">Wendet die Einstellungen an</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Du kannst Blocks neu anordnen, indem du auf einen Block tippst und ihn dann mit den Pfeilen nach oben und unten, die unten links auf dem Block erscheinen, an die passende Stelle navigieren.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Willkommen in der Welt der Blöcke</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Wenn du einen Block entfernen möchtest, wähle ihn aus und klicke auf die drei Punkte unten rechts im Block, um die Einstellungen anzuzeigen. Hier kannst du die Option zum Entfernen des Blocks auswählen.</string>
@@ -16,6 +31,7 @@ Language: de
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Sorge dafür, dass dein Inhalt hervorsticht, indem du Bilder, GIFs, Videos und andere eingebettete Medien zu deinen Seiten hinzufügst.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Probier es aus, indem du deinem Beitrag oder deiner Seite ein paar Blocks hinzufügst!</string>
     <string name="gutenberg_native_embed_media">Medien einbetten</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Jeder Block weist eigene Einstellungen auf. Tippe auf den jeweiligen Block, um sie zu finden. Die Einstellungen werden in der Toolbar unten auf dem Bildschirm angezeigt.</string>
     <string name="gutenberg_native_build_layouts">Layouts erstellen</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
@@ -62,6 +78,7 @@ Language: de
     <string name="blogging_reminders_epilogue_body_no_reminders">Du hast keine Erinnerungen festgelegt.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Erinnerungen entfernt!</string>
     <string name="blogging_reminders_epilogue_title">Fertig!</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Du erhältst %1$swöchentlich am %2$s um %3$s Uhr eine Erinnerung zum Bloggen.</string>
     <string name="blogging_reminders_update">Aktualisieren</string>
     <string name="blogging_reminders_not_set">Nicht festgelegt</string>
     <string name="blogging_reminders_n_a_week">%s pro Woche</string>
@@ -148,6 +165,7 @@ Language: de
     <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Gib eine kurze Beschreibung des Links für Benutzer von Screenreadern an</string>
+    <string name="gutenberg_native_add_blocks">Blöcke hinzufügen</string>
     <string name="login_no_jetpack_sites">Keine Jetpack-Websites gefunden</string>
     <string name="gutenberg_native_what_is_alt_text">Was ist Alt-Text?</string>
     <string name="gutenberg_native_transform_s_to">%s umwandeln in</string>
@@ -2642,6 +2660,7 @@ Language: de
     <string name="my_site_btn_blog_posts">Blogbeiträge</string>
     <string name="my_site_header_look_and_feel">Erscheinungsbild</string>
     <string name="my_site_header_publish">Veröffentlichen</string>
+    <string name="my_site_btn_site_settings">Website-Einstellungen</string>
     <string name="my_site_header_configuration">Einrichtung</string>
     <string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
     <string name="deselect_all">Alle abwählen</string>

@@ -1,4 +1,0 @@
-18.0:
-Nós otimizamos as imagens de tema para proporcionar downloads mais rápidos e um impacto reduzido em seu plano de dados.
-
-Também adicionamos cores de estilo global aos temas de edição de site completo, realizamos algumas melhorias nos bastidores da experiência de comentários e corrigimos um bug que impedia a barra de ferramentas "Mais" de aparecer no editor de blocos não compatíveis.

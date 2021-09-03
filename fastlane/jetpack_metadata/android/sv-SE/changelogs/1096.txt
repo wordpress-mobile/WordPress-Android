@@ -1,4 +1,0 @@
-18.0:
-Vi har optimerat temabilderna för snabbare nedladdningar och mindre påverkan på din dataplan.
-
-Vi har också lagt till färger för globala stilar i teman med fullständig webbplatsredigering, gjort några förbättringar bakom kulisserna i kommentarsupplevelsen och åtgärdat ett fel som förhindrade att verktygsfältet "Mer" visades för block som inte stöds av blockredigeraren.

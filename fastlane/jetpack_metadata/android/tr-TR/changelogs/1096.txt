@@ -1,4 +1,0 @@
-18.0:
-İndirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik.
-
-Ayrıca Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik, yorum deneyimi için perde arkasında bazı iyileştirmeler yaptık ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı düzelttik.

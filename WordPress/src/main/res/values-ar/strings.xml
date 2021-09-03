@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-20 12:03:29+0000
+Translation-Revision-Date: 2021-09-01 11:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">حصل موقعك على ⁦%1$d⁩ من المشاهدات، و⁦%2$d⁩ من الإعجابات، و⁦%3$d⁩ من التعليقات.</string>
+    <string name="weekly_roundup_notification_title">موجز أسبوعي: %s</string>
+    <string name="blogging_reminders_notification_time">وقت التنبيه</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt; في &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ في الأسبوع في ⁦%2$s⁩</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">توجد عناصر التحكم في تنسيق النص ضمن شريط الأدوات الذي يوجد فوق لوحة المفاتيح في أثناء تحرير مكوِّن نص</string>
+    <string name="gutenberg_native_selected_s">مُحدَّد %s</string>
+    <string name="gutenberg_native_select_a_color_above">تحديد لون أعلاه</string>
+    <string name="gutenberg_native_navigates_to_select_s">ينتقل لتحديد %s</string>
+    <string name="gutenberg_native_move_blocks">نقل المكوِّنات</string>
+    <string name="gutenberg_native_how_to_edit_your_post">كيفية تحرير مقالتك</string>
+    <string name="gutenberg_native_how_to_edit_your_page">كيفية تحرير صفحتك</string>
+    <string name="gutenberg_native_customize_blocks">تخصيص المكوِّنات</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">لن تتأثر التغييرات على الصورة البارزة عن طريق أزرار التراجع/الإعادة.</string>
+    <string name="gutenberg_native_applies_the_setting">يقوم بتطبيق الإعداد</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">يمكنك إعادة ترتيب المكوِّنات عن طريق النقر على مكوِّن، ثم النقر على الأسهم المتجهة إلى الأعلى والأسفل التي تظهر أسفل يسار المكوِّن لنقله فوق المكوِّنات الأخرى أو أسفلها.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">مرحبًا في عالم المكوِّنات</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">لإزالة مكوِّن، حدِّد المكوِّن وانقر على النقاط الثلاث الموجودة في أسفل يمين المكوِّن لعرض الإعدادات. من هناك، اختر خيار إزالة المكوِّن.</string>
@@ -62,6 +77,7 @@ Language: ar
     <string name="blogging_reminders_epilogue_body_no_reminders">ليست لديك أي تذكيرات معينة.</string>
     <string name="blogging_reminders_epilogue_not_set_title">تمت إزالة التذكيرات!</string>
     <string name="blogging_reminders_epilogue_title">كل شيء جاهز!</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">ستحصل على تذكيرات للتدوين ⁦%1$s⁩ في الأسبوع يوم ⁦%2$s⁩ في ⁦%3$s⁩.</string>
     <string name="blogging_reminders_update">تحديث</string>
     <string name="blogging_reminders_not_set">لم يتم تعيين أي شيء</string>
     <string name="blogging_reminders_n_a_week">%s في الأسبوع</string>
@@ -148,6 +164,7 @@ Language: ar
     <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
+    <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">ماهو النص البديل؟</string>
     <string name="gutenberg_native_transform_s_to">تحويل %s إلى</string>
@@ -2642,6 +2659,7 @@ Language: ar
     <string name="my_site_header_look_and_feel">الشكل والطابع</string>
     <string name="my_site_header_publish">نشر</string>
     <string name="my_site_btn_blog_posts">مقالات المدونة</string>
+    <string name="my_site_btn_site_settings">إعدادات الموقع</string>
     <string name="my_site_header_configuration">التكوين</string>
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
     <string name="deselect_all">إلغاء تحديد الكل</string>

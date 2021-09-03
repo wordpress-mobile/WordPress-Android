@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-20 12:07:17+0000
+Translation-Revision-Date: 2021-08-31 13:54:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
+    <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
+    <string name="blogging_reminders_notification_time">מועד ההודעות</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt; בשעה &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ בשבוע בשעה ⁦%2$s⁩</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">הפקדים לעיצוב טקסט נמצאים בתוך סרגל הכלים שממוקם מעל המקלדת כאשר עורכים בלוק טקסט</string>
+    <string name="gutenberg_native_selected_s">נבחר: %s</string>
+    <string name="gutenberg_native_select_a_color_above">יש לבחור את הצבע למעלה</string>
+    <string name="gutenberg_native_navigates_to_select_s">העברה לבחירת %s</string>
+    <string name="gutenberg_native_move_blocks">להזיז בלוק</string>
+    <string name="gutenberg_native_how_to_edit_your_post">איך לערוך את הפוסט שלך</string>
+    <string name="gutenberg_native_how_to_edit_your_page">איך לערוך את העמוד שלך</string>
+    <string name="gutenberg_native_customize_blocks">להתאים בלוקים אישית</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">פעולת הכפתורים \'לבטל פעולה\'/\'לבצע שוב\' לא תשפיע על השינויים בתמונה המרכזית.</string>
+    <string name="gutenberg_native_applies_the_setting">הפעולה מחילה את ההגדרות</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">כדי לשנות את סדר הבלוקים, יש להקיש על הבלוק ולאחר מכן להקיש על החצים למעלה ולמטה שמופיעים בפינה השמאלית התחתונה כדי להזיז את הבלוק מעל הבלוקים האחרים או מתחתיהם.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">ברוך בואך אל עולם הבלוקים</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">כדי להסיר בלוק, יש לבחור את הבלוק, ללחוץ על שלוש הנקודות בפינה הימנית התחתונה של הבלוק ולהציג את ההגדרות. במקטע הזה יש לבחור באפשרות להסיר את הבלוק.</string>
@@ -62,6 +77,7 @@ Language: he_IL
     <string name="blogging_reminders_epilogue_body_no_reminders">עדיין אין לך תזכורות.</string>
     <string name="blogging_reminders_epilogue_not_set_title">התזכורות הוסרו!</string>
     <string name="blogging_reminders_epilogue_title">הכול מוכן!</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">אנחנו נשלח לך תזכורות לכתוב בלוג ⁦%1$s⁩ בשבוע ביום ⁦%2$s⁩ בשעה ⁦%3$s⁩.</string>
     <string name="blogging_reminders_update">לעדכן</string>
     <string name="blogging_reminders_not_set">לא הוגדרו אפשרויות</string>
     <string name="blogging_reminders_n_a_week">%s בשבוע</string>
@@ -148,6 +164,7 @@ Language: he_IL
     <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
+    <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">מה זה טקסט חלופי?</string>
     <string name="gutenberg_native_transform_s_to">לשנות את %s אל</string>
@@ -2642,6 +2659,7 @@ Language: he_IL
     <string name="my_site_btn_blog_posts">פוסטים בבלוג</string>
     <string name="my_site_header_look_and_feel">סגנון</string>
     <string name="my_site_header_publish">פרסום</string>
+    <string name="my_site_btn_site_settings">הגדרות אתר</string>
     <string name="my_site_header_configuration">הגדרות תצורה</string>
     <string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
     <string name="select_all">בחר הכל</string>

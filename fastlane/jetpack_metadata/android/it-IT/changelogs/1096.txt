@@ -1,4 +1,0 @@
-18.0:
-Abbiamo ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati.
-
-Abbiamo anche aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
