@@ -1,4 +1,0 @@
-18.0:
-Wir haben die Theme-Bilder optimiert, damit du sie schneller herunterladen kannst und sie weniger Auswirkungen auf deinen Datentarif haben.
-
-Außerdem haben wir den Full Site Editing-Themes Farben für globale Stile hinzugefügt, Verbesserungen hinter den Kulissen am Kommentarerlebnis vorgenommen und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.

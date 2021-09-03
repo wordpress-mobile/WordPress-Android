@@ -1,0 +1,4 @@
+18.1:
+- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meistbenutzten Websites, die dir jeden Montag geschickt wird. 
+- Eine Umschaltfunktion im Embed-Block, um eingebettete Inhalte wie Videos und andere Medien auf kleineren Geräten zu ändern.
+- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und eine Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
