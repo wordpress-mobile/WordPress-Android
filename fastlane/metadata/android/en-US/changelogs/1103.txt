@@ -1,0 +1,4 @@
+18.1:
+-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
+-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
+-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.

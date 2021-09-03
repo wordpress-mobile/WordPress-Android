@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-03 10:40:49+0000
+Translation-Revision-Date: 2021-08-29 11:33:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
+    <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
+    <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Do të merrni kujtues për të bloguar &lt;b&gt;çdo ditë&lt;/b&gt; më &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s në javë më %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Kontrollet për formatim teksti gjenden brenda panelit të vendosur mbi tastierën, kur përpunohet një bllok teksti</string>
+    <string name="gutenberg_native_selected_s">Të përzgjedhur: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Përzgjidhni një ngjyrë më sipër</string>
+    <string name="gutenberg_native_navigates_to_select_s">Kalohet për të përzgjedhur %s</string>
+    <string name="gutenberg_native_move_blocks">Lëvizni blloqe</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Si të përpunoni postimin tuaj</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Si të përpunoni faqen tuaj</string>
+    <string name="gutenberg_native_customize_blocks">Përshtatni blloqe</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Ndryshimet te figura e zgjedhur s’do të preken nga butonat Zhbëje/Ribëje.</string>
+    <string name="gutenberg_native_applies_the_setting">Aplikon rregullimet</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Blloqet mund t’i risistemoni duke prekur mbi një bllok dhe mandej duke prekur shigjetat sipër dhe poshtë që shfaqen në anën e poshtme majtas bllokut, për t’i kaluar sipër ose poshtë blloqesh të tjerë.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Mirë se vini në botën e blloqeve</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Që të hiqni një bllok, përzgjidhni bllokun dhe klikoni tre pikat poshtë djathtas bllokut që të shihni rregullimet. Prej andej, zgjidhni mundësinë për heqjen e bllokut.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Disa blloqe kanë rregullime shtesë. Që të shihni më tepër mundësi, prekni ikonën e rregullimeve poshtë djathtas bllokut.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s bllok, i passhëm rishtas</string>
+    <string name="gutenberg_native_rich_text_editing">Përpunim i pasur teksti</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Pasi të familjarizoheni me emrat e blloqeve të ndryshëm, një bllok mund ta shtoni duke shtypur një pjerrake përpara pasuar nga emri i bllokut — për shembull, /figurë, ose /krye.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Nxirreni në pah lëndën tuaj duke shtuar te faqet tuaja figura, gif-e, video, dhe media të trupëzuar.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Provojeni, duke shtuar ca blloqe te postimi ose faqja juaj!</string>
+    <string name="gutenberg_native_embed_media">Trupëzo media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Çdo bllok ka rregullimet e veta. Për t’i gjetur, klikoni mbi një bllok. Rregullimet e tij do të shfaqen te paneli në fund të ekranit.</string>
+    <string name="gutenberg_native_build_layouts">Ndërtoni skema</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blloqet janë pjesë lënde që mund t’i futni, risistemoni dhe stilizoni pa u dashur të dini si të programoni. Blloqet janë një rrugë e lehtë dhe moderne për të krijuar skema të hijshme.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blloqet ju lejojnë të përqendroheni në shkrimin e lëndës tuaj, duke e ditur se krejt mjetet e formatimit që ju duhen janë aty, për t’ju ndihmuar të përcillni mesazhin tuaj.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Sistemojeni lëndën tuaj në shtylla, shtoni butona “Thirrje për Veprim”, dhe tekst përmbi figura.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Shtoni një bllok të ri në çfarëdo kohe, duke prekur mbi ikonën + te paneli poshtë majtas. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s të plotësuar nga %2$s gjithsej</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Mësoni bazat, me një kalim të shpejtë nëpër to.</string>
+    <string name="comment_batch_moderation_error">S’u arrit të moderohet një ose më shumë komente</string>
     <string name="create_site_notification_create_site_action">Krijoje sajtin</string>
     <string name="create_site_notification_text">Ndërtojeni dhe vëreni në punë sajtin tua vetëm me pak hapa të thjeshtë</string>
     <string name="create_site_notification_title">Krijoni sajtin tuaj WordPress</string>
@@ -43,8 +77,7 @@ Language: sq_AL
     <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
     <string name="blogging_reminders_epilogue_caption">Këtë mund ta përditësoni në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues blogimi.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">S’keni të ujdisur kujtues.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Do të merrni kujtues për të bloguar &lt;b&gt;përditë&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Do të merrni kujtues për të bloguar %1$s në javë te %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Do të merrni kujtues për të bloguar %1$s në javë në të %2$s më %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Kujtuesit u hoqën!</string>
     <string name="blogging_reminders_epilogue_title">Gjithçka e rregulluar!</string>
     <string name="blogging_reminders_update">Përditëso</string>
@@ -130,6 +163,7 @@ Language: sq_AL
     <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
+    <string name="gutenberg_native_add_blocks">Shtoni blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Ç’është teksti alternativ?</string>
     <string name="gutenberg_native_transform_s_to">Shndërroje %s në</string>
@@ -722,9 +756,11 @@ Language: sq_AL
     <string name="error_update_site_title_network">S’u përditësua dot titull sajti. Kontrolloni lidhjen në rrjet dhe riprovoni.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ndryshime të paruajtura</string>
     <string name="gutenberg_native_open_link_in_a_browser">Hape lidhjen në një shfletues</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Kalohet te fleta e mëparshme e lëndës</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Kalohet te përshtatja e gradientit</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Kalohet te zgjedhësi i ngjyrës vetjake</string>
     <string name="gutenberg_native_gradient_type">Lloj Gradienti</string>
+    <string name="gutenberg_native_go_back">Shko mbrapsht</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
     <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
     <string name="pages_list_author">Autor faqeje</string>
@@ -2618,7 +2654,7 @@ Language: sq_AL
     <string name="my_site_btn_view_site">Shihni Sajtin</string>
     <string name="my_site_btn_view_admin">Shihni Përgjegjësin</string>
     <string name="my_site_btn_switch_site">Këmbe Sajt</string>
-    <string name="my_site_btn_site_settings">Rregullime</string>
+    <string name="my_site_btn_site_settings">Rregullime Sajti</string>
     <string name="my_site_btn_blog_posts">Postime Blogu</string>
     <string name="my_site_header_publish">Botoje</string>
     <string name="my_site_header_look_and_feel">Pamja dhe Ndjesitë</string>

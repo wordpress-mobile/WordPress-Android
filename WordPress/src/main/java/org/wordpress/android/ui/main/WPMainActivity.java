@@ -144,6 +144,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.workers.CreateSiteNotificationScheduler;
+import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -236,6 +237,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
+    @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -417,7 +419,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
 
-        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
+        scheduleLocalNotifications();
 
         initViewModel();
     }
@@ -444,6 +446,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                    + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
+    }
+
+    private void scheduleLocalNotifications() {
+        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
+        mWeeklyRoundupScheduler.schedule();
     }
 
     private void initViewModel() {

@@ -28,10 +28,14 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.time.DayOfWeek.FRIDAY
+import java.time.DayOfWeek.MONDAY
+import java.time.DayOfWeek.THURSDAY
 
 @RunWith(MockitoJUnitRunner::class)
 class BloggingRemindersAnalyticsTrackerTest {
     lateinit var bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker
+    lateinit var bloggingRemindersUiModel: BloggingRemindersUiModel
 
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val siteStore: SiteStore = mock {
@@ -130,9 +134,13 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackRemindersScheduled tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackRemindersScheduled(3)
+        bloggingRemindersUiModel = BloggingRemindersUiModel(
+                1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30)
+        bloggingRemindersAnalyticsTracker.trackRemindersScheduled(
+                bloggingRemindersUiModel.enabledDays.size, bloggingRemindersUiModel.getNotificationTime24hour())
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_SCHEDULED), checkMap {
             assertThat(it).containsEntry("days_of_week_count", 3)
+            assertThat(it).containsEntry("selected_time", "14:30")
             assertThat(it).containsKey("blog_type")
         })
     }

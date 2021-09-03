@@ -1,4 +1,0 @@
-18.0:
-Kami telah meningkatkan alur login untuk memudahkan Anda membuat dan mengelola situs.
-
-Kami juga telah mengoptimalkan gambar tema agar pengunduhan bisa dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda, menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, dan menghilangkan bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.

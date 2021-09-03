@@ -1,102 +1,108 @@
 <ar>
-18.0:
-لقد قمنا بتحسين تدفق تسجيل الدخول لتسهيل إنشاء مواقعك وإدارتها.
-
-لقد قمنا كذلك بتحسين صور القالب للاستمتاع بتنزيلات أسرع وتأثير أقل في خطة بياناتك، وأضفنا ألوان النمط العالمي إلى قوالب تحرير الموقع بالكامل، وقمنا بالتخلص من الخطأ الذي كان يمنع شريط أدوات "المزيد" من الظهور في محرِّر المكوِّن غير المدعوم.
+18.1:
+-موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
+-زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
+- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
 </ar>
 <de-DE>
-18.0:
-Wir haben den Anmeldevorgang verbessert, damit du deine Websites leichter erstellen und verwalten kannst.
-
-Wir haben auch die Theme-Bilder für schnelleres Herunterladen und weniger Auswirkungen auf deinen Datentarif optimiert, Farben für globale Stile zu den Full Site Editing-Themes hinzugefügt und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.
+18.1:
+- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
+- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
+- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
 </de-DE>
 <en-US>
-18.0:
-We’ve improved the login flow to make it easier for you to create and manage your sites.
-
-We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
+18.1:
+-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
+-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
+-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
 </en-US>
 <es-ES>
-18.0:
-Hemos mejorado el flujo de acceso para hacerte más fácil crear y gestionar tus sitios.
-
-También hemos optimizado las imágenes de los temas para que se descarguen más rápido y tengan un menor impacto en tu plan de datos, hemos añadido colores de estilo globales a los temas de la edición completa de sitios y hemos liquidado un fallo que impedía que apareciera la barra de herramientas «Más» en el editor de bloques no compatibles.
+18.1:
+-Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
+-Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
+-Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
 </es-ES>
 <fr-CA>
-18.0 :
-Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
-
-Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
+18.1 :
+- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
+- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
+- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
 </fr-CA>
 <fr-FR>
-18.0 :
-Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
-
-Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
+18.1 :
+- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
+- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
+- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
 </fr-FR>
 <iw-IL>
-18.0:
-שיפרנו את תהליך ההתחברות לאתר כדי שיהיה פשוט יותר ליצור ולנהל אתרים.
-
-בנוסף, שיפרנו את הפעילות של התמונות בערכת העיצוב כדי לאפשר הורדות מהירות יותר ולצמצם את ההשפעה על חבילת הנתונים בנייד, הוספנו את האפשרות של צבעי סגנון גלובליים לערכות עיצוב עם עריכה של אתר מלא, ומחצנו באג שמנע מסרגל הכלים 'עוד' להופיע בעורך של בלוקים שאינם נתמכים.
+18.1:
+- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
+- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
+- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
 </iw-IL>
 <id>
-18.0:
-Kami telah meningkatkan alur login untuk memudahkan Anda membuat dan mengelola situs.
-
-Kami juga telah mengoptimalkan gambar tema agar pengunduhan bisa dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda, menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, dan menghilangkan bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.
+18.1:
+- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
+- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
+- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
 </id>
 <it-IT>
-18.0:
-Abbiamo migliorato il flusso di accesso per agevolare la creazione e la gestione dei siti.
-
-Abbiamo inoltre ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati, aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
+18.1:
+-Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
+-Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
+-Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
 </it-IT>
 <ja-JP>
-18.0:
-ログインプロセスが改善されたことで、サイトの作成と管理がやりやすくなりました。
-
-また、ダウンロード時間を短縮し、お使いのデータプランへの影響を抑えられるよう、テーマ画像を最適化しました。さらに、グローバルスタイルカラーをフルサイト編集テーマに追加し、サポート対象外のブロックエディターで「その他」ツールバーが表示されないバグを修正しました。
+18.1:
+-1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
+-埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
+-時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
 </ja-JP>
 <ko-KR>
-18.0:
-사이트를 더 쉽게 생성하고 관리할 수 있도록 로그인 절차를 개선했습니다.
-
-또한 다운로드 속도가 단축되고 데이터 요금제에 미치는 영향이 적어지도록 테마 이미지를 최적화했고, 전체 스타일 색상을 전체 사이트 편집 테마에 추가했으며, 지원되지 않는 블록 편집기에 '더 보기' 도구 모음이 표시되지 않는 버그를 수정했습니다.
+18.1:
+- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
+- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
+- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
 </ko-KR>
 <nl-NL>
-18.0:
-We hebben de login flow verbeterd om het gemakkelijker voor je te maken je sites te maken en te beheren.
-
-We hebben ook thema-afbeeldingen geoptimaliseerd voor snellere downloads en een lichter effect op je gegevensabonnement, globale stijlkleuren toegevoegd aan full site editing thema's, en een bug verholpen die verhinderde dat de 'Meer' toolbar verscheen in de niet ondersteunde blok-editor.
+18.1:
+-Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
+-Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
+-Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
 </nl-NL>
+<pt-BR>
+18,1:
+- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
+- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
+- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
+</pt-BR>
 <ru-RU>
-18.0:
-Мы улучшили процесс входа в систему, чтобы вам было проще создавать свои сайты и управлять ими.
-
-Мы также оптимизировали изображения тем для более быстрой загрузки и меньшего использования вашего мобильного трафика, добавили глобальные цвета стиля к темам полного редактирования сайта и устранили ошибку, из-за которой панель инструментов «дополнительно» не отображалась в неподдерживаемом блоке.
+18.1:
+-Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
+-Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
+-Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
 </ru-RU>
 <sv-SE>
-18.0:
-Vi har förbättrat inloggningsflödet för att göra det enklare att skapa och hantera dina webbplatser.
-
-Vi har också optimerat temans bilder så att du får snabbare nedladdningar och lägre förbrukning av mobildata, lagt till globala stilfärger i teman för redigering av hela webbplatsen och rättat ett fel som gjorde att verktygsfältet ”Mer” inte visades i redigeraren för ej stödda block.
+18.1:
+-Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
+-Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
+-En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
 </sv-SE>
 <tr-TR>
-18.0:
-Sitelerinizi oluşturmanızı ve yönetmenizi kolaylaştırmak için giriş akışını iyileştirdik.
-
-Ayrıca, indirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik, Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı ortadan kaldırdık.
+18.1:
+-Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
+-Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
+-Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
 </tr-TR>
 <zh-CN>
-18.0：
-我们改进了登录流程，让您更容易创建和管理您的站点。
-
-我们还优化了主题图片，以加快下载速度并降低对您的数据套餐的影响；向“全站编辑”主题添加了“全局样式颜色”；修复了阻止“不支持的区块编辑器”中显示“更多”工具栏的错误。
+18.1:
+-每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
+-“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
+-时间选择功能，允许您选择特定的时间来接收博客提醒。
 </zh-CN>
 <zh-TW>
-18.0：
-我們已改善登入流程，讓你更輕鬆建立及管理網站。
-
-我們也最佳化了佈景主題圖片，加快下載速度並減輕對行動數據方案的影響、為「完整網站編輯」佈景主題新增「全域樣式顏色」，並修復導致「更多」工具列在不受支援區塊編輯器中無法顯示的錯誤。
+18.1：
+-每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
+-嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
+-時間選取功能可讓你指定接收網誌提醒的時間。
 </zh-TW>

@@ -14,6 +14,7 @@ import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
+import org.wordpress.android.databinding.BloggingRemindersTimeBinding
 import org.wordpress.android.databinding.BloggingRemindersTipBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Emphasiz
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
@@ -155,6 +157,16 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         fun onBind(item: Tip) = with(binding) {
             uiHelpers.setTextOrHide(title, item.title)
             uiHelpers.setTextOrHide(message, item.message)
+        }
+    }
+
+    class TimeViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTimeBinding>(
+                    parentView.viewBinding(BloggingRemindersTimeBinding::inflate)
+            ) {
+        fun onBind(item: TimeItem) = with(binding) {
+            uiHelpers.setTextOrHide(timeButton, item.time)
+            timeItem.setOnClickListener { item.onClick.click() }
         }
     }
 }

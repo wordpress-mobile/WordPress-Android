@@ -1,0 +1,4 @@
+18.1:
+-En veckovis sammanställning: en sammanfattning av aktiviteter (visningar, gilla-markeringar, kommentarer) på dina mest använda webbplatser, som skickas till dig varje måndag.
+-Ett reglage i inbäddningsblocket som du kan använda för att ändra storlek på inbäddat innehåll, som videor och andra medier, på mindre enheter.
+-En tidsvalsfunktion som gör det möjligt att välja en specifik tid för att ta emot bloggningspåminnelser.

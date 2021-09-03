@@ -28,4 +28,12 @@ sealed class SiteDialogModel(
             R.string.my_site_icon_dialog_remove_button,
             R.string.my_site_icon_dialog_cancel_button
     )
+
+    object ShowRemoveNextStepsDialog : SiteDialogModel(
+            MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG,
+            R.string.quick_start_dialog_remove_next_steps_title,
+            R.string.quick_start_dialog_remove_next_steps_message,
+            R.string.remove,
+            R.string.cancel
+    )
 }

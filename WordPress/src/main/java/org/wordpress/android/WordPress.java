@@ -82,6 +82,7 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.debug.cookies.DebugCookieManager;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -184,6 +185,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
     @Inject ExPlat mExPlat;
     @Inject WordPressWorkersFactory mWordPressWorkerFactory;
+    @Inject DebugCookieManager mDebugCookieManager;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -367,6 +369,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
 
         mExPlat.forceRefresh();
+
+        mDebugCookieManager.sync();
     }
 
     protected void initWorkManager() {

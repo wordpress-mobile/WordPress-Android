@@ -1,4 +1,0 @@
-18.0:
-Kami telah mengoptimalkan gambar tema agar pengunduhan dapat dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda.
-
-Kami juga menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, melakukan perbaikan di balik layar untuk meningkatkan pengalaman komentar, dan menghapus bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.

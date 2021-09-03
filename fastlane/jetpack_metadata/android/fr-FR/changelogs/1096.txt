@@ -1,4 +1,0 @@
-18.0 :
-Nous avons optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données.
-
-Nous avons également ajouté des couleurs de style global aux thèmes de modification globale de site, apporté quelques améliorations en arrière-plan à l’expérience des commentaires et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.

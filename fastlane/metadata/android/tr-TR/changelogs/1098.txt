@@ -1,4 +1,0 @@
-18.0:
-Sitelerinizi oluşturmanızı ve yönetmenizi kolaylaştırmak için giriş akışını iyileştirdik.
-
-Ayrıca, indirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik, Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı ortadan kaldırdık.

@@ -1,4 +1,0 @@
-18.0:
-We’ve improved the login flow to make it easier for you to create and manage your sites.
-
-We also optimized theme images for faster downloads and a lighter impact on your data plan, added Global Style Colors to Full Site Editing themes, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.

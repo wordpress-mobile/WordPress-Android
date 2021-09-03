@@ -29,6 +29,7 @@ import org.wordpress.android.push.NotificationType.STORY_SAVE_ERROR
 import org.wordpress.android.push.NotificationType.STORY_SAVE_SUCCESS
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
+import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.push.NotificationType.ZENDESK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -112,6 +113,7 @@ class SystemNotificationsTracker
             ZENDESK -> ZENDESK_MESSAGE_TYPE_VALUE
             BLOGGING_REMINDERS -> BLOGGING_REMINDERS_TYPE_VALUE
             CREATE_SITE -> CREATE_SITE_TYPE_VALUE
+            WEEKLY_ROUNDUP -> WEEKLY_ROUNDUP_TYPE_VALUE
         }
     }
 
@@ -146,5 +148,6 @@ class SystemNotificationsTracker
         private const val ZENDESK_MESSAGE_TYPE_VALUE = "zendesk_message"
         private const val BLOGGING_REMINDERS_TYPE_VALUE = "blogging_reminders"
         private const val CREATE_SITE_TYPE_VALUE = "create_site"
+        private const val WEEKLY_ROUNDUP_TYPE_VALUE = "weekly_roundup"
     }
 }
