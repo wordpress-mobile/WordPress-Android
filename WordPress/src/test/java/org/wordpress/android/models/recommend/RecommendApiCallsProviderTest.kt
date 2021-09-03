@@ -44,7 +44,6 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
     private lateinit var listenerCaptor: KArgumentCaptor<RestRequest.Listener>
     private lateinit var errorListenerCaptor: KArgumentCaptor<RestRequest.ErrorListener>
 
-
     @Before
     fun setUp() {
         callsProvider = RecommendApiCallsProvider(
@@ -83,7 +82,10 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
 
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
-        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(eq(ME), eq("getRecommendTemplate > No Network available"))
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
+                eq(ME),
+                eq("getRecommendTemplate > No Network available")
+        )
     }
 
     @Test
@@ -98,7 +100,10 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
 
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
-        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(eq(ME), startsWith("getTemplateFromJson > Error parsing server API"))
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
+                eq(ME),
+                startsWith("getTemplateFromJson > Error parsing server API")
+        )
     }
 
     @Test
@@ -113,7 +118,10 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
 
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
-        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(eq(ME), startsWith("getTemplateFromJson > wrong app name received: "))
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
+                eq(ME),
+                startsWith("getTemplateFromJson > wrong app name received: ")
+        )
     }
 
     @Test
@@ -127,7 +135,10 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
 
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
-        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(eq(ME), eq("getTemplateFromJson > null response received"))
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
+                eq(ME),
+                eq("getTemplateFromJson > null response received")
+        )
     }
 
     @Test
@@ -141,6 +152,9 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
 
         callsProvider.getRecommendTemplate(WordPress.appName, ME)
 
-        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(eq(ME), startsWith("getRecommendTemplate > Failed with empty string [volleyError = "))
+        verify(analyticsUtilsWrapper, times(1)).trackRecommendAppFetchFailed(
+                eq(ME),
+                startsWith("getRecommendTemplate > Failed with empty string [volleyError = ")
+        )
     }
 }
