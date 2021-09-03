@@ -83,7 +83,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                     }
                     is SiteCreationCompleted -> Pair(true, createSiteState.localSiteId)
                 }
-                intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, localSiteId)
+                intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }

@@ -95,7 +95,6 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "true"
-        buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
@@ -108,7 +107,8 @@ android {
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
-        buildConfigField "boolean", "DOMAIN_PURCHASE", "false"
+        buildConfigField "boolean", "SITE_DOMAINS", "false"
+        buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -177,6 +177,8 @@ android {
 
             versionName versionProperties.getProperty("alpha.versionName")
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
+
+            buildConfigField "boolean", "RECOMMEND_THE_APP", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions

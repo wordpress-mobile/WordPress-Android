@@ -21,11 +21,11 @@ class DynamicCardsSource
 ) : MySiteSource<DynamicCardsUpdate> {
     private val refresh = MutableLiveData<Boolean>()
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<DynamicCardsUpdate> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DynamicCardsUpdate> {
         val data = MediatorLiveData<DynamicCardsUpdate>()
-        data.refreshData(coroutineScope, siteId)
+        data.refreshData(coroutineScope, siteLocalId)
         data.addSource(refresh) {
-            data.refreshData(coroutineScope, siteId)
+            data.refreshData(coroutineScope, siteLocalId)
         }
         return data
     }
@@ -59,8 +59,8 @@ class DynamicCardsSource
     }
 
     private suspend fun callWithSite(function: suspend (Int) -> Unit) {
-        selectedSiteRepository.getSelectedSite()?.id?.let { siteId ->
-            function(siteId)
+        selectedSiteRepository.getSelectedSite()?.id?.let { selectedSiteLocalId ->
+            function(selectedSiteLocalId)
             refresh.postValue(true)
         }
     }

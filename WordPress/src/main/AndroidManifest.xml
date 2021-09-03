@@ -686,6 +686,11 @@
 
         <!--Domain Registration-->
         <activity
+            android:name=".ui.domains.DomainsDashboardActivity"
+            android:label="@string/site_settings_site_domains_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
             android:theme="@style/WordPress.NoActionBar"/>

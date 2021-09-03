@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
@@ -217,7 +218,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
-            val siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1)
+            val siteLocalId = data.getIntExtra(
+                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+            )
             viewModel.onReblogSiteSelected(siteLocalId)
         }
     }

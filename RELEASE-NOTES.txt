@@ -2,7 +2,9 @@
 
 18.2
 -----
-
+* [*] When you like a post from the reader post details, your avatar is gracefully added to the list of people who liked that post through an animation [https://github.com/wordpress-mobile/WordPress-Android/pull/15248]
+* [***] Block editor: Inserter: Add Inserter Block Search [https://github.com/WordPress/gutenberg/pull/33237]
+* [**] Block editor: Enable embed preview for a list of providers (for now only YouTube and Twitter) [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3900]
 
 18.1
 -----

@@ -11,7 +11,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
     -->
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Typos" >
 <array name="com_google_android_gms_fonts_certs">
     <item>@array/com_google_android_gms_fonts_certs_dev</item>
     <item>@array/com_google_android_gms_fonts_certs_prod</item>

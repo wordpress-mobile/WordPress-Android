@@ -360,6 +360,7 @@
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:maxLines">5</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
@@ -460,20 +461,17 @@
         <item name="iconSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="borderWidth">0dp</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="borderWidth">1dp</item>
+        <item name="elevation">0dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
+        <item name="backgroundTint">@color/on_surface_divider</item>
+        <item name="android:outlineProvider">none</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
@@ -488,8 +486,8 @@
 
     <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
         <item name="android:maxLines">1</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
     </style>
 
@@ -738,13 +736,6 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="QuickStartTypeIcon">
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_height">@dimen/quick_start_type_icon</item>
-        <item name="android:layout_marginEnd">@dimen/margin_large</item>
-        <item name="android:layout_width">@dimen/quick_start_type_icon</item>
-    </style>
-
     <style name="QuickStartTypeTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:ellipsize">end</item>
@@ -752,7 +743,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <style name="QuickStartTypeSubtitle">
@@ -762,7 +753,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 

@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,7 +31,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
-import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -40,7 +39,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
@@ -53,10 +51,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
-    @Mock lateinit var onQuickStartCompletedEventObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private val featureAnnouncement = FeatureAnnouncement(
@@ -93,15 +89,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
-                mySiteImprovementsFeatureConfig,
                 quickStartRepository,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
-        )
-        viewModel.completeBottomSheetQuickStartTask.observeForever(
-                onQuickStartCompletedEventObserver
         )
         viewModel.onFocusPointVisibilityChange.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -111,7 +103,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(false)
 
         loginFlowTriggered = false
         switchTabTriggered = false
@@ -368,7 +359,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
@@ -377,8 +369,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
-        verify(quickStartRepository, never()).completeTask(any(), any())
+        verify(quickStartRepository).completeTask(any(), any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
@@ -386,23 +377,23 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository when my site improvements turned on`() {
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
 
         verify(quickStartRepository).completeTask(PUBLISH_POST)
-        verifyZeroInteractions(onQuickStartCompletedEventObserver)
     }
 
     @Test
     fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
@@ -411,7 +402,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
-        verify(onQuickStartCompletedEventObserver, never()).onChanged(anyOrNull())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false

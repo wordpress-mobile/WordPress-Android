@@ -52,6 +52,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
+import org.wordpress.android.ui.domains.DomainsDashboardFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
@@ -70,7 +71,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
-import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -84,7 +84,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
-import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -333,8 +333,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(AccountSettingsFragment object);
 
-    void inject(MySiteFragment object);
-
     void inject(SitePickerActivity object);
 
     void inject(SitePickerAdapter object);
@@ -541,6 +539,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PlanDetailsFragment object);
 
+    void inject(DomainsDashboardFragment object);
+
     void inject(DomainSuggestionsFragment object);
 
     void inject(DomainRegistrationDetailsFragment object);
@@ -655,7 +655,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ActivityLogTypeFilterFragment object);
 
-    void inject(ImprovedMySiteFragment object);
+    void inject(MySiteFragment object);
 
     void inject(BackupDownloadActivity object);
 
@@ -694,7 +694,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(QuickStartPromptDialogFragment object);
 
     void inject(BloggingReminderTimePicker object);
-    
+
     void inject(DebugCookiesFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application

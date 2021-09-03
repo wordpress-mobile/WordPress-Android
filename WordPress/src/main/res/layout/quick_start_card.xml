@@ -1,61 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_start"
+    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_extra_medium_large">
+    android:layout_margin="@dimen/margin_medium">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <!-- The ProgressBar component does not support determinate mode when using a
-        circular progress bar style. To work around this, we set a horizontal style
-        coupled with a custom circular drawable that has an equivalent structure,
-        which allow us to tint both its background and foreground layers programmatically. -->
-        <ProgressBar
-            android:id="@+id/quick_start_card_progress"
-            style="?android:progressBarStyleHorizontal"
-            android:layout_width="@dimen/quick_start_card_progress_indicator_size"
-            android:layout_height="@dimen/quick_start_card_progress_indicator_size"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/content_margin_site_row_start"
-            android:indeterminate="false"
-            android:progressDrawable="@drawable/quick_start_card_progress_drawable"
-            tools:progress="75"
-            tools:progressBackgroundTint="@color/green_0"
-            tools:progressTint="@color/green_20" />
-
-        <TextView
-            android:id="@+id/quick_start_card_title"
+        <include
+            android:id="@+id/my_site_card_toolbar"
+            layout="@layout/my_site_card_toolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            tools:text="Quick Start card" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/quick_start_card_more_button"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/quick_start_customize"
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/actionBarItemBackground"
-            android:contentDescription="@string/more"
-            android:padding="@dimen/margin_medium_large"
-            android:src="@drawable/ic_more_vert_white_24dp"
-            app:tint="?attr/wpColorOnSurfaceMedium" />
-    </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/quick_start_card_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:requiresFadingEdge="horizontal" />
-</LinearLayout>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quick_start_customize" />
+
+        <include
+            android:id="@+id/quick_start_grow"
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
