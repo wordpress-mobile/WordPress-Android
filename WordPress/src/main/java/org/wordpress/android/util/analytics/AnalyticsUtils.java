@@ -77,7 +77,7 @@ public class AnalyticsUtils {
     private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
     private static final String PAGE_KEY = "page";
     private static final String PER_PAGE_KEY = "per_page";
-    private static final String ERROR_KEY = "error";
+    private static final String CAUSE_OF_ISSUE_KEY = "cause_of_issue";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -794,7 +794,7 @@ public class AnalyticsUtils {
     public static void trackRecommendAppFetchFailed(RecommendAppSource source, String error) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(SOURCE_KEY, source.mSourceName);
-        properties.put(ERROR_KEY, error);
+        properties.put(CAUSE_OF_ISSUE_KEY, error);
 
         AnalyticsTracker.track(Stat.RECOMMEND_APP_CONTENT_FETCH_FAILED, properties);
     }

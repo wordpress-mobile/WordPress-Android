@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-19 20:50:18+0000
+Translation-Revision-Date: 2021-09-01 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
+    <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
+    <string name="blogging_reminders_notification_time">通知時間</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">&lt;b&gt;毎日&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;時にブログ投稿のリマインダーを受け取ります。</string>
+    <string name="blogging_reminders_site_settings_label">週に%1$s回%2$s時</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">書式設定コントロールは、テキストブロックの編集中に表示されるキーボードの上に位置するツールバー内にあります</string>
+    <string name="gutenberg_native_selected_s">選択済み: %s</string>
+    <string name="gutenberg_native_select_a_color_above">上記の色を選択</string>
+    <string name="gutenberg_native_navigates_to_select_s">移動して%sを選択</string>
+    <string name="gutenberg_native_move_blocks">ブロックを移動</string>
+    <string name="gutenberg_native_how_to_edit_your_post">投稿の編集方法</string>
+    <string name="gutenberg_native_how_to_edit_your_page">ページの編集方法</string>
+    <string name="gutenberg_native_customize_blocks">ブロックをカスタマイズ</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">アイキャッチ画像に対する変更は、「戻す」または「やり直す」ボタンを使用しても影響を受けません。</string>
+    <string name="gutenberg_native_applies_the_setting">設定を適用</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして他のブロックの上下に移動させることで、ブロックの配置を変更できます。</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">ブロックの世界へようこそ</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">ブロックを削除するには、そのブロックを選択し、ブロックの右下にある3つの点をクリックして設定を表示します。 ここで、ブロックを削除するオプションを選択します。</string>
@@ -16,6 +31,7 @@ Language: ja_JP
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">画像、gif、動画、埋め込みメディアをページに追加することで、コンテンツを差別化しましょう。</string>
     <string name="gutenberg_native_embed_media">メディアを埋め込む</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">投稿やページにブロックをいくつか追加して、どのようになるか見てみましょう。</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">各ブロックには独自の設定があります。 確認するには、ブロックをタップします。 画面下部にあるツールバーに設定が表示されます。</string>
     <string name="gutenberg_native_build_layouts">レイアウトを構築</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">ブロックとはコーディングについて知らなくても挿入、配置変更、スタイル設定が実行できる、コンテンツの集まりです。 ブロックを使うことで、簡単かつ洗練された方法で美しいレイアウトに仕上げることができます。</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">ブロックがあることでコンテンツ作成に集中することができ、メッセージの発信に役立つすべての書式設定ツールが利用できます。</string>
@@ -62,6 +78,7 @@ Language: ja_JP
     <string name="blogging_reminders_epilogue_body_no_reminders">リマインダーが設定されていません。</string>
     <string name="blogging_reminders_epilogue_not_set_title">リマインダーを削除しました。</string>
     <string name="blogging_reminders_epilogue_title">設定を完了しました。</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">週に%1$s回、%2$s曜日の%3$s時にブログ投稿のリマインダーを受け取ります。</string>
     <string name="blogging_reminders_update">更新</string>
     <string name="blogging_reminders_not_set">設定なし</string>
     <string name="blogging_reminders_n_a_week">週に%s</string>
@@ -148,6 +165,7 @@ Language: ja_JP
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
+    <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
     <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
     <string name="gutenberg_native_transform_block">ブロックを変換…</string>
@@ -2642,6 +2660,7 @@ Language: ja_JP
     <string name="my_site_btn_blog_posts">ブログ投稿</string>
     <string name="my_site_header_publish">公開</string>
     <string name="my_site_header_look_and_feel">外観</string>
+    <string name="my_site_btn_site_settings">サイト設定</string>
     <string name="my_site_header_configuration">設定</string>
     <string name="reader_label_new_posts_subtitle">タップして表示</string>
     <string name="deselect_all">すべて選択解除</string>

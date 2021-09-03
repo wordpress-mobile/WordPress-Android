@@ -1,4 +1,0 @@
-18.0:
-Hemos optimizado las imágenes de los temas para que se descarguen más rápido para que tu plan de datos no sufra tanto.
-
-También hemos añadido los Colores para estilos globales para los temas de Edición completa del sitio, hemos mejorado entre bastidores algunos aspectos de los comentarios y también hemos solucionado el error por el que no aparecía la barra de herramientas "Más" en el editor de bloques no compatibles.

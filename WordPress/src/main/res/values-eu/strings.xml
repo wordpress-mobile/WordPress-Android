@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-19 14:41:21+0000
+Translation-Revision-Date: 2021-09-03 14:32:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: eu_ES
 -->
 <resources>
+    <string name="gutenberg_native_what_is_a_block">Zer da blokea?</string>
+    <string name="stats_disabled_title">Estatistiken bila?</string>
     <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>

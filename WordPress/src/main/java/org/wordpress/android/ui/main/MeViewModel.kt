@@ -128,12 +128,12 @@ class MeViewModel
             is ApiFetchedResult -> if (this.isError()) {
                 RecommendAppUiState(this.error!!)
             } else {
-                val openSheetData = RecommendAppUiState(
+                RecommendAppUiState(
                         link = this.link,
                         message = this.message
-                )
-                analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
-                openSheetData
+                ).also {
+                    analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
+                }
             }
             FetchingApi -> RecommendAppUiState(showLoading = true)
         })

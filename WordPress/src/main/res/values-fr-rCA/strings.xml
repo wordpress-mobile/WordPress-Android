@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-24 16:10:09+0000
+Translation-Revision-Date: 2021-08-31 13:54:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">Votre site a obtenu %1$d vues, %2$d mentions J’aime, %3$d commentaires.</string>
+    <string name="weekly_roundup_notification_title">Résumé hebdomadaire : %s</string>
+    <string name="blogging_reminders_notification_time">Heure de notification</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Vous recevrez des rappels pour bloguer &lt;b&gt;tous les jours&lt;/b&gt; à &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s par semaine à %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Les contrôles de mise en forme du texte se trouvent dans la barre d’outils placée au-dessus du clavier lors de l’édition d’un bloc paragraphe</string>
+    <string name="gutenberg_native_selected_s">Sélectionné : %s</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navigue pour sélectionner %s</string>
+    <string name="gutenberg_native_move_blocks">Déplacer des blocs</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Comment modifier votre article</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Comment modifier votre page</string>
+    <string name="gutenberg_native_select_a_color_above">Sélectionner une couleur ci-dessus</string>
+    <string name="gutenberg_native_customize_blocks">Personnaliser des blocs</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Les modifications apportées à l’image mise en avant ne seront pas affectées par les boutons annuler/rétablir.</string>
+    <string name="gutenberg_native_applies_the_setting">Applique le réglage</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Vous pouvez réorganiser les blocs en appuyant sur un bloc, puis sur les flèches vers le haut et vers le bas qui apparaissent en bas à gauche du bloc pour le déplacer au-dessus ou en dessous d’autres blocs.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bienvenue dans le monde des blocs</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Pour supprimer un bloc, sélectionnez-le et cliquez sur les trois points en bas à droite du bloc pour afficher les réglages. À partir de là, choisissez l’option pour supprimer le bloc.</string>
@@ -16,6 +31,7 @@ Language: fr
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Mettez en avant votre contenu en ajoutant des images, des gifs, des vidéos et des médias intégrés à vos pages.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Essayez-le en ajoutant quelques blocs à vos article ou à votre page !</string>
     <string name="gutenberg_native_embed_media">Média intégré</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Chaque bloc possède ses propres réglages. Pour les trouver, appuyez sur un bloc. Ses réglages apparaissent sur la barre d’outils en bas de l’écran.</string>
     <string name="gutenberg_native_build_layouts">Créer des mises en page</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Les blocs sont des éléments de contenu que vous pouvez insérer, réorganiser et styliser sans avoir besoin de savoir coder. Les blocs sont un moyen simple et moderne de créer de belles mises en page.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Les blocs vous permettent de vous concentrer sur la rédaction de votre contenu, en sachant que tous les outils de mise en forme dont vous avez besoin sont là pour vous aider à faire passer votre message.</string>
@@ -62,6 +78,7 @@ Language: fr
     <string name="blogging_reminders_epilogue_body_no_reminders">Vous n’avez aucun rappel défini.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Rappels supprimés !</string>
     <string name="blogging_reminders_epilogue_title">Tout est bon !</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Vous recevrez des rappels pour bloguer %1$s par semaine le %2$s à %3$s.</string>
     <string name="blogging_reminders_update">Mettre à jour</string>
     <string name="blogging_reminders_not_set">Aucun défini</string>
     <string name="blogging_reminders_n_a_week">%s par semaine</string>
@@ -148,6 +165,7 @@ Language: fr
     <string name="gutenberg_native_embed_link">Lien intégré</string>
     <string name="gutenberg_native_display_post_date">Affiche la date du contenu</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
+    <string name="gutenberg_native_add_blocks">Ajouter des blocs</string>
     <string name="login_no_jetpack_sites">Aucun site Jetpack trouvé</string>
     <string name="gutenberg_native_what_is_alt_text">Qu’est-ce que le texte alternatif ?</string>
     <string name="gutenberg_native_transform_s_to">Transformer %s en</string>

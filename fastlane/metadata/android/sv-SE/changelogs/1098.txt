@@ -1,4 +1,0 @@
-18.0:
-Vi har förbättrat inloggningsflödet för att göra det enklare att skapa och hantera dina webbplatser.
-
-Vi har också optimerat temans bilder så att du får snabbare nedladdningar och lägre förbrukning av mobildata, lagt till globala stilfärger i teman för redigering av hela webbplatsen och rättat ett fel som gjorde att verktygsfältet ”Mer” inte visades i redigeraren för ej stödda block.

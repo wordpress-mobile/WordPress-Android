@@ -46,7 +46,7 @@ class RecommendApiCallsProvider @Inject constructor(
                 cont.resume(result)
             }
             val errorListener = ErrorListener { volleyError ->
-                val (errorMessage, errorLog) = getNetErroAndLogStrings("getRecommendTemplate", volleyError)
+                val (errorMessage, errorLog) = getNetErrorAndLogStrings("getRecommendTemplate", volleyError)
                 logErrorAndTrack(source, errorLog)
                 cont.resume(Failure(errorMessage))
             }
@@ -104,7 +104,7 @@ class RecommendApiCallsProvider @Inject constructor(
         }
     }
 
-    private fun getNetErroAndLogStrings(
+    private fun getNetErrorAndLogStrings(
         callingFunction: String,
         volleyError: VolleyError?
     ): Pair<String, String> {

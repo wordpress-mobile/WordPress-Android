@@ -1,4 +1,0 @@
-18.0:
-We hebben de Thema-afbeeldingen geoptimaliseerd voor snellere downloads en minder verbruik van mobiele data.
-
-Ook hebben we: kleuren in algemene stijlen toegevoegd aan thema's voor het bewerken van de volledige site; achter de schermen de opmerkingen verbeterd; en een bug verholpen die ervoor zorgde dat de 'Meer'-werkbalk niet verscheen in de editor van een niet-ondersteund blok.

@@ -1,3 +1,0 @@
-We’ve optimized theme images for faster downloads and a lighter impact on your data plan.
-
-We also added Global Style Colors to Full Site Editing themes, made some behind-the-scenes improvements to the comments experience, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.

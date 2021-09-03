@@ -1,0 +1,4 @@
+18.1:
+-Een weekoverzicht: een samenvatting van de activiteit (weergaven, likes, opmerkingen) op je meestgebruikte sites. Deze samenvatting wordt elke maandag naar je verstuurd.
+-Een schakeloptie in het Insluitblok om de grootte van ingesloten content op kleinere apparaten te wijzigen , zoals video's en andere media.
+-Een functie voor tijdselectie waarmee je een specifieke tijd kunt kiezen waarop je een Blog-herinnering ontvangt.

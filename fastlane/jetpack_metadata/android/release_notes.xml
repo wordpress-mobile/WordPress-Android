@@ -1,101 +1,101 @@
 <en-US>
-We’ve optimized theme images for faster downloads and a lighter impact on your data plan.
-
-We also added Global Style Colors to Full Site Editing themes, made some behind-the-scenes improvements to the comments experience, and squashed a bug that prevented the ‘More’ toolbar from appearing in the Unsupported Block Editor.
+-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
+-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
+-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
 </en-US>
 <ar>
-18.0:
-لقد قمنا بتحسين صور القالب للاستمتاع بتنزيلات أسرع وتأثير أقل في خطة بياناتك.
-
-أضفنا كذلك ألوان النمط العالمي إلى قوالب تحرير الموقع بالكامل، وقمنا بإجراء بعض التحسينات خلف الكواليس على تجربة التعليقات، وقمنا بالتخلص من الخطأ الذي كان يمنع شريط أدوات "المزيد" من الظهور في محرِّر المكوِّن غير المدعوم.
+18.1:
+-موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
+-زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع الفيديو وغيرها من الوسائط على الأجهزة الأصغر.
+- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
 </ar>
 <de-DE>
-18.0:
-Wir haben die Theme-Bilder optimiert, damit du sie schneller herunterladen kannst und sie weniger Auswirkungen auf deinen Datentarif haben.
-
-Außerdem haben wir den Full Site Editing-Themes Farben für globale Stile hinzugefügt, Verbesserungen hinter den Kulissen am Kommentarerlebnis vorgenommen und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.
+18.1:
+- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meistbenutzten Websites, die dir jeden Montag geschickt wird. 
+- Eine Umschaltfunktion im Embed-Block, um eingebettete Inhalte wie Videos und andere Medien auf kleineren Geräten zu ändern.
+- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und eine Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
 </de-DE>
 <es-ES>
-18.0:
-Hemos optimizado las imágenes de los temas para que se descarguen más rápido para que tu plan de datos no sufra tanto.
-
-También hemos añadido los Colores para estilos globales para los temas de Edición completa del sitio, hemos mejorado entre bastidores algunos aspectos de los comentarios y también hemos solucionado el error por el que no aparecía la barra de herramientas "Más" en el editor de bloques no compatibles.
+18.1:
+-Un resumen semanal: un resumen de la actividad (visualizaciones, me gusta, comentarios) en los sitios que más utilizas, que recibirás todos los lunes.
+-Una opción en el bloque de incrustar para cambiar el tamaño del contenido incrustado, como los videos y otros medios, en los dispositivos más pequeños.
+-Una función de selección de hora que permite elegir una hora concreta para recibir un Recordatorio de blogueo.
 </es-ES>
 <fr-FR>
-18.0 :
-Nous avons optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données.
-
-Nous avons également ajouté des couleurs de style global aux thèmes de modification globale de site, apporté quelques améliorations en arrière-plan à l’expérience des commentaires et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.
+18.1 :
+- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
+- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
+- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
 </fr-FR>
 <iw-IL>
-18.0:
-שיפרנו את הפעילות של התמונות בערכת העיצוב כדי לאפשר הורדות מהירות יותר ולצמצם את ההשפעה על חבילת הנתונים בנייד.
-
-הוספנו גם את האפשרות של צבעי סגנון גלובליים לערכות עיצוב עם עריכה של אתר מלא, שיפרנו כמה אלמנטים מאחורי הקלעים בחוויית השימוש בתגובות ומחצנו באג שמנע מסרגל הכלים 'עוד' להופיע בעורך של בלוקים שאינם נתמכים.
+18.1:
+- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
+- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
+- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
 </iw-IL>
 <id>
-18.0:
-Kami telah mengoptimalkan gambar tema agar pengunduhan dapat dilakukan lebih cepat dan dampak menjadi lebih ringan pada paket data Anda.
-
-Kami juga menambahkan Warna-Warna Gaya Global untuk tema Pengeditan Situs Lengkap, melakukan perbaikan di balik layar untuk meningkatkan pengalaman komentar, dan menghapus bug yang mencegah bilah alat 'Lainnya' muncul di Editor Blok yang Tidak Didukung.
+18.1:
+- Ringkasan Mingguan: ringkasan aktivitas (tayangan, suka, komentar) di situs yang paling sering Anda gunakan, dikirimkan kepada Anda setiap Senin.
+- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
+- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
 </id>
 <it-IT>
-18.0:
-Abbiamo ottimizzato le immagini dei temi per download più rapidi e un minore impatto sul tuo piano dati.
-
-Abbiamo anche aggiunto i colori degli Stili globali ai temi di Modifica completa dei siti, apportato miglioramenti all'interfaccia dei commenti e risolto un bug che non consentiva la visualizzazione della barra degli strumenti "Altro" nell'Editor a blocchi non supportato.
+18.1:
+-Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
+-Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
+-Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
 </it-IT>
 <ja-JP>
-18.0:
-ダウンロード時間を短縮し、お使いのデータプランへの影響を抑えられるよう、テーマ画像を最適化しました。
-
-また、グローバルスタイルカラーをフルサイト編集テーマに追加することで、コメントの操作環境のバックグラウンド処理を改善するとともに、サポート対象外のブロックエディターで「その他」ツールバーが表示されないバグを修正しました。
+18.1:
+-1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
+-埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
+-時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
 </ja-JP>
 <ko-KR>
-18.0:
-다운로드 속도가 단축되고 데이터 요금제에 미치는 영향이 적어지도록 테마 이미지를 최적화했습니다.
-
-또한 전체 스타일 색상을 전체 사이트 편집 테마에 추가했고, 댓글 환경 이면의 몇 가지를 개선했으며, 지원되지 않는 블록 편집기에 '더 보기' 도구 모음이 표시되지 않는 버그를 수정했습니다.
+18.1:
+- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
+- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
+- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
 </ko-KR>
 <nl-NL>
-18.0:
-We hebben de Thema-afbeeldingen geoptimaliseerd voor snellere downloads en minder verbruik van mobiele data.
-
-Ook hebben we: kleuren in algemene stijlen toegevoegd aan thema's voor het bewerken van de volledige site; achter de schermen de opmerkingen verbeterd; en een bug verholpen die ervoor zorgde dat de 'Meer'-werkbalk niet verscheen in de editor van een niet-ondersteund blok.
+18.1:
+-Een weekoverzicht: een samenvatting van de activiteit (weergaven, likes, opmerkingen) op je meestgebruikte sites. Deze samenvatting wordt elke maandag naar je verstuurd.
+-Een schakeloptie in het Insluitblok om de grootte van ingesloten content op kleinere apparaten te wijzigen , zoals video's en andere media.
+-Een functie voor tijdselectie waarmee je een specifieke tijd kunt kiezen waarop je een Blog-herinnering ontvangt.
 </nl-NL>
 <pt-BR>
-18.0:
-Nós otimizamos as imagens de tema para proporcionar downloads mais rápidos e um impacto reduzido em seu plano de dados.
-
-Também adicionamos cores de estilo global aos temas de edição de site completo, realizamos algumas melhorias nos bastidores da experiência de comentários e corrigimos um bug que impedia a barra de ferramentas "Mais" de aparecer no editor de blocos não compatíveis.
+18.1:
+- Resumo semanal: toda segunda-feira você recebe um resumo da atividade (visualizações, curtidas, comentários) nos seus sites mais visitados.
+- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo incorporado do site para dispositivos menores.
+- Uma funcionalidade que deixa você escolher um horário específico para receber um Lembrete de publicação.
 </pt-BR>
 <ru-RU>
-18.0:
-Мы оптимизировали изображения тем, ускорив их загрузку и снизив расходы на мобильный трафик.
-
-Кроме того, добавлены цвета глобальных стилей в темы для полного редактирования сайта, улучшены некоторые моменты в работе с комментариями, и исправлен баг, в результате которого панель инструментов "Дополнительно" не появлялась в редакторе неподдерживаемых блоков.
+18.1:
+— Еженедельный обзор: сводка по активности на наиболее часто посещаемых сайтах (просмотры, отметки "Нравится", комментарии), высылаемая каждый понедельник.
+— Переключаемая опция в блоке "Вставка" для изменения размера внедрённого содержимого, такого как видео и другие медиафайлы, на устройствах меньшего размера.
+— Функция выбора времени, позволяющая выбрать время напоминания о необходимости написать в блог.
 </ru-RU>
 <sv-SE>
-18.0:
-Vi har optimerat temabilderna för snabbare nedladdningar och mindre påverkan på din dataplan.
-
-Vi har också lagt till färger för globala stilar i teman med fullständig webbplatsredigering, gjort några förbättringar bakom kulisserna i kommentarsupplevelsen och åtgärdat ett fel som förhindrade att verktygsfältet "Mer" visades för block som inte stöds av blockredigeraren.
+18.1:
+-En veckovis sammanställning: en sammanfattning av aktiviteter (visningar, gilla-markeringar, kommentarer) på dina mest använda webbplatser, som skickas till dig varje måndag.
+-Ett reglage i inbäddningsblocket som du kan använda för att ändra storlek på inbäddat innehåll, som videor och andra medier, på mindre enheter.
+-En tidsvalsfunktion som gör det möjligt att välja en specifik tid för att ta emot bloggningspåminnelser.
 </sv-SE>
 <tr-TR>
-18.0:
-İndirme işlemlerinin daha hızlı olması ve veri planınız üzerindeki etkinin hafiflemesi için tema görsellerini optimize ettik.
-
-Ayrıca Tam Site Düzenleme temalarına Genel Stil Renkleri ekledik, yorum deneyimi için perde arkasında bazı iyileştirmeler yaptık ve "Daha Fazla" araç çubuğunun Desteklenmeyen Blok Düzenleyici'de görünmesini engelleyen bir hatayı düzelttik.
+18.1:
+-Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
+-Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
+-Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
 </tr-TR>
 <zh-CN>
-18.0：
-我们优化了主题图片，以加快下载速度并降低对您的数据套餐的影响。
-
-我们还向“全站编辑”主题添加了“全局样式颜色”；对“评论”体验进行了一些后台改进；修复了阻止“不支持的区块编辑器”中显示“更多”工具栏的错误。
+18.1：
+- 每周综述：常用站点上的活动（查看、点赞、评论） 摘要，每个星期一发给您。
+- 嵌入区块中的切换选项，用于在更小设备上调整嵌入内容（例如视频和其他媒体）的大小。
+- 时间选择功能，允许您选择特定时间来接收博客发布提醒。
 </zh-CN>
 <zh-TW>
-18.0：
-我們已更新佈景主題圖片，加快下載速度並減輕對行動數據方案的影響。
-
-我們也為「完整網站編輯」佈景主題新增了「全域樣式顏色」，對留言體驗做出一些幕後改善，並修復導致「更多」工具列在不受支援區塊編輯器中無法顯示的錯誤。
+18.1：
+-每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
+-嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
+-時間選取功能可讓你指定接收網誌提醒的時間。
 </zh-TW>
