@@ -8,13 +8,13 @@ import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONObject
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.RestClientProvider
 import org.wordpress.android.util.VolleyUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -26,7 +26,9 @@ import kotlin.coroutines.suspendCoroutine
 class RecommendApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val restClientProvider: RestClientProvider,
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) {
     suspend fun getRecommendTemplate(
         appName: String,
@@ -36,7 +38,7 @@ class RecommendApiCallsProvider @Inject constructor(
             logErrorAndTrack(source, "getRecommendTemplate > No Network available")
             cont.resume(Failure(contextProvider.getContext().getString(R.string.no_network_message)))
         } else {
-            val language = LocaleManager.getLanguage(contextProvider.getContext())
+            val language = localeManagerWrapper.getLanguage()
             val endPointPath = "/mobile/share-app-link?app=$appName&locale=$language"
 
             val listener = Listener { jsonObject ->
@@ -49,7 +51,7 @@ class RecommendApiCallsProvider @Inject constructor(
                 cont.resume(Failure(errorMessage))
             }
 
-            WordPress.getRestClientUtilsV2().get(
+            restClientProvider.getRestClientUtilsV2().get(
                     endPointPath,
                     listener,
                     errorListener
