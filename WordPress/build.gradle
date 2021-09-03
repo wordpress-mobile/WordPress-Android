@@ -266,7 +266,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
     }
 
     // Then define the found properties as buildConfigFields
-    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
     fields_map.each {
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
