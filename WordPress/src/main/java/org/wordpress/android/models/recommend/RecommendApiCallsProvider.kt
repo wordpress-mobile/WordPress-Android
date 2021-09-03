@@ -14,43 +14,67 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.VolleyUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class RecommendApiCallsProvider @Inject constructor(
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
-    suspend fun getRecommendTemplate(appName: String): RecommendCallResult = suspendCoroutine { cont ->
-        val language = LocaleManager.getLanguage(contextProvider.getContext())
-        val endPointPath = "/mobile/share-app-link?app=$appName&locale=$language"
+    suspend fun getRecommendTemplate(
+        appName: String,
+        source: RecommendAppSource
+    ): RecommendCallResult = suspendCoroutine { cont ->
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            logErrorAndTrack(source, "getRecommendTemplate > No Network available")
+            cont.resume(Failure(contextProvider.getContext().getString(R.string.no_network_message)))
+        } else {
+            val language = LocaleManager.getLanguage(contextProvider.getContext())
+            val endPointPath = "/mobile/share-app-link?app=$appName&locale=$language"
 
-        val listener = Listener { jsonObject ->
-            val result = getTemplateFromJson(jsonObject, appName)
-            cont.resume(result)
-        }
-        val errorListener = ErrorListener { volleyError ->
-            val error = getErrorStringAndLog("getRecommendTemplate", volleyError)
-            cont.resume(Failure(error))
-        }
+            val listener = Listener { jsonObject ->
+                val result = getTemplateFromJson(jsonObject, appName, source)
+                cont.resume(result)
+            }
+            val errorListener = ErrorListener { volleyError ->
+                val (errorMessage, errorLog) = getNetErroAndLogStrings("getRecommendTemplate", volleyError)
+                logErrorAndTrack(source, errorLog)
+                cont.resume(Failure(errorMessage))
+            }
 
-        WordPress.getRestClientUtilsV2().get(
-                endPointPath,
-                listener,
-                errorListener
-        )
+            WordPress.getRestClientUtilsV2().get(
+                    endPointPath,
+                    listener,
+                    errorListener
+            )
+        }
     }
 
-    private fun getTemplateFromJson(json: JSONObject?, appName: String): RecommendCallResult {
-        return json?.let {
-            val name = it.optString("name")
+    private fun logErrorAndTrack(source: RecommendAppSource, logMessage: String?) {
+        val notNullMessage = logMessage ?: "logErrorAndTrack > logMessage was null"
+        AppLog.d(T.API, notNullMessage)
+        analyticsUtilsWrapper.trackRecommendAppFetchFailed(source, notNullMessage)
+    }
+
+    private fun getTemplateFromJson(
+        json: JSONObject?,
+        appName: String,
+        source: RecommendAppSource
+    ): RecommendCallResult {
+        return if (json != null) {
+            val name = json.optString("name")
             if (name == appName) {
                 try {
                     val gson = Gson()
                     val mapType = object : TypeToken<RecommendTemplateData>() {}.type
-                    val template = gson.fromJson<RecommendTemplateData>(it.toString(), mapType)
+                    val template = gson.fromJson<RecommendTemplateData>(json.toString(), mapType)
                     AppLog.d(
                             T.API,
                             "getTemplateFromJson > name[${template.name}], " +
@@ -58,39 +82,41 @@ class RecommendApiCallsProvider @Inject constructor(
                     )
                     Success(template)
                 } catch (jsonEx: JsonParseException) {
-                    AppLog.d(
-                            T.API,
-                            "getTemplateFromJson > Error parsing server API response: error[{${jsonEx.message}}]"
-                    )
+                    val logMessage = "getTemplateFromJson > Error parsing server API" +
+                            " response: error[{${jsonEx.message}} json[$json]]"
+                    logErrorAndTrack(source, logMessage)
                     Failure(
                             contextProvider.getContext()
                                     .getString((R.string.recommend_app_bad_format_response))
                     )
                 }
             } else {
-                AppLog.d(T.API, "getTemplateFromJson > wrong app name received: expected[$appName] got[$name]")
+                val logMessage = "getTemplateFromJson > wrong app name received: expected[$appName] got[$name]"
+                logErrorAndTrack(source, logMessage)
                 Failure(contextProvider.getContext().getString(R.string.recommend_app_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.recommend_app_null_response))
+        } else {
+            val logMessage = "getTemplateFromJson > null response received"
+            logErrorAndTrack(source, logMessage)
+            Failure(contextProvider.getContext().getString(R.string.recommend_app_null_response))
+        }
     }
 
-    private fun getErrorStringAndLog(
-        functionName: String,
+    private fun getNetErroAndLogStrings(
+        callingFunction: String,
         volleyError: VolleyError?
-    ): String {
+    ): Pair<String, String> {
         val error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
-            AppLog.d(
-                    T.API,
-                    "$functionName > Failed with empty string [volleyError = $volleyError]"
+            Pair(
+                contextProvider.getContext().getString(R.string.recommend_app_generic_get_template_error),
+                "$callingFunction > Failed with empty string [volleyError = $volleyError]"
             )
-            contextProvider.getContext().getString(R.string.recommend_app_generic_get_template_error)
         } else {
-            AppLog.d(
-                    T.API,
-                    "$functionName > Failed [error = $error]"
+            Pair(
+                error,
+                "$callingFunction > Failed [error = $error]"
             )
-            error
         }
     }
 
