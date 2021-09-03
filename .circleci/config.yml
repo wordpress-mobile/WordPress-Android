@@ -65,10 +65,10 @@ jobs:
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
       - run:
           name: Build WordPress APK
-          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PversionName="$VERSION_NAME"
+          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
       - run:
           name: Build Jetpack APK
-          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PversionName="$VERSION_NAME"
+          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
