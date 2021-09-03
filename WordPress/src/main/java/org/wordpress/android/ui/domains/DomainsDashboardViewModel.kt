@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.ui.mysite.ListItemAction
-import org.wordpress.android.ui.mysite.MySiteItem
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -29,30 +29,32 @@ class DomainsDashboardViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<MySiteItem>>()
+    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
     val uiModel = _uiModel
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
 
     // TODO: UI and logic is work in progress.  Will be revamped once design is ready
-    private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteItem> {
-        val listItems = mutableListOf<MySiteItem>()
-        listItems += CategoryHeader(UiStringRes(string.domains_primary_domain))
+    private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteCardAndItem> {
+        val listItems = mutableListOf<MySiteCardAndItem>()
+        listItems += CategoryHeaderItem(UiStringRes(string.domains_primary_domain))
         listItems += ListItem(
-                        R.drawable.ic_domains_white_24dp,
-                        primaryText = UiStringResWithParams(
-                                string.domains_primary_domain_address,
-                                listOf(UiStringText(siteUrl))),
-                        onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
-                )
+                R.drawable.ic_domains_white_24dp,
+                primaryText = UiStringResWithParams(
+                        string.domains_primary_domain_address,
+                        listOf(UiStringText(siteUrl))
+                ),
+                onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
+        )
 
         if (selectedSiteRepository.getSelectedSite()?.hasFreePlan == true) {
             listItems += ListItem(
                     R.drawable.ic_domains_white_24dp,
                     primaryText = UiStringRes(string.domains_free_plan_get_your_domain_title),
-                    onClick = ListItemInteraction.create(this::domainRegistrationClick))
+                    onClick = ListItemInteraction.create(this::domainRegistrationClick)
+            )
         } else {
-            DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick))
+            DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick))
         }
         return listItems
     }

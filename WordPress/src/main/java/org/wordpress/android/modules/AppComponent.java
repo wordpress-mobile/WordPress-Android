@@ -71,7 +71,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
-import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -85,7 +84,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
-import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -333,8 +332,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MyProfileFragment object);
 
     void inject(AccountSettingsFragment object);
-
-    void inject(MySiteFragment object);
 
     void inject(SitePickerActivity object);
 
@@ -658,7 +655,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ActivityLogTypeFilterFragment object);
 
-    void inject(ImprovedMySiteFragment object);
+    void inject(MySiteFragment object);
 
     void inject(BackupDownloadActivity object);
 
@@ -697,7 +694,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(QuickStartPromptDialogFragment object);
 
     void inject(BloggingReminderTimePicker object);
-    
+
     void inject(DebugCookiesFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application

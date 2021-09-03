@@ -461,11 +461,6 @@
         <item name="iconSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="borderWidth">1dp</item>
         <item name="elevation">0dp</item>
@@ -739,13 +734,6 @@
         <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
-    </style>
-
-    <style name="QuickStartTypeIcon">
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_height">@dimen/quick_start_type_icon</item>
-        <item name="android:layout_marginEnd">@dimen/margin_large</item>
-        <item name="android:layout_width">@dimen/quick_start_type_icon</item>
     </style>
 
     <style name="QuickStartTypeTitle">

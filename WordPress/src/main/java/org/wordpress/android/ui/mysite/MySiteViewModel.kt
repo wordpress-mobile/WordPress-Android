@@ -45,26 +45,26 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
-import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
-import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
-import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
-import org.wordpress.android.ui.mysite.ListItemAction.DOMAINS
-import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
-import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
-import org.wordpress.android.ui.mysite.ListItemAction.PAGES
-import org.wordpress.android.ui.mysite.ListItemAction.PEOPLE
-import org.wordpress.android.ui.mysite.ListItemAction.PLAN
-import org.wordpress.android.ui.mysite.ListItemAction.PLUGINS
-import org.wordpress.android.ui.mysite.ListItemAction.POSTS
-import org.wordpress.android.ui.mysite.ListItemAction.SCAN
-import org.wordpress.android.ui.mysite.ListItemAction.SHARING
-import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
-import org.wordpress.android.ui.mysite.ListItemAction.STATS
-import org.wordpress.android.ui.mysite.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -97,14 +97,20 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.mysite.quickactions.QuickActionsBlockBuilder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockBuilder
+import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -146,7 +152,7 @@ class MySiteViewModel
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val siteInfoCardBuilder: SiteInfoCardBuilder,
     private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -161,8 +167,8 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
-    private val quickStartBlockBuilder: QuickStartBlockBuilder,
-    private val quickActionsBlockBuilder: QuickActionsBlockBuilder,
+    private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -221,9 +227,9 @@ class MySiteViewModel
             visibleDynamicCards
     ) ->
         val state = if (site != null) {
-            val siteItems = mutableListOf<MySiteItem>()
+            val siteItems = mutableListOf<MySiteCardAndItem>()
             siteItems.add(
-                    siteInfoBlockBuilder.buildSiteInfoBlock(
+                    siteInfoCardBuilder.buildSiteInfoCard(
                             site,
                             showSiteIconProgressBar,
                             this::titleClick,
@@ -236,7 +242,7 @@ class MySiteViewModel
             )
             if (!buildConfigWrapper.isJetpackApp) {
                 siteItems.add(
-                        quickActionsBlockBuilder.build(
+                        quickActionsCardBuilder.build(
                                 this::quickActionStatsClick,
                                 this::quickActionPagesClick,
                                 this::quickActionPostsClick,
@@ -249,7 +255,7 @@ class MySiteViewModel
             }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
+                siteItems.add(DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick)))
             }
             val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
                 // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
@@ -273,7 +279,7 @@ class MySiteViewModel
             if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
                 quickStartCategories.takeIf { it.isNotEmpty() }?.let {
                     siteItems.add(
-                            quickStartBlockBuilder.build(
+                            quickStartCardBuilder.build(
                                     quickStartCategories,
                                     this::onQuickStartBlockRemoveMenuItemClick,
                                     this::onQuickStartTaskTypeItemClick
@@ -373,7 +379,7 @@ class MySiteViewModel
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartBlockBuilder.getTitle(type)))
+        _onNavigation.value = Event(OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type)))
     }
 
     fun onQuickStartTaskCardClick(task: QuickStartTask) {
@@ -743,7 +749,7 @@ class MySiteViewModel
     )
 
     sealed class State {
-        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class SiteSelected(val cardAndItems: List<MySiteCardAndItem>) : State()
         data class NoSites(val shouldShowImage: Boolean) : State()
     }
 
@@ -761,5 +767,7 @@ class MySiteViewModel
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
+        const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
+        const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
     }
 }

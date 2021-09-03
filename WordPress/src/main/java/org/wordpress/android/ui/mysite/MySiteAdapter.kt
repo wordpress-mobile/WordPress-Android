@@ -5,31 +5,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
-import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
-import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartBlock
-import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
-import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_BLOCK
-import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_DYNAMIC_CARD
-import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
-import org.wordpress.android.ui.mysite.quickactions.QuickActionsViewHolder
-import org.wordpress.android.ui.mysite.quickstart.QuickStartBlockViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
+import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
+import org.wordpress.android.ui.mysite.cards.siteinfo.MySiteInfoViewHolder
+import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
+import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
+import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
-    private var items = listOf<MySiteItem>()
+class MySiteAdapter(
+    val imageManager: ImageManager,
+    val uiHelpers: UiHelpers
+) : Adapter<MySiteCardAndItemViewHolder<*>>() {
+    private var items = listOf<MySiteCardAndItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
 
-    fun loadData(result: List<MySiteItem>) {
+    fun loadData(result: List<MySiteCardAndItem>) {
         val diffResult = DiffUtil.calculateDiff(
                 MySiteAdapterDiffCallback(items, result)
         )
@@ -37,39 +45,39 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteCardAndItemViewHolder<*> {
         return when (viewType) {
-            SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
-            QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
-            DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_BLOCK.ordinal -> QuickStartBlockViewHolder(parent, uiHelpers)
-            QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartCardViewHolder(
+            SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
+            QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
+            DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
+            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
+            QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
                     parent,
                     quickStartViewPool,
                     nestedScrollStates,
                     uiHelpers
             )
-            CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
+            CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
 
-    override fun onBindViewHolder(holder: MySiteItemViewHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
-            is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoBlock)
-            is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsBlock)
-            is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationBlock)
-            is QuickStartBlockViewHolder -> holder.bind(items[position] as QuickStartBlock)
+            is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoCard)
+            is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsCard)
+            is DomainRegistrationViewHolder -> holder.bind(items[position] as DomainRegistrationCard)
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
-            is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)
+            is QuickStartDynamicCardViewHolder -> holder.bind(items[position] as QuickStartDynamicCard)
+            is MySiteCategoryItemViewHolder -> holder.bind(items[position] as CategoryHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
         }
     }
 
-    override fun onViewRecycled(holder: MySiteItemViewHolder<*>) {
+    override fun onViewRecycled(holder: MySiteCardAndItemViewHolder<*>) {
         super.onViewRecycled(holder)
-        if (holder is QuickStartCardViewHolder) {
+        if (holder is QuickStartDynamicCardViewHolder) {
             holder.onRecycled()
         }
     }

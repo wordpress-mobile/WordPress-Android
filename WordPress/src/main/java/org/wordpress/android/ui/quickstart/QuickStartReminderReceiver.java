@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -66,7 +66,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         }
 
         Intent resultIntent = new Intent(context, WPMainActivity.class);
-        resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, true);
+        resultIntent.putExtra(MySiteViewModel.ARG_QUICK_START_TASK, true);
         NotificationType notificationType = NotificationType.QUICK_START_REMINDER;
         resultIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK

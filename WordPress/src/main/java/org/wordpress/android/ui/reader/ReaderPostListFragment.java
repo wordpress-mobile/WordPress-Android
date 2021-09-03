@@ -77,7 +77,7 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
-import org.wordpress.android.ui.mysite.QuickStartRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -125,7 +125,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -223,7 +222,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
-    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject ReaderTracker mReaderTracker;
 
     private enum ActionableEmptyViewButtonType {
@@ -909,14 +907,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
 
             SiteModel selectedSite = getSelectedSite();
-            if (selectedSite != null) {
-                if (mMySiteImprovementsFeatureConfig.isEnabled()) {
-                    mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
-                } else {
-                    mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(QuickStartTask.FOLLOW_SITE,
-                            selectedSite, mQuickStartEvent, getContext());
-                }
-            }
+            if (selectedSite != null) mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
         }
     }
 

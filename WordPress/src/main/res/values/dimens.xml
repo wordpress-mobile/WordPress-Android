@@ -312,7 +312,6 @@
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
-    <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
     <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
     <dimen name="my_site_card_row_padding">16dp</dimen>
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
@@ -426,8 +425,6 @@
     <dimen name="quick_start_focus_point_small_size">30dp</dimen>
     <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
-    <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
-    <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
