@@ -2,9 +2,6 @@ package org.wordpress.android.ui.stories.usecase
 
 import android.net.Uri
 import com.wordpress.stories.compose.story.StoryFrameItem
-import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
-import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.UriBackgroundSource
-import com.wordpress.stories.compose.story.StoryFrameItemType
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.compose.story.StoryRepository
 import dagger.Reusable
