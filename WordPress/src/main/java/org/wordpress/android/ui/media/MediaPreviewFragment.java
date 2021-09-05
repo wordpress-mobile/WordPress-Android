@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -189,7 +187,7 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) {
+        if (showAudioOrVideo()) {
             initializePlayer();
         }
     }
@@ -197,7 +195,7 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if ((showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) || mPlayer != null) {
+        if (showAudioOrVideo() || mPlayer != null) {
             releasePlayer();
         }
     }
@@ -205,18 +203,14 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if ((showAudioOrVideo() && Util.SDK_INT <= VERSION_CODES.M) || mPlayer != null) {
-            releasePlayer();
-        }
+        if (mPlayer != null) releasePlayer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (showAudioOrVideo()) {
-            if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
-                initializePlayer();
-            }
+            if (mPlayer == null) initializePlayer();
         } else {
             loadImage(mContentUri, mImageView);
         }
