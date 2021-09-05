@@ -16,7 +16,7 @@ import org.wordpress.android.R
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
-    private val nestedScrollStates: Bundle
+    private var nestedScrollStates: Bundle
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(
                 parent.context
