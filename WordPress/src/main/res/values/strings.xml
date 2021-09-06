@@ -3416,14 +3416,12 @@
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Embed block previews are coming soon</string>
     <!-- translators: accessibility text. Empty Embed caption. -->
     <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Embed caption. Empty</string>
     <!-- translators: accessibility text. %s: Embed caption. -->
     <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Embed caption. %s</string>
     <string name="gutenberg_native_embed_link" tools:ignore="UnusedResources">Embed link</string>
     <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Embed media</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available" tools:ignore="UnusedResources">Embed previews not yet available</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3455,6 +3453,7 @@
     <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Inside</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">Invalid URL. Please enter a valid URL.</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources">Line Height</string>
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
@@ -3485,7 +3484,6 @@
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
-    <!-- translators: %s: Select control button label e.g. "Button width" -->
     <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Navigates to select %s</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">No application can handle this request.</string>
@@ -3536,6 +3534,8 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s block, newly available</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s block options</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s block previews are coming soon</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s block. This block has invalid content</string>
     <!-- translators: %s: name of the reusable block -->
@@ -3546,6 +3546,8 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s has URL set</string>
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
@@ -3559,7 +3561,6 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources">Select a color above</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
-    <!-- translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Selected: %s</string>
     <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Set as Featured Image </string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
@@ -3592,8 +3593,10 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: accessibility text. %s: video caption. -->
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">We are working hard to add more blocks with each release.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me" tools:ignore="UnusedResources">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the page.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c" tools:ignore="UnusedResources">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the post.</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources">We’re working hard on adding support for %s previews. In the meantime, you can preview the embedded content on the page.</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources">We’re working hard on adding support for %s previews. In the meantime, you can preview the embedded content on the post.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources">Welcome to the world of blocks</string>
     <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources">What is a block?</string>
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">What is alt text?</string>
