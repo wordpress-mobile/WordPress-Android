@@ -28,9 +28,7 @@ class ExoPlayerUtils
 
     fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSourceFactory {
         if (httpDataSourceFactory == null) {
-            httpDataSourceFactory = DefaultHttpDataSourceFactory(
-                    Util.getUserAgent(WordPress.getContext(), USER_AGENT)
-            )
+            httpDataSourceFactory = DefaultHttpDataSourceFactory(WordPress.getUserAgent())
         }
         httpDataSourceFactory?.defaultRequestProperties?.set(authenticationUtils.getAuthHeaders(url))
         return httpDataSourceFactory as DefaultHttpDataSourceFactory
@@ -56,7 +54,6 @@ class ExoPlayerUtils
     }
 
     companion object {
-        private const val USER_AGENT = "WordPress ExoPlayer Android"
         private const val UNSUPPORTED_TYPE = "Unsupported type"
     }
 }
