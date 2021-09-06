@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.3
+-----
+
+
 18.2
 -----
 * [*] When you like a post from the reader post details, your avatar is gracefully added to the list of people who liked that post through an animation [https://github.com/wordpress-mobile/WordPress-Android/pull/15248]
