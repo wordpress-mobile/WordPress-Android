@@ -20,6 +20,7 @@ const val MAP_KEY_ELEMENT_GRADIENTS: String = "gradients"
 const val MAP_KEY_ELEMENT_STYLES: String = "rawStyles"
 const val MAP_KEY_ELEMENT_FEATURES: String = "rawFeatures"
 const val MAP_KEY_IS_FSETHEME: String = "isFSETheme"
+const val MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS: String = "galleryWithImageBlocks"
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
@@ -32,7 +33,8 @@ data class EditorTheme(
                     blockEditorSettings.gradients,
                     blockEditorSettings.styles.toString(),
                     blockEditorSettings.features.toString(),
-                    blockEditorSettings.isFSETheme
+                    blockEditorSettings.isFSETheme,
+                    blockEditorSettings.galleryWithImageBlocks
             ),
             stylesheet = null,
             version = null
@@ -45,6 +47,8 @@ data class EditorTheme(
         element.version = version
         element.rawStyles = themeSupport.rawStyles
         element.rawFeatures = themeSupport.rawFeatures
+        element.isFSETheme = themeSupport.isFSETheme
+        element.galleryWithImageBlocks = themeSupport.galleryWithImageBlocks
 
         return element
     }
@@ -60,6 +64,7 @@ data class EditorTheme(
 
 data class BlockEditorSettings(
     @SerializedName("__unstableEnableFullSiteEditingBlocks") val isFSETheme: Boolean,
+    @SerializedName("__unstableGalleryWithImageBlocks") val galleryWithImageBlocks: Boolean,
     @SerializedName("__experimentalStyles") val styles: JsonElement?,
     @SerializedName("__experimentalFeatures") val features: JsonElement?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val colors: List<EditorThemeElement>?,
@@ -75,7 +80,8 @@ data class EditorThemeSupport(
     val gradients: List<EditorThemeElement>?,
     val rawStyles: String?,
     val rawFeatures: String?,
-    val isFSETheme: Boolean
+    val isFSETheme: Boolean,
+    val galleryWithImageBlocks: Boolean
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
@@ -97,6 +103,7 @@ data class EditorThemeSupport(
         }
 
         bundle.putBoolean(MAP_KEY_IS_FSETHEME, isFSETheme)
+        bundle.putBoolean(MAP_KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks)
 
         return bundle
     }

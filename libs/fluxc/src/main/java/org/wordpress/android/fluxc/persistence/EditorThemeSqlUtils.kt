@@ -91,6 +91,7 @@ class EditorThemeSqlUtils {
             get
             @JvmName("setIsFSETheme")
             set
+        @Column var galleryWithImageBlocks: Boolean = false
 
         override fun setId(id: Int) {
             this.mId = id
@@ -112,7 +113,14 @@ class EditorThemeSqlUtils {
                 gradients = storedGradients.mapNotNull { it.toEditorThemeElement() }
             }
 
-            val editorThemeSupport = EditorThemeSupport(colors, gradients, rawStyles, rawFeatures, isFSETheme)
+            val editorThemeSupport = EditorThemeSupport(
+                    colors,
+                    gradients,
+                    rawStyles,
+                    rawFeatures,
+                    isFSETheme,
+                    galleryWithImageBlocks
+            )
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
         }
