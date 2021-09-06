@@ -1814,6 +1814,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 161 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD GALLERY_WITH_IMAGE_BLOCKS BOOLEAN")
                 }
+                162 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel DROP COLUMN ORDER_KEY")
+                }
             }
         }
         db.setTransactionSuccessful()
