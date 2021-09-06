@@ -58,6 +58,8 @@ class HomePagePickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
+
         with(HomePagePickerFragmentBinding.bind(view)) {
             categoriesRecyclerView.apply {
                 layoutManager = LinearLayoutManager(
@@ -72,7 +74,7 @@ class HomePagePickerFragment : Fragment() {
 
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter()
+                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
             }
 
             setupUi()
@@ -92,9 +94,6 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(HomePagePickerViewModel::class.java)
-
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)

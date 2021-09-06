@@ -65,6 +65,8 @@ abstract class LayoutPickerViewModel(
 
     abstract val useCachedData: Boolean
 
+    var nestedScrollStates: Bundle = Bundle()
+
     abstract fun fetchLayouts(preferCache: Boolean = false)
 
     open fun onPreviewChooseTapped() = onDismissPreview()
