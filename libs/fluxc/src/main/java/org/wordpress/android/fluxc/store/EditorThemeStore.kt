@@ -181,7 +181,7 @@ class EditorThemeStore
     }
 
     private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && site.hasRequiredWordPressVersion(EDITOR_SETTINGS_WP_VERSION)
+            gssEnabled && hasRequiredWordPressVersion(site.softwareVersion, EDITOR_SETTINGS_WP_VERSION)
 
     /**
      * Checks if the [SiteModel.getSoftwareVersion] is higher or equal to the [requiredVersion]
@@ -192,13 +192,18 @@ class EditorThemeStore
      * @param requiredVersion the required WordPress version
      * @return true if the check is met
      */
-    private fun SiteModel.hasRequiredWordPressVersion(requiredVersion: String) = try {
-        val version = if (softwareVersion.contains("-")) {
-            // strip semantic versioning information (alpha, beta etc)
-            softwareVersion.substringBefore("-")
-        } else softwareVersion
-        Version(version) >= Version(requiredVersion)
-    } catch (e: IllegalArgumentException) {
-        false // if version parsing fails return false
+    private fun hasRequiredWordPressVersion(softwareVersion: String?, requiredVersion: String): Boolean {
+        if (softwareVersion == null) {
+            return false
+        }
+        return try {
+            val version = if (softwareVersion.contains("-")) {
+                // strip semantic versioning information (alpha, beta etc)
+                softwareVersion.substringBefore("-")
+            } else softwareVersion
+            Version(version) >= Version(requiredVersion)
+        } catch (e: IllegalArgumentException) {
+            false // if version parsing fails return false
+        }
     }
 }
