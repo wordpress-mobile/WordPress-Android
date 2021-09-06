@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.VersionUtils
 import org.wordpress.android.util.helpers.Version
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -181,29 +182,5 @@ class EditorThemeStore
     }
 
     private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && hasRequiredWordPressVersion(site.softwareVersion, EDITOR_SETTINGS_WP_VERSION)
-
-    /**
-     * Checks if the [SiteModel.getSoftwareVersion] is higher or equal to the [requiredVersion]
-     *
-     * Note: At this point semantic version information (alpha, beta etc) is stripped since it
-     * is not supported by our [Version] utility
-     *
-     * @param requiredVersion the required WordPress version
-     * @return true if the check is met
-     */
-    private fun hasRequiredWordPressVersion(softwareVersion: String?, requiredVersion: String): Boolean {
-        if (softwareVersion == null) {
-            return false
-        }
-        return try {
-            val version = if (softwareVersion.contains("-")) {
-                // strip semantic versioning information (alpha, beta etc)
-                softwareVersion.substringBefore("-")
-            } else softwareVersion
-            Version(version) >= Version(requiredVersion)
-        } catch (e: IllegalArgumentException) {
-            false // if version parsing fails return false
-        }
-    }
+            gssEnabled && VersionUtils.checkMinimalVersion(site.softwareVersion, EDITOR_SETTINGS_WP_VERSION)
 }
