@@ -19,9 +19,7 @@
             android:id="@+id/video_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:show_previous_button="false"
-            app:show_next_button="false"/>
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <RelativeLayout
@@ -63,9 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:show_timeout="0"
-            app:show_previous_button="false"
-            app:show_next_button="false"/>
+            app:show_timeout="0"/>
 
     </RelativeLayout>
 

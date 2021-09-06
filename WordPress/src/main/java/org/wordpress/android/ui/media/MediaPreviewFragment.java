@@ -19,13 +19,12 @@ import androidx.fragment.app.Fragment;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
-import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -295,10 +294,7 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private void initializePlayer() {
-        DefaultHttpDataSourceFactory httpDataSourceFactory = mExoPlayerUtils.buildHttpDataSourceFactory(mContentUri);
-        MediaSourceFactory mediaSourceFactory = mExoPlayerUtils.buildMediaSourceFactory(httpDataSourceFactory);
-
-        mPlayer = new SimpleExoPlayer.Builder(requireActivity()).setMediaSourceFactory(mediaSourceFactory).build();
+        mPlayer = ExoPlayerFactory.newSimpleInstance(requireContext());
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
@@ -313,10 +309,12 @@ public class MediaPreviewFragment extends Fragment {
         }
 
         Uri uri = Uri.parse(mContentUri);
-        mPlayer.setMediaItem(MediaItem.fromUri(uri));
         mPlayer.setPlayWhenReady(mAutoPlay);
         mPlayer.seekTo(0, mPosition);
-        mPlayer.prepare();
+
+        MediaSource mediaSource = mExoPlayerUtils.buildMediaSource(uri);
+        showProgress(true);
+        mPlayer.prepare(mediaSource);
     }
 
     private void releasePlayer() {
@@ -333,7 +331,7 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private class PlayerEventListener implements Player.EventListener {
-        @Override public void onIsLoadingChanged(boolean isLoading) {
+        @Override public void onLoadingChanged(boolean isLoading) {
             showProgress(isLoading);
         }
     }
