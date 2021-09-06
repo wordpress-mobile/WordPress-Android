@@ -1,0 +1,4 @@
+18.1:
+-Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
+-Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
+-En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.

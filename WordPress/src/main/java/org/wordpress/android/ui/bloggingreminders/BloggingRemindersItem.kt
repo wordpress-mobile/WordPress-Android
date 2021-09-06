@@ -7,6 +7,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.NOTIFICATION_TIME
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TIP
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -14,7 +15,14 @@ import org.wordpress.android.ui.utils.UiString
 
 sealed class BloggingRemindersItem(val type: Type) {
     enum class Type {
-        ILLUSTRATION, TITLE, HIGH_EMPHASIS_TEXT, LOW_EMPHASIS_TEXT, CAPTION, DAY_BUTTONS, TIP
+        ILLUSTRATION,
+        TITLE,
+        HIGH_EMPHASIS_TEXT,
+        LOW_EMPHASIS_TEXT,
+        CAPTION,
+        DAY_BUTTONS,
+        TIP,
+        NOTIFICATION_TIME,
     }
 
     data class Illustration(@DrawableRes val illustration: Int) : BloggingRemindersItem(ILLUSTRATION)
@@ -43,6 +51,11 @@ sealed class BloggingRemindersItem(val type: Type) {
 
         data class DayItem(val text: UiString, val isSelected: Boolean, val onClick: ListItemInteraction)
     }
+
+    data class TimeItem(
+        val time: UiString,
+        val onClick: ListItemInteraction
+    ) : BloggingRemindersItem(NOTIFICATION_TIME)
 
     data class Tip(val title: UiString, val message: UiString) : BloggingRemindersItem(TIP)
 }

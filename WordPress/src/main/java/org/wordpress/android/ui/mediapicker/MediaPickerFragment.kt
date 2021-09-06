@@ -575,7 +575,7 @@ class MediaPickerFragment : Fragment() {
                                     clickListener = View.OnClickListener { holder.buttonAction() }
                             )
                         },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
+                        dismissCallback = { _, event -> holder.onDismissAction(event) }
                 )
         )
     }

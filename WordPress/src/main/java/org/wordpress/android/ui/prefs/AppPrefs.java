@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -18,6 +20,7 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -29,15 +32,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
+    public static final int SELECTED_SITE_UNAVAILABLE = -1;
+
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
+
+    private static final Gson GSON = new Gson();
 
     public interface PrefKey {
         String name();
@@ -256,6 +264,9 @@ public class AppPrefs {
         // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
         // (Internal Ref:p3hLNG-18u)
         SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
     }
 
     private static SharedPreferences prefs() {
@@ -586,12 +597,26 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
+    /**
+     * This method should only be used by specific client classes that need access to the persisted selected site
+     * instance due to the fact that the in-memory selected site instance might not be yet available.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such access
+     * to this method is limited to this class.
+     */
     public static int getSelectedSite() {
-        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
-    public static void setSelectedSite(int selectedSite) {
-        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
+    /**
+     * This method should only be used by specific client classes that need to update the persisted selected site
+     * instance due to the fact that the in-memory selected site instance is updated as well.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such the
+     * update method should be limited to this class.
+     */
+    public static void setSelectedSite(int siteLocalId) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
@@ -880,6 +905,17 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
     }
 
+    public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
+        String json = GSON.toJson(newImpressions);
+        setString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+    }
+
+    public static Map<String, Double> getGutenbergBlockTypeImpressions() {
+        String jsonString = getString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
+        return impressions;
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -889,7 +925,7 @@ public class AppPrefs {
 
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
-        List<String> items = Arrays.asList(idsAsString.split(","));
+        String[] items = idsAsString.split(",");
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
@@ -1285,10 +1321,7 @@ public class AppPrefs {
         }
         List<String> currentIds = getPostWithHWAccelerationOff();
         String key = localSiteId + "-" + localPostId;
-        if (currentIds.contains(key)) {
-            return true;
-        }
-        return false;
+        return currentIds.contains(key);
     }
 
     public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {

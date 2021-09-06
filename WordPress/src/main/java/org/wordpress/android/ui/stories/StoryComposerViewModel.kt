@@ -114,7 +114,7 @@ class StoryComposerViewModel @Inject constructor(
                 editPostRepository.getPost(),
                 site
         )
-        this.postEditorAnalyticsSession?.start(null, null)
+        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(

@@ -21,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.test
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -51,6 +52,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
+    @Mock lateinit var notificationsTracker: SystemNotificationsTracker
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -68,10 +70,11 @@ class StatsViewModelTest : BaseUnitTest() {
                 networkUtilsWrapper,
                 statsSiteProvider,
                 newsCardHandler,
-                statsModuleActivateUseCase
+                statsModuleActivateUseCase,
+                notificationsTracker
         )
 
-        viewModel.start(1, false, null, null, false)
+        viewModel.start(1, false, null, null, false, null)
     }
 
     @Test
@@ -231,7 +234,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
     private fun startViewModel(statsModuleEnabled: Boolean = true) {
         whenever(site.isActiveModuleEnabled(any())).thenReturn(statsModuleEnabled)
-        viewModel.start(1, false, null, null, false)
+        viewModel.start(1, false, null, null, false, null)
     }
 
     private val networkUnavailableError = StatsModuleActivateRequestState.Failure.NetworkUnavailable

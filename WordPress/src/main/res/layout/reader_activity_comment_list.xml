@@ -28,11 +28,6 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty"
             style="@style/ReaderTextView.EmptyList"
-            android:layout_above="@+id/layout_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:layout_centerInParent="true"
             android:text="@string/reader_empty_comments"
             android:textColor="?attr/wpColorOnSurfaceMedium"
             android:visibility="gone"

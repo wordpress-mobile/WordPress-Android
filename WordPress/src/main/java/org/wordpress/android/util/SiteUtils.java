@@ -248,7 +248,7 @@ public class SiteUtils {
         return SiteUtils.isAccessedViaWPComRest(site) && (!site.isPrivate() || site.isWPComAtomic());
     }
 
-    public static boolean isAccessedViaWPComRest(SiteModel site) {
+    public static boolean isAccessedViaWPComRest(@NonNull SiteModel site) {
         return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 

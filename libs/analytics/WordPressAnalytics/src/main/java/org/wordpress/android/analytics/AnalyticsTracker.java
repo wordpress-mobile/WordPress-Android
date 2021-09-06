@@ -231,6 +231,7 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_ENABLED, // Aztec editor only
         EDITOR_GUTENBERG_ENABLED, // Gutenberg editor only
         EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
+        EDITOR_HELP_SHOWN,
         EDITOR_SETTINGS_FETCHED,
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
@@ -798,7 +799,10 @@ public final class AnalyticsTracker {
         BLOGGING_REMINDERS_CANCELLED,
         BLOGGING_REMINDERS_NOTIFICATION_RECEIVED,
         LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED,
-        LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED
+        LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED,
+        CREATE_SITE_NOTIFICATION_SCHEDULED,
+        RECOMMEND_APP_ENGAGED,
+        RECOMMEND_APP_CONTENT_FETCH_FAILED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

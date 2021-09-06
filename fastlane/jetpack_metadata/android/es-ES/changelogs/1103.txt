@@ -1,0 +1,4 @@
+18.1:
+-Un resumen semanal: un resumen de la actividad (visualizaciones, me gusta, comentarios) en los sitios que más utilizas, que recibirás todos los lunes.
+-Una opción en el bloque de incrustar para cambiar el tamaño del contenido incrustado, como los videos y otros medios, en los dispositivos más pequeños.
+-Una función de selección de hora que permite elegir una hora concreta para recibir un Recordatorio de blogueo.

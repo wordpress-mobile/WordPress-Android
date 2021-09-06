@@ -57,6 +57,8 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
+
         with(ModalLayoutPickerFragmentBinding.bind(view)) {
             categoriesRecyclerView.apply {
                 layoutManager = LinearLayoutManager(
@@ -71,7 +73,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter()
+                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
             }
 
             modalLayoutPickerTitlebar.backButton.setOnClickListener {
@@ -114,9 +116,6 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     private fun ModalLayoutPickerFragmentBinding.setupViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(ModalLayoutPickerViewModel::class.java)
-
         viewModel.loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this@ModalLayoutPickerFragment, { uiState ->
