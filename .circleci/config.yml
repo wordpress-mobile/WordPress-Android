@@ -80,6 +80,13 @@ jobs:
           path: Artifacts
           destination: Artifacts
   Release Build:
+    parameters:
+      alpha:
+        description: If true, builds the Zalpha, otherwise builds the beta
+        type: boolean
+      app:
+        description: The app to build, should be either 'wordpress' or 'jetpack'
+        type: string
     executor:
       name: android/default
       api-version: "29"
@@ -89,7 +96,7 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress/Jetpack Android failed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -105,36 +112,33 @@ jobs:
           command: |
             APP_VERSION=$(./gradlew -q printVersionName | tail -1)
             echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress/Jetpack Android $APP_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress/Jetpack Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android $APP_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app >> Android $APP_VERSION has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
-      - run:
-          name: Build WordPress Zalpha
-          command: |
-            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_alpha app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi
-          no_output_timeout: 15m
-      - run:
-          name: Build WordPress Vanilla
-          command: |
-            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            else
-              bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi
-          no_output_timeout: 15m
-      - run:
-          name: Build Jetpack Vanilla
-          command: |
-            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta app:jetpack skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            else
-              bundle exec fastlane build_and_upload_release app:jetpack skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi
-          no_output_timeout: 15m
+      - when:
+          condition: << parameters.alpha >>
+          steps:
+            - run:
+                name: Build << parameters.app >> Zalpha
+                command: |
+                  if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  fi
+                no_output_timeout: 15m
+      - unless:
+          condition: << parameters.alpha >>
+          steps:
+            - run:
+                name: Build << parameters.app >> Vanilla
+                command: |
+                  if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  else
+                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  fi
+                no_output_timeout: 15m
       - android/save-gradle-cache
       - store_artifacts:
           path: build
@@ -389,5 +393,15 @@ workflows:
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
-      - Release Build
-
+      - Release Build:
+          name: "Release: WP Alpha"
+          app: wordpress
+          alpha: true
+      - Release Build:
+          name: "Release: WP Beta"
+          app: wordpress
+          alpha: false
+      - Release Build:
+          name: "Release: JP Beta"
+          app: jetpack
+          alpha: false
