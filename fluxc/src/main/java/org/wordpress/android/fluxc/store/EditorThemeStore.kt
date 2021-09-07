@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.VersionUtils
-import org.wordpress.android.util.helpers.Version
 import javax.inject.Inject
 import javax.inject.Singleton
 
