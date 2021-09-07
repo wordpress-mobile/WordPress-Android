@@ -124,7 +124,7 @@ jobs:
                 name: Build << parameters.app >> Zalpha
                 command: |
                   if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:false upload_to_play_store:false
                   fi
                 no_output_timeout: 15m
       - unless:
@@ -134,9 +134,9 @@ jobs:
                 name: Build << parameters.app >> Vanilla
                 command: |
                   if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:false upload_to_play_store:false
                   else
-                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:false upload_to_play_store:false
                   fi
                 no_output_timeout: 15m
       - android/save-gradle-cache
