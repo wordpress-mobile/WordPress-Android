@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-23 11:24:05+0000
+Translation-Revision-Date: 2021-08-01 20:19:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Opprett netsted</string>
+    <string name="create_site_notification_title">Opprett ditt WordPress-nettsted</string>
+    <string name="stats_disabled_enable_stats_error_message">Kunne ikke aktivere nettstedstatistikk</string>
+    <string name="stats_disabled_enable_stats_button">Slå på nettstedstatistikk</string>
+    <string name="gutenberg_native_what_is_a_block">Hva er en blokk?</string>
+    <string name="gutenberg_native_try_another_search_term">Prøv et annet søkeord</string>
+    <string name="gutenberg_native_no_blocks_found">Ingen blokker funnet</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Vis meg rundt</string>
+    <string name="login_epilogue_create_new_site_button">Lag et nytt nettsted</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">LEGG TIL LENKE</string>
+    <string name="blogging_reminders_tip">Tips</string>
+    <string name="blogging_reminders_update">Oppdater</string>
+    <string name="blogging_reminders_n_a_week">%s i uka</string>
+    <string name="blogging_reminders_done">Utført</string>
+    <string name="gutenberg_native_set_as_featured_image">Sett som fremhevet bilde</string>
+    <string name="gutenberg_native_remove_as_featured_image">Fjern som fremhevet bilde</string>
+    <string name="fab_add_category_desc">Opprett kategori</string>
+    <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
+    <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
+    <string name="site_settings_categories_empty_button">Opprett en kategori</string>
+    <string name="site_settings_categories_title">Kategorier</string>
+    <string name="site_settings_blogging_reminders_title">Bloggepåminnere</string>
+    <string name="gutenberg_native_s_block">%s-blokk</string>
+    <string name="gutenberg_native_columns_settings">Kolonneinnstillinger</string>
+    <string name="gutenberg_native_add_link_to_s">Legg til lenke til %s</string>
     <string name="gutenberg_native_what_is_alt_text">Hva er alt-tekst?</string>
     <string name="gutenberg_native_transform_s_to">Omform %s til</string>
     <string name="gutenberg_native_transform_block">Omform blokk…</string>
@@ -40,6 +65,7 @@ Language: nb_NO
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
     <string name="disable">Slå av</string>
     <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
+    <string name="quick_start_list_enable_sharing_title">Sosial deling</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -50,6 +76,7 @@ Language: nb_NO
     <string name="gutenberg_native_lock_icon">Låse-ikon</string>
     <string name="gutenberg_native_choose_audio">Velg lyd</string>
     <string name="gutenberg_native_audio_player">Lydavspiller</string>
+    <string name="gutenberg_native_audio_file">lydfil</string>
     <string name="continue_with_wpcom">Logg inn eller registrer deg på WordPress.com</string>
     <string name="photo_picker_use_audio">Bruk denne lyden</string>
     <string name="photo_picker_choose_audio">Velg lyd fra enheten</string>
@@ -274,6 +301,7 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
+    <string name="quick_start_list_update_site_title_title">Sjekk din nettstedstittel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
@@ -288,6 +316,7 @@ Language: nb_NO
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
+    <string name="gutenberg_native_go_back">Gå tilbake</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_list_author">Sideforfatter</string>
@@ -360,12 +389,14 @@ Language: nb_NO
     <string name="button_insert">Sett inn</string>
     <string name="continue_label">Fortsett</string>
     <string name="copy_text">Kopier</string>
+    <string name="gutenberg_native_number_of_columns">Antall kolonner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytt blokken mot høyre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_right">Flytt blokken mot høyre</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytt blokken mot venstre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_left">Flytt blokken mot venstre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dobbelttrykk for å flytte blokken mot høyre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dobbelttrykk for å flytte blokken mot venstre</string>
+    <string name="gutenberg_native_block_settings">Blokkinnstillinger</string>
     <string name="new_site_creation_creating_site_loading_4">Oppretter kontrollpanel</string>
     <string name="new_site_creation_creating_site_loading_3">Setter opp tema</string>
     <string name="new_site_creation_creating_site_loading_2">Legger til funksjoner på nettstedet</string>
@@ -531,6 +562,7 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
+    <string name="gutenberg_native_link_text">Lenketekst</string>
     <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
@@ -842,10 +874,12 @@ Language: nb_NO
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
+    <string name="quick_start_dialog_upload_icon_title">Velg et unikt nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
+    <string name="quick_start_dialog_publish_post_message">Kladd og publiser et innlegg.</string>
     <string name="quick_start_dialog_need_help_message">Vi vil gå gjennom det grunnleggende for å bygge og utvide ditt nettsted.</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
@@ -1031,6 +1065,7 @@ Language: nb_NO
     <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
     <string name="quick_start_dialog_need_help_button_positive">Godta</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nei, takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
@@ -2113,7 +2148,6 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_btn_switch_site">Bytt nettsted</string>
-    <string name="my_site_btn_site_settings">Innstillinger</string>
     <string name="my_site_btn_blog_posts">Blogginnlegg</string>
     <string name="my_site_header_publish">Publiser</string>
     <string name="my_site_header_look_and_feel">Se og kjenn</string>
@@ -2388,4 +2422,13 @@ Language: nb_NO
     <string name="add">Legg til</string>
     <string name="save">Lagre</string>
     <string name="cancel">Avbryt</string>
+    <string-array name="blogging_reminders_count">
+        <item>Én gang</item>
+        <item>To ganger</item>
+        <item>Tre ganger</item>
+        <item>Fire ganger</item>
+        <item>Fem ganger</item>
+        <item>Seks ganger</item>
+        <item>Sju ganger</item>
+    </string-array>
 </resources>

@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-26 09:54:57+0000
+Translation-Revision-Date: 2021-09-01 11:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">حصل موقعك على ⁦%1$d⁩ من المشاهدات، و⁦%2$d⁩ من الإعجابات، و⁦%3$d⁩ من التعليقات.</string>
+    <string name="weekly_roundup_notification_title">موجز أسبوعي: %s</string>
+    <string name="blogging_reminders_notification_time">وقت التنبيه</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt; في &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ في الأسبوع في ⁦%2$s⁩</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">توجد عناصر التحكم في تنسيق النص ضمن شريط الأدوات الذي يوجد فوق لوحة المفاتيح في أثناء تحرير مكوِّن نص</string>
+    <string name="gutenberg_native_selected_s">مُحدَّد %s</string>
+    <string name="gutenberg_native_select_a_color_above">تحديد لون أعلاه</string>
+    <string name="gutenberg_native_navigates_to_select_s">ينتقل لتحديد %s</string>
+    <string name="gutenberg_native_move_blocks">نقل المكوِّنات</string>
+    <string name="gutenberg_native_how_to_edit_your_post">كيفية تحرير مقالتك</string>
+    <string name="gutenberg_native_how_to_edit_your_page">كيفية تحرير صفحتك</string>
+    <string name="gutenberg_native_customize_blocks">تخصيص المكوِّنات</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">لن تتأثر التغييرات على الصورة البارزة عن طريق أزرار التراجع/الإعادة.</string>
+    <string name="gutenberg_native_applies_the_setting">يقوم بتطبيق الإعداد</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">يمكنك إعادة ترتيب المكوِّنات عن طريق النقر على مكوِّن، ثم النقر على الأسهم المتجهة إلى الأعلى والأسفل التي تظهر أسفل يسار المكوِّن لنقله فوق المكوِّنات الأخرى أو أسفلها.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">مرحبًا في عالم المكوِّنات</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">لإزالة مكوِّن، حدِّد المكوِّن وانقر على النقاط الثلاث الموجودة في أسفل يمين المكوِّن لعرض الإعدادات. من هناك، اختر خيار إزالة المكوِّن.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">تتضمن بعض المكوِّنات إعدادات إضافية. انقر على أيقونة الإعدادات الموجودة في أسفل يمين المكوِّن لعرض مزيد من الخيارات.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s مكوِّن متاح حديثًا</string>
+    <string name="gutenberg_native_rich_text_editing">تحرير النص المنسَّق</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">بمجرد التعرف على أسماء المكوِّنات المختلفة، يمكنك إضافة مكوِّن عن طريق كتابة شرطة مائلة للأمام متبوعة باسم المكوِّن — على سبيل المثال، /image أو /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">اجعل محتواك مميزًا عن طريق إضافة صور وصورgif ومقاطع فيديو ووسائط مضمنة إلى صفحاتك.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">جربه عن طريق إضافة القليل من المكوِّنات إلى مقالتك أو صفحتك!</string>
+    <string name="gutenberg_native_embed_media">تضمين وسائط</string>
+    <string name="gutenberg_native_build_layouts">إنشاء تخطيطات</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">المكوِّنات عبارة عن أجزاء من المحتوى التي يمكنك إدراجها وإعادة ترتيبها وتصميمها من دون الحاجة إلى معرفة كيفية ترميزها. المكوِّنات عبارة عن طريقة سهلة وعصرية لك لإنشاء تخطيطات جميلة.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار. </string>
+    <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات باستخدام معاينة سريعة.</string>
+    <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
+    <string name="create_site_notification_create_site_action">إنشاء موقع</string>
+    <string name="create_site_notification_text">إعداد موقعك وتشغيله ببعض الخطوات السريعة فقط</string>
+    <string name="create_site_notification_title">إنشاء موقع ووردبريس الخاص بك على الويب</string>
+    <string name="stats_disabled_enable_stats_error_message">يتعذر تفعيل إحصاءات الموقع</string>
+    <string name="stats_disabled_enable_stats_button">تمكين إحصاءات الموقع</string>
+    <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
+    <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
+    <string name="gutenberg_native_what_is_a_block">ماذا يُقصد بالمكوِّن؟</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
+    <string name="gutenberg_native_unable_to_embed_media">يتعذر تضمين وسائط</string>
+    <string name="gutenberg_native_try_another_search_term">تجربة مصطلح بحث آخر</string>
+    <string name="gutenberg_native_no_blocks_found">لم يتم العثور على أي مكوِّنات</string>
+    <string name="gutenberg_native_embed_previews_not_yet_available">تضمين المعاينات ليس متاحًا بعد</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">يتوافر تضمين معاينات المكوِّن قريبًا</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
+    <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">خذني في جولة</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">هل تريد بعض المساعدة بشأن إدارة هذا الموقع باستخدام التطبيق؟</string>
+    <string name="login_epilogue_create_new_site_button">إنشاء موقع جديد</string>
+    <string name="login_epilogue_mysites_subheading">يمكنك تبديل المواقع في أي وقت.</string>
+    <string name="login_epilogue_mysites_heading">اختيار موقع لفتحه</string>
+    <string name="scan_multisite_not_supported_subtitle">عذرًا، لكن عملية المسح على Jetpack Scan غير متوافقة مع تثبيت ووردبريس متعددة المواقع في الوقت الحالي.</string>
+    <string name="scan_multisite_not_supported_title">مواقع ووردبريس المتعددة غير مدعومة</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">رابط غير صالح. الرجاء إدخال عنوان موقع صالح.</string>
     <string name="gutenberg_native_embed_caption_s">قم بتضمين تسمية توضيحية. %s</string>
     <string name="gutenberg_native_embed_caption_empty">قم بتضمين تسمية توضيحية. فارغ</string>
@@ -18,10 +75,9 @@ Language: ar
     <string name="blogging_reminders_select_days">تحديد الأيام التي ترغب في التدوين بها</string>
     <string name="blogging_reminders_epilogue_caption">يمكن تحديث هذا في أي وقت من خلال موقعي &gt; الإعدادات &gt; تذكيرات التدوين.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">ليست لديك أي تذكيرات معينة.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">ستحصل على تذكيرات للتدوين ⁦%1$s⁩ في الأسبوع يوم ⁦%2$s⁩.</string>
     <string name="blogging_reminders_epilogue_not_set_title">تمت إزالة التذكيرات!</string>
     <string name="blogging_reminders_epilogue_title">كل شيء جاهز!</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">ستحصل على تذكيرات للتدوين ⁦%1$s⁩ في الأسبوع يوم ⁦%2$s⁩ في ⁦%3$s⁩.</string>
     <string name="blogging_reminders_update">تحديث</string>
     <string name="blogging_reminders_not_set">لم يتم تعيين أي شيء</string>
     <string name="blogging_reminders_n_a_week">%s في الأسبوع</string>
@@ -102,10 +158,13 @@ Language: ar
     <string name="gutenberg_native_mention">الإشارة</string>
     <string name="gutenberg_native_post_content_settings">إعدادات محتوى المقالة</string>
     <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
+    <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
+    <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_featured">مميز</string>
     <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
+    <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">ماهو النص البديل؟</string>
     <string name="gutenberg_native_transform_s_to">تحويل %s إلى</string>
@@ -192,6 +251,7 @@ Language: ar
     <string name="quick_start_list_view_site_title">زيارة موقعك</string>
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
+    <string name="quick_start_list_enable_sharing_title">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="quick_start_list_check_stats_title">تحقّق من احصائياتك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
     <string name="backup_download_status_failure_bullet1">يتعذر علينا العثور على الحالة حتى نخبرك بالمدة التي ستستغرقها عملية النسخة الاحتياطية القابلة للتنزيل لديك.</string>
@@ -682,6 +742,7 @@ Language: ar
     <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b&gt;⁦%1$s⁩&lt;/b&gt; لتعيين عنوان جديد</string>
+    <string name="quick_start_list_update_site_title_title">التحقُّق من عنوان موقعك</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options">خيارات المكوِّن %s</string>
     <string name="gutenberg_native_duplicate_block">تكرار المكوِّن</string>
@@ -696,7 +757,9 @@ Language: ar
     <string name="reader_title_tag_preview">موضوع</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
     <string name="gutenberg_native_open_link_in_a_browser">فتح الرابط في متصفح</string>
+    <string name="gutenberg_native_go_back">العودة للخلف</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
     <string name="gutenberg_native_gradient_type">نوع التدرج</string>
@@ -1297,9 +1360,11 @@ Language: ar
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
+    <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
     <string name="quick_start_dialog_need_help_message">سنوجهك عبر أساسيات بناء موقعك وتنميته.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
+    <string name="quick_start_dialog_publish_post_message">قمل بعمل مسودة مقالة وانشرها.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>
@@ -1489,6 +1554,7 @@ Language: ar
     <string name="quick_start_dialog_follow_sites_message_short_reader">انقر على %1$sالقاريء%2$s للمتابعة</string>
     <string name="quick_start_dialog_follow_sites_message">يمكنك العثور على المواقع التي تلهمك، ومتابعتها للحصول على التحديثات عندما تقوم بالنشر.</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">أنقر على %1$s بحث %2$s للبحث عن مواقع ذات مواضيع مماثلة</string>
+    <string name="quick_start_dialog_need_help_button_negative">لا شكرًا</string>
     <string name="quick_start_button_positive">انتقال</string>
     <string name="quick_start_button_negative_short">إلغاء</string>
     <string name="quick_start_button_negative">ليس الآن</string>
@@ -2590,10 +2656,10 @@ Language: ar
     <string name="site_picker_title">إختر الموقع</string>
     <string name="my_site_btn_switch_site">تبديل الموقع</string>
     <string name="my_site_btn_view_site">عرض الموقع</string>
-    <string name="my_site_btn_site_settings">الإعدادات</string>
     <string name="my_site_header_look_and_feel">الشكل والطابع</string>
     <string name="my_site_header_publish">نشر</string>
     <string name="my_site_btn_blog_posts">مقالات المدونة</string>
+    <string name="my_site_btn_site_settings">إعدادات الموقع</string>
     <string name="my_site_header_configuration">التكوين</string>
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
     <string name="deselect_all">إلغاء تحديد الكل</string>

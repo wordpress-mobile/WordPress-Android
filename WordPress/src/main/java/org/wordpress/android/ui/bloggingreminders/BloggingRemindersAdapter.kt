@@ -8,6 +8,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.NOTIFICATION_TIME
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TIP
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.CaptionViewHolder
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.Da
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.IllustrationViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.MediumEmphasisTextViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TimeViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TipViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TitleViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -44,6 +47,7 @@ class BloggingRemindersAdapter @Inject constructor(private val uiHelpers: UiHelp
             is CaptionViewHolder -> holder.onBind(item as Caption)
             is DayButtonsViewHolder -> holder.onBind(item as DayButtons, payloads.firstOrNull() as? DayButtonsPayload)
             is TipViewHolder -> holder.onBind(item as Tip)
+            is TimeViewHolder -> holder.onBind(item as TimeItem)
         }
     }
 
@@ -56,6 +60,7 @@ class BloggingRemindersAdapter @Inject constructor(private val uiHelpers: UiHelp
             CAPTION -> CaptionViewHolder(parent, uiHelpers)
             DAY_BUTTONS -> DayButtonsViewHolder(parent, uiHelpers)
             TIP -> TipViewHolder(parent, uiHelpers)
+            NOTIFICATION_TIME -> TimeViewHolder(parent, uiHelpers)
         }
     }
 

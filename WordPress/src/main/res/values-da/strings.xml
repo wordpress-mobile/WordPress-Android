@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-09 15:19:07+0000
+Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: da_DK
@@ -27,6 +27,7 @@ Language: da_DK
     <string name="comment_q_action_done_generic">Det er udført!</string>
     <string name="signout">Log ud</string>
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
+    <string name="reader_label_local_related_posts">Mere fra %s</string>
     <string name="invite_invalid_email">%s: ugyldig e-mail</string>
     <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>
@@ -41,6 +42,7 @@ Language: da_DK
     <string name="export_site_hint">Eksporter dit websted til en XML-fil</string>
     <string name="primary_domain">Primært domæne</string>
     <string name="site_settings_export_content_title">Eksporter indhold</string>
+    <string name="contact_support">Kontakt support</string>
     <string name="site_settings_advanced_header">Avanceret</string>
     <string name="alignment_center">Centreret</string>
     <string name="post_format_video">Video</string>
@@ -52,13 +54,26 @@ Language: da_DK
     <string name="post_format_quote">Citat</string>
     <string name="post_format_standard">Standard</string>
     <string name="post_format_audio">Lyd</string>
+    <string name="site_settings_account_header">Konto</string>
+    <string name="site_settings_general_header">Generelt</string>
+    <string name="newest_first">Nyeste først</string>
+    <string name="oldest_first">Ældste først</string>
+    <string name="unknown">Ukendt</string>
+    <string name="never">Aldrig</string>
+    <string name="theme_details">Detaljer</string>
+    <string name="active">Aktiv</string>
+    <string name="details">Detaljer</string>
     <string name="reader_discover_visit_blog">Besøg %s</string>
     <string name="reader_discover_attribution_blog">Oprindeligt udgivet i %s</string>
     <string name="reader_discover_attribution_author">Oprindeligt udgivet af %s</string>
     <string name="reader_discover_attribution_author_and_blog">Oprindeligt udgivet af %1$s den %2$s</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
+    <string name="reader_label_follow_count">%,d følgere</string>
     <string name="reader_short_like_count_none">Like</string>
+    <string name="reader_menu_tags">Rediger emner og websteder</string>
+    <string name="button_publish">Udgiv</string>
+    <string name="button_edit">Rediger</string>
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>
     <string name="ignore">Ignorer</string>
     <string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
@@ -71,13 +86,14 @@ Language: da_DK
     <string name="account_settings">Kontoindstillinger</string>
     <string name="me_btn_support">Hjælp &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
+    <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
+    <string name="site_picker_add_site">Tilføj nyt websted</string>
     <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
     <string name="my_site_btn_view_admin">Vis administration</string>
-    <string name="my_site_btn_site_settings">Indstillinger</string>
     <string name="my_site_header_publish">Udgiv</string>
     <string name="my_site_btn_blog_posts">Blogindlæg</string>
     <string name="my_site_header_look_and_feel">Udseende</string>
@@ -104,6 +120,7 @@ Language: da_DK
     <string name="reader_label_new_posts">Nye indlæg</string>
     <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
+    <string name="reader_empty_posts_in_blog">Dette websted er tomt</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_followers_a_minute_ago">et minut siden</string>
     <string name="stats_followers_a_day">En dag</string>
@@ -147,10 +164,21 @@ Language: da_DK
     <string name="comment_reply_to_user">Besvar %s</string>
     <string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
     <string name="mnu_comment_liked">Synes godt om</string>
+    <string name="reader_empty_posts_in_tag">Ingen indlæg med dette emne</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
+    <string name="reader_toast_blog_blocked">Indlæg fra dette websted, vil ikke længere blive vist</string>
+    <string name="reader_menu_block_blog">Blokere dette websted</string>
+    <string name="reader_toast_err_block_blog">Det er ikke muligt at blokere dette websted</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
+    <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
+    <string name="reader_hint_add_tag_or_url">Indtast en URL eller emne for at følge</string>
+    <string name="reader_page_followed_tags">Fulgte emner</string>
+    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette websted</string>
+    <string name="reader_toast_err_get_blog_info">Det er ikke muligt at vise dette websted</string>
+    <string name="reader_toast_err_follow_blog">Det er ikke muligt at følge dette websted</string>
+    <string name="reader_label_followed_blog">Webstedet følges</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
@@ -216,6 +244,10 @@ Language: da_DK
     <string name="remove_account">Fjern websted</string>
     <string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
+    <string name="delete_page">Slet side?</string>
+    <string name="delete_post">Slet indlæg?</string>
+    <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette emne</string>
+    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emne</string>
     <string name="share_link">Del link</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
@@ -241,6 +273,8 @@ Language: da_DK
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
+    <string name="reader_toast_err_tag_exists">Du følger allerede dette emne</string>
+    <string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt emne</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>
     <string name="share_action">Del</string>
@@ -291,6 +325,7 @@ Language: da_DK
     <string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
     <string name="settings">Indstillinger</string>
     <string name="quickpress_add_error">Genvejsnavn kan ikke være tomt</string>
+    <string name="pages_private">Privat</string>
     <string name="title">Titel</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
@@ -310,4 +345,5 @@ Language: da_DK
     <string name="reply">Svar</string>
     <string name="on">på</string>
     <string name="preview">Forhåndsvis</string>
+    <string name="publish_now">Udgiv nu</string>
 </resources>

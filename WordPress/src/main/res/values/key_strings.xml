@@ -13,7 +13,7 @@
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
-    <string name="pref_key_feature_config" translatable="false">wp_pref_feature_config</string>
+    <string name="pref_key_debug_settings" translatable="false">wp_pref_debug_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
@@ -50,6 +50,7 @@
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
     <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
+    <string name="pref_key_site_domains" translatable="false">wp_pref_site_domains</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>

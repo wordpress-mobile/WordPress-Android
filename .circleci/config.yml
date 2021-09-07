@@ -6,12 +6,6 @@ orbs:
   slack: circleci/slack@3.4.2
 
 parameters:
-  translation_review_build:
-    type: boolean
-    default: false
-  translation_review_lang_id:
-    type: string
-    default: all-lang
   generate_screenshots:
     type: boolean
     default: false
@@ -347,52 +341,11 @@ jobs:
       - run:
           name: Validate login strings
           command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane validate_submodules_strings pr_url:$CIRCLE_PULL_REQUEST
-  translation-review-build:
-    executor:
-      name: android/default
-      api-version: "29"
-    environment:
-      APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - bundle-install/bundle-install:
-          cache_key_prefix: translation-review-build-v2
-      - run:
-          name: Copy Secrets
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane run configure_apply
-      - update-gradle-memory
-      - android/restore-gradle-cache
-      - run:
-          name: Build APK
-          command: |
-            TODAY_DATE=$(date +'%Y%m%d')
-            VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
-            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-            echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
-
-            cp ~/.configure/wordpress-android/secrets/debug_a8c.keystore ~/.android/debug.keystore
-            bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
-      - android/save-gradle-cache
-      - run:
-          name: Prepare APK
-          command: |
-            mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/wordpressJalapeno/release/org.wordpress.android-wordpress-jalapeno-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
-      - run:
-          name: Upload APK
-          command: |
-            curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
-      - store_artifacts:
-          path: Artifacts
-          destination: Artifacts
 
 workflows:
   wordpress_android:
     unless:
       or:
-        - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
@@ -412,7 +365,6 @@ workflows:
   Optional Tests:
     unless:
       or:
-        - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     #Optionally run connected tests on PRs
@@ -427,10 +379,6 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
-  Translation Review Build:
-    when: << pipeline.parameters.translation_review_build >>
-    jobs:
-      - translation-review-build
   Screenshots:
     when: << pipeline.parameters.generate_screenshots >>
     jobs:

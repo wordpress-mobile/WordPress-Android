@@ -1,0 +1,4 @@
+18.1:
+- Ringkasan Mingguan: ringkasan aktivitas (tayangan, suka, komentar) di situs yang paling sering Anda gunakan, dikirimkan kepada Anda setiap Senin.
+- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
+- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.

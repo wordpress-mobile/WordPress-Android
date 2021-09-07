@@ -1,8 +1,30 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.3
+-----
+
+
+18.2
+-----
+* [*] When you like a post from the reader post details, your avatar is gracefully added to the list of people who liked that post through an animation [https://github.com/wordpress-mobile/WordPress-Android/pull/15248]
+* [*] Users can now share the WordPress app with their friends from the Me screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/15279]
+* [***] Block editor: Inserter: Add Inserter Block Search [https://github.com/WordPress/gutenberg/pull/33237]
+* [**] Block editor: Enable embed preview for a list of providers (for now only YouTube and Twitter) [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3900]
+
+18.1
+-----
+* [**] Added a time selection feature to Blogging Reminders: users can now choose at what time they will receive the reminders [#15128]
+* [**] Block editor: Embed block: Add "Resize for smaller devices" setting. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3753]
+* [***] Weekly Roundup: users will receive a weekly notification that presents a summary of the activity on their most used sites [#15195]
+
 18.0
 -----
 * [*] Need a little help after login? We're here for you. We've made a few changes to the login flow that will make it easier for you to start managing your site or create a new one.
+* [*] Fixed the error flow for fetching post formats that was causing a crash [https://github.com/wordpress-mobile/WordPress-Android/issues/15071]
+* [*] Unified Comments: as part of the comments experience unification effort filtered comment was replaced with a new version [https://github.com/wordpress-mobile/WordPress-Android/pull/15107/]
+* [*] Enables Support for Global Style Colors with Full Site Editing Themes [https://github.com/wordpress-mobile/WordPress-Android/pull/15002]
+* [***] Adjusted the image size of Theme Images for more optimal download speeds. [https://github.com/wordpress-mobile/WordPress-Android/pull/15060]
+* [*] Block editor: Fix UBE's inaccessible "more" toolbar item. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3771]
 
 17.9
 -----
