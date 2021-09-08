@@ -114,7 +114,6 @@ class StoryComposerViewModel @Inject constructor(
                 editPostRepository.getPost(),
                 site
         )
-        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -125,6 +124,14 @@ class StoryComposerViewModel @Inject constructor(
                 PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
                 post, site, true
         )
+    }
+
+    fun onStoryComposerFinishedAddingMedia() {
+        // generally speaking, adding media will happen at the beginning of loading the StoryComposer, so once
+        // it's done adding media the StoryComposer will be ready to render the newly loaded / created Story.
+        // Hence, it makes sense to start the editor session tracking at this point - note subsequent calls
+        // will have no effect, given PostEditorAnalyticsSession has a flag so it can only be started once.
+        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     fun writeToBundle(outState: Bundle) {
