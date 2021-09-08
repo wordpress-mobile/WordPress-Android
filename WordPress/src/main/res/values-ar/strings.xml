@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-09-06 12:41:27+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -31,11 +31,13 @@ Language: ar
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">اجعل محتواك مميزًا عن طريق إضافة صور وصورgif ومقاطع فيديو ووسائط مضمنة إلى صفحاتك.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">جربه عن طريق إضافة القليل من المكوِّنات إلى مقالتك أو صفحتك!</string>
     <string name="gutenberg_native_embed_media">تضمين وسائط</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">لكل مكوِّن الإعدادات الخاصة به. للعثور عليها، أنقر على مكوِّن. ستظهر إعداداته على شريط الأدوات في الجزء السفلي من الشاشة.</string>
     <string name="gutenberg_native_build_layouts">إنشاء تخطيطات</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">المكوِّنات عبارة عن أجزاء من المحتوى التي يمكنك إدراجها وإعادة ترتيبها وتصميمها من دون الحاجة إلى معرفة كيفية ترميزها. المكوِّنات عبارة عن طريقة سهلة وعصرية لك لإنشاء تخطيطات جميلة.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار. </string>
+    <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
     <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات باستخدام معاينة سريعة.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
@@ -46,13 +48,9 @@ Language: ar
     <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
     <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
     <string name="gutenberg_native_what_is_a_block">ماذا يُقصد بالمكوِّن؟</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">نعمل بجد على إضافة دعم المعاينات المضمَّنة. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
     <string name="gutenberg_native_unable_to_embed_media">يتعذر تضمين وسائط</string>
     <string name="gutenberg_native_try_another_search_term">تجربة مصطلح بحث آخر</string>
     <string name="gutenberg_native_no_blocks_found">لم يتم العثور على أي مكوِّنات</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">تضمين المعاينات ليس متاحًا بعد</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">يتوافر تضمين معاينات المكوِّن قريبًا</string>
     <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
     <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
@@ -171,8 +169,6 @@ Language: ar
     <string name="gutenberg_native_transform_block">تحويل المكوِّن…</string>
     <string name="gutenberg_native_failed_to_insert_media">فشل في إدراج وسائط.</string>
     <string name="like_title_plural">%d إعجابات</string>
-    <string name="like_faces_singular_text">مدوّن واحد معجب بهذا.</string>
-    <string name="like_faces_plural_text">%d مدوِّنون معجبون بهذا.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">فشل في إدراج ملف صوتي.</string>
     <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">تم تحويل %1$s إلى %2$s</string>
@@ -1352,7 +1348,6 @@ Language: ar
     <string name="site_settings_gutenberg_default_for_new_posts">استخدام مُحرر المكوّنات</string>
     <string name="menu_switch_to_gutenberg_editor">التبديل إلى مُحرر المكوّنات</string>
     <string name="exit">خروج</string>
-    <string name="quick_start_sites_type_subtitle">تم استكمال %1$d من %2$d</string>
     <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
     <string name="quick_start_sites">الخطوات التالية</string>
     <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
@@ -2439,11 +2434,11 @@ Language: ar
     <string name="days_quantity_other">%d من الأيام</string>
     <string name="pending_email_change_snackbar">انقر فوق رابط التحقق في البريد الإلكتروني المرسل إلى %1$s للتأكيد على عنوانك الجديد</string>
     <string name="primary_site">موقع أساسي</string>
-    <string name="web_address">عنوان موقع ويب</string>
+    <string name="web_address">عنوان الويب (URL)</string>
     <string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
     <string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
     <string name="post_settings_set_featured_image">تعيين صورة بارزة</string>
-    <string name="post_settings_featured_image">الصورة المميزة</string>
+    <string name="post_settings_featured_image">الصورة البارزة</string>
     <string name="email_address">عنوان البريد الإلكتروني</string>
     <string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
     <string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>

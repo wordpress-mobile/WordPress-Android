@@ -47,13 +47,9 @@ Language: ja_JP
     <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
     <string name="stats_disabled_title">統計情報をお探しですか ?</string>
     <string name="gutenberg_native_what_is_a_block">ブロックとは</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">埋め込みプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
     <string name="gutenberg_native_unable_to_embed_media">メディアを埋め込むことができません</string>
     <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
     <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">埋め込みプレビューはまだ使用できません</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
     <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
     <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
@@ -174,8 +170,6 @@ Language: ja_JP
     <string name="gutenberg_native_failed_to_insert_audio_file">音声ファイルの挿入に失敗しました。</string>
     <string name="like_faces_error_loading_message">「いいね」データの読み込みに失敗しました。%s。</string>
     <string name="like_title_plural">%d個の「いいね」</string>
-    <string name="like_faces_singular_text">1人のブロガーが「いいね」をつけました。</string>
-    <string name="like_faces_plural_text">%d人のブロガーが「いいね」をつけました。</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">画像の目的を説明してください。画像が純粋に装飾的なものの場合は、空のままにします。</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$sを%2$sに変換しました</string>
     <string name="suggestion">提案:</string>
@@ -1356,7 +1350,6 @@ Language: ja_JP
     <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
     <string name="quick_start_complete_tasks_header">完了 (%d)</string>
-    <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>

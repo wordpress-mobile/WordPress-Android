@@ -47,13 +47,9 @@ Language: it
     <string name="stats_disabled_subtitle">Attiva le statistiche del sito per vedere le informazioni dettagliate su traffico, Mi piace, commenti e abbonati.</string>
     <string name="stats_disabled_title">Cerchi le statistiche?</string>
     <string name="gutenberg_native_what_is_a_block">Che cos\'è un blocco?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
     <string name="gutenberg_native_unable_to_embed_media">Non è possibile incorporare il media</string>
     <string name="gutenberg_native_try_another_search_term">Prova un altro termine di ricerca</string>
     <string name="gutenberg_native_no_blocks_found">Nessun blocco trovato</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Anteprime incorporate non ancora disponibili</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Le anteprime dei blocchi incorporate saranno presto disponibili</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Tocca due volte per visualizzare l\'anteprima dell\'articolo.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>
@@ -175,8 +171,6 @@ Language: it
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrivi lo scopo dell\'immagine. Lascia vuoto, se l\'immagine è semplicemente decorativa. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s trasformato in %2$s</string>
     <string name="like_faces_error_loading_message">Errore durante il caricamento di dati simili. %s.</string>
-    <string name="like_faces_plural_text">Piace a %d blogger.</string>
-    <string name="like_faces_singular_text">Piace a un blogger.</string>
     <string name="like_title_plural">%d Mi piace</string>
     <string name="suggestion">Suggerimento:</string>
     <string name="like_title_singular">1 Mi piace</string>
@@ -1354,7 +1348,6 @@ Language: it
     <string name="site_settings_gutenberg_default_for_new_posts">Usa editor a blocchi</string>
     <string name="exit">esci</string>
     <string name="quick_start_complete_tasks_header">Completato (%d)</string>
-    <string name="quick_start_sites_type_subtitle">%1$d di %2$d completato</string>
     <string name="quick_start_sites">Passi successivi</string>
     <string name="quick_start_dialog_view_site_message">Goditi il tuo prodotto finito.</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>

@@ -613,7 +613,6 @@ Language: sr_RS
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
-    <string name="quick_start_sites_type_subtitle">%1$d од %2$d завршено</string>
     <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>

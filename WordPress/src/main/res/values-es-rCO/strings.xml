@@ -854,7 +854,6 @@ Language: es_CO
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita las nuevas entradas y páginas con el editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">salir</string>
-    <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_sites">Siguientes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">¡Disfruta tu producto terminado!</string>

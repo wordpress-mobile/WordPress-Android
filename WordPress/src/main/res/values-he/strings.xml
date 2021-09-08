@@ -46,13 +46,9 @@ Language: he_IL
     <string name="stats_disabled_subtitle">יש להפעיל את הנתונים הסטטיסטיים כדי להציג מידע מפורט אודות התעבורה, הלייקים, התגובות והמינויים שלך.</string>
     <string name="stats_disabled_title">רוצה להציג את הנתונים הסטטיסטיים?</string>
     <string name="gutenberg_native_what_is_a_block">מהו בלוק?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">אנחנו עובדים קשה כדי להוסיף תמיכה לתצוגות מקדימות מוטמעות. בינתיים, תוכל לראות את התוכן המוטמע בפוסט.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">אנחנו עובדים קשה כדי להוסיף תמיכה לתצוגות מקדימות מוטמעות. בינתיים, תוכל לראות את התוכן המוטמע בעמוד.</string>
     <string name="gutenberg_native_unable_to_embed_media">לא ניתן להטמיע מדיה</string>
     <string name="gutenberg_native_try_another_search_term">נסה מונח חיפוש אחר</string>
     <string name="gutenberg_native_no_blocks_found">לא נמצאו בלוקים</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">תצוגות מקדימות מוטמעות עדיין לא זמינות</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">תצוגות מקדימות של בלוק מוטמע יהיו אפשריות בקרוב</string>
     <string name="gutenberg_native_double_tap_to_preview_post">הקש פעמיים לתצוגה מקדימה של הפוסט.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">הקש פעמיים לתצוגה מקדימה של העמוד.</string>
     <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
@@ -174,8 +170,6 @@ Language: he_IL
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">לתאר את מטרת התמונה. יש להשאיר את השדה ריק אם התמונה נוספה לצורך דקורטיבי בלבד. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">⁦%1$s⁩ שונה אל ⁦%2$s⁩</string>
     <string name="like_faces_error_loading_message">שגיאה בטעינה של נתוני הלייקים. %s.</string>
-    <string name="like_faces_plural_text">%d בלוגרים סימנו לזה לייק.</string>
-    <string name="like_faces_singular_text">בלוגר אחד סימן לזה לייק.</string>
     <string name="like_title_plural">%d לייקים</string>
     <string name="like_title_singular">לייק אחד</string>
     <string name="suggestion">הצעה:</string>
@@ -1352,7 +1346,6 @@ Language: he_IL
     <string name="site_settings_gutenberg_default_for_new_posts_summary">לעריכת פוסטים ועמודים חדשים עם עורך הבלוקים</string>
     <string name="site_settings_gutenberg_default_for_new_posts">שימוש בעורך הבלוקים</string>
     <string name="exit">יציאה</string>
-    <string name="quick_start_sites_type_subtitle">%1$d מתוך %2$d הושלם</string>
     <string name="quick_start_sites">לשלב הבא</string>
     <string name="quick_start_complete_tasks_header">הושלם (%d)</string>
     <string name="quick_start_dialog_view_site_message">בהצלחה עם המוצר המוגמר!</string>

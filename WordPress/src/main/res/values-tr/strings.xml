@@ -48,13 +48,9 @@ Language: tr
     <string name="stats_disabled_subtitle">Trafiğiniz, beğenileriniz, yorumlarınız ve aboneleriniz hakkındaki ayrıntılı bilgileri görmek için site istatistiklerini etkinleştirin.</string>
     <string name="stats_disabled_title">İstatistikleri mi arıyorsunuz?</string>
     <string name="gutenberg_native_what_is_a_block">Blok nedir?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Gömülü ön izlemelere destek eklemek için çok çalışıyoruz. Bu arada, yazıdaki gömülü içeriği ön izleyebilirsiniz.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Gömülü içerik önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, sayfadaki gömülü içeriği önizleyebilirsiniz.</string>
     <string name="gutenberg_native_unable_to_embed_media">Ortam gömülemiyor</string>
     <string name="gutenberg_native_try_another_search_term">Başka bir arama terimi deneyin</string>
     <string name="gutenberg_native_no_blocks_found">Blok bulunamadı</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Gömülü içerik önizlemeleri henüz kullanılamıyor</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Gömülü blok önizlemeleri yakında geliyor</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Yazıyı önizlemek için iki kez dokunun.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Sayfayı önizlemek için iki kez dokunun.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrimiçi yerlerde gösterilir.</string>
@@ -176,8 +172,6 @@ Language: tr
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Görselin amacını açıklayın. Görsel tamamen dekoratif amaçlıysa boş bırakın. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s, %2$s olarak dönüştürüldü</string>
     <string name="like_faces_error_loading_message">Beğeni verileri yüklenirken hata oluştu. %s.</string>
-    <string name="like_faces_plural_text">%d blog yazarı bunu beğendi.</string>
-    <string name="like_faces_singular_text">1 blog yazarı bunu beğendi.</string>
     <string name="like_title_plural">%d Beğenilenler</string>
     <string name="like_title_singular">1 beğeni</string>
     <string name="suggestion">Öneri:</string>
@@ -1354,7 +1348,6 @@ Language: tr
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni gönderileri ve sayfaları düzenleyin</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok Düzenleyicisini Kullan</string>
     <string name="exit">çıkış</string>
-    <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
     <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
     <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
     <string name="quick_start_sites">Sonraki Adımlar</string>
