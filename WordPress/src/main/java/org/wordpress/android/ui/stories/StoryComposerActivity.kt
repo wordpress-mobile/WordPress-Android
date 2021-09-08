@@ -223,6 +223,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
                 setDefaultSelectionAndUpdateBackgroundSurfaceUI(filteredList)
+                viewModel.onStoryComposerFinishedAddingMedia()
             }
 
             // finally if any of the files was a gif, warn the user
