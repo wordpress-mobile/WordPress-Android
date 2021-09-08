@@ -63,7 +63,7 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:1.0.0"
 
     // WordPress libs
-    implementation('org.wordpress:utils:1.30.3-beta.1') {
+    implementation("org.wordpress:utils:$wordPressUtilsVersion") {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
