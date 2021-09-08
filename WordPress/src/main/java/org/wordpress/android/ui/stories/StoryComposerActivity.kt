@@ -223,7 +223,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
                 setDefaultSelectionAndUpdateBackgroundSurfaceUI(filteredList)
-                viewModel.onStoryComposerFinishedAddingMedia()
+                // generally speaking, adding media will happen at the beginning of loading the StoryComposer, so once
+                // it's done adding media the StoryComposer will be ready to render the newly loaded / created Story.
+                // Hence, it makes sense to start the editor session tracking at this point - note subsequent calls
+                // will have no effect, given PostEditorAnalyticsSession has a flag so it can only be started once.
+                viewModel.onStoryComposerStartAnalyticsSession()
             }
 
             // finally if any of the files was a gif, warn the user
@@ -378,6 +382,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 return
             }
             storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+        } else if (data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED)) {
+            // when coming from this entry point, we can start the analytics session
+            viewModel.onStoryComposerStartAnalyticsSession()
         }
     }
 

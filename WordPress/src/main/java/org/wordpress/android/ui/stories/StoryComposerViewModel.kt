@@ -126,11 +126,7 @@ class StoryComposerViewModel @Inject constructor(
         )
     }
 
-    fun onStoryComposerFinishedAddingMedia() {
-        // generally speaking, adding media will happen at the beginning of loading the StoryComposer, so once
-        // it's done adding media the StoryComposer will be ready to render the newly loaded / created Story.
-        // Hence, it makes sense to start the editor session tracking at this point - note subsequent calls
-        // will have no effect, given PostEditorAnalyticsSession has a flag so it can only be started once.
+    fun onStoryComposerStartAnalyticsSession() {
         this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
