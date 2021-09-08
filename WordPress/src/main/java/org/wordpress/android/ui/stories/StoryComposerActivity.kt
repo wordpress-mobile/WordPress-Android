@@ -292,6 +292,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
         data?.let {
             when (requestCode) {

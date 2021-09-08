@@ -130,6 +130,10 @@ class StoryComposerViewModel @Inject constructor(
         this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
+    fun onStoryComposerAnalyticsSessionStartTimeReset() {
+        this.postEditorAnalyticsSession?.resetStartTime()
+    }
+
     fun writeToBundle(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, site)
         outState.putInt(StoryComposerActivity.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
