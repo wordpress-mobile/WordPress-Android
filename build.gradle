@@ -32,7 +32,9 @@ buildscript {
     }
 }
 
-apply plugin: 'com.automattic.android.fetchstyle'
+plugins {
+    id "com.automattic.android.fetchstyle"
+}
 
 allprojects {
     apply plugin: 'checkstyle'

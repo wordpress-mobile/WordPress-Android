@@ -12,6 +12,25 @@ pluginManagement {
         id "io.sentry.android.gradle" version "2.0.0"
         id "com.automattic.android.publish-to-s3" version "0.6.1"
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
+        id "com.automattic.android.fetchstyle" version "1.1"
+    }
+    repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+                includeGroup "com.automattic.android.publish-to-s3"
+            }
+        }
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            // TODO: Remove this as soon as fetchstyle starts supporting Plugin Marker Artifacts
+            if (requested.id.id == "com.automattic.android.fetchstyle") {
+                useModule("com.automattic.android:fetchstyle:1.1")
+            }
+        }
     }
 }
 
