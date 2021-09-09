@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/site_domains_header"
+    android:text="@string/domains_site_domains"
+    android:textAllCaps="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_extra_large" />
+
+

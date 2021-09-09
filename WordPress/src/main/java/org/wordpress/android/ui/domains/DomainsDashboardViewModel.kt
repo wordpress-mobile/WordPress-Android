@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
+import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
+import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
+import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
+import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
+import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -22,6 +24,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
+@file:Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
@@ -29,35 +32,10 @@ class DomainsDashboardViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
+    private val _uiModel = MutableLiveData<List<DomainsListItem>>()
     val uiModel = _uiModel
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
-
-    // TODO: UI and logic is work in progress.  Will be revamped once design is ready
-    private fun buildPrimarySiteAddressUiItems(onClick: (ListItemAction) -> Unit): List<MySiteCardAndItem> {
-        val listItems = mutableListOf<MySiteCardAndItem>()
-        listItems += CategoryHeaderItem(UiStringRes(string.domains_primary_domain))
-        listItems += ListItem(
-                R.drawable.ic_domains_white_24dp,
-                primaryText = UiStringResWithParams(
-                        string.domains_primary_domain_address,
-                        listOf(UiStringText(siteUrl))
-                ),
-                onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
-        )
-
-        if (selectedSiteRepository.getSelectedSite()?.hasFreePlan == true) {
-            listItems += ListItem(
-                    R.drawable.ic_domains_white_24dp,
-                    primaryText = UiStringRes(string.domains_free_plan_get_your_domain_title),
-                    onClick = ListItemInteraction.create(this::domainRegistrationClick)
-            )
-        } else {
-            DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick))
-        }
-        return listItems
-    }
 
     private var isStarted: Boolean = false
     fun start() {
@@ -65,16 +43,106 @@ class DomainsDashboardViewModel @Inject constructor(
             return
         }
         isStarted = true
-        _uiModel.value = buildPrimarySiteAddressUiItems { onItemClick() }
+        _uiModel.value = buildSiteDomainsList()
     }
 
-    private fun onItemClick() {
-        // TODO
+    // TODO: Logic is work in progress to fixed in the next PRs
+    private fun buildSiteDomainsList(): List<DomainsListItem> {
+        return if (siteUrl.endsWith("wordpress.com") &&
+                selectedSiteRepository.getSelectedSite()?.hasFreePlan == true) {
+            getDomainItems()
+        } else if (siteUrl.endsWith("wordpress.com") &&
+                selectedSiteRepository.getSelectedSite()?.hasFreePlan == false) {
+            claimDomainItems()
+        } else {
+            manageDomainsItems()
+        }
     }
 
-    private fun domainRegistrationClick() {
+    private fun getDomainItems(): List<DomainsListItem> {
+        val listItems = mutableListOf<DomainsListItem>()
+
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+
+        listItems +=
+            PurchaseDomain(
+                    R.drawable.media_image_placeholder,
+                    UiStringRes(string.domains_free_plan_get_your_domain_title),
+                    UiStringResWithParams(
+                            string.domains_free_plan_get_your_domain_caption, listOf(UiStringText(siteUrl))),
+                    ListItemInteraction.create(this::onGetDomainClick)
+            )
+
+        return listItems
+    }
+
+    private fun claimDomainItems(): List<DomainsListItem> {
+        val listItems = mutableListOf<DomainsListItem>()
+
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+
+        listItems +=
+            PurchaseDomain(
+                    R.drawable.media_image_placeholder,
+                    UiStringRes(string.domains_paid_plan_claim_your_domain_title),
+                    UiStringRes(string.domains_paid_plan_claim_your_domain_caption),
+                    ListItemInteraction.create(this::onClaimDomainClick)
+            )
+
+        return listItems
+    }
+
+    // if site has a registered domain then show Site Domains, Add Domain and Manage Domains
+    private fun manageDomainsItems(): List<DomainsListItem> {
+        val listItems = mutableListOf<DomainsListItem>()
+
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+
+        listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
+
+        // TODO: Loop through and add all domains, replace hard coded date
+        listItems += SiteDomains(
+                UiStringText(siteUrl),
+                UiStringResWithParams(string.domains_site_domain_expires, listOf(UiStringText("03/09/2024"))))
+
+        listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
+
+        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
+
+        // if site has redirected domain then show this blurb
+        listItems += DomainBlurb(
+                UiStringResWithParams(string.domains_redirected_domains_blurb, listOf(UiStringText(siteUrl))),
+                UiStringRes(string.learn_more),
+                ListItemInteraction.create(this::onLearnMoreClick))
+
+        return listItems
+    }
+
+    private fun onGetDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
         _onNavigation.value = Event(OpenDomainRegistration(selectedSite))
+    }
+
+    private fun onClaimDomainClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+        _onNavigation.value = Event(OpenDomainRegistration(selectedSite))
+    }
+
+    private fun onAddDomainClick() {
+        onClaimDomainClick()
+    }
+
+    private fun onManageDomainClick() {
+        // TODO: Send to WP
+    }
+
+    private fun onLearnMoreClick() {
+        // TODO: Send to WP
+    }
+
+    private fun onMoreMenuClick() {
+        // TODO: next PR
     }
 }

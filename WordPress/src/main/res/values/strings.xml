@@ -2444,17 +2444,20 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_domain">PRIMARY SITE ADDRESS</string>
-    <string name="domains_primary_domain_address">%s</string>
-<!--    <string name="domains_primary_domain_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>-->
-<!--    <string name="domains_redirected_domains">REDIRECTED DOMAINS</string>-->
-<!--    <string name="domains_redirected_domains_blurb">Redirected domains are domains that you own and redirect to your site at %s. Anyone visiting your redirected domains will land on your site. Learn more.</string>-->
-<!--    <string name="domains_manage_domains">Manage Domains</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your domain</string>-->
+    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="domains_primary_site_address_chip">Primary site address</string>
+    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
+    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_add_a_domain">Add a domain</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s.</string>
+    <string name="domains_manage_domains">Manage Domains</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-<!--    <string name="domains_free_plan_get_your_domain_caption">Redirect a custom domain to your site at %s</string>-->
-<!--    <string name="domains_free_plan_redirect_learn_more">Learn more about domain redirects</string>-->
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to %s</string>
+    <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
