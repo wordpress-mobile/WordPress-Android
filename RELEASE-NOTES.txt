@@ -3,6 +3,7 @@
 18.3
 -----
 * [**] Media: Fix Atomic sites video not playing issue. (https://github.com/wordpress-mobile/WordPress-Android/pull/15285)
+* [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
 
 18.2
 -----
