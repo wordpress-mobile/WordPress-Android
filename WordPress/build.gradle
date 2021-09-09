@@ -1,15 +1,20 @@
 buildscript {
     repositories {
         google()
-        jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
-        classpath 'io.sentry:sentry-android-gradle-plugin:2.0.0'
     }
+}
+
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id "org.jetbrains.kotlin.plugin.allopen"
+    id "io.sentry.android.gradle"
+    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
 }
 
 repositories {
@@ -51,13 +56,6 @@ repositories {
     mavenCentral()
     maven { url "https://www.jitpack.io" }
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'kotlin-kapt'
 
 detekt {
     baseline = file("${project.rootDir}/config/detekt/baseline.xml")
@@ -279,7 +277,7 @@ dependencies {
     implementation "com.automattic.stories:mp4compose:$storiesVersion"
     testImplementation "com.automattic.stories:photoeditor:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
 
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'
@@ -591,4 +589,3 @@ if (project.hasProperty("debugStoreFile")) {
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.sentry.android.gradle'

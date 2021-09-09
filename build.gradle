@@ -1,5 +1,4 @@
 buildscript {
-    ext.kotlinVersion = '1.4.20'
     ext.serializationVersion = '1.0-M1-1.4.0-rc'
     ext.navComponentVersion = '2.3.5'
     ext.kotlin_coroutines_version = '1.3.9'
@@ -25,9 +24,9 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$gradle.ext.kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle.ext.kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$gradle.ext.kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
