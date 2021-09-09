@@ -29,6 +29,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.NothingToUpload
@@ -200,7 +201,7 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun getTitle(post: PostModel): UiString {
         return if (post.title.isNotBlank()) {
-            UiStringText(StringEscapeUtils.unescapeHtml4(post.title))
+            UiStringText(StringEscapeUtils.unescapeHtml4(post.title).let { HtmlUtils.stripHtml(it) })
         } else UiStringRes(R.string.untitled_in_parentheses)
     }
 

@@ -1,0 +1,4 @@
+18,1:
+- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
+- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
+- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.

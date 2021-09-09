@@ -1,4 +1,0 @@
-18.0:
-Hemos mejorado el flujo de acceso para hacerte más fácil crear y gestionar tus sitios.
-
-También hemos optimizado las imágenes de los temas para que se descarguen más rápido y tengan un menor impacto en tu plan de datos, hemos añadido colores de estilo globales a los temas de la edición completa de sitios y hemos liquidado un fallo que impedía que apareciera la barra de herramientas «Más» en el editor de bloques no compatibles.

@@ -276,7 +276,6 @@ Language: en_AU
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>

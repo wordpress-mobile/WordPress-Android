@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
@@ -17,11 +16,11 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -33,8 +32,7 @@ class MeViewModel
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -101,21 +99,16 @@ class MeViewModel
             withContext(bgDispatcher) {
                 delay(SHOW_LOADING_DELAY)
 
-                if (!networkUtilsWrapper.isNetworkAvailable()) {
-                    _recommendUiState.postValue(
-                            ApiFetchedResult(contextProvider.getContext().getString(R.string.no_network_message))
-                    )
-                } else {
-                    val fetchedResult = recommendApiCallsProvider.getRecommendTemplate(
-                            if (BuildConfig.IS_JETPACK_APP) {
-                                RecommendAppName.Jetpack.appName
-                            } else {
-                                RecommendAppName.WordPress.appName
-                            }
-                    ).toFetchedResult()
+                val fetchedResult = recommendApiCallsProvider.getRecommendTemplate(
+                        if (BuildConfig.IS_JETPACK_APP) {
+                            RecommendAppName.Jetpack.appName
+                        } else {
+                            RecommendAppName.WordPress.appName
+                        },
+                        ME
+                ).toFetchedResult()
 
-                    _recommendUiState.postValue(fetchedResult)
-                }
+                _recommendUiState.postValue(fetchedResult)
             }
         }
     }
@@ -138,7 +131,9 @@ class MeViewModel
                 RecommendAppUiState(
                         link = this.link,
                         message = this.message
-                )
+                ).also {
+                    analyticsUtilsWrapper.trackRecommendAppEngaged(ME)
+                }
             }
             FetchingApi -> RecommendAppUiState(showLoading = true)
         })

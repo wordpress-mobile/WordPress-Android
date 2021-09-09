@@ -1,4 +1,0 @@
-18.0:
-Wir haben den Anmeldevorgang verbessert, damit du deine Websites leichter erstellen und verwalten kannst.
-
-Wir haben auch die Theme-Bilder für schnelleres Herunterladen und weniger Auswirkungen auf deinen Datentarif optimiert, Farben für globale Stile zu den Full Site Editing-Themes hinzugefügt und einen Fehler behoben, der dazu geführt hat, dass die Leiste „Mehr“ nicht im nicht unterstützten Block-Editor angezeigt wird.

@@ -1,3 +1,1 @@
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+We have made a couple of handy tweaks to the Block editor: The Embed block now gives you a sneak preview when you add something from YouTube or Twitter (more providers to come); and when you go to insert a block and nothing is found, there is now a no results view.

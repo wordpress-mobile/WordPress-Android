@@ -1,4 +1,0 @@
-18.0 :
-Nous avons amélioré le flux de connexion pour vous permettre de créer et de gérer plus facilement vos sites.
-
-Nous avons également optimisé les images des thèmes pour des téléchargements plus rapides et un impact réduit sur votre forfait de données, ajouté des couleurs de style global aux thèmes de modification globale de site et résolu un bogue qui empêchait l’affichage de la barre d’outils « Plus » dans l’éditeur de blocs non pris en charge.

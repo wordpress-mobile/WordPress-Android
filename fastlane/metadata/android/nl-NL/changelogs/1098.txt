@@ -1,4 +1,0 @@
-18.0:
-We hebben de login flow verbeterd om het gemakkelijker voor je te maken je sites te maken en te beheren.
-
-We hebben ook thema-afbeeldingen geoptimaliseerd voor snellere downloads en een lichter effect op je gegevensabonnement, globale stijlkleuren toegevoegd aan full site editing thema's, en een bug verholpen die verhinderde dat de 'Meer' toolbar verscheen in de niet ondersteunde blok-editor.
