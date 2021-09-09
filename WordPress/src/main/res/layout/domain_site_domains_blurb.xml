@@ -1,35 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/primary_site_redirect_blurb"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:text="@string/domains_redirected_domains_blurb" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/learn_more"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/learn_more"
-        android:textAllCaps="false"
-        android:textAlignment="textStart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/primary_site_redirect_blurb" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/primary_site_redirect_blurb"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_medium"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_extra_large"
-        android:text="@string/domains_redirected_domains_blurb"
-        app:layout_constraintEnd_toStartOf="@+id/learn_more"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 

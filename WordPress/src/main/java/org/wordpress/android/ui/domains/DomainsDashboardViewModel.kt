@@ -15,6 +15,7 @@ import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -24,10 +25,11 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-@file:Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -68,8 +70,8 @@ class DomainsDashboardViewModel @Inject constructor(
             PurchaseDomain(
                     R.drawable.media_image_placeholder,
                     UiStringRes(string.domains_free_plan_get_your_domain_title),
-                    UiStringResWithParams(
-                            string.domains_free_plan_get_your_domain_caption, listOf(UiStringText(siteUrl))),
+                    UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            string.domains_free_plan_get_your_domain_caption, siteUrl)),
                     ListItemInteraction.create(this::onGetDomainClick)
             )
 
@@ -111,9 +113,8 @@ class DomainsDashboardViewModel @Inject constructor(
 
         // if site has redirected domain then show this blurb
         listItems += DomainBlurb(
-                UiStringResWithParams(string.domains_redirected_domains_blurb, listOf(UiStringText(siteUrl))),
-                UiStringRes(string.learn_more),
-                ListItemInteraction.create(this::onLearnMoreClick))
+                UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                        string.domains_redirected_domains_blurb, siteUrl)))
 
         return listItems
     }
@@ -135,10 +136,6 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onManageDomainClick() {
-        // TODO: Send to WP
-    }
-
-    private fun onLearnMoreClick() {
         // TODO: Send to WP
     }
 

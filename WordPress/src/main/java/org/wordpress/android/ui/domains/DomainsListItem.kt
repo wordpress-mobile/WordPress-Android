@@ -39,9 +39,5 @@ sealed class DomainsListItem(val type: Type) {
         val onClick: ListItemInteraction
     ) : DomainsListItem(PURCHASE_DOMAIN)
 
-    data class DomainBlurb(
-        val blurb: UiString,
-        val learnMore: UiString,
-        val onClick: ListItemInteraction
-    ) : DomainsListItem(DOMAIN_BLURB)
+    data class DomainBlurb(val blurb: UiString) : DomainsListItem(DOMAIN_BLURB)
 }

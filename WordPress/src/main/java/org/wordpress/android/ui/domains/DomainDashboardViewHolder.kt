@@ -18,6 +18,7 @@ import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.viewBinding
 
 sealed class DomainDashboardViewHolder<T : ViewBinding>(
@@ -102,8 +103,10 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     ) {
         fun onBind(item: DomainBlurb) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteRedirectBlurb, item.blurb)
-            uiHelpers.setTextOrHide(learnMore, item.learnMore)
-            learnMore.setOnClickListener { item.onClick.click() }
+
+            // this is necessary in order for anchor tags in the comment text to be clickable
+            primarySiteRedirectBlurb.linksClickable = true
+            primarySiteRedirectBlurb.movementMethod = WPLinkMovementMethod.getInstance()
         }
     }
 }
