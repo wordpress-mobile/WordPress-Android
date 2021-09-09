@@ -10,6 +10,7 @@ pluginManagement {
         id "org.jetbrains.kotlin.kapt" version gradle.ext.kotlinVersion
         id "org.jetbrains.kotlin.plugin.serialization" version gradle.ext.kotlinVersion
         id "org.jetbrains.kotlin.plugin.parcelize" version gradle.ext.kotlinVersion
+        id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
         id "io.sentry.android.gradle" version "2.0.0"
