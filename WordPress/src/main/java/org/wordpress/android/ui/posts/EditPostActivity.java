@@ -3320,7 +3320,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Boolean supportsGalleryWithImageBlocks = null;
         if (editorTheme != null) {
             // Note that if the editor theme has not been initialized (usually on the first app run) the
-            // `unstableGalleryWithImageBlocks` analytics property will not be reported
+            // `unstable_gallery_with_image_blocks` analytics property will not be reported
             supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
         }
         mPostEditorAnalyticsSession
