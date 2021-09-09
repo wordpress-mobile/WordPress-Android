@@ -48,13 +48,9 @@ Language: gl_ES
     <string name="stats_disabled_subtitle">Activa as estatísticas do sitio para ver información detallada sobre o tráfico, os «Gústame», os comentarios e os subscritores.</string>
     <string name="stats_disabled_title">Buscas as estatísticas?</string>
     <string name="gutenberg_native_what_is_a_block">Que é un  bloque?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Estamos traballando duro para engadir compatibilidade para vistas previas incrustadas. Mentres tanto, podes previsualizar o contido incrustado na entrada.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Estamos traballando duro para engadir compatibilidade para vistas previas incrustadas. Mentres tanto, podes previsualizar o contido incrustado na páxina.</string>
     <string name="gutenberg_native_unable_to_embed_media">Non se puido incrustar o medio</string>
     <string name="gutenberg_native_try_another_search_term">Proba outro termo de busca</string>
     <string name="gutenberg_native_no_blocks_found">Non se encontraron bloques</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Todavía non están dispoñibles as vistas previas incrustadas</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Pronto chegarán as vistas previas dos bloques incrustados</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Toca dúas veces para previsualizar a entrada.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Toca dúas veces para previsualizar a páxina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Mostrado na pestana do navegador do teu visitante e noutros sitios en liña.</string>
@@ -176,8 +172,6 @@ Language: gl_ES
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe o propósito da imaxe. Déixao baleiro se a imaxe é puramente decorativa.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformado a %2$s</string>
     <string name="like_faces_error_loading_message">Erro ao cargar os datos de gústame. %s</string>
-    <string name="like_faces_plural_text">A %d blogueiros gústalles isto.</string>
-    <string name="like_faces_singular_text">A 1 blogueiro gústalle isto.</string>
     <string name="like_title_plural">%d gústame</string>
     <string name="like_title_singular">1 gústame</string>
     <string name="suggestion">Suxerencia:</string>
@@ -1354,7 +1348,6 @@ Language: gl_ES
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita as novas entradas e páxinas co editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">saír</string>
-    <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
     <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
     <string name="quick_start_sites">Seguintes pasos</string>

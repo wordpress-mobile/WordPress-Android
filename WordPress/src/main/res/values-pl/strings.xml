@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-03 07:01:19+0000
+Translation-Revision-Date: 2021-09-08 12:04:15+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -83,8 +83,6 @@ Language: pl
     <string name="login_no_jetpack_sites">Nie odnaleziono witryn Jetpack</string>
     <string name="gutenberg_native_failed_to_insert_media">Nie udało się osadzić pliku mediów.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Nie udało się osadzić pliku dźwiękowego.</string>
-    <string name="like_faces_plural_text">%d blogerów lubi to.</string>
-    <string name="like_faces_singular_text">1 bloger lubi to.</string>
     <string name="like_title_plural">%d polubień</string>
     <string name="like_title_singular">1 polubienie</string>
     <string name="suggestion">Sugestia:</string>
@@ -169,8 +167,8 @@ Language: pl
     <string name="restore_another_process_running">Trwa równoległe odzyskiwanie.</string>
     <string name="restore_complete_failed_title">Przywracanie nie powiodło się</string>
     <string name="restore_complete_icon_content_description">Ikona przywracania</string>
-    <string name="restore_complete_visit_site_action_button">Przejdź do witryny</string>
     <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_complete_visit_site_action_button">Odwiedź witrynę</string>
     <string name="restore_progress_header">Trwa przywracanie witryny</string>
     <string name="restore_progress_icon_content_description">Przywróć ikonę witryny</string>
     <string name="restore_warning_header">Ostrzeżenie</string>
@@ -265,13 +263,13 @@ Language: pl
     <string name="dialog_confirm_copy_local_title">Konflikt synchronizacji wpisu</string>
     <string name="button_copy">Powiel</string>
     <string name="toast_edit_story_update_in_progress_title">Relacja jest zapisywana, proszę czekać…</string>
-    <string name="gutenberg_native_file_name">Nazwa pliku:</string>
     <string name="gutenberg_native_file_block_settings">Ustawienia bloku pliku</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Nie można było zapisać plików.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_edit_file">Edytuj plik</string>
     <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
     <string name="gutenberg_native_choose_a_file">WYBIERZ PLIK</string>
+    <string name="gutenberg_native_file_name">Nazwa pliku</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
     <string name="my_site_btn_jetpack_settings">Ustawienia Jetpacka</string>
     <string name="my_site_header_jetpack">Jetpack</string>
@@ -642,13 +640,13 @@ Language: pl
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
     <string name="weekday_saturday">Sobota</string>
     <string name="weekday_friday">Piątek</string>
-    <string name="weekday_thursday">Czwartek</string>
     <string name="weekday_wednesday">Środa</string>
-    <string name="weekday_tuesday">Wtorek</string>
     <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
     <string name="photo_picker_gif">Wybierz z Tenor</string>
     <string name="weekday_monday">poniedziałek</string>
+    <string name="weekday_tuesday">wtorek</string>
+    <string name="weekday_thursday">czwartek</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
@@ -1122,7 +1120,6 @@ Language: pl
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edytuj nowe wpisy i strony przy pomocy edytora blokowego</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
     <string name="exit">wyjdź</string>
-    <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
     <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
@@ -2035,7 +2032,7 @@ Language: pl
     <string name="pending_draft_one_week_1">Twój szkic \'%1$s\' czeka na ciebie -  upewnij się że go opublikujesz! </string>
     <string name="pending_draft_one_day_2">Czy wiesz że \'%1$s\' jest wciąż szkicem? Opublikuj ten wpis! </string>
     <string name="pending_draft_one_day_1">Stworzyłeś wczoraj szkic  \'%1$s\'. Nie zapomnij go opublikować! </string>
-    <string name="reader_label_visit">Przejdź do witryny</string>
+    <string name="reader_label_visit">Odwiedź witrynę</string>
     <string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com lub skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com.</string>
@@ -2299,9 +2296,9 @@ Language: pl
     <string name="site_settings_allowlist_all_summary">Komentarze od wszystkich użytkowników</string>
     <string name="site_settings_threading_summary">%d poziomy/ów</string>
     <string name="site_settings_privacy_private_summary">Prywatne</string>
-    <string name="site_settings_privacy_hidden_summary">Ukryta</string>
+    <string name="site_settings_privacy_hidden_summary">Ukryte</string>
     <string name="site_settings_delete_site_title">Usuń witrynę</string>
-    <string name="site_settings_privacy_public_summary">Publiczna</string>
+    <string name="site_settings_privacy_public_summary">Publiczne</string>
     <string name="site_settings_moderation_hold_title">Wstrzymaj do moderacji</string>
     <string name="site_settings_multiple_links_title">Odnośniki w komentarzach</string>
     <string name="site_settings_allowlist_title">Automatyczne zatwierdzaj</string>
@@ -2401,8 +2398,8 @@ Language: pl
     <string name="button_preview">Podgląd</string>
     <string name="post_trashed">Wpis został przeniesiony do kosza</string>
     <string name="button_stats">Statystyki</string>
-    <string name="button_trash">Kosz</string>
     <string name="button_view">Zobacz</string>
+    <string name="button_trash">Do kosza</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień dostępu do tej witryny</string>
     <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>
@@ -2482,7 +2479,6 @@ Language: pl
     <string name="more">Więcej</string>
     <string name="reader_title_photo_viewer">%1$d z %2$d</string>
     <string name="error_publish_empty_post">Nie można opublikować pustego wpisu</string>
-    <string name="reader_label_comments_closed">Możliwość komentowania jest wyłączona</string>
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
     <string name="older_last_week">Starsze niż tydzień</string>
     <string name="older_two_days">Starsze niż 2 dni</string>
@@ -2493,11 +2489,12 @@ Language: pl
     <string name="comment">Komentarz</string>
     <string name="comment_trashed">Komentarz przeniesiono do kosza</string>
     <string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
-    <string name="comment_reply_to_user">Odpowiedz na komentarz %s</string>
     <string name="mnu_comment_liked">Polubiony</string>
     <string name="signing_out">Wylogowywanie…</string>
     <string name="reader_empty_posts_in_tag">Brak wpisów z tym tematem</string>
     <string name="reader_label_like">Lubię</string>
+    <string name="comment_reply_to_user">Odpowiedz użytkownikowi %s</string>
+    <string name="reader_label_comments_closed">Możliwość komentowania została wyłączona</string>
     <string name="reader_toast_err_generic">Nie można wykonać tego działania</string>
     <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
     <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>

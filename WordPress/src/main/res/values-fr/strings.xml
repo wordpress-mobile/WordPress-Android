@@ -47,13 +47,9 @@ Language: fr
     <string name="stats_disabled_subtitle">Activez les statistiques du site pour afficher des informations détaillées sur votre trafic, vos préférences, vos commentaires et vos abonnés.</string>
     <string name="stats_disabled_title">Vous cherchez les statistiques ?</string>
     <string name="gutenberg_native_what_is_a_block">Qu\'est-ce qu\'un bloc ?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Nous travaillons d’arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur l\'article de blog.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Nous travaillons d\'arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur la page.</string>
     <string name="gutenberg_native_unable_to_embed_media">Impossible d\'embarquer les médias</string>
     <string name="gutenberg_native_try_another_search_term">Essayez un autre terme de recherche</string>
     <string name="gutenberg_native_no_blocks_found">Aucun bloc trouvé</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Aperçus embarqués pas encore disponibles</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Les aperçus de bloc embarqués seront prochainement disponibles</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Appuyez deux fois pour prévisualiser l\'article de blog.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Appuyez deux fois pour prévisualiser la page.</string>
     <string name="quick_start_list_upload_icon_subtitle">Contenu affiché dans l’onglet du navigateur de vos visiteurs et à d’autres endroits en ligne.</string>
@@ -175,8 +171,6 @@ Language: fr
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Décrivez le rôle de cette image. Ne rien remplir si l’image est purement décorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a été transformé en %2$s</string>
     <string name="like_faces_error_loading_message">Erreur lors du chargement des données. %s.</string>
-    <string name="like_faces_plural_text">%d blogueurs aiment ceci.</string>
-    <string name="like_faces_singular_text">Un blogueur aime ceci.</string>
     <string name="like_title_plural">%d mentions J\'aime</string>
     <string name="like_title_singular">1 mention J\'aime</string>
     <string name="suggestion">Suggestion :</string>
@@ -1357,7 +1351,6 @@ Language: fr
     <string name="quick_start_dialog_view_site_message">Profitez de votre produit fini !</string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Appuyez sur %1$s Plan %2$s pour voir votre plan actuel et les autres plans disponibles</string>
-    <string name="quick_start_sites_type_subtitle">Fait : %1$d of %2$d</string>
     <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_sites_type_grow">Élargir votre public</string>
     <string name="quick_start_sites_type_customize">Personnaliser votre site</string>

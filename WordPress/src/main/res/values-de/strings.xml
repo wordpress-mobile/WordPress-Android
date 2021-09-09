@@ -47,13 +47,9 @@ Language: de
     <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
     <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
     <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Eingebettete Vorschau noch nicht verfügbar</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Eingebettete Block-Vorschau demnächst verfügbar</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
     <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
@@ -175,8 +171,6 @@ Language: de
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschreibe den Zweck des Bildes. Lass dieses Feld frei, falls das Bild rein dekorativ ist. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s umgewandelt in %2$s</string>
     <string name="like_faces_error_loading_message">Fehler beim Laden der „Like“-Daten. %s.</string>
-    <string name="like_faces_plural_text">%d Bloggern gefällt das.</string>
-    <string name="like_faces_singular_text">1 Blogger gefällt das.</string>
     <string name="like_title_plural">%d Gefällt mir</string>
     <string name="like_title_singular">1 Like</string>
     <string name="suggestion">Vorschlag:</string>
@@ -1354,7 +1348,6 @@ Language: de
     <string name="plans_loading_error_no_plans_title">Tarife können nicht geladen werden</string>
     <string name="exit">beenden</string>
     <string name="quick_start_sites">Nächste Schritte</string>
-    <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_view_site_message">Genieße dein fertiges Produkt!</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>

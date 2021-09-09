@@ -814,7 +814,6 @@ Language: ku_TR
     <string name="quick_start_sites">Gavên Pêşve</string>
     <string name="quick_start_complete_tasks_header"> (%d) Qediya</string>
     <string name="quick_start_dialog_view_site_message">Kêfa xwe bi berhema qediyayî bîne!</string>
-    <string name="quick_start_sites_type_subtitle">%1$d / %2$d qediya</string>
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te ew ê îkona te di gerokên xwe de bibînin. Ji bo xuyangeke profesyonel û balkêş îkoneke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo tu pakêta xwe ya heyî û pakêtên din ên berdest bibînî li %1$sPakêt%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_check_stats_message_short">Ji bo tu performansa malpera xwe bibînî li %1$sAmar%2$s\'an bitepîne.</string>

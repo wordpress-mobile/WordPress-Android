@@ -47,13 +47,9 @@ Language: ko_KR
     <string name="stats_disabled_subtitle">트래픽, 좋아요, 댓글, 구독자에 대한 자세한 내용을 참조하려면 사이트 통계를 활성화하세요.</string>
     <string name="stats_disabled_title">통계를 찾으시나요?</string>
     <string name="gutenberg_native_what_is_a_block">블록이란 무엇인가요?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">임베드 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 글에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">임베드 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 페이지에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
     <string name="gutenberg_native_unable_to_embed_media">미디어를 임베드할 수 없음</string>
     <string name="gutenberg_native_try_another_search_term">다른 검색어 시도</string>
     <string name="gutenberg_native_no_blocks_found">블록을 찾을 수 없음</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">임베드 미리보기는 아직 사용할 수 없음</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">임베드 블록 미리보기는 곧 공개 예정</string>
     <string name="gutenberg_native_double_tap_to_preview_post">글을 미리 보려면 두 번 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">페이지를 미리 보려면 두 번 누르세요.</string>
     <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>
@@ -175,8 +171,6 @@ Language: ko_KR
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">이미지의 용도를 설명합니다. 이미지가 장식용이면 비워 둡니다. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%2$s(으)로 변형된 %1$s</string>
     <string name="like_faces_error_loading_message">좋아요 데이터 로드 중 오류가 발생했습니다. %s.</string>
-    <string name="like_faces_plural_text">%d명의 블로거가 좋아합니다.</string>
-    <string name="like_faces_singular_text">1명의 블로거가 좋아합니다.</string>
     <string name="like_title_plural">%d 좋아요</string>
     <string name="like_title_singular">좋아요 1개</string>
     <string name="suggestion">제안:</string>
@@ -1353,7 +1347,6 @@ Language: ko_KR
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
     <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
     <string name="exit">종료</string>
-    <string name="quick_start_sites_type_subtitle">%1$d/%2$d 완료</string>
     <string name="quick_start_sites_type_grow">방문자 늘리기</string>
     <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
     <string name="quick_start_sites">다음 단계</string>

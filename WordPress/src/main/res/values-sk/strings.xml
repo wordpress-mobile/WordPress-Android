@@ -39,7 +39,6 @@ Language: sk
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
     <string name="quick_start_complete_tasks_header">Kompletné (%d)</string>
-    <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
