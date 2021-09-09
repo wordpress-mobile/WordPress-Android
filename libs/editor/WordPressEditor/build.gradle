@@ -1,6 +1,10 @@
-buildscript {
-    ext.aztecVersion = 'v1.3.45'
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
 }
+
+ext.aztecVersion = 'v1.3.45'
 
 repositories {
     maven {
@@ -27,10 +31,6 @@ repositories {
     maven { url "https://a8c-libs.s3.amazonaws.com/android" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdkVersion 29
