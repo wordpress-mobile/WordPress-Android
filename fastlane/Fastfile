@@ -970,23 +970,23 @@ REPOSITORY_NAME="WordPress-Android"
 
     UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
 
-    require 'tempfile'
-    Tempfile.create('unified-release-notes') do |tmp_file|
-      app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
-      unified_notes = apps.map do |app|
-        notes = File.read(release_notes_path(app))
-        "\#\# #{app_titles[app]}\n\n#{notes}"
-      end.join("\n\n")
-      tmp_file.write(unified_notes)
+    app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
+    tmp_file_file = File.absolute_path('unified-release-notes.txt')
+    unified_notes = apps.map do |app|
+      notes = File.read(release_notes_path(app))
+      "\#\# #{app_titles[app]}\n\n#{notes}"
+    end.join("\n\n")
+    File.write(tmp_file_file, unified_notes)
 
-      create_release(
-        repository: GHHELPER_REPO,
-        version: release_title,
-        release_notes_file_path: tmp_file.path,
-        prerelease: set_prerelease_flag,
-        release_assets: release_assets.join(',')
-      )
-    end
+    create_release(
+      repository: GHHELPER_REPO,
+      version: release_title,
+      release_notes_file_path: tmp_file_file,
+      prerelease: set_prerelease_flag,
+      release_assets: release_assets.join(',')
+    )
+
+    FileUtils.rm(tmp_file_file)
   end
 
 #####################################################################################
