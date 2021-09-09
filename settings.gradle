@@ -2,6 +2,7 @@ pluginManagement {
     gradle.ext.kotlinVersion = '1.4.20'
     gradle.ext.agpVersion = '4.2.2'
     gradle.ext.detektVersion = '1.15.0'
+    gradle.ext.navComponentVersion = '2.3.5'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -15,6 +16,7 @@ pluginManagement {
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
         id "com.automattic.android.fetchstyle" version "1.1"
+        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navComponentVersion
     }
     repositories {
         maven {
@@ -24,12 +26,16 @@ pluginManagement {
             }
         }
         gradlePluginPortal()
+        google()
     }
     resolutionStrategy {
         eachPlugin {
             // TODO: Remove this as soon as fetchstyle starts supporting Plugin Marker Artifacts
             if (requested.id.id == "com.automattic.android.fetchstyle") {
                 useModule("com.automattic.android:fetchstyle:1.1")
+            }
+            if (requested.id.id == "androidx.navigation.safeargs.kotlin") {
+                useModule("androidx.navigation:navigation-safe-args-gradle-plugin:$gradle.ext.navComponentVersion")
             }
         }
     }
