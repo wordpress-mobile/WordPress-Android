@@ -38,6 +38,9 @@ pluginManagement {
             if (requested.id.id == "androidx.navigation.safeargs.kotlin") {
                 useModule("androidx.navigation:navigation-safe-args-gradle-plugin:$gradle.ext.navComponentVersion")
             }
+            if (requested.id.id == "com.google.gms.google-services") {
+                useModule("com.google.gms:google-services:4.3.8")
+            }
         }
     }
 }

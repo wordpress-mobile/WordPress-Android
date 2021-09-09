@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        google()
-    }
-    dependencies {
-        classpath 'com.google.gms:google-services:4.3.8'
-    }
-}
-
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
@@ -16,6 +7,7 @@ plugins {
     id "io.sentry.android.gradle"
     id "io.gitlab.arturbosch.detekt"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 repositories {
@@ -587,6 +579,3 @@ if (project.hasProperty("debugStoreFile")) {
         }
     }
 }
-
-// Keep this at the bottom (https://stackoverflow.com/a/37565535)
-apply plugin: 'com.google.gms.google-services'
