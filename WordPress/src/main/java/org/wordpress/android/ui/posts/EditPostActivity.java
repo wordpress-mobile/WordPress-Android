@@ -2325,6 +2325,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     /**
+     * Checks if the theme supports the new gallery block with image blocks.
+     * Note that if the editor theme has not been initialized (usually on the first app run)
+     * the value returned is null and the `unstable_gallery_with_image_blocks` analytics property will not be reported.
+     * @return true if the the supports the new gallery block with image blocks or null if the theme is not initialized.
+     */
+    private Boolean themeSupportsGalleryWithImageBlocks() {
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        if (editorTheme == null) {
+            return null;
+        }
+        return editorTheme.getThemeSupport().getGalleryWithImageBlocks();
+    }
+
+    /**
      * Temporary method for the Editor Onboarding project to control the percentage
      * of users able to use this new editor onboarding tooltip feature. This will eventually
      * be removed when the functionality is opened to all users.
@@ -3301,9 +3315,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-            Boolean supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
-            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
+            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding(), themeSupportsGalleryWithImageBlocks());
         }
     }
 
@@ -3316,15 +3328,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Boolean supportsGalleryWithImageBlocks = null;
-        if (editorTheme != null) {
-            // Note that if the editor theme has not been initialized (usually on the first app run) the
-            // `unstable_gallery_with_image_blocks` analytics property will not be reported
-            supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
-        }
         mPostEditorAnalyticsSession
-                .start(unsupportedBlocksList, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
+                .start(unsupportedBlocksList, canViewEditorOnboarding(), themeSupportsGalleryWithImageBlocks());
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
