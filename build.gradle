@@ -6,7 +6,6 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = 'develop-f98c841225fbc61031f32426aaef4e347b34f717'
     ext.wordPressLoginVersion = '0.0.4'
-    ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'v1.61.0'
     ext.storiesVersion = '713-32cb2d292f6bb0e16669dd3602a0179163c16d20'
 
@@ -28,18 +27,16 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle.ext.kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$gradle.ext.kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
 }
 
 plugins {
     id "com.automattic.android.fetchstyle"
+    id "checkstyle"
+    id "io.gitlab.arturbosch.detekt"
 }
 
 allprojects {
-    apply plugin: 'checkstyle'
-    apply plugin: 'io.gitlab.arturbosch.detekt'
-
     repositories {
         google()
         jcenter()
@@ -57,11 +54,11 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 
     detekt {
+        toolVersion = gradle.ext.detektVersion
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
         buildUponDefaultConfig = false

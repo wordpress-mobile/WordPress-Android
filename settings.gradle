@@ -1,6 +1,7 @@
 pluginManagement {
     gradle.ext.kotlinVersion = '1.4.20'
     gradle.ext.agpVersion = '4.2.2'
+    gradle.ext.detektVersion = '1.15.0'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -11,7 +12,7 @@ pluginManagement {
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
         id "io.sentry.android.gradle" version "2.0.0"
-        id "com.automattic.android.publish-to-s3" version "0.6.1"
+        id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
         id "com.automattic.android.fetchstyle" version "1.1"
     }
@@ -20,7 +21,6 @@ pluginManagement {
             url 'https://a8c-libs.s3.amazonaws.com/android'
             content {
                 includeGroup "com.automattic.android"
-                includeGroup "com.automattic.android.publish-to-s3"
             }
         }
         gradlePluginPortal()
