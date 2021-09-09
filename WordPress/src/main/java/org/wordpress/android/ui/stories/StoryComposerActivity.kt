@@ -23,6 +23,7 @@ import com.wordpress.stories.compose.PermanentPermissionDenialDialogProvider
 import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StoryLoadEvents.StoryLoadEnd
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
@@ -33,6 +34,8 @@ import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -656,5 +659,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onStoryLoadEnd(event: StoryLoadEnd) {
+        // once the Story has been loaded by the Composer, we should mark the composing session start as the
+        // UI is ready to receive user's input
+        viewModel.onStoryComposerStartAnalyticsSession()
     }
 }
