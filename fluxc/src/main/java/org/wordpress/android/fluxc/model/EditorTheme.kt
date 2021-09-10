@@ -31,8 +31,8 @@ data class EditorTheme(
             themeSupport = EditorThemeSupport(
                     blockEditorSettings.colors,
                     blockEditorSettings.gradients,
-                    blockEditorSettings.styles.toString(),
-                    blockEditorSettings.features.toString(),
+                    blockEditorSettings.styles?.toString(),
+                    blockEditorSettings.features?.toString(),
                     blockEditorSettings.isFSETheme,
                     blockEditorSettings.galleryWithImageBlocks
             ),
