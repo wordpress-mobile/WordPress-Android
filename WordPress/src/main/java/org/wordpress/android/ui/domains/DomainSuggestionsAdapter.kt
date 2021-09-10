@@ -2,6 +2,7 @@ package org.wordpress.android.ui.domains
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsAdapter(
@@ -9,6 +10,7 @@ class DomainSuggestionsAdapter(
 ) : Adapter<DomainSuggestionsViewHolder>() {
     private val list = mutableListOf<DomainSuggestionResponse>()
     var selectedPosition = -1
+    lateinit var siteModel: SiteModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainSuggestionsViewHolder {
         return DomainSuggestionsViewHolder(
@@ -22,7 +24,7 @@ class DomainSuggestionsAdapter(
     }
 
     override fun onBindViewHolder(holder: DomainSuggestionsViewHolder, position: Int) {
-        holder.bind(list[position], position, selectedPosition == position)
+        holder.bind(list[position], position, selectedPosition == position, siteModel)
     }
 
     private fun onDomainSuggestionSelected(suggestion: DomainSuggestionResponse?, position: Int) {
@@ -35,7 +37,8 @@ class DomainSuggestionsAdapter(
         itemSelectionListener(suggestion, position)
     }
 
-    internal fun updateSuggestionsList(items: List<DomainSuggestionResponse>) {
+    internal fun updateSuggestionsList(items: List<DomainSuggestionResponse>, site: SiteModel) {
+        siteModel = site
         list.clear()
         list.addAll(items)
         notifyDataSetChanged()
