@@ -48,16 +48,13 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.value = buildSiteDomainsList()
     }
 
-    // TODO: Logic is work in progress to fixed in the next PRs
     private fun buildSiteDomainsList(): List<DomainsListItem> {
-        return if (siteUrl.endsWith("wordpress.com") &&
-                selectedSiteRepository.getSelectedSite()?.hasFreePlan == true) {
-            getDomainItems()
-        } else if (siteUrl.endsWith("wordpress.com") &&
-                selectedSiteRepository.getSelectedSite()?.hasFreePlan == false) {
-            claimDomainItems()
-        } else {
-            manageDomainsItems()
+        val freePlan = selectedSiteRepository.getSelectedSite()?.let { SiteUtils.onFreePlan(it) }
+        val customDomain = selectedSiteRepository.getSelectedSite()?.let { SiteUtils.hasCustomDomain(it) }
+        return when {
+            customDomain == true -> manageDomainsItems()
+            freePlan == true -> getDomainItems()
+            else -> claimDomainItems()
         }
     }
 
@@ -102,7 +99,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 
-        // TODO: Loop through and add all domains, replace hard coded date
+        // TODO: Loop through and add all domains, replace hard coded date.  Not sure where to find this info yet!
         listItems += SiteDomains(
                 UiStringText(siteUrl),
                 UiStringResWithParams(string.domains_site_domain_expires, listOf(UiStringText("03/09/2024"))))
@@ -136,7 +133,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onManageDomainClick() {
-        // TODO: Send to WP
+        // TODO: next PR
     }
 
     private fun onMoreMenuClick() {
