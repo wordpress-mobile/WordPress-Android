@@ -276,19 +276,14 @@ Language: en_AU
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
-    <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
     <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -472,7 +467,6 @@ Language: en_AU
     <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
     <string name="quick_start_dialog_need_help_button_positive">Accept</string>
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-    <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
@@ -1544,7 +1538,6 @@ Language: en_AU
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>

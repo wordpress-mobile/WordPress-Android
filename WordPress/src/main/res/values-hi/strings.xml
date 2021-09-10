@@ -161,7 +161,6 @@ Language: hi_IN
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
     <string name="my_site_header_publish">प्रकाशित</string>
     <string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
-    <string name="my_site_btn_site_settings">सेटिंग्स</string>
     <string name="show">दिखाएँ</string>
     <string name="hide">छुपाएँ</string>
     <string name="select_all">सभी चुनें</string>

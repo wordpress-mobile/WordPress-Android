@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -107,7 +108,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @LayoutRes
     private int loginEpilogueScreenResource() {
         if (isNewLoginEpilogueScreenEnabled()) {
-            if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD) {
+            if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return R.layout.login_epilogue_screen_new;
             } else {
                 return R.layout.login_epilogue_screen_new_expanded;
@@ -118,7 +120,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp();
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     @Override
@@ -186,7 +190,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 headerHandler(),
                 footerHandler(),
                 mOldSitesIds,
-                SitePickerMode.DEFAULT_MODE
+                SitePickerMode.DEFAULT_MODE,
+                mShowAndReturn
         );
         setOnSiteClickListener();
     }

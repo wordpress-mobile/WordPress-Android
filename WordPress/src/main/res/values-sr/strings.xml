@@ -9,9 +9,9 @@ Language: sr_RS
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
+    <string name="gutenberg_native_search_blocks">Блокови претраге</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Натпис блока претраге. Тренутни текст је</string>
     <string name="gutenberg_native_outside">Изван</string>
-    <string name="gutenberg_native_no_button">Без дугмета</string>
     <string name="gutenberg_native_inside">Унутар</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s је %3$s %4$s.</string>
     <string name="gutenberg_native_add_button_text">Додај текст дугмета</string>
@@ -22,9 +22,7 @@ Language: sr_RS
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
-    <string name="quick_start_list_upload_icon_subtitle">Додајте иконицу веб места за исполиран професионални изглед.</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
-    <string name="quick_start_list_enable_sharing_title">Омогући дељење</string>
     <string name="quick_start_list_check_stats_title">Проверите своју статистику</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
@@ -230,7 +228,6 @@ Language: sr_RS
     <string name="or_type_your_password">Или укуцајте своју лозинку</string>
     <string name="send_link_by_email">Пошаљи повезницу електронском поштом</string>
     <string name="reset_your_password">Ресетујте своју лозинку</string>
-    <string name="quick_start_list_update_site_title_title">Поставите наслов свог сајта</string>
     <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
     <string name="gutenberg_native_s_block_options">опције блока %s</string>
     <string name="gutenberg_native_duplicate_block">Дуплирај блок</string>
@@ -616,9 +613,6 @@ Language: sr_RS
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
-    <string name="quick_start_dialog_upload_icon_title">Отпреми иконицу сајта</string>
-    <string name="quick_start_sites_type_subtitle">%1$d од %2$d завршено</string>
-    <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави свој први чланак</string>
     <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
@@ -780,7 +774,6 @@ Language: sr_RS
     <string name="quick_start_dialog_need_help_button_positive">Прихвати</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_neutral">Никад</string>
-    <string name="quick_start_dialog_need_help_button_negative">Не хвала</string>
     <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
@@ -1701,7 +1694,6 @@ Language: sr_RS
     <string name="site_picker_title">Одабери веб место</string>
     <string name="my_site_btn_switch_site">Промени веб место</string>
     <string name="my_site_btn_blog_posts">Чланци блога</string>
-    <string name="my_site_btn_site_settings">Подешавања</string>
     <string name="my_site_header_look_and_feel">Изглед и осећај</string>
     <string name="my_site_header_publish">Објави</string>
     <string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>

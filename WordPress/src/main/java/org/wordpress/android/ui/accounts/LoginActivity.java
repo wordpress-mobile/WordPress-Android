@@ -57,9 +57,9 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -84,11 +84,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
-
-import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -324,11 +324,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 finish();
                 break;
             case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
@@ -342,7 +342,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 if (newSitesIds.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSitesIds.get(0));
+                    intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "

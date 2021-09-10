@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -33,8 +33,6 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
@@ -54,8 +52,6 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private lateinit var viewModel: PageListViewModel
@@ -74,9 +70,7 @@ class PageListViewModelTest : BaseUnitTest() {
                 localeManagerWrapper,
                 accountStore,
                 Dispatchers.Unconfined,
-                mySiteImprovementsFeatureConfig,
-                quickStartRepository,
-                quickStartUtilsWrapper
+                quickStartRepository
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -462,7 +456,6 @@ class PageListViewModelTest : BaseUnitTest() {
         initEmptyPagesViewModel()
 
         whenever(pagesViewModel.site).thenReturn(site)
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
         val pageRemoteId = 1L
         site.pageOnFront = pageRemoteId
 

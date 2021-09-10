@@ -431,7 +431,7 @@ class PostsListActivity : LocaleAwareActivity(),
                                         clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }
@@ -666,12 +666,16 @@ class PostsListActivity : LocaleAwareActivity(),
             context: Context,
             site: SiteModel,
             postListType: PostListType,
-            actionsShownByDefault: Boolean
+            actionsShownByDefault: Boolean,
+            notificationType: NotificationType? = null
         ): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
             intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
             intent.putExtra(TAB_INDEX, postListType.ordinal)
+            if (notificationType != null) {
+                intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+            }
             return intent
         }
     }

@@ -90,7 +90,8 @@ public class JPScreenshotTest extends BaseTest {
         clickOn(R.id.switch_site);
 
         (new SitePickerPage()).chooseSiteWithURL("yourjetpack.blog");
-        waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         setNightModeAndWait(false);
         takeScreenshot("1-bring-your-jetpack-with-you");

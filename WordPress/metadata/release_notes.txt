@@ -1,3 +1,4 @@
-* [***] Block editor: New Block: Embed block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3727]
-* [*] Added webp image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/15068]
-
+- The Embed block now gives a preview when you add from YouTube or Twitter. 
+- If nothing is found in a block inserter search a “no results” view appears. 
+- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link. 
+- Liking a post in the Reader also adds your avatar to the like.

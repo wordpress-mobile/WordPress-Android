@@ -980,7 +980,6 @@ Language: el_GR
     <string name="my_site_btn_switch_site">Αλλαγή Ιστότοπου</string>
     <string name="my_site_btn_view_admin">Προβολή Διαχείρισης</string>
     <string name="site_picker_title">Επιλογή ιστότοπου</string>
-    <string name="my_site_btn_site_settings">Ρυθμίσεις</string>
     <string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
     <string name="my_site_header_publish">Δημοσιεύω</string>
     <string name="my_site_btn_blog_posts">Άρθρο ιστολογίου</string>

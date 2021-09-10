@@ -313,12 +313,14 @@ public class UploadUtils {
                         new Info(
                              view,
                              new UiStringText(message),
-                             K_SNACKBAR_WAIT_TIME_MS
+                             K_SNACKBAR_WAIT_TIME_MS,
+                             true
                         ),
                         new Action(
                              new UiStringRes(buttonTitleRes),
                              onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -330,8 +332,10 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringText(message),
-                                K_SNACKBAR_WAIT_TIME_MS
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
+                        null,
                         null,
                         null
                 )
@@ -345,12 +349,14 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringRes(messageRes),
-                                K_SNACKBAR_WAIT_TIME_MS
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
                         new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -363,12 +369,14 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringRes(messageRes),
-                                K_SNACKBAR_WAIT_TIME_MS
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
                         new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -381,12 +389,14 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringText(message),
-                                K_SNACKBAR_WAIT_TIME_MS
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
                         new Action(
                                 new UiStringRes(buttonTitleRes),
                                 onClickListener
                         ),
+                        null,
                         null
                 )
         );
@@ -399,9 +409,11 @@ public class UploadUtils {
                 new Info(
                         view,
                         new UiStringRes(messageRes),
-                        Snackbar.LENGTH_LONG
+                        Snackbar.LENGTH_LONG,
+                        true
                 ),
                 new Action(new UiStringRes(buttonTitleRes), onClickListener),
+                null,
                 null
         ));
     }
@@ -412,8 +424,10 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringRes(messageRes),
-                                Snackbar.LENGTH_LONG
+                                Snackbar.LENGTH_LONG,
+                                true
                         ),
+                        null,
                         null,
                         null
                 )
@@ -426,8 +440,10 @@ public class UploadUtils {
                         new Info(
                                 view,
                                 new UiStringText(messageText),
-                                Snackbar.LENGTH_LONG
+                                Snackbar.LENGTH_LONG,
+                                true
                         ),
+                        null,
                         null,
                         null
                 )

@@ -8,6 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
+import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostsListActivity
@@ -39,7 +40,8 @@ class ReminderNotifier @Inject constructor(
                                     context,
                                     site,
                                     PostListType.DRAFTS,
-                                    actionsShownByDefault = true
+                                    actionsShownByDefault = true,
+                                    notificationType = BLOGGING_REMINDERS
                             ),
                             FLAG_CANCEL_CURRENT
                     )

@@ -14,7 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestApplication.class, sdk = VERSION_CODES.LOLLIPOP)
+@Config(application = TestApplication.class, sdk = VERSION_CODES.N)
 public class RobolectricSetupTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();

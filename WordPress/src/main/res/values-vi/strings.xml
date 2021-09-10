@@ -41,7 +41,6 @@ Language: vi_VN
     <string name="quick_start_dialog_need_help_title">Muốn 1 chút trợ giúp khi bắt đầu?</string>
     <string name="quick_start_dialog_need_help_button_positive">Có</string>
     <string name="quick_start_dialog_need_help_button_neutral">Không bao giờ</string>
-    <string name="quick_start_dialog_need_help_button_negative">Không</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các site khác</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấp %1$s Ngước đọc %2$s để tiếp tục</string>
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
@@ -394,7 +393,6 @@ Language: vi_VN
     <string name="site_picker_title">Chọn Site</string>
     <string name="my_site_btn_switch_site">Chuyển Site</string>
     <string name="my_site_btn_blog_posts">Bài viết Blog</string>
-    <string name="my_site_btn_site_settings">Thiết đặt</string>
     <string name="my_site_header_look_and_feel">Nhìn và Cảm nhận</string>
     <string name="my_site_header_publish">Xuất bản</string>
     <string name="my_site_header_configuration">Cấu hình</string>

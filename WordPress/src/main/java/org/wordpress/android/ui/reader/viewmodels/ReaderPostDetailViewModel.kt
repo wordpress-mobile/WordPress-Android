@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
@@ -16,14 +18,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
-import org.wordpress.android.ui.engagement.EngageItem
-import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -32,6 +28,9 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
@@ -61,6 +60,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -68,7 +68,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.map
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -89,7 +88,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
-    private val contextProvider: ContextProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -112,8 +110,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
-        state -> buildLikersUiState(state)
+    val likesUiState: LiveData<TrainOfFacesUiState> = _updateLikesState.map { state ->
+        buildLikersUiState(state)
     }
 
     /**
@@ -131,15 +129,27 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
-    private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int) {
-        fun isMatchingPost(post: ReaderPost): Boolean {
-            return blogId != post.blogId || postId != post.postId || numLikes != post.numLikes
+    private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int, val iLike: Boolean) {
+        fun isMatchingPostLikeStatus(post: ReaderPost): Boolean {
+            return blogId != post.blogId || postId != post.postId ||
+                    numLikes != post.numLikes || iLike != post.isLikedByCurrentUser
         }
     }
+
     private var lastRenderedLikesData: RenderedLikesData? = null
 
     private val shouldOfferSignIn: Boolean
         get() = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
+
+    data class TrainOfFacesUiState(
+        val showLikeFacesTrainContainer: Boolean,
+        val showLoading: Boolean,
+        val engageItemsList: List<TrainOfFacesItem>,
+        val showEmptyState: Boolean,
+        val emptyStateTitle: UiString? = null,
+        val contentDescription: UiString,
+        val goingToShowFaces: Boolean
+    )
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
@@ -180,11 +190,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
                         onRefreshLikersData(
                                 post,
-                                if (post.isLikedByCurrentUser) {
-                                    REQUIRE_TO_BE_THERE
-                                } else {
-                                    REQUIRE_TO_NOT_BE_THERE
-                                }
+                                true
                         )
                     }
                     updatePostActions(post)
@@ -217,13 +223,42 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: CurrentUserInListRequirement = DONT_CARE) {
-        if (!likesEnhancementsFeatureConfig.isEnabled()) return
-        if (readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) return
-        val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
+    fun onRefreshLikersData(post: ReaderPost, isLikingAction: Boolean = false) {
+        if (
+                !likesEnhancementsFeatureConfig.isEnabled() ||
+                readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)
+        ) {
+            return
+        }
 
-        if (isLikeDataChanged) {
-            lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
+        val isLikeDataChanged = lastRenderedLikesData?.isMatchingPostLikeStatus(post) ?: true
+
+        if (!isLikeDataChanged) return
+
+        lastRenderedLikesData = RenderedLikesData(
+                post.blogId,
+                post.postId,
+                post.numLikes,
+                post.isLikedByCurrentUser
+        )
+
+        if (isLikingAction) {
+            val state = _updateLikesState.value
+
+            state?.let {
+                when (it) {
+                    is Failure -> _updateLikesState.value = it.copy(
+                            iLike = post.isLikedByCurrentUser,
+                            expectedNumLikes = post.numLikes
+                    )
+                    is LikesData -> _updateLikesState.value = it.copy(
+                            iLike = post.isLikedByCurrentUser,
+                            expectedNumLikes = post.numLikes
+                    )
+                    Loading -> {}
+                }
+            }
+        } else {
             getLikesJob?.cancel()
             getLikesJob = launch(bgDispatcher) {
                 getLikesHandler.handleGetLikesForPost(
@@ -233,9 +268,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                                 post.numLikes
                         ),
                         requestNextPage = false,
-                        pageLength = MAX_NUM_LIKES_FACES,
-                        limit = MAX_NUM_LIKES_FACES,
-                        expectingToBeThere = expectingToBeThere
+                        pageLength = MAX_NUM_LIKES_FACES_WITH_SELF
                 )
             }
         }
@@ -246,10 +279,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
-        _uiState.value = LoadingUiState
-
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
+            _uiState.value = LoadingUiState
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
                 FetchReaderPostState.Success -> {
                     getReaderPostFromDb(blogId, postId)
@@ -468,27 +500,31 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                actions = postDetailUiStateBuilder.buildPostActions(
-                        post,
-                        this@ReaderPostDetailViewModel::onButtonClicked
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    actions = postDetailUiStateBuilder.buildPostActions(
+                            post,
+                            this@ReaderPostDetailViewModel::onButtonClicked
+                    )
+            )
+        }
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
-                localRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.localRelatedPosts,
-                        isGlobal = false
-                ),
-                globalRelatedPosts = convertRelatedPostsToUiState(
-                        sourcePost = sourcePost,
-                        relatedPosts = state.globalRelatedPosts,
-                        isGlobal = true
-                )
-        )
+        (_uiState.value as? ReaderPostDetailsUiState)?.let {
+            _uiState.value = it.copy(
+                    localRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.localRelatedPosts,
+                            isGlobal = false
+                    ),
+                    globalRelatedPosts = convertRelatedPostsToUiState(
+                            sourcePost = sourcePost,
+                            relatedPosts = state.globalRelatedPosts,
+                            isGlobal = true
+                    )
+            )
+        }
     }
 
     private fun trackAndUpdateNotAuthorisedErrorState() {
@@ -521,8 +557,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun buildLikersUiState(updateLikesState: GetLikesState?): EngagedPeopleListUiState {
-        val (likers, numLikes) = getLikersEssentials(updateLikesState)
+    private fun buildLikersUiState(updateLikesState: GetLikesState?): TrainOfFacesUiState {
+        val (likers, numLikes, iLiked) = getLikersEssentials(updateLikesState)
 
         val showLoading = updateLikesState is Loading
         var showEmptyState = false
@@ -539,67 +575,149 @@ class ReaderPostDetailViewModel @Inject constructor(
             it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
-        return EngagedPeopleListUiState(
+        val engageItemsList = if (showLikeFacesTrainContainer) {
+            likers + getLikersFacesText(showEmptyState, numLikes, iLiked)
+        } else {
+            listOf()
+        }
+
+        val goingToShowFaces = showLikeFacesTrainContainer && !showEmptyState
+
+        val contentDescription = getContentDescription(goingToShowFaces, engageItemsList)
+
+        return TrainOfFacesUiState(
                 showLikeFacesTrainContainer = showLikeFacesTrainContainer,
                 showLoading = showLoading,
-                engageItemsList = if (showLikeFacesTrainContainer) likers else listOf(),
-                numLikes = post?.let { numLikes } ?: 0,
+                engageItemsList = engageItemsList,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,
-                likersFacesText = getLikersFacesText(showEmptyState, numLikes)
+                contentDescription = contentDescription,
+                goingToShowFaces = goingToShowFaces
         )
     }
 
-    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int): UiString? {
+    private fun getContentDescription(
+        goingToShowFaces: Boolean,
+        items: List<TrainOfFacesItem>
+    ) = if (goingToShowFaces) {
+        when (val lastItem = items.lastOrNull()) {
+            is BloggersLikingTextItem -> lastItem.textWithParams
+            is FaceItem, null -> UiStringText("")
+        }
+    } else {
+        UiStringText("")
+    }
+
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
+        val likeThisResString = UiStringRes(R.string.like_this)
+        val likesThisResString = UiStringRes(R.string.likes_this)
+
         return when {
             showEmptyState -> {
-                null
+                listOf()
             }
-            numLikes == 1 -> {
-                UiStringRes(R.string.like_faces_singular_text)
+            numLikes == 1 && iLiked -> {
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_you_text, listOf(likeThisResString)),
+                        likeThisResString
+                ).toList()
             }
-            numLikes > 1 -> {
-                UiStringText(contextProvider.getContext().getString(R.string.like_faces_plural_text, numLikes))
+            numLikes == 2 && iLiked -> {
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf(likeThisResString)),
+                        likeThisResString
+                ).toList()
+            }
+            numLikes > 2 && iLiked -> {
+                BloggersLikingTextItem(
+                        UiStringResWithParams(
+                                R.string.like_faces_plural_with_you_text,
+                                listOf(UiStringText((numLikes - 1).toString()), likeThisResString)
+                        ),
+                        likeThisResString
+                ).toList()
+            }
+            numLikes == 1 && !iLiked -> {
+                BloggersLikingTextItem(
+                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf(likesThisResString)),
+                        likesThisResString
+                ).toList()
+            }
+            numLikes > 1 && !iLiked -> {
+                BloggersLikingTextItem(
+                        UiStringResWithParams(
+                                R.string.like_faces_more_bloggers_text,
+                                listOf(UiStringText(numLikes.toString()), likeThisResString)
+                        ),
+                        likeThisResString
+                ).toList()
             }
             else -> {
-                null
+                listOf()
             }
         }
     }
 
-    private fun getLikersEssentials(updateLikesState: GetLikesState?): Pair<List<EngageItem>, Int> {
+    private fun BloggersLikingTextItem.toList() = listOf(this)
+
+    private fun getLikersEssentials(updateLikesState: GetLikesState?): Triple<List<TrainOfFacesItem>, Int, Boolean> {
         return when (updateLikesState) {
             is LikesData -> {
-                Pair(
-                        engagementUtils.likesToEngagedPeople(updateLikesState.likes),
-                        updateLikesState.expectedNumLikes
+                val liked = isLikedByCurrentUser(updateLikesState.iLike)
+                Triple(
+                        engagementUtils.likesToTrainOfFaces(updateLikesState.likes.manageSelfLike(liked)),
+                        updateLikesState.expectedNumLikes,
+                        liked
                 )
             }
             is Failure -> {
-                Pair(
-                        engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes),
-                        updateLikesState.expectedNumLikes
+                val liked = isLikedByCurrentUser(updateLikesState.iLike)
+                Triple(
+                        engagementUtils.likesToTrainOfFaces(updateLikesState.cachedLikes.manageSelfLike(liked)),
+                        updateLikesState.expectedNumLikes,
+                        liked
                 )
             }
-            Loading, null -> Pair(listOf(), 0)
+            Loading, null -> Triple(listOf(), 0, false)
         }
+    }
+
+    private fun List<LikeModel>.manageSelfLike(iLiked: Boolean): List<LikeModel> {
+        return this.take(MAX_NUM_LIKES_FACES_WITH_SELF).filter {
+            it.likerId != accountStore.account.userId
+        }.take(MAX_NUM_LIKES_FACES_WITHOUT_SELF).let { likersList ->
+            if (iLiked) {
+                likersList + LikeModel().apply {
+                    likerId = accountStore.account.userId
+                    likerAvatarUrl = accountStore.account.avatarUrl
+                }
+            } else {
+                likersList
+            }
+        }
+    }
+
+    private fun isLikedByCurrentUser(iLiked: Boolean?): Boolean {
+        return iLiked ?: post?.isLikedByCurrentUser ?: false
     }
 
     fun onLikeFacesClicked() {
         post?.let { readerPost ->
-            _navigationEvents.value = Event(ShowEngagedPeopleList(
-                    readerPost.blogId,
-                    readerPost.postId,
-                    HeaderData(
-                            AuthorNameString(readerPost.authorName),
-                            readerPost.title,
-                            readerPost.postAvatar,
-                            readerPost.authorId,
-                            readerPost.authorBlogId,
-                            readerPost.authorBlogUrl,
-                            lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+            _navigationEvents.value = Event(
+                    ShowEngagedPeopleList(
+                            readerPost.blogId,
+                            readerPost.postId,
+                            HeaderData(
+                                    AuthorNameString(readerPost.authorName),
+                                    readerPost.title,
+                                    readerPost.postAvatar,
+                                    readerPost.authorId,
+                                    readerPost.authorBlogId,
+                                    readerPost.authorBlogUrl,
+                                    lastRenderedLikesData?.numLikes ?: readerPost.numLikes
+                            )
                     )
-            ))
+            )
         }
     }
 
@@ -659,6 +777,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MAX_NUM_LIKES_FACES = 5
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val MAX_NUM_LIKES_FACES_WITH_SELF = 6
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val MAX_NUM_LIKES_FACES_WITHOUT_SELF = 5
     }
 }

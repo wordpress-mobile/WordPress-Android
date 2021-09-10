@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -136,5 +138,28 @@ class LatestPostSummaryMapperTest {
         barChartItem.entries.apply {
             assertThat(this).hasSize(30)
         }
+    }
+
+    @Test
+    fun `strips HTML from post title in latest post summary`() {
+        val postTitleWithHtml = "<b>Title</b> with <font color=\"red\">HTML</color>"
+
+        val viewCount = 0
+        val model = InsightsLatestPostModel(siteId, postTitleWithHtml, postURL, date, postId, viewCount, 0, 0, listOf())
+
+        val sinceTimeLabel = "10 mins"
+        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+
+        whenever(
+                resourceProvider.getString(
+                        eq(R.string.stats_insights_latest_post_with_no_engagement),
+                        eq(sinceTimeLabel),
+                        anyString()
+                )
+        ).thenAnswer { "message with no engagement for post ${it.getArgument<String>(2)}" }
+
+        val result = mapper.buildMessageItem(model) {}
+
+        assertThat(result.text).isEqualTo("message with no engagement for post Title with HTML")
     }
 }

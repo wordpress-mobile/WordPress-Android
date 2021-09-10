@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
@@ -136,8 +137,6 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
     }
 
-    fun getSelectedSite(): Int = AppPrefs.getSelectedSite()
-
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
@@ -194,6 +193,20 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
+
+    fun isQuickStartEnabled() = !AppPrefs.isQuickStartDisabled()
+
+    fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
+
+    fun getSelectedSite() = AppPrefs.getSelectedSite()
+
+    fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
+
+    fun isQuickStartNoticeRequired() = AppPrefs.isQuickStartNoticeRequired()
+
+    fun setQuickStartNoticeRequired(shown: Boolean) = AppPrefs.setQuickStartNoticeRequired(shown)
+
+    fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

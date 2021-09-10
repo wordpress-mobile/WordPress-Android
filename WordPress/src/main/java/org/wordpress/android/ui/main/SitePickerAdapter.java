@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -101,6 +102,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mIsMultiSelectEnabled;
     private final boolean mIsInSearchMode;
     private boolean mShowHiddenSites = false;
+    private final boolean mShowAndReturn;
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
     private SiteList mAllSites;
@@ -127,6 +129,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ImageManager mImageManager;
     @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mLayoutContainer;
@@ -161,7 +164,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              boolean isInEditMode
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                null, null, null, sitePickerMode, isInEditMode);
+                null, null, null, sitePickerMode, isInEditMode, false);
     }
 
     public SitePickerAdapter(Context context,
@@ -174,7 +177,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @Nullable ArrayList<Integer> ignoreSitesIds
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false);
+                headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false, false);
     }
 
     public SitePickerAdapter(Context context,
@@ -186,10 +189,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @NonNull ViewHolderHandler<?> headerHandler,
                              @Nullable ViewHolderHandler<?> footerHandler,
                              ArrayList<Integer> ignoreSitesIds,
-                             SitePickerMode sitePickerMode
+                             SitePickerMode sitePickerMode,
+                             boolean showAndReturn
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, footerHandler, ignoreSitesIds, sitePickerMode, false);
+                headerHandler, footerHandler, ignoreSitesIds, sitePickerMode, false, showAndReturn);
     }
 
     public SitePickerAdapter(Context context,
@@ -202,7 +206,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              @Nullable ViewHolderHandler<?> footerHandler,
                              @Nullable ArrayList<Integer> ignoreSitesIds,
                              SitePickerMode sitePickerMode,
-                             boolean isInEditMode
+                             boolean isInEditMode,
+                             boolean showAndReturn
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -236,6 +241,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSitePickerMode = sitePickerMode;
 
         mShowHiddenSites = isInEditMode; // If site picker is in edit mode, show hidden sites.
+
+        mShowAndReturn = showAndReturn;
 
         loadSites();
     }
@@ -459,11 +466,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isValidPosition(int position) {
-        if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+        if (isNewLoginEpilogueScreenEnabled()) {
             return (position >= 0 && position <= mSites.size());
         } else {
             return (position >= 0 && position < mSites.size());
         }
+    }
+
+    private boolean isNewLoginEpilogueScreenEnabled() {
+        return mOnboardingImprovementsFeatureConfig.isEnabled()
+               && !mBuildConfigWrapper.isJetpackApp()
+               && !mShowAndReturn;
     }
 
     /*
@@ -578,6 +591,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    @NonNull
     private SiteList getSelectedSites() {
         SiteList sites = new SiteList();
         if (!mIsMultiSelectEnabled) {
@@ -611,9 +625,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
-        if (sites != null && sites.size() > 0) {
+        if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
-            int currentSiteId = AppPrefs.getSelectedSite();
+            int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
             for (SiteRecord site : sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
@@ -622,7 +636,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         changeSet.add(siteRecord);
                         siteRecord.mIsHidden = !makeVisible;
                         if (!makeVisible
-                            && siteRecord.mLocalId != currentSiteId
+                            && siteRecord.mLocalId != selectedSiteLocalId
                             && recentIds.contains(siteRecord.mLocalId)) {
                             AppPrefs.removeRecentlyPickedSiteId(siteRecord.mLocalId);
                         }

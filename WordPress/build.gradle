@@ -17,6 +17,7 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
+            includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
@@ -93,11 +94,8 @@ android {
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
-        buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
-        buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
+        buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "true"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
-        buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-        buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -106,8 +104,11 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
-        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
+        buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
+        buildConfigField "boolean", "SITE_DOMAINS", "false"
+        buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -122,6 +123,8 @@ android {
     }
 
     flavorDimensions "app", "buildType"
+
+    def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
 
     productFlavors {
         wordpress {
@@ -149,29 +152,40 @@ android {
 
         vanilla { // used for release and beta
             dimension "buildType"
+
+            versionName versionProperties.getProperty("versionName")
+            versionCode versionProperties.getProperty("versionCode").toInteger()
+
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
-            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
-            buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
+            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             dimension "buildType"
+
+            versionName versionProperties.getProperty("alpha.versionName")
+            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
+
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
+            buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
-            buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
+
+            versionName versionProperties.getProperty("alpha.versionName")
+            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
             isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
+
+            versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("alpha.versionName")
+            versionCode 1 // Fixed versionCode because those builds are not meant to be uploaded to the PlayStore.
         }
 
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
@@ -232,16 +246,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-
-    applicationVariants.all { variant ->
-        def app = variant.productFlavors[0].name
-        def buildType = variant.productFlavors[1].name
-        def version = versionForVariant(app, buildType)
-        variant.outputs.each { output ->
-            output.versionNameOverride = version['versionName']
-            output.versionCodeOverride = version['versionCode']?.toInteger()
-        }
-    }
 }
 
 /// Dynamically add `buildConfigFields` on a given variant/flavor from prefixed properties
@@ -262,33 +266,9 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
     }
 
     // Then define the found properties as buildConfigFields
-    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
     fields_map.each {
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
-}
-
-// Search for a variant-specific variation of the versionName and versionCode in `version.properties` file, based on the
-// variant's app and buildType flavors.
-//
-// This will search the `version.properties` file for "$app.$buildType.versionName" first, and fallback to "$app.versionName" then just "versionName" (and same for versionCode)
-// Note: If the property is overridden at project level (e.g. '-PversionName'), it will take priority over any value in `version.properties`.
-//
-// Returns a Hash with keys 'versionName' and 'versionCode', with the found values for the app and buildType provided.
-def versionForVariant(app, buildType) {
-    def versionProperties = new Properties()
-    file("../version.properties").withInputStream { versionProperties.load(it) }
-
-    def propertyForVariant = { property ->
-        return project.findProperty(property)
-                ?: versionProperties.getProperty("${app}.${buildType}.${property}")
-                ?: versionProperties.getProperty("${app}.${property}")
-                ?: versionProperties.getProperty(property)
-    }
-
-    def versionName = propertyForVariant('versionName')
-    def versionCode = propertyForVariant('versionCode')
-    return [versionName: versionName, versionCode: versionCode]
 }
 
 dependencies {
@@ -426,7 +406,10 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    implementation("$gradle.ext.fluxCBinaryPath:fluxc:$fluxCVersion") {
+    implementation("$gradle.ext.fluxCBinaryPath") {
+        version {
+            strictly fluxCVersion
+        }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }
@@ -448,7 +431,6 @@ dependencies {
     }
 
     implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
-        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
@@ -491,6 +473,8 @@ dependencies {
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
+
+    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
 }
 
 configurations.all {
@@ -541,20 +525,13 @@ tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.
     ]
 }
 
-tasks.register("updateVersionProperties") {
-    doLast {
-        ant.propertyfile(
-                file: "../version.properties") {
-            entry( key: "$key", value: "$value")
-        }
-    }
-}
-
 tasks.register("printVersionName") {
     doLast {
-        def app = project.findProperty('productKey') ?: 'wordpress'
-        def buildType = project.findProperty('buildType') ?: ''
-        println versionForVariant(app, buildType)['versionName']
+        if (project.hasProperty('alpha')) {
+          println android.productFlavors.zalpha.versionName
+        } else {
+          println android.productFlavors.vanilla.versionName
+        }
     }
 }
 

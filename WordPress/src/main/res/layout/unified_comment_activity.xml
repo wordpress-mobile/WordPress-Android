@@ -9,19 +9,26 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@+id/nested_scroll_view">
+        android:layout_alignParentTop="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             app:theme="@style/WordPress.ActionBar" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:layout_below="@+id/toolbar"
+            android:elevation="@dimen/tabs_elevation"
+            app:tabMode="scrollable" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-19 14:57:30+0000
+Translation-Revision-Date: 2021-08-24 20:05:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="weekly_roundup_notification_text">O teu sitio recibiu %1$d visualizacións, %2$d gústame, %3$d comentarios.</string>
+    <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
+    <string name="blogging_reminders_notification_time">Hora do aviso</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Recibirás recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt; ás &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s á semana ás %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Os controis de formato de texto están dentro da barra de ferramentas situada enriba do teclado mentres editas un bloque de texto</string>
+    <string name="gutenberg_native_selected_s">Selecionado: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Selecciona unha cor de arriba</string>
+    <string name="gutenberg_native_navigates_to_select_s">Navega para seleccionar %s</string>
+    <string name="gutenberg_native_move_blocks">Mover bloques</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Como editar a túa entrada</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Como editar a túa páxina</string>
+    <string name="gutenberg_native_customize_blocks">Personalizar bloques</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Os cambios na imaxe destacada non se verán afectados polos botóns de desfacer/refacer.</string>
+    <string name="gutenberg_native_applies_the_setting">Aplica o axuste</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Podes reorganizar os bloques tocando un bloque e logo tocando as frechas arriba e abaixo que aparecen na parte inferior esquerda do bloque para movelo encima ou debaixo doutros bloques.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Benvido ao mundo dos bloques</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Para eliminar un bloque, selecciona o bloque e fai clic nos tres puntos da parte inferior dereita do bloque para ver os axustes. A partir de aí, elixe a opción para eliminar o bloque.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Algúns bloques teñen axustes adicionais. Toca a icona dos axustes na parte inferior dereita do bloque para ver máis opcións.</string>
+    <string name="gutenberg_native_s_block_newly_available">Bloque %s, dispoñible novamente</string>
+    <string name="gutenberg_native_rich_text_editing">Edición de texto enriquecido</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Unha vez que te familiarices cos nomes dos diferentes bloques, podes engadir un bloque escribindo unha barra inclinada seguida do nome do bloque, por exemplo, «/imaxe» ou «/cabeceira.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Fai que o teu contido destaque engadindo imaxes, gifs, vídeos e medios incrustados ás túas páxinas.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Próbao engadindo uns cantos bloques á túa entrada ou páxina!</string>
+    <string name="gutenberg_native_embed_media">Medio incrustado</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Cada bloque ten os seus propios axustes. Para encontralos, toca nun bloque. Os seusS axustes aparecerán na barra de ferramentas da parte inferior da pantalla.</string>
+    <string name="gutenberg_native_build_layouts">Crear deseños</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Os bloques son pezas de contido que podes insertar, reorganizar e dar estilo sen necesidade de saber programar. Os bloques son unha forma fácil e moderna para que crees bonitos deseños.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Os bloques permítenche centrarte na escritura do teu contido, sabendo que todas as ferramentas de formato que necesitas están aí para axudarche a transmitir a túa mensaxe.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organiza o teu contido en columnas, engade botóns de chamada á acción e superpón imaxes con texto.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Engade un novo bloque en calquera momento tocando o icona «+» na barra de ferramentas da parte inferior esquerda. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Aprende o básico cun recorrido rápido.</string>
+    <string name="comment_batch_moderation_error">Fallou a moderación dun o máis comentarios</string>
+    <string name="create_site_notification_create_site_action">Crear un sitio</string>
+    <string name="create_site_notification_text">Ten o teu sitio activo e funcionando en só uns rápidos pasos</string>
+    <string name="create_site_notification_title">Crea a túa web WordPress</string>
+    <string name="stats_disabled_enable_stats_error_message">Non se puideron activar as estatísticas do sitio</string>
+    <string name="stats_disabled_enable_stats_button">Activar as estatísticas do sitio</string>
+    <string name="stats_disabled_subtitle">Activa as estatísticas do sitio para ver información detallada sobre o tráfico, os «Gústame», os comentarios e os subscritores.</string>
+    <string name="stats_disabled_title">Buscas as estatísticas?</string>
+    <string name="gutenberg_native_what_is_a_block">Que é un  bloque?</string>
+    <string name="gutenberg_native_unable_to_embed_media">Non se puido incrustar o medio</string>
+    <string name="gutenberg_native_try_another_search_term">Proba outro termo de busca</string>
+    <string name="gutenberg_native_no_blocks_found">Non se encontraron bloques</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Toca dúas veces para previsualizar a entrada.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Toca dúas veces para previsualizar a páxina.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Mostrado na pestana do navegador do teu visitante e noutros sitios en liña.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Móstrame o camiño</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Queres unha pequena axuda para xestionar este sitio coa aplicación?</string>
+    <string name="login_epilogue_create_new_site_button">Crear un novo sitio</string>
+    <string name="login_epilogue_mysites_subheading">Podes cambiar os sitios en calquera momento.</string>
+    <string name="login_epilogue_mysites_heading">Elixe un sitio para abrir</string>
+    <string name="scan_multisite_not_supported_subtitle">Sentímolo, neste momento Jetpack Scan non é compatible coas instalacións multisitio de WordPress.</string>
+    <string name="scan_multisite_not_supported_title">Os multisitios de WordPress non son compatibles</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non válida. Por favor, introduce unha URL válida.</string>
-    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">O contido incrustado de %s non se pode ver neste momento no editor móbil. Por favor, previsualiza a páxina para ver o contido incrustado.</string>
     <string name="gutenberg_native_embed_caption_s">Lenda incrustada. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Lenda incrustada. Baleira</string>
     <string name="gutenberg_native_add_link_0fcaed3b">ENGALIR LIGAZÓN</string>
@@ -19,8 +73,7 @@ Language: gl_ES
     <string name="blogging_reminders_select_days">Selecciona os días nos que queres bloguear</string>
     <string name="blogging_reminders_epilogue_caption">Podes actualizar isto en calquera momento desde O meu sitio &gt; Axustes &gt; Recordatorios de blogueo.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">Non tes configurado ningún recordatorio.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">Tes recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt;.</string>
-    <string name="blogging_reminders_epilogue_body_days">Tes recordatorios para bloguear %1$s á semana en %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_days_with_time">Recibirás recordatorios para bloguear %1$s á semana o %2$s ás %3$s.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Recordatorios eliminados!</string>
     <string name="blogging_reminders_epilogue_title">Todo configurado!</string>
     <string name="blogging_reminders_update">Actualizar</string>
@@ -101,12 +154,15 @@ Language: gl_ES
     <string name="gutenberg_native_sorting_and_filtering">Ordenación e filtrado</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
+    <string name="gutenberg_native_preview_post">Previsualizar a entrada</string>
+    <string name="gutenberg_native_preview_page">Previsualizar a páxina</string>
     <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente o enlace para axudar aos usuarios de lectores de pantalla</string>
+    <string name="gutenberg_native_add_blocks">Engadir bloques</string>
     <string name="login_no_jetpack_sites">Non se encontraron sitios de Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Que é o texto alt?</string>
     <string name="gutenberg_native_transform_s_to">Transformar %s a</string>
@@ -116,18 +172,16 @@ Language: gl_ES
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe o propósito da imaxe. Déixao baleiro se a imaxe é puramente decorativa.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformado a %2$s</string>
     <string name="like_faces_error_loading_message">Erro ao cargar os datos de gústame. %s</string>
-    <string name="like_faces_plural_text">A %d blogueiros gústalles isto.</string>
-    <string name="like_faces_singular_text">A 1 blogueiro gústalle isto.</string>
     <string name="like_title_plural">%d gústame</string>
     <string name="like_title_singular">1 gústame</string>
     <string name="suggestion">Suxerencia:</string>
     <string name="gutenberg_native_use_icon_button">Usar botón de icona</string>
     <string name="gutenberg_native_search_input_field">Campo de introdución de busca.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Botón de busca. O texto actual do botón é</string>
+    <string name="gutenberg_native_search_blocks">Bloques de busca</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta do bloque de busca. O texto actual é</string>
     <string name="gutenberg_native_outside">Exterior</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Non se estableceu ningún marcador de posición personalizado</string>
-    <string name="gutenberg_native_no_button">Sen botón</string>
     <string name="gutenberg_native_inside">Dentro</string>
     <string name="gutenberg_native_hide_search_heading">Ocultar o encabezado de busca</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dobre toque para editar o texto do marcador de posición</string>
@@ -138,8 +192,6 @@ Language: gl_ES
     <string name="gutenberg_native_clear_search">Baleirar a busca</string>
     <string name="gutenberg_native_cancel_search">Cancelar a busca</string>
     <string name="gutenberg_native_button_position">Posición do botón</string>
-    <string name="gutenberg_native_button_outside">Botón exterior</string>
-    <string name="gutenberg_native_button_inside">Botón interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s é %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocorreu un erro ao obter os datos dos gústame</string>
     <string name="get_likes_unknown_error">Ocorreu un erro ao obter os gústame.</string>
@@ -192,9 +244,8 @@ Language: gl_ES
     <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa as túas páxinas e fai cambios, ou engade ou elimina páxinas.</string>
     <string name="quick_start_list_view_site_title">Visita o teu sitio</string>
-    <string name="quick_start_list_upload_icon_subtitle">Engade unha icona do sitio para un aspecto pulcro, profesional.</string>
     <string name="quick_start_list_follow_site_subtitle">Descobre e segue sitios que te inspiren.</string>
-    <string name="quick_start_list_enable_sharing_title">Activar compartir</string>
+    <string name="quick_start_list_enable_sharing_title">Compartir socialmente</string>
     <string name="quick_start_list_enable_sharing_subtitle">Comparte automaticamente as novas entradas nos teus medios sociais.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dálle un nome ao teu sitio que reflexe a súa personalidade e temática.</string>
     <string name="quick_start_list_check_stats_title">Revisa as túas estatísticas</string>
@@ -686,7 +737,7 @@ Language: gl_ES
     <string name="send_link_by_email">Enviar o enlace por correo electrónico</string>
     <string name="reset_your_password">Restablecer o teu contrasinal</string>
     <string name="reader_error_request_failed_title">Ocorreu un problema ao xestionar a petición. Por favor, inténtao de novo máis tarde.</string>
-    <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
+    <string name="quick_start_list_update_site_title_title">Comproba o título do teu sitio</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
@@ -703,9 +754,11 @@ Language: gl_ES
     <string name="error_update_site_title_network">Non se puido actualizar o título do sitio. Comproba a túa conexión de rede e inténtao de novo.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sen gardar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir o enlace nun navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navega á folla de contido anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navega para personalizar o degradado</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navega ao selector de cor personalizado</string>
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
+    <string name="gutenberg_native_go_back">Volver</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dúas veces para seleccionar a opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar gradiente</string>
     <string name="pages_list_author">Autor da páxina</string>
@@ -1295,21 +1348,18 @@ Language: gl_ES
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita as novas entradas e páxinas co editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">saír</string>
-    <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
     <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
     <string name="quick_start_sites">Seguintes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">Goza do teu produto terminado!</string>
-    <string name="quick_start_dialog_upload_icon_title">Sube un icona do sitio</string>
+    <string name="quick_start_dialog_upload_icon_title">Elixe unha icona do sitio único</string>
     <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver o teu plan actual e outros plans dispoñibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icona do teu sitio %2$s para subir un novo</string>
-    <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica a túa primeira entrada.</string>
+    <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica unha entrada.</string>
     <string name="quick_start_dialog_need_help_message">Levarémoste polas bases sobre como crear e facer crecer o teu sitio.</string>
-    <string name="quick_start_dialog_migration_title">Realizamos algúns cambios na túa lista de comprobación</string>
-    <string name="quick_start_dialog_migration_message">Engadimos máis tarefas para axudarche a facer crecer a túa audiencia.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar plans</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre as ferramentas de marketing e SEO dos nosos plans de pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -2601,7 +2651,7 @@ Language: gl_ES
     <string name="my_site_btn_view_site">Ver o sitio</string>
     <string name="my_site_btn_view_admin">Ir ao Panel</string>
     <string name="my_site_btn_switch_site">Cambiar de sitio</string>
-    <string name="my_site_btn_site_settings">Configuración</string>
+    <string name="my_site_btn_site_settings">Axustes do sitio</string>
     <string name="my_site_btn_blog_posts">Artigos</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparencia</string>

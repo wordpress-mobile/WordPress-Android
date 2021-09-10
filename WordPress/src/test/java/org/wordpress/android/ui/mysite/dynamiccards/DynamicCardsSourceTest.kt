@@ -23,26 +23,26 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var siteModel: SiteModel
     private lateinit var dynamicCardsSource: DynamicCardsSource
-    private val siteId: Int = 1
+    private val siteLocalId: Int = 1
 
     @Before
     fun setUp() {
         dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)
-        whenever(siteModel.id).thenReturn(siteId)
+        whenever(siteModel.id).thenReturn(siteLocalId)
     }
 
     @Test
     fun `returns cards from the store`() = test {
         val pinnedItem = GROW_QUICK_START
         val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-        whenever(dynamicCardStore.getCards(siteId)).thenReturn(
+        whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
                 DynamicCardsModel(
                         pinnedItem,
                         dynamicCardTypes
                 )
         )
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.buildSource(testScope(), siteId).observeForever { result = it }
+        dynamicCardsSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)
@@ -54,7 +54,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.hideItem(CUSTOMIZE_QUICK_START)
 
-        verify(dynamicCardStore).hideCard(siteId, CUSTOMIZE_QUICK_START)
+        verify(dynamicCardStore).hideCard(siteLocalId, CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -72,7 +72,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.pinItem(CUSTOMIZE_QUICK_START)
 
-        verify(dynamicCardStore).pinCard(siteId, CUSTOMIZE_QUICK_START)
+        verify(dynamicCardStore).pinCard(siteLocalId, CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -90,7 +90,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
 
         dynamicCardsSource.unpinItem()
 
-        verify(dynamicCardStore).unpinCard(siteId)
+        verify(dynamicCardStore).unpinCard(siteLocalId)
     }
 
     @Test

@@ -625,9 +625,14 @@
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
             android:theme="@style/WordPress.NoActionBar" />
+
         <activity
-            android:name=".util.config.manual.ManualFeatureConfigActivity"
+            android:name="org.wordpress.android.ui.debug.DebugSettingsActivity"
             android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.debug.cookies.DebugCookiesActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->
@@ -680,6 +685,11 @@
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Domain Registration-->
+        <activity
+            android:name=".ui.domains.DomainsDashboardActivity"
+            android:label="@string/site_settings_site_domains_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"

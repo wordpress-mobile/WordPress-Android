@@ -225,7 +225,6 @@ Language: ku_TR
     <string name="enter_email_to_continue_wordpress_com">Ji bo têketinê an jî afirandina hesabekî WordPress.com\'ê navnîşana emaila xwe bikevê.</string>
     <string name="send_link_by_email">Girêdanê bi emailê re bişîne</string>
     <string name="reader_error_request_failed_title">Di hêrana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
-    <string name="quick_start_list_update_site_title_title">Sernavê malpera xwe saz bike</string>
     <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b&gt;%1$s&lt;/b&gt;ê bitikîne</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>
     <string name="gutenberg_native_s_block_options">Vebijarkên bloka %s\'ê</string>
@@ -242,7 +241,9 @@ Language: ku_TR
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Guhertinên netomarkirî</string>
     <string name="my_site_title_changer_dialog_hint">Sernavê Malperê, li benda-sernavê ya geroka webê tê xuyan û di pirî rûkaran de jî li sermalperê tê xuyan.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Girêdanê di gerokê de veke</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Diçe rûpela naverokê ya berî vê</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Diçe beşa taybetkirina gradyanê</string>
+    <string name="gutenberg_native_go_back">Paşve here</string>
     <string name="gutenberg_native_customize_gradient">Gradyanê taybet bike</string>
     <string name="gutenberg_native_gradient_type">Cûreya Gradyanê</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ji bo vebijarkekê hilbijêrî, ducar bitikîne</string>
@@ -813,17 +814,12 @@ Language: ku_TR
     <string name="quick_start_sites">Gavên Pêşve</string>
     <string name="quick_start_complete_tasks_header"> (%d) Qediya</string>
     <string name="quick_start_dialog_view_site_message">Kêfa xwe bi berhema qediyayî bîne!</string>
-    <string name="quick_start_sites_type_subtitle">%1$d / %2$d qediya</string>
-    <string name="quick_start_dialog_upload_icon_title">Îkona malperekê hilxîne</string>
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te ew ê îkona te di gerokên xwe de bibînin. Ji bo xuyangeke profesyonel û balkêş îkoneke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo tu pakêta xwe ya heyî û pakêtên din ên berdest bibînî li %1$sPakêt%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_check_stats_message_short">Ji bo tu performansa malpera xwe bibînî li %1$sAmar%2$s\'an bitepîne.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din lê hilxînî, li %1$sÎkona Malpera Te%2$s\'yê bitepîne</string>
-    <string name="quick_start_dialog_publish_post_message">Şandiya xwe ya ewil bike reşnivîs û biweşîne.</string>
     <string name="quick_start_dialog_need_help_message">Em ê ji bo bingehên avakirin û mezinkirina malpera te ji te re rêberiyê bikin.</string>
-    <string name="quick_start_dialog_migration_title">Me hinek guhertin di lîsteya te ya kontrolê de kir</string>
     <string name="quick_start_dialog_enable_sharing_title">Parvekirina şandiyê biçalakîne</string>
-    <string name="quick_start_dialog_migration_message">Ji bo ku tu girseya temaşevanên xwe mezin bikî, me gelek peywir tevlî kirin.</string>
     <string name="quick_start_dialog_explore_plans_title">Pakêtan keşf bike</string>
     <string name="quick_start_dialog_explore_plans_message">Di derbarê alavên SEO\'yê û bazarkirinê yên pakêtên bipere de, agahî bi dest bixe.</string>
     <string name="quick_start_dialog_enable_sharing_message">Şandiyên nû di hesabên xwe yên medyaya civakî de bixweber parve bike.</string>
@@ -1008,7 +1004,6 @@ Language: ku_TR
     <string name="quick_start_dialog_need_help_title">Ji bo dest pê bikî alîkariyeke biçûk dixwazî?</string>
     <string name="quick_start_dialog_publish_post_message_short">Ji bo şandiyeke nû biafirînî li %1$sŞandî Biafirîne%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_title">Malperên din bişopîne</string>
-    <string name="quick_start_dialog_need_help_button_negative">Na Spas</string>
     <string name="quick_start_dialog_need_help_button_neutral">Qet</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ji bo domandinê li %1$sXwîner%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_message">Malperên ku îlhamê didine te bibîne û wan bişopîne ji bo ku hayê te ji hildemandinên weşanên wan çêbibe.</string>
@@ -2094,7 +2089,6 @@ Language: ku_TR
     <string name="my_site_btn_view_admin">Revebir Bibîne</string>
     <string name="site_picker_title">Malperê hilbijêre</string>
     <string name="my_site_header_publish">Biweşîne</string>
-    <string name="my_site_btn_site_settings">Sazkarî</string>
     <string name="my_site_btn_blog_posts">Şandiyên Blogê</string>
     <string name="my_site_header_look_and_feel">Xuyang û Şêwaz</string>
     <string name="my_site_header_configuration">Pevsazî</string>

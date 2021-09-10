@@ -6,26 +6,12 @@ orbs:
   slack: circleci/slack@3.4.2
 
 parameters:
-  translation_review_build:
-    type: boolean
-    default: false
-  translation_review_lang_id:
-    type: string
-    default: all-lang
   generate_screenshots:
     type: boolean
     default: false
   release_build:
     type: boolean
     default: false
-  # Display name of the app and should match the usual public facing name (e.g. WordPress, Jetpack)
-  app_name:
-    type: string
-    default: "WordPress"
-  # The key used to reference the app in the Fastfile
-  product_key:
-    type: string
-    default: "wordpress"
 
 commands:
   copy-gradle-properties:
@@ -79,10 +65,10 @@ jobs:
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
       - run:
           name: Build WordPress APK
-          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PversionName="$VERSION_NAME"
+          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
       - run:
           name: Build Jetpack APK
-          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PversionName="$VERSION_NAME"
+          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
@@ -94,6 +80,13 @@ jobs:
           path: Artifacts
           destination: Artifacts
   Release Build:
+    parameters:
+      alpha:
+        description: If true, builds the Zalpha, otherwise builds the beta
+        type: boolean
+      app:
+        description: The app to build, should be either 'wordpress' or 'jetpack'
+        type: string
     executor:
       name: android/default
       api-version: "29"
@@ -103,7 +96,7 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android failed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -117,29 +110,35 @@ jobs:
       - run:
           name: Prepare build
           command: |
-            echo "export APP_VERSION=$(./gradlew -q printVersionName -PproductKey='<< pipeline.parameters.product_key >>' | tail -1)" >> $BASH_ENV
-            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey="<< pipeline.parameters.product_key >>" | tail -1)
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android $APP_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app >> Android $APP_VERSION has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
-      - run:
-          name: Build Zalpha
-          command: |
-            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_alpha app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi
-          no_output_timeout: 15m
-      - run:
-          name: Build Vanilla
-          command: |
-            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            else
-              bundle exec fastlane build_and_upload_release app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi
-          no_output_timeout: 15m
+      - when:
+          condition: << parameters.alpha >>
+          steps:
+            - run:
+                name: Build << parameters.app >> Zalpha
+                command: |
+                  if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  fi
+                no_output_timeout: 15m
+      - unless:
+          condition: << parameters.alpha >>
+          steps:
+            - run:
+                name: Build << parameters.app >> Vanilla
+                command: |
+                  if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  else
+                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                  fi
+                no_output_timeout: 15m
       - android/save-gradle-cache
       - store_artifacts:
           path: build
@@ -347,52 +346,11 @@ jobs:
       - run:
           name: Validate login strings
           command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane validate_submodules_strings pr_url:$CIRCLE_PULL_REQUEST
-  translation-review-build:
-    executor:
-      name: android/default
-      api-version: "29"
-    environment:
-      APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - bundle-install/bundle-install:
-          cache_key_prefix: translation-review-build-v2
-      - run:
-          name: Copy Secrets
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane run configure_apply
-      - update-gradle-memory
-      - android/restore-gradle-cache
-      - run:
-          name: Build APK
-          command: |
-            TODAY_DATE=$(date +'%Y%m%d')
-            VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
-            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-            echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
-
-            cp ~/.configure/wordpress-android/secrets/debug_a8c.keystore ~/.android/debug.keystore
-            bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
-      - android/save-gradle-cache
-      - run:
-          name: Prepare APK
-          command: |
-            mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/wordpressJalapeno/release/org.wordpress.android-wordpress-jalapeno-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
-      - run:
-          name: Upload APK
-          command: |
-            curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
-      - store_artifacts:
-          path: Artifacts
-          destination: Artifacts
 
 workflows:
   wordpress_android:
     unless:
       or:
-        - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
@@ -412,7 +370,6 @@ workflows:
   Optional Tests:
     unless:
       or:
-        - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     #Optionally run connected tests on PRs
@@ -427,10 +384,6 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
-  Translation Review Build:
-    when: << pipeline.parameters.translation_review_build >>
-    jobs:
-      - translation-review-build
   Screenshots:
     when: << pipeline.parameters.generate_screenshots >>
     jobs:
@@ -440,5 +393,15 @@ workflows:
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
-      - Release Build
-
+      - Release Build:
+          name: "Release: WP Alpha"
+          app: wordpress
+          alpha: true
+      - Release Build:
+          name: "Release: WP Beta"
+          app: wordpress
+          alpha: false
+      - Release Build:
+          name: "Release: JP Beta"
+          app: jetpack
+          alpha: false

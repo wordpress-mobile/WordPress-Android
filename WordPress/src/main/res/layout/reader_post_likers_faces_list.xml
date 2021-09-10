@@ -1,55 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.ui.reader.views.InterceptingFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<org.wordpress.android.ui.reader.views.InterceptingFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/liker_faces_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    tools:visibility="visible"
+    android:animateLayoutChanges="false"
+    android:background="?attr/selectableItemBackground"
     android:clipChildren="true"
-    android:animateLayoutChanges="true"
-    android:minHeight="@dimen/liker_faces_section_min_height">
+    android:focusable="true"
+    android:minHeight="@dimen/liker_faces_section_min_height"
+    android:paddingEnd="@dimen/reader_detail_margin"
+    android:paddingStart="@dimen/reader_detail_margin"
+    android:visibility="gone"
+    app:alignItems="center"
+    tools:visibility="visible">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/faces_block"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/likes_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:paddingBottom="@dimen/margin_extra_medium_large"
-        android:paddingEnd="@dimen/reader_detail_margin"
-        android:paddingStart="@dimen/reader_detail_margin"
-        android:paddingTop="@dimen/margin_extra_medium_large"
-        app:alignItems="center"
-        app:flexWrap="wrap"
-        app:maxLine="2">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/likes_recycler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:clipChildren="false"
-            tools:itemCount="5"
-            tools:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/liker_face_item"
-            tools:orientation="horizontal" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/num_bloggers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="@color/material_on_surface_emphasis_medium"
-            tools:text="19 bloggers like this." />
-
-    </com.google.android.flexbox.FlexboxLayout>
+        android:layout_gravity="center_vertical"
+        android:clipChildren="false"
+        android:importantForAccessibility="no"
+        tools:itemCount="5"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/liker_face_item"
+        tools:orientation="horizontal" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -57,19 +34,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_state_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_gravity="center"
         android:ellipsize="end"
+        android:gravity="center_vertical"
         android:singleLine="true"
         android:textAppearance="?attr/textAppearanceCaption"
         android:visibility="gone"
         tools:text="There was an issue loading people who liked this post."
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
 </org.wordpress.android.ui.reader.views.InterceptingFrameLayout>

@@ -1,85 +1,108 @@
+<ar>
+18.1:
+-موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
+-زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
+- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+</ar>
 <de-DE>
-17.8:
-Wir haben Text-Blöcken Anpassungsmöglichkeiten für Farbe und Hintergrund hinzugefügt.
-Nicht unterstützte Blocks konnten mit Konten, die vor Dezember 2018 erstellt wurden, nicht bearbeitet werden. Diesen Fehler haben wir nun behoben! Außerdem haben wir die Bildschirmanzeigen für „wird geladen“ und „fehlgeschlagen“ für nicht unterstützte Block-Editoren aktualisiert.
+18.1:
+- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
+- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
+- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
 </de-DE>
 <en-US>
-17.8:
-We added color/background customization for text blocks.
-It wasn't possible for unsupported blocks to be edited with accounts created before December 2018. We fixed that! Along the way, we also updated loading/failed screens for the unsupported block editor.
+18.1:
+-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
+-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
+-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
 </en-US>
 <es-ES>
-17.8:
-Hemos añadido la personalización del color/fondo para los bloques de texto.
-No era posible editar bloques no compatibles con cuentas creadas antes de diciembre de 2018. ¡Lo hemos corregido! En paralelo, también actualizamos las pantallas de carga/fallo para el editor de bloques no compatibles.
+18.1:
+-Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
+-Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
+-Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
 </es-ES>
 <fr-CA>
-17.8:
-Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
-Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+18.1 :
+- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
+- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
+- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
 </fr-CA>
 <fr-FR>
-17.8:
-Nous avons ajouté la personnalisation des couleurs/de l'arrière plan pour tous les blocs paragraphe.
-Cela n'était pas possible pour les blocs non pris en charge à modifier avec les comptes créés avant décembre 2018. Ce problème a été résolu! Nous avons également mis à jour les écrans de chargement/échec du bloc paragraphe non pris en charge.
+18.1 :
+- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
+- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
+- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
 </fr-FR>
 <iw-IL>
-17.8:
-הוספנו אפשרות התאמת צבע/רקע לבלוקים של טקסט.
-לא ניתן היה לערוך בלוקים שאינם נתמכים עם חשבונות שנוצרו לפני דצמבר 2018. תיקנו את הבעיה הזו! בנוסף, עדכנו גם טעינת מסכים/מסמכים שלא נטענים עבור עורך הבלוקים שלא נתמכים.
+18.1:
+- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
+- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
+- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
 </iw-IL>
 <id>
-17.8:
-Fungsi penyesuaian warna/latar belakang telah kami tambahkan untuk blok teks.
-Sebelumnya, blok yang tidak didukung tidak bisa diedit menggunakan akun yang dibuat sebelum Desember 2018. Ini juga sudah diperbaiki. Selain itu, kami juga telah memperbarui layar memuat/gagal untuk editor blok yang tidak didukung.
+18.1:
+- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
+- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
+- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
 </id>
 <it-IT>
-17.8:
-Abbiamo aggiunto la personalizzazione del colore/dello sfondo per i blocchi di testo.
-Non era possibile modificare i blocchi non supportati con gli account creati prima di dicembre 2018. Abbiamo risolto questo problema. Lungo il percorso, abbiamo anche aggiornato le schermate di caricamento/errore per l'editor a blocchi non supportate.
+18.1:
+-Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
+-Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
+-Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
 </it-IT>
 <ja-JP>
-17.8:
-テキストブロックに色や背景のカスタマイズ機能を追加しました。
-2018年12月以前に作成されたアカウントでは、サポート対象外のブロックを編集できませんでした。 その問題を修正しました。 また、サポート対象外のブロックエディターの読み込み画面、失敗画面を更新しました。
+18.1:
+-1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
+-埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
+-時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
 </ja-JP>
 <ko-KR>
-17.8:
-텍스트 블록의 색상/배경 사용자 정의를 추가했습니다.
-2018년 12월 이전에 생성한 계정에서 편집한 지원되지 않는 블록의 경우에는 해당 사용자 정의를 추가할 수 없었습니다. 해당 문제를 해결했습니다! 이와 함께 지원되지 않는 블록 편집기의 로드 중/실패 화면도 업데이트했습니다.
+18.1:
+- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
+- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
+- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
 </ko-KR>
 <nl-NL>
-17.8:
-We hebben kleur-/achtergrond aanpassing toegevoegd voor tekstblokken.
-Het was niet mogelijk om niet ondersteunde blokken te bewerken met accounts die vóór december 2018 zijn gemaakt. Dat hebben we opgelost! Onderweg hebben we ook laad-/mislukte schermen geüpdatet voor de niet ondersteunde blok-editor.
+18.1:
+-Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
+-Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
+-Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
 </nl-NL>
 <pt-BR>
-17.8:
-Adicionamos personalização de plano de fundo/cor para blocos de texto.
-Blocos não compatíveis não podiam ser editados com contas criadas antes de dezembro de 2018. Isso foi corrigido! Além disso, atualizamos as telas de carregamento/falha para o editor de blocos não compatíveis.
+18,1:
+- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
+- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
+- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
 </pt-BR>
 <ru-RU>
-17.8:
-Мы добавили настройку цвета / фона для текстовых блоков.
-Было невозможно редактировать неподдерживаемые блоки с учетными записями, созданными до декабря 2018 года. Мы исправили это! Попутно мы также обновили экраны загрузки / ошибок для неподдерживаемых блоков в редакторе.
+18.1:
+-Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
+-Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
+-Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
 </ru-RU>
 <sv-SE>
-17.8:
-Vi har lagt till anpassning av färg/bakgrund i textblock.
-Block utan stöd kunde tidigare inte redigeras med konton som var skapade före december 2018, men det har vi löst! På samma gång uppdaterade vi även sidorna för laddning/misslyckande för block som inte stöds av blockredigeraren.
+18.1:
+-Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
+-Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
+-En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
 </sv-SE>
 <tr-TR>
-17.8:
-Metin blokları için renk/arkaplan özelleştirme ekledik.
-Aralık 2018'den önce oluşturulmuş hesaplarla desteklenmeyen blokların düzenlenmesi mümkün değildi. Bunu düzelttik! Düzeltirken de desteklenmeyen blok düzenlyici için yüklenme/başarısız olma ekranlarını da güncelledik.
+18.1:
+-Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
+-Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
+-Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
 </tr-TR>
 <zh-CN>
-17.8:
-我们为文本块添加了颜色/背景定制功能。
-之前，如果用户帐户是在 2018 年 12 月之前创建的，则无法编辑不受支持的区块。 现在我们已经修复了这个问题！ 我们还借此机会，更新了不受支持的区块编辑器的“正在加载”/“失败”屏幕。
+18.1:
+-每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
+-“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
+-时间选择功能，允许您选择特定的时间来接收博客提醒。
 </zh-CN>
 <zh-TW>
-17.8:
-我們為文字區塊新增了色彩/背景自訂功能。
-2018 年 12 月之前建立的帳號以前無法編輯不受支援的區塊。 這個問題現在已經解決！ 我們也為不受支援的區塊編輯器更新了載入/失敗畫面。
+18.1：
+-每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
+-嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
+-時間選取功能可讓你指定接收網誌提醒的時間。
 </zh-TW>

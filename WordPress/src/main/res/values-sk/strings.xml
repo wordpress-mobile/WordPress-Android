@@ -39,7 +39,6 @@ Language: sk
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
     <string name="quick_start_complete_tasks_header">Kompletné (%d)</string>
-    <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
     <string name="quick_start_remove_next_steps_menu_title">Odstrániť toto</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -174,7 +173,6 @@ Language: sk
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nie, ďakujem</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
@@ -1254,7 +1252,6 @@ Language: sk
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
     <string name="my_site_btn_view_admin">Zobraziť administráciu</string>
-    <string name="my_site_btn_site_settings">Nastavenia</string>
     <string name="my_site_header_publish">Zverejniť</string>
     <string name="my_site_btn_blog_posts">Články blogu</string>
     <string name="my_site_header_look_and_feel">Vzhľad</string>

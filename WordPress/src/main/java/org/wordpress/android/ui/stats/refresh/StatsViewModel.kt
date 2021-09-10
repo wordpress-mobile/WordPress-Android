@@ -16,6 +16,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
@@ -62,7 +65,8 @@ class StatsViewModel
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
     newsCardHandler: NewsCardHandler,
-    private val statsModuleActivateUseCase: StatsModuleActivateUseCase
+    private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
+    private val notificationsTracker: SystemNotificationsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -94,7 +98,8 @@ class StatsViewModel
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
+        val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
+        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -126,7 +131,8 @@ class StatsViewModel
         launchedFromWidget: Boolean,
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
-        restart: Boolean
+        restart: Boolean,
+        notificationType: NotificationType?
     ) {
         if (restart) {
             selectedDateProvider.clear()
@@ -146,6 +152,10 @@ class StatsViewModel
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
+            }
+
+            if (notificationType != null) {
+                notificationsTracker.trackTappedNotification(notificationType)
             }
         }
 
