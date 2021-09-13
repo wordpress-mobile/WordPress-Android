@@ -144,8 +144,8 @@ jobs:
           path: build
           destination: Artifacts
       - persist_to_workspace:
-          root: .
-          paths: ['build/*.aab'] # So they are made available for the "Create GitHub Release" job
+          root: build
+          paths: ['*.aab'] # So they are made available for the "Create GitHub Release" job
       - slack/status:
           include_job_number_field: false
           include_project_field: false
@@ -158,12 +158,12 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - attach_workspace:
-          at: .
       - git/shallow-checkout:
           init-submodules: false
       - bundle-install/bundle-install:
           cache_key_prefix: *release-build-cache-key
+      - attach_workspace:
+          at: build # Restore *.aab files built from "Release Build" jobs so we can attach them to the GitHub release
       - run:
           name: Create GitHub Release
           command: |
