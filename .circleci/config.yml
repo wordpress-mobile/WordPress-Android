@@ -101,7 +101,7 @@ jobs:
           init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
-          cache_key_prefix: release-build-v2
+          cache_key_prefix: &release-build-cache-key release-build-v2
       - run:
           name: Copy Secrets
           command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane run configure_apply
@@ -145,7 +145,7 @@ jobs:
           destination: Artifacts
       - persist_to_workspace:
           root: .
-          paths: ['build/*.aab', 'WordPress/*metadata/release_notes.txt']
+          paths: ['build/*.aab'] # So they are made available for the "Create GitHub Release" job
       - slack/status:
           include_job_number_field: false
           include_project_field: false
@@ -160,6 +160,10 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - git/shallow-checkout:
+          init-submodules: false
+      - bundle-install/bundle-install:
+          cache_key_prefix: *release-build-cache-key
       - run:
           name: Create GitHub Release
           command: |
