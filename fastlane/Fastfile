@@ -944,21 +944,20 @@ REPOSITORY_NAME="WordPress-Android"
   # create_gh_release
   # -----------------------------------------------------------------------------------
   # This lane creates a GitHub release for the current version
-  #   - attaching the existing .aab files in `build/` as the release assets
-  #   - using the WP & JP release_notes.txt as description
+  #   - Attaching the existing .aab files in `build/` as the release assets
+  #   - Using the WP & JP release_notes.txt as description
+  #   - If prerelease:<true|false> is not provided, the pre-release status will be guessed from the version name
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:true]
+  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:<true|false>]
   #
   # Examples:
-  # bundle exec fastlane create_gh_release prerelease:true  # Includes existing assets for WPAlpha+WPBeta+JPBeta
-  # bundle exec fastlane create_gh_release app:wordpress prerelease:true # Includes existing assets for WPAlpha+WPBeta
-  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true # Includes existing assets for WPAlpha+WPBeta+JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPAlpha+WPBeta+JPBeta
+  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPAlpha+WPBeta
+  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPAlpha+WPBeta+JPBeta 12.3-rc-4
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
-    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
-
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
     versions = options[:version].nil? ? [android_get_alpha_version(app: 'wp_jp'), android_get_release_version(app: 'wp_jp')] : [options[:version]]
 
@@ -967,6 +966,7 @@ REPOSITORY_NAME="WordPress-Android"
     end.select { |f| File.exist?(f) }
 
     release_title = versions.last['name']
+    set_prerelease_flag = options[:prerelease].nil? ? /-rc-|alpha-/.match?(release_title) : options[:prerelease]
 
     UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
 
