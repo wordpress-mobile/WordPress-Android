@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-20 13:42:48+0000
+Translation-Revision-Date: 2021-09-08 18:26:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
@@ -139,6 +139,7 @@ Language: pt_BR
     <string name="gutenberg_native_embed_link">Link da mídia incorporada</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
+    <string name="gutenberg_native_add_blocks">Adicionar blocos</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Modificar %s em</string>
@@ -2627,6 +2628,7 @@ Language: pt_BR
     <string name="my_site_btn_view_site">Ver site</string>
     <string name="my_site_btn_view_admin">Ver Painel</string>
     <string name="my_site_btn_switch_site">Mudar de site</string>
+    <string name="my_site_btn_site_settings">Configurações do site</string>
     <string name="my_site_btn_blog_posts">Posts do blog</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparência</string>

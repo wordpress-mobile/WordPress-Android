@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-09-11 20:56:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
+    <string name="domains_primary_domain">HAUPTADRESSE DER WEBSITE</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
+    <string name="gutenberg_native_line_height">Zeilenhöhe</string>
+    <string name="site_settings_site_domains_title">Website-Domains</string>
+    <string name="my_site_btn_domains">Domains</string>
+    <string name="me_btn_share">Teile WordPress mit einem Freund</string>
+    <string name="recommend_app_subject">WordPress-Apps – Apps für jeden Bildschirm</string>
+    <string name="recommend_app_null_response">Keine Antwort erhalten</string>
+    <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
     <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
