@@ -954,7 +954,7 @@ REPOSITORY_NAME="WordPress-Android"
   # Examples:
   # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPAlpha+WPBeta+JPBeta
   # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPAlpha+WPBeta
-  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPAlpha+WPBeta+JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
