@@ -109,6 +109,7 @@ public class FluxCUtils {
 
         MediaModel media = mediaStore.instantiateMediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
+        if (filename == null) filename = "";
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
         if (TextUtils.isEmpty(mimeType)) {
