@@ -122,6 +122,12 @@ public class FluxCUtils {
             }
         }
 
+        String title = filename;
+        // Remove extension from title
+        if (fileExtension != null && title.contains("." + fileExtension)) {
+            title = title.substring(0, title.lastIndexOf(fileExtension) - 1);
+        }
+
         // If file extension is null, upload won't work on wordpress.com
         if (fileExtension == null) {
             fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
@@ -129,7 +135,7 @@ public class FluxCUtils {
         }
 
         media.setFileName(filename);
-        media.setTitle(filename);
+        media.setTitle(title);
         media.setFilePath(path);
         media.setLocalSiteId(localSiteId);
         media.setFileExtension(fileExtension);
