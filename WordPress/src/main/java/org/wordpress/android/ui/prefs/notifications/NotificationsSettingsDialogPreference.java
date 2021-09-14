@@ -27,6 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -197,6 +198,15 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 view.addView(setupSettingView(settingName, settingValue, settingSummary, isSettingChecked,
                         isSettingLast, mOnCheckedChangedListener));
             }
+        }
+
+        // Add Weekly Roundup setting
+        if (mChannel == Channel.BLOGS && mType == Type.DEVICE) {
+            String settingName = getContext().getString(R.string.weekly_roundup);
+            boolean isSettingChecked = AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId);
+            View settingView = setupSettingView(settingName, null, null, isSettingChecked, true,
+                    (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked));
+            view.addView(settingView);
         }
 
         return view;
