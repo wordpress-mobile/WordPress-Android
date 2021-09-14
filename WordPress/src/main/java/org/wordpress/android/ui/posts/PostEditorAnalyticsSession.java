@@ -24,7 +24,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
     private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
     private static final String KEY_CAN_VIEW_EDITOR_ONBOARDING = "can_view_editor_onboarding";
-    private static final String KEY_GALLERY_WITH_IMAGE_BLOCKS = "unstableGalleryWithImageBlocks";
+    private static final String KEY_GALLERY_WITH_IMAGE_BLOCKS = "unstable_gallery_with_image_blocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
