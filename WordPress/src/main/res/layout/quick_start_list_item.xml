@@ -17,7 +17,7 @@
         android:id="@+id/icon"
         style="@style/QuickStartIcon"
         android:importantForAccessibility="no"
-        tools:src="@drawable/ic_plus_white_24dp" />
+        tools:src="@drawable/ic_gridicons_site_white_24dp" />
 
     <TextView
         android:id="@+id/title"
