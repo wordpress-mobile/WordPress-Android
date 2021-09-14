@@ -5,6 +5,7 @@ import android.app.ActionBar.LayoutParams;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.preference.DialogPreference;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
@@ -182,48 +184,59 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     continue;
                 }
 
-                View commentsSetting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
-                TextView title = commentsSetting.findViewById(R.id.notifications_switch_title);
-                title.setText(settingName);
-
                 // Add special summary text for the WPCOM section
+                String settingSummary = null;
                 if (mChannel == Channel.WPCOM && i < summaryArray.length) {
-                    String summaryText = summaryArray[i];
-                    TextView summary = commentsSetting.findViewById(R.id.notifications_switch_summary);
-                    summary.setVisibility(View.VISIBLE);
-                    summary.setText(summaryText);
+                    settingSummary = summaryArray[i];
                 }
 
-                final SwitchCompat toggleSwitch = commentsSetting.findViewById(R.id.notifications_switch);
-                toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
-                toggleSwitch.setTag(settingValue);
-                toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);
+                boolean isSettingChecked = JSONUtils.queryJSON(settingsJson, settingValue, true);
 
-                View rowContainer = commentsSetting.findViewById(R.id.row_container);
-                rowContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
-                        toggleSwitch.setChecked(!toggleSwitch.isChecked());
-                    }
-                });
+                boolean isSettingLast = i == mSettingsArray.length - 1;
 
-                if (mShouldDisplayMainSwitch && i == mSettingsArray.length - 1) {
-                    View divider = commentsSetting.findViewById(R.id.notifications_list_divider);
-                    if (divider != null) {
-                        MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
-                        mlp.leftMargin = 0;
-                        mlp.rightMargin = 0;
-                        divider.setLayoutParams(mlp);
-                    }
-                }
-
-                view.addView(commentsSetting);
+                view.addView(setupSettingView(settingName, settingValue, settingSummary, isSettingChecked,
+                        isSettingLast, mOnCheckedChangedListener));
             }
         }
 
         return view;
     }
 
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener =
+    private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,
+                                  boolean isSettingChecked, boolean isSettingLast,
+                                  CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+        View setting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
+        TextView title = setting.findViewById(R.id.notifications_switch_title);
+        title.setText(settingName);
+
+        if (!TextUtils.isEmpty(settingSummary)) {
+            TextView summary = setting.findViewById(R.id.notifications_switch_summary);
+            summary.setVisibility(View.VISIBLE);
+            summary.setText(settingSummary);
+        }
+
+        final SwitchCompat toggleSwitch = setting.findViewById(R.id.notifications_switch);
+        toggleSwitch.setChecked(isSettingChecked);
+        toggleSwitch.setTag(settingValue);
+        toggleSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+
+        View rowContainer = setting.findViewById(R.id.row_container);
+        rowContainer.setOnClickListener(v -> toggleSwitch.setChecked(!toggleSwitch.isChecked()));
+
+        if (mShouldDisplayMainSwitch && isSettingLast) {
+            View divider = setting.findViewById(R.id.notifications_list_divider);
+            if (divider != null) {
+                MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
+                mlp.leftMargin = 0;
+                mlp.rightMargin = 0;
+                divider.setLayoutParams(mlp);
+            }
+        }
+
+        return setting;
+    }
+
+    private final CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener =
             new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -325,7 +338,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
      * Updates Notifications current settings switches state based on the main switch state
      *
      * @param isMainChecked TRUE to switch on the settings switches.
-     *                        FALSE to switch off the settings switches.
+     *                      FALSE to switch off the settings switches.
      */
     private void setSettingsSwitchesChecked(boolean isMainChecked) {
         for (String settingValue : mSettingsValues) {
