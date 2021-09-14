@@ -946,7 +946,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane creates a GitHub release for the current version
   #   - Attaching the existing .aab files in `build/` as the release assets
   #   - Using the WP & JP release_notes.txt as description
-  #   - If prerelease:<true|false> is not provided, the pre-release status will be guessed from the version name
+  #   - If `prerelease:<true|false>`` is not provided, the pre-release status will be inferred from the version name
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:<true|false>]
@@ -971,22 +971,22 @@ REPOSITORY_NAME="WordPress-Android"
     UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
 
     app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
-    tmp_file_file = File.absolute_path('unified-release-notes.txt')
+    tmp_file = File.absolute_path('unified-release-notes.txt')
     unified_notes = apps.map do |app|
       notes = File.read(release_notes_path(app))
       "\#\# #{app_titles[app]}\n\n#{notes}"
     end.join("\n\n")
-    File.write(tmp_file_file, unified_notes)
+    File.write(tmp_file, unified_notes)
 
     create_release(
       repository: GHHELPER_REPO,
       version: release_title,
-      release_notes_file_path: tmp_file_file,
+      release_notes_file_path: tmp_file,
       prerelease: set_prerelease_flag,
       release_assets: release_assets.join(',')
     )
 
-    FileUtils.rm(tmp_file_file)
+    FileUtils.rm(tmp_file)
   end
 
 #####################################################################################
