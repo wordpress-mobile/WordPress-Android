@@ -118,6 +118,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.support.ZendeskExtraTags;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -125,6 +127,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -410,6 +413,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -3461,6 +3465,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
         AppPrefs.setGutenbergBlockTypeImpressions(impressions);
+    }
+
+    @Override public void onCustomerSupportCreateTicket() {
+        // construct a mutable list to add the related and extra tags
+        ArrayList<String> tagsList = new ArrayList<>();
+
+        // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+        if (SiteUtils.isBlockEditorDefaultForNewPost(getSite())) {
+            tagsList.add(ZendeskExtraTags.gutenbergIsDefault);
+        }
+
+        mZendeskHelper.createNewTicket(
+                this,
+                Origin.EDITOR_HELP,
+                getSite(),
+                tagsList.isEmpty() ? null : tagsList
+        );
     }
 
     // FluxC events
