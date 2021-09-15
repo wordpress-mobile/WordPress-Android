@@ -41,15 +41,11 @@ class BloggingLikersTextViewHolder(
 
     private fun formatWithSpan(context: Context, text: CharSequence): Spannable {
         val fullText = StringBuffer(text).toString()
-        val underlineEnd = fullText.lastIndexOf("_")
-
-        if (underlineEnd < 0) return SpannableString(fullText)
-
-        val closureString = fullText.substring(underlineEnd).replace("_", "")
+        val start = fullText.indexOf("_")
+        val end = fullText.lastIndexOf("_") - 1
         val fullTextSanitized = fullText.replace("_", "")
-        val start = 0
-        val end = fullTextSanitized.lastIndexOf(closureString)
-        return if (end <= start || end >= text.length - 1) {
+
+        return if (end < 0 || start < 0 || end <= start || end >= fullTextSanitized.length - 1) {
             SpannableString(fullTextSanitized)
         } else {
             SpannableString(fullTextSanitized).apply {
