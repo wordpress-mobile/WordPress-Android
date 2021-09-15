@@ -35,20 +35,24 @@ class BloggingLikersTextViewHolder(
 
         numBloggers.text = with(bloggersTextItem) {
             val fullText = uiHelpers.getTextOfUiString(itemView.context, textWithParams)
-            val closure = uiHelpers.getTextOfUiString(itemView.context, underlineDelimiterClosure)
-            SpannableString(fullText).formatWithSpan(itemView.context, fullText, closure)
+            formatWithSpan(itemView.context, fullText)
         }
     }
 
-    private fun SpannableString.formatWithSpan(context: Context, text: CharSequence, closure: CharSequence): Spannable {
-        val textString = StringBuffer(text).toString()
-        val closureString = StringBuffer(closure).toString()
+    private fun formatWithSpan(context: Context, text: CharSequence): Spannable {
+        val fullText = StringBuffer(text).toString()
+        val underlineEnd = fullText.lastIndexOf("_")
+
+        if (underlineEnd < 0) return SpannableString(fullText)
+
+        val closureString = fullText.substring(underlineEnd).replace("_", "")
+        val fullTextSanitized = fullText.replace("_", "")
         val start = 0
-        val end = textString.lastIndexOf(closureString) - 1
+        val end = fullTextSanitized.lastIndexOf(closureString)
         return if (end <= start || end >= text.length - 1) {
-            this
+            SpannableString(fullTextSanitized)
         } else {
-            this.apply {
+            SpannableString(fullTextSanitized).apply {
                 setSpan(
                         object : UnderlineSpan() {
                             override fun updateDrawState(ds: TextPaint) {

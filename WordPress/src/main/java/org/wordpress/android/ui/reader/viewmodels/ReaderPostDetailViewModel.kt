@@ -609,47 +609,39 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
-        val likeThisResString = UiStringRes(R.string.like_this)
-        val likesThisResString = UiStringRes(R.string.likes_this)
-
         return when {
             showEmptyState -> {
                 listOf()
             }
             numLikes == 1 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_text, listOf(likeThisResString)),
-                        likeThisResString
+                        UiStringResWithParams(R.string.like_faces_you_text, listOf())
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf(likeThisResString)),
-                        likeThisResString
+                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf())
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
                 BloggersLikingTextItem(
                         UiStringResWithParams(
                                 R.string.like_faces_plural_with_you_text,
-                                listOf(UiStringText((numLikes - 1).toString()), likeThisResString)
-                        ),
-                        likeThisResString
+                                listOf(UiStringText((numLikes - 1).toString()))
+                        )
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf(likesThisResString)),
-                        likesThisResString
+                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf())
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
                 BloggersLikingTextItem(
                         UiStringResWithParams(
                                 R.string.like_faces_more_bloggers_text,
-                                listOf(UiStringText(numLikes.toString()), likeThisResString)
-                        ),
-                        likeThisResString
+                                listOf(UiStringText(numLikes.toString()))
+                        )
                 ).toList()
             }
             else -> {
