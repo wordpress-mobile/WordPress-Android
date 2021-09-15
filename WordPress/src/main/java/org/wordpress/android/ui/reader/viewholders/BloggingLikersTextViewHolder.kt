@@ -45,9 +45,10 @@ class BloggingLikersTextViewHolder(
         val end = fullText.lastIndexOf("_") - 1
         val fullTextSanitized = fullText.replace("_", "")
 
-        return if (end < 0 || start < 0 || end <= start || end >= fullTextSanitized.length - 1) {
-            SpannableString(fullTextSanitized)
-        } else {
+        val underscoresFound = end >= 0 && start >= 0
+        val underscoresInString = start < end && end <= fullTextSanitized.length - 1
+
+        return if (underscoresFound && underscoresInString) {
             SpannableString(fullTextSanitized).apply {
                 setSpan(
                         object : UnderlineSpan() {
@@ -61,6 +62,8 @@ class BloggingLikersTextViewHolder(
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
+        } else {
+            SpannableString(fullTextSanitized)
         }
     }
 }
