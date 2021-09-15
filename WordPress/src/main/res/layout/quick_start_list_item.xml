@@ -30,7 +30,6 @@
         style="@style/QuickStartSubtitle"
         android:layout_below="@+id/title"
         android:layout_toEndOf="@+id/icon"
-        app:fixWidowWords="true"
         tools:text="@string/quick_start_list_create_site_subtitle" />
 
     <View
