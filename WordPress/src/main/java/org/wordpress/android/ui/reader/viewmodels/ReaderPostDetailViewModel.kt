@@ -615,31 +615,31 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
             numLikes == 1 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_text, listOf())
+                        UiStringResWithParams(R.string.like_faces_you_like_text, listOf())
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf())
+                        UiStringResWithParams(R.string.like_faces_you_plus_one_like_text, listOf())
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
                 BloggersLikingTextItem(
                         UiStringResWithParams(
-                                R.string.like_faces_plural_with_you_text,
+                                R.string.like_faces_you_plus_others_like_text,
                                 listOf(UiStringText((numLikes - 1).toString()))
                         )
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf())
+                        UiStringResWithParams(R.string.like_faces_one_blogger_likes_text, listOf())
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
                 BloggersLikingTextItem(
                         UiStringResWithParams(
-                                R.string.like_faces_more_bloggers_text,
+                                R.string.like_faces_others_like_text,
                                 listOf(UiStringText(numLikes.toString()))
                         )
                 ).toList()

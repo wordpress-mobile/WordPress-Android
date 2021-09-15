@@ -1505,15 +1505,15 @@
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
+    <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
     <!-- Note for translators: the underscores in the like_faces_* strings below are used
     to mark the end of underlined text; it is not displayed in final string but must be kept
     there for coding purposes (code ref: BloggingLikersTextViewHolder.formatWithSpan function) -->
-    <string name="like_faces_you_text">You_ like this.</string>
-    <string name="like_faces_you_plus_one_text">You and 1 blogger_ like this.</string>
-    <string name="like_faces_plural_with_you_text">You and %1$s bloggers_ like this.</string>
-    <string name="like_faces_one_blogger_text">1 blogger_ likes this.</string>
-    <string name="like_faces_more_bloggers_text">%1$s bloggers_ like this.</string>
-    <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
+    <string name="like_faces_you_like_text">You_ like this.</string>
+    <string name="like_faces_you_plus_one_like_text">You and 1 blogger_ like this.</string>
+    <string name="like_faces_you_plus_others_like_text">You and %1$s bloggers_ like this.</string>
+    <string name="like_faces_one_blogger_likes_text">1 blogger_ likes this.</string>
+    <string name="like_faces_others_like_text">%1$s bloggers_ like this.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
