@@ -866,9 +866,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     likers + BloggersLikingTextItem(
                             textWithParams = UiStringResWithParams(
                                     stringRes = R.string.like_faces_more_bloggers_text,
-                                    params = listOf(UiStringText("10"), UiStringRes(R.string.like_this))
-                            ),
-                            underlineDelimiterClosure = UiStringRes(R.string.like_this)
+                                    params = listOf(UiStringText("10"))
+                            )
                     )
             )
             assertThat(showEmptyState).isFalse
