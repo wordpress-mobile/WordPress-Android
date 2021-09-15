@@ -511,7 +511,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnCustomerSupportOptionsShowListener() {
                     @Override
                     public void onCustomerSupportOptionsShow() {
-                        ToastUtils.showToast(getActivity(), "Would show support now!").show();
+                        mEditorFragmentListener.onCustomerSupportCreateTicket();
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
