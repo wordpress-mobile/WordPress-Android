@@ -865,7 +865,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             assertThat(engageItemsList).isEqualTo(
                     likers + BloggersLikingTextItem(
                             textWithParams = UiStringResWithParams(
-                                    stringRes = R.string.like_faces_more_bloggers_text,
+                                    stringRes = R.string.like_faces_others_like_text,
                                     params = listOf(UiStringText("10"))
                             )
                     )
