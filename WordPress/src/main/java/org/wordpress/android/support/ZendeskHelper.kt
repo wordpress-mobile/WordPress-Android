@@ -36,7 +36,10 @@ import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
+import zendesk.support.CreateRequest
 import zendesk.support.CustomField
+import zendesk.support.Request
+import zendesk.support.RequestProvider
 import zendesk.support.Support
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
@@ -61,8 +64,14 @@ class ZendeskHelper(
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
 
+    private val isSupportEnabled: Boolean
+        get() = supportInstance.isInitialized
+
     private val zendeskPushRegistrationProvider: PushRegistrationProvider?
         get() = zendeskInstance.provider()?.pushRegistrationProvider()
+
+    private val supportRequestProvider: RequestProvider?
+        get() = supportInstance.provider()?.requestProvider()
 
     private val timer: Timer by lazy {
         Timer()
@@ -130,18 +139,18 @@ class ZendeskHelper(
         }
         requireIdentity(context, selectedSite) {
             AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
-            RequestActivity.builder()
-                .show(
-                    context,
-                    buildZendeskConfig(
-                        context,
-                        siteStore.sites,
-                        origin,
-                        selectedSite,
-                        extraTags,
-                        buildConfigWrapper
-                    )
-                )
+                RequestActivity.builder()
+                        .show(
+                                context,
+                                buildZendeskConfig(
+                                        context,
+                                        siteStore.sites,
+                                        origin,
+                                        selectedSite,
+                                        extraTags,
+                                        buildConfigWrapper
+                                )
+                        )
         }
     }
 
@@ -189,6 +198,46 @@ class ZendeskHelper(
                         buildConfigWrapper
                     )
                 )
+        }
+    }
+
+    // TODO Add documentation
+    fun createRequest(
+        context: Context,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>? = null,
+        description: String? = null,
+        callback: (Result<Request>) -> Unit
+    ) {
+        require(isZendeskEnabled && isSupportEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        requireIdentity(context, selectedSite) {
+            val allSites = siteStore.sites
+            val createRequest = CreateRequest().apply {
+                this.ticketFormId = TicketFieldIds.form
+                this.customFields = buildZendeskCustomFields(context, allSites, selectedSite, buildConfigWrapper)
+                this.subject = context.getString(R.string.support_ticket_subject)
+                this.tags = buildZendeskTags(allSites, selectedSite, origin ?: Origin.UNKNOWN, extraTags)
+                this.description = description
+            }
+
+            supportRequestProvider?.createRequest(createRequest, object : ZendeskCallback<Request>() {
+                override fun onSuccess(request: Request?) {
+                    callback(
+                            if (request != null) {
+                                Result.success(request)
+                            } else {
+                                Result.failure(Error("Request creation failed with error: returned request was null"))
+                            }
+                    )
+                }
+
+                override fun onError(errorResponse: ErrorResponse?) {
+                    callback(Result.failure(Error("Request creation failed with error: ${errorResponse?.reason}")))
+                }
+            })
         }
     }
 
