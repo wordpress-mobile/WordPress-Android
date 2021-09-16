@@ -3484,6 +3484,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
         );
     }
 
+    @Override public void onGotoMyCustomerSupportTickets() {
+        // construct a mutable list to add the related and extra tags
+        ArrayList<String> tagsList = new ArrayList<>();
+
+        // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+        if (SiteUtils.isBlockEditorDefaultForNewPost(getSite())) {
+            tagsList.add(ZendeskExtraTags.gutenbergIsDefault);
+        }
+
+        mZendeskHelper.showAllTickets(
+                this,
+                Origin.EDITOR_HELP,
+                getSite(),
+                tagsList.isEmpty() ? null : tagsList
+        );
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
