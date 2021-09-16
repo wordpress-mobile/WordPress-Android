@@ -3467,7 +3467,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         AppPrefs.setGutenbergBlockTypeImpressions(impressions);
     }
 
-    @Override public void onCustomerSupportCreateTicket() {
+    @Override public void onContactCustomerSupport() {
         // construct a mutable list to add the related and extra tags
         ArrayList<String> tagsList = new ArrayList<>();
 
