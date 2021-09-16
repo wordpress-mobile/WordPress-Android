@@ -1506,14 +1506,14 @@
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
-    <!-- Note for translators: the underscores in the strings below are used to mark the start
-    and the end of underlined text; it is not displayed in final string but must be kept
-    there for coding purposes (code ref: BloggingLikersTextViewHolder.formatWithSpan function) -->
-    <string name="like_faces_you_like_text">_You_ like this.</string>
-    <string name="like_faces_you_plus_one_like_text">_You and 1 blogger_ like this.</string>
-    <string name="like_faces_you_plus_others_like_text">_You and %1$s bloggers_ like this.</string>
-    <string name="like_faces_one_blogger_likes_text">_1 blogger_ likes this.</string>
-    <string name="like_faces_others_like_text">_%1$s bloggers_ like this.</string>
+    <!-- Note for translators: the '&lt;a href=""&gt;' and '&lt;/a&gt;' must be kept without
+    translations/modifications and are used to enclose the portion of the text
+    that will be rendered as underlined. -->
+    <string name="like_faces_you_like_text">&lt;a href=""&gt;You&lt;/a&gt; like this.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=""&gt;You and 1 blogger&lt;/a&gt; like this.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=""&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=""&gt;1 blogger&lt;/a&gt; likes this.</string>
+    <string name="like_faces_others_like_text">&lt;a href=""&gt;%1$s bloggers&lt;/a&gt; like this.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
