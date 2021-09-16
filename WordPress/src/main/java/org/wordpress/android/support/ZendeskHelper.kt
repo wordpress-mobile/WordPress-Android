@@ -55,6 +55,9 @@ class ZendeskHelper(
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
 
+    private val supportInstance: Support
+        get() = Support.INSTANCE
+
     private val isZendeskEnabled: Boolean
         get() = zendeskInstance.isInitialized
 
@@ -106,7 +109,7 @@ class ZendeskHelper(
         }
         zendeskInstance.init(context, zendeskUrl, applicationId, oauthClientId)
         Logger.setLoggable(enableLogs)
-        Support.INSTANCE.init(zendeskInstance)
+        supportInstance.init(zendeskInstance)
         refreshIdentity()
     }
 
@@ -194,7 +197,7 @@ class ZendeskHelper(
      * it's successful. We'll use the return value to decide whether to show a push notification or not.
      */
     fun refreshRequest(context: Context, requestId: String?): Boolean =
-            Support.INSTANCE.refreshRequest(requestId, context)
+            supportInstance.refreshRequest(requestId, context)
 
     /**
      * This function should be called when the user logs out of WordPress.com. Push notifications are only available
