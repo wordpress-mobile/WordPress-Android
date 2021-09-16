@@ -337,7 +337,15 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
         String inputSiteAddress = mRequestedSiteAddress;
         endProgress();
-        mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress);
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            mLoginListener.gotConnectedSiteInfo(
+                    mConnectSiteInfoUrl,
+                    mConnectSiteInfoUrlRedirect,
+                    mConnectSiteInfoCalculatedHasJetpack
+                                               );
+        } else {
+            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress);
+        }
     }
 
     private void askForHttpAuthCredentials(@NonNull final String url) {
@@ -418,10 +426,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
         } else {
-            mLoginListener.gotConnectedSiteInfo(
-                    siteInfo.url,
-                    siteInfo.urlAfterRedirects,
-                    hasJetpack);
+            initiateDiscovery();
         }
     }
 
