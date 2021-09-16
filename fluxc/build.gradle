@@ -12,7 +12,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 18
         targetSdkVersion 30
         javaCompileOptions {
             annotationProcessorOptions {
