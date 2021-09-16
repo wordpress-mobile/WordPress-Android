@@ -407,7 +407,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(createConnectSiteInfoProperties(event.info, hasJetpack));
 
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-                handleConnectSiteInfoForWoo(event.info, hasJetpack);
+                handleConnectSiteInfoForWoo(event.info);
             } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY) {
                 handleConnectSiteInfoForJetpack(event.info);
             } else {
@@ -416,13 +416,13 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
     }
 
-    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
-        endProgressIfNeeded();
-
+    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo) {
         if (!siteInfo.exists) {
+            endProgressIfNeeded();
             // Site does not exist
             showError(R.string.invalid_site_url_message);
         } else if (!siteInfo.isWordPress) {
+            endProgressIfNeeded();
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
         } else {
