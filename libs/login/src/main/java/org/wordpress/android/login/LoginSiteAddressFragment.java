@@ -67,6 +67,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     private String mRequestedSiteAddress;
 
+    private String mConnectSiteInfoUrl;
+    private String mConnectSiteInfoUrlRedirect;
+    private Boolean mConnectSiteInfoCalculatedHasJetpack;
+
     private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
     @Inject AccountStore mAccountStore;
@@ -151,6 +155,11 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+            mConnectSiteInfoUrl = savedInstanceState.getString(KEY_SITE_INFO_URL);
+            mConnectSiteInfoUrlRedirect =
+                    savedInstanceState.getString(KEY_SITE_INFO_URL_AFTER_REDIRECTS);
+            mConnectSiteInfoCalculatedHasJetpack =
+                    savedInstanceState.getBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK);
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
@@ -184,6 +193,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
+        outState.putString(KEY_SITE_INFO_URL, mConnectSiteInfoUrl);
+        outState.putString(KEY_SITE_INFO_URL_AFTER_REDIRECTS, mConnectSiteInfoUrlRedirect);
+        outState.putBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK,
+                mConnectSiteInfoCalculatedHasJetpack);
     }
 
     @Override public void onDestroyView() {
@@ -228,6 +241,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        mConnectSiteInfoUrl = null;
+        mConnectSiteInfoUrlRedirect = null;
+        mConnectSiteInfoCalculatedHasJetpack = null;
     }
 
     @Override
@@ -375,6 +391,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             endProgressIfNeeded();
         } else {
             boolean hasJetpack = calculateHasJetpack(event.info);
+
+            mConnectSiteInfoUrl = event.info.url;
+            mConnectSiteInfoUrlRedirect = event.info.urlAfterRedirects;
+            mConnectSiteInfoCalculatedHasJetpack = hasJetpack;
 
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(createConnectSiteInfoProperties(event.info, hasJetpack));
 
