@@ -75,6 +75,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifie
 import org.wordpress.android.ui.stories.StoryComposerViewModel;
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
 import org.wordpress.android.ui.suggestion.SuggestionViewModel;
+import org.wordpress.android.ui.support.SupportFormViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
@@ -572,4 +573,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DebugCookiesViewModel.class)
     abstract ViewModel debugCookiesViewModel(DebugCookiesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SupportFormViewModel.class)
+    abstract ViewModel supportFormViewModel(SupportFormViewModel viewModel);
 }
