@@ -3484,7 +3484,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         );
     }
 
-    @Override public void onGotoMyCustomerSupportTickets() {
+    @Override public void onGotoCustomerSupportOptions() {
         // construct a mutable list to add the related and extra tags
         ArrayList<String> tagsList = new ArrayList<>();
 
@@ -3493,12 +3493,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             tagsList.add(ZendeskExtraTags.gutenbergIsDefault);
         }
 
-        mZendeskHelper.showAllTickets(
-                this,
-                Origin.EDITOR_HELP,
-                getSite(),
-                tagsList.isEmpty() ? null : tagsList
-        );
+        ActivityLauncher.viewHelpAndSupport(this, Origin.EDITOR_HELP, getSite(), tagsList.isEmpty() ? null : tagsList);
     }
 
     // FluxC events

@@ -514,8 +514,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public void onGotoMyCustomerSupportTickets() {
-                        mEditorFragmentListener.onGotoMyCustomerSupportTickets();
+                    public void onGotoCustomerSupportOptions() {
+                        mEditorFragmentListener.onGotoCustomerSupportOptions();
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
