@@ -222,7 +222,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         Map<String, Double> onRequestBlockTypeImpressions();
         void onSetBlockTypeImpressions(Map<String, Double> impressions);
         void onContactCustomerSupport();
-        void onGotoMyCustomerSupportTickets();
+        void onGotoCustomerSupportOptions();
     }
 
     /**
