@@ -48,6 +48,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mExcerpt;
     @Column private String mTagNames;
     @Column private String mStatus;
+    @Column private boolean mSticky;
     @Column private String mPassword;
     @Column private long mFeaturedImageId;
     @Column private String mPostFormat;
@@ -249,6 +250,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setStatus(String status) {
         mStatus = status;
+    }
+
+    @Override public boolean getSticky() {
+        return mSticky;
+    }
+
+    public void setSticky(boolean sticky) {
+        mSticky = sticky;
     }
 
     @Override
@@ -525,6 +534,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
                 && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
                 && isPage() == otherPost.isPage()
+                && getSticky() == otherPost.getSticky()
                 && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
                 && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
                 && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
@@ -576,6 +586,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mExcerpt != null ? mExcerpt.hashCode() : 0);
         result = 31 * result + (mTagNames != null ? mTagNames.hashCode() : 0);
         result = 31 * result + (mStatus != null ? mStatus.hashCode() : 0);
+        result = 31 * result + (mSticky ? 1 : 0);
         result = 31 * result + (mPassword != null ? mPassword.hashCode() : 0);
         result = 31 * result + (int) (mAuthorId ^ (mAuthorId >>> 32));
         result = 31 * result + (mAuthorDisplayName != null ? mAuthorDisplayName.hashCode() : 0);

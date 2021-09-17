@@ -1814,6 +1814,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 161 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD GALLERY_WITH_IMAGE_BLOCKS BOOLEAN")
                 }
+                162 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD STICKY BOOLEAN")
+                }
             }
         }
         db.setTransactionSuccessful()
