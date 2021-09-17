@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-09 17:48:23+0000
+Translation-Revision-Date: 2021-09-16 00:37:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_line_height">Altezza linea</string>
+    <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_primary_domain">INDIRIZZO DEL SITO PRINCIPALE</string>
+    <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
+    <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
+    <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
+    <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
+    <string name="me_btn_share">Condividi WordPress con un amico</string>
+    <string name="my_site_quick_actions_title">Link veloci</string>
+    <string name="my_site_btn_domains">Domini</string>
+    <string name="like_faces_more_bloggers_text">A %1$s blogger %2$s.</string>
+    <string name="like_faces_one_blogger_text">A 1 blogger %1$s.</string>
+    <string name="like_faces_plural_with_you_text">A te e %1$s blogger %2$s.</string>
+    <string name="like_faces_you_plus_one_text">A te e 1 blogger %1$s.</string>
+    <string name="like_faces_you_text">A te %1$s.</string>
+    <string name="likes_this">piace questo elemento</string>
+    <string name="like_this">piace questo elemento</string>
+    <string name="site_settings_site_domains_title">Domini del sito</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -48,9 +67,13 @@ Language: it
     <string name="stats_disabled_subtitle">Attiva le statistiche del sito per vedere le informazioni dettagliate su traffico, Mi piace, commenti e abbonati.</string>
     <string name="stats_disabled_title">Cerchi le statistiche?</string>
     <string name="gutenberg_native_what_is_a_block">Che cos\'è un blocco?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
     <string name="gutenberg_native_unable_to_embed_media">Non è possibile incorporare il media</string>
     <string name="gutenberg_native_try_another_search_term">Prova un altro termine di ricerca</string>
     <string name="gutenberg_native_no_blocks_found">Nessun blocco trovato</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Le anteprime di %s non sono ancora disponibili</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">Le anteprime dei blocchi di %s sono presto disponibili</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Tocca due volte per visualizzare l\'anteprima dell\'articolo.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>

@@ -1,0 +1,2 @@
+18.2:
+Hemos hecho un par de mejoras en el Editor de bloques: ahora el bloque de incrustar muestra una vista previa cuando añades contenido de YouTube o de Twitter (próximamente se añadirán más proveedores). Además, si quieres insertar un bloque pero no se encuentra nada, ahora aparece una vista sin resultados. 

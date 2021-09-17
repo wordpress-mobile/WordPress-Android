@@ -1,0 +1,2 @@
+18.2 :
+Nous avons apporté quelques modifications pratiques à l’éditeur de blocs : le bloc de contenu embarqué vous donne désormais un premier aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter (plus de fournisseurs prochainement) ; et lorsque vous essayez d’insérer un bloc introuvable, un message indique qu’aucun résultat n’est disponible.
