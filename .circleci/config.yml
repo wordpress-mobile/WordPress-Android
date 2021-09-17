@@ -96,7 +96,8 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android failed!'" >> $BASH_ENV
+            SLACKMSG_APP_NAME=$(echo "<< parameters.app >>" | sed s/wordpress/WordPress/i | sed s/jetpack/Jetpack/i)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for ${SLACKMSG_APP_NAME} Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -111,9 +112,11 @@ jobs:
           name: Prepare build
           command: |
             APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            SLACKMSG_APP_NAME=$(echo "<< parameters.app >>" | sed s/wordpress/WordPress/i | sed s/jetpack/Jetpack/i)
+            SLACKMSG_APP_VERSION=<<# parameters.alpha >>$(./gradlew -q printVersionName -Palpha | tail -1)<</ parameters.alpha >><<^ parameters.alpha >>$APP_VERSION<</ parameters.alpha >>
             echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android $APP_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app >> Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for ${SLACKMSG_APP_NAME} Android ${SLACKMSG_APP_VERSION} failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: ${SLACKMSG_APP_NAME} Android ${SLACKMSG_APP_VERSION} has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
@@ -125,6 +128,9 @@ jobs:
                 command: |
                   if [[ ${APP_VERSION} == *"-rc-"* ]]; then
                     bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true upload_to_play_store:true
+                  else
+                    echo "Skipping and halting this job because we only build Zalpha variants for rc versions, but current version is ${APP_VERSION}"
+                    circleci-agent step halt
                   fi
                 no_output_timeout: 15m
       - unless:
