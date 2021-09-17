@@ -105,6 +105,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
+import org.wordpress.android.ui.support.SupportFormActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -1288,6 +1289,15 @@ public class ActivityLauncher {
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
         viewHelpAndSupportInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
+    }
+
+    public static void viewSupportForm(@NonNull Context context, @Nullable Origin origin,
+                                       @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        // TODO Add tracking
+        // Map<String, String> properties = new HashMap<>();
+        // properties.put("origin", origin.name());
+        // AnalyticsTracker.track(Stat.SUPPORT_FORM_OPENED, properties);
+        context.startActivity(SupportFormActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
