@@ -21,6 +21,7 @@ interface PostImmutableModel {
     val tagNames: String
     val tagNameList: List<String>
     val status: String
+    val sticky: Boolean
     val password: String
     val featuredImageId: Long
     val postFormat: String
