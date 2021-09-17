@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.login.BuildConfig
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -138,6 +139,22 @@ class ZendeskHelper(
                         buildConfigWrapper
                     )
                 )
+        }
+    }
+
+    // TODO Add documentation
+    @JvmOverloads
+    fun showSupportForm(
+        context: Context,
+        origin: Origin?,
+        selectedSite: SiteModel?,
+        extraTags: List<String>? = null
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        requireIdentity(context, selectedSite) {
+            ActivityLauncher.viewSupportForm(context, origin, selectedSite, extraTags)
         }
     }
 
