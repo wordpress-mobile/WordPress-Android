@@ -56,7 +56,7 @@ class HelpActivity : LocaleAwareActivity() {
                 actionBar.elevation = 0f // remove shadow
             }
 
-            contactUsButton.setOnClickListener { createNewZendeskTicket() }
+            contactUsButton.setOnClickListener { showSupportForm() }
             faqButton.setOnClickListener { showFaq() }
             myTicketsButton.setOnClickListener { showZendeskTickets() }
             applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
@@ -109,6 +109,15 @@ class HelpActivity : LocaleAwareActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSupportForm() {
+        zendeskHelper.showSupportForm(
+                this,
+                originFromExtras,
+                selectedSiteFromExtras,
+                extraTagsFromExtras
+        )
     }
 
     private fun createNewZendeskTicket() {
