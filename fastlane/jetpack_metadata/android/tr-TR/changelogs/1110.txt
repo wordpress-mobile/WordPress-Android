@@ -1,0 +1,2 @@
+18.2:
+Blok düzenleyicide kullanışlı birkaç değişiklik yaptık: Gömülü blok artık YouTube veya Twitter'dan bir şey eklediğinizde size bir önizleme görüntülüyor (yakında daha fazla sağlayıcı sunulacaktır). Bir blok eklemeye gittiğinizde ve hiçbir şey bulunamadığında da artık sonuç görünümü görüntülenmeyecektir.

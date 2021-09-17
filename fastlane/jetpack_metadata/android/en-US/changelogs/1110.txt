@@ -1,0 +1,1 @@
+We have made a couple of handy tweaks to the Block editor: The Embed block now gives you a sneak preview when you add something from YouTube or Twitter (more providers to come); and when you go to insert a block and nothing is found, there is now a no results view.
