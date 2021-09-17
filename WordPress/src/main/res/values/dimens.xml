@@ -670,4 +670,7 @@
 
     <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
     <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
+
+    <!-- Support form -->
+    <dimen name="support_form_button_progress_size">32dp</dimen>
 </resources>

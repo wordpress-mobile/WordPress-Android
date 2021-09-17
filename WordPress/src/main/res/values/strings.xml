@@ -3789,4 +3789,38 @@ translators: Block name. %s: The localized block name -->
     <!-- Weekly Roundup Notification -->
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
+
+    <!-- Support Form -->
+    <string name="support_form_reason_for_contact_hint">You\'re reaching out to…</string>
+    <string name="support_form_feeling_hint">Mind sharing how you feel?</string>
+    <string name="support_form_site_hint">Which site do you need help with?</string>
+    <string name="support_form_message_hint">How can we help?</string>
+    <string name="support_form_message_helper_text">Tip: the more details you can share, the sooner we can get back to you!</string>
+    <string name="support_form_send_message_action">Send message</string>
+
+    <string name="support_form_reason_for_contact_get_started">Get started</string>
+    <string name="support_form_reason_for_contact_report_bug">Report something isn\'t working</string>
+    <string name="support_form_reason_for_contact_make_suggestion">Make a suggestion</string>
+
+    <string-array name="support_form_reason_for_contact_array" translatable="false">
+        <item>@string/support_form_reason_for_contact_get_started</item>
+        <item>@string/support_form_reason_for_contact_report_bug</item>
+        <item>@string/support_form_reason_for_contact_make_suggestion</item>
+    </string-array>
+
+    <string name="support_form_feeling_rather_not">I\'d rather not</string>
+    <string name="support_form_feeling_happy">Happy</string>
+    <string name="support_form_feeling_confused">Confused</string>
+    <string name="support_form_feeling_discouraged">Discouraged</string>
+    <string name="support_form_feeling_upset">Upset</string>
+    <string name="support_form_feeling_panicked">Panicked</string>
+
+    <string-array name="support_form_feeling_array" translatable="false">
+        <item>@string/support_form_feeling_rather_not</item>
+        <item>@string/support_form_feeling_happy</item>
+        <item>@string/support_form_feeling_confused</item>
+        <item>@string/support_form_feeling_discouraged</item>
+        <item>@string/support_form_feeling_upset</item>
+        <item>@string/support_form_feeling_panicked</item>
+    </string-array>
 </resources>
