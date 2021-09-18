@@ -1,0 +1,5 @@
+18.2:
+- Blok Sematan sekarang dilengkapi pratinjau untuk konten yang ditambahkan dari YouTube atau Twitter.
+- Jika tidak ada konten yang ditemukan di penyisip blok, tulisan "tidak ada hasil" akan ditampilkan.
+- Layar Saya dilengkapi dengan tombol baru “Bagikan WordPress ke teman” yang dan memungkinkan Anda berbagi tautan aplikasi WordPress.
+- Sekarang avatar Anda juga akan ditampilkan saat menyukai pos lewat Pembaca.

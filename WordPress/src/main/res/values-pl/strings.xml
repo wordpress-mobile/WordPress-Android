@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-13 06:13:36+0000
+Translation-Revision-Date: 2021-09-17 06:34:54+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -380,7 +380,6 @@ Language: pl
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
-    <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
     <string name="typeface_label_libre_baskerville">Klasyczna</string>
     <string name="typeface_label_nunito">Codzienna</string>
@@ -389,6 +388,7 @@ Language: pl
     <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
     <string name="typeface_label_shrikhand">Pogrubienie</string>
     <string name="typeface_label_oswald">Silne</string>
+    <string name="typeface_label_space_mono">Nowoczesny</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -584,10 +584,10 @@ Language: pl
     <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
     <string name="site_settings_failed_to_save_homepage_settings">NIe można było zapisać ustawień strony głównej</string>
-    <string name="site_settings_accept_homepage">Akceptuj</string>
     <string name="site_settings_failed_to_load_pages">Nie udało sie wczytać stron</string>
     <string name="site_settings_homepage_settings_description">Wybierz na stronie głównej czy wyświetla ostatnie wpisy (blog klasyczny) czy statyczną stronę</string>
     <string name="site_settings_homepage_settings">Ustawienia strony głównej</string>
+    <string name="site_settings_accept_homepage">Akceptuję</string>
     <string name="site_settings_homepage">Strona główna</string>
     <string name="page_homepage_update_failed">Nie udało się zaktualizować strony głównej</string>
     <string name="page_homepage_successfully_updated">Strona główna zaktualizowana</string>
@@ -940,8 +940,8 @@ Language: pl
     <string name="post_notification_one_hour_before">1 godzina temu</string>
     <string name="post_settings_add_to_calendar">Dodaj do kalendarza</string>
     <string name="post_settings_notification">Powiadomienie</string>
-    <string name="post_settings_time_and_date">Data i czas</string>
     <string name="post_notification_off">Wyłączone</string>
+    <string name="post_settings_time_and_date">Data i godzina</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -1315,7 +1315,7 @@ Language: pl
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
     <string name="quick_start_dialog_need_help_title">Potrzebujesz pomocy?</string>
     <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Akceptuj</string>
+    <string name="quick_start_dialog_need_help_button_positive">Akceptuję</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
@@ -1337,10 +1337,10 @@ Language: pl
     <string name="installing_jetpack">Instalowanie Jetpacka</string>
     <string name="install_jetpack">Zainstaluj Jetpacka</string>
     <string name="jetpack">Jetpack</string>
-    <string name="install_jetpack_continue">Utwórz</string>
     <string name="install_jetpack_message">Dane logowania do witryny nie będą przechowywane i są użyte jedynie do celów instalacji Jetpacka.</string>
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
     <string name="install_jetpack_retry">Spróbuj ponownie</string>
+    <string name="install_jetpack_continue">Ustaw</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -1407,13 +1407,13 @@ Language: pl
     <string name="magic_link_login_title">Logowanie przy użyciu Magic Linka</string>
     <string name="magic_link_sent_login_title">Wysłano Magic Linka</string>
     <string name="reader_bookmark_snack_title">Wpis zapisano</string>
-    <string name="reader_bookmark_snack_btn">Zobacz wszystkie</string>
     <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
     <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>
     <string name="reader_save_for_later_title">Zapisane wpisy</string>
     <string name="removed">Usunięto</string>
     <string name="reader_empty_saved_posts_description">Stuknij %s aby zapisać wpis na swojej liście.</string>
     <string name="reader_empty_saved_posts_title">Nie zapisano jeszcze żadnych wpisów!</string>
+    <string name="reader_bookmark_snack_btn">Zobacz wszystko</string>
     <string name="my_site_icon_content_description">Zmień ikonę witryny</string>
     <string name="my_site_icon_dialog_cancel_button">Anuluj</string>
     <string name="my_site_icon_dialog_remove_button">Usuń</string>

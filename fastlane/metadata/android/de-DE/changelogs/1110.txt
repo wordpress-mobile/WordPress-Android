@@ -1,0 +1,5 @@
+18.2:
+- Der Embed-Block zeigt dir jetzt eine Vorschau an, wenn du Inhalte aus YouTube oder Twitter einfügst.
+- Wenn bei einer Block-Einfüge-Suche nichts gefunden wird, wird jetzt der Bildschirm „Keine Ergebnisse“ angezeigt.
+Der Bildschirm „Ich“ verfügt jetzt über den Button „Teile WordPress mit Freunden“, über den du einen Link zur WordPress-App teilen kannst.
+- Wenn du einen Beitrag im Reader mit „Gefällt mir“ markierst, wird zu deiner Gefällt mir-Angabe auch dein Avatar hinzugefügt.
