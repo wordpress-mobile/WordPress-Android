@@ -3823,4 +3823,6 @@ translators: Block name. %s: The localized block name -->
         <item>@string/support_form_feeling_upset</item>
         <item>@string/support_form_feeling_panicked</item>
     </string-array>
+
+    <string name="support_form_request_creation_error">Something went wrong. Try again later.</string>
 </resources>
