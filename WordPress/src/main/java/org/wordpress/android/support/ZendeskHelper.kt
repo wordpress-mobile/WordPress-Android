@@ -202,6 +202,21 @@ class ZendeskHelper(
     }
 
     // TODO Add documentation
+    fun showTicket(
+        context: Context,
+        request: Request,
+        selectedSite: SiteModel?
+    ) {
+        require(isZendeskEnabled) {
+            zendeskNeedsToBeEnabledError
+        }
+        requireIdentity(context, selectedSite) {
+            // TODO Add tracking
+            RequestActivity.builder().withRequest(request).show(context)
+        }
+    }
+
+    // TODO Add documentation
     fun createRequest(
         context: Context,
         origin: Origin?,
