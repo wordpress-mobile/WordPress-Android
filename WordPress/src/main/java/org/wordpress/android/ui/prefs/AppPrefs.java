@@ -166,7 +166,8 @@ public class AppPrefs {
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
-        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
     }
 
     /**
@@ -1298,6 +1299,18 @@ public class AppPrefs {
 
     public static boolean shouldScheduleCreateSiteNotification() {
         return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
+    }
+
+    public static void setShouldShowWeeklyRoundupNotification(long remoteSiteId, boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), shouldShow).apply();
+    }
+
+    public static boolean shouldShowWeeklyRoundupNotification(long remoteSiteId) {
+        return prefs().getBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), true);
+    }
+
+    @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
     /*

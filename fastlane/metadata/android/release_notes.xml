@@ -1,108 +1,119 @@
 <ar>
-18.1:
--موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
--زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
-- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+18.2:
+- يمنحك الآن مكوِّن التضمين معاينة عندما تقوم بالإضافة من يوتيوب أو تويتر.
+- إذا لم يتم العثور على أي شيء في بحث أداة إدراج المكوِّن، فسيظهر طريقة عرض "لا توجد نتائج".
+- تحتوي شاشة صفحتي الرئيسية على زر "مشاركة ووردبريس مع صديق"، ما يتيح لك مشاركة رابط تطبيق ووردبريس.
+- يؤدي كذلك الإعجاب بمقالة في القارئ إلى إضافة صورة أفاتار الخاصة بك إلى الإعجابات.
 </ar>
 <de-DE>
-18.1:
-- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
-- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
-- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
+18.2:
+- Der Embed-Block zeigt dir jetzt eine Vorschau an, wenn du Inhalte aus YouTube oder Twitter einfügst.
+- Wenn bei einer Block-Einfüge-Suche nichts gefunden wird, wird jetzt der Bildschirm „Keine Ergebnisse“ angezeigt.
+Der Bildschirm „Ich“ verfügt jetzt über den Button „Teile WordPress mit Freunden“, über den du einen Link zur WordPress-App teilen kannst.
+- Wenn du einen Beitrag im Reader mit „Gefällt mir“ markierst, wird zu deiner Gefällt mir-Angabe auch dein Avatar hinzugefügt.
 </de-DE>
 <en-US>
-18.1:
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+18.2:
+- The Embed block now gives a preview when you add from YouTube or Twitter.
+- If nothing is found in a block inserter search a “no results” view appears.
+- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link.
+- Liking a post in the Reader also adds your avatar to the like.
 </en-US>
 <es-ES>
-18.1:
--Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
--Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
--Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
+18.2:
+- El bloque incrustado ahora da una vista previa cuando añades desde YouTube o Twitter.
+- Si no se encuentra nada en una búsqueda de inserción de bloques, aparece una vista de «sin resultados».
+- La pantalla «Yo» tiene un nuevo botón «Compartir WordPress con un amigo», permitiéndote compartir un enlace de la aplicación de WordPress.
+- Al pulsar «Me gusta» en una entrada en el lector, también se añade tu avatar al «Me gusta».
 </es-ES>
 <fr-CA>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.2 :
+- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
+- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
+- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
+- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
 </fr-CA>
 <fr-FR>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.2 :
+- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
+- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
+- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
+- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
 </fr-FR>
 <iw-IL>
-18.1:
-- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
-- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
-- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
+18.2:
+- בלוק ההטמעה כעת מאפשר לך לראות תצוגה מקדימה כאשר מוסיפים תוכן מ-YouTube או מטוויטר.
+- כאשר לא מוצאים שום דבר בחיפוש של מוסיף הבלוקים, תופיע תצוגה עם המלל "אין תוצאות".
+- המסך 'אני' כולל כפתור חדש "לשתף את WordPress עם חברים" שמאפשר לך לשתף קישור לאפליקציה של WordPress.
+- סימון לייק לפוסט ב-Reader יוסיף גם את תמונת הפרופיל שלך ללייק.
 </iw-IL>
 <id>
-18.1:
-- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
-- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
-- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
+18.2:
+- Blok Sematan sekarang dilengkapi pratinjau untuk konten yang ditambahkan dari YouTube atau Twitter.
+- Jika tidak ada konten yang ditemukan di penyisip blok, tulisan "tidak ada hasil" akan ditampilkan.
+- Layar Saya dilengkapi dengan tombol baru “Bagikan WordPress ke teman” yang dan memungkinkan Anda berbagi tautan aplikasi WordPress.
+- Sekarang avatar Anda juga akan ditampilkan saat menyukai pos lewat Pembaca.
 </id>
 <it-IT>
-18.1:
--Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
--Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
--Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
+18.2:
+- Il blocco Incorporamenti ora offre un'anteprima quando aggiungi da YouTube o Twitter.
+- Se non viene trovato nulla in una ricerca nello strumento per l'inserimento dei blocchi, viene mostrata una visualizzazione "nessun risultato".
+- La schermata Io ha un nuovo pulsante "Condividi WordPress con un amico", che ti consente di condividere un link dell'app WordPress.
+- Mettendo Mi piace a un articolo nel Reader viene aggiunto anche il tuo avatar ai Mi piace.
 </it-IT>
 <ja-JP>
-18.1:
--1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
--埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
--時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
+18.2:
+- YouTube または Twitter からコンテンツを追加したときに埋め込みブロックでプレビューが見られるようになりました。
+- ブロック挿入の検索で何も見つからなかった場合は「見つかりませんでした」と表示されるようになりました。
+- Me 画面に「WordPress を友達と共有する」ボタンが追加され、WordPress のアプリリンクをシェアできるようになりました。
+- Reader に投稿をリンクすると「いいね」にもアバターが追加されるようになりました。
 </ja-JP>
 <ko-KR>
-18.1:
-- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
-- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
-- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
+18.2:
+- 이제 YouTube 또는 Twitter에서 추가하면 임베드 블록에서 미리보기가 제공됩니다.
+- 블록 삽입기에서 아무것도 찾을 수 없으면 '결과 없음' 보기가 나타납니다.
+- WordPress 앱 링크를 공유할 수 있는 새로운 '친구와 WordPress 공유' 버튼이 내 계정 화면에 있습니다.
+- 리더에서 글에 좋아요를 표시하면 아바타도 좋아요에 추가됩니다.
 </ko-KR>
 <nl-NL>
-18.1:
--Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
--Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
--Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
+18.2:
+- Het insluit blok geeft nu een voorbeeld als je toevoegt van YouTube of Twitter.
+- Als er niets gevonden wordt met een blok invoeger zoekopdracht verschijnt er een "geen resultaten" weergave.
+- Het Mij scherm heeft een nieuwe "Deel WordPress met een vriend" knop, waarmee je een WordPress app link kunt delen.
+- Een bericht liken in de Reader voegt nu ook je avatar toe aan de like.
 </nl-NL>
-<pt-BR>
-18,1:
-- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
-- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
-- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
-</pt-BR>
 <ru-RU>
-18.1:
--Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
--Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
--Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
+18.2:
+- Блок встраивания теперь имеет предварительный просмотр при добавлении с YouTube или Twitter.
+- Если ничего не найдено в поиске при вставке блока, то будет показан экран отсутствия результатов.
+- На экране профиля появилась новая кнопка «Поделиться WordPress с другом», с помощью которой вы можете поделиться ссылкой на приложение WordPress.
+- Если вы поставите отметку "нравится" в Чтиве, ваш аватар будет добавлен в список отметивших "нравится".
 </ru-RU>
 <sv-SE>
-18.1:
--Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
--Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
--En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
+18.2:
+- Inbäddningsblocket innehåller nu en förhandsvisning när du bäddar in från YouTube eller Twitter.
+- Om inget hittas vid sökning för infogning av block visas en vy för ”inget resultat”.
+- Skärmen Jag har en ny knapp ”Dela WordPress med en vän” så att du kan skicka en länk till en WordPress-app.
+- Om du gillar ett inlägg i läsaren läggs även din avatar in med gillamarkeringen.
 </sv-SE>
 <tr-TR>
-18.1:
--Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
--Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
--Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
+18.2:
+- Gömülü blok artık YouTube veya Twitter'dan eklediğinizde bir önizleme görüntüler.
+- Blok yerleştirici aramasında hiçbir şey bulunamazsa, “sonuç yok” görünümü görüntülenir.
+- Ben ekranında, bir WordPress uygulama bağlantısını paylaşmanıza olanak tanıyan yeni bir "WordPress'i bir arkadaşınızla paylaşın" düğmesi bulunur.
+- Okuyucu'da bir gönderi beğenildiğinde avatarınız da beğeniye eklenir.
 </tr-TR>
 <zh-CN>
-18.1:
--每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
--“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
--时间选择功能，允许您选择特定的时间来接收博客提醒。
+18.2：
+- 现在，嵌入区块允许您从 YouTube 或 Twitter 添加内容时进行预览。
+- 如果您在区块插入器搜索中没有找到任何内容，“无结果”视图将显示。
+-“我”屏幕拥有新的“与朋友共享 WordPress”按钮，允许您共享 WordPress 应用程序链接。
+- 在阅读器中点赞文章还会将您的头像添加到该赞中。
 </zh-CN>
 <zh-TW>
-18.1：
--每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
--嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
--時間選取功能可讓你指定接收網誌提醒的時間。
+18.2：
+- 嵌入區塊現在可預覽從 YouTube 或 Twitter 新增的內容。
+- 如果區塊插入器搜尋功能中找不到結果，現在會顯示「無結果」畫面。
+-「我的」畫面現在新增「向朋友推薦 WordPress」按鈕，讓你能夠分享 WordPress 應用程式連結。
+- 在閱讀器中對文章按讚現在也會新增你的大頭貼。
 </zh-TW>

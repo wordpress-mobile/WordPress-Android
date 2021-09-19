@@ -1,5 +1,4 @@
-* [*] When you like a post from the reader post details, your avatar is gracefully added to the list of people who liked that post through an animation [https://github.com/wordpress-mobile/WordPress-Android/pull/15248]
-* [*] Users can now share the WordPress app with their friends from the Me screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/15279]
-* [***] Block editor: Inserter: Add Inserter Block Search [https://github.com/WordPress/gutenberg/pull/33237]
-* [**] Block editor: Enable embed preview for a list of providers (for now only YouTube and Twitter) [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3900]
-
+- The Embed block now gives a preview when you add from YouTube or Twitter. 
+- If nothing is found in a block inserter search a “no results” view appears. 
+- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link. 
+- Liking a post in the Reader also adds your avatar to the like.

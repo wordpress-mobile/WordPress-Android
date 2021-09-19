@@ -62,7 +62,6 @@ Language: es_CL
     <string name="site_settings_gutenberg_default_for_new_posts">Utiliza el Editor de Bloques</string>
     <string name="menu_switch_to_gutenberg_editor">Cambiar al editor de bloques</string>
     <string name="exit">salir</string>
-    <string name="quick_start_sites_type_subtitle">%1$d de %2$d completado</string>
     <string name="quick_start_sites">Siguientes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">¡Disfruta de tu producto terminado!</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-09-16 21:04:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
+    <string name="domains_primary_domain">HAUPTADRESSE DER WEBSITE</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
+    <string name="gutenberg_native_line_height">Zeilenhöhe</string>
+    <string name="site_settings_site_domains_title">Website-Domains</string>
+    <string name="my_site_btn_domains">Domains</string>
+    <string name="me_btn_share">Teile WordPress mit einem Freund</string>
+    <string name="recommend_app_subject">WordPress-Apps – Apps für jeden Bildschirm</string>
+    <string name="recommend_app_null_response">Keine Antwort erhalten</string>
+    <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
+    <string name="my_site_quick_actions_title">Direkte Links</string>
+    <string name="like_faces_more_bloggers_text">%1$s Blogger %2$s.</string>
+    <string name="like_faces_one_blogger_text">1 Blogger %1$s.</string>
+    <string name="like_faces_plural_with_you_text">Dir und %1$s Bloggern %2$s.</string>
+    <string name="like_faces_you_plus_one_text">Dir und 1 Blogger %1$s.</string>
+    <string name="like_faces_you_text">Dir %1$s.</string>
+    <string name="likes_this">gefällt das</string>
+    <string name="like_this">gefällt das</string>
     <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
     <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
@@ -36,6 +55,7 @@ Language: de
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst. </string>
     <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
     <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
@@ -47,13 +67,13 @@ Language: de
     <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Wir arbeiten daran, Unterstützung für die eingebettete Vorschau hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
     <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
     <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Eingebettete Vorschau noch nicht verfügbar</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Eingebettete Block-Vorschau demnächst verfügbar</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s-Vorschauen noch nicht verfügbar</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">%s-Block-Vorschauen demnächst verfügbar</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
     <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
@@ -175,8 +195,6 @@ Language: de
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschreibe den Zweck des Bildes. Lass dieses Feld frei, falls das Bild rein dekorativ ist. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s umgewandelt in %2$s</string>
     <string name="like_faces_error_loading_message">Fehler beim Laden der „Like“-Daten. %s.</string>
-    <string name="like_faces_plural_text">%d Bloggern gefällt das.</string>
-    <string name="like_faces_singular_text">1 Blogger gefällt das.</string>
     <string name="like_title_plural">%d Gefällt mir</string>
     <string name="like_title_singular">1 Like</string>
     <string name="suggestion">Vorschlag:</string>
@@ -1354,7 +1372,6 @@ Language: de
     <string name="plans_loading_error_no_plans_title">Tarife können nicht geladen werden</string>
     <string name="exit">beenden</string>
     <string name="quick_start_sites">Nächste Schritte</string>
-    <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_view_site_message">Genieße dein fertiges Produkt!</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>

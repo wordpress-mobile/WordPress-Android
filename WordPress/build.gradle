@@ -184,8 +184,8 @@ android {
             applicationIdSuffix ".prealpha"
             dimension "buildType"
 
-            versionName versionProperties.getProperty("alpha.versionName")
-            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
+            versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("alpha.versionName")
+            versionCode 1 // Fixed versionCode because those builds are not meant to be uploaded to the PlayStore.
         }
 
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
@@ -266,7 +266,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
     }
 
     // Then define the found properties as buildConfigFields
-    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
     fields_map.each {
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
@@ -474,6 +473,8 @@ dependencies {
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
+
+    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
 }
 
 configurations.all {

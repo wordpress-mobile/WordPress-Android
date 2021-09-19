@@ -186,6 +186,14 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.isBloggingRemindersShown(siteId)
     }
 
+    fun setShouldShowWeeklyRoundupNotification(siteId: Long, shouldShow: Boolean) {
+        AppPrefs.setShouldShowWeeklyRoundupNotification(siteId, shouldShow)
+    }
+
+    fun shouldShowWeeklyRoundupNotification(siteId: Long): Boolean {
+        return AppPrefs.shouldShowWeeklyRoundupNotification(siteId)
+    }
+
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
             AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 

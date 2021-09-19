@@ -114,8 +114,6 @@ Language: cs_CZ
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Popište účel obrázku. Pokud je obrázek čistě dekorativní, ponechte toto pole prázdné.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s změnit na %2$s</string>
     <string name="like_faces_error_loading_message">Chyba při načítání podobných dat. %s.</string>
-    <string name="like_faces_plural_text">%d blogerům se to líbí.</string>
-    <string name="like_faces_singular_text">1 blogerovi se to líbí.</string>
     <string name="like_title_plural">%d to se mi líbí</string>
     <string name="like_title_singular">1 to se mi libí</string>
     <string name="suggestion">Doporučení:</string>
@@ -1298,7 +1296,6 @@ Language: cs_CZ
     <string name="quick_start_complete_tasks_header">Kompletní (%d)</string>
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
-    <string name="quick_start_sites_type_subtitle">%1$d z %2$d dokončeno</string>
     <string name="quick_start_dialog_need_help_message">Provedeme vás základy budování a rozšiřování vašeho webu</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>

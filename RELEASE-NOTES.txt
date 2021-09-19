@@ -2,7 +2,9 @@
 
 18.3
 -----
-
+* [**] Media: Fix Atomic sites video not playing issue. (https://github.com/wordpress-mobile/WordPress-Android/pull/15285)
+* [*] Block editor: Fixes bug preventing button block gradient background from being updated in the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15312]
+* [*] Updated the wording for the "Posts" and "Pages" entries in My Site screen [https://github.com/wordpress-mobile/WordPress-Android/pull/15327]
 
 18.2
 -----
