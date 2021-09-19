@@ -8,7 +8,7 @@ buildscript {
     ext.wordPressUtilsVersion = 'develop-eebc5d8e91a1d90190919f900f924b39c861a528'
     ext.wordPressLoginVersion = '0.0.4'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = '3937-6994e1f753b640de02042b466e2b7072cd362965'
+    ext.gutenbergMobileVersion = '3937-774b8f516b61b079f9bebcc0c9e30a6ee9d05c07'
 
     repositories {
         maven {
