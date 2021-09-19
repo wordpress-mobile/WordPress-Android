@@ -369,9 +369,11 @@ public class EditPostSettingsFragment extends Fragment {
         if (getEditPostRepository() != null && getEditPostRepository().isPage()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
+            final View markAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
             categoriesTagsContainer.setVisibility(View.GONE);
             formatBottomSeparator.setVisibility(View.GONE);
             mFormatContainer.setVisibility(View.GONE);
+            markAsStickyContainer.setVisibility(View.GONE);
         }
 
         mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {

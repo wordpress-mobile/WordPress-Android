@@ -222,10 +222,11 @@
 
         <!-- Mark as Sticky -->
 
-        <LinearLayout style="@style/PostSettingsCardViewInnerLayout">
+        <LinearLayout
+            android:id="@+id/post_settings_mark_as_sticky_container"
+            style="@style/PostSettingsCardViewInnerLayout" >
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/post_settings_mark_as_sticky_header"
                 style="@style/PostSettingsSectionHeader"
                 android:text="@string/post_settings_mark_as_sticky_options_header" />
 
