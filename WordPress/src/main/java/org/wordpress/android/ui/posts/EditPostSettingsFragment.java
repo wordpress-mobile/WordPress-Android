@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -145,7 +144,7 @@ public class EditPostSettingsFragment extends Fragment {
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
     private final OnCheckedChangeListener onStickySwitchChangeListener =
-            (buttonView, isChecked) -> Toast.makeText(getContext(), "MUDOU AQUI", Toast.LENGTH_LONG).show();
+            (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
 
 
     public interface EditPostActivityHook {
@@ -576,6 +575,16 @@ public class EditPostSettingsFragment extends Fragment {
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
+    private void onStickySwitchChanged(boolean checked) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateAsync(postModel -> {
+                postModel.setSticky(checked);
+                return true;
+            }, null);
+        }
+    }
+
     /*
      * called by the activity when the user taps OK on a PostSettingsDialogFragment
      */
@@ -859,7 +868,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         // We need to remove the listener first, otherwise the listener will be triggered
         mStickySwitch.setOnCheckedChangeListener(null);
-        mStickySwitch.setChecked(Math.random() % 2 != 0);
+        mStickySwitch.setChecked(postModel.getSticky());
         mStickySwitch.setOnCheckedChangeListener(onStickySwitchChangeListener);
     }
 
