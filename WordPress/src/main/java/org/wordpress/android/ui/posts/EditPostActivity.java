@@ -3468,32 +3468,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onContactCustomerSupport() {
-        // construct a mutable list to add the related and extra tags
-        ArrayList<String> tagsList = new ArrayList<>();
-
-        // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
-        if (SiteUtils.isBlockEditorDefaultForNewPost(getSite())) {
-            tagsList.add(ZendeskExtraTags.gutenbergIsDefault);
-        }
-
-        mZendeskHelper.createNewTicket(
-                this,
-                Origin.EDITOR_HELP,
-                getSite(),
-                tagsList.isEmpty() ? null : tagsList
-        );
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
     }
 
     @Override public void onGotoCustomerSupportOptions() {
-        // construct a mutable list to add the related and extra tags
-        ArrayList<String> tagsList = new ArrayList<>();
-
-        // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
-        if (SiteUtils.isBlockEditorDefaultForNewPost(getSite())) {
-            tagsList.add(ZendeskExtraTags.gutenbergIsDefault);
-        }
-
-        ActivityLauncher.viewHelpAndSupport(this, Origin.EDITOR_HELP, getSite(), tagsList.isEmpty() ? null : tagsList);
+        EditPostCustomerSupportHelper.INSTANCE.onGotoCustomerSupportOptions(this, getSite());
     }
 
     // FluxC events
