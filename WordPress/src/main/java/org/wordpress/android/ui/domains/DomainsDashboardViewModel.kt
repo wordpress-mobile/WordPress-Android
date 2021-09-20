@@ -2,6 +2,8 @@ package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -16,6 +18,7 @@ import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
 import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -29,7 +32,8 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    selectedSiteRepository: SelectedSiteRepository,
+    private val domainRegistrationHandler: DomainRegistrationHandler,
     private val htmlMessageUtils: HtmlMessageUtils
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
@@ -39,6 +43,9 @@ class DomainsDashboardViewModel @Inject constructor(
     val uiModel = _uiModel
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
+    val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+    private val domainCreditAvailable =
+            domainRegistrationHandler.buildSource(viewModelScope, selectedSite.id).distinctUntilChanged()
 
     private var isStarted: Boolean = false
     fun start() {
@@ -50,12 +57,12 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun buildSiteDomainsList(): List<DomainsListItem> {
-        val freePlan = selectedSiteRepository.getSelectedSite()?.let { SiteUtils.onFreePlan(it) }
-        val customDomain = selectedSiteRepository.getSelectedSite()?.let { SiteUtils.hasCustomDomain(it) }
+        val hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
+        val hasCustomDomain = SiteUtils.hasCustomDomain(selectedSite)
         return when {
-            customDomain == true -> manageDomainsItems()
-            freePlan == true -> getDomainItems()
-            else -> claimDomainItems()
+            hasCustomDomain -> manageDomainsItems()
+            hasDomainCredit -> claimDomainItems()
+            else -> getDomainItems()
         }
     }
 
@@ -118,13 +125,11 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onGetDomainClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
         _onNavigation.value = Event(GetDomain(selectedSite))
     }
 
     private fun onClaimDomainClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
         _onNavigation.value = Event(GetDomain(selectedSite))
     }
@@ -134,8 +139,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onManageDomainClick() {
-        val siteId = selectedSiteRepository.selectedSiteChange.value?.siteId
-        _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${siteId}")))
+        _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${selectedSite.siteId}")))
     }
 
     private fun onChangeSiteClick() {
