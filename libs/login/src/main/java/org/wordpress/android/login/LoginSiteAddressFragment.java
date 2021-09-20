@@ -369,8 +369,11 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                     event.error.message);
 
             AppLog.e(T.API, "onFetchedConnectSiteInfo has error: " + event.error.message);
-
-            showError(R.string.invalid_site_url_message);
+            if (NetworkUtils.isNetworkAvailable(requireContext())) {
+                showError(R.string.invalid_site_url_message);
+            } else {
+                showError(R.string.error_generic_network);
+            }
 
             endProgressIfNeeded();
         } else {
