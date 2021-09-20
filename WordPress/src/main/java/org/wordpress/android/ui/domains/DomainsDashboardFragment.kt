@@ -11,8 +11,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FragmentDomainsDashboardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -58,13 +58,16 @@ class DomainsDashboardFragment : Fragment() {
         }
     }
 
-    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
-        is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+    private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
+        is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        else -> {} // TODO: next
+        is OpenManageDomains -> ActivityLauncher.openUrlExternal(
+                requireContext(),
+                action.url
+        )
     }
 
     companion object {

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
@@ -12,9 +13,9 @@ import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -31,7 +32,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val htmlMessageUtils: HtmlMessageUtils
 ) : ViewModel() {
-    private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
+    private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
     val onNavigation = _onNavigation
 
     private val _uiModel = MutableLiveData<List<DomainsListItem>>()
@@ -61,7 +62,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun getDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
 
         listItems +=
             PurchaseDomain(
@@ -78,7 +79,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun claimDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
 
         listItems +=
             PurchaseDomain(
@@ -95,7 +96,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun manageDomainsItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onMoreMenuClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
 
         listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 
@@ -119,13 +120,13 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onGetDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
-        _onNavigation.value = Event(OpenDomainRegistration(selectedSite))
+        _onNavigation.value = Event(GetDomain(selectedSite))
     }
 
     private fun onClaimDomainClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
-        _onNavigation.value = Event(OpenDomainRegistration(selectedSite))
+        _onNavigation.value = Event(GetDomain(selectedSite))
     }
 
     private fun onAddDomainClick() {
@@ -133,10 +134,11 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onManageDomainClick() {
-        // TODO: next PR
+        val siteId = selectedSiteRepository.selectedSiteChange.value?.siteId
+        _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${siteId}")))
     }
 
-    private fun onMoreMenuClick() {
+    private fun onChangeSiteClick() {
         // TODO: next PR
     }
 }
