@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import javax.inject.Inject
 
 /**
@@ -102,4 +103,9 @@ class AnalyticsUtilsWrapper @Inject constructor(
 
     fun trackWithBlogPostDetails(stat: Stat, blogId: Long, postId: Long) =
             AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
+
+    fun trackRecommendAppEngaged(source: RecommendAppSource) = AnalyticsUtils.trackRecommendAppEngaged(source)
+
+    fun trackRecommendAppFetchFailed(source: RecommendAppSource, error: String) =
+            AnalyticsUtils.trackRecommendAppFetchFailed(source, error)
 }

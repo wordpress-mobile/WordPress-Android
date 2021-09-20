@@ -83,6 +83,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -115,8 +116,8 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
+import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.workers.WordPressWorkersFactory;
@@ -131,12 +132,12 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
-
-import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
 public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
@@ -187,6 +188,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject WordPressWorkersFactory mWordPressWorkerFactory;
     @Inject DebugCookieManager mDebugCookieManager;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -222,14 +224,14 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+            int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+            SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+            if (site != null) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
                 // Reload editor details from the remote backend
                 if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
                     // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(site));
                 }
             }
             return true;
@@ -391,13 +393,13 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     private void sanitizeMediaUploadStateForSite() {
-        int siteLocalId = AppPrefs.getSelectedSite();
-        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (selectedSite != null) {
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId(true);
+        final SiteModel site = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        if (site != null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, site);
                 }
             }).start();
         }

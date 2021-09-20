@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-24 09:26:59+0000
+Translation-Revision-Date: 2021-09-07 13:50:02+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_line_height">Înălțime linie</string>
+    <string name="domains_free_plan_get_your_domain_title">Ia-ți domeniul</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_primary_domain">Adresă site principal</string>
+    <string name="recommend_app_generic_get_template_error">Eroare necunoscută la aducerea șablonului recomandat pentru aplicație</string>
+    <string name="recommend_app_bad_format_response">Am primit un răspuns invalid</string>
+    <string name="recommend_app_null_response">Nu am primit niciun răspuns</string>
+    <string name="recommend_app_subject">Aplicații WordPress - aplicații pentru orice tip de ecran</string>
+    <string name="me_btn_share">Împărtășește WordPress cu un prieten</string>
+    <string name="my_site_quick_actions_title">Legături rapide</string>
+    <string name="my_site_btn_domains">Domenii</string>
+    <string name="like_faces_plural_with_you_text">Tu și alți %1$s bloggeri %2$s.</string>
+    <string name="like_faces_you_plus_one_text">Tu și încă un blogger %1$s.</string>
+    <string name="like_faces_one_blogger_text">Un blogger %1$s.</string>
+    <string name="like_faces_more_bloggers_text">%1$s bloggeri %2$s.</string>
+    <string name="site_settings_site_domains_title">Domenii site</string>
+    <string name="like_this">au apreciat asta</string>
+    <string name="likes_this">a apreciat asta</string>
     <string name="weekly_roundup_notification_text">Site-ul tău a avut %1$d vizualizări și ai primit %2$d aprecieri și %3$d comentarii.</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Vei primi reamintiri pentru publicare &lt;b&gt;în fiecare zi&lt;/b&gt; la &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="weekly_roundup_notification_title">Rezumat săptămânal: %s</string>
@@ -46,15 +64,15 @@ Language: ro
     <string name="stats_disabled_enable_stats_error_message">Nu pot să activez statisticile site-ului</string>
     <string name="create_site_notification_title">Creează-ți site-ul WordPress</string>
     <string name="create_site_notification_text">Cu doar câțiva pași rapizi, ai un site care rulează și funcționează</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Lucrăm din greu ca să adăugăm suport pentru previzualizarea înglobărilor. Între timp, poți previzualiza conținutul înglobat în articol.</string>
     <string name="gutenberg_native_what_is_a_block">Ce este un bloc?</string>
     <string name="stats_disabled_title">Cauți statisticile?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Lucrăm din greu ca să adăugăm suport pentru previzualizarea înglobărilor. Între timp, poți previzualiza conținutul înglobat în pagină.</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Previzualizările înglobărilor nu sunt încă disponibile</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Lucrăm din greu ca să adăugăm suport pentru previzualizări %s. Între timp, poți previzualiza conținutul înglobat în articol.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Lucrăm din greu ca să adăugăm suport pentru previzualizări %s. Între timp, poți previzualiza conținutul înglobat în pagină.</string>
     <string name="gutenberg_native_no_blocks_found">Niciun bloc găsit</string>
     <string name="gutenberg_native_try_another_search_term">Încearcă un alt termen de căutare</string>
     <string name="gutenberg_native_unable_to_embed_media">Nu pot să înglobez elemente media</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">În curând, previzualizări pentru blocurile înglobate</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Previzualizările %s nu sunt încă disponibile</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">În curând, previzualizări pentru blocul %s</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Atinge de două ori pentru a previzualiza pagina.</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Atinge de două ori pentru a previzualiza articolul.</string>
     <string name="quick_start_list_upload_icon_subtitle">Este afișat în fila navigatoarelor vizitatorilor tăi și în alte locuri online.</string>
@@ -172,8 +190,6 @@ Language: ro
     <string name="gutenberg_native_transform_s_to">Transformă %s în</string>
     <string name="gutenberg_native_transform_block">Transformă blocul…</string>
     <string name="gutenberg_native_failed_to_insert_media">Inserarea elementului media a eșuat.</string>
-    <string name="like_faces_plural_text">%d blogeri apreciază asta.</string>
-    <string name="like_faces_singular_text">Un bloger apreciază asta.</string>
     <string name="like_title_plural">%d aprecieri</string>
     <string name="like_faces_error_loading_message">Eroare la încărcarea datele despre aprecieri. %s.</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrie scopul imaginii. Lasă gol dacă imaginea este doar decorativă.</string>
@@ -1360,7 +1376,6 @@ Language: ro
     <string name="quick_start_sites">Pașii următori</string>
     <string name="quick_start_complete_tasks_header">Finalizate (%d)</string>
     <string name="quick_start_sites_type_grow">Crește-ți audiența</string>
-    <string name="quick_start_sites_type_subtitle">%1$d din %2$d finalizate</string>
     <string name="quick_start_sites_type_customize">Personalizează-ți site-ul</string>
     <string name="quick_start_dialog_upload_icon_title">Alege un icon unic pentru site</string>
     <string name="quick_start_dialog_need_help_message">Vom parcurge elementele de bază ale construirii și dezvoltării site-ului tău.</string>

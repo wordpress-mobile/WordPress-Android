@@ -15,7 +15,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,8 +29,7 @@ private const val SITE_CREATION_LOCATION = "site_creation"
 
 @Singleton
 class SiteCreationTracker @Inject constructor(
-    val tracker: AnalyticsTrackerWrapper,
-    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    val tracker: AnalyticsTrackerWrapper
 ) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
@@ -123,12 +121,11 @@ class SiteCreationTracker @Inject constructor(
      */
     fun trackSiteCreated(template: String?) {
         if (template == null || designSelectionSkipped) {
-            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mySiteImprovementsFeatureConfig)
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
         } else {
             tracker.track(
                     AnalyticsTracker.Stat.SITE_CREATED,
-                    mapOf(TEMPLATE.key to template),
-                    mySiteImprovementsFeatureConfig
+                    mapOf(TEMPLATE.key to template)
             )
         }
     }

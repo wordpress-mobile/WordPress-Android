@@ -2104,6 +2104,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_epilogue_create_new_site_tapped";
             case CREATE_SITE_NOTIFICATION_SCHEDULED:
                 return "create_site_notification_scheduled";
+            case RECOMMEND_APP_ENGAGED:
+                return "recommend_app_engaged";
+            case RECOMMEND_APP_CONTENT_FETCH_FAILED:
+                return "recommend_app_content_fetch_failed";
         }
         return null;
     }

@@ -10,7 +10,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 
 data class MySiteUiState(
     val currentAvatarUrl: String? = null,

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
@@ -273,6 +274,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PlansViewModel.class)
     abstract ViewModel plansViewModel(PlansViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainsDashboardViewModel.class)
+    abstract ViewModel domainsDashboardViewModel(DomainsDashboardViewModel viewModel);
 
     @Binds
     @IntoMap

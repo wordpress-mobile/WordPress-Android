@@ -1,3 +1,4 @@
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+- The Embed block now gives a preview when you add from YouTube or Twitter. 
+- If nothing is found in a block inserter search a “no results” view appears. 
+- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link. 
+- Liking a post in the Reader also adds your avatar to the like.

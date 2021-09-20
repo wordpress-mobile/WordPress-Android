@@ -201,6 +201,39 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/recommend_the_app_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/recommend_the_app_shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_auto_start="false">
+
+                    <LinearLayout
+                        android:id="@+id/row_recommend_the_app"
+                        style="@style/MeListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/me_share_icon"
+                            style="@style/MeListRowIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_share_white_24dp" />
+
+                        <org.wordpress.android.util.widgets.AutoResizeTextView
+                            android:id="@+id/me_share_text_view"
+                            style="@style/MeListRowTextView"
+                            android:text="@string/me_btn_share" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <View style="@style/MeListSectionDividerView" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/row_logout"
                 style="@style/MeListRowLayout">
 

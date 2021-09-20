@@ -20,6 +20,7 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -35,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
+    public static final int SELECTED_SITE_UNAVAILABLE = -1;
+
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
@@ -163,7 +166,8 @@ public class AppPrefs {
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
-        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
     }
 
     /**
@@ -594,12 +598,26 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
+    /**
+     * This method should only be used by specific client classes that need access to the persisted selected site
+     * instance due to the fact that the in-memory selected site instance might not be yet available.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such access
+     * to this method is limited to this class.
+     */
     public static int getSelectedSite() {
-        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
-    public static void setSelectedSite(int selectedSite) {
-        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
+    /**
+     * This method should only be used by specific client classes that need to update the persisted selected site
+     * instance due to the fact that the in-memory selected site instance is updated as well.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such the
+     * update method should be limited to this class.
+     */
+    public static void setSelectedSite(int siteLocalId) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
@@ -908,7 +926,7 @@ public class AppPrefs {
 
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
-        List<String> items = Arrays.asList(idsAsString.split(","));
+        String[] items = idsAsString.split(",");
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
@@ -1283,6 +1301,18 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
     }
 
+    public static void setShouldShowWeeklyRoundupNotification(long remoteSiteId, boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), shouldShow).apply();
+    }
+
+    public static boolean shouldShowWeeklyRoundupNotification(long remoteSiteId) {
+        return prefs().getBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), true);
+    }
+
+    @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1304,10 +1334,7 @@ public class AppPrefs {
         }
         List<String> currentIds = getPostWithHWAccelerationOff();
         String key = localSiteId + "-" + localPostId;
-        if (currentIds.contains(key)) {
-            return true;
-        }
-        return false;
+        return currentIds.contains(key);
     }
 
     public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {
