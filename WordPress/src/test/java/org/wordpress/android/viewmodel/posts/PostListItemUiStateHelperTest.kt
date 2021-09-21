@@ -995,7 +995,7 @@ class PostListItemUiStateHelperTest {
     fun `when a post is sticky and private, the labels "Private" and "Sticky" are displayed`() {
         // Arrange
         val state = createPostListItemUiState(
-                post = createPostModel(status = POST_STATE_PRIVATE,sticky = true)
+                post = createPostModel(status = POST_STATE_PRIVATE, sticky = true)
         )
 
         // Assert
