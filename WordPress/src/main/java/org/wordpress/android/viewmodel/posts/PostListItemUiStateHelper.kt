@@ -119,7 +119,8 @@ class PostListItemUiStateHelper @Inject constructor(
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
                 hasUnhandledConflicts = unhandledConflicts,
-                hasAutoSave = hasAutoSave
+                hasAutoSave = hasAutoSave,
+                isSticky = post.sticky
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
@@ -238,7 +239,8 @@ class PostListItemUiStateHelper @Inject constructor(
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean,
-        hasAutoSave: Boolean
+        hasAutoSave: Boolean,
+        isSticky: Boolean
     ): List<UiString> {
         val labels: MutableList<UiString> = ArrayList()
         when {
@@ -282,6 +284,9 @@ class PostListItemUiStateHelper @Inject constructor(
             }
             if (postStatus == PENDING) {
                 labels.add(UiStringRes(R.string.post_status_pending_review))
+            }
+            if (isSticky) {
+                labels.add(UiStringRes(R.string.post_status_sticky))
             }
         }
         return labels
