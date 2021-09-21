@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,7 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.util.SiteUtils
 
 class DomainSuggestionsViewHolder(
     parent: ViewGroup,
@@ -24,9 +21,14 @@ class DomainSuggestionsViewHolder(
     private val selectionRadioButton: RadioButton = itemView.findViewById(R.id.domain_selection_radio_button)
     private val container: View = itemView.findViewById(R.id.domain_suggestions_container)
 
-    fun bind(suggestion: DomainSuggestionResponse, position: Int, isSelectedPosition: Boolean, site: SiteModel) {
+    fun bind(
+        suggestion: DomainSuggestionResponse,
+        position: Int,
+        isSelectedPosition: Boolean,
+        isDomainCreditAvailable: Boolean
+    ) {
         domainName.text = suggestion.domain_name
-        domainCost.text = getFormattedCost(suggestion, site)
+        domainCost.text = getFormattedCost(suggestion, isDomainCreditAvailable)
         selectionRadioButton.isChecked = isSelectedPosition
 
         container.setOnClickListener {
@@ -40,28 +42,29 @@ class DomainSuggestionsViewHolder(
         }
     }
 
-    private fun getFormattedCost(suggestion: DomainSuggestionResponse, site: SiteModel) = when {
+    private fun getFormattedCost(
+        suggestion: DomainSuggestionResponse,
+        isDomainCreditAvailable: Boolean
+    ) = when {
         suggestion.is_free -> {
             suggestion.cost
         }
-        SiteUtils.onFreePlan(site) -> {
-            Log.d(suggestion.product_id.toString(), suggestion.product_slug)
-
+        isDomainCreditAvailable -> {
             HtmlCompat.fromHtml(
                     String.format(
                             container.context.getString(
-                                    R.string.domain_suggestions_list_item_cost
+                                    R.string.domain_suggestions_list_item_cost_free
                             ),
                             suggestion.cost
                     ),
                     HtmlCompat.FROM_HTML_MODE_LEGACY
             )
         }
-        else -> { // on paid plan
+        else -> { // on free plan
             HtmlCompat.fromHtml(
                     String.format(
                             container.context.getString(
-                                    R.string.domain_suggestions_list_item_cost_free
+                                    R.string.domain_suggestions_list_item_cost
                             ),
                             suggestion.cost
                     ),
