@@ -494,6 +494,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setStatus(from.getStatus());
         post.setPassword(from.getPassword());
         post.setIsPage(from.getType().equals("page"));
+        post.setSticky(from.getSticky());
 
         if (from.getAuthor() != null) {
             post.setAuthorId(from.getAuthor().getId());
@@ -602,6 +603,7 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         params.put("password", StringUtils.notNullStr(post.getPassword()));
+        params.put("sticky", post.getSticky());
 
         // construct a json object with a `category` field holding a json array with the tags
         JsonObject termsById = new JsonObject();
