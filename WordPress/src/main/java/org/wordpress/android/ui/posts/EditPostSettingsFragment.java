@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -143,7 +142,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
-    private final OnCheckedChangeListener onStickySwitchChangeListener =
+    private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
 
 
@@ -363,7 +362,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        mStickySwitch.setOnCheckedChangeListener(onStickySwitchChangeListener);
+        mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
 
 
         if (getEditPostRepository() != null && getEditPostRepository().isPage()) { // remove post specific views
@@ -871,7 +870,7 @@ public class EditPostSettingsFragment extends Fragment {
         // We need to remove the listener first, otherwise the listener will be triggered
         mStickySwitch.setOnCheckedChangeListener(null);
         mStickySwitch.setChecked(postModel.getSticky());
-        mStickySwitch.setOnCheckedChangeListener(onStickySwitchChangeListener);
+        mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
     }
 
     private void updatePostFormatTextView(PostImmutableModel postModel) {

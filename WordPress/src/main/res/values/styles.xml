@@ -820,6 +820,13 @@
         <item name="android:background">?android:listDivider</item>
     </style>
 
+    <style name="PostSettingsSwitch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    </style>
+
     <!--Quick Start Prompt Dialog Styles (Old) -->
     <style name="QuickStartPromptDialogTitle">
         <item name="android:layout_gravity">center_vertical</item>

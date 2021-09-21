@@ -234,11 +234,8 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/post_settings_sticky_switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/post_settings_post_sticky"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    style="@style/PostSettingsSwitch"
+                    android:text="@string/post_settings_post_sticky" />
 
             </LinearLayout>
 
