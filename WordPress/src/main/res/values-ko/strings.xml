@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 09:54:08+0000
+Translation-Revision-Date: 2021-09-16 00:43:00+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_line_height">줄 높이</string>
+    <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_primary_domain">기본 사이트 주소</string>
+    <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
+    <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
+    <string name="recommend_app_null_response">수신된 응답 없음</string>
+    <string name="recommend_app_subject">WordPress 앱 - 모든 화면에 알맞은 앱</string>
+    <string name="me_btn_share">친구와 WordPress 공유</string>
+    <string name="my_site_quick_actions_title">퀵 링크</string>
+    <string name="my_site_btn_domains">도메인</string>
+    <string name="like_faces_more_bloggers_text">%1$s명 블로거의 %2$s입니다.</string>
+    <string name="like_faces_one_blogger_text">1명 블로거의 %1$s입니다.</string>
+    <string name="like_faces_plural_with_you_text">회원님과 %1$s명 블로거의 %2$s입니다.</string>
+    <string name="like_faces_you_plus_one_text">회원님과 1명 블로거의 %1$s입니다.</string>
+    <string name="like_faces_you_text">회원님의 %1$s입니다.</string>
+    <string name="likes_this">좋아요 개수</string>
+    <string name="like_this">좋아요 개수</string>
+    <string name="site_settings_site_domains_title">사이트 도메인</string>
     <string name="weekly_roundup_notification_text">사이트에서 조회수 %1$d개, 좋아요 %2$d개 댓글 %3$d개를 받았습니다.</string>
     <string name="weekly_roundup_notification_title">주간 총정리: %s</string>
     <string name="blogging_reminders_notification_time">알림 시간</string>
@@ -47,9 +66,13 @@ Language: ko_KR
     <string name="stats_disabled_subtitle">트래픽, 좋아요, 댓글, 구독자에 대한 자세한 내용을 참조하려면 사이트 통계를 활성화하세요.</string>
     <string name="stats_disabled_title">통계를 찾으시나요?</string>
     <string name="gutenberg_native_what_is_a_block">블록이란 무엇인가요?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">%s 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 글에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">%s 미리보기에 대한 지원을 추가하려고 노력하고 있습니다. 그동안에는 페이지에 임베드된 콘텐츠를 미리 볼 수 있습니다.</string>
     <string name="gutenberg_native_unable_to_embed_media">미디어를 임베드할 수 없음</string>
     <string name="gutenberg_native_try_another_search_term">다른 검색어 시도</string>
     <string name="gutenberg_native_no_blocks_found">블록을 찾을 수 없음</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">아직 %s 미리보기 사용할 수 없음</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">%s 블록 미리보기 곧 공개 예정</string>
     <string name="gutenberg_native_double_tap_to_preview_post">글을 미리 보려면 두 번 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">페이지를 미리 보려면 두 번 누르세요.</string>
     <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>

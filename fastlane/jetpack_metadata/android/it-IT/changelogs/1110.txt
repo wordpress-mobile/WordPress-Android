@@ -1,0 +1,2 @@
+18.2:
+Abbiamo apportato un paio di utili miglioramenti all'editor a blocchi: il blocco Incorporamenti ora ti offre un assaggio di anteprima quando aggiungi qualcosa da YouTube o Twitter (sono in arrivo altri fornitori); e quando vai a inserire un blocco e non trovi nulla, ora viene mostrata una visualizzazione "nessun risultato".

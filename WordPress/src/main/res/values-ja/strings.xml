@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 09:54:09+0000
+Translation-Revision-Date: 2021-09-16 21:05:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_line_height">行の高さ</string>
+    <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
+    <string name="domains_primary_domain">主要サイトのアドレス</string>
+    <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
+    <string name="recommend_app_null_response">応答がありませんでした</string>
+    <string name="recommend_app_subject">WordPress アプリ - さまざまな画面で利用できるアプリ</string>
+    <string name="me_btn_share">WordPress を友達と共有する</string>
+    <string name="my_site_quick_actions_title">クイックリンク</string>
+    <string name="my_site_btn_domains">ドメイン</string>
+    <string name="like_faces_more_bloggers_text">%1$s人のブロガー %2$s。</string>
+    <string name="like_faces_one_blogger_text">1人のブロガー %1$s。</string>
+    <string name="like_faces_plural_with_you_text">あなたと%1$s人のブロガー %2$s。</string>
+    <string name="like_faces_you_plus_one_text">あなたと1人のブロガー%1$s。</string>
+    <string name="like_faces_you_text">あなた %1$s。</string>
+    <string name="likes_this">「いいね」しています</string>
+    <string name="like_this">「いいね」しています</string>
+    <string name="site_settings_site_domains_title">サイトドメイン</string>
     <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
     <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
@@ -37,6 +56,7 @@ Language: ja_JP
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">ブロックがあることでコンテンツ作成に集中することができ、メッセージの発信に役立つすべての書式設定ツールが利用できます。</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">列へのコンテンツの配置、行動喚起ボタンの追加、テキストによる画像のオーバーレイを実行できます。</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">左下のツールバーにある + アイコンをタップすることで、いつでも新しいブロックを追加できます。 </string>
+    <string name="quick_start_sites_type_tasks_completed">%2$s個中%1$s個が完了</string>
     <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
     <string name="comment_batch_moderation_error">1つ以上のコメントを承認できませんでした</string>
     <string name="create_site_notification_create_site_action">サイトを作成</string>
@@ -47,9 +67,13 @@ Language: ja_JP
     <string name="stats_disabled_subtitle">サイト統計情報を有効にすると、トラフィック、「いいね」、コメント、購読者に関する詳細を確認できます。</string>
     <string name="stats_disabled_title">統計情報をお探しですか ?</string>
     <string name="gutenberg_native_what_is_a_block">ブロックとは</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、ブログ投稿で埋め込まれたコンテンツをプレビューできます。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">%sプレビューのサポートの追加に取り組んでいます。 それまでの間、固定ページで埋め込まれたコンテンツをプレビューできます。</string>
     <string name="gutenberg_native_unable_to_embed_media">メディアを埋め込むことができません</string>
     <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
     <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%sプレビューはまだご利用いただけません</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">%sブロックのプレビューはまもなく公開予定です</string>
     <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
     <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>

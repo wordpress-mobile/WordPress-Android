@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-11 20:56:59+0000
+Translation-Revision-Date: 2021-09-16 21:04:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
@@ -17,6 +17,14 @@ Language: de
     <string name="recommend_app_subject">WordPress-Apps – Apps für jeden Bildschirm</string>
     <string name="recommend_app_null_response">Keine Antwort erhalten</string>
     <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
+    <string name="my_site_quick_actions_title">Direkte Links</string>
+    <string name="like_faces_more_bloggers_text">%1$s Blogger %2$s.</string>
+    <string name="like_faces_one_blogger_text">1 Blogger %1$s.</string>
+    <string name="like_faces_plural_with_you_text">Dir und %1$s Bloggern %2$s.</string>
+    <string name="like_faces_you_plus_one_text">Dir und 1 Blogger %1$s.</string>
+    <string name="like_faces_you_text">Dir %1$s.</string>
+    <string name="likes_this">gefällt das</string>
+    <string name="like_this">gefällt das</string>
     <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
     <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
@@ -47,6 +55,7 @@ Language: de
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst. </string>
     <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
     <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
@@ -58,9 +67,13 @@ Language: de
     <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
     <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
     <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s-Vorschauen noch nicht verfügbar</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">%s-Block-Vorschauen demnächst verfügbar</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
     <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>

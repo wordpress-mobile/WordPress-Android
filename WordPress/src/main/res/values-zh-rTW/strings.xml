@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 09:54:09+0000
+Translation-Revision-Date: 2021-09-16 00:44:00+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_line_height">行高</string>
+    <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_primary_domain">主要網站位址</string>
+    <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
+    <string name="recommend_app_bad_format_response">收到無效回應</string>
+    <string name="recommend_app_null_response">未收到回應</string>
+    <string name="recommend_app_subject">WordPress 應用程式 - 適用任何螢幕</string>
+    <string name="me_btn_share">向朋友推薦 WordPress</string>
+    <string name="my_site_quick_actions_title">快速連結</string>
+    <string name="my_site_btn_domains">網域</string>
+    <string name="like_faces_more_bloggers_text">%1$s 位部落客%2$s。</string>
+    <string name="like_faces_one_blogger_text">1 位部落客%1$s。</string>
+    <string name="like_faces_plural_with_you_text">你和 %1$s 位部落客%2$s。</string>
+    <string name="like_faces_you_plus_one_text">你和 1 位部落客%1$s。</string>
+    <string name="like_faces_you_text">你%1$s。</string>
+    <string name="likes_this">按讚</string>
+    <string name="like_this">按讚</string>
+    <string name="site_settings_site_domains_title">網站網域</string>
     <string name="weekly_roundup_notification_text">你的網站獲得 %1$d 次瀏覽、%2$d 個讚和 %3$d 個留言。</string>
     <string name="weekly_roundup_notification_title">每週綜合整理：%s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
@@ -48,9 +67,13 @@ Language: zh_TW
     <string name="stats_disabled_subtitle">啟用網站統計資料即可查看網站詳細資訊，包括流量、按讚數、留言數和訂閱人數。</string>
     <string name="stats_disabled_title">在尋找統計資料嗎？</string>
     <string name="gutenberg_native_what_is_a_block">什麼是區塊？</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在文章中預覽嵌入內容。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在頁面中預覽嵌入內容。</string>
     <string name="gutenberg_native_unable_to_embed_media">無法內嵌媒體</string>
     <string name="gutenberg_native_try_another_search_term">嘗試其他搜尋字詞</string>
     <string name="gutenberg_native_no_blocks_found">找不到區塊</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">尚未推出 %s 預覽</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">即將推出 %s 區塊預覽</string>
     <string name="gutenberg_native_double_tap_to_preview_post">點兩下可預覽文章。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
     <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
