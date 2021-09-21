@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.4
+-----
+
+
 18.3
 -----
 * [**] Media: Fix Atomic sites video not playing issue. (https://github.com/wordpress-mobile/WordPress-Android/pull/15285)
