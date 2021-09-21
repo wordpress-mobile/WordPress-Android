@@ -49,7 +49,7 @@
 /payments/accounts
 /payments/orders/<order_id>/create_customer
 
-/terminal/locations/store
+/payments/terminal/locations/store
 
 /taxes
 /taxes/classes/
