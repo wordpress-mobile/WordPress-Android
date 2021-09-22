@@ -24,7 +24,10 @@ sealed class DomainsListItem(val type: Type) {
         DOMAIN_BLURB
     }
 
-    data class PrimaryDomain(val domain: UiString, val onPopupMenuClick: (Action) -> Boolean) : DomainsListItem(PRIMARY_DOMAIN)
+    data class PrimaryDomain(
+        val domain: UiString,
+        val onPopupMenuClick: (Action) -> Boolean
+    ) : DomainsListItem(PRIMARY_DOMAIN)
 
     data class SiteDomainsHeader(val title: UiString) : DomainsListItem(SITE_DOMAINS_HEADER)
 
