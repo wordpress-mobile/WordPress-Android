@@ -2445,6 +2445,7 @@
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
     <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_address_chip">Primary site address</string>
     <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>

@@ -32,8 +32,8 @@
                 android:id="@+id/primary_site_adress_actions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_more_horiz_white_24dp"
-                app:tint="@color/black"
+                app:srcCompat="@drawable/ic_ellipsis_vertical_white_24dp"
+                app:tint="?attr/wpColorOnSurfaceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

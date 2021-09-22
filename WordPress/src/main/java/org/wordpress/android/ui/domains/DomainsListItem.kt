@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.domains
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.domains.DomainsListItem.Type.ADD_DOMAIN
 import org.wordpress.android.ui.domains.DomainsListItem.Type.DOMAIN_BLURB
 import org.wordpress.android.ui.domains.DomainsListItem.Type.MANAGE_DOMAINS
@@ -22,7 +24,7 @@ sealed class DomainsListItem(val type: Type) {
         DOMAIN_BLURB
     }
 
-    data class PrimaryDomain(val domain: UiString, val onClick: ListItemInteraction) : DomainsListItem(PRIMARY_DOMAIN)
+    data class PrimaryDomain(val domain: UiString, val onPopupMenuClick: (Action) -> Boolean) : DomainsListItem(PRIMARY_DOMAIN)
 
     data class SiteDomainsHeader(val title: UiString) : DomainsListItem(SITE_DOMAINS_HEADER)
 
@@ -40,4 +42,15 @@ sealed class DomainsListItem(val type: Type) {
     ) : DomainsListItem(PURCHASE_DOMAIN)
 
     data class DomainBlurb(val blurb: UiString) : DomainsListItem(DOMAIN_BLURB)
+
+    enum class Action(@IdRes val itemId: Int) {
+        CHANGE_SITE_ADDRESS(R.id.change_site_address);
+
+        companion object {
+            fun fromItemId(itemId: Int): Action {
+                return values().firstOrNull { it.itemId == itemId }
+                        ?: throw IllegalArgumentException("Unexpected item ID in context menu")
+            }
+        }
+    }
 }

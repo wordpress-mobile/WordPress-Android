@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.domains
 
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import org.wordpress.android.R
 import org.wordpress.android.databinding.DomainAddDomainCtaBinding
 import org.wordpress.android.databinding.DomainManageDomainsCtaBinding
 import org.wordpress.android.databinding.DomainPrimarySiteAddressCardBinding
@@ -32,7 +35,17 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     ) {
         fun onBind(item: PrimaryDomain) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteAddress, item.domain)
-            primarySiteAdressActions.setOnClickListener { item.onClick.click() }
+            primarySiteAdressActions.setOnClickListener { view -> popupMenuClick(item, view) }
+        }
+
+        private fun popupMenuClick(item: PrimaryDomain, v: View) {
+            val popup = PopupMenu(v.context, v)
+            popup.setOnMenuItemClickListener { menuItem ->
+                val action = DomainsListItem.Action.fromItemId(menuItem.itemId)
+                item.onPopupMenuClick(action)
+            }
+            popup.menuInflater.inflate(R.menu.domains_more, popup.menu)
+            popup.show()
         }
     }
 

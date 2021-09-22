@@ -8,6 +8,8 @@ import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
+import org.wordpress.android.ui.domains.DomainsListItem.Action
+import org.wordpress.android.ui.domains.DomainsListItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
@@ -69,7 +71,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun getDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
 
         listItems +=
             PurchaseDomain(
@@ -86,7 +88,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun claimDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
 
         listItems +=
             PurchaseDomain(
@@ -103,7 +105,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun manageDomainsItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
-        listItems += PrimaryDomain(UiStringText(siteUrl), ListItemInteraction.create(this::onChangeSiteClick))
+        listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
 
         listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 
@@ -142,7 +144,10 @@ class DomainsDashboardViewModel @Inject constructor(
         _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${selectedSite.siteId}")))
     }
 
-    private fun onChangeSiteClick() {
-        // TODO: next PR
+    private fun onChangeSiteClick(action: Action): Boolean {
+        when (action) {
+            CHANGE_SITE_ADDRESS -> {} // TODO: next PR
+        }
+        return true
     }
 }
