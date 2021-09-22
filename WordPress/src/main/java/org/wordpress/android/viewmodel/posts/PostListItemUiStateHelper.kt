@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.posts
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
@@ -116,12 +115,10 @@ class PostListItemUiStateHelper @Inject constructor(
         )
         val statuses = getStatuses(
                 postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
+                post = post,
                 uploadUiState = uploadUiState,
                 hasUnhandledConflicts = unhandledConflicts,
-                hasAutoSave = hasAutoSave,
-                isSticky = post.sticky
+                hasAutoSave = hasAutoSave
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
@@ -246,30 +243,30 @@ class PostListItemUiStateHelper @Inject constructor(
                 getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
-                labels.add(UiStringRes(string.post_uploading_draft))
+                labels.add(UiStringRes(R.string.post_uploading_draft))
             } else {
-                labels.add(UiStringRes(string.post_uploading))
+                labels.add(UiStringRes(R.string.post_uploading))
             }
-            uploadUiState is UploadingMedia -> labels.add(UiStringRes(string.uploading_media))
-            uploadUiState is UploadQueued -> labels.add(UiStringRes(string.post_queued))
+            uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
+            uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
             uploadUiState is UploadWaitingForConnection -> {
                 getWaitingForConnectionStatus(uploadUiState.postStatus)?.let {
                     labels.add(it)
                 }
             }
-            hasUnhandledConflicts -> labels.add(UiStringRes(string.local_post_is_conflicted))
-            hasAutoSave -> labels.add(UiStringRes(string.local_post_autosave_revision_available))
+            hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
+            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
         return labels
     }
 
     private fun getWaitingForConnectionStatus(postStatus: PostStatus): UiString? {
         return when (postStatus) {
-            UNKNOWN, PUBLISHED -> (UiStringRes(string.post_waiting_for_connection_publish))
-            PRIVATE -> (UiStringRes(string.post_waiting_for_connection_private))
-            PENDING -> (UiStringRes(string.post_waiting_for_connection_pending))
-            SCHEDULED -> (UiStringRes(string.post_waiting_for_connection_scheduled))
-            DRAFT -> (UiStringRes(string.post_waiting_for_connection_draft))
+            UNKNOWN, PUBLISHED -> (UiStringRes(R.string.post_waiting_for_connection_publish))
+            PRIVATE -> (UiStringRes(R.string.post_waiting_for_connection_private))
+            PENDING -> (UiStringRes(R.string.post_waiting_for_connection_pending))
+            SCHEDULED -> (UiStringRes(R.string.post_waiting_for_connection_scheduled))
+            DRAFT -> (UiStringRes(R.string.post_waiting_for_connection_draft))
             TRASHED -> {
                 AppLog.e(
                         POSTS,
@@ -281,15 +278,12 @@ class PostListItemUiStateHelper @Inject constructor(
         }
     }
 
-    @Suppress("LongParameterList")
     private fun getStatuses(
         postStatus: PostStatus,
-        isLocalDraft: Boolean,
-        isLocallyChanged: Boolean,
+        post: PostModel,
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean,
-        hasAutoSave: Boolean,
-        isSticky: Boolean
+        hasAutoSave: Boolean
     ): List<UiString> {
         val labels: MutableList<UiString> = getErrorAndProgressStatuses(
                 uploadUiState,
@@ -300,9 +294,9 @@ class PostListItemUiStateHelper @Inject constructor(
 
         // we want to show either single error/progress label or 0-n info labels.
         if (labels.isEmpty()) {
-            if (isLocalDraft) {
+            if (post.isLocalDraft) {
                 labels.add(UiStringRes(R.string.local_draft))
-            } else if (isLocallyChanged) {
+            } else if (post.isLocallyChanged) {
                 labels.add(UiStringRes(R.string.local_changes))
             }
             if (postStatus == PRIVATE) {
@@ -311,7 +305,7 @@ class PostListItemUiStateHelper @Inject constructor(
             if (postStatus == PENDING) {
                 labels.add(UiStringRes(R.string.post_status_pending_review))
             }
-            if (isSticky) {
+            if (post.sticky) {
                 labels.add(UiStringRes(R.string.post_status_sticky))
             }
         }
