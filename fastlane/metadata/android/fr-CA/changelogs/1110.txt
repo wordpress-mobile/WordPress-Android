@@ -1,0 +1,5 @@
+18.2 :
+- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
+- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
+- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
+- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.

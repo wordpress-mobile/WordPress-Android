@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-20 13:42:48+0000
+Translation-Revision-Date: 2021-09-08 18:26:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
@@ -26,13 +26,9 @@ Language: pt_BR
     <string name="stats_disabled_subtitle">Ative as estatísticas do site para obter informações detalhadas sobre o tráfego, curtidas, comentários e assinantes.</string>
     <string name="stats_disabled_title">Procurando pelas estatísticas?</string>
     <string name="gutenberg_native_what_is_a_block">O que é um bloco?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Estamos trabalhando duro para adicionarmos compatibilidade com visualização de código incorporado. Enquanto isso, você pode visualizar o conteúdo incorporado diretamente no post.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Estamos trabalhando duro para adicionarmos compatibilidade com visualização de código incorporado. Enquanto isso, você pode visualizar o conteúdo incorporado diretamente na página.</string>
     <string name="gutenberg_native_unable_to_embed_media">Não foi possível incorporar mídia</string>
     <string name="gutenberg_native_try_another_search_term">Tente outro termo de pesquisa</string>
     <string name="gutenberg_native_no_blocks_found">Nenhum bloco encontrado</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Visualização de código incorporado ainda não disponível</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">A visualização para blocos de código incorporado estarão disponíveis em breve</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Toque duas vezes para visualizar post.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Toque duas vezes para visualizar a página.</string>
     <string name="quick_start_list_upload_icon_subtitle">Exibido na aba do navegador de seu visitante e outros lugares online.</string>
@@ -143,6 +139,7 @@ Language: pt_BR
     <string name="gutenberg_native_embed_link">Link da mídia incorporada</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
+    <string name="gutenberg_native_add_blocks">Adicionar blocos</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Modificar %s em</string>
@@ -152,8 +149,6 @@ Language: pt_BR
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descreva o propósito da imagem. Não preencha se a imagem é puramente decorativa.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s modificado para %2$s</string>
     <string name="like_faces_error_loading_message">Erro ao carregar informações de curtidas. %s.</string>
-    <string name="like_faces_plural_text">%d blogueiros curtiram isso.</string>
-    <string name="like_faces_singular_text">Um blogueiro curtiu disso.</string>
     <string name="like_title_plural">%d curtidas</string>
     <string name="like_title_singular">1 curtida</string>
     <string name="suggestion">Sugestão:</string>
@@ -1330,7 +1325,6 @@ Language: pt_BR
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editar novos posts e páginas com o editor de blocos.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
     <string name="exit">sair</string>
-    <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
     <string name="quick_start_sites_type_grow">Aumente seu número de visitantes</string>
     <string name="quick_start_sites_type_customize">Personalize seu site</string>
     <string name="quick_start_sites">Próximos passos</string>
@@ -2634,6 +2628,7 @@ Language: pt_BR
     <string name="my_site_btn_view_site">Ver site</string>
     <string name="my_site_btn_view_admin">Ver Painel</string>
     <string name="my_site_btn_switch_site">Mudar de site</string>
+    <string name="my_site_btn_site_settings">Configurações do site</string>
     <string name="my_site_btn_blog_posts">Posts do blog</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparência</string>

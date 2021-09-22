@@ -1,0 +1,2 @@
+18.2:
+We hebben enkele kleine maar nuttige aanpassingen aangebracht aan de blokeditor: Het insluitblok toont nu een voorbeeldweergave wanneer je iets van YouTube of Twitter toevoegt (in de toekomst meer platformen). En voor wanneer je een blok toevoegt maar er niets wordt gevonden, is er nu een weergave voor geen resultaten.

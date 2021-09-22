@@ -31,13 +31,9 @@ Language: en_CA
     <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
     <string name="stats_disabled_title">Looking for stats?</string>
     <string name="gutenberg_native_what_is_a_block">What is a block?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the post.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the page.</string>
     <string name="gutenberg_native_unable_to_embed_media">Unable to embed media</string>
     <string name="gutenberg_native_try_another_search_term">Try another search term</string>
     <string name="gutenberg_native_no_blocks_found">No blocks found</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Embed previews not yet available</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Embed block previews are coming soon</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Double tap to preview post.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Double tap to preview page.</string>
     <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
@@ -157,8 +153,6 @@ Language: en_CA
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe the purpose of the image. Leave empty if the image is purely decorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformed to %2$s</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
-    <string name="like_faces_plural_text">%d bloggers like this.</string>
-    <string name="like_faces_singular_text">One blogger likes this.</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_title_singular">One Like</string>
     <string name="suggestion">Suggestion:</string>
@@ -1335,7 +1329,6 @@ Language: en_CA
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites">Next Steps</string>

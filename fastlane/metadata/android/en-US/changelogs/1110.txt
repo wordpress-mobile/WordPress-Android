@@ -1,0 +1,5 @@
+18.2:
+- The Embed block now gives a preview when you add from YouTube or Twitter.
+- If nothing is found in a block inserter search a “no results” view appears.
+- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link.
+- Liking a post in the Reader also adds your avatar to the like.

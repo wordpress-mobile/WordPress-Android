@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-31 13:54:48+0000
+Translation-Revision-Date: 2021-09-15 18:37:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_line_height">hauteur de ligne</string>
+    <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
+    <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
+    <string name="recommend_app_bad_format_response">Réponse reçue non valide</string>
+    <string name="recommend_app_subject">Applications WordPress - Des applications pour tous les écrans</string>
+    <string name="me_btn_share">Partager WordPress avec un ami</string>
+    <string name="my_site_quick_actions_title">Liens rapides</string>
+    <string name="like_faces_more_bloggers_text">%1$s blogueurs %2$s.</string>
+    <string name="like_faces_one_blogger_text">1 blogueur %1$s.</string>
+    <string name="like_faces_plural_with_you_text">Vous et %1$s blogueurs %2$s.</string>
+    <string name="like_faces_you_plus_one_text">Vous et 1 blogueur %1$s.</string>
+    <string name="like_faces_you_text">Vous %1$s.</string>
+    <string name="likes_this">aime ceci</string>
+    <string name="like_this">aimez ceci</string>
+    <string name="site_settings_site_domains_title">Domaines de sites</string>
     <string name="weekly_roundup_notification_text">Votre site a obtenu %1$d vues, %2$d mentions J’aime, %3$d commentaires.</string>
     <string name="weekly_roundup_notification_title">Résumé hebdomadaire : %s</string>
     <string name="blogging_reminders_notification_time">Heure de notification</string>
@@ -37,6 +52,7 @@ Language: fr
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Les blocs vous permettent de vous concentrer sur la rédaction de votre contenu, en sachant que tous les outils de mise en forme dont vous avez besoin sont là pour vous aider à faire passer votre message.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organisez votre contenu en colonnes, ajoutez des boutons d’appel à l’action et superposez des images avec du texte.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Ajoutez un nouveau bloc à tout moment en appuyant sur l’icône + dans la barre d’outils en bas à gauche. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s sur %2$s terminés</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Apprenez les bases avec une procédure pas à pas rapide.</string>
     <string name="comment_batch_moderation_error">Échec de la modération d’un ou de plusieurs commentaires</string>
     <string name="create_site_notification_create_site_action">Créer un site</string>
@@ -47,13 +63,13 @@ Language: fr
     <string name="stats_disabled_subtitle">Activez les statistiques du site pour afficher des informations détaillées sur votre trafic, vos préférences, vos commentaires et vos abonnés.</string>
     <string name="stats_disabled_title">Vous cherchez les statistiques ?</string>
     <string name="gutenberg_native_what_is_a_block">Qu\'est-ce qu\'un bloc ?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Nous travaillons d’arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur l\'article de blog.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Nous travaillons d\'arrache-pied pour vous proposer une prise en charge des aperçus de contenu embarqué. En attendant, vous pouvez prévisualiser le contenu embarqué sur la page.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Nous travaillons dur pour ajouter de la prise en charge des aperçus %s. En attendant, vous pouvez prévisualiser le contenu embarqué sur l\'article de blog.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Nous travaillons dur pour ajouter de la prise en charge des aperçus %s. En attendant, vous pouvez prévisualiser le contenu embarqué sur la page.</string>
     <string name="gutenberg_native_unable_to_embed_media">Impossible d\'embarquer les médias</string>
     <string name="gutenberg_native_try_another_search_term">Essayez un autre terme de recherche</string>
     <string name="gutenberg_native_no_blocks_found">Aucun bloc trouvé</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Aperçus embarqués pas encore disponibles</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Les aperçus de bloc embarqués seront prochainement disponibles</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Les aperçus %s ne sont pas encore disponibles</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">Les aperçus du bloc %s seront bientôt disponibles</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Appuyez deux fois pour prévisualiser l\'article de blog.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Appuyez deux fois pour prévisualiser la page.</string>
     <string name="quick_start_list_upload_icon_subtitle">Contenu affiché dans l’onglet du navigateur de vos visiteurs et à d’autres endroits en ligne.</string>
@@ -175,8 +191,6 @@ Language: fr
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Décrivez le rôle de cette image. Ne rien remplir si l’image est purement décorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a été transformé en %2$s</string>
     <string name="like_faces_error_loading_message">Erreur lors du chargement des données. %s.</string>
-    <string name="like_faces_plural_text">%d blogueurs aiment ceci.</string>
-    <string name="like_faces_singular_text">Un blogueur aime ceci.</string>
     <string name="like_title_plural">%d mentions J\'aime</string>
     <string name="like_title_singular">1 mention J\'aime</string>
     <string name="suggestion">Suggestion :</string>
@@ -1357,7 +1371,6 @@ Language: fr
     <string name="quick_start_dialog_view_site_message">Profitez de votre produit fini !</string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Appuyez sur %1$s Plan %2$s pour voir votre plan actuel et les autres plans disponibles</string>
-    <string name="quick_start_sites_type_subtitle">Fait : %1$d of %2$d</string>
     <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_sites_type_grow">Élargir votre public</string>
     <string name="quick_start_sites_type_customize">Personnaliser votre site</string>

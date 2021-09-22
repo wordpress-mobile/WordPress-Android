@@ -23,6 +23,7 @@ import com.wordpress.stories.compose.PermanentPermissionDenialDialogProvider
 import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StoryLoadEvents.StoryLoadEnd
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
@@ -33,6 +34,8 @@ import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -223,6 +226,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
                 setDefaultSelectionAndUpdateBackgroundSurfaceUI(filteredList)
+                // generally speaking, adding media will happen at the beginning of loading the StoryComposer, so once
+                // it's done adding media the StoryComposer will be ready to render the newly loaded / created Story.
+                // Hence, it makes sense to start the editor session tracking at this point - note subsequent calls
+                // will have no effect, given PostEditorAnalyticsSession has a flag so it can only be started once.
+                viewModel.onStoryComposerStartAnalyticsSession()
             }
 
             // finally if any of the files was a gif, warn the user
@@ -287,6 +295,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
         data?.let {
             when (requestCode) {
@@ -377,6 +386,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 return
             }
             storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+        } else if (data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED)) {
+            // when coming from this entry point, we can start the analytics session
+            viewModel.onStoryComposerStartAnalyticsSession()
         }
     }
 
@@ -647,5 +659,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onStoryLoadEnd(event: StoryLoadEnd) {
+        // once the Story has been loaded by the Composer, we should mark the composing session start as the
+        // UI is ready to receive user's input
+        viewModel.onStoryComposerStartAnalyticsSession()
     }
 }

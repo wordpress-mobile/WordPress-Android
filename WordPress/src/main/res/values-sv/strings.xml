@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-23 11:06:42+0000
+Translation-Revision-Date: 2021-09-08 11:08:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_line_height">Radhöjd</string>
+    <string name="domains_free_plan_get_your_domain_title">Skaffa din domän</string>
+    <string name="domains_primary_domain_address">%s</string>
+    <string name="domains_primary_domain">PRIMÄR WEBBPLATSADRESS</string>
+    <string name="recommend_app_generic_get_template_error">Okänt fel vid hämtning av rekommenderad app-mall</string>
+    <string name="recommend_app_bad_format_response">Ett ogiltigt svar har tagits emot</string>
+    <string name="recommend_app_null_response">Inget svar har tagits emot</string>
+    <string name="recommend_app_subject">WordPress-appar – appar för alla skärmtyper</string>
+    <string name="me_btn_share">Dela WordPress med en vän</string>
+    <string name="my_site_quick_actions_title">Snabblänkar</string>
+    <string name="my_site_btn_domains">Domäner</string>
+    <string name="like_faces_more_bloggers_text">%1$s bloggare %2$s.</string>
+    <string name="like_faces_one_blogger_text">1 bloggare %1$s.</string>
+    <string name="like_faces_plural_with_you_text">Du och %1$s bloggare %2$s.</string>
+    <string name="like_faces_you_plus_one_text">Du och 1 bloggare %1$s.</string>
+    <string name="like_faces_you_text">Du %1$s.</string>
+    <string name="likes_this">gillar detta</string>
+    <string name="like_this">gillar detta</string>
+    <string name="site_settings_site_domains_title">Webbplatsdomäner</string>
     <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
     <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
     <string name="blogging_reminders_notification_time">Aviseringstid</string>
@@ -48,13 +67,13 @@ Language: sv_SE
     <string name="stats_disabled_subtitle">Aktivera webbplatsstatistik för att se detaljerad information om din trafik, gillamarkeringar, kommentarer och prenumeranter.</string>
     <string name="stats_disabled_title">Letar du efter statistik?</string>
     <string name="gutenberg_native_what_is_a_block">Vad är ett block?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av %s. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Vi jobbar hårt på att lägga till stöd för förhandsgranskningar av %s. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
     <string name="gutenberg_native_unable_to_embed_media">Kan inte bädda in media</string>
     <string name="gutenberg_native_try_another_search_term"> Prova en annan sökterm</string>
     <string name="gutenberg_native_no_blocks_found">Inga block hittades.</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Förhandsgranskning av inbäddningar är inte tillgängligt ännu</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Förhandsgranskning av inbäddade block kommer snart</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Förhandsgranskning av %s är inte tillgängligt ännu</string>
+    <string name="gutenberg_native_s_block_previews_are_coming_soon">Förhandsgranskning av block för %s kommer snart</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltryck för att förhandsgranska inlägget.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
     <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
@@ -176,8 +195,6 @@ Language: sv_SE
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beskriv bildens syfte. Lämna tomt om bilden endast har dekorativ funktion.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s har omvandats till %2$s</string>
     <string name="like_faces_error_loading_message">Fel vid hämtning av info om gillamarkeringar. %s.</string>
-    <string name="like_faces_plural_text">%d bloggare gillar detta.</string>
-    <string name="like_faces_singular_text">En bloggare gillar detta.</string>
     <string name="like_title_plural">%d gillamarkeringar</string>
     <string name="like_title_singular">1 gillamarkering</string>
     <string name="suggestion">Förslag:</string>
@@ -1354,7 +1371,6 @@ Language: sv_SE
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Redigera nya inlägg och sidor med blockredigeraren</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Använd blockredigerare</string>
     <string name="exit">avbryt</string>
-    <string name="quick_start_sites_type_subtitle">%1$d av %2$d klart</string>
     <string name="quick_start_sites_type_grow">Vidga din läsekrets</string>
     <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
     <string name="quick_start_sites">Gå vidare</string>
