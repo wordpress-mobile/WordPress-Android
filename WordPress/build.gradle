@@ -274,9 +274,9 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation "com.automattic:stories:$storiesVersion"
-    implementation "com.automattic.stories:mp4compose:$storiesVersion"
-    testImplementation "com.automattic.stories:photoeditor:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
