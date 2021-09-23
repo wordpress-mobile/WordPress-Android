@@ -752,8 +752,7 @@ REPOSITORY_NAME="WordPress-Android"
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
-    {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   binary_imported_libraries = [
@@ -773,6 +772,14 @@ REPOSITORY_NAME="WordPress-Android"
       strings_file_path: "WordPressLoginFlow/src/main/res/values/strings.xml",
       github_release_prefix: "",
       exclusions: ["default_web_client_id"]
+    },
+    {
+      name: "Stories Library",
+      import_key: "storiesVersion",
+      repository: "Automattic/stories-android",
+      strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
     },
   ]
 
