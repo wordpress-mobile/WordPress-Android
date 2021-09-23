@@ -11,6 +11,14 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_183"
+msgid ""
+"18.3:\n"
+"Lots of improvements in the block editor! We fixed a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.\n"
+"\n"
+"Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).\n"
+msgstr ""
+
 msgctxt "release_note_182"
 msgid ""
 "18.2:\n"
@@ -18,14 +26,6 @@ msgid ""
 "- If nothing is found in a block inserter search a “no results” view appears.\n"
 "- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link.\n"
 "- Liking a post in the Reader also adds your avatar to the like.\n"
-msgstr ""
-
-msgctxt "release_note_181"
-msgid ""
-"18.1:\n"
-"-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.\n"
-"-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.\n"
-"-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
