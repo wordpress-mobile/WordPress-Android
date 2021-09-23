@@ -356,21 +356,6 @@ jobs:
           timeout: 10m
           results-history-name: CircleCI WPUtils Connected Tests
       - android/save-gradle-cache
-  submodules-strings-check:
-    docker:
-      - image: circleci/ruby:2.6.4
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - run:
-          name: Install bundler
-          command: gem install bundler --version 2.0.2
-      - bundle-install/bundle-install:
-          cache_key_prefix: strings-check-v2
-      - run:
-          name: Validate login strings
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane validate_submodules_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
@@ -379,7 +364,6 @@ workflows:
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
-      - submodules-strings-check
       - Installable Build:
           filters:
             branches:
