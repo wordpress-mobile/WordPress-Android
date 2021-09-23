@@ -10,7 +10,24 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_183"
+msgid ""
+"18.3:\n"
+"In the block editor, we fixed a toolbar issue on devices set to an RTL language, and made updates to the Embed block, like enabling WordPress, Instagram, and Vimeo previews and adding options to retry or convert media into a link.\n"
+"\n"
+"More updates include a fix affecting video on some sites, and updating My Site menu labels (“Posts” and “Pages”).\n"
+msgstr ""
+
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_183"
+msgid ""
+"18.3:\n"
+"Lots of improvements in the block editor! We fixed a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.\n"
+"\n"
+"Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).\n"
+msgstr ""
+
 msgctxt "release_note_182"
 msgid ""
 "18.2:\n"
@@ -20,16 +37,6 @@ msgid ""
 "- Liking a post in the Reader also adds your avatar to the like.\n"
 msgstr ""
 
-msgctxt "release_note_181"
-msgid ""
-"18.1:\n"
-"-A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.\n"
-"-A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.\n"
-"-A time selection feature that lets you choose a specific time to receive a Blogging Reminder.\n"
-msgstr ""
-
-#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
 msgstr ""
