@@ -12,7 +12,6 @@ import org.wordpress.android.ui.domains.DomainsListItem.Action
 import org.wordpress.android.ui.domains.DomainsListItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
@@ -35,7 +34,7 @@ import javax.inject.Inject
 class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     selectedSiteRepository: SelectedSiteRepository,
-    private val domainRegistrationHandler: DomainRegistrationHandler,
+    domainRegistrationHandler: DomainRegistrationHandler,
     private val htmlMessageUtils: HtmlMessageUtils
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
@@ -49,6 +48,9 @@ class DomainsDashboardViewModel @Inject constructor(
     private val domainCreditAvailable =
             domainRegistrationHandler.buildSource(viewModelScope, selectedSite.id).distinctUntilChanged()
 
+    private val hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
+    private val hasCustomDomain = SiteUtils.hasCustomDomain(selectedSite)
+
     private var isStarted: Boolean = false
     fun start() {
         if (isStarted) {
@@ -58,21 +60,17 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.value = buildSiteDomainsList()
     }
 
-    private fun buildSiteDomainsList(): List<DomainsListItem> {
-        val hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
-        val hasCustomDomain = SiteUtils.hasCustomDomain(selectedSite)
-        return when {
-            hasCustomDomain -> manageDomainsItems()
-            hasDomainCredit -> claimDomainItems()
-            else -> getDomainItems()
-        }
+    private fun buildSiteDomainsList(): List<DomainsListItem> = when {
+        hasCustomDomain -> manageDomainsItems()
+        hasDomainCredit -> claimDomainItems()
+        else -> getDomainItems()
     }
 
     private fun getDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
 
         listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
-
+        // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
         listItems +=
             PurchaseDomain(
                     R.drawable.media_image_placeholder,
@@ -109,6 +107,17 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 
+        // if site has redirected domain then show this blurb
+        if (!hasCustomDomain) {
+            listItems += DomainBlurb(
+                    UiStringText(
+                            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                    string.domains_redirected_domains_blurb, siteUrl
+                            )
+                    )
+            )
+        }
+
         // TODO: Loop through and add all domains, replace hard coded date.  Not sure where to find this info yet!
         listItems += SiteDomains(
                 UiStringText(siteUrl),
@@ -116,12 +125,8 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
 
-        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
-
-        // if site has redirected domain then show this blurb
-        listItems += DomainBlurb(
-                UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.domains_redirected_domains_blurb, siteUrl)))
+//        NOTE: Manage domains option is de-scoped for v1 release
+//        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
 
         return listItems
     }
@@ -144,6 +149,7 @@ class DomainsDashboardViewModel @Inject constructor(
         _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${selectedSite.siteId}")))
     }
 
+//  NOTE: Change site option is de-scoped for v1 release
     private fun onChangeSiteClick(action: Action): Boolean {
         when (action) {
             CHANGE_SITE_ADDRESS -> {} // TODO: next PR

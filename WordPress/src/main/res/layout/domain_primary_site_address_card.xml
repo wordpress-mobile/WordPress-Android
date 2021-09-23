@@ -10,6 +10,10 @@
         android:id="@+id/primary_site_address_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/on_surface_disabled_primary_selector"
+        app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,6 +34,7 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/primary_site_adress_actions"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_ellipsis_vertical_white_24dp"
