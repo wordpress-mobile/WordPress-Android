@@ -285,7 +285,7 @@ class PostListItemUiStateHelper @Inject constructor(
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
     ): List<UiString> {
-        val labels: MutableList<UiString> = getErrorAndProgressStatuses(
+        val labels = getErrorAndProgressStatuses(
                 uploadUiState,
                 postStatus,
                 hasUnhandledConflicts,
