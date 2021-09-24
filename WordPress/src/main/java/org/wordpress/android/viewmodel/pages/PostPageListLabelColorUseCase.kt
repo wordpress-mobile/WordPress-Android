@@ -52,11 +52,10 @@ class PostPageListLabelColorUseCase @Inject constructor() {
         post: PostModel,
         hasUnhandledAutoSave: Boolean
     ): Boolean {
-
         val postStatus = PostStatus.fromPost(post)
 
         return (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
                 post.isLocalDraft || post.isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
-                uploadUiState is UploadWaitingForConnection || hasUnhandledAutoSave
+                post.sticky || uploadUiState is UploadWaitingForConnection || hasUnhandledAutoSave
     }
 }
