@@ -2,8 +2,10 @@ package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
+import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.Intent;
 import android.preference.DialogPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -27,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
@@ -200,6 +203,16 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
             }
         }
 
+        // Add Blogging Reminders setting
+        if (mChannel == Channel.BLOGS) {
+            String settingName = getContext().getString(R.string.site_settings_blogging_reminders_title);
+            boolean isSettingChecked = AppPrefs.shouldShowBloggingReminders(mBlogId);
+            View settingView = setupSettingView(settingName, null, null, isSettingChecked, true,
+                    (compoundButton, isChecked) -> launchBloggingReminders());
+            // AppPrefs.setShouldShowBloggingReminders(mBlogId, isChecked));
+            view.addView(settingView);
+        }
+
         // Add Weekly Roundup setting
         if (mChannel == Channel.BLOGS && mType == Type.DEVICE) {
             String settingName = getContext().getString(R.string.weekly_roundup);
@@ -210,6 +223,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
 
         return view;
+    }
+
+    private void launchBloggingReminders() {
+        ActivityLauncher.showBloggingReminders((Activity) getContext(), mBlogId);
     }
 
     private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,

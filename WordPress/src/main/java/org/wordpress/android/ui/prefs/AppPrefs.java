@@ -1293,6 +1293,18 @@ public class AppPrefs {
         return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
     }
 
+    public static void setShouldShowBloggingReminders(long siteId, boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowBloggingReminders(siteId), shouldShow).apply();
+    }
+
+    public static boolean shouldShowBloggingReminders(long siteId) {
+        return prefs().getBoolean(getShouldShowBloggingReminders(siteId), false);
+    }
+
+    @NonNull private static String getShouldShowBloggingReminders(long siteId) {
+        return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
+    }
+
     public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
         setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
     }

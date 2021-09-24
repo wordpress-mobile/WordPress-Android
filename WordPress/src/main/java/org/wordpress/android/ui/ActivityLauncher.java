@@ -43,6 +43,7 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
@@ -1596,5 +1597,11 @@ public class ActivityLauncher {
 
     public static void viewDebugCookies(@NonNull Context context) {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
+    }
+
+    public static void showBloggingReminders(Activity activity, long blogId) {
+        Intent intent = new Intent(activity, BloggingRemindersActivity.class);
+        intent.putExtra(BloggingRemindersActivity.EXTRA_SITE_ID, blogId);
+        activity.startActivityForResult(intent, RequestCodes.BLOGGING_REMINDER);
     }
 }

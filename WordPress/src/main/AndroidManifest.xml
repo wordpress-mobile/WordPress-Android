@@ -574,6 +574,11 @@
 
         <!-- Other activities -->
         <activity
+            android:name=".ui.bloggingreminders.BloggingRemindersActivity"
+            android:label="@string/site_settings_blogging_reminders_title"
+            android:theme="@style/NoDisplay" />
+
+        <activity
             android:name=".ui.publicize.PublicizeListActivity"
             android:label="@string/sharing"
             android:launchMode="singleTop"

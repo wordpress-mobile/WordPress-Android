@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
+import android.app.Activity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -28,6 +29,31 @@ object BloggingReminderUtils {
                     bottomSheet.dismiss()
                 }
             })
+    }
+
+    @JvmStatic
+    fun observeBottomSheet(
+        isBottomSheetShowing: LiveData<Event<Boolean>>,
+        lifecycleOwner: LifecycleOwner,
+        activity: Activity,
+        tag: String,
+        getSupportFragmentManager: () -> FragmentManager?
+    ) {
+        isBottomSheetShowing.observeEvent(lifecycleOwner,
+                { isShowing: Boolean ->
+                    val fm: FragmentManager = getSupportFragmentManager() ?: return@observeEvent
+                    var bottomSheet = fm.findFragmentByTag(tag) as BloggingReminderBottomSheetFragment?
+                    if (isShowing && bottomSheet == null) {
+                        bottomSheet = BloggingReminderBottomSheetFragment()
+                        bottomSheet.show(
+                                fm,
+                                tag
+                        )
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss()
+                        activity.finish()
+                    }
+                })
     }
 
     @JvmStatic
