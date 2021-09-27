@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -107,6 +108,10 @@ class BloggingRemindersViewModel @Inject constructor(
     fun getBlogSettingsUiState(siteId: Int) = getUiModel(siteId)
             .map { dayLabelUtils.buildSiteSettingsLabel(it) }
             .asLiveData(mainDispatcher)
+
+    val notificationsSettingsUiState = combine(siteStore.sites.map { getUiModel(it.id) }) { models ->
+        models.associate { siteStore.getSiteIdForLocalId(it.siteId) to dayLabelUtils.buildSiteSettingsLabel(it) }
+    }.asLiveData(mainDispatcher)
 
     private fun getUiModel(siteId: Int) =
             bloggingRemindersStore.bloggingRemindersModel(siteId).map { mapper.toUiModel(it) }
