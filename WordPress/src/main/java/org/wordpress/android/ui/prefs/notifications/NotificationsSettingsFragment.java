@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
 
@@ -893,5 +895,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 }
             }
         }
+    }
+
+    @Nullable
+    private AppCompatActivity getAppCompatActivity() {
+        final Activity activity = getActivity();
+        if (activity instanceof AppCompatActivity) {
+            return (AppCompatActivity) activity;
+        }
+        return null;
     }
 }
