@@ -221,7 +221,7 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    fun onSettingsItemClicked(siteId: Int) {
+    fun onBlogSettingsItemClicked(siteId: Int) {
         onSettingsItemClicked(siteId, BLOG_SETTINGS)
     }
 

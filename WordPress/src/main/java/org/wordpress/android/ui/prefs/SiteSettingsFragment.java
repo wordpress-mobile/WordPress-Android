@@ -1227,7 +1227,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-        mBloggingRemindersViewModel.onSettingsItemClicked(mSite.getId());
+        mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
     }
 
     private void showHomepageSettings() {
