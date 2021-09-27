@@ -73,6 +73,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,6 +126,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -915,7 +917,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
         @Override public boolean isEnabled() {
-            return true; // TODO Handle feature flag
+            return mBloggingRemindersFeatureConfig.isEnabled();
         }
 
         @Override public String getSummary(long blogId) {
