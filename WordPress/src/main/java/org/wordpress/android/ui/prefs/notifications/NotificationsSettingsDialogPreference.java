@@ -62,13 +62,30 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
     private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
+    private final BloggingRemindersProvider mBloggingRemindersProvider;
+
     public interface OnNotificationsSettingsChangedListener {
         void onSettingsChanged(Channel channel, Type type, long siteId, JSONObject newValues);
+    }
+
+    public interface BloggingRemindersProvider {
+        boolean isEnabled();
+
+        String getSummary(long blogId);
+
+        void onClick(long blogId);
     }
 
     public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
                                                  Type type, long blogId, NotificationsSettings settings,
                                                  OnNotificationsSettingsChangedListener listener) {
+        this(context, attrs, channel, type, blogId, settings, listener, null);
+    }
+
+    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
+                                                 Type type, long blogId, NotificationsSettings settings,
+                                                 OnNotificationsSettingsChangedListener listener,
+                                                 BloggingRemindersProvider bloggingRemindersProvider) {
         super(context, attrs);
 
         mChannel = channel;
@@ -76,6 +93,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         mBlogId = blogId;
         mSettings = settings;
         mOnNotificationsSettingsChangedListener = listener;
+        mBloggingRemindersProvider = bloggingRemindersProvider;
         mShouldDisplayMainSwitch = mSettings.shouldDisplayMainSwitch(mChannel, mType);
     }
 
@@ -204,7 +222,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
 
         if (shouldShowLocalNotifications) {
-            boolean isBloggingRemindersEnabled = true; // TODO Handle feature flag
+            boolean isBloggingRemindersEnabled =
+                    mBloggingRemindersProvider != null && mBloggingRemindersProvider.isEnabled();
             addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled);
             if (isBloggingRemindersEnabled) {
                 addBloggingReminderSetting(view);
@@ -229,10 +248,12 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     private void addBloggingReminderSetting(LinearLayout view) {
         view.addView(setupClickSettingView(
                 getContext().getString(R.string.site_settings_blogging_reminders_title),
-                null, // TODO Add summary
+                mBloggingRemindersProvider != null ? mBloggingRemindersProvider.getSummary(mBlogId) : null,
                 true,
                 (v -> {
-                    // TODO Handle click
+                    if (mBloggingRemindersProvider != null) {
+                        mBloggingRemindersProvider.onClick(mBlogId);
+                    }
                     getDialog().dismiss();
                 })
         ));
