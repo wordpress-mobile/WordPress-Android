@@ -221,6 +221,11 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 onCheckedChangeListener, null);
     }
 
+    private View setupClickSettingView(String settingName, String settingSummary, boolean isSettingLast,
+                                       View.OnClickListener onClickListener) {
+        return setupSettingView(settingName, null, settingSummary, false, isSettingLast, null, onClickListener);
+    }
+
     private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,
                                   boolean isSettingChecked, boolean isSettingLast,
                                   @Nullable CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
