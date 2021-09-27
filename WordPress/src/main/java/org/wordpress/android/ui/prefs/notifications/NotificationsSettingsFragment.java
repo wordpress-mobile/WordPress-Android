@@ -59,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -129,6 +130,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
+
+    private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -925,7 +928,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         @Override public void onClick(long blogId) {
-            // TODO Handle click
+            mBloggingRemindersViewModel.onNotificationSettingsItemClicked(blogId);
         }
     };
 
@@ -938,6 +941,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (appCompatActivity != null) {
             mBloggingRemindersViewModel = new ViewModelProvider(appCompatActivity, mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
+            BloggingReminderUtils.observeBottomSheet(
+                    mBloggingRemindersViewModel.isBottomSheetShowing(),
+                    appCompatActivity,
+                    BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
+                    appCompatActivity::getSupportFragmentManager
+            );
         }
     }
 }
