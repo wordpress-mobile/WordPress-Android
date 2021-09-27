@@ -203,16 +203,22 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
             }
         }
 
-        // Add Weekly Roundup setting
         if (shouldShowLocalNotifications) {
-            String settingName = getContext().getString(R.string.weekly_roundup);
-            boolean isSettingChecked = AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId);
-            View settingView = setupSwitchSettingView(settingName, null, null, isSettingChecked, true,
-                    (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked));
-            view.addView(settingView);
+            addWeeklyRoundupSetting(view, true);
         }
 
         return view;
+    }
+
+    private void addWeeklyRoundupSetting(LinearLayout view, boolean isLast) {
+        view.addView(setupSwitchSettingView(
+                getContext().getString(R.string.weekly_roundup),
+                null,
+                null,
+                AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId),
+                isLast,
+                (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked)
+        ));
     }
 
     private View setupSwitchSettingView(String settingName, @Nullable String settingValue,
