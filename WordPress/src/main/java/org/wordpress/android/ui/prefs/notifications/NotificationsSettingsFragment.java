@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -58,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
@@ -122,6 +124,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+
+    private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,6 +192,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (lv != null) {
             ViewCompat.setNestedScrollingEnabled(lv, true);
         }
+        initBloggingReminders();
     }
 
 
@@ -920,4 +926,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             // TODO Handle click
         }
     };
+
+    private void initBloggingReminders() {
+        if (!isAdded()) {
+            return;
+        }
+
+        final AppCompatActivity appCompatActivity = getAppCompatActivity();
+        if (appCompatActivity != null) {
+            mBloggingRemindersViewModel = new ViewModelProvider(appCompatActivity, mViewModelFactory)
+                    .get(BloggingRemindersViewModel.class);
+        }
+    }
 }
