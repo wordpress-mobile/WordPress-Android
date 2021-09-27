@@ -66,6 +66,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsDialogPreference.BloggingRemindersProvider;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -79,8 +81,10 @@ import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -128,8 +132,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
+    private final Map<Long, UiString> mBloggingRemindersSummariesBySiteId = new HashMap<>();
 
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
@@ -924,7 +930,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         @Override public String getSummary(long blogId) {
-            return null; // TODO Provide summary
+            UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
+            return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;
         }
 
         @Override public void onClick(long blogId) {
@@ -947,6 +954,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
                     appCompatActivity::getSupportFragmentManager
             );
+
+            mBloggingRemindersViewModel.getNotificationsSettingsUiState()
+                                       .observe(appCompatActivity, mBloggingRemindersSummariesBySiteId::putAll);
         }
     }
 }
