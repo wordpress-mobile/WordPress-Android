@@ -62,6 +62,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
+import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsDialogPreference.BloggingRemindersProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -740,7 +741,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (!TextUtils.isEmpty(deviceID)) {
             NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                     context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings,
-                    mOnSettingsChangedListener
+                    mOnSettingsChangedListener, mBloggingRemindersProvider
             );
             setPreferenceIcon(devicePreference, R.drawable.ic_phone_white_24dp);
             devicePreference.setTitle(R.string.app_notifications);
@@ -905,4 +906,18 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
         return null;
     }
+
+    private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
+        @Override public boolean isEnabled() {
+            return true; // TODO Handle feature flag
+        }
+
+        @Override public String getSummary(long blogId) {
+            return null; // TODO Provide summary
+        }
+
+        @Override public void onClick(long blogId) {
+            // TODO Handle click
+        }
+    };
 }
