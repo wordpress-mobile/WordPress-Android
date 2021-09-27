@@ -196,7 +196,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
                 boolean isSettingLast = i == mSettingsArray.length - 1;
 
-                view.addView(setupSettingView(settingName, settingValue, settingSummary, isSettingChecked,
+                view.addView(setupSwitchSettingView(settingName, settingValue, settingSummary, isSettingChecked,
                         isSettingLast, mOnCheckedChangedListener));
             }
         }
@@ -205,7 +205,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         if (mChannel == Channel.BLOGS && mType == Type.DEVICE) {
             String settingName = getContext().getString(R.string.weekly_roundup);
             boolean isSettingChecked = AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId);
-            View settingView = setupSettingView(settingName, null, null, isSettingChecked, true,
+            View settingView = setupSwitchSettingView(settingName, null, null, isSettingChecked, true,
                     (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked));
             view.addView(settingView);
         }
@@ -213,7 +213,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         return view;
     }
 
-    private View setupSettingView(String settingName, @Nullable String settingValue,
+    private View setupSwitchSettingView(String settingName, @Nullable String settingValue,
                                         @Nullable String settingSummary, boolean isSettingChecked,
                                         boolean isSettingLast,
                                         CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
