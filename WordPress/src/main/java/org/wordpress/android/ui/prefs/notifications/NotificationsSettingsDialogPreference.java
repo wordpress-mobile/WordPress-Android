@@ -204,7 +204,11 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
 
         if (shouldShowLocalNotifications) {
-            addWeeklyRoundupSetting(view, true);
+            boolean isBloggingRemindersEnabled = true; // TODO Handle feature flag
+            addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled);
+            if (isBloggingRemindersEnabled) {
+                addBloggingReminderSetting(view);
+            }
         }
 
         return view;
@@ -218,6 +222,19 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId),
                 isLast,
                 (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked)
+        ));
+    }
+
+
+    private void addBloggingReminderSetting(LinearLayout view) {
+        view.addView(setupClickSettingView(
+                getContext().getString(R.string.site_settings_blogging_reminders_title),
+                null, // TODO Add summary
+                true,
+                (v -> {
+                    // TODO Handle click
+                    getDialog().dismiss();
+                })
         ));
     }
 
