@@ -1214,7 +1214,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
                     () -> getAppCompatActivity().getSupportFragmentManager()
             );
-            mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
+            mBloggingRemindersViewModel.getBlogSettingsUiState(mSite.getId()).observe(getAppCompatActivity(), s -> {
                 if (mBloggingRemindersPref != null) {
                     CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
                     mBloggingRemindersPref.setSummary(summary);

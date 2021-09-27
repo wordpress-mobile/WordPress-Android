@@ -102,7 +102,7 @@ class BloggingRemindersViewModel @Inject constructor(
         analyticsTracker.trackScreenShown(screen)
     }
 
-    fun getSettingsState(siteId: Int) = getUiModel(siteId)
+    fun getBlogSettingsUiState(siteId: Int) = getUiModel(siteId)
             .map { dayLabelUtils.buildSiteSettingsLabel(it) }
             .asLiveData(mainDispatcher)
 
