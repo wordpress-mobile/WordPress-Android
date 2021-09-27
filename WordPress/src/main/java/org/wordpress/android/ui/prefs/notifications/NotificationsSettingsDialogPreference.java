@@ -213,9 +213,18 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         return view;
     }
 
+    private View setupSettingView(String settingName, @Nullable String settingValue,
+                                        @Nullable String settingSummary, boolean isSettingChecked,
+                                        boolean isSettingLast,
+                                        CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+        return setupSettingView(settingName, settingValue, settingSummary, isSettingChecked, isSettingLast,
+                onCheckedChangeListener, null);
+    }
+
     private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,
                                   boolean isSettingChecked, boolean isSettingLast,
-                                  CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+                                  @Nullable CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+                                  @Nullable View.OnClickListener onClickListener) {
         NotificationsSettingsSwitchBinding binding =
                 NotificationsSettingsSwitchBinding.inflate(LayoutInflater.from(getContext()));
 
@@ -233,6 +242,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
             binding.rowContainer.setOnClickListener(v -> binding.notificationsSwitch.toggle());
         } else {
             binding.notificationsSwitch.setVisibility(View.GONE);
+        }
+
+        if (onClickListener != null) {
+            binding.rowContainer.setOnClickListener(onClickListener);
         }
 
         if (mShouldDisplayMainSwitch && isSettingLast) {
