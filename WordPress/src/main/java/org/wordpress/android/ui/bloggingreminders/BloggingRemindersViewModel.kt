@@ -102,11 +102,12 @@ class BloggingRemindersViewModel @Inject constructor(
         analyticsTracker.trackScreenShown(screen)
     }
 
-    fun getSettingsState(siteId: Int): LiveData<UiString> {
-        return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
-            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildSiteSettingsLabel(uiModel) }
-        }.asLiveData(mainDispatcher)
-    }
+    fun getSettingsState(siteId: Int) = getUiModel(siteId)
+            .map { dayLabelUtils.buildSiteSettingsLabel(it) }
+            .asLiveData(mainDispatcher)
+
+    private fun getUiModel(siteId: Int) =
+            bloggingRemindersStore.bloggingRemindersModel(siteId).map { mapper.toUiModel(it) }
 
     private fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
