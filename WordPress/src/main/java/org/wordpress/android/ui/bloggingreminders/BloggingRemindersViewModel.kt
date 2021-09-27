@@ -222,13 +222,17 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun onSettingsItemClicked(siteId: Int) {
+        onSettingsItemClicked(siteId, BLOG_SETTINGS)
+    }
+
+    private fun onSettingsItemClicked(siteId: Int, source: Source) {
         launch {
             val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
                 SELECTION
             } else {
                 PROLOGUE_SETTINGS
             }
-            showBottomSheet(siteId, screen, BLOG_SETTINGS)
+            showBottomSheet(siteId, screen, source)
         }
     }
 
