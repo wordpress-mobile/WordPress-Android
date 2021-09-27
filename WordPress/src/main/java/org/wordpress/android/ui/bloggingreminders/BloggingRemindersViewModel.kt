@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
@@ -41,7 +42,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val dayLabelUtils: DayLabelUtils,
     private val analyticsTracker: BloggingRemindersAnalyticsTracker,
     private val reminderScheduler: ReminderScheduler,
-    private val mapper: BloggingRemindersModelMapper
+    private val mapper: BloggingRemindersModelMapper,
+    private val siteStore: SiteStore
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
