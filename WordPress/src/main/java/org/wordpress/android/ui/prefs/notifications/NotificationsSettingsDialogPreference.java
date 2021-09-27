@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.databinding.NotificationsSettingsSwitchBinding;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -215,35 +216,34 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,
                                   boolean isSettingChecked, boolean isSettingLast,
                                   CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
-        View setting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
-        TextView title = setting.findViewById(R.id.notifications_switch_title);
-        title.setText(settingName);
+        NotificationsSettingsSwitchBinding binding =
+                NotificationsSettingsSwitchBinding.inflate(LayoutInflater.from(getContext()));
+
+        binding.notificationsSwitchTitle.setText(settingName);
 
         if (!TextUtils.isEmpty(settingSummary)) {
-            TextView summary = setting.findViewById(R.id.notifications_switch_summary);
-            summary.setVisibility(View.VISIBLE);
-            summary.setText(settingSummary);
+            binding.notificationsSwitchSummary.setVisibility(View.VISIBLE);
+            binding.notificationsSwitchSummary.setText(settingSummary);
         }
 
-        final SwitchCompat toggleSwitch = setting.findViewById(R.id.notifications_switch);
-        toggleSwitch.setChecked(isSettingChecked);
-        toggleSwitch.setTag(settingValue);
-        toggleSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-
-        View rowContainer = setting.findViewById(R.id.row_container);
-        rowContainer.setOnClickListener(v -> toggleSwitch.setChecked(!toggleSwitch.isChecked()));
+        if (onCheckedChangeListener != null) {
+            binding.notificationsSwitch.setChecked(isSettingChecked);
+            binding.notificationsSwitch.setTag(settingValue);
+            binding.notificationsSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+            binding.rowContainer.setOnClickListener(v -> binding.notificationsSwitch.toggle());
+        } else {
+            binding.notificationsSwitch.setVisibility(View.GONE);
+        }
 
         if (mShouldDisplayMainSwitch && isSettingLast) {
-            View divider = setting.findViewById(R.id.notifications_list_divider);
-            if (divider != null) {
-                MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
-                mlp.leftMargin = 0;
-                mlp.rightMargin = 0;
-                divider.setLayoutParams(mlp);
-            }
+            View divider = binding.notificationsListDivider;
+            MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
+            mlp.leftMargin = 0;
+            mlp.rightMargin = 0;
+            divider.setLayoutParams(mlp);
         }
 
-        return setting;
+        return binding.getRoot();
     }
 
     private final CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener =
