@@ -176,6 +176,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 break;
         }
 
+        boolean shouldShowLocalNotifications = mChannel == Channel.BLOGS && mType == Type.DEVICE;
+
         if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
             for (int i = 0; i < mSettingsArray.length; i++) {
                 String settingName = mSettingsArray[i];
@@ -194,7 +196,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
                 boolean isSettingChecked = JSONUtils.queryJSON(settingsJson, settingValue, true);
 
-                boolean isSettingLast = i == mSettingsArray.length - 1;
+                boolean isSettingLast = !shouldShowLocalNotifications && i == mSettingsArray.length - 1;
 
                 view.addView(setupSwitchSettingView(settingName, settingValue, settingSummary, isSettingChecked,
                         isSettingLast, mOnCheckedChangedListener));
@@ -202,7 +204,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
 
         // Add Weekly Roundup setting
-        if (mChannel == Channel.BLOGS && mType == Type.DEVICE) {
+        if (shouldShowLocalNotifications) {
             String settingName = getContext().getString(R.string.weekly_roundup);
             boolean isSettingChecked = AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId);
             View settingView = setupSwitchSettingView(settingName, null, null, isSettingChecked, true,
