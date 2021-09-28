@@ -128,6 +128,14 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
     }
 
+    public void resetStartTime() {
+        if (!mStarted) {
+            mStartTime = System.currentTimeMillis();
+        } else {
+            AppLog.w(T.EDITOR, "An editor session start time cannot be reset once it's started");
+        }
+    }
+
     public void switchEditor(Editor editor) {
         mCurrentEditor = editor;
         Map<String, Object> properties = getCommonProperties();
