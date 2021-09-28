@@ -67,6 +67,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     private String mRequestedSiteAddress;
 
+    private String mConnectSiteInfoUrl;
+    private String mConnectSiteInfoUrlRedirect;
+    private Boolean mConnectSiteInfoCalculatedHasJetpack;
+
     private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
     @Inject AccountStore mAccountStore;
@@ -151,6 +155,11 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+            mConnectSiteInfoUrl = savedInstanceState.getString(KEY_SITE_INFO_URL);
+            mConnectSiteInfoUrlRedirect =
+                    savedInstanceState.getString(KEY_SITE_INFO_URL_AFTER_REDIRECTS);
+            mConnectSiteInfoCalculatedHasJetpack =
+                    savedInstanceState.getBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK);
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
@@ -184,6 +193,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
+        outState.putString(KEY_SITE_INFO_URL, mConnectSiteInfoUrl);
+        outState.putString(KEY_SITE_INFO_URL_AFTER_REDIRECTS, mConnectSiteInfoUrlRedirect);
+        outState.putBoolean(KEY_SITE_INFO_CALCULATED_HAS_JETPACK,
+                mConnectSiteInfoCalculatedHasJetpack);
     }
 
     @Override public void onDestroyView() {
@@ -228,6 +241,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        mConnectSiteInfoUrl = null;
+        mConnectSiteInfoUrlRedirect = null;
+        mConnectSiteInfoCalculatedHasJetpack = null;
     }
 
     @Override
@@ -321,7 +337,15 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
         String inputSiteAddress = mRequestedSiteAddress;
         endProgress();
-        mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress);
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            mLoginListener.gotConnectedSiteInfo(
+                    mConnectSiteInfoUrl,
+                    mConnectSiteInfoUrlRedirect,
+                    mConnectSiteInfoCalculatedHasJetpack
+                                               );
+        } else {
+            mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress);
+        }
     }
 
     private void askForHttpAuthCredentials(@NonNull final String url) {
@@ -379,10 +403,14 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         } else {
             boolean hasJetpack = calculateHasJetpack(event.info);
 
+            mConnectSiteInfoUrl = event.info.url;
+            mConnectSiteInfoUrlRedirect = event.info.urlAfterRedirects;
+            mConnectSiteInfoCalculatedHasJetpack = hasJetpack;
+
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(createConnectSiteInfoProperties(event.info, hasJetpack));
 
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-                handleConnectSiteInfoForWoo(event.info, hasJetpack);
+                handleConnectSiteInfoForWoo(event.info);
             } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY) {
                 handleConnectSiteInfoForJetpack(event.info);
             } else {
@@ -391,20 +419,25 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
     }
 
-    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
-        endProgressIfNeeded();
-
+    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo) {
         if (!siteInfo.exists) {
+            endProgressIfNeeded();
             // Site does not exist
             showError(R.string.invalid_site_url_message);
         } else if (!siteInfo.isWordPress) {
+            endProgressIfNeeded();
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
         } else {
-            mLoginListener.gotConnectedSiteInfo(
-                    siteInfo.url,
-                    siteInfo.urlAfterRedirects,
-                    hasJetpack);
+            /**
+             * Jetpack internally uses xml-rpc protocol. Due to a bug on the API, when jetpack is
+             * setup and connected to a .com account `isJetpackConnected` returns false when xml-rpc
+             * is disabled.
+             * This is causing issues to the client apps as they can't differentiate between
+             * "xml-rpc disabled" and "jetpack not connected" states. Therefore, the login flow
+             * library always needs to invoke "xml-rpc discovery" to check if xml-rpc is accessible.
+             */
+            initiateDiscovery();
         }
     }
 
