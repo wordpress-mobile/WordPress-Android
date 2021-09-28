@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
@@ -698,6 +699,29 @@ class SiteRestClient @Inject constructor(
                             SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload)
                     )
                 })
+        add(request)
+    }
+
+    fun fetchSiteDomains(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
+        val request =
+                WPComGsonRequest.buildGetRequest(url, null, DomainsResponse::class.java,
+                { response ->
+                    val domains = response.domains
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newFetchedDomainsAction(FetchedDomainsPayload(site, domains))
+                    )
+                }
+        ) { error ->
+            val siteErrorType = when (error.apiError) {
+                "unauthorized" -> UNAUTHORIZED
+                "unknown_blog" -> UNKNOWN_SITE
+                else -> SiteErrorType.GENERIC_ERROR
+            }
+            val domainsError = SiteError(siteErrorType, error.message)
+            val payload = FetchedDomainsPayload(site, domainsError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainsAction(payload))
+        }
         add(request)
     }
 
