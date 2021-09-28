@@ -11,17 +11,17 @@ import java.net.CookieManager
 import javax.inject.Inject
 
 /**
- * This class wraps a [CookieStore][java.net.CookieStore] and a [SharedPreferences][android.content.SharedPreferences],
- * and syncs [DebugCookie]s between them.
+ * This class syncs [DebugCookie]s between a [java.net.CookieManager], a [android.webkit.CookieManager], and a
+ * [SharedPreferences][android.content.SharedPreferences].
  *
  * Note: this class was not designed with production use in mind, and because of that, it makes several assumptions
  * about the format of the cookies. If we ever need to use this for anything other than manually setting debug cookies,
- * then we should consider introducing our own [CookieStore][java.net.CookieStore] implementation instead.
+ * then we should consider introducing our own [java.net.CookieStore] implementation instead.
  *
- * @param context The [Context][android.content.Context] from which the
- * [SharedPreferences][android.content.SharedPreferences] will be built.
- * @param cookieManager The [CookieManager][java.net.CookieManager] from which the [CookieStore][java.net.CookieStore]
- * will be retrieved.
+ * @param httpCookieManager [java.net.CookieManager] instance used by HTTP calls.
+ * @param webViewCookieManager [android.webkit.CookieManager] instance used by [WebView][android.webkit.WebView]s.
+ * @param preferences [SharedPreferences][android.content.SharedPreferences] instance to store [DebugCookie]s.
+ * @param gson Gson instance to encode/decode [DebugCookie]s for [SharedPreferences][android.content.SharedPreferences].
  */
 class DebugCookieManager internal constructor(
     private val httpCookieManager: CookieManager,
