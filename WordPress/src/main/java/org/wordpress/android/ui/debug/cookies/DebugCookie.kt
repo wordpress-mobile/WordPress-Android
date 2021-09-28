@@ -13,6 +13,8 @@ data class DebugCookie(
 
     val oldRfcDomain = ".$host"
 
+    val headerValue = name + "=" + value.orEmpty()
+
     fun toURI(): URI = URI(host)
 
     fun toHttpCookie(): HttpCookie = HttpCookie(name, value).apply {
