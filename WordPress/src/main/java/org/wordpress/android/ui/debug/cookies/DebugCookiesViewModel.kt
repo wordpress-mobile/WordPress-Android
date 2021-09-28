@@ -27,7 +27,7 @@ class DebugCookiesViewModel @Inject constructor(
 
     private fun onItemClick(debugCookie: DebugCookie) {
         _uiState.value = _uiState.value?.copy(
-                domainInputText = debugCookie.domain,
+                domainInputText = debugCookie.host,
                 nameInputText = debugCookie.name,
                 valueInputText = debugCookie.value
         )
@@ -43,7 +43,7 @@ class DebugCookiesViewModel @Inject constructor(
     private fun getUpdatedItems() = debugCookieManager.getAll().sortedBy { it.key }.map {
         DebugCookieItem(
                 it.key,
-                it.domain,
+                it.host,
                 it.name,
                 it.value,
                 ListItemInteraction.create(it, ::onItemClick),

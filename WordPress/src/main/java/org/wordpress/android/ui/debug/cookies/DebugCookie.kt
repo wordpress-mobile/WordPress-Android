@@ -5,21 +5,17 @@ import java.net.HttpCookie
 import java.net.URI
 
 data class DebugCookie(
-    val domain: String,
+    val host: String,
     val name: String,
-    val value: String?,
-    val scheme: String = "https",
-    val path: String = "/",
-    val version: Int = 0
+    val value: String?
 ) {
-    val key = domain + "_" + name
+    val key = host + "_" + name
 
-    fun toURI(): URI = URI(scheme, domain, path, null)
+    fun toURI(): URI = URI(host)
 
     fun toHttpCookie(): HttpCookie = HttpCookie(name, value).apply {
-        version = this@DebugCookie.version
-        domain = this@DebugCookie.domain
-        path = this@DebugCookie.path
+        version = 0
+        domain = host
     }
 
     fun encode(gson: Gson): String = gson.toJson(this)
