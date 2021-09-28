@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
@@ -38,6 +39,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_CONNECT_SITE_INFO
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
@@ -71,6 +73,7 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
@@ -641,6 +644,28 @@ open class SiteStore
         error: DomainSupportedCountriesError?
     ) : OnChanged<DomainSupportedCountriesError>() {
         init {
+            this.error = error
+        }
+    }
+
+    data class FetchedDomainsPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val domains: List<Domain>? = null
+    ) : Payload<SiteError>() {
+        constructor(site: SiteModel, error: SiteError) : this(site) {
+            this.error = error
+        }
+    }
+
+    data class OnSiteDomainsFetched(
+        @JvmField val site: SiteModel,
+        @JvmField val domains: List<Domain>?
+    ) : OnChanged<SiteError>() {
+        constructor(
+            site: SiteModel,
+            domains: List<Domain>?,
+            error: SiteError?
+        ) : this(site, domains) {
             this.error = error
         }
     }
@@ -1238,6 +1263,8 @@ open class SiteStore
             FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(
                     action.payload as FetchedJetpackCapabilitiesPayload
             )
+            FETCH_DOMAINS -> fetchSiteDomains(action.payload as SiteModel)
+            FETCHED_DOMAINS -> handleFetchedSiteDomains(action.payload as FetchedDomainsPayload)
         }
     }
 
@@ -1815,5 +1842,18 @@ open class SiteStore
         val event = OnPrimaryDomainDesignated(payload.site, payload.success)
         event.error = payload.error
         emitChange(event)
+    }
+
+    private fun fetchSiteDomains(siteModel: SiteModel) {
+        if (siteModel.isUsingWpComRestApi) {
+            siteRestClient.fetchSiteDomains(siteModel)
+        } else {
+            val domainsError = SiteError(SiteErrorType.GENERIC_ERROR)
+            handleFetchedSiteDomains(FetchedDomainsPayload(siteModel, domainsError))
+        }
+    }
+
+    private fun handleFetchedSiteDomains(payload: FetchedDomainsPayload) {
+        emitChange(OnSiteDomainsFetched(payload.site, payload.domains, payload.error))
     }
 }
