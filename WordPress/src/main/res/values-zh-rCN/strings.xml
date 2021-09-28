@@ -12,19 +12,12 @@ Language: zh_CN
     <string name="domains_primary_domain">主要站点地址</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
     <string name="site_settings_site_domains_title">站点域</string>
-    <string name="like_this">点赞</string>
-    <string name="like_faces_you_text">您%1$s。</string>
-    <string name="like_faces_you_plus_one_text">您和其他1位博主%1$s。</string>
-    <string name="like_faces_plural_with_you_text">您和其他%1$s位博主%2$s。</string>
-    <string name="like_faces_one_blogger_text">1位博主%1$s。</string>
-    <string name="like_faces_more_bloggers_text">%1$s位博主%2$s。</string>
     <string name="my_site_btn_domains">域名</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
     <string name="recommend_app_subject">WordPress App——适用于任何屏幕的App</string>
     <string name="recommend_app_null_response">未收到任何响应</string>
     <string name="recommend_app_bad_format_response">收到无效响应</string>
-    <string name="likes_this">点赞</string>
     <string name="weekly_roundup_notification_text">您的站点获得了%1$d次浏览、%2$d次喜欢、%3$d次评论。</string>
     <string name="blogging_reminders_notification_time">通知间隔</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">您会收到提醒，要在&lt;b&gt;每天&lt;/b&gt;&lt;b&gt;%s&lt;/b&gt;写博客。</string>
@@ -73,7 +66,6 @@ Language: zh_CN
     <string name="gutenberg_native_try_another_search_term">尝试其他搜索词</string>
     <string name="gutenberg_native_unable_to_embed_media">无法嵌入媒体</string>
     <string name="gutenberg_native_s_previews_not_yet_available">%s 预览尚不可用</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">%s 区块预览即将推出</string>
     <string name="quick_start_list_upload_icon_subtitle">显示在访问者的浏览器选项卡和其他在线位置。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">双击可预览页面。</string>
     <string name="gutenberg_native_double_tap_to_preview_post">双击可预览文章</string>
@@ -1333,7 +1325,6 @@ Language: zh_CN
     <string name="plugin_install_custom_domain_required_dialog_register_btn">注册域</string>
     <string name="plugin_install_custom_domain_required_dialog_message">要安装插件，您需要拥有一个与站点相关联的自定义域。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">安装插件</string>
-    <string name="new_site_creation_preview_subtitle">您可以稍后定制站点的外观和风格</string>
     <string name="publish_on">发布日期：%s</string>
     <string name="schedule_for">预计发布日期：%s</string>
     <string name="published_on">发布日期：%s</string>
@@ -1914,7 +1905,6 @@ Language: zh_CN
     <string name="plugin_byline">作者：%s</string>
     <string name="plugin_fetch_error">无法加载插件</string>
     <string name="change_photo">更改照片</string>
-    <string name="my_site_btn_site_pages">站点页面</string>
     <string name="site_settings_tags_hint">管理站点标签</string>
     <string name="dlg_saving_tag">正在保存</string>
     <string name="dlg_deleting_tag">正在删除</string>
@@ -2674,7 +2664,6 @@ Language: zh_CN
     <string name="my_site_btn_view_site">查看站点</string>
     <string name="site_picker_title">选择站点</string>
     <string name="my_site_btn_switch_site">切换站点</string>
-    <string name="my_site_btn_blog_posts">博客文章</string>
     <string name="my_site_header_look_and_feel">外观</string>
     <string name="my_site_header_publish">发布</string>
     <string name="my_site_btn_site_settings">站点设置</string>
