@@ -351,21 +351,8 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || site.isWPComAtomic());
     }
 
-    public static boolean supportsFacebookEmbedFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_FACEBOOK_EMBED_JETPACK_VERSION));
-    }
-
-    public static boolean supportsInstagramEmbedFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_INSTAGRAM_EMBED_JETPACK_VERSION));
-    }
-
-    public static boolean supportsLoomEmbedFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_LOOM_EMBED_JETPACK_VERSION));
-    }
-
-    public static boolean supportsSmartframeEmbedFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site,
-                WP_SMARTFRAME_EMBED_JETPACK_VERSION));
+    public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }
 
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
