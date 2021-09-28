@@ -11,14 +11,14 @@ data class DebugCookie(
 ) {
     val key = host + "_" + name
 
-    val oldRfcDomain = ".$host"
+    val oldRfcDomain = ".$host" // Append leading dot to match subdomains under RFC2109 and RFC2965
 
     val headerValue = name + "=" + value.orEmpty()
 
     fun toURI(): URI = URI(host)
 
     fun toHttpCookie(): HttpCookie = HttpCookie(name, value).apply {
-        version = 0
+        version = 0 // Use Netscape specification to maintain compatibility with java.net.CookieManager
         domain = host
     }
 
