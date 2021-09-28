@@ -169,5 +169,3 @@ internal class BooleanTypeAdapter : JsonDeserializer<Boolean?> {
         }
     }
 }
-
-
