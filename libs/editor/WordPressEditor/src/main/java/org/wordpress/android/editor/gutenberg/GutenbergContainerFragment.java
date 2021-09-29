@@ -43,7 +43,7 @@ public class GutenbergContainerFragment extends Fragment {
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
-    private WPAndroidGlueCode mWPAndroidGlueCode;
+    private WPAndroidGlueCodeWPCOM mWPAndroidGlueCode;
     public static GutenbergContainerFragment newInstance(GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
@@ -114,7 +114,7 @@ public class GutenbergContainerFragment extends Fragment {
             breadcrumbLogger = exceptionLoggingActivity.getBreadcrumbLogger();
         }
 
-        mWPAndroidGlueCode = new WPAndroidGlueCode();
+        mWPAndroidGlueCode = new WPAndroidGlueCodeWPCOM();
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
                 getContext(),
