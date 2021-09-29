@@ -21,11 +21,9 @@
     <ID>ComplexMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getErrorResource(imgType: ImageType): Int?</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getPlaceholderResource(imgType: ImageType): Int?</ID>
-    <ID>ComplexMethod:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ComplexMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>ComplexMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier&gt;?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
     <ID>ComplexMethod:MySiteAdapterDiffCallback.kt$MySiteAdapterDiffCallback$override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean</ID>
-    <ID>ComplexMethod:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ComplexMethod:MySiteViewModel.kt$MySiteViewModel$private fun onItemClick(action: ListItemAction)</ID>
     <ID>ComplexMethod:NoticonUtils.kt$NoticonUtils$fun noticonToGridicon(noticon: String): Int</ID>
     <ID>ComplexMethod:PostActionHandler.kt$PostActionHandler$fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean)</ID>
@@ -88,11 +86,9 @@
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
-    <ID>LongMethod:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>LongMethod:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
     <ID>LongMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier&gt;?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
-    <ID>LongMethod:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>LongMethod:OverviewMapper.kt$OverviewMapper$fun buildChart( dates: List&lt;PeriodData&gt;, statsGranularity: StatsGranularity, onBarSelected: (String?) -&gt; Unit, onBarChartDrawn: (visibleBarCount: Int) -&gt; Unit, selectedType: Int, selectedItemPeriod: String ): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:PhotoPickerFragment.kt$PhotoPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:PostListItemUiStateHelper.kt$PostListItemUiStateHelper$fun createPostListItemUiState( authorFilterSelection: AuthorFilterSelection, post: PostModel, site: SiteModel, unhandledConflicts: Boolean, hasAutoSave: Boolean, capabilitiesToPublish: Boolean, statsSupported: Boolean, featuredImageUrl: String?, formattedDate: String, performingCriticalAction: Boolean, isSearch: Boolean, uploadStatusTracker: PostModelUploadStatusTracker, onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -&gt; Unit ): PostListItemUiState</ID>
@@ -157,7 +153,6 @@
     <ID>LongParameterList:ReaderPostUiStateBuilder.kt$ReaderPostUiStateBuilder$( source: String, post: ReaderPost, isDiscover: Boolean = false, photonWidth: Int, photonHeight: Int, postListType: ReaderPostListType, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onItemClicked: (Long, Long) -&gt; Unit, onItemRendered: (ReaderCardUiState) -&gt; Unit, onDiscoverSectionClicked: (Long, Long) -&gt; Unit, onMoreButtonClicked: (ReaderPostUiState) -&gt; Unit, onMoreDismissed: (ReaderPostUiState) -&gt; Unit, onVideoOverlayClicked: (Long, Long) -&gt; Unit, onPostHeaderViewClicked: (Long, Long) -&gt; Unit, onTagItemClicked: (String) -&gt; Unit, moreMenuItems: List&lt;SecondaryAction&gt;? = null )</ID>
     <ID>LongParameterList:ReferrersUseCase.kt$ReferrersUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val referrersStore: ReferrersStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode, private val popupMenuHandler: ReferrerPopupMenuHandler )</ID>
     <ID>LongParameterList:SearchTermsUseCase.kt$SearchTermsUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val store: SearchTermsStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
-    <ID>LongParameterList:SiteInfoBlockBuilder.kt$SiteInfoBlockBuilder$( site: SiteModel, showSiteIconProgressBar: Boolean, titleClick: () -&gt; Unit, iconClick: () -&gt; Unit, urlClick: () -&gt; Unit, switchSiteClick: () -&gt; Unit, showUpdateSiteTitleFocusPoint: Boolean, showUploadSiteIconFocusPoint: Boolean )</ID>
     <ID>LongParameterList:SiteSettingsInterfaceWrapper.kt$SiteSettingsInterfaceWrapper.Factory$( site: SiteModel, onSaveError: ((error: Exception?) -&gt; Unit)? = null, onFetchError: ((error: Exception?) -&gt; Unit)? = null, onSettingsUpdated: (() -&gt; Unit)? = null, onSettingsSaved: (() -&gt; Unit)? = null, onCredentialsValidated: ((error: Exception?) -&gt; Unit)? = null )</ID>
     <ID>LongParameterList:StatsDetailActivity.kt$StatsDetailActivity.Companion$( context: Context, site: SiteModel, postId: Long, postType: String, postTitle: String, postUrl: String? )</ID>
     <ID>LongParameterList:StatsModule.kt$StatsModule$( allTimeStatsUseCase: AllTimeStatsUseCase, latestPostSummaryUseCase: LatestPostSummaryUseCase, todayStatsUseCase: TodayStatsUseCase, followersUseCaseFactory: FollowersUseCaseFactory, commentsUseCase: CommentsUseCase, mostPopularInsightsUseCase: MostPopularInsightsUseCase, tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory, publicizeUseCaseFactory: PublicizeUseCaseFactory, postingActivityUseCase: PostingActivityUseCase, followerTotalsUseCase: FollowerTotalsUseCase, annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory, managementControlUseCase: ManagementControlUseCase, managementNewsCardUseCase: ManagementNewsCardUseCase )</ID>
@@ -201,7 +196,6 @@
     <ID>MagicNumber:ExpandableItemViewHolder.kt$ExpandableItemViewHolder$180F</ID>
     <ID>MagicNumber:ExpandableItemViewHolder.kt$ExpandableItemViewHolder$200</ID>
     <ID>MagicNumber:FeatureAnnouncementViewModel.kt$FeatureAnnouncementViewModel$1000</ID>
-    <ID>MagicNumber:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$100</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$3</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$5</ID>
     <ID>MagicNumber:LatestPostSummaryMapper.kt$LatestPostSummaryMapper$30</ID>
@@ -211,10 +205,7 @@
     <ID>MagicNumber:MapViewHolder.kt$MapViewHolder$8</ID>
     <ID>MagicNumber:MediaPickerViewModel.kt$MediaPickerViewModel$100</ID>
     <ID>MagicNumber:MediaPickerViewModel.kt$MediaPickerViewModel$300</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$0.5</ID>
     <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$100</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$4</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$600</ID>
     <ID>MagicNumber:MySiteViewModel.kt$MySiteViewModel$600</ID>
     <ID>MagicNumber:NotificationsListFragmentPage.kt$NotificationsListFragmentPage$1000L</ID>
     <ID>MagicNumber:OverviewMapper.kt$OverviewMapper$100</ID>
@@ -233,7 +224,6 @@
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$10000</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$60</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$6000</ID>
-    <ID>MagicNumber:QuickStartCardViewHolder.kt$QuickStartCardViewHolder$600</ID>
     <ID>MagicNumber:QuickStartItemBuilder.kt$QuickStartItemBuilder$100</ID>
     <ID>MagicNumber:ReaderCommentListViewModel.kt$ReaderCommentListViewModel$300</ID>
     <ID>MagicNumber:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$300</ID>
@@ -272,7 +262,6 @@
     <ID>MaxLineLength:AppConfig.kt$AppConfig$*</ID>
     <ID>MaxLineLength:FeatureAnnouncementViewModel.kt$FeatureAnnouncementViewModel$?:</ID>
     <ID>MaxLineLength:ImageManager.kt$ImageManager$*</ID>
-    <ID>MaxLineLength:MySiteFragment.kt$MySiteFragment$private</ID>
     <ID>MaxLineLength:ReaderPostListViewModel.kt$ReaderPostListViewModel$// TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(</ID>
     <ID>MaxLineLength:ReaderUtilsWrapper.kt$ReaderUtilsWrapper$*</ID>
     <ID>MaxLineLength:SaveStoryGutenbergBlockUseCase.kt$SaveStoryGutenbergBlockUseCase.&lt;no name provided&gt;$// now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace</ID>
@@ -297,14 +286,12 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.kt:105</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:54</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:56</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:419</ID>
     <ID>NestedBlockDepth:AllTimeWidgetBlockListViewModel.kt$AllTimeWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:AllTimeWidgetListViewModel.kt$AllTimeWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
     <ID>NestedBlockDepth:CreatePageListItemActionsUseCase.kt$CreatePageListItemActionsUseCase$fun setupPageActions( listType: PageListType, uploadUiState: PostUploadUiState, siteModel: SiteModel, remoteId: Long ): Set&lt;Action&gt;</ID>
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String&gt;): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:MeFragment.kt$MeFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>NestedBlockDepth:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
-    <ID>NestedBlockDepth:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
     <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
@@ -314,7 +301,6 @@
     <ID>NestedBlockDepth:TodayWidgetBlockListViewModel.kt$TodayWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:TodayWidgetListViewModel.kt$TodayWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
     <ID>NestedBlockDepth:ViewsWidgetListViewModel.kt$ViewsWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
-    <ID>NestedBlockDepth:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun onCreateActionClicked(actionType: ActionType)</ID>
     <ID>ProtectedMemberInFinalClass:PageParentSearchFragment.kt$PageParentSearchFragment$protected var job: Job = Job()</ID>
     <ID>ReturnCount:BarChartViewHolder.kt$BarChartViewHolder$private fun roundUp(input: Float): Float</ID>
     <ID>ReturnCount:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
@@ -325,10 +311,8 @@
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun queueFeaturedImageForUpload( localPostId: Int, site: SiteModel, uri: Uri, mimeType: String? ): EnqueueFeaturedImageResult</ID>
     <ID>ReturnCount:FollowedBlogsProvider.kt$FollowedBlogsProvider$fun getAllFollowedBlogs(query: String?): List&lt;PreferenceModel&gt;</ID>
     <ID>ReturnCount:ImageManager.kt$ImageManager$ private fun Context?.isAvailable(): Boolean</ID>
-    <ID>ReturnCount:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ReturnCount:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList&lt;String&gt;): Boolean</ID>
     <ID>ReturnCount:MediaPickerAdapterDiffCallback.kt$MediaPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
-    <ID>ReturnCount:MySiteFragment.kt$MySiteFragment$private fun startSiteIconUpload(filePath: String)</ID>
     <ID>ReturnCount:MySiteViewModel.kt$MySiteViewModel$private fun startSiteIconUpload(filePath: String)</ID>
     <ID>ReturnCount:PageListViewModel.kt$PageListViewModel$private fun getFeaturedImageUrl(featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PageParentFragment.kt$PageParentFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
