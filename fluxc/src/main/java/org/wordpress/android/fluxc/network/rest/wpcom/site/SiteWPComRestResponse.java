@@ -94,6 +94,7 @@ public class SiteWPComRestResponse implements Response {
     public boolean visible;
     public boolean is_private;
     public boolean is_coming_soon;
+    public int organization_id;
     public Options options;
     public Capabilities capabilities;
     public Plan plan;
