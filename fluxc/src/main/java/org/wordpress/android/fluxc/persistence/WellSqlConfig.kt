@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 163
+        return 164
     }
 
     override fun getDbName(): String {
@@ -1816,6 +1816,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 162 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD STICKY BOOLEAN")
+                }
+                163 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD ORGANIZATION_ID INTEGER")
                 }
             }
         }
