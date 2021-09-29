@@ -84,7 +84,8 @@ class SiteRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "fields" to "ID,URL,name,description,jetpack," +
-                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta"
+                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
+                                "organization_id"
                 )
         )
     }
@@ -132,7 +133,8 @@ class SiteRestClientTest {
                 mapOf(
                         "filters" to "wpcom",
                         "fields" to "ID,URL,name,description,jetpack," +
-                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta"
+                                "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
+                                "organization_id"
                 )
         )
     }
