@@ -145,9 +145,14 @@ class DomainsDashboardViewModel @Inject constructor(
             if (!it.wpcomDomain && !it.isWpcomStagingDomain) {
                 listItems += SiteDomains(
                         UiStringText(it.domain.toString()),
-                        UiStringResWithParams(
-                                string.domains_site_domain_expires, listOf(UiStringText(it.expiry.toString()))
-                        )
+                        if (it.expirySoon) {
+                            UiStringText(
+                                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                            string.domains_site_domain_expires_soon, it.expiry.toString()))
+                        } else {
+                            UiStringResWithParams(
+                                    string.domains_site_domain_expires, listOf(UiStringText(it.expiry.toString())))
+                        }
                 )
             }
         }
