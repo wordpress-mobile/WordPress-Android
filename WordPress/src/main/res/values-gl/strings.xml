@@ -17,8 +17,6 @@ Language: gl_ES
     <string name="me_btn_share">Comparte WordPress cun amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
-    <string name="likes_this">gústame</string>
-    <string name="like_this">gústame</string>
     <string name="site_settings_site_domains_title">Dominios do sitio</string>
     <string name="weekly_roundup_notification_text">O teu sitio recibiu %1$d visualizacións, %2$d gústame, %3$d comentarios.</string>
     <string name="weekly_roundup_notification_title">Repaso semanal: %s</string>
@@ -68,7 +66,6 @@ Language: gl_ES
     <string name="gutenberg_native_try_another_search_term">Proba outro termo de busca</string>
     <string name="gutenberg_native_no_blocks_found">Non se encontraron bloques</string>
     <string name="gutenberg_native_s_previews_not_yet_available">Aínda non están dispoñibles as vistas previas de %s</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">Pronto chegarán as vistas previas do bloque %s</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Toca dúas veces para previsualizar a entrada.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Toca dúas veces para previsualizar a páxina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Mostrado na pestana do navegador do teu visitante e noutros sitios en liña.</string>
@@ -1328,7 +1325,6 @@ Language: gl_ES
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Rexistrar dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins necesitas ter un dominio personalizado asociado ao teu sitio.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
-    <string name="new_site_creation_preview_subtitle">Poderás personalizar a apariencia do teu sitio máis adiante</string>
     <string name="publish_on">Publicar o: %s</string>
     <string name="schedule_for">Programada para o: %s</string>
     <string name="published_on">Publicado o: %s</string>
@@ -1909,7 +1905,6 @@ Language: gl_ES
     <string name="plugin_byline">por %s</string>
     <string name="change_photo">Cambiar foto</string>
     <string name="plugin_fetch_error">Non é posible cargar plugins</string>
-    <string name="my_site_btn_site_pages">Páxinas do sitio</string>
     <string name="site_settings_tags_hint">Xestiona as etiquetas do teu sitio</string>
     <string name="dlg_saving_tag">Gardando</string>
     <string name="dlg_deleting_tag">Borrando</string>
@@ -2670,7 +2665,6 @@ Language: gl_ES
     <string name="my_site_btn_view_admin">Ir ao Panel</string>
     <string name="my_site_btn_switch_site">Cambiar de sitio</string>
     <string name="my_site_btn_site_settings">Axustes do sitio</string>
-    <string name="my_site_btn_blog_posts">Artigos</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparencia</string>
     <string name="my_site_header_configuration">Configuración</string>

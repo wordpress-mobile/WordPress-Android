@@ -1073,7 +1073,6 @@ Language: sr_RS
     <string name="plugin_byline">од %s</string>
     <string name="change_photo">Промените фотографију</string>
     <string name="plugin_fetch_error">Није у могућности да учита додатке</string>
-    <string name="my_site_btn_site_pages">Странице сајта</string>
     <string name="dlg_saving_tag">Снимање</string>
     <string name="dlg_deleting_tag">Брисање</string>
     <string name="dlg_confirm_delete_tag">Трајно обриши ознаку \'%s\'?</string>
@@ -1693,7 +1692,6 @@ Language: sr_RS
     <string name="my_site_btn_view_site">Види веб место</string>
     <string name="site_picker_title">Одабери веб место</string>
     <string name="my_site_btn_switch_site">Промени веб место</string>
-    <string name="my_site_btn_blog_posts">Чланци блога</string>
     <string name="my_site_header_look_and_feel">Изглед и осећај</string>
     <string name="my_site_header_publish">Објави</string>
     <string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>
