@@ -58,6 +58,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mMaxUploadSize; // only set for Jetpack sites
     @Column private long mMemoryLimit; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
+    @Column private int mOrganizationId = -1;
 
     @Column private String mShowOnFront;
     @Column private long mPageOnFront = -1;
@@ -793,5 +794,13 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setZendeskAddOns(String zendeskAddOns) {
         mZendeskAddOns = zendeskAddOns;
+    }
+
+    public int getOrganizationId() {
+        return mOrganizationId;
+    }
+
+    public void setOrganizationId(int organizationId) {
+        mOrganizationId = organizationId;
     }
 }

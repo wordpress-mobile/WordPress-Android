@@ -905,6 +905,7 @@ class SiteRestClient @Inject constructor(
         site.setIsVisible(from.visible)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
+        site.organizationId = from.organization_id
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled)
@@ -1063,7 +1064,7 @@ class SiteRestClient @Inject constructor(
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta,zendesk_site_meta")
+                "capabilities,quota,icon,meta,zendesk_site_meta,organization_id")
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
