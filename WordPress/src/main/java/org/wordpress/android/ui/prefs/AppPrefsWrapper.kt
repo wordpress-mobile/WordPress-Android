@@ -202,10 +202,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
 
-    fun isQuickStartEnabled() = !AppPrefs.isQuickStartDisabled()
-
-    fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
-
     fun getSelectedSite() = AppPrefs.getSelectedSite()
 
     fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)

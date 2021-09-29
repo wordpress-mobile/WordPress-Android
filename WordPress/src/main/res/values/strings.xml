@@ -2915,18 +2915,11 @@
 
     <string name="content_description_more">More</string>
 
-    <!-- Quick Start Promo Dialog (Old) -->
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-
-    <!-- Quick Start Promo Dialog (New) -->
+    <!-- Quick Start Promo Dialog -->
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
 
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
