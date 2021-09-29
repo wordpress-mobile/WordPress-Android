@@ -1064,7 +1064,7 @@ class SiteRestClient @Inject constructor(
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta,zendesk_site_meta")
+                "capabilities,quota,icon,meta,zendesk_site_meta,organization_id")
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
