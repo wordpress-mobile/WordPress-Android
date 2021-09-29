@@ -10,7 +10,7 @@
     android:paddingStart="@dimen/margin_medium">
 
     <TextView
-        android:id="@+id/cookie_domain"
+        android:id="@+id/cookie_host"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
@@ -28,7 +28,7 @@
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintEnd_toStartOf="@+id/delete_cookie_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cookie_domain"
+        app:layout_constraintTop_toBottomOf="@+id/cookie_host"
         tools:text="cookie_name" />
 
     <TextView

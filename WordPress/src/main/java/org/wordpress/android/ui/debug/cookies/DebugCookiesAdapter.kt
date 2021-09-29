@@ -20,7 +20,7 @@ class DebugCookiesAdapter : ListAdapter<DebugCookieItem, DebugCookieItemViewHold
 
     class DebugCookieItemViewHolder(private val binding: DebugCookieItemBinding) : ViewHolder(binding.root) {
         fun onBind(item: DebugCookieItem) = with(binding) {
-            cookieDomain.text = item.domain
+            cookieHost.text = item.host
             cookieName.text = item.name
             cookieValue.text = item.value
 
@@ -36,7 +36,7 @@ class DebugCookiesAdapter : ListAdapter<DebugCookieItem, DebugCookieItemViewHold
 
     data class DebugCookieItem(
         val key: String,
-        val domain: String,
+        val host: String,
         val name: String,
         val value: String?,
         val onClick: ListItemInteraction,

@@ -119,7 +119,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         adapter.selectedPosition = viewModel.selectedPosition.value ?: -1
-        adapter.updateSuggestionsList(domainSuggestions)
+        adapter.updateSuggestionsList(domainSuggestions, viewModel.isDomainCreditAvailable)
     }
 
     private fun onDomainSuggestionSelected(
