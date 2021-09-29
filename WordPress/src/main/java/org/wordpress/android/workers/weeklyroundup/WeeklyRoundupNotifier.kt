@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.WEEKLY_ROUNDUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
@@ -38,6 +39,7 @@ class WeeklyRoundupNotifier @Inject constructor(
                 .awaitAll()
                 .asSequence()
                 .filterNotNull()
+                .filter { it.site.organizationId != Organization.A8C.orgId } // Filters A8C P2s
                 .filter { appPrefs.shouldShowWeeklyRoundupNotification(it.site.siteId) }
                 .sortedByDescending { it.score }
                 .take(TOP_FIVE_SITES)
