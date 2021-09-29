@@ -110,7 +110,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.quick_start_prompt_dialog_fragment_new, container, false)
+        val view = inflater.inflate(R.layout.quick_start_prompt_dialog_fragment, container, false)
         initializeView(view)
         return view
     }
