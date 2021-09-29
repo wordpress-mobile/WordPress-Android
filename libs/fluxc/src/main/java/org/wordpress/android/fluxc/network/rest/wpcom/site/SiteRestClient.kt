@@ -905,6 +905,7 @@ class SiteRestClient @Inject constructor(
         site.setIsVisible(from.visible)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
+        site.organizationId = from.organization_id
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled)
