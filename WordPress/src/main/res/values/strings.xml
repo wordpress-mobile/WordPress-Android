@@ -918,7 +918,7 @@
     <!-- Debug cookies -->
     <string name="debug_cookies_title" translatable="false">Debug cookies</string>
     <string name="debug_cookies_set_cookie" translatable="false">Set cookie</string>
-    <string name="debug_cookies_cookie_domain_hint" translatable="false">wordpress.com</string>
+    <string name="debug_cookies_cookie_host_hint" translatable="false">wordpress.com</string>
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
