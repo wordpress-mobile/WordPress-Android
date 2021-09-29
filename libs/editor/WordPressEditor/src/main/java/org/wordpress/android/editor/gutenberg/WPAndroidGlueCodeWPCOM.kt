@@ -2,19 +2,18 @@ package org.wordpress.android.editor.gutenberg
 
 import android.view.ViewGroup
 import com.facebook.react.ReactPackage
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode
 
 class WPAndroidGlueCodeWPCOM : WPAndroidGlueCode() {
-    private val lateinit mGutenbergBridgeJS2ParentWPCOMListener: GutenbergBridgeJS2ParentWPCOMListener?
+    private var mGutenbergBridgeJS2ParentWPCOMListener: GutenbergBridgeJS2ParentWPCOMListener? = null
 
     override fun getPackages(): MutableList<ReactPackage> {
-        val packages: MutableList<ReactPackage> = super.getPackages()
+        val packages: ArrayList<ReactPackage> = ArrayList(super.getPackages())
         packages.add(RNExamplePackage(object: GutenbergBridgeJS2ParentWPCOM {
             override fun justToast(text: String?) {
-                ToastUtils.showToast(text)
+                mGutenbergBridgeJS2ParentWPCOMListener?.justToast(text)
             }
         }))
         return packages
@@ -44,7 +43,7 @@ class WPAndroidGlueCodeWPCOM : WPAndroidGlueCode() {
         onGutenbergDidRequestPreviewListener: OnGutenbergDidRequestPreviewListener?,
         onBlockTypeImpressionsEventListener: OnBlockTypeImpressionsEventListener?,
         isDarkMode: Boolean,
-        gutenbergBridgeJS2ParentWPCOMListener: GutenbergBridgeJS2ParentWPCOMListener?
+        gutenbergBridgeJS2ParentWPCOMListener: GutenbergBridgeJS2ParentWPCOMListener
     ) {
         super.attachToContainer(
                 viewGroup,

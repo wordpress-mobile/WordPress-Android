@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
+import org.wordpress.android.editor.gutenberg.WPAndroidGlueCodeWPCOM.GutenbergBridgeJS2ParentWPCOMListener;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -77,7 +78,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnGutenbergDidRequestPreviewListener
                                           onGutenbergDidRequestPreviewListener,
                                   OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
-                                  boolean isDarkMode) {
+                                  boolean isDarkMode,
+                                  GutenbergBridgeJS2ParentWPCOMListener gutenbergBridgeJS2ParentWPCOMListener) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
@@ -97,7 +99,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,
-                    isDarkMode);
+                    isDarkMode,
+                    gutenbergBridgeJS2ParentWPCOMListener);
     }
 
     @Override

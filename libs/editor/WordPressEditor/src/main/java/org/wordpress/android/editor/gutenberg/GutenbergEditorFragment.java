@@ -47,6 +47,7 @@ import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
+import org.wordpress.android.editor.gutenberg.WPAndroidGlueCodeWPCOM.GutenbergBridgeJS2ParentWPCOMListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -506,7 +507,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onSetBlockTypeImpressions(impressions);
                     }
                 },
-                GutenbergUtils.isDarkMode(getActivity()));
+                GutenbergUtils.isDarkMode(getActivity()),
+                new GutenbergBridgeJS2ParentWPCOMListener() {
+                    @Override public void justToast(@Nullable String text) {
+                        ToastUtils.showToast(getContext(), text);
+                    }
+                }
+        );
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
