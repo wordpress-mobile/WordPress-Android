@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPaylo
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
@@ -133,8 +132,6 @@ public enum SiteAction implements IAction {
     FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
     @Action(payloadType = QuickStartCompletedResponsePayload.class)
     COMPLETED_QUICK_START,
-    @Action(payloadType = FetchedDomainsPayload.class)
-    FETCHED_DOMAINS,
     @Action(payloadType = DesignatedPrimaryDomainPayload.class)
     DESIGNATED_PRIMARY_DOMAIN,
     @Action(payloadType = FetchedPrivateAtomicCookiePayload.class)
