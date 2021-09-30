@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-28 11:54:08+0000
+Translation-Revision-Date: 2021-09-29 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -12,8 +12,8 @@ Language: ar
     <string name="quick_start_list_create_site_message">تم إنشاء الموقع! قم بإكمال مهمة أخرى.</string>
     <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
     <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;مدوّن واحد&lt;/a&gt; معجب بهذا.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;أنت و⁦%1$s⁩ من المدونين&lt;/a&gt; معجبين بهذا.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;أنت و مدوِّن واحد&lt;/a&gt; معجبان بهذا.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;أنت و⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;أنت&lt;/a&gt; معجب بهذا.</string>
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
