@@ -221,6 +221,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         boolean showPreview();
         Map<String, Double> onRequestBlockTypeImpressions();
         void onSetBlockTypeImpressions(Map<String, Double> impressions);
+        void onContactCustomerSupport();
+        void onGotoCustomerSupportOptions();
     }
 
     /**
