@@ -428,6 +428,13 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             endProgressIfNeeded();
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
+        } else if (siteInfo.hasJetpack && siteInfo.isJetpackConnected && siteInfo.isJetpackActive) {
+            endProgressIfNeeded();
+            mLoginListener.gotConnectedSiteInfo(
+                    mConnectSiteInfoUrl,
+                    mConnectSiteInfoUrlRedirect,
+                    mConnectSiteInfoCalculatedHasJetpack
+            );
         } else {
             /**
              * Jetpack internally uses xml-rpc protocol. Due to a bug on the API, when jetpack is
@@ -435,7 +442,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
              * is disabled.
              * This is causing issues to the client apps as they can't differentiate between
              * "xml-rpc disabled" and "jetpack not connected" states. Therefore, the login flow
-             * library always needs to invoke "xml-rpc discovery" to check if xml-rpc is accessible.
+             * library needs to invoke "xml-rpc discovery" to check if xml-rpc is accessible.
              */
             initiateDiscovery();
         }
