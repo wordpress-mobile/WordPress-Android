@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
@@ -283,5 +284,43 @@ class SiteStoreTest {
         assertThat(onPostFormatsChanged.site).isEqualTo(site)
         assertThat(onPostFormatsChanged.error).isEqualTo(payload.error)
         verifyZeroInteractions(siteSqlUtils)
+    }
+
+    @Test
+    fun `fetchSiteDomains from WPCom endpoint`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+        val fetchedDomains = FetchedDomainsPayload(site, listOf())
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(fetchedDomains)
+
+        assertSiteDomainsFetched(site)
+    }
+
+    private suspend fun assertSiteDomainsFetched(
+        site: SiteModel
+    ) {
+        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
+
+        assertThat(onSiteDomainsFetched.domains).isNotNull
+        assertThat(onSiteDomainsFetched.error).isNull()
+    }
+
+    @Test
+    fun `fetchSiteDomains error from WPCom endpoint returns error`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        val domainsError = SiteError(GENERIC_ERROR, null)
+        val fetchedDomains = FetchedDomainsPayload(site, domainsError)
+
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(fetchedDomains)
+
+        assertSiteDomainsFetchError(site)
+    }
+
+    private suspend fun assertSiteDomainsFetchError(site: SiteModel) {
+        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
+
+        assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
     }
 }
