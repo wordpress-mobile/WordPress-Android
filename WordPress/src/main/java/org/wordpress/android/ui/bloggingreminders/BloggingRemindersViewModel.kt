@@ -7,11 +7,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.NOTIFICATION_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
@@ -41,7 +44,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val dayLabelUtils: DayLabelUtils,
     private val analyticsTracker: BloggingRemindersAnalyticsTracker,
     private val reminderScheduler: ReminderScheduler,
-    private val mapper: BloggingRemindersModelMapper
+    private val mapper: BloggingRemindersModelMapper,
+    private val siteStore: SiteStore
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -102,11 +106,16 @@ class BloggingRemindersViewModel @Inject constructor(
         analyticsTracker.trackScreenShown(screen)
     }
 
-    fun getSettingsState(siteId: Int): LiveData<UiString> {
-        return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
-            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildSiteSettingsLabel(uiModel) }
-        }.asLiveData(mainDispatcher)
-    }
+    fun getBlogSettingsUiState(siteId: Int) = getUiModel(siteId)
+            .map { dayLabelUtils.buildSiteSettingsLabel(it) }
+            .asLiveData(mainDispatcher)
+
+    val notificationsSettingsUiState = combine(siteStore.sites.map { getUiModel(it.id) }) { models ->
+        models.associate { siteStore.getSiteIdForLocalId(it.siteId) to dayLabelUtils.buildSiteSettingsLabel(it) }
+    }.asLiveData(mainDispatcher)
+
+    private fun getUiModel(siteId: Int) =
+            bloggingRemindersStore.bloggingRemindersModel(siteId).map { mapper.toUiModel(it) }
 
     private fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
@@ -213,14 +222,22 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    fun onSettingsItemClicked(siteId: Int) {
+    fun onBlogSettingsItemClicked(siteId: Int) {
+        onSettingsItemClicked(siteId, BLOG_SETTINGS)
+    }
+
+    fun onNotificationSettingsItemClicked(remoteSiteId: Long) {
+        onSettingsItemClicked(siteStore.getLocalIdForRemoteSiteId(remoteSiteId), NOTIFICATION_SETTINGS)
+    }
+
+    private fun onSettingsItemClicked(siteId: Int, source: Source) {
         launch {
             val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
                 SELECTION
             } else {
                 PROLOGUE_SETTINGS
             }
-            showBottomSheet(siteId, screen, BLOG_SETTINGS)
+            showBottomSheet(siteId, screen, source)
         }
     }
 

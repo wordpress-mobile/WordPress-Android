@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-17 06:34:54+0000
+Translation-Revision-Date: 2021-09-27 05:42:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -183,7 +183,7 @@ Language: pl
     <string name="quick_start_card_menu_remove">Nie pokazuj ponownie</string>
     <string name="quick_start_card_menu_pin">Przypnij ten element</string>
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
-    <string name="web_preview_mobile">Mobilne</string>
+    <string name="web_preview_mobile">Urządzenie przenośne</string>
     <string name="quick_start_dialog_edit_homepage_title">Edytuj stronę domową</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
@@ -574,13 +574,13 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
     <string name="pages_set_as_homepage">Ustaw jako stronę domową</string>
-    <string name="site_settings_select_page">Wybierz Stronę</string>
     <string name="site_settings_posts_page">Strona z wpisami</string>
     <string name="site_settings_static_homepage">Statyczna strona główna</string>
     <string name="site_settings_classic_blog">Klasyczny blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Wybrana strona główna i strony dla wpisów nie mogą być te same.</string>
     <string name="pages_set_as_posts_page">Ustaw jako Stronę z wpisami</string>
     <string name="suggestion_invalid">%s nie jest prawidłową nazwą %s</string>
+    <string name="site_settings_select_page">Wybierz stronę</string>
     <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
     <string name="site_settings_failed_to_save_homepage_settings">NIe można było zapisać ustawień strony głównej</string>
@@ -705,7 +705,7 @@ Language: pl
     <string name="notifications_tab_title_comments">Komentarze</string>
     <string name="notifications_tab_title_unread_notifications">Nieprzeczytane</string>
     <string name="dlg_cancel_action_dont_trash">Nie usuwaj</string>
-    <string name="dlg_confirm_action_trash">Kosz</string>
+    <string name="dlg_confirm_action_trash">Do kosza</string>
     <string name="stats_insights_management_activity">Aktywność</string>
     <string name="stats_insights_management_posts_and_pages">Wpisy i Strony</string>
     <string name="stats_insights_management_general">Ogólne</string>
@@ -759,7 +759,7 @@ Language: pl
     <string name="photo_picker_image_thumbnail_selected">Wybrano obrazek</string>
     <string name="photo_picker_image_thumbnail_content_description">Miniaturka obrazka</string>
     <string name="my_site_bottom_sheet_add_post">Wpis na blogu</string>
-    <string name="my_site_bottom_sheet_title">Dodaj nowy</string>
+    <string name="my_site_bottom_sheet_title">Dodaj</string>
     <string name="post_settings_publish">Opublikuj</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Synchronizuj teraz</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Ten wpis będzie natychmiast zsynchronizowany.</string>
@@ -912,7 +912,7 @@ Language: pl
     <string name="site_settings_site_accelerator">Przyspieszacz witryny</string>
     <string name="site_settings_lazy_load_images_summary">Zwiększ szybkość swojej witryny wczytując jedynie obrazki widoczne na ekranie.</string>
     <string name="site_settings_performance">Wydajność</string>
-    <string name="stats_file_downloads_value_label">Pobrań</string>
+    <string name="stats_file_downloads_value_label">Pobrania</string>
     <string name="stats_file_downloads_title_label">Plik</string>
     <string name="stats_file_downloads">Pobrania plików</string>
     <string name="stats_data_not_recorded_for_period">Statystyki ilości pobrań nie były rejestrowane przed 28 czerwca 2019.</string>
@@ -926,9 +926,9 @@ Language: pl
     <string name="navigate_forward_desc">Idź dalej</string>
     <string name="calendar_scheduled_post_title">WordPress zapanował wpis: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
-    <string name="web_preview_desktop">Komputer</string>
     <string name="calendar_scheduled_post_description">Wpis \"%s\" został zaplanowany do publikacji w dniu \"%s\" w twojej aplikacji WordPressowej\n%s</string>
     <string name="navigate_back_desc">Wróć</string>
+    <string name="web_preview_desktop">Komputer stacjonarny</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1055,9 +1055,9 @@ Language: pl
     <string name="post_trashing">Wpis jest usuwany </string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokalne zmiany</string>
     <string name="stats_menu_remove">Usuń z Trendów</string>
-    <string name="stats_menu_move_down">Przesuń niżej</string>
     <string name="stats_menu_move_up">Przesuń wyżej</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Usunięcie tego wpisu anuluje niezapisane zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
+    <string name="stats_menu_move_down">Przenieś w dół</string>
     <string name="button_move_to_draft">Przesuń do szkiców</string>
     <string name="post_list_toggle_item_layout_list_view">Przełącz na widok listy</string>
     <string name="posts_trashed_empty">Nie masz żadnych usuniętych wpisów</string>
@@ -1074,9 +1074,9 @@ Language: pl
     <string name="stats_insights_average_comments">Średnio koment./wpis</string>
     <string name="stats_insights_total_comments">Suma komentarzy</string>
     <string name="stats_insights_year">Rok</string>
-    <string name="stats_insights_this_year_site_stats">Ten rok</string>
     <string name="no_site_error">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
     <string name="stats_insights_posts">Wpisy</string>
+    <string name="stats_insights_this_year_site_stats">Bieżący rok</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Sprawdzanie środków domeny</string>
     <string name="plugin_check_domain_credit_error">Nie udało się sprawdzić dostępnych środków w ramach domeny</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Zarejestruj domenę</string>
@@ -1089,7 +1089,6 @@ Language: pl
     <string name="stats_months_and_years_period_label">Okres</string>
     <string name="stats_detail_months_and_years">Miesiące i lata</string>
     <string name="stats_insights_load_more">Wczytaj więcej</string>
-    <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
     <string name="published_on">Opublikowano w dniu: %s</string>
     <string name="publish_on">Zostanie opublikowany w dniu: %s</string>
     <string name="stats_months_and_years_views_label">Wyświetlenia</string>
@@ -1240,8 +1239,8 @@ Language: pl
     <string name="stats_manage_insights">Zarządzaj trendami</string>
     <string name="stats_tags_and_categories_views_label">Wyświetlenia</string>
     <string name="stats_posts_and_pages_views_label">Wyświetlenia</string>
-    <string name="stats_no_data_yet">Brak danych, jak dotąd</string>
     <string name="stats_empty_insights_title">Brak trendów, jak dotąd</string>
+    <string name="stats_no_data_yet">Jeszcze nie ma żadnych danych</string>
     <string name="menu_debug">Menu Debugowania</string>
     <string name="change_password_dialog_message">Zmiana hasła…</string>
     <string name="change_password_dialog_hint">Twoje hasło powinno zawierać co najmniej 6 znaków. Aby było to silne hasło, użyj małych i wielkich liter, cyfr oraz znaków specjalnych takich jak  ! \" ? $ % ^ &amp; ).</string>
@@ -1276,11 +1275,11 @@ Language: pl
     <string name="pages_empty_scheduled">Nie masz żadnych zaplanowanych stron</string>
     <string name="pages_empty_drafts">Nie masz żadnych szkiców stron</string>
     <string name="pages_empty_published">Nie opublikowałeś jeszcze żadnych stron</string>
-    <string name="pages_search_suggestion">Przeszukaj strony</string>
     <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
     <string name="pages_delete_permanently">Usuń na zawsze</string>
     <string name="pages_move_to_trash">Przenieś do kosza</string>
+    <string name="pages_search_suggestion">Wyszukaj strony</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
     <string name="pages_scheduled">Zaplanowano</string>
     <string name="pages_drafts">Szkice</string>
@@ -1329,7 +1328,6 @@ Language: pl
     <string name="content_description_more">Więcej</string>
     <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tematów</string>
     <string name="reader_empty_followed_tags_subtitle">Dodaj tematy aby odnaleźć wpisy dotyczące tych które ciebie interesują</string>
-    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
     <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
     <string name="jetpack_installation_problem_message">Nie można było zainstalować  Jetpacka</string>
     <string name="jetpack_installation_problem">Wystąpił problem</string>
@@ -1341,6 +1339,7 @@ Language: pl
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
     <string name="install_jetpack_retry">Spróbuj ponownie</string>
     <string name="install_jetpack_continue">Ustaw</string>
+    <string name="stats_jetpack_connection_faq">Najczęściej zadawane pytania Jetpacka</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -1381,12 +1380,12 @@ Language: pl
     <string name="support_push_notification_message">Nowe wiadomości od zespołu \'Pomocy i wsparcia\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nie ustawiono</string>
-    <string name="support_contact_email">Email kontaktowy</string>
     <string name="application_log_button">Log/dziennik aplikacji</string>
     <string name="my_tickets">Moje bilety</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
     <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Trwa przywracanie</string>
+    <string name="support_contact_email">Adres e-mail do kontaktu</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem przywrócona</string>
     <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
     <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
@@ -1663,7 +1662,6 @@ Language: pl
     <string name="plugin_byline">przez %s</string>
     <string name="change_photo">Zmień zdjęcie</string>
     <string name="plugin_fetch_error">Nie można było wczytać wtyczek</string>
-    <string name="my_site_btn_site_pages">Strony witryny</string>
     <string name="site_settings_tags_hint">Zarządzaj tagami swojej witryny</string>
     <string name="dlg_saving_tag">Zapisywanie</string>
     <string name="dlg_deleting_tag">Usuwanie</string>
@@ -1677,7 +1675,7 @@ Language: pl
     <string name="site_settings_timezones_error">Nie można było wczytać stref czasowych</string>
     <string name="site_settings_format_help">Dowiedz się więcej o formatowaniu daty i czasu</string>
     <string name="site_settings_format_hint_custom">Własny format</string>
-    <string name="site_settings_format_entry_custom">Własny</string>
+    <string name="site_settings_format_entry_custom">Własne</string>
     <string name="site_settings_posts_per_page_title">Wpisów na stronę</string>
     <string name="site_settings_timezone_subtitle">Wybierz miasto ze swojej strefy czasowej</string>
     <string name="site_settings_timezone_title">Strefa czasowa</string>
@@ -1935,7 +1933,7 @@ Language: pl
     <string name="site_settings_reblog">Pokaż przycisk reblogowania</string>
     <string name="site_settings_reblog_and_like_header">Rebloguj i dodaj polubienie</string>
     <string name="official_buttons_display">Oficjalne przyciski</string>
-    <string name="text_only_display">Tylko tekst</string>
+    <string name="text_only_display">Tylko tekstowa</string>
     <string name="icon_only_display">Tylko ikony</string>
     <string name="icon_and_text_display">Ikony i Tekst</string>
     <string name="connection_chooser_message">Wybierz konto które chcesz autoryzować. Zauważ że twoje wpisy będą automatycznie udostępniane na wybrane konto.</string>
@@ -1972,7 +1970,7 @@ Language: pl
     <string name="media_insert_title">Dodaj kilka zdjęć</string>
     <string name="media_gallery_column_count_multi">%d kolumn</string>
     <string name="media_gallery_column_count_single">1 kolumna</string>
-    <string name="editor_confirm_email_prompt_negative">Wyślij email ponownie</string>
+    <string name="editor_confirm_email_prompt_negative">Ponownie wyślij e-mail</string>
     <string name="editor_confirm_email_prompt_message_with_email">Wysłaliśmy email na adres %s podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
     <string name="editor_confirm_email_prompt_message">Wysłaliśmy email na twój adres podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
     <string name="editor_confirm_email_prompt_title">Proszę potwierdzić swój adres email</string>
@@ -2424,7 +2422,6 @@ Language: pl
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>
     <string name="my_site_btn_view_admin">Przejdź do kokpitu</string>
     <string name="my_site_header_publish">Opublikuj</string>
-    <string name="my_site_btn_blog_posts">Wpisy na blogu</string>
     <string name="my_site_header_look_and_feel">Wygląd</string>
     <string name="my_site_header_configuration">Konfiguracja</string>
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
@@ -2473,7 +2470,7 @@ Language: pl
     <string name="stats_views">Wyświetlenia</string>
     <string name="stats_visitors">Odwiedzający</string>
     <string name="ssl_certificate_details">Szczegóły</string>
-    <string name="cab_selected">Liczba zaznaczonych: %d</string>
+    <string name="cab_selected">%d wybrano</string>
     <string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
     <string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
     <string name="more">Więcej</string>
@@ -2679,7 +2676,7 @@ Language: pl
     <string name="pages_private">Prywatny</string>
     <string name="title">Tytuł</string>
     <string name="categories">Kategorie</string>
-    <string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
+    <string name="tags_separate_with_commas">Oddzielaj tagi przecinkami</string>
     <string name="dlg_deleting_comments">Usuwanie komentarzy</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
     <string name="media">Media</string>

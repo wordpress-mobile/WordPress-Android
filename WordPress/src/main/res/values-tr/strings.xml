@@ -17,13 +17,6 @@ Language: tr
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
-    <string name="like_faces_more_bloggers_text">%1$s blog yazarı %2$s.</string>
-    <string name="like_faces_one_blogger_text">1 blog yazarı %1$s.</string>
-    <string name="like_faces_plural_with_you_text">Sizinle birlikte %1$s blog yazarı %2$s.</string>
-    <string name="like_faces_you_plus_one_text">Sizinle birlikte 1 blog yazarı %1$s.</string>
-    <string name="like_faces_you_text">Siz %1$s.</string>
-    <string name="likes_this">bunu beğendi</string>
-    <string name="like_this">bunu beğendi</string>
     <string name="site_settings_site_domains_title">Site alan adları</string>
     <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
@@ -73,7 +66,6 @@ Language: tr
     <string name="gutenberg_native_try_another_search_term">Başka bir arama terimi deneyin</string>
     <string name="gutenberg_native_no_blocks_found">Blok bulunamadı</string>
     <string name="gutenberg_native_s_previews_not_yet_available">%s önizlemeleri henüz kullanılamıyor</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">%s blok önizlemeleri yakında kullanıma hazır</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Yazıyı önizlemek için iki kez dokunun.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Sayfayı önizlemek için iki kez dokunun.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrimiçi yerlerde gösterilir.</string>
@@ -1333,7 +1325,6 @@ Language: tr
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Alan adı kaydet</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Eklentileri yüklemek için sitenizle ilişkili özel bir alan adına sahip olmanız gerekir.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Eklenti yükle</string>
-    <string name="new_site_creation_preview_subtitle">Daha sonra sitenizin görünümünü kişiselleştirebileceksiniz</string>
     <string name="publish_on">Yayın tarihi: %s</string>
     <string name="schedule_for">Zamanlanan: %s</string>
     <string name="published_on">Yayınlanma tarihi: %s</string>
@@ -1914,7 +1905,6 @@ Language: tr
     <string name="plugin_byline">%s tarafından</string>
     <string name="change_photo">Fotoğrafı değiştir</string>
     <string name="plugin_fetch_error">Eklentiler yüklenemedi</string>
-    <string name="my_site_btn_site_pages">Site sayfaları</string>
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
@@ -2675,7 +2665,6 @@ Language: tr
     <string name="my_site_btn_view_admin">Yöneticiyi görüntüle</string>
     <string name="my_site_btn_switch_site">Site değiştir</string>
     <string name="my_site_btn_site_settings">Site Ayarları</string>
-    <string name="my_site_btn_blog_posts">Blog yazıları</string>
     <string name="my_site_header_publish">Yayımla</string>
     <string name="my_site_header_look_and_feel">Genel görünüm</string>
     <string name="my_site_header_configuration">Yapılandırma</string>
