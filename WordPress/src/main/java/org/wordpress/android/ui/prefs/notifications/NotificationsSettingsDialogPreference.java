@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.databinding.NotificationsSettingsSwitchBinding;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -61,13 +62,30 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
     private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
+    private final BloggingRemindersProvider mBloggingRemindersProvider;
+
     public interface OnNotificationsSettingsChangedListener {
         void onSettingsChanged(Channel channel, Type type, long siteId, JSONObject newValues);
+    }
+
+    public interface BloggingRemindersProvider {
+        boolean isEnabled();
+
+        String getSummary(long blogId);
+
+        void onClick(long blogId);
     }
 
     public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
                                                  Type type, long blogId, NotificationsSettings settings,
                                                  OnNotificationsSettingsChangedListener listener) {
+        this(context, attrs, channel, type, blogId, settings, listener, null);
+    }
+
+    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
+                                                 Type type, long blogId, NotificationsSettings settings,
+                                                 OnNotificationsSettingsChangedListener listener,
+                                                 BloggingRemindersProvider bloggingRemindersProvider) {
         super(context, attrs);
 
         mChannel = channel;
@@ -75,6 +93,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         mBlogId = blogId;
         mSettings = settings;
         mOnNotificationsSettingsChangedListener = listener;
+        mBloggingRemindersProvider = bloggingRemindersProvider;
         mShouldDisplayMainSwitch = mSettings.shouldDisplayMainSwitch(mChannel, mType);
     }
 
@@ -175,6 +194,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 break;
         }
 
+        boolean shouldShowLocalNotifications = mChannel == Channel.BLOGS && mType == Type.DEVICE;
+
         if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
             for (int i = 0; i < mSettingsArray.length; i++) {
                 String settingName = mSettingsArray[i];
@@ -193,57 +214,100 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
                 boolean isSettingChecked = JSONUtils.queryJSON(settingsJson, settingValue, true);
 
-                boolean isSettingLast = i == mSettingsArray.length - 1;
+                boolean isSettingLast = !shouldShowLocalNotifications && i == mSettingsArray.length - 1;
 
-                view.addView(setupSettingView(settingName, settingValue, settingSummary, isSettingChecked,
+                view.addView(setupSwitchSettingView(settingName, settingValue, settingSummary, isSettingChecked,
                         isSettingLast, mOnCheckedChangedListener));
             }
         }
 
-        // Add Weekly Roundup setting
-        if (mChannel == Channel.BLOGS && mType == Type.DEVICE) {
-            String settingName = getContext().getString(R.string.weekly_roundup);
-            boolean isSettingChecked = AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId);
-            View settingView = setupSettingView(settingName, null, null, isSettingChecked, true,
-                    (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked));
-            view.addView(settingView);
+        if (shouldShowLocalNotifications) {
+            boolean isBloggingRemindersEnabled =
+                    mBloggingRemindersProvider != null && mBloggingRemindersProvider.isEnabled();
+            addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled);
+            if (isBloggingRemindersEnabled) {
+                addBloggingReminderSetting(view);
+            }
         }
 
         return view;
     }
 
+    private void addWeeklyRoundupSetting(LinearLayout view, boolean isLast) {
+        view.addView(setupSwitchSettingView(
+                getContext().getString(R.string.weekly_roundup),
+                null,
+                null,
+                AppPrefs.shouldShowWeeklyRoundupNotification(mBlogId),
+                isLast,
+                (compoundButton, isChecked) -> AppPrefs.setShouldShowWeeklyRoundupNotification(mBlogId, isChecked)
+        ));
+    }
+
+
+    private void addBloggingReminderSetting(LinearLayout view) {
+        view.addView(setupClickSettingView(
+                getContext().getString(R.string.site_settings_blogging_reminders_title),
+                mBloggingRemindersProvider != null ? mBloggingRemindersProvider.getSummary(mBlogId) : null,
+                true,
+                (v -> {
+                    if (mBloggingRemindersProvider != null) {
+                        mBloggingRemindersProvider.onClick(mBlogId);
+                    }
+                    getDialog().dismiss();
+                })
+        ));
+    }
+
+    private View setupSwitchSettingView(String settingName, @Nullable String settingValue,
+                                        @Nullable String settingSummary, boolean isSettingChecked,
+                                        boolean isSettingLast,
+                                        CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+        return setupSettingView(settingName, settingValue, settingSummary, isSettingChecked, isSettingLast,
+                onCheckedChangeListener, null);
+    }
+
+    private View setupClickSettingView(String settingName, String settingSummary, boolean isSettingLast,
+                                       View.OnClickListener onClickListener) {
+        return setupSettingView(settingName, null, settingSummary, false, isSettingLast, null, onClickListener);
+    }
+
     private View setupSettingView(String settingName, @Nullable String settingValue, @Nullable String settingSummary,
                                   boolean isSettingChecked, boolean isSettingLast,
-                                  CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
-        View setting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
-        TextView title = setting.findViewById(R.id.notifications_switch_title);
-        title.setText(settingName);
+                                  @Nullable CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+                                  @Nullable View.OnClickListener onClickListener) {
+        NotificationsSettingsSwitchBinding binding =
+                NotificationsSettingsSwitchBinding.inflate(LayoutInflater.from(getContext()));
+
+        binding.notificationsSwitchTitle.setText(settingName);
 
         if (!TextUtils.isEmpty(settingSummary)) {
-            TextView summary = setting.findViewById(R.id.notifications_switch_summary);
-            summary.setVisibility(View.VISIBLE);
-            summary.setText(settingSummary);
+            binding.notificationsSwitchSummary.setVisibility(View.VISIBLE);
+            binding.notificationsSwitchSummary.setText(settingSummary);
         }
 
-        final SwitchCompat toggleSwitch = setting.findViewById(R.id.notifications_switch);
-        toggleSwitch.setChecked(isSettingChecked);
-        toggleSwitch.setTag(settingValue);
-        toggleSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        if (onCheckedChangeListener != null) {
+            binding.notificationsSwitch.setChecked(isSettingChecked);
+            binding.notificationsSwitch.setTag(settingValue);
+            binding.notificationsSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+            binding.rowContainer.setOnClickListener(v -> binding.notificationsSwitch.toggle());
+        } else {
+            binding.notificationsSwitch.setVisibility(View.GONE);
+        }
 
-        View rowContainer = setting.findViewById(R.id.row_container);
-        rowContainer.setOnClickListener(v -> toggleSwitch.setChecked(!toggleSwitch.isChecked()));
+        if (onClickListener != null) {
+            binding.rowContainer.setOnClickListener(onClickListener);
+        }
 
         if (mShouldDisplayMainSwitch && isSettingLast) {
-            View divider = setting.findViewById(R.id.notifications_list_divider);
-            if (divider != null) {
-                MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
-                mlp.leftMargin = 0;
-                mlp.rightMargin = 0;
-                divider.setLayoutParams(mlp);
-            }
+            View divider = binding.notificationsListDivider;
+            MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
+            mlp.leftMargin = 0;
+            mlp.rightMargin = 0;
+            divider.setLayoutParams(mlp);
         }
 
-        return setting;
+        return binding.getRoot();
     }
 
     private final CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener =

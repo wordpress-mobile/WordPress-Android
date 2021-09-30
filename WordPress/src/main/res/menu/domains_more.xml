@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/change_site_address"
+        android:orderInCategory="100"
+        android:title="@string/domains_primary_site_more_menu_change_site_address"
+        app:showAsAction="never"/>
+</menu>
+
+

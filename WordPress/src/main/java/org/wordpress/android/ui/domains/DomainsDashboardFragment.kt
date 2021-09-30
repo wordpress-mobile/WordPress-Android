@@ -11,18 +11,16 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FragmentDomainsDashboardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.mysite.MySiteAdapter
-import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
+import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainsDashboardFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var adapter: DomainsDashboardAdapter
     private lateinit var viewModel: DomainsDashboardViewModel
     private var binding: FragmentDomainsDashboardBinding? = null
 
@@ -37,7 +35,6 @@ class DomainsDashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_domains_dashboard, container, false)
     }
 
@@ -46,7 +43,7 @@ class DomainsDashboardFragment : Fragment() {
 
         with(FragmentDomainsDashboardBinding.bind(view)) {
             binding = this
-            val adapter = MySiteAdapter(imageManager, uiHelpers)
+            val adapter = DomainsDashboardAdapter(uiHelpers)
             contentRecyclerView.adapter = adapter
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(DomainsDashboardViewModel::class.java)
@@ -54,20 +51,23 @@ class DomainsDashboardFragment : Fragment() {
             viewModel.start()
 
             viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
-                (contentRecyclerView.adapter as? MySiteAdapter)?.loadData(uiState ?: listOf())
+                (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
             }
 
             viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         }
     }
 
-    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
-        is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+    private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
+        is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        else -> {} // TODO: next
+        is OpenManageDomains -> ActivityLauncher.openUrlExternal(
+                requireContext(),
+                action.url
+        )
     }
 
     companion object {
