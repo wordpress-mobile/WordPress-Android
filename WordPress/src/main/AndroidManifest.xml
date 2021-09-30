@@ -935,6 +935,11 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.domains.DomainRegistrationWebViewActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"

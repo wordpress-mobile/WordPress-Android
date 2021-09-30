@@ -9,15 +9,21 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.DomainRegistrationWebViewActivity.Companion.DOMAIN_REGISTRATION_REQUEST_CODE
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
-        CTA_DOMAIN_CREDIT_REDEMPTION
+        CTA_DOMAIN_CREDIT_REDEMPTION,
+        DOMAIN_PURCHASE
     }
 
     companion object {
@@ -49,9 +55,15 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
-        viewModel.start()
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
+
+        val site = intent?.getSerializableExtra(WordPress.SITE) as? SiteModel
+
+        if (site == null) {
+            AppLog.e(T.DOMAIN_REGISTRATION, "Site is null!")
+        } else {
+            viewModel.start(site)
+        }
 
         viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
@@ -70,16 +82,26 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
         viewModel.selectedDomain.observe(this, { selectedDomain ->
             selectedDomain?.let {
-                var fragment = supportFragmentManager.findFragmentByTag(
-                        DomainRegistrationDetailsFragment.TAG
-                )
+                if (viewModel.isSiteDomainsEnabled) {
+                    viewModel.createCart(it)
+                } else {
+                    var fragment = supportFragmentManager.findFragmentByTag(
+                            DomainRegistrationDetailsFragment.TAG
+                    )
 
-                if (fragment == null) {
-                    fragment = DomainRegistrationDetailsFragment.newInstance(it)
-                    showFragment(fragment!!, DomainRegistrationDetailsFragment.TAG)
+                    if (fragment == null) {
+                        fragment = DomainRegistrationDetailsFragment.newInstance(it)
+                        showFragment(fragment!!, DomainRegistrationDetailsFragment.TAG)
+                    }
                 }
             }
         })
+
+        viewModel.cartCreated.observe(this) { event ->
+            event?.let {
+                DomainRegistrationWebViewActivity.openCheckout(this, it.site)
+            }
+        }
 
         viewModel.domainRegistrationCompleted.observe(this, { event ->
             event?.let {
@@ -130,7 +152,19 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun shouldShowCongratsScreen(): Boolean {
-        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION ||
+                domainRegistrationPurpose == DOMAIN_PURCHASE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            DOMAIN_REGISTRATION_REQUEST_CODE -> when(resultCode) {
+                RESULT_OK -> viewModel.handleSuccessfulRegistration()
+                else -> TODO()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
