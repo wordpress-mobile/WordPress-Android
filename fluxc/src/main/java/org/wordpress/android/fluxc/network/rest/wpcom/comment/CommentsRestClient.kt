@@ -88,7 +88,11 @@ class CommentsRestClient @Inject constructor(
         return updateCommentFields(site, comment, request)
     }
 
-    private suspend fun updateCommentFields(site: SiteModel, comment: CommentEntity, request: Map<String, String>): CommentsApiPayload<CommentEntity> {
+    private suspend fun updateCommentFields(
+        site: SiteModel,
+        comment: CommentEntity,
+        request: Map<String, String>
+    ): CommentsApiPayload<CommentEntity> {
         val url = WPCOMREST.sites.site(site.siteId).comments.comment(comment.remoteCommentId).urlV1_1
 
         val response = wpComGsonRequestBuilder.syncPostRequest(

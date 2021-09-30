@@ -98,7 +98,11 @@ class CommentsXMLRPCClient @Inject constructor(
         return updateCommentFields(site, comment, commentParams)
     }
 
-    private suspend fun updateCommentFields(site: SiteModel, comment: CommentEntity, commentParams: Map<String, Any?>): CommentsApiPayload<CommentEntity> {
+    private suspend fun updateCommentFields(
+        site: SiteModel,
+        comment: CommentEntity,
+        commentParams: Map<String, Any?>
+    ): CommentsApiPayload<CommentEntity> {
         val params: MutableList<Any> = ArrayList(5)
 
         params.add(site.selfHostedSiteId)
