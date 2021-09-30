@@ -669,7 +669,6 @@ Language: ms
     <string name="my_site_btn_view_admin">Lihat Pentadbir</string>
     <string name="my_site_btn_view_site">Lihat Laman</string>
     <string name="my_site_btn_switch_site">Tukar Laman</string>
-    <string name="my_site_btn_blog_posts">Kiriman Blog</string>
     <string name="my_site_header_look_and_feel">Rupa dan Bentuk</string>
     <string name="my_site_header_publish">Terbit</string>
     <string name="my_site_header_configuration">Konfigurasi</string>

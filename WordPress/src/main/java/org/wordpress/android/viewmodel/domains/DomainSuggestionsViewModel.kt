@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -15,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -29,9 +32,11 @@ typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
-    private val debouncer: Debouncer
+    private val debouncer: Debouncer,
+    private val domainRegistrationHandler: DomainRegistrationHandler
 ) : ViewModel() {
     lateinit var site: SiteModel
+    var isDomainCreditAvailable: Boolean = false
     private var isStarted = false
     private var isQueryTrackingCompleted = false
 
@@ -95,12 +100,19 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         this.site = site
+        checkDomainCreditAvailability()
         initializeDefaultSuggestions()
         isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
+    }
+
+    private fun checkDomainCreditAvailability() {
+        val domainCreditAvailable =
+                domainRegistrationHandler.buildSource(viewModelScope, site.id).distinctUntilChanged()
+        isDomainCreditAvailable = domainCreditAvailable.value?.isDomainCreditAvailable == true
     }
 
     // Network Request

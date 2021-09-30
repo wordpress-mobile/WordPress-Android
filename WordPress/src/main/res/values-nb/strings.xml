@@ -828,7 +828,6 @@ Language: nb_NO
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrer domene</string>
     <string name="plugin_install_custom_domain_required_dialog_message">For å installere utvidelser trenger du å ha et eget domene for ditt nettsted.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installer utvidelser</string>
-    <string name="new_site_creation_preview_subtitle">Du kan tilpasse utseende på ditt nettstede senere</string>
     <string name="publish_on">Publiser på: %s</string>
     <string name="schedule_for">Planlegg for: %s</string>
     <string name="published_on">Publisert på: %s</string>
@@ -1389,7 +1388,6 @@ Language: nb_NO
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Endre bilde</string>
     <string name="plugin_fetch_error">Kan ikke laste utvidelser</string>
-    <string name="my_site_btn_site_pages">Sider på nettstedet</string>
     <string name="site_settings_tags_hint">Behandle stikkord på nettstedet</string>
     <string name="dlg_saving_tag">Lagrer</string>
     <string name="dlg_deleting_tag">Sletter</string>
@@ -2145,7 +2143,6 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_btn_switch_site">Bytt nettsted</string>
-    <string name="my_site_btn_blog_posts">Blogginnlegg</string>
     <string name="my_site_header_publish">Publiser</string>
     <string name="my_site_header_look_and_feel">Se og kjenn</string>
     <string name="my_site_header_configuration">Oppsett</string>
