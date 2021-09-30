@@ -67,7 +67,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     data class EditCommentUiState(
         val isMenuEnabled: Boolean,
-        val isInit: Boolean,
+        val shouldInitComment: Boolean,
+        val shouldInitWatchers: Boolean,
         val showProgress: Boolean = false,
         val progressText: UiString? = null,
         val originalComment: CommentEssentials,
@@ -112,7 +113,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun start(site: SiteModel, commentId: Int) {
-        if (isStarted) return
+        if (isStarted) {
+            // If we are here, the fragment view was recreated (like in a configuration change)
+            // so we reattach the watchers.
+            _uiState.value = _uiState.value?.copy(shouldInitWatchers = true)
+            return
+        }
         isStarted = true
 
         this.site = site
@@ -123,7 +129,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private suspend fun setLoadingState(state: ProgressState) {
         val uiState = _uiState.value ?: EditCommentUiState(
                 isMenuEnabled = false,
-                isInit = false,
+                shouldInitComment = false,
+                shouldInitWatchers = false,
                 showProgress = LOADING.show,
                 progressText = LOADING.progressText,
                 originalComment = CommentEssentials(),
@@ -207,7 +214,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
                 _uiState.value = EditCommentUiState(
                         isMenuEnabled = false,
-                        isInit = true,
+                        shouldInitComment = true,
+                        shouldInitWatchers = true,
                         showProgress = LOADING.show,
                         progressText = LOADING.progressText,
                         originalComment = commentEssentials,
@@ -248,7 +256,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
             _uiState.value = it.copy(
                 isMenuEnabled = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
-                isInit = false,
+                shouldInitComment = false,
+                shouldInitWatchers = false,
                 editedComment = editedComment,
                 editErrorStrings = errors
             )

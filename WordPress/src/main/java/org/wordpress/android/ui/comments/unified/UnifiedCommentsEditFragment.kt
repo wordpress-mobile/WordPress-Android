@@ -106,14 +106,16 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                 scrollView.visibility = View.VISIBLE
             }
 
-            if (uiState.isInit) {
+            if (uiState.shouldInitComment) {
                 uiState.originalComment.let {
                     userName.setText(it.userName)
                     commentEditWebAddress.setText(it.userWebAddress)
                     commentEditEmailAddress.setText(it.userEmail)
                     commentEditComment.setText(it.commentText)
                 }
+            }
 
+            if (uiState.shouldInitWatchers) {
                 initTextWatchers()
             }
 
