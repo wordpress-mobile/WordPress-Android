@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAINS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
@@ -1263,8 +1262,9 @@ open class SiteStore
             FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(
                     action.payload as FetchedJetpackCapabilitiesPayload
             )
-            FETCH_DOMAINS -> fetchSiteDomains(action.payload as SiteModel)
-            FETCHED_DOMAINS -> handleFetchedSiteDomains(action.payload as FetchedDomainsPayload)
+            FETCH_DOMAINS -> coroutineEngine.launch(T.MAIN, this, "Fetch site domains") {
+                emitChange(fetchSiteDomains(action.payload as SiteModel))
+            }
         }
     }
 
@@ -1844,16 +1844,8 @@ open class SiteStore
         emitChange(event)
     }
 
-    private fun fetchSiteDomains(siteModel: SiteModel) {
-        if (siteModel.isUsingWpComRestApi) {
-            siteRestClient.fetchSiteDomains(siteModel)
-        } else {
-            val domainsError = SiteError(SiteErrorType.GENERIC_ERROR)
-            handleFetchedSiteDomains(FetchedDomainsPayload(siteModel, domainsError))
-        }
-    }
-
-    private fun handleFetchedSiteDomains(payload: FetchedDomainsPayload) {
-        emitChange(OnSiteDomainsFetched(payload.site, payload.domains, payload.error))
+    suspend fun fetchSiteDomains(siteModel: SiteModel): OnSiteDomainsFetched {
+        val result = siteRestClient.fetchSiteDomains(siteModel)
+        return OnSiteDomainsFetched(siteModel, result.domains, result.error)
     }
 }

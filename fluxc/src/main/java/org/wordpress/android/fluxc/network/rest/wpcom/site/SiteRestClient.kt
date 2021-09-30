@@ -702,27 +702,24 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    fun fetchSiteDomains(site: SiteModel) {
+    suspend fun fetchSiteDomains(site: SiteModel): FetchedDomainsPayload {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
-        val request =
-                WPComGsonRequest.buildGetRequest(url, null, DomainsResponse::class.java,
-                { response ->
-                    val domains = response.domains
-                    mDispatcher.dispatch(
-                            SiteActionBuilder.newFetchedDomainsAction(FetchedDomainsPayload(site, domains))
-                    )
-                }
-        ) { error ->
-            val siteErrorType = when (error.apiError) {
-                "unauthorized" -> UNAUTHORIZED
-                "unknown_blog" -> UNKNOWN_SITE
-                else -> SiteErrorType.GENERIC_ERROR
+        val response =
+                wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
+        return when (response) {
+            is Success -> {
+                FetchedDomainsPayload(site, response.data.domains)
             }
-            val domainsError = SiteError(siteErrorType, error.message)
-            val payload = FetchedDomainsPayload(site, domainsError)
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainsAction(payload))
+            is Error -> {
+                val siteErrorType = when (response.error.apiError) {
+                    "unauthorized" -> UNAUTHORIZED
+                    "unknown_blog" -> UNKNOWN_SITE
+                    else -> SiteErrorType.GENERIC_ERROR
+                }
+                val domainsError = SiteError(siteErrorType, response.error.message)
+                FetchedDomainsPayload(site, domainsError)
+            }
         }
-        add(request)
     }
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
