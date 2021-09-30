@@ -457,7 +457,10 @@ open class SiteStore
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
-    data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError>() {
+    data class OnSiteChanged(
+        @JvmField val rowsAffected: Int = 0,
+        @JvmField val updatedSites: List<SiteModel> = emptyList()
+    ) : OnChanged<SiteError>() {
         constructor(rowsAffected: Int = 0, siteError: SiteError?) : this(rowsAffected) {
             this.error = siteError
         }
@@ -734,6 +737,7 @@ open class SiteStore
 
     data class UpdateSitesResult(
         @JvmField val rowsAffected: Int = 0,
+        @JvmField val updatedSites: List<SiteModel> = emptyList(),
         @JvmField val duplicateSiteFound: Boolean = false
     )
 
@@ -1337,7 +1341,7 @@ open class SiteStore
             val result = if (res.duplicateSiteFound) {
                 OnSiteChanged(res.rowsAffected, SiteError(DUPLICATE_SITE))
             } else {
-                OnSiteChanged(res.rowsAffected)
+                OnSiteChanged(res.rowsAffected, res.updatedSites)
             }
             siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
@@ -1347,6 +1351,7 @@ open class SiteStore
     private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
         var rowsAffected = 0
         var duplicateSiteFound = false
+        val updatedSites = mutableListOf<SiteModel>()
         for (site in sites.sites) {
             try {
                 // The REST API doesn't return info about the editor(s). Make sure to copy current values
@@ -1357,12 +1362,16 @@ open class SiteStore
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
                 }
-                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
+                val isUpdated = (siteSqlUtils.insertOrUpdateSite(site) == 1)
+                if (isUpdated) {
+                    rowsAffected++
+                    updatedSites.add(site)
+                }
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true
             }
         }
-        return UpdateSitesResult(rowsAffected, duplicateSiteFound)
+        return UpdateSitesResult(rowsAffected, updatedSites, duplicateSiteFound)
     }
 
     private fun deleteSite(site: SiteModel) {
