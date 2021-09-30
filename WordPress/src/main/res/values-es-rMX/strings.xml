@@ -889,7 +889,6 @@ Language: es_MX
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins, necesitas tener un dominio personalizado asociado con tu sitio.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
-    <string name="new_site_creation_preview_subtitle">Podrás personalizar la apariencia de tu sitio más adelante</string>
     <string name="publish_on">Publicar el: %s</string>
     <string name="schedule_for">Programa para el: %s</string>
     <string name="published_on">Publicado el: %s</string>
@@ -1460,7 +1459,6 @@ Language: es_MX
     <string name="plugin_byline">por %s</string>
     <string name="change_photo">Cambiar foto</string>
     <string name="plugin_fetch_error">No es posible cargar plugins</string>
-    <string name="my_site_btn_site_pages">Páginas del sitio</string>
     <string name="site_settings_tags_hint">Gestiona las etiquetas de tu sitio</string>
     <string name="dlg_saving_tag">Guardando</string>
     <string name="dlg_deleting_tag">Borrando</string>
@@ -2219,7 +2217,6 @@ Language: es_MX
     <string name="my_site_btn_view_admin">Ver Administrador</string>
     <string name="my_site_header_look_and_feel">Aspecto</string>
     <string name="my_site_header_publish">Publicar</string>
-    <string name="my_site_btn_blog_posts">Entradas del blog</string>
     <string name="my_site_header_configuration">Configuración</string>
     <string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
     <string name="hide">Ocultar</string>
