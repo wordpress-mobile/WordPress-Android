@@ -488,6 +488,15 @@
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
+    <string name="comment_edit_menu_done">Done</string>
+    <string name="comment_edit_user_name">Name</string>
+    <string name="comment_edit_comment">Comment</string>
+    <string name="comment_edit_web_address">Web address</string>
+    <string name="comment_edit_email_address">Email address</string>
+    <string name="comment_edit_user_name_error">User name cannot be empty</string>
+    <string name="comment_edit_web_address_error">Web address not valid</string>
+    <string name="comment_edit_user_email_error">User email not valid</string>
+    <string name="comment_edit_comment_error">Comment cannot be empty</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove site</string>
