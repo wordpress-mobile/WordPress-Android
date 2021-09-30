@@ -91,6 +91,7 @@ public class SiteWPComRestResponse implements Response {
     public String name;
     public String description;
     public boolean jetpack;
+    public boolean jetpack_connection;
     public boolean visible;
     public boolean is_private;
     public boolean is_coming_soon;
