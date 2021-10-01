@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
@@ -51,7 +52,6 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
@@ -702,24 +702,9 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    suspend fun fetchSiteDomains(site: SiteModel): FetchedDomainsPayload {
+    suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
-        val response =
-                wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
-        return when (response) {
-            is Success -> {
-                FetchedDomainsPayload(site, response.data.domains)
-            }
-            is Error -> {
-                val siteErrorType = when (response.error.apiError) {
-                    "unauthorized" -> UNAUTHORIZED
-                    "unknown_blog" -> UNKNOWN_SITE
-                    else -> SiteErrorType.GENERIC_ERROR
-                }
-                val domainsError = SiteError(siteErrorType, response.error.message)
-                FetchedDomainsPayload(site, domainsError)
-            }
-        }
+         return  wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
     }
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {

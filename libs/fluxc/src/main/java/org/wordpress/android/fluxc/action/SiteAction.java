@@ -90,8 +90,6 @@ public enum SiteAction implements IAction {
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
     @Action(payloadType = CompleteQuickStartPayload.class)
     COMPLETE_QUICK_START,
-    @Action(payloadType = SiteModel.class)
-    FETCH_DOMAINS,
     @Action(payloadType = DesignatePrimaryDomainPayload.class)
     DESIGNATE_PRIMARY_DOMAIN,
     @Action(payloadType = FetchPrivateAtomicCookiePayload.class)

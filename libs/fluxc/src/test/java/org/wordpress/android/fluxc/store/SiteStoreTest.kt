@@ -15,7 +15,11 @@ import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
@@ -23,7 +27,6 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_INVALID
@@ -46,6 +49,8 @@ class SiteStoreTest {
     @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
+    @Mock lateinit var successResponse: Response.Success<DomainsResponse>
+    @Mock lateinit var errorResponse: Response.Error<DomainsResponse>
     private lateinit var siteStore: SiteStore
 
     @Before
@@ -290,15 +295,10 @@ class SiteStoreTest {
     fun `fetchSiteDomains from WPCom endpoint`() = test {
         val site = SiteModel()
         site.setIsWPCom(true)
-        val fetchedDomains = FetchedDomainsPayload(site, listOf())
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(fetchedDomains)
 
-        assertSiteDomainsFetched(site)
-    }
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(successResponse)
+        whenever(successResponse.data).thenReturn(DomainsResponse(listOf()))
 
-    private suspend fun assertSiteDomainsFetched(
-        site: SiteModel
-    ) {
         val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
 
         assertThat(onSiteDomainsFetched.domains).isNotNull
@@ -310,15 +310,9 @@ class SiteStoreTest {
         val site = SiteModel()
         site.setIsWPCom(true)
 
-        val domainsError = SiteError(GENERIC_ERROR, null)
-        val fetchedDomains = FetchedDomainsPayload(site, domainsError)
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(errorResponse)
+        whenever(errorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
-        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(fetchedDomains)
-
-        assertSiteDomainsFetchError(site)
-    }
-
-    private suspend fun assertSiteDomainsFetchError(site: SiteModel) {
         val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
 
         assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
