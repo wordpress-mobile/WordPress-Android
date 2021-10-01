@@ -54,7 +54,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     data class EditErrorStrings(
         val userNameError: String? = null,
         val commentTextError: String? = null,
-        val userWebAddressError: String? = null,
+        val userUrlError: String? = null,
         val userEmailError: String? = null
     )
 
@@ -62,7 +62,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val commentId: Long = 0,
         val userName: String = "",
         val commentText: String = "",
-        val userWebAddress: String = "",
+        val userUrl: String = "",
         val userEmail: String = ""
     )
 
@@ -88,6 +88,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         USER_EMAIL(R.string.comment_edit_user_email_error, { isValidUserEmail(it) }),
         WEB_ADDRESS(R.string.comment_edit_web_address_error, { isValidWebAddress(it) }),
         COMMENT(R.string.comment_edit_comment_error, { isValidComment(it) });
+
+        // This is here for testing purposes
+        fun matches(expectedField: FieldType): Boolean {
+            return this == expectedField
+        }
 
         companion object {
             private fun isValidUserName(userName: String): Boolean {
@@ -164,7 +169,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
                 comment?.let {
                     val updatedComment = comment.copy(
-                            authorUrl = editedContent.userWebAddress,
+                            authorUrl = editedContent.userUrl,
                             authorName = editedContent.userName,
                             authorEmail = editedContent.userEmail,
                             content = editedContent.commentText
@@ -220,7 +225,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         commentId = comment.id,
                         userName = comment.authorName ?: "",
                         commentText = comment.content ?: "",
-                        userWebAddress = comment.authorUrl ?: "",
+                        userUrl = comment.authorUrl ?: "",
                         userEmail = comment.authorEmail ?: ""
                 )
 
@@ -253,17 +258,17 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             val previousErrors = it.editErrorStrings
 
             val editedComment = previousComment.copy(
-                userName = if (fieldType == USER_NAME) field else previousComment.userName,
-                commentText = if (fieldType == COMMENT) field else previousComment.commentText,
-                userWebAddress = if (fieldType == WEB_ADDRESS) field else previousComment.userWebAddress,
-                userEmail = if (fieldType == USER_EMAIL) field else previousComment.userEmail
+                userName = if (fieldType.matches(USER_NAME)) field else previousComment.userName,
+                commentText = if (fieldType.matches(COMMENT)) field else previousComment.commentText,
+                userUrl = if (fieldType.matches(WEB_ADDRESS)) field else previousComment.userUrl,
+                userEmail = if (fieldType.matches(USER_EMAIL)) field else previousComment.userEmail
             )
 
             val errors = previousErrors.copy(
-                userNameError = if (fieldType == USER_NAME) fieldError else previousErrors.userNameError,
-                commentTextError = if (fieldType == COMMENT) fieldError else previousErrors.commentTextError,
-                userWebAddressError = if (fieldType == WEB_ADDRESS) fieldError else previousErrors.userWebAddressError,
-                userEmailError = if (fieldType == USER_EMAIL) fieldError else previousErrors.userEmailError
+                userNameError = if (fieldType.matches(USER_NAME)) fieldError else previousErrors.userNameError,
+                commentTextError = if (fieldType.matches(COMMENT)) fieldError else previousErrors.commentTextError,
+                userUrlError = if (fieldType.matches(WEB_ADDRESS)) fieldError else previousErrors.userUrlError,
+                userEmailError = if (fieldType.matches(USER_EMAIL)) fieldError else previousErrors.userEmailError
             )
 
             _uiState.value = it.copy(
@@ -280,7 +285,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         return !(this.commentText == other.commentText &&
                 this.userEmail == other.userEmail &&
                 this.userName == other.userName &&
-                this.userWebAddress == other.userWebAddress)
+                this.userUrl == other.userUrl)
     }
 
     private fun EditErrorStrings.hasError(): Boolean {
@@ -288,7 +293,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 this.commentTextError,
                 this.userEmailError,
                 this.userNameError,
-                this.userWebAddressError
+                this.userUrlError
         ).any { !it.isNullOrEmpty() }
     }
 

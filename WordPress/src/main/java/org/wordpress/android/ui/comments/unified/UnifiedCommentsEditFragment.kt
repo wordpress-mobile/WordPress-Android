@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.comments.unified
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -128,7 +126,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             if (uiState.shouldInitComment) {
                 uiState.originalComment.let {
                     userName.setText(it.userName)
-                    commentEditWebAddress.setText(it.userWebAddress)
+                    commentEditWebAddress.setText(it.userUrl)
                     commentEditEmailAddress.setText(it.userEmail)
                     commentEditComment.setText(it.commentText)
                 }
@@ -140,7 +138,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
             uiState.editErrorStrings.let { errors ->
                 userName.error = errors.userNameError
-                commentEditWebAddress.error = errors.userWebAddressError
+                commentEditWebAddress.error = errors.userUrlError
                 commentEditEmailAddress.error = errors.userEmailError
                 commentEditComment.error = errors.commentTextError
             }

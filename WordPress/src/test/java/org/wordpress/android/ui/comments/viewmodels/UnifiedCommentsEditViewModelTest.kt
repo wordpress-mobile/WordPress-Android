@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments.viewmodels
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -23,9 +24,12 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.CommentEssentials
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentUiState
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.USER_EMAIL
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -118,8 +122,28 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onBackPressed triggers CLOSE`() {
+    fun `onBackPressed triggers CLOSE when no edits`() {
+        viewModel.start(site, commentId)
         viewModel.onBackPressed()
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(CLOSE)
+    }
+
+    @Test
+    fun `onBackPressed triggers CANCEL_EDIT_CONFIRM when edits are present`() {
+        val emailFieldType: FieldType = mock()
+        whenever(emailFieldType.matches(USER_EMAIL)).thenReturn(true)
+        whenever(emailFieldType.isValid).thenReturn { _ -> true }
+
+        viewModel.start(site, commentId)
+        viewModel.onValidateField("edited user email", emailFieldType)
+        viewModel.onBackPressed()
+
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(CANCEL_EDIT_CONFIRM)
+    }
+
+    @Test
+    fun `onConfirmEditingDiscard triggers CLOSE`() {
+        viewModel.onConfirmEditingDiscard()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(CLOSE)
     }
 
@@ -172,7 +196,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 commentId = DEFAULT_COMMENT.id,
                 userName = DEFAULT_COMMENT.authorName!!,
                 commentText = DEFAULT_COMMENT.content!!,
-                userWebAddress = DEFAULT_COMMENT.authorUrl!!,
+                userUrl = DEFAULT_COMMENT.authorUrl!!,
                 userEmail = DEFAULT_COMMENT.authorEmail!!
         )
     }
