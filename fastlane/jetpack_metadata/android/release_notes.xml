@@ -1,67 +1,101 @@
 <en-US>
-We have made a couple of handy tweaks to the Block editor: The Embed block now gives you a sneak preview when you add something from YouTube or Twitter (more providers to come); and when you go to insert a block and nothing is found, there is now a no results view.
+Lots of improvements in the block editor! We fixed an image displaying issue, a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.
+
+Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).
 </en-US>
 <ar>
-18.2:
-لقد أجرينا بعض التعديلات العملية على محرِّر المكوِّن: يمنحك مكوِّن التضمين الآن معاينة مسبقة عندما تضيف شيئًا ما من يوتيوب أو تويتر (المزيد من المزوِّدين في المستقبل)؛ وعندما تنتقل لإدراج مكوِّن ولا يتم العثور على أي شيء، لا يوجد الآن أي طريقة عرض نتائج.
+18.3:
+الكثير من التحسينات في محرِّر المكوِّن! قمنا بإصلاح مشكلة شريط الأدوات التي تؤثر في الأجهزة التي تم تعيينها إلى لغة RTL، وأجرينا العديد من التحديثات على مكوِّن التضمين، بما في ذلك تمكين معاينات ووردبريس وإنستغرام وفيميو وتقديم خيارات لإعادة تجربة الوسائط أو تحويلها إلى رابط إذا لم تكن قابلة للتضمين.
+
+تتضمن بعض التحديثات الأخرى إصلاحًا يؤثر في مقاطع الفيديو التي تكون بتنسيق .mp4 على بعض المواقع وتبسيط تسميات قوائم موقعي ("المقالات" و"الصفحات").
 </ar>
 <de-DE>
-18.2:
-Wir haben ein paar praktische Änderungen am Block-Editor vorgenommen: Der Embed-Block bietet jetzt eine Vorschau, wenn du Inhalte aus YouTube oder Twitter (und bald noch von weiteren Anbietern) einfügst. Und wenn du einen Block einfügst und nichts gefunden wird, siehst du jetzt die Anzeige, dass keine Ergebnisse vorhanden sind.
+18.3:
+Wir haben Probleme im Block-Editor mit der Werkzeugleiste bei Geräten mit linksläufiger Sprache behoben und einige Updates am Embed-Block vorgenommen, u. a. eine Vorschau für WordPress, Instagram und Vimeo sowie Optionen zum Wiederholen oder Konvertieren von Medien in einen Link.
+
+Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos auftrat, und die „Meine Website“-Menübeschriftungen aktualisiert („Beiträge“ und „Seiten“).
 </de-DE>
 <es-ES>
-18.2:
-Hemos hecho un par de mejoras en el Editor de bloques: ahora el bloque de incrustar muestra una vista previa cuando añades contenido de YouTube o de Twitter (próximamente se añadirán más proveedores). Además, si quieres insertar un bloque pero no se encuentra nada, ahora aparece una vista sin resultados. 
+18.3:
+En el editor de bloques, hemos solucionado un problema con la barra de herramientas en los dispositivos configurados en un idioma RTL. Además, hemos realizado actualizaciones en el bloque de incrustar, como activar las vistas previas de WordPress, Instagram y Vimeo y añadir opciones para reintentar o convertir los medios en un enlace.
+
+También se incluye una corrección que afecta a los videos en algunos sitios.
 </es-ES>
 <fr-FR>
-18.2 :
-Nous avons apporté quelques modifications pratiques à l’éditeur de blocs : le bloc de contenu embarqué vous donne désormais un premier aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter (plus de fournisseurs prochainement) ; et lorsque vous essayez d’insérer un bloc introuvable, un message indique qu’aucun résultat n’est disponible.
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
 </fr-FR>
 <iw-IL>
-18.2:
-ביצענו כמה שינויים קטנים ומועילים לעורך הבלוקים: בלוק ההטמעה כעת מאפשר לך לראות תצוגה מקדימה כאשר מוסיפים תוכן מ-YouTube או מטוויטר (בקרוב נוסיף עוד ספקים). בנוסף, כאשר עוברים להוספת בלוק אבל לא מוצאים שום דבר, כעת המידע שאין תוצאות מופיע בתצוגה.
+18.3:
+המון שיפורים בעורך הבלוקים! תיקנו בעיה בסרגל הכלים שהשפיעה על מכשירים שמוגדרים לשפה שנקראת מימין לשמאל והוספנו הרבה עדכונים לבלוק ההטמעה, כולל הפעלה של תצוגות מקדימות של תוכן מ-WordPress, מאינסטגרם ומ-Vimeo ואפשרויות לנסות שוב או להמיר את המדיה לקישורים אם סוג המדיה לא ניתן להטמעה.
+
+עדכונים אחרים כוללים תיקון שהשפיע על סרטוני וידאו בפורמט ‎.mp4 בחלק מהאתרים ושיפור בתצוגה של תוויות התפריט 'האתר שלי' ('פוסטים' ו'עמודים').
 </iw-IL>
 <id>
-18.2:
-Kami melakukan beberapa penyesuaian bermanfaat untuk editor Blok: Blok Sematan sekarang dilengkapi pratinjau singkat untuk konten yang ditambahkan dari YouTube atau Twitter (penyedia lainnya akan hadir); dan saat blok dimasukkan dan tidak ada konten yang ditemukan, tidak ada hasil akan muncul di tampilan.
+18.3:
+Di Editor blok, kami memperbaiki masalah bilah peralatan pada perangkat yang disetel ke bahasa RTL, dan membuat pembaruan pada blok Sematan, seperti mengaktifkan pratinjau WordPress, Instagram, dan Vimeo dan menambahkan pilihan untuk mencoba lagi atau mengonversi media menjadi tautan.
+
+Pembaruan lainnya mencakup perbaikan yang memengaruhi video .mp4 di beberapa situs, dan memperbarui label menu Situs Saya (“Pos” dan “Halaman”).
 </id>
 <it-IT>
-18.2:
-Abbiamo apportato un paio di utili miglioramenti all'editor a blocchi: il blocco Incorporamenti ora ti offre un assaggio di anteprima quando aggiungi qualcosa da YouTube o Twitter (sono in arrivo altri fornitori); e quando vai a inserire un blocco e non trovi nulla, ora viene mostrata una visualizzazione "nessun risultato".
+18.3:
+Nell'editor a blocchi, risolto un problema alla barra degli strumenti per i dispositivi impostati su una lingua RTL ed eseguito aggiornamenti al blocco Incorporamenti, come l'abilitazione delle anteprime di WordPress, Instagram e Vimeo e l'aggiunta di opzioni per riprovare o convertire gli elementi multimediali in un link.
+
+Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e 'aggiornamento delle etichette del menu Il mio sito ("Articoli" e "Pagine").
 </it-IT>
 <ja-JP>
-18.2:
-ブロックエディターにいくつかの便利な機能が追加されました。YouTube や Twitter (今後他のプロバイダーにも対応予定) からコンテンツを追加すると、埋め込みブロックでプレビューが見られるようになりました。また、ブロックを挿入しようとして何も見つからなかった場合は、「見つかりませんでした」と表示されるようになりました。
+18.3:
+ブロックエディターが多くの点で改良されました。 右から左に表示される言語に設定されているデバイスに影響を及ぼすツールバーの問題を修正しました。また、WordPress、Instagram、Vimeo でのプレビューの有効化や、メディアを埋め込めない場合に埋め込みをリトライしたり、リンクに変換したりするためのオプションの導入など、埋め込みブロックに対して多数アップデートを行っています。
+
+一部のサイトの .mp4 動画に影響する問題の修正や、「参加サイト」メニューのラベルの整理 (「投稿」と「ページ」) なども行っています。
 </ja-JP>
 <ko-KR>
-18.2:
-블록 편집기에서 몇 가지를 편리하게 조정했습니다. 이제 YouTube 또는 Twitter에서 무언가를 추가하면 살짝 미리보기가 임베드 블록에서 제공됩니다(공급업체 추가 예정). 그리고 블록 삽입으로 이동했는데 아무것도 찾을 수 없으면 이제는 결과 없음 보기가 나타납니다.
+18.3:
+블록 편집기가 아주 많이 개선되었습니다! RTL 언어로 설정된 기기에 영향을 주는 도구 모음 문제를 해결했으며, WordPress, Instagram, Vimeo 미리보기를 활성화하고 미디어를 임베드할 수 없는 경우 다시 시도하거나 링크로 변환하는 옵션을 제공하는 등 임베드 블록을 많이 업데이트했습니다.
+
+기타 업데이트에는 일부 사이트의 .mp4 비디오에 영향을 주는 수정 사항과 "글"과 "페이지"로 간소화한 내 사이트 메뉴 레이블이 포함됩니다.
 </ko-KR>
 <nl-NL>
-18.2:
-We hebben enkele kleine maar nuttige aanpassingen aangebracht aan de blokeditor: Het insluitblok toont nu een voorbeeldweergave wanneer je iets van YouTube of Twitter toevoegt (in de toekomst meer platformen). En voor wanneer je een blok toevoegt maar er niets wordt gevonden, is er nu een weergave voor geen resultaten.
+18.3:
+In de blok-editor, hebben we een probleem met de toolbar opgelost op apparaten die zijn ingesteld op een RTL taal, en hebben we updates aangebracht aan het blok Insluiten, zoals het inschakelen van WordPress-, Instagram- en Vimeo-voorvertoningen en het toevoegen van opties om het opnieuw te proberen of media om te zetten in een link.
+
+Meer updates omvatten een oplossing voor video op sommige sites en het updaten van menulabels voor Mijn site ("Berichten" en "Pagina's").
 </nl-NL>
 <pt-BR>
-18.2:
-Fizemos alguns ajustes práticos no editor de blocos: o bloco de mídia incorporada agora fornece uma prévia quando você adiciona mídia do YouTube ou Twitter (em breve mais provedores). Além disso, quando você quer inserir um bloco e não encontra nada, agora aparece uma visualização "Nenhum resultado".
+18.3:
+No editor de blocos, corrigimos um erro na barra de ferramentas de dispositivos configurados em RTL e fizemos atualizações no bloco de mídia incorporada, como habilitar prévias para o WordPress, Instagram e Vimeo e incluir a opção de tentar novamente ou converter a mídia em um link.
+
+Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos os rótulos do menu Meu site (agora "Posts" e "Páginas").
 </pt-BR>
 <ru-RU>
-18.2:
-Мы внесли пару полезных изменений в редактор блоков: блок "Вставка" теперь поддерживает предварительный просмотр при добавлении содержимого из YouTube или Twitter (скоро будут добавлены другие поставщики); если при использовании функции вставки блока ничего не найдено, отображается вид "Нет результатов".
+18.3:
+В редакторе блоков исправлена проблема с панелью инструментов на устройствах, где выбран язык с написанием справа налево. Обновлены некоторые функции в блоке "Вставка", добавлены предварительный просмотр элементов WordPress, Instagram и Vimeo и возможности повторной вставки и преобразования медиафайла в ссылку.
+
+Кроме того, устранена ошибка с воспроизведением видеофайлов на некоторых сайтах, улучшены ярлыки меню "Мой сайт" ("Записи" и "Страницы").
 </ru-RU>
 <sv-SE>
-18.2:
-Vi har gjort några praktiska ändringar i blockredigeraren: Inbäddningsblocket ger dig nu en förhandsvisning när du lägger till något från YouTube eller Twitter (fler leverantörer kommer) och när du ska infoga ett block och ingenting hittas visas nu en vy utan resultat.
+18.3:
+Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
+
+Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).
 </sv-SE>
 <tr-TR>
-18.2:
-Blok düzenleyicide kullanışlı birkaç değişiklik yaptık: Gömülü blok artık YouTube veya Twitter'dan bir şey eklediğinizde size bir önizleme görüntülüyor (yakında daha fazla sağlayıcı sunulacaktır). Bir blok eklemeye gittiğinizde ve hiçbir şey bulunamadığında da artık sonuç görünümü görüntülenmeyecektir.
+18.3:
+Blok düzenleyicide, RTL diline ayarlanmış cihazlarda araç çubuğunda yaşanan bir sorunu düzelttik ve Gömülü blokta WordPress, Instagram ve Vimeo önizlemelerini etkinleştirmek, medyayı yeniden denemek veya bir bağlantıya dönüştürmek için seçenekler eklemek gibi güncellemeler yaptık.
+
+Diğer güncellemeler olarak, bazı sitelerdeki videoyu etkileyen bir düzeltmeyi ve Sitem menü etiketlerinin (“Gönderiler” ve “Sayfalar”) güncellenmesini sayabiliriz.
 </tr-TR>
 <zh-CN>
-18.2：
-我们对区块编辑器进行了一些便捷调整：借助嵌入区块，您现在从 YouTube 或 Twitter（即将推出更多提供商）添加内容时，可以先睹为快；此外，当您插入区块，但没有找到任何内容时，现在会有“无结果”视图。
+18.3：
+区块编辑器中有许多改进！ 我们修复了影响将设备设置为 RTL 语言的工具栏问题，并对嵌入区块进行了许多更新，包括启用 WordPress、Instagram 和 Vimeo 预览，并在无法嵌入媒体时提供了重试媒体嵌入或将媒体转换为链接的选项。
+
+其他更新包括修复了影响某些站点上 .mp4 视频的问题，以及简化了“我的站点”菜单标签（“文章”和“页面”）。
 </zh-CN>
 <zh-TW>
-18.2：
-我們對區塊編輯器進行了一些實用的調整：在嵌入區塊中從 Youtube 或 Twitter (之後會支援更多服務商) 新增內容時，現在可以迅速預覽畫面；插入區塊卻找不到內容時，現在也會顯示無結果畫面。
+18.3:
+我們改善了區塊編輯器的諸多功能！ 修正了讓裝置無法選擇 RTL 語言的工具列問題，也對嵌入內容區塊做了諸多更新，包括啟用 WordPress、Instagram 和 Vimeo 預覽，並提供了重試或將媒體轉換成連結的選項 (如果媒體不能嵌入的話)。
+
+其他更新包括修正了某些網站 .mp4 影片的問題，以及簡化了「我的網站」選單標籤 (現在是「文章」和「頁面」)。
 </zh-TW>

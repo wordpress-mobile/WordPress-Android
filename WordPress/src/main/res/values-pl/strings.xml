@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-27 05:42:57+0000
+Translation-Revision-Date: 2021-10-01 09:07:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -2257,7 +2257,7 @@ Language: pl
     <string name="site_settings_rp_preview3_site">W trakcie upgrade\'u</string>
     <string name="site_settings_rp_preview3_title">Przegląd najważniejszych wydarzeń: VideoPress dla wesel</string>
     <string name="site_settings_rp_preview2_site">w \"Aplikacjach\"</string>
-    <string name="site_settings_rp_preview2_title">Aplikacja WordPress dla Androida przeszła duży face-lifting</string>
+    <string name="site_settings_rp_preview2_title">Aplikacja WordPress dla Androida przeszła dużą aktualizację wyglądu</string>
     <string name="site_settings_rp_preview1_site">W sekcji \"Urządzenia mobilne\"</string>
     <string name="site_settings_rp_preview1_title">Duża aktualizacja dla iPhone/iPad jest dostępna</string>
     <string name="site_settings_rp_show_images_title">Pokaż obrazki</string>

@@ -1,0 +1,4 @@
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).

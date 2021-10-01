@@ -1,0 +1,4 @@
+18.3:
+Di Editor blok, kami memperbaiki masalah bilah peralatan pada perangkat yang disetel ke bahasa RTL, dan membuat pembaruan pada blok Sematan, seperti mengaktifkan pratinjau WordPress, Instagram, dan Vimeo dan menambahkan pilihan untuk mencoba lagi atau mengonversi media menjadi tautan.
+
+Pembaruan lainnya mencakup perbaikan yang memengaruhi video .mp4 di beberapa situs, dan memperbarui label menu Situs Saya (“Pos” dan “Halaman”).

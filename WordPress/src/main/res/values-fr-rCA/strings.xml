@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 15:54:08+0000
+Translation-Revision-Date: 2021-10-01 15:09:03+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Les aperçus de bloc embarqués seront prochainement disponibles</string>
     <string name="weekly_roundup">Résumé hebdomadaire</string>
     <string name="gutenberg_native_embed_options">Options d’intégration</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Appuyez deux fois pour afficher les options d’intégration.</string>
@@ -1350,6 +1351,7 @@ Language: fr
     <string name="stats_months_and_years_period_label">Période</string>
     <string name="stats_detail_months_and_years">Mois et années</string>
     <string name="stats_insights_load_more">En afficher plus</string>
+    <string name="new_site_creation_preview_subtitle">Vous pourrez personnaliser l’apparence de votre site plus tard</string>
     <string name="stats_insights_today_stats">Aujourd’hui</string>
     <string name="stats_insights_best_hour">Meilleure heure</string>
     <string name="stats_insights_best_day">Meilleur jour</string>
@@ -1924,6 +1926,7 @@ Language: fr
     <string name="dlg_saving_tag">Enregistrement</string>
     <string name="dlg_deleting_tag">Suppression</string>
     <string name="dlg_confirm_delete_tag">Supprimer définitivement la balise « %s » ?</string>
+    <string name="my_site_btn_site_pages">Pages</string>
     <string name="error_tag_exists">Une étiquette avec ce nom existe déjà</string>
     <string name="add_new_tag">Ajout de nouvelle étiquette</string>
     <string name="tag_description_hint">Description</string>
@@ -2682,6 +2685,7 @@ Language: fr
     <string name="my_site_btn_site_settings">Réglages</string>
     <string name="my_site_header_look_and_feel">Personnaliser</string>
     <string name="my_site_header_publish">Publier</string>
+    <string name="my_site_btn_blog_posts">Articles</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="reader_label_new_posts_subtitle">Touchez pour les afficher</string>
     <string name="deselect_all">Tout déselectionner</string>
