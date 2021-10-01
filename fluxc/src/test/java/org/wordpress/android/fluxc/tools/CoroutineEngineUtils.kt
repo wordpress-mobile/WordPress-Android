@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito.lenient
 
@@ -38,6 +40,16 @@ fun initCoroutineEngine() = runBlocking {
             any(),
             any(),
             any<(suspend CoroutineScope.() -> Any)>()
+    )
+    lenient().doAnswer {
+        return@doAnswer runBlocking {
+            flow { it.getArgument<(suspend FlowCollector<Any>.() -> Unit)>(3).invoke(this) }
+        }
+    }.whenever(coroutineEngine).flowWithDefaultContext(
+            any(),
+            any(),
+            any(),
+            any<(suspend FlowCollector<Any>.() -> Unit)>()
     )
     coroutineEngine
 }
