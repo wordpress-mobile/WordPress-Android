@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentsEditFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityId
+import org.wordpress.android.ui.ActivityId.COMMENT_EDITOR
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.COMMENT
@@ -43,6 +45,8 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentsEditViewModel::class.java)
+
+        ActivityId.trackLastActivity(COMMENT_EDITOR)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
