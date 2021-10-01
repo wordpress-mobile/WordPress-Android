@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.comments.unified
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -19,6 +18,8 @@ import org.wordpress.android.databinding.UnifiedCommentsEditFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityId.COMMENT_EDITOR
+import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment.Companion.EDIT_CANCEL_DIALOG_TAG
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.COMMENT
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.WEB_ADDRESS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -71,25 +73,36 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp)
         }
+        activity.onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(
+                        true
+                ) {
+                    override fun handleOnBackPressed() {
+                        viewModel.onBackPressed()
+                    }
+                })
     }
 
     private fun hideKeyboard() {
         if (!isAdded || view == null) return
-        activity?.let {
-            val imm: InputMethodManager = it.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
-        }
+        ActivityUtils.hideKeyboardForced(view)
     }
 
     private fun UnifiedCommentsEditFragmentBinding.setupObservers(site: SiteModel, commentId: Int) {
         viewModel.uiActionEvent.observeEvent(viewLifecycleOwner, {
             when (it) {
-                CLOSE -> requireActivity().finish()
+                CLOSE -> {
+                    requireActivity().finish()
+                }
                 DONE -> {
                     requireActivity().apply {
                         setResult(RESULT_OK)
                         finish()
                     }
+                }
+                CANCEL_EDIT_CONFIRM -> {
+                    EditCancelDialogFragment.newInstance().show(childFragmentManager, EDIT_CANCEL_DIALOG_TAG)
                 }
             }
         })
@@ -113,7 +126,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             if (uiState.shouldInitComment) {
                 uiState.originalComment.let {
                     userName.setText(it.userName)
-                    commentEditWebAddress.setText(it.userWebAddress)
+                    commentEditWebAddress.setText(it.userUrl)
                     commentEditEmailAddress.setText(it.userEmail)
                     commentEditComment.setText(it.commentText)
                 }
@@ -125,7 +138,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
             uiState.editErrorStrings.let { errors ->
                 userName.error = errors.userNameError
-                commentEditWebAddress.error = errors.userWebAddressError
+                commentEditWebAddress.error = errors.userUrlError
                 commentEditEmailAddress.error = errors.userEmailError
                 commentEditComment.error = errors.commentTextError
             }
@@ -182,7 +195,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             }
 
             viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-                actionMenu.isEnabled = uiState.isMenuEnabled
+                actionMenu.isEnabled = uiState.canSaveChanges
             })
         }
     }
