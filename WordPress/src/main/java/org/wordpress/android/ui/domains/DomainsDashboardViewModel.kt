@@ -1,19 +1,16 @@
 package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.store.SiteStore.OnSiteDomainsFetched
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsListItem.Action
 import org.wordpress.android.ui.domains.DomainsListItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
@@ -36,16 +33,19 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
-    private val dispatcher: Dispatcher,
+    private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     selectedSiteRepository: SelectedSiteRepository,
     domainRegistrationHandler: DomainRegistrationHandler,
-    private val htmlMessageUtils: HtmlMessageUtils
-) : ViewModel() {
+    private val htmlMessageUtils: HtmlMessageUtils,
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
     private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
     val onNavigation = _onNavigation
 
@@ -61,15 +61,6 @@ class DomainsDashboardViewModel @Inject constructor(
     private val hasCustomDomain = SiteUtils.hasCustomDomain(selectedSite)
 
     private var isStarted: Boolean = false
-
-    init {
-        dispatcher.register(this)
-    }
-
-    override fun onCleared() {
-        dispatcher.unregister(this)
-        super.onCleared()
-    }
 
     fun start() {
         if (isStarted) {
@@ -120,18 +111,19 @@ class DomainsDashboardViewModel @Inject constructor(
 
     // if site has a registered domain then show Site Domains, Add Domain and Manage Domains
     private fun manageDomainsItems(): List<DomainsListItem> {
-        dispatcher.dispatch(SiteActionBuilder.newFetchDomainsAction(selectedSite))
-        return manageDomainsListItems(null)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSiteDomainsFetched(event: OnSiteDomainsFetched) {
-        if (event.isError) {
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
-        } else {
-            AppLog.d(T.DOMAIN_REGISTRATION, event.domains.toString())
-            _uiModel.value = manageDomainsListItems(event.domains)
+        launch {
+            val result = siteStore.fetchSiteDomains(selectedSite)
+            when {
+                result.isError -> {
+                    AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
+                }
+                else -> {
+                    _uiModel.value = manageDomainsListItems(result.domains)
+                }
+            }
         }
+
+        return manageDomainsListItems(null)
     }
 
     private fun manageDomainsListItems(domains: List<Domain>?): List<DomainsListItem> {
