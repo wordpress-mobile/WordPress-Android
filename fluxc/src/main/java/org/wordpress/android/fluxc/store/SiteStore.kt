@@ -71,6 +71,9 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
@@ -97,6 +100,8 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorTyp
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
@@ -641,6 +646,15 @@ open class SiteStore
         error: DomainSupportedCountriesError?
     ) : OnChanged<DomainSupportedCountriesError>() {
         init {
+            this.error = error
+        }
+    }
+
+    data class FetchedDomainsPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val domains: List<Domain>? = null
+    ) : Payload<SiteError>() {
+        constructor(site: SiteModel, error: SiteError) : this(site) {
             this.error = error
         }
     }
@@ -1816,4 +1830,23 @@ open class SiteStore
         event.error = payload.error
         emitChange(event)
     }
+
+    suspend fun fetchSiteDomains(siteModel: SiteModel): FetchedDomainsPayload =
+            coroutineEngine.withDefaultContext(T.API, this, "Fetch site domains") {
+                return@withDefaultContext when (val response =
+                        siteRestClient.fetchSiteDomains(siteModel)) {
+                            is Success -> {
+                                FetchedDomainsPayload(siteModel, response.data.domains)
+                            }
+                            is Error -> {
+                                val siteErrorType = when (response.error.apiError) {
+                                    "unauthorized" -> UNAUTHORIZED
+                                    "unknown_blog" -> UNKNOWN_SITE
+                                    else -> SiteErrorType.GENERIC_ERROR
+                                }
+                                val domainsError = SiteError(siteErrorType, response.error.message)
+                                FetchedDomainsPayload(siteModel, domainsError)
+                            }
+                        }
+            }
 }

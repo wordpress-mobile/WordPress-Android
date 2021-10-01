@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
@@ -699,6 +700,11 @@ class SiteRestClient @Inject constructor(
                     )
                 })
         add(request)
+    }
+
+    suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
     }
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
