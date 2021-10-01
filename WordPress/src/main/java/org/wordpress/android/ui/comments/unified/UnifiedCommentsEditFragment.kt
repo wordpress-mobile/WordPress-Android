@@ -30,6 +30,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.WEB_ADDRESS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -87,10 +88,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
 
     private fun hideKeyboard() {
         if (!isAdded || view == null) return
-        activity?.let {
-            val imm: InputMethodManager = it.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.rootView?.windowToken, 0)
-        }
+        ActivityUtils.hideKeyboardForced(view)
     }
 
     private fun UnifiedCommentsEditFragmentBinding.setupObservers(site: SiteModel, commentId: Int) {
