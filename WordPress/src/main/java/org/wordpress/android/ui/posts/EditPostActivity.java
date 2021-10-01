@@ -3473,6 +3473,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditPostCustomerSupportHelper.INSTANCE.onGotoCustomerSupportOptions(this, getSite());
     }
 
+    @Override public void onSendEventToHost(String eventName, Map<String, Object> properties) {
+        AppLog.d(AppLog.T.EDITOR, "Receive event from onSendEvent...");
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
