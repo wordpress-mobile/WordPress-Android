@@ -704,7 +704,7 @@ class SiteRestClient @Inject constructor(
 
     suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
-         return  wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
     }
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
