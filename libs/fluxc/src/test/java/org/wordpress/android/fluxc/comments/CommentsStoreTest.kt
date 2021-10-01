@@ -411,6 +411,71 @@ class CommentsStoreTest {
     }
 
     @Test
+    fun `updateEditComment returns updated comment for WPCom`() = test {
+        val comment = getDefaultCommentList().first().copy(id = 220)
+        val commentFromEndpoint = comment.copy(id = 0)
+        whenever(restClient.updateEditComment(any(), any())).thenReturn(CommentsApiPayload(commentFromEndpoint))
+        whenever(commentsDao.insertOrUpdateCommentForResult(any())).thenReturn(listOf(comment))
+
+        val result = commentsStore.updateEditComment(
+                site = site,
+                comment
+        )
+
+        verify(restClient, times(1)).updateEditComment(
+                site = site,
+                comment = comment
+        )
+        verify(commentsDao, times(1)).insertOrUpdateCommentForResult(
+                comment
+        )
+
+        assertThat((result.data as CommentsActionData).comments.first()).isEqualTo(comment)
+    }
+
+    @Test
+    fun `updateEditComment returns updated comment for Self-Hosted`() = test {
+        whenever(site.isUsingWpComRestApi).thenReturn(false)
+        val comment = getDefaultCommentList().first().copy(id = 220)
+        val commentFromEndpoint = comment.copy(id = 0)
+        whenever(xmlRpcClient.updateEditComment(any(), any())).thenReturn(CommentsApiPayload(commentFromEndpoint))
+        whenever(commentsDao.insertOrUpdateCommentForResult(any())).thenReturn(listOf(comment))
+
+        val result = commentsStore.updateEditComment(
+                site = site,
+                comment
+        )
+
+        verify(xmlRpcClient, times(1)).updateEditComment(
+                site = site,
+                comment = comment
+        )
+        verify(commentsDao, times(1)).insertOrUpdateCommentForResult(
+                comment
+        )
+
+        assertThat((result.data as CommentsActionData).comments.first()).isEqualTo(comment)
+    }
+
+    @Test
+    fun `updateEditComment returns error on failure`() = test {
+        val comment = getDefaultCommentList().first()
+        whenever(restClient.updateEditComment(any(), any())).thenReturn(CommentsApiPayload(commentError))
+
+        val result = commentsStore.updateEditComment(
+                site = site,
+                comment = comment
+        )
+
+        verify(restClient, times(1)).updateEditComment(
+                site = site,
+                comment = comment
+        )
+
+        assertThat(result.isError).isTrue
+    }
+
+    @Test
     fun `deleteComment returns updated comment for WPCom`() = test {
         val comment = getDefaultCommentList().first()
         val commentApiResponse = comment.copy(status = DELETED.toString(), id = 0)

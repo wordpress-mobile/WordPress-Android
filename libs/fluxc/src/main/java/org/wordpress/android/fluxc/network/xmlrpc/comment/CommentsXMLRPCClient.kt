@@ -78,13 +78,32 @@ class CommentsXMLRPCClient @Inject constructor(
     }
 
     suspend fun pushComment(site: SiteModel, comment: CommentEntity): CommentsApiPayload<CommentEntity> {
-        val params: MutableList<Any> = ArrayList(5)
-
         val commentParams = mutableMapOf<String, Any?>(
                 "content" to comment.content,
                 "date" to comment.datePublished,
                 "status" to getXMLRPCCommentStatus(CommentStatus.fromString(comment.status))
         )
+
+        return updateCommentFields(site, comment, commentParams)
+    }
+
+    suspend fun updateEditComment(site: SiteModel, comment: CommentEntity): CommentsApiPayload<CommentEntity> {
+        val commentParams = mutableMapOf<String, Any?>(
+                "content" to comment.content,
+                "author" to comment.authorName,
+                "author_email" to comment.authorEmail,
+                "author_url" to comment.authorUrl
+        )
+
+        return updateCommentFields(site, comment, commentParams)
+    }
+
+    private suspend fun updateCommentFields(
+        site: SiteModel,
+        comment: CommentEntity,
+        commentParams: Map<String, Any?>
+    ): CommentsApiPayload<CommentEntity> {
+        val params: MutableList<Any> = ArrayList(5)
 
         params.add(site.selfHostedSiteId)
         params.add(site.username)
