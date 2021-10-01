@@ -19,7 +19,7 @@ Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos au
 18.3:
 En el editor de bloques, hemos solucionado un problema con la barra de herramientas en los dispositivos configurados en un idioma RTL. Además, hemos realizado actualizaciones en el bloque de incrustar, como activar las vistas previas de WordPress, Instagram y Vimeo y añadir opciones para reintentar o convertir los medios en un enlace.
 
-También se incluye una corrección que afecta a los videos en algunos sitios y se han actualizado las etiquetas del menú de Mi Sitio ("Entradas" y "Páginas").
+También se incluye una corrección que afecta a los videos en algunos sitios.
 </es-ES>
 <fr-FR>
 18.3 :
@@ -59,9 +59,9 @@ Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e
 </ko-KR>
 <nl-NL>
 18.3:
-We hebben in blokeditor een probleem met de werkbalk opgelost dat apparaten beïnvloedde die waren ingesteld op een RTL-taal. We hebben ook veel updates doorgevoerd voor het insluitblok, waaronder voorbeeldweergaven inschakelen van WordPress, Instagram en Vimeo en de mogelijkheid toegevoegd om opnieuw te proberen of media te converteren naar een link.
+In de blok-editor, hebben we een probleem met de toolbar opgelost op apparaten die zijn ingesteld op een RTL taal, en hebben we updates aangebracht aan het blok Insluiten, zoals het inschakelen van WordPress-, Instagram- en Vimeo-voorvertoningen en het toevoegen van opties om het opnieuw te proberen of media om te zetten in een link.
 
-Andere updates omvatten een oplossing voor problemen met video’s op een aantal sites en nieuwe menulabels van Mijn site (‘Berichten’ en ‘Pagina’s’).
+Meer updates omvatten een oplossing voor video op sommige sites en het updaten van menulabels voor Mijn site ("Berichten" en "Pagina's").
 </nl-NL>
 <pt-BR>
 18.3:
@@ -77,9 +77,9 @@ Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos
 </ru-RU>
 <sv-SE>
 18.3:
-I blockredigeraren har vi åtgärdat ett verktygsfältsproblem på enheter inställda på ett RTL-språk och genomfört uppdateringar av inbäddningsblocket. Bland annat har vi aktiverat WordPress-, Instagram- och Vimeo-förhandsgranskningar och lagt till alternativ för att försöka igen eller konvertera mediainnehållet till en länk.
+Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
 
-Ytterligare uppdateringar inkluderar en korrigering som påverkar videofiler på vissa webbplatser och en uppdatering av etiketterna i menyn Min webbplats ("Inlägg" och "Sidor").
+Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).
 </sv-SE>
 <tr-TR>
 18.3:
