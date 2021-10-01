@@ -2,6 +2,10 @@ package org.wordpress.android.fluxc.tools
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -31,6 +35,18 @@ open class CoroutineEngine
         appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage")
         return block()
     }
+
+    fun <RESULT_TYPE> flowWithDefaultContext(
+        tag: AppLog.T,
+        caller: Any,
+        loggedMessage: String,
+        block: suspend FlowCollector<RESULT_TYPE>.() -> Unit
+    ): Flow<RESULT_TYPE> =
+            flow { block() }
+                    .flowOn(context)
+//                    .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
+//                    .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
+//                    .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
 
     fun <RESULT_TYPE> launch(
         tag: AppLog.T,
