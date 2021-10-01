@@ -336,6 +336,10 @@
         <item name="android:textColorHint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+    <style name="WordPress.ActionBar.MenuAlign" parent="WordPress.ActionBar">
+        <item name="android:paddingEnd">2dp</item>
+    </style>
+
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
