@@ -1,0 +1,4 @@
+18.3:
+We hebben in blokeditor een probleem met de werkbalk opgelost dat apparaten beïnvloedde die waren ingesteld op een RTL-taal. We hebben ook veel updates doorgevoerd voor het insluitblok, waaronder voorbeeldweergaven inschakelen van WordPress, Instagram en Vimeo en de mogelijkheid toegevoegd om opnieuw te proberen of media te converteren naar een link.
+
+Andere updates omvatten een oplossing voor problemen met video’s op een aantal sites en nieuwe menulabels van Mijn site (‘Berichten’ en ‘Pagina’s’).
