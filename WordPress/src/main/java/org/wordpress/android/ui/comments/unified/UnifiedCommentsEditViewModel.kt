@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.COMMENT
@@ -66,7 +67,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     )
 
     data class EditCommentUiState(
-        val isMenuEnabled: Boolean,
+        val canSaveChanges: Boolean,
         val shouldInitComment: Boolean,
         val shouldInitWatchers: Boolean,
         val showProgress: Boolean = false,
@@ -109,7 +110,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     enum class EditCommentActionEvent {
         CLOSE,
-        DONE
+        DONE,
+        CANCEL_EDIT_CONFIRM
     }
 
     fun start(site: SiteModel, commentId: Int) {
@@ -128,7 +130,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     private suspend fun setLoadingState(state: ProgressState) {
         val uiState = _uiState.value ?: EditCommentUiState(
-                isMenuEnabled = false,
+                canSaveChanges = false,
                 shouldInitComment = false,
                 shouldInitWatchers = false,
                 showProgress = LOADING.show,
@@ -183,6 +185,16 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
+        _uiState.value?.let {
+            if (it.editedComment.isNotEqualTo(it.originalComment)) {
+                _uiActionEvent.value = Event(CANCEL_EDIT_CONFIRM)
+            } else {
+                _uiActionEvent.value = Event(CLOSE)
+            }
+        }
+    }
+
+    fun onConfirmEditingCancel() {
         _uiActionEvent.value = Event(CLOSE)
     }
 
@@ -213,7 +225,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 )
 
                 _uiState.value = EditCommentUiState(
-                        isMenuEnabled = false,
+                        canSaveChanges = false,
                         shouldInitComment = true,
                         shouldInitWatchers = true,
                         showProgress = LOADING.show,
@@ -255,7 +267,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             )
 
             _uiState.value = it.copy(
-                isMenuEnabled = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
+                canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
                 shouldInitComment = false,
                 shouldInitWatchers = false,
                 editedComment = editedComment,
