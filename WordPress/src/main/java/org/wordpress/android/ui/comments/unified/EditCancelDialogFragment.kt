@@ -33,7 +33,7 @@ class EditCancelDialogFragment : DialogFragment() {
             setTitle(R.string.comment_edit_cancel_dialog_title)
             setMessage(R.string.comment_edit_cancel_dialog_message)
             setPositiveButton(R.string.button_discard) { _, _ ->
-                viewModel?.onConfirmEditingCancel()
+                viewModel?.onConfirmEditingDiscard()
             }
             setNegativeButton(R.string.cancel) { _, _ ->
                 // nothing to be done here.

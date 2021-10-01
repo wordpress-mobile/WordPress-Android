@@ -194,7 +194,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmEditingCancel() {
+    fun onConfirmEditingDiscard() {
         _uiActionEvent.value = Event(CLOSE)
     }
 
