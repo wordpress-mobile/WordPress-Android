@@ -68,13 +68,32 @@ class CommentsRestClient @Inject constructor(
     }
 
     suspend fun pushComment(site: SiteModel, comment: CommentEntity): CommentsApiPayload<CommentEntity> {
-        val url = WPCOMREST.sites.site(site.siteId).comments.comment(comment.remoteCommentId).urlV1_1
-
         val request = mutableMapOf(
                 "content" to comment.content.orEmpty(),
                 "date" to comment.datePublished.orEmpty(),
                 "status" to comment.status.orEmpty()
         )
+
+        return updateCommentFields(site, comment, request)
+    }
+
+    suspend fun updateEditComment(site: SiteModel, comment: CommentEntity): CommentsApiPayload<CommentEntity> {
+        val request = mutableMapOf(
+                "content" to comment.content.orEmpty(),
+                "author" to comment.authorName.orEmpty(),
+                "author_email" to comment.authorEmail.orEmpty(),
+                "author_url" to comment.authorUrl.orEmpty()
+        )
+
+        return updateCommentFields(site, comment, request)
+    }
+
+    private suspend fun updateCommentFields(
+        site: SiteModel,
+        comment: CommentEntity,
+        request: Map<String, String>
+    ): CommentsApiPayload<CommentEntity> {
+        val url = WPCOMREST.sites.site(site.siteId).comments.comment(comment.remoteCommentId).urlV1_1
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
