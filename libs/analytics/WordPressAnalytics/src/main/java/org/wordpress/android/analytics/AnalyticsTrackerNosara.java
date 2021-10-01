@@ -2108,6 +2108,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_engaged";
             case RECOMMEND_APP_CONTENT_FETCH_FAILED:
                 return "recommend_app_content_fetch_failed";
+            case EDITOR_BLOCK_INSERTED:
+                return "editor_block_inserted";
         }
         return null;
     }

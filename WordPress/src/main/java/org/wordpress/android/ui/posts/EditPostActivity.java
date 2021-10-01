@@ -3474,7 +3474,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onSendEventToHost(String eventName, Map<String, Object> properties) {
-        AppLog.d(AppLog.T.EDITOR, "Receive event from onSendEvent...");
+        AnalyticsUtils.trackBlockEditorEvent(eventName, properties);
     }
 
     // FluxC events
