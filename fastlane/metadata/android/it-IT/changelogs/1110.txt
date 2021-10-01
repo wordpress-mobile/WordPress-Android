@@ -1,5 +1,0 @@
-18.2:
-- Il blocco Incorporamenti ora offre un'anteprima quando aggiungi da YouTube o Twitter.
-- Se non viene trovato nulla in una ricerca nello strumento per l'inserimento dei blocchi, viene mostrata una visualizzazione "nessun risultato".
-- La schermata Io ha un nuovo pulsante "Condividi WordPress con un amico", che ti consente di condividere un link dell'app WordPress.
-- Mettendo Mi piace a un articolo nel Reader viene aggiunto anche il tuo avatar ai Mi piace.

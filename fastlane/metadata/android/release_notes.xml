@@ -1,119 +1,108 @@
 <ar>
-18.2:
-- يمنحك الآن مكوِّن التضمين معاينة عندما تقوم بالإضافة من يوتيوب أو تويتر.
-- إذا لم يتم العثور على أي شيء في بحث أداة إدراج المكوِّن، فسيظهر طريقة عرض "لا توجد نتائج".
-- تحتوي شاشة صفحتي الرئيسية على زر "مشاركة ووردبريس مع صديق"، ما يتيح لك مشاركة رابط تطبيق ووردبريس.
-- يؤدي كذلك الإعجاب بمقالة في القارئ إلى إضافة صورة أفاتار الخاصة بك إلى الإعجابات.
+18.3:
+الكثير من التحسينات في محرِّر المكوِّن! قمنا بإصلاح مشكلة شريط الأدوات التي تؤثر في الأجهزة التي تم تعيينها إلى لغة RTL، وأجرينا العديد من التحديثات على مكوِّن التضمين، بما في ذلك تمكين معاينات ووردبريس وإنستغرام وفيميو وتقديم خيارات لإعادة تجربة الوسائط أو تحويلها إلى رابط إذا لم تكن قابلة للتضمين.
+
+تتضمن بعض التحديثات الأخرى إصلاحًا يؤثر في مقاطع الفيديو التي تكون بتنسيق .mp4 على بعض المواقع وتبسيط تسميات قوائم موقعي ("المقالات" و"الصفحات").
 </ar>
 <de-DE>
-18.2:
-- Der Embed-Block zeigt dir jetzt eine Vorschau an, wenn du Inhalte aus YouTube oder Twitter einfügst.
-- Wenn bei einer Block-Einfüge-Suche nichts gefunden wird, wird jetzt der Bildschirm „Keine Ergebnisse“ angezeigt.
-Der Bildschirm „Ich“ verfügt jetzt über den Button „Teile WordPress mit Freunden“, über den du einen Link zur WordPress-App teilen kannst.
-- Wenn du einen Beitrag im Reader mit „Gefällt mir“ markierst, wird zu deiner Gefällt mir-Angabe auch dein Avatar hinzugefügt.
+18.3:
+Wir haben Probleme im Block-Editor mit der Werkzeugleiste bei Geräten mit linksläufiger Sprache behoben und einige Updates am Embed-Block vorgenommen, u. a. eine Vorschau für WordPress, Instagram und Vimeo sowie Optionen zum Wiederholen oder Konvertieren von Medien in einen Link.
+
+Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos auftrat, und die „Meine Website“-Menübeschriftungen aktualisiert („Beiträge“ und „Seiten“).
 </de-DE>
 <en-US>
-18.2:
-- The Embed block now gives a preview when you add from YouTube or Twitter.
-- If nothing is found in a block inserter search a “no results” view appears.
-- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link.
-- Liking a post in the Reader also adds your avatar to the like.
+18.3:
+Lots of improvements in the block editor! We fixed a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.
+
+Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).
 </en-US>
 <es-ES>
-18.2:
-- El bloque incrustado ahora da una vista previa cuando añades desde YouTube o Twitter.
-- Si no se encuentra nada en una búsqueda de inserción de bloques, aparece una vista de «sin resultados».
-- La pantalla «Yo» tiene un nuevo botón «Compartir WordPress con un amigo», permitiéndote compartir un enlace de la aplicación de WordPress.
-- Al pulsar «Me gusta» en una entrada en el lector, también se añade tu avatar al «Me gusta».
+18.3:
+En el editor de bloques, hemos corregido un problema de la barra de herramientas en los dispositivos configurados con un idioma RTL, y hemos realizado actualizaciones en el bloque de incrustación, como la activación de las vistas previas de WordPress, Instagram y Vimeo y la incorporación de opciones para reintentar o convertir los medios en un enlace.
+
+Otras actualizaciones incluyen una corrección que afecta al vídeo en algunos sitios, y la actualización de las etiquetas del menú de «Mi sitio» («Entradas» y «Páginas»).
 </es-ES>
 <fr-CA>
-18.2 :
-- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
-- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
-- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
-- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
 </fr-CA>
 <fr-FR>
-18.2 :
-- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
-- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
-- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
-- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
 </fr-FR>
 <iw-IL>
-18.2:
-- בלוק ההטמעה כעת מאפשר לך לראות תצוגה מקדימה כאשר מוסיפים תוכן מ-YouTube או מטוויטר.
-- כאשר לא מוצאים שום דבר בחיפוש של מוסיף הבלוקים, תופיע תצוגה עם המלל "אין תוצאות".
-- המסך 'אני' כולל כפתור חדש "לשתף את WordPress עם חברים" שמאפשר לך לשתף קישור לאפליקציה של WordPress.
-- סימון לייק לפוסט ב-Reader יוסיף גם את תמונת הפרופיל שלך ללייק.
+18.3:
+המון שיפורים בעורך הבלוקים! תיקנו בעיה בסרגל הכלים שהשפיעה על מכשירים שמוגדרים לשפה שנקראת מימין לשמאל והוספנו הרבה עדכונים לבלוק ההטמעה, כולל הפעלה של תצוגות מקדימות של תוכן מ-WordPress, מאינסטגרם ומ-Vimeo ואפשרויות לנסות שוב או להמיר את המדיה לקישורים אם סוג המדיה לא ניתן להטמעה.
+
+עדכונים אחרים כוללים תיקון שהשפיע על סרטוני וידאו בפורמט ‎.mp4 בחלק מהאתרים ושיפור בתצוגה של תוויות התפריט 'האתר שלי' ('פוסטים' ו'עמודים').
 </iw-IL>
 <id>
-18.2:
-- Blok Sematan sekarang dilengkapi pratinjau untuk konten yang ditambahkan dari YouTube atau Twitter.
-- Jika tidak ada konten yang ditemukan di penyisip blok, tulisan "tidak ada hasil" akan ditampilkan.
-- Layar Saya dilengkapi dengan tombol baru “Bagikan WordPress ke teman” yang dan memungkinkan Anda berbagi tautan aplikasi WordPress.
-- Sekarang avatar Anda juga akan ditampilkan saat menyukai pos lewat Pembaca.
+18.3:
+Di Editor blok, kami memperbaiki masalah bilah peralatan pada perangkat yang disetel ke bahasa RTL, dan membuat pembaruan pada blok Sematan, seperti mengaktifkan pratinjau WordPress, Instagram, dan Vimeo dan menambahkan pilihan untuk mencoba lagi atau mengonversi media menjadi tautan.
+
+Pembaruan lainnya mencakup perbaikan yang memengaruhi video .mp4 di beberapa situs, dan memperbarui label menu Situs Saya (“Pos” dan “Halaman”).
 </id>
 <it-IT>
-18.2:
-- Il blocco Incorporamenti ora offre un'anteprima quando aggiungi da YouTube o Twitter.
-- Se non viene trovato nulla in una ricerca nello strumento per l'inserimento dei blocchi, viene mostrata una visualizzazione "nessun risultato".
-- La schermata Io ha un nuovo pulsante "Condividi WordPress con un amico", che ti consente di condividere un link dell'app WordPress.
-- Mettendo Mi piace a un articolo nel Reader viene aggiunto anche il tuo avatar ai Mi piace.
+18.3:
+Nell'editor a blocchi, risolto un problema alla barra degli strumenti per i dispositivi impostati su una lingua RTL ed eseguito aggiornamenti al blocco Incorporamenti, come l'abilitazione delle anteprime di WordPress, Instagram e Vimeo e l'aggiunta di opzioni per riprovare o convertire gli elementi multimediali in un link.
+
+Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e 'aggiornamento delle etichette del menu Il mio sito ("Articoli" e "Pagine").
 </it-IT>
 <ja-JP>
-18.2:
-- YouTube または Twitter からコンテンツを追加したときに埋め込みブロックでプレビューが見られるようになりました。
-- ブロック挿入の検索で何も見つからなかった場合は「見つかりませんでした」と表示されるようになりました。
-- Me 画面に「WordPress を友達と共有する」ボタンが追加され、WordPress のアプリリンクをシェアできるようになりました。
-- Reader に投稿をリンクすると「いいね」にもアバターが追加されるようになりました。
+18.3:
+ブロックエディターが多くの点で改良されました。 右から左に表示される言語に設定されているデバイスに影響を及ぼすツールバーの問題を修正しました。また、WordPress、Instagram、Vimeo でのプレビューの有効化や、メディアを埋め込めない場合に埋め込みをリトライしたり、リンクに変換したりするためのオプションの導入など、埋め込みブロックに対して多数アップデートを行っています。
+
+一部のサイトの .mp4 動画に影響する問題の修正や、「参加サイト」メニューのラベルの整理 (「投稿」と「ページ」) なども行っています。
 </ja-JP>
 <ko-KR>
-18.2:
-- 이제 YouTube 또는 Twitter에서 추가하면 임베드 블록에서 미리보기가 제공됩니다.
-- 블록 삽입기에서 아무것도 찾을 수 없으면 '결과 없음' 보기가 나타납니다.
-- WordPress 앱 링크를 공유할 수 있는 새로운 '친구와 WordPress 공유' 버튼이 내 계정 화면에 있습니다.
-- 리더에서 글에 좋아요를 표시하면 아바타도 좋아요에 추가됩니다.
+18.3:
+블록 편집기가 아주 많이 개선되었습니다! RTL 언어로 설정된 기기에 영향을 주는 도구 모음 문제를 해결했으며, WordPress, Instagram, Vimeo 미리보기를 활성화하고 미디어를 임베드할 수 없는 경우 다시 시도하거나 링크로 변환하는 옵션을 제공하는 등 임베드 블록을 많이 업데이트했습니다.
+
+기타 업데이트에는 일부 사이트의 .mp4 비디오에 영향을 주는 수정 사항과 "글"과 "페이지"로 간소화한 내 사이트 메뉴 레이블이 포함됩니다.
 </ko-KR>
 <nl-NL>
-18.2:
-- Het insluit blok geeft nu een voorbeeld als je toevoegt van YouTube of Twitter.
-- Als er niets gevonden wordt met een blok invoeger zoekopdracht verschijnt er een "geen resultaten" weergave.
-- Het Mij scherm heeft een nieuwe "Deel WordPress met een vriend" knop, waarmee je een WordPress app link kunt delen.
-- Een bericht liken in de Reader voegt nu ook je avatar toe aan de like.
+18.3:
+In de blok-editor, hebben we een probleem met de toolbar opgelost op apparaten die zijn ingesteld op een RTL taal, en hebben we updates aangebracht aan het blok Insluiten, zoals het inschakelen van WordPress-, Instagram- en Vimeo-voorvertoningen en het toevoegen van opties om het opnieuw te proberen of media om te zetten in een link.
+
+Meer updates omvatten een oplossing voor video op sommige sites en het updaten van menulabels voor Mijn site ("Berichten" en "Pagina's").
 </nl-NL>
+<pt-BR>
+18.3:
+No editor de blocos, corrigimos um erro na barra de ferramentas de dispositivos configurados em RTL e fizemos atualizações no bloco de mídia incorporada, como habilitar prévias para o WordPress, Instagram e Vimeo e incluir a opção de tentar novamente ou converter a mídia em um link.
+
+Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos os rótulos do menu Meu site (agora "Posts" e "Páginas").
+</pt-BR>
 <ru-RU>
-18.2:
-- Блок встраивания теперь имеет предварительный просмотр при добавлении с YouTube или Twitter.
-- Если ничего не найдено в поиске при вставке блока, то будет показан экран отсутствия результатов.
-- На экране профиля появилась новая кнопка «Поделиться WordPress с другом», с помощью которой вы можете поделиться ссылкой на приложение WordPress.
-- Если вы поставите отметку "нравится" в Чтиве, ваш аватар будет добавлен в список отметивших "нравится".
+18.3:
+Множество улучшений в редакторе блоков! Мы исправили проблему с панелью инструментов при использовании на устройстве языков RTL, и внесли много обновлений в блок встраивания, включая предварительный просмотр WordPress, Instagram и Vimeo, возможность повторной попытки или преобразования мультимедиа в ссылку, если она не может быть встроена.
+
+Другие обновления включают исправление видео в формате .mp4 на некоторых сайтах, и оптимизацию ярлыков меню «Мой сайт» («Записи» и «Страницы»).
 </ru-RU>
 <sv-SE>
-18.2:
-- Inbäddningsblocket innehåller nu en förhandsvisning när du bäddar in från YouTube eller Twitter.
-- Om inget hittas vid sökning för infogning av block visas en vy för ”inget resultat”.
-- Skärmen Jag har en ny knapp ”Dela WordPress med en vän” så att du kan skicka en länk till en WordPress-app.
-- Om du gillar ett inlägg i läsaren läggs även din avatar in med gillamarkeringen.
+18.3:
+Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
+
+Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).
 </sv-SE>
 <tr-TR>
-18.2:
-- Gömülü blok artık YouTube veya Twitter'dan eklediğinizde bir önizleme görüntüler.
-- Blok yerleştirici aramasında hiçbir şey bulunamazsa, “sonuç yok” görünümü görüntülenir.
-- Ben ekranında, bir WordPress uygulama bağlantısını paylaşmanıza olanak tanıyan yeni bir "WordPress'i bir arkadaşınızla paylaşın" düğmesi bulunur.
-- Okuyucu'da bir gönderi beğenildiğinde avatarınız da beğeniye eklenir.
+18.3:
+Blok düzenleyicide, RTL diline ayarlanmış cihazlarda araç çubuğunda yaşanan bir sorunu düzelttik ve Gömülü blokta WordPress, Instagram ve Vimeo önizlemelerini etkinleştirmek, medyayı yeniden denemek veya bir bağlantıya dönüştürmek için seçenekler eklemek gibi güncellemeler yaptık.
+
+Diğer güncellemeler olarak, bazı sitelerdeki videoyu etkileyen bir düzeltmeyi ve Sitem menü etiketlerinin (“Gönderiler” ve “Sayfalar”) güncellenmesini sayabiliriz.
 </tr-TR>
 <zh-CN>
-18.2：
-- 现在，嵌入区块允许您从 YouTube 或 Twitter 添加内容时进行预览。
-- 如果您在区块插入器搜索中没有找到任何内容，“无结果”视图将显示。
--“我”屏幕拥有新的“与朋友共享 WordPress”按钮，允许您共享 WordPress 应用程序链接。
-- 在阅读器中点赞文章还会将您的头像添加到该赞中。
+18.3：
+区块编辑器中有许多改进！ 我们修复了影响将设备设置为 RTL 语言的工具栏问题，并对嵌入区块进行了许多更新，包括启用 WordPress、Instagram 和 Vimeo 预览，并在无法嵌入媒体时提供了重试媒体嵌入或将媒体转换为链接的选项。
+
+其他更新包括修复了影响某些站点上 .mp4 视频的问题，以及简化了“我的站点”菜单标签（“文章”和“页面”）。
 </zh-CN>
 <zh-TW>
-18.2：
-- 嵌入區塊現在可預覽從 YouTube 或 Twitter 新增的內容。
-- 如果區塊插入器搜尋功能中找不到結果，現在會顯示「無結果」畫面。
--「我的」畫面現在新增「向朋友推薦 WordPress」按鈕，讓你能夠分享 WordPress 應用程式連結。
-- 在閱讀器中對文章按讚現在也會新增你的大頭貼。
+18.3:
+我們改善了區塊編輯器的諸多功能！ 修正了讓裝置無法選擇 RTL 語言的工具列問題，也對嵌入內容區塊做了諸多更新，包括啟用 WordPress、Instagram 和 Vimeo 預覽，並提供了重試或將媒體轉換成連結的選項 (如果媒體不能嵌入的話)。
+
+其他更新包括修正了某些網站 .mp4 影片的問題，以及簡化了「我的網站」選單標籤 (現在是「文章」和「頁面」)。
 </zh-TW>

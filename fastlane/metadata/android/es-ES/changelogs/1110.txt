@@ -1,5 +1,0 @@
-18.2:
-- El bloque incrustado ahora da una vista previa cuando añades desde YouTube o Twitter.
-- Si no se encuentra nada en una búsqueda de inserción de bloques, aparece una vista de «sin resultados».
-- La pantalla «Yo» tiene un nuevo botón «Compartir WordPress con un amigo», permitiéndote compartir un enlace de la aplicación de WordPress.
-- Al pulsar «Me gusta» en una entrada en el lector, también se añade tu avatar al «Me gusta».
