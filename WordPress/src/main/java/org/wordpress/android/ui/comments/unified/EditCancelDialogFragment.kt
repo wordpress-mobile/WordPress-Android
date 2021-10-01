@@ -12,7 +12,7 @@ import javax.inject.Inject
 class EditCancelDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var viewModel:UnifiedCommentsEditViewModel? = null
+    private var viewModel: UnifiedCommentsEditViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
