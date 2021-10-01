@@ -44,6 +44,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
+import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
@@ -687,6 +688,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentListAdapter object);
 
     void inject(UnifiedCommentsEditFragment object);
+
+    void inject(EditCancelDialogFragment object);
 
     void inject(BloggingReminderBottomSheetFragment object);
 
