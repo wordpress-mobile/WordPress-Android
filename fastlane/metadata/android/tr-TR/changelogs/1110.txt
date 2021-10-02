@@ -1,5 +1,0 @@
-18.2:
-- Gömülü blok artık YouTube veya Twitter'dan eklediğinizde bir önizleme görüntüler.
-- Blok yerleştirici aramasında hiçbir şey bulunamazsa, “sonuç yok” görünümü görüntülenir.
-- Ben ekranında, bir WordPress uygulama bağlantısını paylaşmanıza olanak tanıyan yeni bir "WordPress'i bir arkadaşınızla paylaşın" düğmesi bulunur.
-- Okuyucu'da bir gönderi beğenildiğinde avatarınız da beğeniye eklenir.

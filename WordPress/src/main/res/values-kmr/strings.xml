@@ -776,7 +776,6 @@ Language: ku_TR
     <string name="stats_detail_recent_weeks">Hefteyên Dawî</string>
     <string name="stats_months_and_years_period_label">Heyam</string>
     <string name="stats_detail_months_and_years">Meh û Sal</string>
-    <string name="new_site_creation_preview_subtitle">Tu yê piştre karibî xuyanga malpera xwe kesane bikî</string>
     <string name="publish_on">Demweşan: %s</string>
     <string name="published_on">Demweşan: %s</string>
     <string name="stats_months_and_years_views_label">Dîtin</string>
@@ -1344,7 +1343,6 @@ Language: ku_TR
     <string name="plugin_byline">ji aliye %s</string>
     <string name="plugin_fetch_error">Pêvek nehatin barkirin</string>
     <string name="change_photo">Wêneyê biguherîne</string>
-    <string name="my_site_btn_site_pages">Rûpelên Malperê</string>
     <string name="dlg_saving_tag">Tê tomarkirin</string>
     <string name="dlg_deleting_tag">Tê jêbirin</string>
     <string name="site_settings_tags_hint">Etîketên malpera xwe birêve bibe</string>
@@ -2089,7 +2087,6 @@ Language: ku_TR
     <string name="my_site_btn_view_admin">Revebir Bibîne</string>
     <string name="site_picker_title">Malperê hilbijêre</string>
     <string name="my_site_header_publish">Biweşîne</string>
-    <string name="my_site_btn_blog_posts">Şandiyên Blogê</string>
     <string name="my_site_header_look_and_feel">Xuyang û Şêwaz</string>
     <string name="my_site_header_configuration">Pevsazî</string>
     <string name="reader_label_new_posts_subtitle">Ji bo wan nîşan bide, bitikîne</string>

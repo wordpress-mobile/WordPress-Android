@@ -51,7 +51,7 @@ class DebugCookiesFragment : Fragment(R.layout.debug_cookies_fragment) {
 
         setCookieButton.setOnClickListener {
             viewModel.setCookie(
-                    domainInput.text.toString(),
+                    hostInput.text.toString(),
                     nameInput.text.toString(),
                     valueInput.text.toString()
             )
@@ -61,7 +61,7 @@ class DebugCookiesFragment : Fragment(R.layout.debug_cookies_fragment) {
     private fun DebugCookiesFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             (recyclerView.adapter as? DebugCookiesAdapter)?.submitList(uiState.items)
-            uiState.domainInputText?.let { domainInput.setTextAndMoveCursor(it) }
+            uiState.hostInputText?.let { hostInput.setTextAndMoveCursor(it) }
             uiState.nameInputText?.let { nameInput.setTextAndMoveCursor(it) }
             uiState.valueInputText?.let { valueInput.setTextAndMoveCursor(it) }
         }

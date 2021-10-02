@@ -2,7 +2,7 @@
 
 18.4
 -----
-
+* [**] Site Comments: when editing a Comment, the author's name, email address, and web address can now be changed. (https://github.com/wordpress-mobile/WordPress-Android/pull/15402)
 
 18.3
 -----
