@@ -109,6 +109,7 @@ android {
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

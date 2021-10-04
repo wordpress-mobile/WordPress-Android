@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-16 00:43:00+0000
+Translation-Revision-Date: 2021-09-29 11:54:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="weekly_roundup">주간 총정리</string>
+    <string name="gutenberg_native_embed_options">임베드 옵션</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">임베드 옵션을 보려면 두 번 누릅니다.</string>
+    <string name="quick_start_list_create_site_message">사이트가 생성되었습니다! 다른 작업을 완료하세요.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s명의 블로거&lt;/a&gt;가 좋아합니다.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1명의 블로거&lt;/a&gt;가 좋아합니다.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;회원님과 %1$s명의 블로거&lt;/a&gt;가 좋아합니다.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;회원님과 1명의 블로거&lt;/a&gt;가 좋아합니다.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;회원님&lt;/a&gt;이 좋아합니다.</string>
     <string name="gutenberg_native_line_height">줄 높이</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
     <string name="domains_primary_domain">기본 사이트 주소</string>
@@ -65,6 +74,7 @@ Language: ko_KR
     <string name="gutenberg_native_try_another_search_term">다른 검색어 시도</string>
     <string name="gutenberg_native_no_blocks_found">블록을 찾을 수 없음</string>
     <string name="gutenberg_native_s_previews_not_yet_available">아직 %s 미리보기 사용할 수 없음</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 임베드 블록 미리보기 곧 공개 예정</string>
     <string name="gutenberg_native_double_tap_to_preview_post">글을 미리 보려면 두 번 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">페이지를 미리 보려면 두 번 누르세요.</string>
     <string name="quick_start_list_upload_icon_subtitle">방문자의 브라우저 탭과 다른 온라인 위치에 표시됩니다.</string>
@@ -172,9 +182,13 @@ Language: ko_KR
     <string name="gutenberg_native_post_meta_settings">글 메타 설정</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
+    <string name="gutenberg_native_retry">재시도</string>
+    <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_embed_link">링크 임베드</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
+    <string name="gutenberg_native_column_d">열 %d</string>
+    <string name="gutenberg_native_none">없음</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
     <string name="gutenberg_native_add_blocks">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
@@ -732,6 +746,7 @@ Language: ko_KR
     <string name="gutenberg_native_choose_image_or_video">이미지나 비디오 고르기</string>
     <string name="gutenberg_native_choose_video">비디오 고르기</string>
     <string name="enter_your_site_address">이미 있는 사이트 주소 입력하기</string>
+    <string name="gutenberg_native_convert_to_link">링크로 변환</string>
     <string name="continue_terms_of_service_text">계속하면 %1$s서비스 약관%2$s에 동의하는 것입니다.</string>
     <string name="signup_confirmation_message">이 이메일 주소를 사용하여 새 워드프레스닷컴 계정을 만들 것입니다.</string>
     <string name="signup_magic_link_message">워드프레스닷컴 계정을 만드는 등록 링크를 이메일 하였습니다. 이 장치에서 이메일을 확인하고, 워드프레스닷컴에서 받은 이메일에 있는 링크를 누르세요.</string>
@@ -1334,6 +1349,7 @@ Language: ko_KR
     <string name="stats_months_and_years_period_label">기간</string>
     <string name="stats_detail_months_and_years">월 및 연도</string>
     <string name="stats_insights_load_more">더 보기</string>
+    <string name="new_site_creation_preview_subtitle">나중에 사이트의 모양과 느낌을 사용자 지정할 수 있습니다.</string>
     <string name="stats_insights_today_stats">오늘</string>
     <string name="stats_insights_best_hour">최고의 시간</string>
     <string name="stats_insights_best_day">안녕히 계세요.</string>
@@ -1908,6 +1924,7 @@ Language: ko_KR
     <string name="dlg_saving_tag">저장 중</string>
     <string name="dlg_deleting_tag">삭제 중</string>
     <string name="dlg_confirm_delete_tag">\'%s\'을(를) 영구 삭제하시겠습니까?</string>
+    <string name="my_site_btn_site_pages">페이지</string>
     <string name="error_tag_exists">이 이름의 태그가 이미 존재합니다.</string>
     <string name="add_new_tag">새 태그 추가</string>
     <string name="tag_description_hint">설명</string>
@@ -2666,6 +2683,7 @@ Language: ko_KR
     <string name="my_site_header_look_and_feel">모양과 느낌</string>
     <string name="my_site_header_publish">게시</string>
     <string name="my_site_btn_site_settings">사이트 설정</string>
+    <string name="my_site_btn_blog_posts">글</string>
     <string name="my_site_header_configuration">설정</string>
     <string name="reader_label_new_posts_subtitle">눌러서 표시</string>
     <string name="deselect_all">모두 선택 해제</string>

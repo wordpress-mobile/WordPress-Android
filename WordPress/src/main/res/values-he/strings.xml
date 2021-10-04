@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-16 21:05:42+0000
+Translation-Revision-Date: 2021-09-29 11:54:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="weekly_roundup">סיכום שבועי</string>
+    <string name="gutenberg_native_embed_options">אפשרויות הטמעה</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">יש להקיש פעמיים כדי להציג את אפשרויות ההטמעה.</string>
+    <string name="quick_start_list_create_site_message">האתר נוצר! להשלים משימה אחרת.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ בלוגרים&lt;/a&gt; סימנו לזה לייק.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;בלוגר אחד&lt;/a&gt; סימן לזה לייק.</string>
+    <string name="like_faces_you_plus_others_like_text">הפוסט קיבל לייק &lt;a href=\"\"&gt;ממך ומ-⁦%1$s⁩ בלוגרים&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;המשתמש שלך ועוד בלוגר אחד&lt;/a&gt; סימנו לזה לייק.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;סימנת&lt;/a&gt; לזה לייק.</string>
     <string name="gutenberg_native_line_height">גובה השורה</string>
     <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
     <string name="domains_primary_domain">כתובת האתר הראשי</string>
@@ -65,6 +74,7 @@ Language: he_IL
     <string name="gutenberg_native_try_another_search_term">נסה מונח חיפוש אחר</string>
     <string name="gutenberg_native_no_blocks_found">לא נמצאו בלוקים</string>
     <string name="gutenberg_native_s_previews_not_yet_available">תצוגות מקדימות של %s עדיין לא זמינות</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s תצוגות מקדימות של בלוק ההטמעה יהיו זמינות בקרוב</string>
     <string name="gutenberg_native_double_tap_to_preview_post">הקש פעמיים לתצוגה מקדימה של הפוסט.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">הקש פעמיים לתצוגה מקדימה של העמוד.</string>
     <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
@@ -172,9 +182,13 @@ Language: he_IL
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
     <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
     <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
+    <string name="gutenberg_native_retry">לנסות שוב</string>
+    <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
+    <string name="gutenberg_native_column_d">טור %d</string>
+    <string name="gutenberg_native_none">ללא</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -732,6 +746,7 @@ Language: he_IL
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
     <string name="enter_your_site_address">יש להזין את כתובת האתר החדש שלך</string>
+    <string name="gutenberg_native_convert_to_link">להמיר לקישור</string>
     <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
     <string name="signup_confirmation_message">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
     <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור להרשמה כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
@@ -1908,6 +1923,7 @@ Language: he_IL
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
     <string name="dlg_confirm_delete_tag">האם למחוק את התגית \'%s\' לצמיתות?</string>
+    <string name="my_site_btn_site_pages">עמודים</string>
     <string name="error_tag_exists">כבר קיימת תגית עם שם זה</string>
     <string name="add_new_tag">הוספת תגית חדשה</string>
     <string name="tag_description_hint">תיאור</string>
@@ -2666,6 +2682,7 @@ Language: he_IL
     <string name="my_site_header_look_and_feel">סגנון</string>
     <string name="my_site_header_publish">פרסום</string>
     <string name="my_site_btn_site_settings">הגדרות אתר</string>
+    <string name="my_site_btn_blog_posts">פוסטים</string>
     <string name="my_site_header_configuration">הגדרות תצורה</string>
     <string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
     <string name="select_all">בחר הכל</string>

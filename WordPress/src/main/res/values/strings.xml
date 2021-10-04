@@ -488,6 +488,17 @@
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
+    <string name="comment_edit_menu_done">Done</string>
+    <string name="comment_edit_user_name">Name</string>
+    <string name="comment_edit_comment">Comment</string>
+    <string name="comment_edit_web_address">Web address</string>
+    <string name="comment_edit_email_address">Email address</string>
+    <string name="comment_edit_user_name_error">User name cannot be empty</string>
+    <string name="comment_edit_web_address_error">Web address not valid</string>
+    <string name="comment_edit_user_email_error">User email not valid</string>
+    <string name="comment_edit_comment_error">Comment cannot be empty</string>
+    <string name="comment_edit_cancel_dialog_title">There are unsaved changes</string>
+    <string name="comment_edit_cancel_dialog_message">Do you want to discard them?</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove site</string>
@@ -2123,6 +2134,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
+    <string name="help_and_support">Help &amp; Support</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2455,6 +2467,7 @@
     <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
     <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href="https://wordpress.com/support/site-redirect/"&gt;Learn more&lt;/a&gt;.</string>
     <string name="domains_manage_domains">Manage Domains</string>

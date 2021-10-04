@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-10 04:04:33+0000
+Translation-Revision-Date: 2021-10-01 03:47:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
@@ -66,6 +66,7 @@ Language: gl_ES
     <string name="gutenberg_native_try_another_search_term">Proba outro termo de busca</string>
     <string name="gutenberg_native_no_blocks_found">Non se encontraron bloques</string>
     <string name="gutenberg_native_s_previews_not_yet_available">Aínda non están dispoñibles as vistas previas de %s</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Pronto chegarán as vistas previas do bloque incrustado %s</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Toca dúas veces para previsualizar a entrada.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Toca dúas veces para previsualizar a páxina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Mostrado na pestana do navegador do teu visitante e noutros sitios en liña.</string>
@@ -173,9 +174,13 @@ Language: gl_ES
     <string name="gutenberg_native_preview_page">Previsualizar a páxina</string>
     <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
+    <string name="gutenberg_native_retry">Reintentar</string>
+    <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
+    <string name="gutenberg_native_column_d">Columna %d</string>
+    <string name="gutenberg_native_none">Ningunha</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente o enlace para axudar aos usuarios de lectores de pantalla</string>
     <string name="gutenberg_native_add_blocks">Engadir bloques</string>
     <string name="login_no_jetpack_sites">Non se encontraron sitios de Jetpack</string>
@@ -726,6 +731,7 @@ Language: gl_ES
     <string name="pick_file">Engadir un arquivo</string>
     <string name="gutenberg_native_replace_video">Substituír o vídeo</string>
     <string name="gutenberg_native_replace_image_or_video">Substituír a imaxe ou vídeo</string>
+    <string name="gutenberg_native_convert_to_link">Converter en ligazón</string>
     <string name="gutenberg_native_choose_video">Elixir un vídeo</string>
     <string name="gutenberg_native_choose_image_or_video">Elixir unha imaxe ou vídeo</string>
     <string name="gutenberg_native_choose_image">Elixir unha imaxe</string>
@@ -1325,6 +1331,7 @@ Language: gl_ES
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Rexistrar dominio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins necesitas ter un dominio personalizado asociado ao teu sitio.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
+    <string name="new_site_creation_preview_subtitle">Poderás personalizar a aparencia do teu sitio máis adiante</string>
     <string name="publish_on">Publicar o: %s</string>
     <string name="schedule_for">Programada para o: %s</string>
     <string name="published_on">Publicado o: %s</string>
@@ -1905,6 +1912,7 @@ Language: gl_ES
     <string name="plugin_byline">por %s</string>
     <string name="change_photo">Cambiar foto</string>
     <string name="plugin_fetch_error">Non é posible cargar plugins</string>
+    <string name="my_site_btn_site_pages">Páxinas</string>
     <string name="site_settings_tags_hint">Xestiona as etiquetas do teu sitio</string>
     <string name="dlg_saving_tag">Gardando</string>
     <string name="dlg_deleting_tag">Borrando</string>
@@ -2665,6 +2673,7 @@ Language: gl_ES
     <string name="my_site_btn_view_admin">Ir ao Panel</string>
     <string name="my_site_btn_switch_site">Cambiar de sitio</string>
     <string name="my_site_btn_site_settings">Axustes do sitio</string>
+    <string name="my_site_btn_blog_posts">Entradas</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparencia</string>
     <string name="my_site_header_configuration">Configuración</string>

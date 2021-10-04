@@ -50,7 +50,7 @@
 
         <item
             android:id="@+id/menu_editor_help"
-            android:title="@string/help" >
+            android:title="@string/help_and_support" >
         </item>
 
     </group>
