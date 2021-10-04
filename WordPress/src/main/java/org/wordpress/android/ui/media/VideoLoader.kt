@@ -48,7 +48,7 @@ class VideoLoader
                 }
             }
             withContext(mainDispatcher) {
-                if (length > MIN_SIZE && length < SIZE_LIMIT_10_MB) {
+                if (length in (MIN_SIZE + 1) until SIZE_LIMIT_10_MB) {
                     loadAction()
                 } else {
                     fallbackAction()
