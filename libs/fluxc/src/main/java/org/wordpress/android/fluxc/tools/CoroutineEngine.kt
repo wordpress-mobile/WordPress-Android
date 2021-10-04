@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -44,9 +47,9 @@ open class CoroutineEngine
     ): Flow<RESULT_TYPE> =
             flow { block() }
                     .flowOn(context)
-//                    .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
-//                    .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
-//                    .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
+                    .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
+                    .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
+                    .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
 
     fun <RESULT_TYPE> launch(
         tag: AppLog.T,
