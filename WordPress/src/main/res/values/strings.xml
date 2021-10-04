@@ -2428,8 +2428,8 @@
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
-    <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;span&gt;</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style="color:#008000;"&gt;Free for the first year &lt;span&gt;&lt;/strong&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style="color:#008000;"&gt;Free for the first year &lt;/span&gt;&lt;/strong&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
@@ -2467,7 +2467,7 @@
     <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
-    <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
     <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href="https://wordpress.com/support/site-redirect/"&gt;Learn more&lt;/a&gt;.</string>
     <string name="domains_manage_domains">Manage Domains</string>
