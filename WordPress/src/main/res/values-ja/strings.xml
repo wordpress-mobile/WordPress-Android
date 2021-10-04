@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-16 21:05:15+0000
+Translation-Revision-Date: 2021-09-29 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="weekly_roundup">1週間のまとめ</string>
+    <string name="gutenberg_native_embed_options">埋め込みオプション</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
+    <string name="quick_start_list_create_site_message">サイトを作成しました。 別のタスクを完了します。</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;あなたと%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;あなたと1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;あなた&lt;/a&gt;が「いいね」をつけています。</string>
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="domains_primary_domain">主要サイトのアドレス</string>
@@ -17,13 +26,6 @@ Language: ja_JP
     <string name="me_btn_share">WordPress を友達と共有する</string>
     <string name="my_site_quick_actions_title">クイックリンク</string>
     <string name="my_site_btn_domains">ドメイン</string>
-    <string name="like_faces_more_bloggers_text">%1$s人のブロガー %2$s。</string>
-    <string name="like_faces_one_blogger_text">1人のブロガー %1$s。</string>
-    <string name="like_faces_plural_with_you_text">あなたと%1$s人のブロガー %2$s。</string>
-    <string name="like_faces_you_plus_one_text">あなたと1人のブロガー%1$s。</string>
-    <string name="like_faces_you_text">あなた %1$s。</string>
-    <string name="likes_this">「いいね」しています</string>
-    <string name="like_this">「いいね」しています</string>
     <string name="site_settings_site_domains_title">サイトドメイン</string>
     <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
     <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
@@ -73,7 +75,7 @@ Language: ja_JP
     <string name="gutenberg_native_try_another_search_term">別の検索キーワードを試す</string>
     <string name="gutenberg_native_no_blocks_found">ブロックが見つかりません</string>
     <string name="gutenberg_native_s_previews_not_yet_available">%sプレビューはまだご利用いただけません</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">%sブロックのプレビューはまもなく公開予定です</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 埋め込みブロックのプレビューはまもなく公開予定です</string>
     <string name="gutenberg_native_double_tap_to_preview_post">ダブルタップで投稿をプレビューできます。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">ダブルタップで固定ページをプレビューできます。</string>
     <string name="quick_start_list_upload_icon_subtitle">訪問者のブラウザータブやオンライン上のその他の場所に表示されます。</string>
@@ -181,9 +183,13 @@ Language: ja_JP
     <string name="gutenberg_native_post_meta_settings">投稿メタ設定</string>
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
+    <string name="gutenberg_native_retry">リトライ</string>
+    <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_featured">おすすめ</string>
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
+    <string name="gutenberg_native_column_d">カラム %d</string>
+    <string name="gutenberg_native_none">なし</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
     <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
@@ -741,6 +747,7 @@ Language: ja_JP
     <string name="signup_confirmation_title">登録の確認</string>
     <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
     <string name="enter_your_site_address">既存のサイトアドレスを入力</string>
+    <string name="gutenberg_native_convert_to_link">リンクに変換</string>
     <string name="continue_terms_of_service_text">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
     <string name="signup_confirmation_message">このメールアドレスは新しい WordPress.com アカウントの作成に使用します。</string>
     <string name="signup_magic_link_message">新しい WordPress.com アカウントを作成するための登録リンクをメールでお送りしました。現在の端末でメールをチェックし、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
@@ -1343,7 +1350,7 @@ Language: ja_JP
     <string name="stats_detail_months_and_years">月と年</string>
     <string name="stats_insights_load_more">さらに読み込む</string>
     <string name="stats_months_and_years_views_label">表示数</string>
-    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます</string>
+    <string name="new_site_creation_preview_subtitle">サイトのデザインは後でカスタマイズできます</string>
     <string name="stats_insights_today_stats">今日</string>
     <string name="stats_insights_best_hour">最高記録達成時間</string>
     <string name="stats_insights_best_day">最高記録達成日</string>
@@ -1914,11 +1921,11 @@ Language: ja_JP
     <string name="plugin_byline">作成者: %s</string>
     <string name="change_photo">写真を変更</string>
     <string name="plugin_fetch_error">プラグインを読み込めませんでした</string>
-    <string name="my_site_btn_site_pages">サイトページ</string>
     <string name="site_settings_tags_hint">サイトのタグを管理</string>
     <string name="dlg_saving_tag">保存中</string>
     <string name="dlg_deleting_tag">削除中</string>
     <string name="dlg_confirm_delete_tag">「%s」タグを永久に削除しますか ?</string>
+    <string name="my_site_btn_site_pages">ページ</string>
     <string name="error_tag_exists">この名前のタグは既に存在します</string>
     <string name="tag_name_hint">タグ</string>
     <string name="tag_description_hint">説明</string>
@@ -2674,10 +2681,10 @@ Language: ja_JP
     <string name="my_site_btn_view_site">サイトを表示</string>
     <string name="site_picker_title">サイトを選択</string>
     <string name="my_site_btn_switch_site">サイト切り替え</string>
-    <string name="my_site_btn_blog_posts">ブログ投稿</string>
     <string name="my_site_header_publish">公開</string>
     <string name="my_site_header_look_and_feel">外観</string>
     <string name="my_site_btn_site_settings">サイト設定</string>
+    <string name="my_site_btn_blog_posts">投稿</string>
     <string name="my_site_header_configuration">設定</string>
     <string name="reader_label_new_posts_subtitle">タップして表示</string>
     <string name="deselect_all">すべて選択解除</string>

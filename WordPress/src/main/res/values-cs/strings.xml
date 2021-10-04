@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-27 06:32:26+0000
+Translation-Revision-Date: 2021-09-23 10:55:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -104,6 +104,7 @@ Language: cs_CZ
     <string name="gutenberg_native_featured">Doporučené</string>
     <string name="gutenberg_native_embed_link">Vložit odkaz</string>
     <string name="gutenberg_native_display_post_date">Zobrazit datum příspěvku</string>
+    <string name="gutenberg_native_none">Žádný</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
@@ -1831,11 +1832,11 @@ Language: cs_CZ
     <string name="plugin_byline">Od %s</string>
     <string name="change_photo">Změnit fotku</string>
     <string name="plugin_fetch_error">Nelze načíst pluginy</string>
-    <string name="my_site_btn_site_pages">Stránky webu</string>
     <string name="dlg_saving_tag">Ukládání</string>
     <string name="dlg_deleting_tag">Mazání</string>
     <string name="site_settings_tags_hint">Spravovat štítky webu</string>
     <string name="dlg_confirm_delete_tag">Nenávratně smazat štítek \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Stránky</string>
     <string name="error_tag_exists">Štítek s tímto jménem už existuje</string>
     <string name="add_new_tag">Přidat nový štítek</string>
     <string name="tag_description_hint">Popis</string>
@@ -2591,10 +2592,10 @@ Language: cs_CZ
     <string name="site_picker_title">Vybrat web</string>
     <string name="my_site_btn_switch_site">Přepnout web</string>
     <string name="my_site_btn_view_site">Zobrazit web</string>
-    <string name="my_site_btn_blog_posts">Příspěvky</string>
     <string name="my_site_header_publish">Publikovat</string>
     <string name="my_site_header_look_and_feel">Vzhled</string>
     <string name="my_site_btn_site_settings">Nastavení webu</string>
+    <string name="my_site_btn_blog_posts">Příspěvky</string>
     <string name="my_site_header_configuration">Nastavení</string>
     <string name="reader_label_new_posts_subtitle">Klepněte pro jejich zobrazení</string>
     <string name="hide">Skrýt</string>

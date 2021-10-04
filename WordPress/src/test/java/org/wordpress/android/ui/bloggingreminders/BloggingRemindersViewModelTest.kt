@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
@@ -55,6 +56,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var dayLabelUtils: DayLabelUtils
     @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
     @Mock lateinit var reminderScheduler: ReminderScheduler
+    @Mock lateinit var siteStore: SiteStore
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private val hour = 10
@@ -75,7 +77,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 dayLabelUtils,
                 analyticsTracker,
                 reminderScheduler,
-                BloggingRemindersModelMapper()
+                BloggingRemindersModelMapper(),
+                siteStore
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -95,7 +98,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `sets blogging reminders as shown from SiteSettings when has no previous blogging reminders`() = test {
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(false)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
     }
@@ -124,7 +127,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = initPrologueBuilderForSiteSettings()
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(false)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -136,7 +139,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         whenever(daySelectionBuilder.buildSelection(eq(model), any(), any())).thenReturn(daySelectionScreen)
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         assertThat(uiState.last().uiItems).isEqualTo(daySelectionScreen)
     }
@@ -165,7 +168,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         ).thenReturn(dayLabel)
         var uiState: UiString? = null
 
-        viewModel.getSettingsState(siteId).observeForever { uiState = it }
+        viewModel.getBlogSettingsUiState(siteId).observeForever { uiState = it }
 
         assertThat(uiState).isEqualTo(dayLabel)
     }
@@ -203,7 +206,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         initEpilogueBuilder()
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         clickPrimaryButton()
     }
@@ -233,7 +236,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `showBottomSheet tracks flow start with correct source`() = test {
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
         viewModel.onPublishingPost(siteId, true)
 
@@ -246,7 +249,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
         viewModel.onPublishingPost(siteId, true)
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         verify(analyticsTracker).trackScreenShown(PROLOGUE)
         verify(analyticsTracker).trackScreenShown(SELECTION)
@@ -279,7 +282,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         initDaySelectionBuilder()
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         clickPrimaryButton()
 
@@ -308,7 +311,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `dismissing bottom sheet on selection screen tracks dismiss event`() = test {
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
         viewModel.onBottomSheetDismissed()
 
         verify(analyticsTracker).trackFlowDismissed(SELECTION)
@@ -329,7 +332,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         initDaySelectionBuilder()
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         clickPrimaryButton()
 
@@ -347,7 +350,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         initDaySelectionBuilder()
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         clickPrimaryButton()
 
@@ -391,7 +394,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         initPrologueBuilderForSiteSettings()
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         assertPrologue()
     }
@@ -403,7 +406,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         initEmptyStore()
         initDaySelectionBuilder()
 
-        viewModel.onSettingsItemClicked(siteId)
+        viewModel.onBlogSettingsItemClicked(siteId)
 
         assertDaySelection()
     }
