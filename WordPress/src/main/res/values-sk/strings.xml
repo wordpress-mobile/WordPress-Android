@@ -21,7 +21,6 @@ Language: sk
     <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
-    <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
     <string name="scheduled_for">Naplánované na: %s</string>
     <string name="stats_detail_average_views_per_day">Priemerný počet zobrazení za deň</string>
     <string name="stats_months_and_years_views_label">Zobrazení</string>
@@ -510,7 +509,6 @@ Language: sk
     <string name="plugin_byline">od %s</string>
     <string name="change_photo">Zmeňte fotku</string>
     <string name="plugin_fetch_error">Nepodarilo sa načítať pluginy</string>
-    <string name="my_site_btn_site_pages">Stránky webovej stránky</string>
     <string name="site_settings_tags_hint">Spravujte značky vašej webovej stránky</string>
     <string name="dlg_saving_tag">Ukladanie</string>
     <string name="dlg_deleting_tag">Mazanie</string>
@@ -1253,7 +1251,6 @@ Language: sk
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
     <string name="my_site_btn_view_admin">Zobraziť administráciu</string>
     <string name="my_site_header_publish">Zverejniť</string>
-    <string name="my_site_btn_blog_posts">Články blogu</string>
     <string name="my_site_header_look_and_feel">Vzhľad</string>
     <string name="my_site_header_configuration">Kanfigurácia</string>
     <string name="reader_label_new_posts_subtitle">Ťuknite k ich zobrazeniu</string>
