@@ -3578,6 +3578,8 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
