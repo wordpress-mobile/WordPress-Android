@@ -1,2 +1,0 @@
-18.2:
-Kami melakukan beberapa penyesuaian bermanfaat untuk editor Blok: Blok Sematan sekarang dilengkapi pratinjau singkat untuk konten yang ditambahkan dari YouTube atau Twitter (penyedia lainnya akan hadir); dan saat blok dimasukkan dan tidak ada konten yang ditemukan, tidak ada hasil akan muncul di tampilan.

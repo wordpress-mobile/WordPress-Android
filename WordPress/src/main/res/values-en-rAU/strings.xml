@@ -238,7 +238,6 @@ Language: en_AU
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
     <string name="publish_on">Publish on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="published_on">Published on: %s</string>
@@ -802,7 +801,6 @@ Language: en_AU
     <string name="plugin_byline">by %s</string>
     <string name="change_photo">Change photo</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="dlg_saving_tag">Saving</string>
     <string name="dlg_deleting_tag">Deleting</string>
@@ -1538,7 +1536,6 @@ Language: en_AU
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_configuration">Configuration</string>

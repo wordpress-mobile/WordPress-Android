@@ -114,7 +114,6 @@ class StoryComposerViewModel @Inject constructor(
                 editPostRepository.getPost(),
                 site
         )
-        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -125,6 +124,14 @@ class StoryComposerViewModel @Inject constructor(
                 PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
                 post, site, true
         )
+    }
+
+    fun onStoryComposerStartAnalyticsSession() {
+        this.postEditorAnalyticsSession?.start(null, null, null)
+    }
+
+    fun onStoryComposerAnalyticsSessionStartTimeReset() {
+        this.postEditorAnalyticsSession?.resetStartTime()
     }
 
     fun writeToBundle(outState: Bundle) {
