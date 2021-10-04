@@ -31,17 +31,7 @@ class VideoLoader
             var length = MIN_SIZE
             withContext(bgDispatcher) {
                 try {
-                    val url = URL(filePath)
-
-                    val urlConnection = url.openConnection()
-                    for ((key, value) in authenticationUtils.getAuthHeaders(filePath).entries) {
-                        urlConnection.addRequestProperty(key, value)
-                    }
-
-                    length = urlConnection.contentLength
-                    if (length <= MIN_SIZE) {
-                        length = urlConnection.getHeaderFieldInt("Content-Length", MIN_SIZE)
-                    }
+                    length = getSizeFromURL(URL(filePath))
                 } catch (ioe: IOException) {
                     appLogWrapper.e(T.MEDIA, "Failed to load video thumbnail: ${ioe.stackTrace}")
                 }
@@ -54,6 +44,19 @@ class VideoLoader
                 }
             }
         }
+    }
+
+    private fun getSizeFromURL(url: URL): Int {
+        val urlConnection = url.openConnection()
+        for ((key, value) in authenticationUtils.getAuthHeaders(url.toString()).entries) {
+            urlConnection.addRequestProperty(key, value)
+        }
+
+        var length = urlConnection.contentLength
+        if (length <= MIN_SIZE) {
+            length = urlConnection.getHeaderFieldInt("Content-Length", MIN_SIZE)
+        }
+        return length
     }
 
     companion object {
