@@ -10,15 +10,8 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 
 1. Make sure you've installed [Android Studio](https://developer.android.com/studio/index.html).
 1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/tutorials/devenv/#quickstart)
-1. `git clone --recurse-submodules git@github.com:wordpress-mobile/WordPress-Android.git` in the folder of your preference.
-Or if you already have the project cloned, initialize and update the submodules:
-    ```
-    git submodule init
-    git submodule update
-    ```
 1. `cd WordPress-Android` to enter the working directory.
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
-1. `git submodule update --init --recursive`  to pull the submodules (optionally use `--depth=1 --recommend-shallow` flags to skip pulling full submodules' history).
 1. In Android Studio, open the project from the local repository. This will auto-generate `local.properties` with the SDK location.
 1. Recommended: The CI uses JDK11 to build the app and run the tests. Some tests won't pass on the JDK embedded in Android Studio (JDK8). You might want to set JAVA_HOME and JDK location in Android Studio to JDK11.
 1. Go to Tools → AVD Manager and create an emulated device.
