@@ -18,8 +18,10 @@ import androidx.core.view.WindowInsetsCompat;
  * Basic idea for this solution found here: http://stackoverflow.com/a/9108219/325479
  */
 public class KeyboardResizeViewUtil {
-    private final View mDecorView;
-    private final View mContentView;
+    @SuppressWarnings("FieldMayBeFinal")
+    private View mDecorView;
+    @SuppressWarnings("FieldMayBeFinal")
+    private View mContentView;
 
     public KeyboardResizeViewUtil(Activity activity, View contentView) {
         this.mDecorView = activity.getWindow().getDecorView();
