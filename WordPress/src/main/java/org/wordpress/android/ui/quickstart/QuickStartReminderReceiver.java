@@ -23,8 +23,6 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
-import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 
 import javax.inject.Inject;
 
@@ -35,7 +33,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
     @Inject QuickStartStore mQuickStartStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
-    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
@@ -57,7 +54,6 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         if (
                 quickStartTaskDetails == null
                 || selectedSiteLocalId == SelectedSiteRepository.UNAVAILABLE
-                || (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
                 || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartTask.CREATE_SITE)
                 || mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId)
                 || mQuickStartStore.hasDoneTask(selectedSiteLocalId, quickStartTaskDetails.getTask())

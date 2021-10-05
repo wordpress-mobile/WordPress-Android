@@ -223,9 +223,6 @@ public class AppPrefs {
         LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
         LAST_READER_KNOWN_USER_ID,
 
-        // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED,
-
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -997,14 +994,6 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
-    }
-
-    public static void setQuickStartDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
-    }
-
-    public static boolean isQuickStartDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {
