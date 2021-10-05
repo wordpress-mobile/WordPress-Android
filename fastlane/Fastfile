@@ -752,8 +752,7 @@ REPOSITORY_NAME="WordPress-Android"
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
-    {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   binary_imported_libraries = [
@@ -773,6 +772,14 @@ REPOSITORY_NAME="WordPress-Android"
       strings_file_path: "WordPressLoginFlow/src/main/res/values/strings.xml",
       github_release_prefix: "",
       exclusions: ["default_web_client_id"]
+    },
+    {
+      name: "Stories Library",
+      import_key: "storiesVersion",
+      repository: "Automattic/stories-android",
+      strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
     },
   ]
 
@@ -836,21 +843,6 @@ REPOSITORY_NAME="WordPress-Android"
     unless is_repo_clean then
       commit_strings(options)
     end
-  end
-
-  # This lane verifies that new strings which have been added to the main strings.xml
-  # and which belongs to features of subtrees and submodules have also been added
-  # to the library strings.xml file.
-  lane :validate_submodules_strings do | options |
-    pr_number = options[:pr_number]
-    pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
-
-    diff_url = nil
-    if (pr_number.nil? == false)
-      diff_url = "https://patch-diff.githubusercontent.com/raw/wordpress-mobile/WordPress-Android/pull/#{pr_number}.diff"
-    end
-
-    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path, diff_url: diff_url)
   end
 
 ########################################################################
