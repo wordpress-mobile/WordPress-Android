@@ -113,7 +113,7 @@ class ModalLayoutPickerViewModelTest {
                 id = 1
                 mobileEditor = GB_EDITOR_NAME
             }
-            whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
+            whenever(selectedSiteRepository.getSelectedSiteLocalId(true)).thenReturn(site.id)
             if (isSiteUnavailable) {
                 whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(null)
             } else {
