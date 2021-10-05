@@ -61,15 +61,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
-    private val site: SiteModel by lazy {
-        requireNotNull(siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId()))
+    private val site: SiteModel? by lazy {
+        siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     override val useCachedData: Boolean = true
 
     override val selectedLayout: LayoutModel?
         get() = (uiState.value as? Content)?.let { state ->
-            state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+            state.selectedLayoutSlug?.let { slug ->
+                site?.let { site ->
+                    siteStore.getBlockLayout(site, slug)
+                }
+            }?.let { LayoutModel(it) }
         }
 
     sealed class PageRequest(val template: String?) {
@@ -90,7 +94,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     override fun fetchLayouts(preferCache: Boolean) {
-        if (!networkUtils.isNetworkAvailable()) {
+        val selectedSite = site
+        if (!networkUtils.isNetworkAvailable() || selectedSite == null) {
             setErrorState()
             return
         }
@@ -99,7 +104,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
         launch {
             val payload = FetchBlockLayoutsPayload(
-                    site,
+                    selectedSite,
                     supportedBlocksProvider.fromAssets().supported,
                     thumbDimensionProvider.previewWidth.toFloat(),
                     thumbDimensionProvider.previewHeight.toFloat(),
