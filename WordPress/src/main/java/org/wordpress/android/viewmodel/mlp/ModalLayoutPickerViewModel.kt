@@ -62,7 +62,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
     private val site: SiteModel? by lazy {
-        siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId())
+        siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId(true))
     }
 
     override val useCachedData: Boolean = true
