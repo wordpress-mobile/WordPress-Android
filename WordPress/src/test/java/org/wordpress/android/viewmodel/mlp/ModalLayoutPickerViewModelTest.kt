@@ -103,15 +103,22 @@ class ModalLayoutPickerViewModelTest {
     }
 
     @ExperimentalCoroutinesApi
-    private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
+    private fun <T> mockFetchingSelectedSite(
+        isError: Boolean = false,
+        isSiteUnavailable: Boolean = false,
+        block: suspend CoroutineScope.() -> T
+    ) {
         coroutineScope.runBlockingTest {
             val site = SiteModel().apply {
                 id = 1
                 mobileEditor = GB_EDITOR_NAME
             }
             whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
-            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
-            whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
+            if (isSiteUnavailable) {
+                whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(null)
+            } else {
+                whenever(siteStore.getSiteByLocalId(site.id)).thenReturn(site)
+            }
             whenever(siteStore.getBlockLayout(site, "about")).thenReturn(aboutLayout)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             whenever(thumbDimensionProvider.previewWidth).thenReturn(136)
@@ -171,6 +178,14 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         assertThat(viewModel.uiState.value is Error).isEqualTo(true)
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when modal layout picker starts and the site is unavailable errors are handled`() =
+            mockFetchingSelectedSite(isSiteUnavailable = true) {
+                viewModel.createPageFlowTriggered()
+                assertThat(viewModel.uiState.value is Error).isEqualTo(true)
+            }
 
     @ExperimentalCoroutinesApi
     @Test
