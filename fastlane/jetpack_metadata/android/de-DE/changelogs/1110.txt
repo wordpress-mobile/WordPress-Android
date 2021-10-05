@@ -1,2 +1,0 @@
-18.2:
-Wir haben ein paar praktische Änderungen am Block-Editor vorgenommen: Der Embed-Block bietet jetzt eine Vorschau, wenn du Inhalte aus YouTube oder Twitter (und bald noch von weiteren Anbietern) einfügst. Und wenn du einen Block einfügst und nichts gefunden wird, siehst du jetzt die Anzeige, dass keine Ergebnisse vorhanden sind.

@@ -95,7 +95,6 @@ Language: da_DK
     <string name="my_site_btn_switch_site">Skift websted</string>
     <string name="my_site_btn_view_admin">Vis administration</string>
     <string name="my_site_header_publish">Udgiv</string>
-    <string name="my_site_btn_blog_posts">Blogindlæg</string>
     <string name="my_site_header_look_and_feel">Udseende</string>
     <string name="my_site_header_configuration">Konfiguration</string>
     <string name="deselect_all">Fravælg alle</string>

@@ -32,7 +32,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtilsKt;
-import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -127,7 +126,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
-    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
@@ -474,8 +472,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return mOnboardingImprovementsFeatureConfig.isEnabled()
-               && !mBuildConfigWrapper.isJetpackApp()
+        return !mBuildConfigWrapper.isJetpackApp()
                && !mShowAndReturn;
     }
 

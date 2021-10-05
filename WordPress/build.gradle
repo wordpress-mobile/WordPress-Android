@@ -105,10 +105,10 @@ android {
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
-        buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

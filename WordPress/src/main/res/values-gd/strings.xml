@@ -50,7 +50,6 @@ Language: gd_GB
     <string name="site_picker_title">Tagh làrach</string>
     <string name="my_site_btn_switch_site">Leum gu làrach eile</string>
     <string name="my_site_btn_view_admin">Seall an rianachd</string>
-    <string name="my_site_btn_blog_posts">Puist bloga</string>
     <string name="my_site_header_look_and_feel">Coltas</string>
     <string name="my_site_header_publish">Foillsich</string>
     <string name="my_site_header_configuration">Rèiteachadh</string>

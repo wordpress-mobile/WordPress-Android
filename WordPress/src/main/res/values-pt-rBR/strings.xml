@@ -1287,7 +1287,6 @@ Language: pt_BR
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar domínio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins, é necessário ter um domínio personalizado associado ao seu site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
-    <string name="new_site_creation_preview_subtitle">Você poderá personalizar a aparência de seu site mais tarde</string>
     <string name="publish_on">Publicar em: %s</string>
     <string name="schedule_for">Agendar para: %s</string>
     <string name="published_on">Publicado em: %s</string>
@@ -1868,7 +1867,6 @@ Language: pt_BR
     <string name="plugin_byline">por %s</string>
     <string name="change_photo">Alterar foto</string>
     <string name="plugin_fetch_error">Não foi possível carregar os plugins</string>
-    <string name="my_site_btn_site_pages">Páginas do site</string>
     <string name="site_settings_tags_hint">Gerenciar as tags do seu site</string>
     <string name="dlg_saving_tag">Salvando</string>
     <string name="dlg_deleting_tag">Excluindo</string>
@@ -2629,7 +2627,6 @@ Language: pt_BR
     <string name="my_site_btn_view_admin">Ver Painel</string>
     <string name="my_site_btn_switch_site">Mudar de site</string>
     <string name="my_site_btn_site_settings">Configurações do site</string>
-    <string name="my_site_btn_blog_posts">Posts do blog</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparência</string>
     <string name="my_site_header_configuration">Configuração</string>
