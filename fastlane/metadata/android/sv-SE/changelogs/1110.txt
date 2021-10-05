@@ -1,5 +1,0 @@
-18.2:
-- Inbäddningsblocket innehåller nu en förhandsvisning när du bäddar in från YouTube eller Twitter.
-- Om inget hittas vid sökning för infogning av block visas en vy för ”inget resultat”.
-- Skärmen Jag har en ny knapp ”Dela WordPress med en vän” så att du kan skicka en länk till en WordPress-app.
-- Om du gillar ett inlägg i läsaren läggs även din avatar in med gillamarkeringen.

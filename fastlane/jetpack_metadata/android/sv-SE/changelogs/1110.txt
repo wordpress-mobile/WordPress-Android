@@ -1,2 +1,0 @@
-18.2:
-Vi har gjort några praktiska ändringar i blockredigeraren: Inbäddningsblocket ger dig nu en förhandsvisning när du lägger till något från YouTube eller Twitter (fler leverantörer kommer) och när du ska infoga ett block och ingenting hittas visas nu en vy utan resultat.

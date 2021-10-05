@@ -1,5 +1,0 @@
-18.2:
-- Het insluit blok geeft nu een voorbeeld als je toevoegt van YouTube of Twitter.
-- Als er niets gevonden wordt met een blok invoeger zoekopdracht verschijnt er een "geen resultaten" weergave.
-- Het Mij scherm heeft een nieuwe "Deel WordPress met een vriend" knop, waarmee je een WordPress app link kunt delen.
-- Een bericht liken in de Reader voegt nu ook je avatar toe aan de like.

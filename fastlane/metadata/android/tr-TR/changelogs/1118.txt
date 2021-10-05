@@ -1,0 +1,4 @@
+18.3:
+Blok düzenleyicide, RTL diline ayarlanmış cihazlarda araç çubuğunda yaşanan bir sorunu düzelttik ve Gömülü blokta WordPress, Instagram ve Vimeo önizlemelerini etkinleştirmek, medyayı yeniden denemek veya bir bağlantıya dönüştürmek için seçenekler eklemek gibi güncellemeler yaptık.
+
+Diğer güncellemeler olarak, bazı sitelerdeki videoyu etkileyen bir düzeltmeyi ve Sitem menü etiketlerinin (“Gönderiler” ve “Sayfalar”) güncellenmesini sayabiliriz.

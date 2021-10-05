@@ -207,7 +207,7 @@ REPOSITORY_NAME="WordPress-Android"
   # Example:
   # fastlane update_appstore_strings version:10.3
   #####################################################################################
-  desc "Updates the PlayStoreStrings.po & JetpackPlayStoreStrings.po files"
+  desc "Updates the PlayStoreStrings.po files for WP + JP"
   lane :update_appstore_strings do |options|
     update_wordpress_appstore_strings(options)
     update_jetpack_appstore_strings(options)
@@ -271,7 +271,7 @@ REPOSITORY_NAME="WordPress-Android"
   # Example:
   # fastlane update_jetpack_appstore_strings version:10.3
   #####################################################################################
-  desc "Updates the JetpackPlayStoreStrings.po file for Jetpack"
+  desc "Updates the PlayStoreStrings.po file for Jetpack"
   lane :update_jetpack_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
 
@@ -283,11 +283,8 @@ REPOSITORY_NAME="WordPress-Android"
       'app-store-name': File.join(metadata_folder, 'title.txt'),
     }
 
-    # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.
-    #   This will require a change in the sandbox to update the path that the cron job uses to import this file into GlotPress.
-    #   In the meantime, `jetpack_metadata/PlayStoreStrings.po` is a symlink to the real `../metadata/JetpackPlayStoreStrings.po`
     android_update_metadata_source(
-      po_file_path: metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'JetpackPlayStoreStrings.po'),
+      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
       source_files: files,
       release_version: options[:version]
     )
