@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-16 00:11:36+0000
+Translation-Revision-Date: 2021-09-29 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="weekly_roundup">موجز أسبوعي</string>
+    <string name="gutenberg_native_embed_options">خيارات التضمين</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">اضغط ضغطًا مزدوجًا لعرض خيارات التضمين.</string>
+    <string name="quick_start_list_create_site_message">تم إنشاء الموقع! قم بإكمال مهمة أخرى.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;مدوّن واحد&lt;/a&gt; معجب بهذا.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;أنت و مدوِّن واحد&lt;/a&gt; معجبان بهذا.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;أنت و⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;أنت&lt;/a&gt; معجب بهذا.</string>
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="domains_primary_domain">عنوان الموقع الأساسي</string>
@@ -17,13 +26,6 @@ Language: ar
     <string name="me_btn_share">مشاركة ووردبريس مع صديق</string>
     <string name="my_site_quick_actions_title">روابط سريعة</string>
     <string name="my_site_btn_domains">النطاقات</string>
-    <string name="like_faces_more_bloggers_text">⁦%1$s⁩ المدونون ⁦%2$s⁩.</string>
-    <string name="like_faces_one_blogger_text">مدوِّن واحد ⁦%1$s⁩.</string>
-    <string name="like_faces_plural_with_you_text">أنت و⁦%1$s⁩ من المدونين ⁦%2$s⁩.</string>
-    <string name="like_faces_you_plus_one_text">أنت ومدون واحد ⁦%1$s⁩.</string>
-    <string name="like_faces_you_text">أنت ⁦%1$s⁩.</string>
-    <string name="likes_this">معجبون بهذا</string>
-    <string name="like_this">معجب بهذا</string>
     <string name="site_settings_site_domains_title">نطاقات الموقع</string>
     <string name="weekly_roundup_notification_text">حصل موقعك على ⁦%1$d⁩ من المشاهدات، و⁦%2$d⁩ من الإعجابات، و⁦%3$d⁩ من التعليقات.</string>
     <string name="weekly_roundup_notification_title">موجز أسبوعي: %s</string>
@@ -73,7 +75,6 @@ Language: ar
     <string name="gutenberg_native_try_another_search_term">تجربة مصطلح بحث آخر</string>
     <string name="gutenberg_native_no_blocks_found">لم يتم العثور على أي مكوِّنات</string>
     <string name="gutenberg_native_s_previews_not_yet_available">ميزة معاينات %s ليس متاحاً بعد</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">ستتوفر ميزة معاينات المكوِّن %s قريبًا</string>
     <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
     <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
@@ -181,9 +182,13 @@ Language: ar
     <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
     <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
     <string name="gutenberg_native_preview_post">معاينة المقالة</string>
+    <string name="gutenberg_native_retry">أعد المحاولة</string>
+    <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_featured">مميز</string>
     <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
+    <string name="gutenberg_native_column_d">عمود %d</string>
+    <string name="gutenberg_native_none">بدون</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
@@ -741,6 +746,7 @@ Language: ar
     <string name="continue_with_google_terms_of_service_text">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_confirmation_title">تأكيد التسجيل</string>
     <string name="enter_your_site_address">أدخل رابط موقعك الحالي</string>
+    <string name="gutenberg_native_convert_to_link">تحويل إلى رابط</string>
     <string name="continue_terms_of_service_text">بالمتابعة، أنت توافق على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_confirmation_message">سنستخدم عنوان البريد الإلكتروني هذا لإنشاء حسابك الجديد على WordPress.com.</string>
     <string name="signup_magic_link_message">أرسلنا لك عبر البريد الإلكتروني رسالة تتضمن رابط التسجيل لإنشاء حسابك الجديد على WordPress.com. تحقَّق من بريدك الإلكتروني على هذا الجهاز، وانقر على الرابط الموجود في الرسالة التي تم تلقيها عبر البريد الإلكتروني من WordPress.com.</string>
@@ -1340,10 +1346,10 @@ Language: ar
     <string name="stats_months_and_years_period_label">الفترة</string>
     <string name="stats_detail_months_and_years">شهور وسنوات</string>
     <string name="stats_insights_load_more">تحميل المزيد</string>
-    <string name="new_site_creation_preview_subtitle">ستتمكن من تخصيص شكل ومظهر الموقع الخاص بك لاحقًا</string>
     <string name="scheduled_for">تمّت الجدولة ليوم: %s</string>
     <string name="published_on">نُشر في: %s</string>
     <string name="publish_on">النشر في: %s</string>
+    <string name="new_site_creation_preview_subtitle">ستتمكن من تخصيص شكل موقعك ومظهره لاحقًا</string>
     <string name="stats_insights_today_stats">اليوم</string>
     <string name="stats_insights_best_hour">أفضل ساعة</string>
     <string name="stats_insights_best_day">أفضل يوم</string>
@@ -1914,11 +1920,11 @@ Language: ar
     <string name="plugin_byline">بواسطة %s</string>
     <string name="change_photo">تغيير الصورة</string>
     <string name="plugin_fetch_error">تعذر تحميل الإضافات</string>
-    <string name="my_site_btn_site_pages">صفحات الموقع</string>
     <string name="site_settings_tags_hint">إدارة علامات موقعك</string>
     <string name="dlg_confirm_delete_tag">هل تريد حذف وسم \"%s\" بشكل دائم؟</string>
     <string name="dlg_deleting_tag">جاري الحذف</string>
     <string name="dlg_saving_tag">جاري الحفظ</string>
+    <string name="my_site_btn_site_pages">الصفحات</string>
     <string name="error_tag_exists">توجد علامة تحمل هذا الاسم بالفعل</string>
     <string name="tag_description_hint">الوصف</string>
     <string name="tag_name_hint">العلامة</string>
@@ -2676,8 +2682,8 @@ Language: ar
     <string name="my_site_btn_view_site">عرض الموقع</string>
     <string name="my_site_header_look_and_feel">الشكل والطابع</string>
     <string name="my_site_header_publish">نشر</string>
-    <string name="my_site_btn_blog_posts">مقالات المدونة</string>
     <string name="my_site_btn_site_settings">إعدادات الموقع</string>
+    <string name="my_site_btn_blog_posts">مقالات</string>
     <string name="my_site_header_configuration">التكوين</string>
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
     <string name="deselect_all">إلغاء تحديد الكل</string>

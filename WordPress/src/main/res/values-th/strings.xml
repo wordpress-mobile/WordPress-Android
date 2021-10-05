@@ -159,7 +159,6 @@ Language: th
     <string name="my_site_btn_view_site">ดูเว็บไซต์</string>
     <string name="site_picker_title">เลือกเว็บไซต์</string>
     <string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
-    <string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
     <string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
     <string name="my_site_header_publish">เผยแพร่</string>
     <string name="my_site_header_configuration">การปรับแต่ง</string>

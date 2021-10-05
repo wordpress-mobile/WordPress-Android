@@ -118,6 +118,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -410,6 +411,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -3461,6 +3463,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
         AppPrefs.setGutenbergBlockTypeImpressions(impressions);
+    }
+
+    @Override public void onContactCustomerSupport() {
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
+    }
+
+    @Override public void onGotoCustomerSupportOptions() {
+        EditPostCustomerSupportHelper.INSTANCE.onGotoCustomerSupportOptions(this, getSite());
     }
 
     // FluxC events

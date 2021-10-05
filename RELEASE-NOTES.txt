@@ -1,8 +1,15 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-18.4
+18.5
 -----
 * [*] Fixed an issue where navigating through a couple of related posts in Reader caused the incorrect post to be loaded after rotation [https://github.com/wordpress-mobile/WordPress-Android/issues/14195]
+
+18.4
+-----
+* [**] Embed block: Add the top 5 specific embed blocks to the Block inserter list. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3995]
+* [*] Embed block: Fix URL update when edited after setting a bad URL of a provider. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4002]
+* [**] Users can now contact support from inside the block editor screen. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3975]
+* [**] Site Comments: when editing a Comment, the author's name, email address, and web address can now be changed. (https://github.com/wordpress-mobile/WordPress-Android/pull/15402)
 
 18.3
 -----

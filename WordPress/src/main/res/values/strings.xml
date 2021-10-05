@@ -488,6 +488,17 @@
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
+    <string name="comment_edit_menu_done">Done</string>
+    <string name="comment_edit_user_name">Name</string>
+    <string name="comment_edit_comment">Comment</string>
+    <string name="comment_edit_web_address">Web address</string>
+    <string name="comment_edit_email_address">Email address</string>
+    <string name="comment_edit_user_name_error">User name cannot be empty</string>
+    <string name="comment_edit_web_address_error">Web address not valid</string>
+    <string name="comment_edit_user_email_error">User email not valid</string>
+    <string name="comment_edit_comment_error">Comment cannot be empty</string>
+    <string name="comment_edit_cancel_dialog_title">There are unsaved changes</string>
+    <string name="comment_edit_cancel_dialog_message">Do you want to discard them?</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove site</string>
@@ -918,7 +929,7 @@
     <!-- Debug cookies -->
     <string name="debug_cookies_title" translatable="false">Debug cookies</string>
     <string name="debug_cookies_set_cookie" translatable="false">Set cookie</string>
-    <string name="debug_cookies_cookie_domain_hint" translatable="false">wordpress.com</string>
+    <string name="debug_cookies_cookie_host_hint" translatable="false">wordpress.com</string>
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
@@ -2123,6 +2134,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
+    <string name="help_and_support">Help &amp; Support</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2416,6 +2428,8 @@
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style="color:#008000;"&gt;Free for the first year &lt;span&gt;&lt;/strong&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
@@ -2446,17 +2460,22 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_domain">PRIMARY SITE ADDRESS</string>
-    <string name="domains_primary_domain_address">%s</string>
-<!--    <string name="domains_primary_domain_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>-->
-<!--    <string name="domains_redirected_domains">REDIRECTED DOMAINS</string>-->
-<!--    <string name="domains_redirected_domains_blurb">Redirected domains are domains that you own and redirect to your site at %s. Anyone visiting your redirected domains will land on your site. Learn more.</string>-->
-<!--    <string name="domains_manage_domains">Manage Domains</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your domain</string>-->
+    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="domains_primary_site_address_chip">Primary site address</string>
+    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
+    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;span&gt;</string>
+    <string name="domains_add_a_domain">Add a domain</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href="https://wordpress.com/support/site-redirect/"&gt;Learn more&lt;/a&gt;.</string>
+    <string name="domains_manage_domains">Manage Domains</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-<!--    <string name="domains_free_plan_get_your_domain_caption">Redirect a custom domain to your site at %s</string>-->
-<!--    <string name="domains_free_plan_redirect_learn_more">Learn more about domain redirects</string>-->
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
@@ -2909,18 +2928,11 @@
 
     <string name="content_description_more">More</string>
 
-    <!-- Quick Start Promo Dialog (Old) -->
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-
-    <!-- Quick Start Promo Dialog (New) -->
+    <!-- Quick Start Promo Dialog -->
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
 
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
@@ -3558,6 +3570,8 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s has URL set</string>
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->

@@ -37,7 +37,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
@@ -66,8 +65,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-
-    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -120,8 +117,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return mOnboardingImprovementsFeatureConfig.isEnabled()
-               && !mBuildConfigWrapper.isJetpackApp()
+        return !mBuildConfigWrapper.isJetpackApp()
                && !mShowAndReturn;
     }
 
