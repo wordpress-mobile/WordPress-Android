@@ -19,6 +19,8 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.stories"
         }
     }
     maven {
@@ -272,9 +274,9 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation project(path: ':mp4compose')
-    implementation project(path:':libs:stories-android:stories')
-    testImplementation project(path:':photoeditor')
+    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 

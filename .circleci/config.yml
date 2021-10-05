@@ -28,11 +28,6 @@ commands:
         - run:
             name: Update memory setting
             command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-<< parameters.jvmargs >> -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
-  checkout-submodules:
-    steps:
-      - run:
-          name: Checkout submodules
-          command: git submodule update --init --recursive --depth 1
 
 version: 2.1
 jobs:
@@ -41,9 +36,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build-v4
       - run:
@@ -98,9 +91,7 @@ jobs:
           command: |
             SLACKMSG_APP_NAME=$(echo "<< parameters.app >>" | sed s/wordpress/WordPress/i | sed s/jetpack/Jetpack/i)
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for ${SLACKMSG_APP_NAME} Android failed!'" >> $BASH_ENV
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: &release-build-cache-key release-build-v2
       - run:
@@ -164,8 +155,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: false
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: *release-build-cache-key
       - attach_workspace:
@@ -186,9 +176,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory:
@@ -228,9 +216,7 @@ jobs:
       api-version: "29"
     working_directory: /tmp/workspace
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: raw-screenshots-v2
       - android/restore-gradle-cache
@@ -334,9 +320,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory
@@ -356,21 +340,6 @@ jobs:
           timeout: 10m
           results-history-name: CircleCI WPUtils Connected Tests
       - android/save-gradle-cache
-  submodules-strings-check:
-    docker:
-      - image: circleci/ruby:2.6.4
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - run:
-          name: Install bundler
-          command: gem install bundler --version 2.0.2
-      - bundle-install/bundle-install:
-          cache_key_prefix: strings-check-v2
-      - run:
-          name: Validate login strings
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane validate_submodules_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
@@ -379,7 +348,6 @@ workflows:
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
-      - submodules-strings-check
       - Installable Build:
           filters:
             branches:
