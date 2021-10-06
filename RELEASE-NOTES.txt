@@ -1,5 +1,11 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.5
+-----
+* [*] Fixed an issue where navigating through a couple of related posts in Reader caused the incorrect post to be loaded after rotation [https://github.com/wordpress-mobile/WordPress-Android/issues/14195]
+* [*] Allow users to mark Posts as sticky [https://github.com/wordpress-mobile/WordPress-Android/pull/15351]
+* [*] Fixed a crash in Page Template chooser [https://github.com/wordpress-mobile/WordPress-Android/pull/15415]
+
 18.4
 -----
 * [**] Embed block: Add the top 5 specific embed blocks to the Block inserter list. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3995]

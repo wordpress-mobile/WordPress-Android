@@ -63,7 +63,6 @@
     <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
-    <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>

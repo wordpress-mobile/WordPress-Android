@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +29,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMP
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
@@ -45,20 +43,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -80,7 +64,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.IC
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.URL_CLICK
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -108,19 +91,33 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -135,7 +132,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -167,9 +163,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
-    @Mock lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -302,9 +296,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 unifiedCommentsListFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
-                onboardingImprovementsFeatureConfig,
                 quickStartUtilsWrapper,
-                appPrefsWrapper,
                 snackbarSequencer
         )
         uiModels = mutableListOf()
@@ -1267,11 +1259,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given onboarding improvements feature is on, when check and start QS is triggered, then new QSP is shown`() {
+    fun `when check and start QS is triggered, then QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId)
 
@@ -1281,40 +1272,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
                         R.string.quick_start_dialog_need_help_button_negative
-                )
-        )
-    }
-
-    @Test
-    fun `given QS is disabled, when check and start QS is triggered, then old QSP is not shown`() {
-        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(false)
-
-        viewModel.checkAndStartQuickStart(siteLocalId)
-
-        assertThat(navigationActions).isEmpty()
-    }
-
-    @Test
-    fun `given QS is enabled, when check and start QS is triggered, then old QSP is shown`() {
-        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(appPrefsWrapper.isQuickStartEnabled()).thenReturn(true)
-
-        viewModel.checkAndStartQuickStart(siteLocalId)
-
-        assertThat(navigationActions).containsExactly(
-                ShowQuickStartDialog(
-                        R.string.quick_start_dialog_need_help_title,
-                        R.string.quick_start_dialog_need_help_message,
-                        R.string.quick_start_dialog_need_help_button_positive,
-                        R.string.quick_start_dialog_need_help_manage_site_button_negative,
-                        R.string.quick_start_dialog_need_help_button_neutral
                 )
         )
     }
@@ -1340,34 +1297,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.ignoreQuickStart()
 
         verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
-    }
-
-    @Test
-    fun `given onboarding improvements feature is on, when disable QS is triggered, then do nothing`() {
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(true)
-
-        viewModel.disableQuickStart()
-
-        verifyZeroInteractions(analyticsTrackerWrapper)
-        verifyZeroInteractions(appPrefsWrapper)
-    }
-
-    @Test
-    fun `when disable QS is triggered, then QS request dialog neutral tapped is tracked`() {
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.disableQuickStart()
-
-        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
-    }
-
-    @Test
-    fun `when disable QS is triggered, then disable QS`() {
-        whenever(onboardingImprovementsFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.disableQuickStart()
-
-        verify(appPrefsWrapper).setQuickStartDisabled(true)
     }
 
     @Test

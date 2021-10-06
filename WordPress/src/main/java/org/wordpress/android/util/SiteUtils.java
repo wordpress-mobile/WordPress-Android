@@ -209,7 +209,7 @@ public class SiteUtils {
         dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
-    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+    public static boolean isBlockEditorDefaultForNewPost(@Nullable SiteModel site) {
         if (site == null) {
             return true;
         }
