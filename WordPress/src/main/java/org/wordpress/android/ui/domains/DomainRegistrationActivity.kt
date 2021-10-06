@@ -41,6 +41,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
             setupToolbar()
             setupViewModel()
+            setupObservers()
         }
     }
 
@@ -53,10 +54,11 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
         viewModel.start()
+    }
 
+    private fun setupObservers() {
         viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
