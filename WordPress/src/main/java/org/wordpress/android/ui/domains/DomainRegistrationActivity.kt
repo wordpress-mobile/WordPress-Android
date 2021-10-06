@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -28,8 +29,9 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
-    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var binding: DomainSuggestionsActivityBinding
+    private lateinit var site: SiteModel
+    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,8 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         with(DomainSuggestionsActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             binding = this
+
+            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
             domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
                     as DomainRegistrationPurpose
