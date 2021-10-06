@@ -39,12 +39,16 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
                     as DomainRegistrationPurpose
 
-            setSupportActionBar(toolbarDomain)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
-            }
+            setupToolbar()
             setupViewModel()
+        }
+    }
+
+    private fun DomainSuggestionsActivityBinding.setupToolbar() {
+        setSupportActionBar(toolbarDomain)
+        supportActionBar?.let {
+            it.setHomeButtonEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
         }
     }
 
