@@ -681,7 +681,7 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,
+    public static void viewDomainRegistrationActivityForResult(Activity activity, @NonNull SiteModel site,
                                                                @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
