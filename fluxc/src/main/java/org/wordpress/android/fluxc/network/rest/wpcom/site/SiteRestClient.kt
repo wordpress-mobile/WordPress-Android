@@ -906,8 +906,9 @@ class SiteRestClient @Inject constructor(
         site.url = from.URL
         site.name = StringEscapeUtils.unescapeHtml4(from.name)
         site.description = StringEscapeUtils.unescapeHtml4(from.description)
-        site.setIsJetpackConnected(from.jetpack)
+        site.setIsJetpackConnected(from.jetpack && from.jetpack_connection)
         site.setIsJetpackInstalled(from.jetpack)
+        site.setIsJetpackCPConnected(from.jetpack_connection && !from.jetpack)
         site.setIsVisible(from.visible)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
@@ -1069,8 +1070,8 @@ class SiteRestClient @Inject constructor(
 
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
-        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta,zendesk_site_meta,organization_id")
+        private const val SITE_FIELDS = "ID,URL,name,description,jetpack,jetpack_connection,visible,is_private," +
+                "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }

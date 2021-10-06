@@ -73,6 +73,20 @@ public class SiteUtils {
         return example;
     }
 
+    public static SiteModel generateJetpackCPSite() {
+        SiteModel example = new SiteModel();
+        example.setSiteId(5623);
+        example.setIsWPCom(false);
+        example.setIsJetpackInstalled(false);
+        example.setIsJetpackConnected(false);
+        example.setIsJetpackCPConnected(true);
+        example.setIsVisible(true);
+        example.setUrl("http://jetpackcp.url");
+        example.setXmlRpcUrl("http://jetpackcp.url/xmlrpc.php");
+        example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        return example;
+    }
+
     public static SiteModel generateSelfHostedSiteFutureJetpack() {
         SiteModel example = new SiteModel();
         example.setSelfHostedSiteId(8);

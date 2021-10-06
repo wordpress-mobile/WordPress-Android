@@ -83,7 +83,7 @@ class SiteRestClientTest {
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
-                        "fields" to "ID,URL,name,description,jetpack," +
+                        "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
                                 "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
                                 "organization_id"
                 )
@@ -132,7 +132,7 @@ class SiteRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "filters" to "wpcom",
-                        "fields" to "ID,URL,name,description,jetpack," +
+                        "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
                                 "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
                                 "organization_id"
                 )
