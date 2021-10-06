@@ -2,6 +2,7 @@
 
 18.5
 -----
+* [*] Allow users to mark Posts as sticky [https://github.com/wordpress-mobile/WordPress-Android/pull/15351]
 * [*] Fixed a crash in Page Template chooser [https://github.com/wordpress-mobile/WordPress-Android/pull/15415]
 
 18.4

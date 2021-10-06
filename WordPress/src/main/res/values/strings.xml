@@ -1586,12 +1586,14 @@
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
+    <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
+    <string name="post_settings_post_sticky">Stick post to the front page</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
@@ -1635,6 +1637,7 @@
     <string name="post_status_publish_post">Publish</string>
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
+    <string name="post_status_sticky">Sticky</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_post_scheduled">Scheduled</string>
     <string name="post_status_post_trashed">Trashed</string>
