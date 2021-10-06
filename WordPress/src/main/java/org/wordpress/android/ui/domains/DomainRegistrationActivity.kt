@@ -82,13 +82,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
                 if (shouldShowCongratsScreen()) {
                     showDomainRegistrationResult(it)
                 } else {
-                    val intent = Intent()
-                    intent.putExtra(
-                            DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL,
-                            it.email
-                    )
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
+                    finishDomainRegistration(it)
                 }
             }
         })
@@ -121,6 +115,13 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             fragment = DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
             showFragment(fragment, DomainRegistrationResultFragment.TAG)
         }
+    }
+
+    private fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        val intent = Intent()
+        intent.putExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL, event.email)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     private fun showFragment(
