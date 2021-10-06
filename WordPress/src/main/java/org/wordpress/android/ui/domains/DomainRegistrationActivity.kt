@@ -12,8 +12,6 @@ import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
@@ -135,10 +133,6 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
 
         transaction.replace(R.id.fragment_container, fragment, tag).commit()
-    }
-
-    private fun shouldShowCongratsScreen(): Boolean {
-        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION || domainRegistrationPurpose == DOMAIN_PURCHASE
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
