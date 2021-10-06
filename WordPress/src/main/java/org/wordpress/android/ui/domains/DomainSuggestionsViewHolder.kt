@@ -25,10 +25,16 @@ class DomainSuggestionsViewHolder(
         suggestion: DomainSuggestionResponse,
         position: Int,
         isSelectedPosition: Boolean,
+        isSiteDomainsFeatureEnabled: Boolean,
         isDomainCreditAvailable: Boolean
     ) {
         domainName.text = suggestion.domain_name
-        domainCost.text = getFormattedCost(suggestion, isDomainCreditAvailable)
+        if (isSiteDomainsFeatureEnabled) {
+            domainCost.visibility = View.VISIBLE
+            domainCost.text = getFormattedCost(suggestion, isDomainCreditAvailable)
+        } else {
+            domainCost.visibility = View.GONE
+        }
         selectionRadioButton.isChecked = isSelectedPosition
 
         container.setOnClickListener {
