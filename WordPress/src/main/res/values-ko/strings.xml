@@ -17,9 +17,7 @@ Language: ko_KR
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;회원님&lt;/a&gt;이 좋아합니다.</string>
     <string name="gutenberg_native_line_height">줄 높이</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
-    <string name="domains_primary_domain">기본 사이트 주소</string>
     <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
     <string name="recommend_app_null_response">수신된 응답 없음</string>
     <string name="recommend_app_subject">WordPress 앱 - 모든 화면에 알맞은 앱</string>

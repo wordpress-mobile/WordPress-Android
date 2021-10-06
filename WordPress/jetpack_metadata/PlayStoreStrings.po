@@ -20,18 +20,21 @@ msgid ""
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_184"
+msgid ""
+"18.4:\n"
+"Dedicated embed blocks for Twitter, Vimeo, YouTube, and Twitter, with URLs that can be edited after they are selected.\n"
+"The gallery block now adds images even if the post is closed during the upload.\n"
+"Site comments allow the author’s name, email, and web address to be edited.\n"
+"You can now contact support directly from the editor screen.\n"
+msgstr ""
+
 msgctxt "release_note_183"
 msgid ""
 "18.3:\n"
 "Lots of improvements in the block editor! We fixed a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.\n"
 "\n"
 "Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).\n"
-msgstr ""
-
-msgctxt "release_note_182"
-msgid ""
-"18.2:\n"
-"We have made a couple of handy tweaks to the Block editor: The Embed block now gives you a sneak preview when you add something from YouTube or Twitter (more providers to come); and when you go to insert a block and nothing is found, there is now a no results view.\n"
 msgstr ""
 
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!

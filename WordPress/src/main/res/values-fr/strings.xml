@@ -16,8 +16,6 @@ Language: fr
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Vous et %1$s blogueurs&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Vous et 1 blogueur&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
-    <string name="domains_primary_domain">ADRESSE DU SITE PRINCIPAL</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>

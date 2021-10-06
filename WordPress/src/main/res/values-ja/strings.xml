@@ -17,9 +17,7 @@ Language: ja_JP
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;あなた&lt;/a&gt;が「いいね」をつけています。</string>
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
-    <string name="domains_primary_domain">主要サイトのアドレス</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
     <string name="recommend_app_null_response">応答がありませんでした</string>
     <string name="recommend_app_subject">WordPress アプリ - さまざまな画面で利用できるアプリ</string>

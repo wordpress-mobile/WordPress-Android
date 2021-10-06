@@ -7,8 +7,6 @@ Language: de
 -->
 <resources>
     <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
-    <string name="domains_primary_domain">HAUPTADRESSE DER WEBSITE</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
     <string name="gutenberg_native_line_height">Zeilenhöhe</string>
     <string name="site_settings_site_domains_title">Website-Domains</string>

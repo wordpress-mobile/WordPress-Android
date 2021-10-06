@@ -1,5 +1,4 @@
-* [**] Embed block: Add the top 5 specific embed blocks to the Block inserter list. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3995]
-* [*] Embed block: Fix URL update when edited after setting a bad URL of a provider. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4002]
-* [**] Users can now contact support from inside the block editor screen. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3975]
-* [**] Site Comments: when editing a Comment, the author's name, email address, and web address can now be changed. (https://github.com/wordpress-mobile/WordPress-Android/pull/15402)
-
+Dedicated embed blocks for Twitter, Vimeo, YouTube, and Twitter, with URLs that can be edited after they are selected.
+The gallery block now adds images even if the post is closed during the upload.
+Site comments allow the author’s name, email, and web address to be edited.
+You can now contact support directly from the editor screen.
