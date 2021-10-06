@@ -80,17 +80,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         viewModel.domainRegistrationCompleted.observe(this, { event ->
             event?.let {
                 if (shouldShowCongratsScreen()) {
-                    var fragment = supportFragmentManager.findFragmentByTag(
-                            DomainRegistrationResultFragment.TAG
-                    )
-
-                    if (fragment == null) {
-                        fragment = DomainRegistrationResultFragment.newInstance(
-                                it.domainName,
-                                it.email
-                        )
-                        showFragment(fragment!!, DomainRegistrationResultFragment.TAG)
-                    }
+                    showDomainRegistrationResult(it)
                 } else {
                     val intent = Intent()
                     intent.putExtra(
@@ -122,6 +112,14 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         if (fragment == null) {
             fragment = DomainRegistrationDetailsFragment.newInstance(details)
             showFragment(fragment, DomainRegistrationDetailsFragment.TAG)
+        }
+    }
+
+    private fun showDomainRegistrationResult(event: DomainRegistrationCompletedEvent) {
+        var fragment = supportFragmentManager.findFragmentByTag(DomainRegistrationResultFragment.TAG)
+        if (fragment == null) {
+            fragment = DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
+            showFragment(fragment, DomainRegistrationResultFragment.TAG)
         }
     }
 
