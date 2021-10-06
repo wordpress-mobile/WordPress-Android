@@ -73,14 +73,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
         viewModel.selectedDomain.observe(this, { selectedDomain ->
             selectedDomain?.let {
-                var fragment = supportFragmentManager.findFragmentByTag(
-                        DomainRegistrationDetailsFragment.TAG
-                )
-
-                if (fragment == null) {
-                    fragment = DomainRegistrationDetailsFragment.newInstance(it)
-                    showFragment(fragment!!, DomainRegistrationDetailsFragment.TAG)
-                }
+                showDomainRegistrationDetails(it)
             }
         })
 
@@ -121,6 +114,14 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
                     slideIn = false,
                     isRootFragment = true
             )
+        }
+    }
+
+    private fun showDomainRegistrationDetails(details: DomainProductDetails) {
+        var fragment = supportFragmentManager.findFragmentByTag(DomainRegistrationDetailsFragment.TAG)
+        if (fragment == null) {
+            fragment = DomainRegistrationDetailsFragment.newInstance(details)
+            showFragment(fragment, DomainRegistrationDetailsFragment.TAG)
         }
     }
 
