@@ -46,7 +46,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
                     as DomainRegistrationPurpose
 
             setupToolbar()
-            setupViewModel()
+            setupViewModel(site, domainRegistrationPurpose)
             setupObservers()
         }
     }
@@ -59,9 +59,9 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
     }
 
-    private fun setupViewModel() {
+    private fun setupViewModel(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
-        viewModel.start()
+        viewModel.start(site, domainRegistrationPurpose)
     }
 
     private fun setupObservers() {

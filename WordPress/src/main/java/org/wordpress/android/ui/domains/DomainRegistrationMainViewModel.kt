@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -20,10 +22,17 @@ class DomainRegistrationMainViewModel @Inject constructor(
     val domainRegistrationCompleted: LiveData<DomainRegistrationCompletedEvent> = _domainRegistrationCompleted
 
     private var isStarted: Boolean = false
-    fun start() {
+
+    private lateinit var site: SiteModel
+    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+
+    fun start(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         if (isStarted) {
             return
         }
+
+        this.site = site
+        this.domainRegistrationPurpose = domainRegistrationPurpose
 
         _domainSuggestionsVisible.value = true
 
