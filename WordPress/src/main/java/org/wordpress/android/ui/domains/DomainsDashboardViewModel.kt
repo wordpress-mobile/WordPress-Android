@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.domains
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,23 +44,25 @@ class DomainsDashboardViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     selectedSiteRepository: SelectedSiteRepository,
-    domainRegistrationHandler: DomainRegistrationHandler,
+    private val domainRegistrationHandler: DomainRegistrationHandler,
     private val htmlMessageUtils: HtmlMessageUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<DomainsListItem>>()
-    val uiModel = _uiModel
+    val uiModel = MediatorLiveData<List<DomainsListItem>>()
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
     val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-    private val domainCreditAvailable =
-            domainRegistrationHandler.buildSource(viewModelScope, selectedSite.id).distinctUntilChanged()
 
-    private val hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
-    private val hasCustomDomain = SiteUtils.hasCustomDomain(selectedSite)
+    private val _siteIdLiveData = MutableLiveData<Int>()
+
+    private val _domainCreditAvailable = Transformations.switchMap(_siteIdLiveData) {
+        domainRegistrationHandler.buildSource(viewModelScope, it).distinctUntilChanged()
+    }
+
+    private val _customDomainLiveData = MutableLiveData<Boolean>()
 
     private var isStarted: Boolean = false
 
@@ -67,14 +71,27 @@ class DomainsDashboardViewModel @Inject constructor(
             return
         }
         isStarted = true
-        _uiModel.value = buildSiteDomainsList()
+
+        _siteIdLiveData.value = selectedSite.id
+        _customDomainLiveData.value = SiteUtils.hasCustomDomain(selectedSite)
+
+        uiModel.value = getPrimaryDomainItems()
+
+        uiModel.addSource(_domainCreditAvailable) {
+            uiModel.value = if (it.isDomainCreditAvailable) claimDomainItems() else getDomainItems()
+        }
+        uiModel.addSource(_customDomainLiveData) { customDomain ->
+            uiModel.value = if (customDomain) manageDomainsItems() else getDomainItems()
+        }
     }
 
-    private fun buildSiteDomainsList(): List<DomainsListItem> = when {
-        hasCustomDomain -> manageDomainsItems()
-        hasDomainCredit -> claimDomainItems()
-        else -> getDomainItems()
+    override fun onCleared() {
+        domainRegistrationHandler.clear()
+        super.onCleared()
     }
+
+    private fun getPrimaryDomainItems() =
+        listOf(PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick))
 
     private fun getDomainItems(): List<DomainsListItem> {
         val listItems = mutableListOf<DomainsListItem>()
@@ -118,7 +135,7 @@ class DomainsDashboardViewModel @Inject constructor(
                     AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
                 }
                 else -> {
-                    _uiModel.value = manageDomainsListItems(result.domains)
+                    uiModel.value = manageDomainsListItems(result.domains)
                 }
             }
         }
@@ -150,7 +167,7 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         // if site has redirected domain then show this blurb
-        if (!hasCustomDomain) {
+        if (_customDomainLiveData.value != true) {
             listItems += DomainBlurb(
                     UiStringText(
                             htmlMessageUtils.getHtmlMessageFromStringFormatResId(
