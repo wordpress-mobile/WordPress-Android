@@ -267,18 +267,7 @@ class MySiteViewModel
             }
 
             siteItems.addAll(buildDynamicCards(quickStartCategories, pinnedDynamicCard, visibleDynamicCards))
-
-            siteItems.addAll(
-                    siteItemsBuilder.buildSiteItems(
-                            site,
-                            this::onItemClick,
-                            backupAvailable,
-                            scanAvailable,
-                            activeTask == QuickStartTask.VIEW_SITE,
-                            activeTask == ENABLE_POST_SHARING,
-                            activeTask == EXPLORE_PLANS
-                    )
-            )
+            siteItems.addAll(buildSiteItems(site, backupAvailable, scanAvailable, activeTask))
             scrollToQuickStartTaskIfNecessary(
                     activeTask,
                     siteItems.indexOfFirst { it.activeQuickStartItem })
@@ -314,6 +303,21 @@ class MySiteViewModel
         }.associateBy { it.dynamicCardType }
         return visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
     }
+
+    private fun buildSiteItems(
+        site: SiteModel,
+        backupAvailable: Boolean,
+        scanAvailable: Boolean,
+        activeTask: QuickStartTask?
+    ) = siteItemsBuilder.buildSiteItems(
+            site,
+            this::onItemClick,
+            backupAvailable,
+            scanAvailable,
+            activeTask == QuickStartTask.VIEW_SITE,
+            activeTask == ENABLE_POST_SHARING,
+            activeTask == EXPLORE_PLANS
+    )
 
     private fun scrollToQuickStartTaskIfNecessary(
         quickStartTask: QuickStartTask?,
