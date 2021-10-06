@@ -220,6 +220,24 @@ class CommentsStore
         }
     }
 
+    suspend fun updateEditComment(site: SiteModel, comment: CommentEntity): CommentsActionPayload<CommentsActionData> {
+        val payload = if (site.isUsingWpComRestApi) {
+            commentsRestClient.updateEditComment(site, comment)
+        } else {
+            commentsXMLRPCClient.updateEditComment(site, comment)
+        }
+
+        return if (payload.isError) {
+            CommentsActionPayload(payload.error, CommentsActionData(comment.toListOrEmpty(), 0))
+        } else {
+            payload.response?.let {
+                val commentUpdated = it.copy(id = comment.id)
+                val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentUpdated)
+                CommentsActionPayload(CommentsActionData(cachedCommentAsList, cachedCommentAsList.size))
+            } ?: CommentsActionPayload(CommentError(INVALID_RESPONSE, "Network response was valid but empty!"))
+        }
+    }
+
     suspend fun deleteComment(
         site: SiteModel,
         remoteCommentId: Long,

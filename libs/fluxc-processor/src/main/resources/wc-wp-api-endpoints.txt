@@ -49,6 +49,8 @@
 /payments/accounts
 /payments/orders/<order_id>/create_customer
 
+/payments/terminal/locations/store
+
 /taxes
 /taxes/classes/
 

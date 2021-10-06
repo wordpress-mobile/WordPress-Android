@@ -15,7 +15,11 @@ import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
@@ -45,6 +49,8 @@ class SiteStoreTest {
     @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
     @Mock lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Mock lateinit var siteSqlUtils: SiteSqlUtils
+    @Mock lateinit var successResponse: Response.Success<DomainsResponse>
+    @Mock lateinit var errorResponse: Response.Error<DomainsResponse>
     private lateinit var siteStore: SiteStore
 
     @Before
@@ -283,5 +289,32 @@ class SiteStoreTest {
         assertThat(onPostFormatsChanged.site).isEqualTo(site)
         assertThat(onPostFormatsChanged.error).isEqualTo(payload.error)
         verifyZeroInteractions(siteSqlUtils)
+    }
+
+    @Test
+    fun `fetchSiteDomains from WPCom endpoint`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(successResponse)
+        whenever(successResponse.data).thenReturn(DomainsResponse(listOf()))
+
+        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
+
+        assertThat(onSiteDomainsFetched.domains).isNotNull
+        assertThat(onSiteDomainsFetched.error).isNull()
+    }
+
+    @Test
+    fun `fetchSiteDomains error from WPCom endpoint returns error`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        whenever(siteRestClient.fetchSiteDomains(site)).thenReturn(errorResponse)
+        whenever(errorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val onSiteDomainsFetched = siteStore.fetchSiteDomains(site)
+
+        assertThat(onSiteDomainsFetched.error).isEqualTo(SiteError(GENERIC_ERROR, null))
     }
 }
