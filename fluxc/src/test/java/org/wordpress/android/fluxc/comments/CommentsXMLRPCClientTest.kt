@@ -180,6 +180,32 @@ class CommentsXMLRPCClientTest {
     }
 
     @Test
+    fun `updateEditComment returns pushed comment`() = test {
+        mockedResponse = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+              <params>
+                <param>
+                  <value>
+                  <boolean>1</boolean>
+                  </value>
+                </param>
+              </params>
+            </methodResponse>
+        """
+
+        val comment = getDefaultComment()
+
+        val payload = xmlRpcClient.updateEditComment(
+                site = site,
+                comment = comment
+        )
+
+        assertThat(payload.isError).isFalse
+        assertThat(payload.response).isEqualTo(comment)
+    }
+
+    @Test
     fun `fetchComment returns fetched comment`() = test {
         mockedResponse = """
             <?xml version="1.0" encoding="UTF-8"?>

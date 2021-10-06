@@ -188,6 +188,60 @@ class CommentsRestClientTest {
     }
 
     @Test
+    fun `updateEditComment returns updated comment`() = test {
+        val response = getDefaultDto()
+        val comment = response.toEntity()
+
+        whenever(commentsMapper.commentDtoToEntity(response, site)).thenReturn(comment)
+        initPushResponse(response)
+
+        val payload = restClient.updateEditComment(
+                site = site,
+                comment = comment
+        )
+
+        assertThat(payload.isError).isFalse
+        val commentResponse = payload.response!!
+        assertThat(commentResponse).isEqualTo(comment)
+        assertThat(urlCaptor.lastValue).isEqualTo(
+                "https://public-api.wordpress.com/rest/v1.1/sites/${site.siteId}/comments/${comment.remoteCommentId}/"
+        )
+        assertThat(bodyCaptor.lastValue).isEqualTo(
+                mutableMapOf(
+                        "content" to comment.content.orEmpty(),
+                        "author" to comment.authorName.orEmpty(),
+                        "author_email" to comment.authorEmail.orEmpty(),
+                        "author_url" to comment.authorUrl.orEmpty()
+                )
+        )
+    }
+
+    @Test
+    fun `updateEditComment returns an error on API fail`() = test {
+        val errorMessage = "this is an error"
+        val comment = getDefaultDto().toEntity()
+        whenever(commentErrorUtilsWrapper.networkToCommentError(any()))
+                .thenReturn(CommentError(INVALID_RESPONSE, errorMessage))
+
+        initPushResponse(error = WPComGsonNetworkError(
+                BaseNetworkError(
+                        NETWORK_ERROR,
+                        errorMessage,
+                        VolleyError(errorMessage)
+                )
+        ))
+
+        val payload = restClient.updateEditComment(
+                site = site,
+                comment = comment
+        )
+
+        assertThat(payload.isError).isTrue
+        assertThat(payload.error.type).isEqualTo(INVALID_RESPONSE)
+        assertThat(payload.error.message).isEqualTo(errorMessage)
+    }
+
+    @Test
     fun `fetchComment returns comment`() = test {
         val response = getDefaultDto()
         val comment = response.toEntity()
