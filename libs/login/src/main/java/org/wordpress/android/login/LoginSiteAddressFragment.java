@@ -69,7 +69,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     private String mConnectSiteInfoUrl;
     private String mConnectSiteInfoUrlRedirect;
-    private Boolean mConnectSiteInfoCalculatedHasJetpack;
+    private boolean mConnectSiteInfoCalculatedHasJetpack;
 
     private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
@@ -243,7 +243,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         mConnectSiteInfoUrl = null;
         mConnectSiteInfoUrlRedirect = null;
-        mConnectSiteInfoCalculatedHasJetpack = null;
+        mConnectSiteInfoCalculatedHasJetpack = false;
     }
 
     @Override
