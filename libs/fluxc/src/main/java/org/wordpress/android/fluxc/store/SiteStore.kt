@@ -71,6 +71,9 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
@@ -97,6 +100,8 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorTyp
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
@@ -452,7 +457,10 @@ open class SiteStore
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
-    data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError>() {
+    data class OnSiteChanged(
+        @JvmField val rowsAffected: Int = 0,
+        @JvmField val updatedSites: List<SiteModel> = emptyList()
+    ) : OnChanged<SiteError>() {
         constructor(rowsAffected: Int = 0, siteError: SiteError?) : this(rowsAffected) {
             this.error = siteError
         }
@@ -645,6 +653,15 @@ open class SiteStore
         }
     }
 
+    data class FetchedDomainsPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val domains: List<Domain>? = null
+    ) : Payload<SiteError>() {
+        constructor(site: SiteModel, error: SiteError) : this(site) {
+            this.error = error
+        }
+    }
+
     class PlansError
     @JvmOverloads constructor(
         @JvmField val type: PlansErrorType,
@@ -720,6 +737,7 @@ open class SiteStore
 
     data class UpdateSitesResult(
         @JvmField val rowsAffected: Int = 0,
+        @JvmField val updatedSites: List<SiteModel> = emptyList(),
         @JvmField val duplicateSiteFound: Boolean = false
     )
 
@@ -1323,7 +1341,7 @@ open class SiteStore
             val result = if (res.duplicateSiteFound) {
                 OnSiteChanged(res.rowsAffected, SiteError(DUPLICATE_SITE))
             } else {
-                OnSiteChanged(res.rowsAffected)
+                OnSiteChanged(res.rowsAffected, res.updatedSites)
             }
             siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
@@ -1333,6 +1351,7 @@ open class SiteStore
     private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
         var rowsAffected = 0
         var duplicateSiteFound = false
+        val updatedSites = mutableListOf<SiteModel>()
         for (site in sites.sites) {
             try {
                 // The REST API doesn't return info about the editor(s). Make sure to copy current values
@@ -1343,12 +1362,16 @@ open class SiteStore
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
                 }
-                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
+                val isUpdated = (siteSqlUtils.insertOrUpdateSite(site) == 1)
+                if (isUpdated) {
+                    rowsAffected++
+                    updatedSites.add(site)
+                }
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true
             }
         }
-        return UpdateSitesResult(rowsAffected, duplicateSiteFound)
+        return UpdateSitesResult(rowsAffected, updatedSites, duplicateSiteFound)
     }
 
     private fun deleteSite(site: SiteModel) {
@@ -1816,4 +1839,23 @@ open class SiteStore
         event.error = payload.error
         emitChange(event)
     }
+
+    suspend fun fetchSiteDomains(siteModel: SiteModel): FetchedDomainsPayload =
+            coroutineEngine.withDefaultContext(T.API, this, "Fetch site domains") {
+                return@withDefaultContext when (val response =
+                        siteRestClient.fetchSiteDomains(siteModel)) {
+                            is Success -> {
+                                FetchedDomainsPayload(siteModel, response.data.domains)
+                            }
+                            is Error -> {
+                                val siteErrorType = when (response.error.apiError) {
+                                    "unauthorized" -> UNAUTHORIZED
+                                    "unknown_blog" -> UNKNOWN_SITE
+                                    else -> SiteErrorType.GENERIC_ERROR
+                                }
+                                val domainsError = SiteError(siteErrorType, response.error.message)
+                                FetchedDomainsPayload(siteModel, domainsError)
+                            }
+                        }
+            }
 }

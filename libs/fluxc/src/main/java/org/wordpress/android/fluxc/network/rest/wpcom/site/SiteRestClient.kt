@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
@@ -701,6 +702,11 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
+    }
+
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
         val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
         val params = mutableMapOf<String, Any>()
@@ -900,8 +906,9 @@ class SiteRestClient @Inject constructor(
         site.url = from.URL
         site.name = StringEscapeUtils.unescapeHtml4(from.name)
         site.description = StringEscapeUtils.unescapeHtml4(from.description)
-        site.setIsJetpackConnected(from.jetpack)
+        site.setIsJetpackConnected(from.jetpack && from.jetpack_connection)
         site.setIsJetpackInstalled(from.jetpack)
+        site.setIsJetpackCPConnected(from.jetpack_connection && !from.jetpack)
         site.setIsVisible(from.visible)
         site.setIsPrivate(from.is_private)
         site.setIsComingSoon(from.is_coming_soon)
@@ -1063,8 +1070,8 @@ class SiteRestClient @Inject constructor(
 
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
-        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta,zendesk_site_meta,organization_id")
+        private const val SITE_FIELDS = "ID,URL,name,description,jetpack,jetpack_connection,visible,is_private," +
+                "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
