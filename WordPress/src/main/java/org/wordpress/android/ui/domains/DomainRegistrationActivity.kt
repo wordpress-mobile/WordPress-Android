@@ -67,16 +67,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private fun setupObservers() {
         viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
-                var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
-                if (fragment == null) {
-                    fragment = DomainSuggestionsFragment.newInstance()
-                    showFragment(
-                            fragment,
-                            DomainSuggestionsFragment.TAG,
-                            slideIn = false,
-                            isRootFragment = true
-                    )
-                }
+                showDomainSuggestions()
             }
         })
 
@@ -118,6 +109,19 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
                 }
             }
         })
+    }
+
+    private fun showDomainSuggestions() {
+        var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
+        if (fragment == null) {
+            fragment = DomainSuggestionsFragment.newInstance()
+            showFragment(
+                    fragment,
+                    DomainSuggestionsFragment.TAG,
+                    slideIn = false,
+                    isRootFragment = true
+            )
+        }
     }
 
     private fun showFragment(
