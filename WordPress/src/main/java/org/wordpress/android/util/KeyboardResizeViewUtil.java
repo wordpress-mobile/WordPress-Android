@@ -72,8 +72,14 @@ public class KeyboardResizeViewUtil {
     };
 
     private int getInsetBottom() {
-        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mContentView);
-        return insets != null ? insets.getSystemWindowInsetBottom() : 0;
+        int insetsBottom = 0;
+        try {
+            WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mContentView);
+            insetsBottom = insets != null ? insets.getSystemWindowInsetBottom() : 0;
+        } catch (NullPointerException e) {
+            AppLog.e(AppLog.T.PREPUBLISHING_NUDGES, "Error in getting window insets on keyboard resize:", e);
+        }
+        return insetsBottom;
     }
 
     private int getRealScreenHeight() {
