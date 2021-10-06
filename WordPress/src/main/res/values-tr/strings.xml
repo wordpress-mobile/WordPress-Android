@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 21:54:09+0000
+Translation-Revision-Date: 2021-10-04 12:11:34+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
@@ -18,8 +18,6 @@ Language: tr
     <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
     <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
     <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">BİRİNCİL SİTE ADRESİ</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
@@ -1341,6 +1339,7 @@ Language: tr
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Alan adı kaydet</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Eklentileri yüklemek için sitenizle ilişkili özel bir alan adına sahip olmanız gerekir.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Eklenti yükle</string>
+    <string name="new_site_creation_preview_subtitle">Daha sonra sitenizin görünümünü kişiselleştirebileceksiniz</string>
     <string name="publish_on">Yayın tarihi: %s</string>
     <string name="schedule_for">Zamanlanan: %s</string>
     <string name="published_on">Yayınlanma tarihi: %s</string>

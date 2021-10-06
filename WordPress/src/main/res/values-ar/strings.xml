@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 13:54:08+0000
+Translation-Revision-Date: 2021-10-01 20:44:51+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">ستتوفر ميزة معاينات مكوّن التضمين قريبًا</string>
     <string name="weekly_roundup">موجز أسبوعي</string>
     <string name="gutenberg_native_embed_options">خيارات التضمين</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">اضغط ضغطًا مزدوجًا لعرض خيارات التضمين.</string>
@@ -17,9 +18,7 @@ Language: ar
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;أنت&lt;/a&gt; معجب بهذا.</string>
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
-    <string name="domains_primary_domain">عنوان الموقع الأساسي</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="recommend_app_null_response">لم يتم تلقي أي ردّ</string>
     <string name="recommend_app_subject">تطبيقات ووردبريس - تطبيقات لأي شاشة</string>
@@ -69,12 +68,13 @@ Language: ar
     <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
     <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
     <string name="gutenberg_native_what_is_a_block">ماذا يُقصد بالمكوِّن؟</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">نعمل بجد على إضافة دعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">نعمل بجد على إضافة دعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">نعمل بجد على إضافة الدعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">نعمل بجد على إضافة الدعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
     <string name="gutenberg_native_unable_to_embed_media">يتعذر تضمين وسائط</string>
     <string name="gutenberg_native_try_another_search_term">تجربة مصطلح بحث آخر</string>
     <string name="gutenberg_native_no_blocks_found">لم يتم العثور على أي مكوِّنات</string>
-    <string name="gutenberg_native_s_previews_not_yet_available">ميزة معاينات %s ليس متاحاً بعد</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">ستتوفر ميزة معاينات مكوّن التضمين %s قريبًا</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">معاينات %s غير متاحة حتى الآن</string>
     <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
     <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>

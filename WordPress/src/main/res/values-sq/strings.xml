@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-21 11:26:33+0000
+Translation-Revision-Date: 2021-10-06 10:59:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Kërkoni për një përkatësi</string>
+    <string name="domains_free_plan_get_your_domain_caption">Përkatësitë e blera në këtë sajt do t’i ridrejtojnë vizitorët te &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Me planin tuaj keni të përfshirë një regjistrim përkatësie falas për një vit</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Kërkoni përkatësinë tuaj falas</string>
+    <string name="domains_manage_domains">Administroni Përkatësi</string>
+    <string name="domains_redirected_domains_blurb">Përkatësitë tuaja do të ridrejtojnë te sajti juaj në &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Mësoni më tepër&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Shtoni një përkatësi</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Skadon më %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires">Skadon më %s</string>
+    <string name="domains_site_domains">Përkatësitë e sajtit tuaj</string>
+    <string name="domains_primary_site_address_blurb">Adresa parësore e sajtit tuaj është ajo çka do të shohin vizitorët te shtylla e adresave në shfletues, kur vizitojnë sajtin tuaj.</string>
+    <string name="domains_primary_site_address_chip">Adresë parësore sajti</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Ndryshoni adresën e sajtit</string>
+    <string name="domains_primary_site_caption">Adresa juaj falas WordPress.com është</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /vit&lt;span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Doni të hidhen tej?</string>
+    <string name="comment_edit_cancel_dialog_title">Ka ndryshime të paruajtura</string>
+    <string name="comment_edit_comment_error">Komenti s’mund të jetë i zbrazët</string>
+    <string name="comment_edit_user_email_error">Email përdoruesi jo i vlefshëm</string>
+    <string name="comment_edit_web_address_error">Adresë Web jo e vlefshme</string>
+    <string name="comment_edit_user_name_error">Emri i përdoruesit s’mund të jetë i zbrazët</string>
+    <string name="comment_edit_email_address">Adresë email</string>
+    <string name="comment_edit_web_address">Adresë Web</string>
+    <string name="comment_edit_comment">Koment</string>
+    <string name="comment_edit_user_name">Emër</string>
+    <string name="comment_edit_menu_done">U bë</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
     <string name="weekly_roundup">Përmbledhje Javore</string>
     <string name="gutenberg_native_embed_options">Mundësi trupëzimi</string>
@@ -18,8 +45,7 @@ Language: sq_AL
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ju&lt;/a&gt; pëlqen kjo.</string>
     <string name="gutenberg_native_line_height">Lartësi Rreshti</string>
     <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">ADRESË PARËSORE SAJTI</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>
     <string name="recommend_app_bad_format_response">U mor përgjigje e pavlefshme</string>
     <string name="recommend_app_null_response">S’u mor përgjigje</string>
@@ -183,6 +209,7 @@ Language: sq_AL
     <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_retry">Riprovoni</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
+    <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
     <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
@@ -2751,6 +2778,7 @@ Language: sq_AL
     <string name="browse_our_faq_button">Shfletoni PBR tonat</string>
     <string name="reader_label_view_original">Shihni shkrimin origjinal</string>
     <string name="reader_empty_posts_in_tag">S’ka postime me këtë temë</string>
+    <string name="help_and_support">Ndihmë &amp; Asistencë</string>
     <string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
     <string name="reader_toast_err_block_blog">S’arrihet të bllokohet ky sajt</string>
     <string name="reader_menu_block_blog">Bllokoje këtë sajt</string>

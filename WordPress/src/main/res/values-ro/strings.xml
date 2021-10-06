@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-21 17:48:57+0000
+Translation-Revision-Date: 2021-10-05 15:11:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Caută un domeniu</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domeniile cumpărate pentru acest site vor redirecționa vizitatorii la &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">În planul tău este inclusă o înregistrare gratuită pentru un domeniu în primul an</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Revendică-ți domeniul gratuit</string>
+    <string name="domains_manage_domains">Administrează domeniile</string>
+    <string name="domains_redirected_domains_blurb">Domeniile tale vor redirecționa la site-ul tău, la &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Află mai multe&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Adaugă un domeniu</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expiră pe %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires">Expiră pe %s</string>
+    <string name="domains_site_domains">Domeniile site-ului tău</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Schimbă adresa site-ului</string>
+    <string name="domains_primary_site_address_chip">Adresă principală site</string>
+    <string name="domains_primary_site_address_blurb">Adresa principală a site-ului este ceea ce vor vedea vizitatorii în bara de adrese a navigatorului lor când îți vizitează site-ul.</string>
+    <string name="domains_primary_site_caption">Adresa ta gratuită pentru WordPress.com este</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Vrei să le elimini?</string>
+    <string name="comment_edit_cancel_dialog_title">Ai modificări nesalvate</string>
+    <string name="comment_edit_comment_error">Comentariul trebuie să conțină un text</string>
+    <string name="comment_edit_user_email_error">Emailul utilizatorului nu este valid</string>
+    <string name="comment_edit_web_address_error">Adresa web nu este validă</string>
+    <string name="comment_edit_user_name_error">Trebuie completat numele de utilizator</string>
+    <string name="comment_edit_email_address">Adresă email</string>
+    <string name="comment_edit_web_address">Adresă web</string>
+    <string name="comment_edit_comment">Comentariu</string>
+    <string name="comment_edit_user_name">Nume</string>
+    <string name="comment_edit_menu_done">Gata</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">În curând, previzualizări pentru blocul Înglobează</string>
     <string name="weekly_roundup">Rezumat săptămânal</string>
     <string name="gutenberg_native_embed_options">Opțiuni de înglobare</string>
@@ -18,9 +45,8 @@ Language: ro
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ai&lt;/a&gt; apreciat asta.</string>
     <string name="gutenberg_native_line_height">Înălțime linie</string>
     <string name="domains_free_plan_get_your_domain_title">Ia-ți domeniul</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">Adresă site principal</string>
     <string name="recommend_app_generic_get_template_error">Eroare necunoscută la aducerea șablonului recomandat pentru aplicație</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">Am primit un răspuns invalid</string>
     <string name="recommend_app_null_response">Nu am primit niciun răspuns</string>
     <string name="recommend_app_subject">Aplicații WordPress - aplicații pentru orice tip de ecran</string>
@@ -186,6 +212,7 @@ Language: ro
     <string name="gutenberg_native_preview_page">Previzualizează pagina</string>
     <string name="gutenberg_native_retry">Reîncearcă</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
+    <string name="gutenberg_native_s_link">Legătură la %s</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
     <string name="gutenberg_native_embed_link">Înglobează legătura</string>
     <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
@@ -2735,6 +2762,7 @@ Language: ro
     <string name="ssl_certificate_details">Detalii</string>
     <string name="cab_selected">%d selectate</string>
     <string name="reader_title_photo_viewer">%1$d din %2$d</string>
+    <string name="help_and_support">Ajutor și suport</string>
     <string name="reader_empty_comments">Niciun comentariu încă</string>
     <string name="reader_label_view_original">Vezi articolul original</string>
     <string name="reader_label_comments_closed">Comentariile sunt închise</string>
@@ -2902,8 +2930,8 @@ Language: ro
     <string name="media_gallery_type_tiled">Placată</string>
     <string name="stats">Statistici</string>
     <string name="share_action">Partajează</string>
-    <string name="manage">Gestionează</string>
     <string name="discard">Renunță</string>
+    <string name="manage">Administrează</string>
     <string name="sign_in">Autentificare</string>
     <string name="note_reply_successful">Răspuns publicat</string>
     <string name="more_notifications">și încă %d.</string>
