@@ -46,6 +46,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -223,28 +225,55 @@ class MySiteViewModel
             visibleDynamicCards
     ) ->
         val state = if (site != null) {
-            val siteItems = mutableListOf<MySiteCardAndItem>()
-            siteItems.addAll(
-                    buildCards(
-                            site,
-                            showSiteIconProgressBar,
-                            activeTask,
-                            isDomainCreditAvailable,
-                            quickStartCategories
-                    )
-            )
-            siteItems.addAll(buildDynamicCards(quickStartCategories, pinnedDynamicCard, visibleDynamicCards))
-            siteItems.addAll(buildSiteItems(site, backupAvailable, scanAvailable, activeTask))
-            scrollToQuickStartTaskIfNecessary(
+            buildSiteSelectedState(
+                    site,
+                    showSiteIconProgressBar,
                     activeTask,
-                    siteItems.indexOfFirst { it.activeQuickStartItem })
-            State.SiteSelected(siteItems)
+                    isDomainCreditAvailable,
+                    quickStartCategories,
+                    pinnedDynamicCard,
+                    visibleDynamicCards,
+                    backupAvailable,
+                    scanAvailable
+            )
         } else {
-            // Hide actionable empty view image when screen height is under 600 pixels.
-            val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
-            State.NoSites(shouldShowImage)
+            buildNoSiteState()
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    @Suppress("LongParameterList")
+    private fun buildSiteSelectedState(
+        site: SiteModel,
+        showSiteIconProgressBar: Boolean,
+        activeTask: QuickStartTask?,
+        isDomainCreditAvailable: Boolean,
+        quickStartCategories: List<QuickStartCategory>,
+        pinnedDynamicCard: DynamicCardType?,
+        visibleDynamicCards: List<DynamicCardType>,
+        backupAvailable: Boolean,
+        scanAvailable: Boolean
+    ): SiteSelected {
+        val siteItems = mutableListOf<MySiteCardAndItem>()
+        siteItems.addAll(
+                buildCards(
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories
+                )
+        )
+        siteItems.addAll(buildDynamicCards(quickStartCategories, pinnedDynamicCard, visibleDynamicCards))
+        siteItems.addAll(buildSiteItems(site, backupAvailable, scanAvailable, activeTask))
+        scrollToQuickStartTaskIfNecessary(activeTask, siteItems.indexOfFirst { it.activeQuickStartItem })
+        return SiteSelected(siteItems)
+    }
+
+    private fun buildNoSiteState(): NoSites {
+        // Hide actionable empty view image when screen height is under 600 pixels.
+        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+        return NoSites(shouldShowImage)
     }
 
     private fun buildCards(
