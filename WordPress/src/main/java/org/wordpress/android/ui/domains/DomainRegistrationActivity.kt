@@ -17,7 +17,8 @@ import javax.inject.Inject
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
-        CTA_DOMAIN_CREDIT_REDEMPTION
+        CTA_DOMAIN_CREDIT_REDEMPTION,
+        DOMAIN_PURCHASE
     }
 
     companion object {
