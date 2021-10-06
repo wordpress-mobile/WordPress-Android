@@ -14,6 +14,11 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
@@ -65,27 +70,14 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun setupObservers() {
-        viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
-            if (isVisible == true) {
-                showDomainSuggestions()
+        viewModel.onNavigation.observeEvent(this) {
+            when (it) {
+                is OpenDomainSuggestions -> showDomainSuggestions()
+                is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
+                is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
+                is FinishDomainRegistration -> finishDomainRegistration(it.event)
             }
-        })
-
-        viewModel.selectedDomain.observe(this, { selectedDomain ->
-            selectedDomain?.let {
-                showDomainRegistrationDetails(it)
-            }
-        })
-
-        viewModel.domainRegistrationCompleted.observe(this, { event ->
-            event?.let {
-                if (shouldShowCongratsScreen()) {
-                    showDomainRegistrationResult(it)
-                } else {
-                    finishDomainRegistration(it)
-                }
-            }
-        })
+        }
     }
 
     private fun showDomainSuggestions() {
