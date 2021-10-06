@@ -224,48 +224,15 @@ class MySiteViewModel
     ) ->
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteCardAndItem>()
-            siteItems.add(
-                    siteInfoCardBuilder.buildSiteInfoCard(
+            siteItems.addAll(
+                    buildCards(
                             site,
                             showSiteIconProgressBar,
-                            this::titleClick,
-                            this::iconClick,
-                            this::urlClick,
-                            this::switchSiteClick,
-                            activeTask == UPDATE_SITE_TITLE,
-                            activeTask == UPLOAD_SITE_ICON
+                            activeTask,
+                            isDomainCreditAvailable,
+                            quickStartCategories
                     )
             )
-            if (!buildConfigWrapper.isJetpackApp) {
-                siteItems.add(
-                        quickActionsCardBuilder.build(
-                                this::quickActionStatsClick,
-                                this::quickActionPagesClick,
-                                this::quickActionPostsClick,
-                                this::quickActionMediaClick,
-                                site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                                activeTask == CHECK_STATS,
-                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
-                        )
-                )
-            }
-            if (isDomainCreditAvailable) {
-                analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-                siteItems.add(DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick)))
-            }
-
-            if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
-                quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                    siteItems.add(
-                            quickStartCardBuilder.build(
-                                    quickStartCategories,
-                                    this::onQuickStartBlockRemoveMenuItemClick,
-                                    this::onQuickStartTaskTypeItemClick
-                            )
-                    )
-                }
-            }
-
             siteItems.addAll(buildDynamicCards(quickStartCategories, pinnedDynamicCard, visibleDynamicCards))
             siteItems.addAll(buildSiteItems(site, backupAvailable, scanAvailable, activeTask))
             scrollToQuickStartTaskIfNecessary(
@@ -278,6 +245,58 @@ class MySiteViewModel
             State.NoSites(shouldShowImage)
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun buildCards(
+        site: SiteModel,
+        showSiteIconProgressBar: Boolean,
+        activeTask: QuickStartTask?,
+        isDomainCreditAvailable: Boolean,
+        quickStartCategories: List<QuickStartCategory>
+    ): List<MySiteCardAndItem> {
+        val cards = mutableListOf<MySiteCardAndItem>()
+        cards.add(
+                siteInfoCardBuilder.buildSiteInfoCard(
+                        site,
+                        showSiteIconProgressBar,
+                        this::titleClick,
+                        this::iconClick,
+                        this::urlClick,
+                        this::switchSiteClick,
+                        activeTask == UPDATE_SITE_TITLE,
+                        activeTask == UPLOAD_SITE_ICON
+                )
+        )
+        if (!buildConfigWrapper.isJetpackApp) {
+            cards.add(
+                    quickActionsCardBuilder.build(
+                            this::quickActionStatsClick,
+                            this::quickActionPagesClick,
+                            this::quickActionPostsClick,
+                            this::quickActionMediaClick,
+                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                            activeTask == CHECK_STATS,
+                            activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
+                    )
+            )
+        }
+        if (isDomainCreditAvailable) {
+            analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
+            cards.add(DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick)))
+        }
+
+        if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+                cards.add(
+                        quickStartCardBuilder.build(
+                                quickStartCategories,
+                                this::onQuickStartBlockRemoveMenuItemClick,
+                                this::onQuickStartTaskTypeItemClick
+                        )
+                )
+            }
+        }
+        return cards
     }
 
     fun buildDynamicCards(
