@@ -12,6 +12,7 @@ import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import javax.inject.Inject
 
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
@@ -137,7 +138,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun shouldShowCongratsScreen(): Boolean {
-        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION || domainRegistrationPurpose == DOMAIN_PURCHASE
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
