@@ -38,7 +38,6 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -91,7 +90,6 @@ class MySiteViewModel
     private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
-    private val quickStartItemBuilder: QuickStartItemBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,

@@ -27,8 +27,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -84,8 +83,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -114,6 +113,7 @@ private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
 private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 13
 private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 14
 private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 15
+private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -132,7 +132,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
-    @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
@@ -142,11 +141,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
+    @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
+    private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
@@ -167,8 +168,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val dynamicCards = MutableLiveData(
             DynamicCardsUpdate(
                     cards = listOf(
-                            CUSTOMIZE_QUICK_START,
-                            GROW_QUICK_START
+                            DynamicCardType.CUSTOMIZE_QUICK_START,
+                            DynamicCardType.GROW_QUICK_START
                     )
             )
     )
@@ -180,18 +181,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 taskType = QuickStartTaskType.CUSTOMIZE,
                 uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
                 completedTasks = emptyList()
-        )
-    private val dynamicQuickStartTaskCard: QuickStartDynamicCard
-        get() = QuickStartDynamicCard(
-                CUSTOMIZE_QUICK_START,
-                UiStringRes(0),
-                emptyList(),
-                0,
-                0,
-                ListItemInteraction.create(
-                        DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true),
-                        dynamicCardMoreClick as (DynamicCardMenuModel) -> Unit
-                )
         )
 
     private var quickActionsStatsClickAction: (() -> Unit)? = null
@@ -233,7 +222,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 scanAndBackupSource,
                 displayUtilsWrapper,
                 quickStartRepository,
-                quickStartItemBuilder,
                 quickStartCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
@@ -241,13 +229,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 quickStartUtilsWrapper,
                 snackbarSequencer,
-                cardsBuilder
+                cardsBuilder,
+                dynamicCardsBuilder
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
         textInputDialogModels = mutableListOf()
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
+        dynamicCardMenu = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -273,6 +263,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 navigationActions.add(it)
             }
         }
+        viewModel.onDynamicCardMenuShown.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                dynamicCardMenu.add(it)
+            }
+        }
         site = SiteModel()
         site.id = siteLocalId
         site.url = siteUrl
@@ -281,6 +276,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.siteId = siteLocalId.toLong()
 
         setUpCardsBuilder()
+        setUpDynamicCardsBuilder()
+
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -727,10 +724,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
-    /* QUICK START CARD + DYNAMIC CARD */
+    /* QUICK START CARD */
     @Test
     fun `hides quick start menu item in quickStartRepository`() {
-        val id = CUSTOMIZE_QUICK_START
+        val id = DynamicCardType.CUSTOMIZE_QUICK_START
         viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
@@ -739,32 +736,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `removes quick start menu item in quickStartRepository`() {
-        val id = CUSTOMIZE_QUICK_START
+        val id = DynamicCardType.CUSTOMIZE_QUICK_START
         viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(quickStartRepository).refresh()
-    }
-
-    @Test
-    fun `given quick start is not in progress, when site is selected, then QS dynamic card not built`() {
-        initSelectedSite(isQuickStartInProgress = false)
-
-        assertThat(findQuickStartDynamicCard()).isNull()
-    }
-
-    @Test
-    fun `given dynamic card disabled + QS in progress, when site is selected, then QS dynamic card not built`() {
-        initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
-
-        assertThat(findQuickStartDynamicCard()).isNull()
-    }
-
-    @Test
-    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS dynamic card built`() {
-        initSelectedSite(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
-
-        assertThat(findQuickStartDynamicCard()).isNotNull
     }
 
     @Test
@@ -919,6 +895,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.ignoreQuickStart()
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    /* DYNAMIC QUICK START CARD */
+    @Test
+    fun `when dynamic quick start more menu is clicked, then dynamic card menu is shown`() {
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        findQuickStartDynamicCard()!!.onMoreClick.click()
+
+        assertThat(dynamicCardMenu.last()).isNotNull
     }
 
     /* ITEM CLICK */
@@ -1268,10 +1254,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        doAnswer {
-            dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
-            dynamicQuickStartTaskCard
-        }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
@@ -1307,6 +1289,19 @@ class MySiteViewModelTest : BaseUnitTest() {
                 domainRegistrationClick = any(),
                 onQuickStartBlockRemoveMenuItemClick = any(),
                 onQuickStartTaskTypeItemClick = any()
+        )
+    }
+
+    private fun setUpDynamicCardsBuilder() {
+        doAnswer {
+            val dynamicQuickStartCard = initDynamicQuickStartCard(it)
+            listOf<DynamicCard>(dynamicQuickStartCard)
+        }.whenever(dynamicCardsBuilder).build(
+                quickStartCategories = any(),
+                pinnedDynamicCard = anyOrNull(),
+                visibleDynamicCards = any(),
+                onDynamicCardMoreClick = any(),
+                onQuickStartTaskCardClick = any()
         )
     }
 
@@ -1380,6 +1375,22 @@ class MySiteViewModelTest : BaseUnitTest() {
                                         (quickStartTaskTypeItemClickAction as ((QuickStartTaskType) -> Unit))
                                 )
                         )
+                )
+        )
+    }
+
+    private fun initDynamicQuickStartCard(mockInvocation: InvocationOnMock): QuickStartDynamicCard {
+        dynamicCardMoreClick = mockInvocation.getArgument(DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION)
+        val dynamicCardType = DynamicCardType.CUSTOMIZE_QUICK_START
+        return QuickStartDynamicCard(
+                id = dynamicCardType,
+                title = UiStringRes(0),
+                taskCards = mock(),
+                accentColor = 0,
+                progress = 0,
+                onMoreClick = ListItemInteraction.create(
+                        DynamicCardMenuModel(dynamicCardType, true),
+                        dynamicCardMoreClick as ((DynamicCardMenuModel) -> Unit)
                 )
         )
     }
