@@ -15,13 +15,18 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,12 +48,19 @@ class CardsBuilderTest {
     @Mock lateinit var site: SiteModel
 
     private lateinit var cardsBuilder: CardsBuilder
+    private val quickStartCategory: QuickStartCategory
+        get() = QuickStartCategory(
+                taskType = QuickStartTaskType.CUSTOMIZE,
+                uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
+                completedTasks = emptyList()
+        )
 
     @Before
     fun setUp() {
         setUpCardsBuilder()
         setUpSiteInfoCardBuilder()
         setUpQuickActionsBuilder()
+        setUpQuickStartCardBuilder()
     }
 
     /* SITE INFO CARD */
@@ -91,32 +103,61 @@ class CardsBuilderTest {
         assertThat(cards.findQuickActionsCard()).isNotNull
     }
 
+    /* QUICK START CARD */
+    @Test
+    fun `given quick start is not in progress, then quick start card not built`() {
+        val cards = buildCards(isQuickStartInProgress = false)
+
+        assertThat(cards.findQuickStartCard()).isNull()
+    }
+
+    @Test
+    fun `given dynamic card disabled + quick start in progress, when site is selected, then QS card built`() {
+        val cards = buildCards(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
+
+        assertThat(cards.findQuickStartCard()).isNotNull
+    }
+
+    @Test
+    fun `given dynamic card enabled + quick start in progress, when site is selected, then QS card not built`() {
+        val cards = buildCards(isQuickStartDynamicCardEnabled = true, isQuickStartInProgress = true)
+
+        assertThat(cards.findQuickStartCard()).isNull()
+    }
+
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
             this.find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun List<MySiteCardAndItem>.findSiteInfoCard() = this.find { it is SiteInfoCard } as SiteInfoCard?
 
+    private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
+
     private fun buildCards(
         activeTask: QuickStartTask? = null,
-        isDomainCreditAvailable: Boolean = false
-    ) = cardsBuilder.build(
-            site = site,
-            showSiteIconProgressBar = false,
-            activeTask = activeTask,
-            isDomainCreditAvailable = isDomainCreditAvailable,
-            quickStartCategories = emptyList(),
-            titleClick = mock(),
-            iconClick = mock(),
-            urlClick = mock(),
-            switchSiteClick = mock(),
-            quickActionStatsClick = mock(),
-            quickActionPagesClick = mock(),
-            quickActionPostsClick = mock(),
-            quickActionMediaClick = mock(),
-            domainRegistrationClick = mock(),
-            onQuickStartBlockRemoveMenuItemClick = mock(),
-            onQuickStartTaskTypeItemClick = mock()
-    )
+        isDomainCreditAvailable: Boolean = false,
+        isQuickStartInProgress: Boolean = false,
+        isQuickStartDynamicCardEnabled: Boolean = false
+    ): List<MySiteCardAndItem> {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
+        return cardsBuilder.build(
+                site = site,
+                showSiteIconProgressBar = false,
+                activeTask = activeTask,
+                isDomainCreditAvailable = isDomainCreditAvailable,
+                quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
+                titleClick = mock(),
+                iconClick = mock(),
+                urlClick = mock(),
+                switchSiteClick = mock(),
+                quickActionStatsClick = mock(),
+                quickActionPagesClick = mock(),
+                quickActionPostsClick = mock(),
+                quickActionMediaClick = mock(),
+                domainRegistrationClick = mock(),
+                onQuickStartBlockRemoveMenuItemClick = mock(),
+                onQuickStartTaskTypeItemClick = mock()
+        )
+    }
 
     fun setUpSiteInfoCardBuilder() {
         doAnswer {
@@ -167,6 +208,29 @@ class CardsBuilderTest {
                 showPagesFocusPoint = any()
         )
     }
+
+    fun setUpQuickStartCardBuilder() {
+        doAnswer {
+            initQuickStartCard()
+        }.whenever(quickStartCardBuilder).build(any(), any(), any())
+    }
+
+    private fun initQuickStartCard() = QuickStartCard(
+            title = UiStringText(""),
+            onRemoveMenuItemClick = mock(),
+            taskTypeItems = listOf(
+                    QuickStartTaskTypeItem(
+                            quickStartTaskType = mock(),
+                            title = UiStringText(""),
+                            titleEnabled = true,
+                            subtitle = UiStringText(""),
+                            strikeThroughTitle = false,
+                            progressColor = 0,
+                            progress = 0,
+                            onClick = mock()
+                    )
+            )
+    )
 
     private fun setUpCardsBuilder() {
         cardsBuilder = CardsBuilder(
