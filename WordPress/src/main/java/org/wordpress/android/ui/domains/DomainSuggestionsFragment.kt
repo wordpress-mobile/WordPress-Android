@@ -97,7 +97,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        adapter.updateSuggestionsList(domainSuggestions)
+        adapter.submitList(domainSuggestions)
     }
 
     private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?) {

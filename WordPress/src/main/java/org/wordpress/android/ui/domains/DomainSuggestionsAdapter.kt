@@ -1,28 +1,23 @@
 package org.wordpress.android.ui.domains
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 class DomainSuggestionsAdapter(
     private val itemSelectionListener: (DomainSuggestionItem?) -> Unit
-) : Adapter<DomainSuggestionsViewHolder>() {
-    private val list = mutableListOf<DomainSuggestionItem>()
-    var selectedPosition = -1
-
+) : ListAdapter<DomainSuggestionItem, DomainSuggestionsViewHolder>(DomainSuggestionItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             DomainSuggestionsViewHolder(parent, itemSelectionListener)
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
     override fun onBindViewHolder(holder: DomainSuggestionsViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(getItem(position))
     }
 
-    internal fun updateSuggestionsList(items: List<DomainSuggestionItem>) {
-        list.clear()
-        list.addAll(items)
-        notifyDataSetChanged()
+    private class DomainSuggestionItemDiffCallback : DiffUtil.ItemCallback<DomainSuggestionItem>() {
+        override fun areItemsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) =
+                old.domainName == new.domainName
+
+        override fun areContentsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) = old == new
     }
 }
