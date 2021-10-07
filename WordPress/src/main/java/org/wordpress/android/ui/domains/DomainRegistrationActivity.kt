@@ -76,31 +76,20 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun showDomainSuggestions() {
-        var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
-        if (fragment == null) {
-            fragment = DomainSuggestionsFragment.newInstance()
-            showFragment(
-                    fragment,
-                    DomainSuggestionsFragment.TAG,
-                    slideIn = false,
-                    isRootFragment = true
-            )
+        showFragment(DomainSuggestionsFragment.TAG, true) {
+            DomainSuggestionsFragment.newInstance()
         }
     }
 
     private fun showDomainRegistrationDetails(details: DomainProductDetails) {
-        var fragment = supportFragmentManager.findFragmentByTag(DomainRegistrationDetailsFragment.TAG)
-        if (fragment == null) {
-            fragment = DomainRegistrationDetailsFragment.newInstance(details)
-            showFragment(fragment, DomainRegistrationDetailsFragment.TAG)
+        showFragment(DomainRegistrationDetailsFragment.TAG) {
+            DomainRegistrationDetailsFragment.newInstance(details)
         }
     }
 
     private fun showDomainRegistrationResult(event: DomainRegistrationCompletedEvent) {
-        var fragment = supportFragmentManager.findFragmentByTag(DomainRegistrationResultFragment.TAG)
-        if (fragment == null) {
-            fragment = DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
-            showFragment(fragment, DomainRegistrationResultFragment.TAG)
+        showFragment(DomainRegistrationResultFragment.TAG) {
+            DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
         }
     }
 
@@ -112,24 +101,23 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun showFragment(
-        fragment: Fragment,
         tag: String,
-        slideIn: Boolean = true,
-        isRootFragment: Boolean = false
-    ) {
-        val transaction = supportFragmentManager.beginTransaction()
-
-        if (slideIn) {
-            transaction.setCustomAnimations(
-                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-            )
+        isRootFragment: Boolean = false,
+        factory: () -> Fragment
+    ) = with(supportFragmentManager) {
+        beginTransaction().apply {
+            if (!isRootFragment) {
+                setCustomAnimations(
+                        R.anim.activity_slide_in_from_right,
+                        R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left,
+                        R.anim.activity_slide_out_to_right
+                )
+                addToBackStack(null)
+            }
+            replace(R.id.fragment_container, findFragmentByTag(tag) ?: factory(), tag)
+            commit()
         }
-        if (!isRootFragment) {
-            transaction.addToBackStack(null)
-        }
-
-        transaction.replace(R.id.fragment_container, fragment, tag).commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
