@@ -726,6 +726,28 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* QUICK ACTIONS CARD */
     @Test
+    fun `when build is Jetpack, then quick action card is not built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        initSelectedSite()
+
+        val quickActionsCard = findQuickActionsCard()
+
+        assertThat(quickActionsCard).isNull()
+    }
+
+    @Test
+    fun `when build is WordPress, then quick action card is built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        val quickActionsCard = findQuickActionsCard()
+
+        assertThat(quickActionsCard).isNotNull
+    }
+
+    @Test
     fun `quick actions does not show pages button when site doesn't have the required capability`() {
         site.hasCapabilityEditPages = false
 
@@ -1254,29 +1276,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onQuickStartTaskCardClick(task)
 
         verify(quickStartRepository).setActiveTask(task)
-    }
-
-    /* QUICK ACTIONS CARD */
-    @Test
-    fun `when build is Jetpack, then quick action card is not built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-
-        initSelectedSite()
-
-        val quickActionsCard = findQuickActionsCard()
-
-        assertThat(quickActionsCard).isNull()
-    }
-
-    @Test
-    fun `when build is WordPress, then quick action card is built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-
-        initSelectedSite()
-
-        val quickActionsCard = findQuickActionsCard()
-
-        assertThat(quickActionsCard).isNotNull
     }
 
     /* START/IGNORE QUICK START + QUICK START DIALOG */
