@@ -477,7 +477,9 @@ class MySiteViewModel
                     quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
                             Event(
-                                    SiteNavigationAction.OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite()))
+                                    SiteNavigationAction.OpenMediaPicker(
+                                            requireNotNull(selectedSiteRepository.getSelectedSite())
+                                    )
                             )
                     )
                 }

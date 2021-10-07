@@ -27,20 +27,11 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -60,10 +51,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.ICON_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.SWITCH_SITE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.TITLE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoCardAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -101,20 +88,6 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ACTIVITY_LOG
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLUGINS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SCAN
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SHARING
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTINGS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -225,17 +198,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
     private var quickActionsMediaClickAction: (() -> Unit)? = null
-    private val quickActionsCard: QuickActionsCard
-        get() = QuickActionsCard(
-                title = UiStringText(""),
-                onStatsClick = ListItemInteraction.create { quickActionsStatsClickAction },
-                onPagesClick = ListItemInteraction.create { quickActionsPagesClickAction },
-                onPostsClick = ListItemInteraction.create { quickActionsPostsClickAction },
-                onMediaClick = ListItemInteraction.create { quickActionsMediaClickAction },
-                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                showPagesFocusPoint = false,
-                showStatsFocusPoint = false
-        )
 
     @InternalCoroutinesApi
     @Before
@@ -442,7 +404,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `site info card title click shows snackbar message when network not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        invokeSiteInfoCardAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -455,7 +417,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityManageOptions = false
         site.origin = SiteModel.ORIGIN_WPCOM_REST
 
-        invokeSiteInfoCardAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -470,7 +432,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_XMLRPC
 
-        invokeSiteInfoCardAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -484,7 +446,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.origin = SiteModel.ORIGIN_WPCOM_REST
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
-        invokeSiteInfoCardAction(TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
 
         assertThat(snackbars).isEmpty()
         assertThat(textInputDialogModels.last()).isEqualTo(
@@ -505,7 +467,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityUploadFiles = true
         site.iconUrl = siteIcon
 
-        invokeSiteInfoCardAction(ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(ChangeSiteIconDialogModel)
     }
@@ -516,7 +478,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityUploadFiles = true
         site.iconUrl = null
 
-        invokeSiteInfoCardAction(ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(AddSiteIconDialogModel)
     }
@@ -528,7 +490,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site.hasCapabilityUploadFiles = false
                 site.setIsWPCom(false)
 
-                invokeSiteInfoCardAction(ICON_CLICK)
+                invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
 
                 assertThat(dialogModels).isEmpty()
                 assertThat(snackbars).containsOnly(
@@ -543,7 +505,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = siteIcon
 
-        invokeSiteInfoCardAction(ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -558,7 +520,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = null
 
-        invokeSiteInfoCardAction(ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -589,14 +551,14 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card url click opens site`() = test {
-        invokeSiteInfoCardAction(URL_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.URL_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSite(site))
     }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
-        invokeSiteInfoCardAction(SWITCH_SITE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoCardAction.SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
     }
@@ -689,7 +651,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
     }
 
     @Test
@@ -698,7 +660,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
@@ -708,7 +670,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
@@ -738,7 +700,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findDomainRegistrationCard()?.onClick?.click()
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+        verify(analyticsTrackerWrapper).track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
 
         assertThat(navigationActions).containsOnly(OpenDomainRegistration(site))
     }
@@ -747,7 +709,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `snackbar is shown and event is tracked when handling successful domain registration result without email`() {
         viewModel.handleSuccessfulDomainRegistrationResult(null)
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        verify(analyticsTrackerWrapper).track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
 
         val message = UiStringRes(R.string.my_site_verify_your_email_without_email)
 
@@ -758,7 +720,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `snackbar is shown and event is tracked when handling successful domain registration result with email`() {
         viewModel.handleSuccessfulDomainRegistrationResult(emailAddress)
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        verify(analyticsTrackerWrapper).track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
 
         val message = UiStringResWithParams(R.string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
 
@@ -940,7 +902,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
         viewModel.startQuickStart()
 
-        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
     @Test
@@ -956,99 +918,99 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
         viewModel.ignoreQuickStart()
 
-        verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     /* ITEM CLICK */
     @Test
     fun `activity item click emits OpenActivity navigation event`() {
-        invokeItemClickAction(ACTIVITY_LOG)
+        invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
 
         assertThat(navigationActions).containsExactly(OpenActivityLog(site))
     }
 
     @Test
     fun `scan item click emits OpenScan navigation event`() {
-        invokeItemClickAction(SCAN)
+        invokeItemClickAction(ListItemAction.SCAN)
 
         assertThat(navigationActions).containsExactly(OpenScan(site))
     }
 
     @Test
     fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
-        invokeItemClickAction(PLAN)
+        invokeItemClickAction(ListItemAction.PLAN)
 
-        verify(quickStartRepository).completeTask(EXPLORE_PLANS)
+        verify(quickStartRepository).completeTask(QuickStartTask.EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(OpenPlan(site))
     }
 
     @Test
     fun `posts item click emits OpenPosts navigation event`() {
-        invokeItemClickAction(POSTS)
+        invokeItemClickAction(ListItemAction.POSTS)
 
         assertThat(navigationActions).containsExactly(OpenPosts(site))
     }
 
     @Test
     fun `pages item click emits OpenPages navigation event`() {
-        invokeItemClickAction(PAGES)
+        invokeItemClickAction(ListItemAction.PAGES)
 
-        verify(quickStartRepository).completeTask(REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(OpenPages(site))
     }
 
     @Test
     fun `admin item click emits OpenAdmin navigation event`() {
-        invokeItemClickAction(ADMIN)
+        invokeItemClickAction(ListItemAction.ADMIN)
 
         assertThat(navigationActions).containsExactly(OpenAdmin(site))
     }
 
     @Test
     fun `sharing item click emits OpenSharing navigation event`() {
-        invokeItemClickAction(SHARING)
+        invokeItemClickAction(ListItemAction.SHARING)
 
         assertThat(navigationActions).containsExactly(OpenSharing(site))
     }
 
     @Test
     fun `site settings item click emits OpenSiteSettings navigation event`() {
-        invokeItemClickAction(SITE_SETTINGS)
+        invokeItemClickAction(ListItemAction.SITE_SETTINGS)
 
         assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
     }
 
     @Test
     fun `themes item click emits OpenThemes navigation event`() {
-        invokeItemClickAction(THEMES)
+        invokeItemClickAction(ListItemAction.THEMES)
 
         assertThat(navigationActions).containsExactly(OpenThemes(site))
     }
 
     @Test
     fun `plugins item click emits OpenPlugins navigation event`() {
-        invokeItemClickAction(PLUGINS)
+        invokeItemClickAction(ListItemAction.PLUGINS)
 
         assertThat(navigationActions).containsExactly(OpenPlugins(site))
     }
 
     @Test
     fun `media item click emits OpenMedia navigation event`() {
-        invokeItemClickAction(MEDIA)
+        invokeItemClickAction(ListItemAction.MEDIA)
 
         assertThat(navigationActions).containsExactly(OpenMedia(site))
     }
 
     @Test
     fun `comments item click emits OpenMedia navigation event`() {
-        invokeItemClickAction(COMMENTS)
+        invokeItemClickAction(ListItemAction.COMMENTS)
 
         assertThat(navigationActions).containsExactly(OpenComments(site))
     }
 
     @Test
     fun `view site item click emits OpenSite navigation event`() {
-        invokeItemClickAction(VIEW_SITE)
+        invokeItemClickAction(ListItemAction.VIEW_SITE)
 
         assertThat(navigationActions).containsExactly(OpenSite(site))
     }
@@ -1058,7 +1020,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         site.setIsWPCom(true)
 
-        invokeItemClickAction(STATS)
+        invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(OpenStats(site))
     }
@@ -1069,16 +1031,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackConnected(true)
         site.setIsJetpackInstalled(true)
 
-        invokeItemClickAction(STATS)
+        invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(OpenStats(site))
     }
 
     @Test
     fun `stats item click completes CHECK_STATS task`() {
-        invokeItemClickAction(STATS)
+        invokeItemClickAction(ListItemAction.STATS)
 
-        verify(quickStartRepository).completeTask(CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
     }
 
     @Test
@@ -1086,7 +1048,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         site.setIsJetpackConnected(true)
 
-        invokeItemClickAction(STATS)
+        invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
     }
@@ -1097,7 +1059,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackConnected(false)
         site.setIsWPCom(false)
 
-        invokeItemClickAction(STATS)
+        invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
     }
@@ -1176,35 +1138,35 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = false)
     }
 
     @Test
     fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = false)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = false)
     }
 
     @Test
     fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
     }
 
     @Test
     fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
     }
 
     @Test
     fun `when site icon dialog is dismissed, then upload site icon task is marked complete with refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
     }
 
     @Test
@@ -1263,8 +1225,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
-    private fun findQuickStartCard() = getLastItems().find { it is QuickStartCard } as QuickStartCard?
-
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
 
     private fun findDomainRegistrationCard() =
@@ -1283,10 +1243,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
         val siteInfoCard = findSiteInfoCard()!!
         when (action) {
-            TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
-            ICON_CLICK -> siteInfoCard.onIconClick.click()
-            URL_CLICK -> siteInfoCard.onUrlClick.click()
-            SWITCH_SITE_CLICK -> siteInfoCard.onSwitchSiteClick.click()
+            SiteInfoCardAction.TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
+            SiteInfoCardAction.ICON_CLICK -> siteInfoCard.onIconClick.click()
+            SiteInfoCardAction.URL_CLICK -> siteInfoCard.onUrlClick.click()
+            SiteInfoCardAction.SWITCH_SITE_CLICK -> siteInfoCard.onSwitchSiteClick.click()
         }
     }
 
