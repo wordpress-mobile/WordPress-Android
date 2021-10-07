@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,8 +53,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     val isDomainCreditAvailable = MediatorLiveData<Boolean>()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
-    val suggestionsLiveData: LiveData<DomainSuggestionsListState>
-        get() = _suggestions
+    val suggestionsLiveData: LiveData<DomainSuggestionsListState> = _suggestions
 
     private var suggestions: ListState<DomainSuggestionResponse>
             by Delegates.observable(ListState.Init()) { _, _, new ->
@@ -63,19 +61,15 @@ class DomainSuggestionsViewModel @Inject constructor(
             }
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
-    val selectedSuggestion: LiveData<DomainSuggestionResponse?>
-        get() = _selectedSuggestion
+    val selectedSuggestion: LiveData<DomainSuggestionResponse?> = _selectedSuggestion
 
-    val choseDomainButtonEnabledState: LiveData<Boolean>
-        get() = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
+    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
 
     private val _selectedPosition = MutableLiveData<Int>()
-    val selectedPosition: LiveData<Int>
-        get() = _selectedPosition
+    val selectedPosition: LiveData<Int> = _selectedPosition
 
-    private val _isIntroVisible = MutableLiveData<Boolean>().apply { value = true }
-    val isIntroVisible: LiveData<Boolean>
-        get() = _isIntroVisible
+    private val _isIntroVisible = MutableLiveData(true)
+    val isIntroVisible: LiveData<Boolean> = _isIntroVisible
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -175,9 +169,9 @@ class DomainSuggestionsViewModel @Inject constructor(
     }
 
     fun updateSearchQuery(query: String) {
-        _isIntroVisible.value = query.isEmpty()
+        _isIntroVisible.value = query.isBlank()
 
-        if (!TextUtils.isEmpty(query)) {
+        if (query.isNotBlank()) {
             searchQuery = query
         } else if (searchQuery != site.name) {
             // Only reinitialize the search query, if it has changed.
