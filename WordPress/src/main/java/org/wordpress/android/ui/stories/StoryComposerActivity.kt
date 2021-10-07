@@ -294,6 +294,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
+    @Suppress("NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
@@ -303,14 +304,23 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER, RequestCodes.STORIES_PHOTO_PICKER -> {
-                    if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                        val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                                it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                        )
-                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
-                    } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                        handleMediaPickerIntentData(it)
+                    when {
+                        it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
+                            data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
+                                val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
+                                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                            }
+                        }
+                        it.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
+                            handleMediaPickerIntentData(it)
+                        }
+                        else -> {
+                            // handleMediaPickerIntentData(it)?
+                        }
                     }
+                }
+                else -> {
+                    // handleMediaPickerIntentData(it)?
                 }
             }
         }
@@ -369,26 +379,31 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-            val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-            )
-            if (uriList.isNotEmpty()) {
-                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+        when {
+            data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
+                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
+                    val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
+
+                    if (uriList.isNotEmpty()) {
+                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                    }
+                }
             }
-        } else if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-            val ids = ListUtils.fromLongArray(
-                    data.getLongArrayExtra(
-                            MediaBrowserActivity.RESULT_IDS
-                    )
-            )
-            if (ids == null || ids.size == 0) {
-                return
+            data.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
+                val ids = ListUtils.fromLongArray(
+                        data.getLongArrayExtra(
+                                MediaBrowserActivity.RESULT_IDS
+                        )
+                )
+                if (ids == null || ids.size == 0) {
+                    return
+                }
+                storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
             }
-            storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
-        } else if (data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED)) {
-            // when coming from this entry point, we can start the analytics session
-            viewModel.onStoryComposerStartAnalyticsSession()
+            data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED) -> {
+                // when coming from this entry point, we can start the analytics session
+                viewModel.onStoryComposerStartAnalyticsSession()
+            }
         }
     }
 
