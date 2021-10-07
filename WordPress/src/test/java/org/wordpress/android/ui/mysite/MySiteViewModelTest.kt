@@ -394,6 +394,102 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
     }
 
+    /* AVATAR */
+    @Test
+    fun `account avatar url value is emitted and updated from the source`() {
+        initSelectedSite()
+
+        currentAvatar.value = CurrentAvatarUrl(avatarUrl)
+
+        assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
+    }
+
+    @Test
+    fun `avatar press opens me screen`() {
+        viewModel.onAvatarPressed()
+
+        assertThat(navigationActions).containsOnly(OpenMeScreen)
+    }
+
+    /* LOGIN - NAVIGATION TO STATS */
+    @Test
+    fun `handling successful login result opens stats screen`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.handleSuccessfulLoginResult()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    /* EMPTY VIEW */
+    @Test
+    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+
+        initSelectedSite()
+        onSiteSelected.value = null
+
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
+    }
+
+    @Test
+    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+
+        initSelectedSite()
+        onSiteSelected.value = null
+
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
+    }
+
+    /* EMPTY VIEW - ADD SITE */
+    @Test
+    fun `add new site press is handled correctly`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        viewModel.onAddSitePressed()
+
+        assertThat(navigationActions).containsOnly(AddNewSite(true))
+    }
+
+    /* REFRESH */
+    @Test
+    fun `when refresh is triggered, then update site settings if necessary`() {
+        viewModel.refresh()
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh quick start`() {
+        viewModel.refresh()
+
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when refresh is triggered, then refresh current avatar`() {
+        viewModel.refresh()
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `when clear active quick start task is triggered, then clear active quick start task`() {
+        viewModel.clearActiveQuickStartTask()
+
+        verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
+        viewModel.checkAndShowQuickStartNotice()
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
     /* SITE INFO CARD */
     @Test
     fun `site info card title click shows snackbar message when network not available`() = test {
@@ -628,23 +724,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(findSiteInfoCard()!!.showIconFocusPoint).isTrue
     }
 
-    /* AVATAR */
-    @Test
-    fun `account avatar url value is emitted and updated from the source`() {
-        initSelectedSite()
-
-        currentAvatar.value = CurrentAvatarUrl(avatarUrl)
-
-        assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
-    }
-
-    @Test
-    fun `avatar press opens me screen`() {
-        viewModel.onAvatarPressed()
-
-        assertThat(navigationActions).containsOnly(OpenMeScreen)
-    }
-
     /* QUICK ACTIONS CARD */
     @Test
     fun `quick actions does not show pages button when site doesn't have the required capability`() {
@@ -772,16 +851,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(OpenMedia(site))
-    }
-
-    /* LOGIN - NAVIGATION TO STATS */
-    @Test
-    fun `handling successful login result opens stats screen`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-
-        viewModel.handleSuccessfulLoginResult()
-
-        assertThat(navigationActions).containsOnly(OpenStats(site))
     }
 
     /* ITEM CLICK */
@@ -1044,39 +1113,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    /* EMPTY VIEW */
-    @Test
-    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
-
-        initSelectedSite()
-        onSiteSelected.value = null
-
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
-        assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
-    }
-
-    @Test
-    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
-
-        initSelectedSite()
-        onSiteSelected.value = null
-
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
-        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
-    }
-
-    /* ADD NEW SITE */
-    @Test
-    fun `add new site press is handled correctly`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        viewModel.onAddSitePressed()
-
-        assertThat(navigationActions).containsOnly(AddNewSite(true))
-    }
-
     /* QUICK START CARD + DYNAMIC CARD */
     @Test
     fun `hides quick start menu item in quickStartRepository`() {
@@ -1313,42 +1349,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.ignoreQuickStart()
 
         verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
-    }
-
-    /* REFRESH */
-    @Test
-    fun `when refresh is triggered, then update site settings if necessary`() {
-        viewModel.refresh()
-
-        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
-    }
-
-    @Test
-    fun `when refresh is triggered, then refresh quick start`() {
-        viewModel.refresh()
-
-        verify(quickStartRepository).refresh()
-    }
-
-    @Test
-    fun `when refresh is triggered, then refresh current avatar`() {
-        viewModel.refresh()
-
-        verify(currentAvatarSource).refresh()
-    }
-
-    @Test
-    fun `when clear active quick start task is triggered, then clear active quick start task`() {
-        viewModel.clearActiveQuickStartTask()
-
-        verify(quickStartRepository).clearActiveTask()
-    }
-
-    @Test
-    fun `when check and show quick start notice is triggered, then check and show quick start notice`() {
-        viewModel.checkAndShowQuickStartNotice()
-
-        verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
     /* ADD SITE ICON DIALOG */
