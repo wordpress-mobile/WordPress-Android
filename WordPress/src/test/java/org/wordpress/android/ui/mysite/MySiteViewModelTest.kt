@@ -276,7 +276,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.siteId = siteLocalId.toLong()
 
         setUpCardsBuilder()
-        setUpDynamicCardsBuilder()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -1253,7 +1252,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false
     ) {
-        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
+        if (isQuickStartDynamicCardEnabled) setUpDynamicCardsBuilder()
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
