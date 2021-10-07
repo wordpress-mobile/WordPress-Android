@@ -699,6 +699,10 @@
             android:label="@string/register_domain"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.domains.DomainRegistrationCheckoutWebViewActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
