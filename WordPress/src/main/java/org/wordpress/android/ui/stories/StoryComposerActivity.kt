@@ -294,6 +294,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
+    @Suppress("NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
