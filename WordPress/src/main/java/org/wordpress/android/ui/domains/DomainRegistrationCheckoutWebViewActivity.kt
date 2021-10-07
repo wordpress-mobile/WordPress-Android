@@ -8,9 +8,10 @@ import androidx.activity.result.contract.ActivityResultContract
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewClient.DomainRegistrationCheckoutWebViewClientListener
 import org.wordpress.android.util.SiteUtils
 
-class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity() {
+class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainRegistrationCheckoutWebViewClientListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
@@ -19,6 +20,11 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // We don't want any menu items
         return true
+    }
+
+    override fun onCheckoutSuccess() {
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent>() {
