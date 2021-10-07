@@ -69,7 +69,7 @@ class CardsBuilder
             )
         }
         if (isDomainCreditAvailable) {
-            cards.add(buildAndTrackDomainRegistrationCard(domainRegistrationClick))
+            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationClick))
         }
         if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartCategories.takeIf { it.isNotEmpty() }?.let {
@@ -123,7 +123,7 @@ class CardsBuilder
             activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
     )
 
-    private fun buildAndTrackDomainRegistrationCard(domainRegistrationClick: () -> Unit): DomainRegistrationCard {
+    private fun trackAndBuildDomainRegistrationCard(domainRegistrationClick: () -> Unit): DomainRegistrationCard {
         analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
         return DomainRegistrationCard(ListItemInteraction.create(domainRegistrationClick))
     }
