@@ -19,6 +19,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
@@ -39,7 +40,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_ST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
@@ -96,7 +96,6 @@ import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilde
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
@@ -136,10 +135,14 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
+private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 5
+private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 6
+private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 7
+private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
-    @Mock lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -274,7 +277,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 analyticsTrackerWrapper,
-                siteInfoCardBuilder,
                 siteItemsBuilder,
                 accountStore,
                 selectedSiteRepository,
@@ -348,26 +350,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onSwitchSiteClick = mock()
         )
 
-        doAnswer {
-            siteInfoCard = siteInfoCard.copy(
-                    onTitleClick = ListItemInteraction.create { (it.getArgument(2) as () -> Unit).invoke() },
-                    onIconClick = ListItemInteraction.create { (it.getArgument(3) as () -> Unit).invoke() },
-                    onUrlClick = ListItemInteraction.create { (it.getArgument(4) as () -> Unit).invoke() },
-                    onSwitchSiteClick = ListItemInteraction.create {
-                        (it.getArgument(5) as () -> Unit).invoke()
-                    }
-            )
-            siteInfoCard
-        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
-                site = any(),
-                showSiteIconProgressBar = any(),
-                titleClick = any(),
-                iconClick = any(),
-                urlClick = any(),
-                switchSiteClick = any(),
-                showUpdateSiteTitleFocusPoint = any(),
-                showUploadSiteIconFocusPoint = any()
-        )
+        setUpCardsBuilder()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -387,7 +370,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
-        assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
     }
 
@@ -671,54 +653,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoCardAction(SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
-    }
-
-    @Test
-    fun `passes active UPDATE_SITE_TITLE into site info card builder`() = test {
-        initSelectedSite()
-
-        whenever(
-                siteInfoCardBuilder.buildSiteInfoCard(
-                        site = eq(site),
-                        showSiteIconProgressBar = any(),
-                        titleClick = any(),
-                        iconClick = any(),
-                        urlClick = any(),
-                        switchSiteClick = any(),
-                        showUpdateSiteTitleFocusPoint = any(),
-                        showUploadSiteIconFocusPoint = any()
-                )
-        ).thenReturn(
-                siteInfoCard.copy(showTitleFocusPoint = true)
-        )
-
-        quickStartUpdate.value = QuickStartUpdate(UPDATE_SITE_TITLE, listOf())
-
-        assertThat(findSiteInfoCard()!!.showTitleFocusPoint).isTrue
-    }
-
-    @Test
-    fun `passes active UPLOAD_SITE_ICON into site info card builder`() {
-        initSelectedSite()
-
-        whenever(
-                siteInfoCardBuilder.buildSiteInfoCard(
-                        site = eq(site),
-                        showSiteIconProgressBar = any(),
-                        titleClick = any(),
-                        iconClick = any(),
-                        urlClick = any(),
-                        switchSiteClick = any(),
-                        showUpdateSiteTitleFocusPoint = eq(false),
-                        showUploadSiteIconFocusPoint = eq(true)
-                )
-        ).thenReturn(
-                siteInfoCard.copy(showIconFocusPoint = true)
-        )
-
-        quickStartUpdate.value = QuickStartUpdate(UPLOAD_SITE_ICON, listOf())
-
-        assertThat(findSiteInfoCard()!!.showIconFocusPoint).isTrue
     }
 
     /* QUICK ACTIONS CARD */
@@ -1491,5 +1425,42 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private enum class SiteInfoCardAction {
         TITLE_CLICK, ICON_CLICK, URL_CLICK, SWITCH_SITE_CLICK
+    }
+
+    private fun setUpCardsBuilder() {
+        doAnswer {
+            siteInfoCard = siteInfoCard.copy(
+                    onTitleClick = ListItemInteraction.create {
+                        (it.getArgument(CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+                    },
+                    onIconClick = ListItemInteraction.create {
+                        (it.getArgument(CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+                    },
+                    onUrlClick = ListItemInteraction.create {
+                        (it.getArgument(CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+                    },
+                    onSwitchSiteClick = ListItemInteraction.create {
+                        (it.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
+                    }
+            )
+            listOf<MySiteCardAndItem>(siteInfoCard)
+        }.whenever(cardsBuilder).build(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                activeTask = anyOrNull(),
+                isDomainCreditAvailable = anyBoolean(),
+                quickStartCategories = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                quickActionStatsClick = any(),
+                quickActionPagesClick = any(),
+                quickActionPostsClick = any(),
+                quickActionMediaClick = any(),
+                domainRegistrationClick = any(),
+                onQuickStartBlockRemoveMenuItemClick = any(),
+                onQuickStartTaskTypeItemClick = any()
+        )
     }
 }
