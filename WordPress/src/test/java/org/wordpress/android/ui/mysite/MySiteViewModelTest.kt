@@ -21,12 +21,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
+import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
@@ -139,6 +139,7 @@ private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 5
 private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 6
 private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 7
 private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
+private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 13
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -798,19 +799,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `correct event is tracked when domain registration item is shown`() = test {
-        initQuickActionsCard()
-
-        onSiteSelected.value = siteLocalId
-        onSiteChange.value = site
-        isDomainCreditAvailable.value = DomainCreditAvailable(true)
-
-        delay(1000)
-
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
-    }
-
-    @Test
     fun `snackbar is shown and event is tracked when handling successful domain registration result without email`() {
         viewModel.handleSuccessfulDomainRegistrationResult(null)
 
@@ -1443,7 +1431,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                         (it.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
                     }
             )
-            listOf<MySiteCardAndItem>(siteInfoCard)
+            val domainRegistrationCard = initDomainRegistrationCard(it)
+            listOf<MySiteCardAndItem>(siteInfoCard, domainRegistrationCard)
         }.whenever(cardsBuilder).build(
                 site = eq(site),
                 showSiteIconProgressBar = any(),
@@ -1463,4 +1452,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onQuickStartTaskTypeItemClick = any()
         )
     }
+
+    private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
+            ListItemInteraction.create {
+                (mockInvocation.getArgument(CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION) as () -> Unit)
+                        .invoke()
+            }
+    )
 }

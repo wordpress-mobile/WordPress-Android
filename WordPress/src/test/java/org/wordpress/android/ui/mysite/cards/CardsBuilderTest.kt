@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -64,6 +66,14 @@ class CardsBuilderTest {
         assertThat(cards.findSiteInfoCard()?.showIconFocusPoint).isTrue
     }
 
+    /* DOMAIN REGISTRATION CARD */
+    @Test
+    fun `when domain credit is available, then correct event is tracked`() {
+        buildCards(isDomainCreditAvailable = true)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+    }
+
     /* QUICK ACTIONS CARD */
     @Test
     fun `when build is Jetpack, then quick action card is not built`() {
@@ -86,11 +96,14 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findSiteInfoCard() = this.find { it is SiteInfoCard } as SiteInfoCard?
 
-    private fun buildCards(activeTask: QuickStartTask? = null) = cardsBuilder.build(
+    private fun buildCards(
+        activeTask: QuickStartTask? = null,
+        isDomainCreditAvailable: Boolean = false
+    ) = cardsBuilder.build(
             site = site,
             showSiteIconProgressBar = false,
             activeTask = activeTask,
-            isDomainCreditAvailable = false,
+            isDomainCreditAvailable = isDomainCreditAvailable,
             quickStartCategories = emptyList(),
             titleClick = mock(),
             iconClick = mock(),
