@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-09-29 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
+    <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
+    <string name="gutenberg_native_line_height">Zeilenhöhe</string>
+    <string name="site_settings_site_domains_title">Website-Domains</string>
+    <string name="my_site_btn_domains">Domains</string>
+    <string name="me_btn_share">Teile WordPress mit einem Freund</string>
+    <string name="recommend_app_subject">WordPress-Apps – Apps für jeden Bildschirm</string>
+    <string name="recommend_app_null_response">Keine Antwort erhalten</string>
+    <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
+    <string name="my_site_quick_actions_title">Direkte Links</string>
     <string name="weekly_roundup_notification_text">Deine Website hat %1$d Aufrufe, %2$d Likes und %3$d Kommentare erhalten.</string>
     <string name="weekly_roundup_notification_title">Wöchentliche Zusammenfassung: %s</string>
     <string name="blogging_reminders_notification_time">Zeit für Benachrichtigungen</string>
@@ -36,6 +46,7 @@ Language: de
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst. </string>
     <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
     <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
@@ -47,9 +58,13 @@ Language: de
     <string name="stats_disabled_subtitle">Aktiviere die Website-Statistiken, um ausführliche Informationen zu deinem Traffic, deinen Likes, Kommentaren und Abonnenten anzuzeigen.</string>
     <string name="gutenberg_native_what_is_a_block">Was ist ein Block?</string>
     <string name="stats_disabled_title">Du suchst die Statistiken?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deinem Beitrag als Vorschau sehen.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Wir arbeiten daran, Unterstützung für %s-Vorschauen hinzuzufügen. In der Zwischenzeit kannst du den eingebetteten Inhalt auf deiner Seite als Vorschau sehen.</string>
     <string name="gutenberg_native_no_blocks_found">Keine Blöcke gefunden</string>
     <string name="gutenberg_native_unable_to_embed_media">Medien können nicht eingebettet werden</string>
     <string name="gutenberg_native_try_another_search_term">Versuche es mit einem anderen Suchbegriff</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s-Vorschauen noch nicht verfügbar</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Embed-Block-Vorschau für %s-Inhalte demnächst verfügbar</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Zur Vorschau des Beitrags zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Zur Vorschau der Seite zweimal tippen</string>
     <string name="quick_start_list_upload_icon_subtitle">Auf dem Browser-Tab deines Besuchers und an anderen Stellen online anzeigen</string>
@@ -157,9 +172,13 @@ Language: de
     <string name="gutenberg_native_post_meta_settings">Beitrags-Meta-Einstellungen</string>
     <string name="gutenberg_native_preview_page">Seitenvorschau</string>
     <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
-    <string name="gutenberg_native_featured">Vorgestellt</string>
+    <string name="gutenberg_native_retry">Erneut versuchen</string>
+    <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
+    <string name="gutenberg_native_featured">Beitragsbild</string>
     <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
+    <string name="gutenberg_native_column_d">Spalte %d</string>
+    <string name="gutenberg_native_none">Keine</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Gib eine kurze Beschreibung des Links für Benutzer von Screenreadern an</string>
     <string name="gutenberg_native_add_blocks">Blöcke hinzufügen</string>
     <string name="login_no_jetpack_sites">Keine Jetpack-Websites gefunden</string>
@@ -717,6 +736,7 @@ Language: de
     <string name="signup_confirmation_title">Registrierungsbestätigung</string>
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
+    <string name="gutenberg_native_convert_to_link">Als Link konvertieren</string>
     <string name="continue_terms_of_service_text">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="signup_confirmation_message">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_magic_link_message">Wir haben dir einen Anmeldelink per E-Mail gesendet, um dein neues WordPress.com-Konto zu erstellen. Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von WordPress.com erhalten hast.</string>
@@ -1314,7 +1334,6 @@ Language: de
     <string name="stats_detail_months_and_years">Monate und Jahre</string>
     <string name="stats_insights_load_more">Mehr laden</string>
     <string name="stats_months_and_years_views_label">Ansichten</string>
-    <string name="new_site_creation_preview_subtitle">Du kannst das Erscheinungsbild deiner Website später anpassen</string>
     <string name="publish_on">Veröffentlichen auf: %s</string>
     <string name="schedule_for">Planen für: %s</string>
     <string name="scheduled_for">Geplant für: %s</string>
@@ -1894,7 +1913,6 @@ Language: de
     <string name="dlg_saving_tag">Wird gespeichert …</string>
     <string name="dlg_deleting_tag">Wird gelöscht …</string>
     <string name="dlg_confirm_delete_tag">Schlagwort „%s“ dauerhaft löschen?</string>
-    <string name="my_site_btn_site_pages">Seiten</string>
     <string name="error_tag_exists">Ein Schlagwort mit diesem Namen ist bereits vorhanden.</string>
     <string name="add_new_tag">Neues Schlagwort hinzufügen</string>
     <string name="tag_description_hint">Beschreibung</string>
@@ -2650,10 +2668,10 @@ Language: de
     <string name="my_site_btn_view_site">Website ansehen</string>
     <string name="site_picker_title">Website auswählen</string>
     <string name="my_site_btn_switch_site">Website wechseln</string>
-    <string name="my_site_btn_blog_posts">Blogbeiträge</string>
     <string name="my_site_header_look_and_feel">Erscheinungsbild</string>
     <string name="my_site_header_publish">Veröffentlichen</string>
     <string name="my_site_btn_site_settings">Website-Einstellungen</string>
+    <string name="my_site_btn_blog_posts">Beiträge</string>
     <string name="my_site_header_configuration">Einrichtung</string>
     <string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
     <string name="deselect_all">Alle abwählen</string>

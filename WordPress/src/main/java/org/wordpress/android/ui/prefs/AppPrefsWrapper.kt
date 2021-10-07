@@ -186,6 +186,14 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.isBloggingRemindersShown(siteId)
     }
 
+    fun setShouldShowWeeklyRoundupNotification(siteId: Long, shouldShow: Boolean) {
+        AppPrefs.setShouldShowWeeklyRoundupNotification(siteId, shouldShow)
+    }
+
+    fun shouldShowWeeklyRoundupNotification(siteId: Long): Boolean {
+        return AppPrefs.shouldShowWeeklyRoundupNotification(siteId)
+    }
+
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
             AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 
@@ -193,10 +201,6 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
-
-    fun isQuickStartEnabled() = !AppPrefs.isQuickStartDisabled()
-
-    fun setQuickStartDisabled(isDisabled: Boolean) = AppPrefs.setQuickStartDisabled(isDisabled)
 
     fun getSelectedSite() = AppPrefs.getSelectedSite()
 

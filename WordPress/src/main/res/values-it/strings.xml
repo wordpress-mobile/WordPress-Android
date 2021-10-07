@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-09-29 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="weekly_roundup">Resoconto settimanale</string>
+    <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
+    <string name="quick_start_list_create_site_message">Sito creato. Completa un\'altra attività.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A te e %1$s blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A te e 1 blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A te&lt;/a&gt; piace questo.</string>
+    <string name="gutenberg_native_line_height">Altezza linea</string>
+    <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
+    <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
+    <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
+    <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
+    <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
+    <string name="me_btn_share">Condividi WordPress con un amico</string>
+    <string name="my_site_quick_actions_title">Link veloci</string>
+    <string name="my_site_btn_domains">Domini</string>
+    <string name="site_settings_site_domains_title">Domini del sito</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -37,6 +56,7 @@ Language: it
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">I blocchi ti consentono di concentrarti sulla scrittura dei contenuti, perché tutti gli strumenti di formattazione di cui hai bisogno sono già lì per aiutarti a trasmettere il tuo messaggio.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organizza i tuoi contenuti in colonne, aggiungi pulsanti di inviti all\'azione e sovrapponi il testo alle immagini.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Aggiungi un nuovo blocco in qualsiasi momento toccando l\'icona + sulla barra degli strumenti nella parte inferiore sinistra. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s di %2$s completati</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Scopri le nozioni di base grazie a una rapida guida dettagliata.</string>
     <string name="comment_batch_moderation_error">Non è stato possibile moderare uno o più commenti</string>
     <string name="create_site_notification_create_site_action">Crea il sito</string>
@@ -47,9 +67,13 @@ Language: it
     <string name="stats_disabled_subtitle">Attiva le statistiche del sito per vedere le informazioni dettagliate su traffico, Mi piace, commenti e abbonati.</string>
     <string name="stats_disabled_title">Cerchi le statistiche?</string>
     <string name="gutenberg_native_what_is_a_block">Che cos\'è un blocco?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
     <string name="gutenberg_native_unable_to_embed_media">Non è possibile incorporare il media</string>
     <string name="gutenberg_native_try_another_search_term">Prova un altro termine di ricerca</string>
     <string name="gutenberg_native_no_blocks_found">Nessun blocco trovato</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Le anteprime di %s non sono ancora disponibili</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Le anteprime %s dei blocchi incorporate saranno presto disponibili</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Tocca due volte per visualizzare l\'anteprima dell\'articolo.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>
@@ -157,9 +181,13 @@ Language: it
     <string name="gutenberg_native_post_meta_settings">Impostazioni dei metadati dell\'articolo</string>
     <string name="gutenberg_native_preview_page">Pagina di anteprima</string>
     <string name="gutenberg_native_preview_post">Anteprima articolo</string>
+    <string name="gutenberg_native_retry">Riprova</string>
+    <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
+    <string name="gutenberg_native_column_d">Colonna %d</string>
+    <string name="gutenberg_native_none">Nessuno</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
     <string name="gutenberg_native_add_blocks">Aggiungi blocchi</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>
@@ -717,6 +745,7 @@ Language: it
     <string name="signup_confirmation_title">Conferma dell\'iscrizione</string>
     <string name="continue_with_google_terms_of_service_text">Se continui con Google e non hai già un account WordPress.com, crei un account e accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="enter_your_site_address">Immetti l\'indirizzo del sito esistente</string>
+    <string name="gutenberg_native_convert_to_link">Converti in link</string>
     <string name="continue_terms_of_service_text">Continuando, accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="signup_confirmation_message">Useremo questo indirizzo email per creare il tuo nuovo account WordPress.com.</string>
     <string name="signup_magic_link_message">Ti abbiamo inviato un\'email con un link per creare il tuo nuovo account WordPress.com. Controlla la tua email su questo dispositivo e tocca il link nell\'email ricevuta da WordPress.com.</string>
@@ -1318,7 +1347,6 @@ Language: it
     <string name="stats_months_and_years_period_label">Periodo</string>
     <string name="stats_detail_months_and_years">Mesi e anni</string>
     <string name="stats_insights_load_more">Carica di più</string>
-    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto del tuo sito in un secondo momento</string>
     <string name="stats_detail_average_views_per_day">Media visualizzazioni al giorno</string>
     <string name="stats_insights_today_stats">Oggi</string>
     <string name="stats_insights_best_hour">Orario migliore</string>
@@ -1893,7 +1921,6 @@ Language: it
     <string name="site_settings_tags_hint">Gestisci i tag del tuo sito</string>
     <string name="dlg_saving_tag">Salvataggio</string>
     <string name="dlg_deleting_tag">Cancellazione</string>
-    <string name="my_site_btn_site_pages">Pagine</string>
     <string name="dlg_confirm_delete_tag">Eliminare definitivamente il tag \'%s\'?</string>
     <string name="error_tag_exists">Esiste già un tag con questo nome</string>
     <string name="tag_description_hint">Descrizione</string>
@@ -2652,7 +2679,6 @@ Language: it
     <string name="my_site_btn_view_site">Visualizza il sito</string>
     <string name="my_site_header_look_and_feel">Aspetto</string>
     <string name="my_site_header_publish">Pubblica</string>
-    <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="my_site_btn_site_settings">Impostazioni sito</string>
     <string name="my_site_header_configuration">Configurazione</string>
     <string name="reader_label_new_posts_subtitle">Tocca per visualizzarli</string>

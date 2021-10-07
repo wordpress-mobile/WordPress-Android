@@ -140,9 +140,61 @@ class PostPageListLabelColorUseCaseTest {
         assertThat(labelsColor).isEqualTo(ERROR_COLOR)
     }
 
-    private fun dummyPostModel(): PostModel {
+    @Test
+    fun `label has info color on sticky post`() {
+        // Arrange
+        val stickyPost = dummyPostModel(sticky = true)
+
+        // Act
+        val labelsColor = useCase.getLabelsColor(
+                stickyPost,
+                mock(),
+                hasUnhandledConflicts = false,
+                hasUnhandledAutoSave = false
+        )
+        // Assert
+        assertThat(labelsColor).isEqualTo(STATE_INFO_COLOR)
+    }
+
+    @Test
+    fun `label error color has precedence over info and progress color`() {
+        // Arrange
+        val stickyPost = dummyPostModel(sticky = true)
+        val hasUnhandledConflicts = true
+        val uploadState = UploadingPost(false)
+
+        // Act
+        val labelsColor = useCase.getLabelsColor(
+                stickyPost,
+                uploadState,
+                hasUnhandledConflicts = hasUnhandledConflicts,
+                hasUnhandledAutoSave = false
+        )
+        // Assert
+        assertThat(labelsColor).isEqualTo(ERROR_COLOR)
+    }
+
+    @Test
+    fun `label progress color has precedence over info color`() {
+        // Arrange
+        val stickyPost = dummyPostModel(sticky = true)
+        val uploadState = UploadingPost(false)
+
+        // Act
+        val labelsColor = useCase.getLabelsColor(
+                stickyPost,
+                uploadState,
+                hasUnhandledConflicts = false,
+                hasUnhandledAutoSave = false
+        )
+        // Assert
+        assertThat(labelsColor).isEqualTo(PROGRESS_INFO_COLOR)
+    }
+
+    private fun dummyPostModel(sticky: Boolean = false): PostModel {
         val post = PostModel()
         post.setDateCreated("1970-01-01'T'00:00:01Z")
+        post.setSticky(sticky)
         return post
     }
 

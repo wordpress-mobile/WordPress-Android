@@ -84,8 +84,8 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -132,7 +132,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -186,8 +185,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
 
-    private static final int NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES = -1;
-
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
 
@@ -224,7 +221,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
@@ -384,7 +380,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     this,
                     getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mOnboardingImprovementsFeatureConfig.isEnabled(),
                     mBuildConfigWrapper.isJetpackApp()
             );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
@@ -1279,7 +1274,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 this,
                                 true,
                                 getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                                mOnboardingImprovementsFeatureConfig.isEnabled(),
                                 mBuildConfigWrapper.isJetpackApp()
                         );
                     }
@@ -1566,14 +1560,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         MySiteFragment mySiteFragment = getMySiteFragment();
         if (mySiteFragment != null) {
             mySiteFragment.onNegativeClicked(instanceTag);
-        }
-    }
-
-    @Override
-    public void onNeutralClicked(@NonNull String instanceTag) {
-        MySiteFragment mySiteFragment = getMySiteFragment();
-        if (mySiteFragment != null) {
-            mySiteFragment.onNeutralClicked(instanceTag);
         }
     }
 

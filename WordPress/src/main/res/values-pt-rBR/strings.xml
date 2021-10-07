@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-20 13:42:48+0000
+Translation-Revision-Date: 2021-09-08 18:26:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
@@ -139,6 +139,7 @@ Language: pt_BR
     <string name="gutenberg_native_embed_link">Link da mídia incorporada</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
+    <string name="gutenberg_native_add_blocks">Adicionar blocos</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Modificar %s em</string>
@@ -1286,7 +1287,6 @@ Language: pt_BR
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrar domínio</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Para instalar plugins, é necessário ter um domínio personalizado associado ao seu site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Instalar plugin</string>
-    <string name="new_site_creation_preview_subtitle">Você poderá personalizar a aparência de seu site mais tarde</string>
     <string name="publish_on">Publicar em: %s</string>
     <string name="schedule_for">Agendar para: %s</string>
     <string name="published_on">Publicado em: %s</string>
@@ -1867,7 +1867,6 @@ Language: pt_BR
     <string name="plugin_byline">por %s</string>
     <string name="change_photo">Alterar foto</string>
     <string name="plugin_fetch_error">Não foi possível carregar os plugins</string>
-    <string name="my_site_btn_site_pages">Páginas do site</string>
     <string name="site_settings_tags_hint">Gerenciar as tags do seu site</string>
     <string name="dlg_saving_tag">Salvando</string>
     <string name="dlg_deleting_tag">Excluindo</string>
@@ -2627,7 +2626,7 @@ Language: pt_BR
     <string name="my_site_btn_view_site">Ver site</string>
     <string name="my_site_btn_view_admin">Ver Painel</string>
     <string name="my_site_btn_switch_site">Mudar de site</string>
-    <string name="my_site_btn_blog_posts">Posts do blog</string>
+    <string name="my_site_btn_site_settings">Configurações do site</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparência</string>
     <string name="my_site_header_configuration">Configuração</string>

@@ -114,6 +114,13 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner, Observer {
             choseDomainButton.isEnabled = it ?: false
         })
+
+        viewModel.isDomainCreditAvailable.observe(viewLifecycleOwner, {
+            it?.let {
+                val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
+                adapter.updateDomainCreditAvailable(viewModel.isSiteDomainsFeatureConfigEnabled, it)
+            }
+        })
     }
 
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {

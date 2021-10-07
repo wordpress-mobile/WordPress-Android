@@ -1,108 +1,108 @@
 <ar>
-18.1:
--موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
--زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
-- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+18.3:
+الكثير من التحسينات في محرِّر المكوِّن! قمنا بإصلاح مشكلة شريط الأدوات التي تؤثر في الأجهزة التي تم تعيينها إلى لغة RTL، وأجرينا العديد من التحديثات على مكوِّن التضمين، بما في ذلك تمكين معاينات ووردبريس وإنستغرام وفيميو وتقديم خيارات لإعادة تجربة الوسائط أو تحويلها إلى رابط إذا لم تكن قابلة للتضمين.
+
+تتضمن بعض التحديثات الأخرى إصلاحًا يؤثر في مقاطع الفيديو التي تكون بتنسيق .mp4 على بعض المواقع وتبسيط تسميات قوائم موقعي ("المقالات" و"الصفحات").
 </ar>
 <de-DE>
-18.1:
-- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
-- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
-- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
+18.3:
+Wir haben Probleme im Block-Editor mit der Werkzeugleiste bei Geräten mit linksläufiger Sprache behoben und einige Updates am Embed-Block vorgenommen, u. a. eine Vorschau für WordPress, Instagram und Vimeo sowie Optionen zum Wiederholen oder Konvertieren von Medien in einen Link.
+
+Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos auftrat, und die „Meine Website“-Menübeschriftungen aktualisiert („Beiträge“ und „Seiten“).
 </de-DE>
 <en-US>
-18.1:
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+18.3:
+Lots of improvements in the block editor! We fixed an image displaying issue, a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.
+
+Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).
 </en-US>
 <es-ES>
-18.1:
--Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
--Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
--Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
+18.3:
+En el editor de bloques, hemos corregido un problema de la barra de herramientas en los dispositivos configurados con un idioma RTL, y hemos realizado actualizaciones en el bloque de incrustación, como la activación de las vistas previas de WordPress, Instagram y Vimeo y la incorporación de opciones para reintentar o convertir los medios en un enlace.
+
+Otras actualizaciones incluyen una corrección que afecta al vídeo en algunos sitios.
 </es-ES>
 <fr-CA>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
 </fr-CA>
 <fr-FR>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.3 :
+Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
+
+Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
 </fr-FR>
 <iw-IL>
-18.1:
-- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
-- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
-- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
+18.3:
+המון שיפורים בעורך הבלוקים! תיקנו בעיה בסרגל הכלים שהשפיעה על מכשירים שמוגדרים לשפה שנקראת מימין לשמאל והוספנו הרבה עדכונים לבלוק ההטמעה, כולל הפעלה של תצוגות מקדימות של תוכן מ-WordPress, מאינסטגרם ומ-Vimeo ואפשרויות לנסות שוב או להמיר את המדיה לקישורים אם סוג המדיה לא ניתן להטמעה.
+
+עדכונים אחרים כוללים תיקון שהשפיע על סרטוני וידאו בפורמט ‎.mp4 בחלק מהאתרים ושיפור בתצוגה של תוויות התפריט 'האתר שלי' ('פוסטים' ו'עמודים').
 </iw-IL>
 <id>
-18.1:
-- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
-- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
-- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
+18.3:
+Di Editor blok, kami memperbaiki masalah bilah peralatan pada perangkat yang disetel ke bahasa RTL, dan membuat pembaruan pada blok Sematan, seperti mengaktifkan pratinjau WordPress, Instagram, dan Vimeo dan menambahkan pilihan untuk mencoba lagi atau mengonversi media menjadi tautan.
+
+Pembaruan lainnya mencakup perbaikan yang memengaruhi video .mp4 di beberapa situs, dan memperbarui label menu Situs Saya (“Pos” dan “Halaman”).
 </id>
 <it-IT>
-18.1:
--Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
--Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
--Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
+18.3:
+Nell'editor a blocchi, risolto un problema alla barra degli strumenti per i dispositivi impostati su una lingua RTL ed eseguito aggiornamenti al blocco Incorporamenti, come l'abilitazione delle anteprime di WordPress, Instagram e Vimeo e l'aggiunta di opzioni per riprovare o convertire gli elementi multimediali in un link.
+
+Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e 'aggiornamento delle etichette del menu Il mio sito ("Articoli" e "Pagine").
 </it-IT>
 <ja-JP>
-18.1:
--1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
--埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
--時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
+18.3:
+ブロックエディターが多くの点で改良されました。 右から左に表示される言語に設定されているデバイスに影響を及ぼすツールバーの問題を修正しました。また、WordPress、Instagram、Vimeo でのプレビューの有効化や、メディアを埋め込めない場合に埋め込みをリトライしたり、リンクに変換したりするためのオプションの導入など、埋め込みブロックに対して多数アップデートを行っています。
+
+一部のサイトの .mp4 動画に影響する問題の修正や、「参加サイト」メニューのラベルの整理 (「投稿」と「ページ」) なども行っています。
 </ja-JP>
 <ko-KR>
-18.1:
-- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
-- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
-- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
+18.3:
+블록 편집기가 아주 많이 개선되었습니다! RTL 언어로 설정된 기기에 영향을 주는 도구 모음 문제를 해결했으며, WordPress, Instagram, Vimeo 미리보기를 활성화하고 미디어를 임베드할 수 없는 경우 다시 시도하거나 링크로 변환하는 옵션을 제공하는 등 임베드 블록을 많이 업데이트했습니다.
+
+기타 업데이트에는 일부 사이트의 .mp4 비디오에 영향을 주는 수정 사항과 "글"과 "페이지"로 간소화한 내 사이트 메뉴 레이블이 포함됩니다.
 </ko-KR>
 <nl-NL>
-18.1:
--Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
--Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
--Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
+18.3:
+In de blok-editor, hebben we een probleem met de toolbar opgelost op apparaten die zijn ingesteld op een RTL taal, en hebben we updates aangebracht aan het blok Insluiten, zoals het inschakelen van WordPress-, Instagram- en Vimeo-voorvertoningen en het toevoegen van opties om het opnieuw te proberen of media om te zetten in een link.
+
+Meer updates omvatten een oplossing voor video op sommige sites en het updaten van menulabels voor Mijn site ("Berichten" en "Pagina's").
 </nl-NL>
 <pt-BR>
-18,1:
-- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
-- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
-- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
+18.3:
+No editor de blocos, corrigimos um erro na barra de ferramentas de dispositivos configurados em RTL e fizemos atualizações no bloco de mídia incorporada, como habilitar prévias para o WordPress, Instagram e Vimeo e incluir a opção de tentar novamente ou converter a mídia em um link.
+
+Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos os rótulos do menu Meu site (agora "Posts" e "Páginas").
 </pt-BR>
 <ru-RU>
-18.1:
--Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
--Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
--Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
+18.3:
+Множество улучшений в редакторе блоков! Мы исправили проблему с панелью инструментов при использовании на устройстве языков RTL, и внесли много обновлений в блок встраивания, включая предварительный просмотр WordPress, Instagram и Vimeo, возможность повторной попытки или преобразования мультимедиа в ссылку, если она не может быть встроена.
+
+Другие обновления включают исправление видео в формате .mp4 на некоторых сайтах, и оптимизацию ярлыков меню «Мой сайт» («Записи» и «Страницы»).
 </ru-RU>
 <sv-SE>
-18.1:
--Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
--Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
--En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
+18.3:
+Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
+
+Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).
 </sv-SE>
 <tr-TR>
-18.1:
--Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
--Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
--Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
+18.3:
+Blok düzenleyicide, RTL diline ayarlanmış cihazlarda araç çubuğunda yaşanan bir sorunu düzelttik ve Gömülü blokta WordPress, Instagram ve Vimeo önizlemelerini etkinleştirmek, medyayı yeniden denemek veya bir bağlantıya dönüştürmek için seçenekler eklemek gibi güncellemeler yaptık.
+
+Diğer güncellemeler olarak, bazı sitelerdeki videoyu etkileyen bir düzeltmeyi ve Sitem menü etiketlerinin (“Gönderiler” ve “Sayfalar”) güncellenmesini sayabiliriz.
 </tr-TR>
 <zh-CN>
-18.1:
--每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
--“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
--时间选择功能，允许您选择特定的时间来接收博客提醒。
+18.3：
+区块编辑器中有许多改进！ 我们修复了影响将设备设置为 RTL 语言的工具栏问题，并对嵌入区块进行了许多更新，包括启用 WordPress、Instagram 和 Vimeo 预览，并在无法嵌入媒体时提供了重试媒体嵌入或将媒体转换为链接的选项。
+
+其他更新包括修复了影响某些站点上 .mp4 视频的问题，以及简化了“我的站点”菜单标签（“文章”和“页面”）。
 </zh-CN>
 <zh-TW>
-18.1：
--每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
--嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
--時間選取功能可讓你指定接收網誌提醒的時間。
+18.3:
+我們改善了區塊編輯器的諸多功能！ 修正了讓裝置無法選擇 RTL 語言的工具列問題，也對嵌入內容區塊做了諸多更新，包括啟用 WordPress、Instagram 和 Vimeo 預覽，並提供了重試或將媒體轉換成連結的選項 (如果媒體不能嵌入的話)。
+
+其他更新包括修正了某些網站 .mp4 影片的問題，以及簡化了「我的網站」選單標籤 (現在是「文章」和「頁面」)。
 </zh-TW>

@@ -207,7 +207,7 @@ REPOSITORY_NAME="WordPress-Android"
   # Example:
   # fastlane update_appstore_strings version:10.3
   #####################################################################################
-  desc "Updates the PlayStoreStrings.po & JetpackPlayStoreStrings.po files"
+  desc "Updates the PlayStoreStrings.po files for WP + JP"
   lane :update_appstore_strings do |options|
     update_wordpress_appstore_strings(options)
     update_jetpack_appstore_strings(options)
@@ -271,7 +271,7 @@ REPOSITORY_NAME="WordPress-Android"
   # Example:
   # fastlane update_jetpack_appstore_strings version:10.3
   #####################################################################################
-  desc "Updates the JetpackPlayStoreStrings.po file for Jetpack"
+  desc "Updates the PlayStoreStrings.po file for Jetpack"
   lane :update_jetpack_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
 
@@ -283,11 +283,8 @@ REPOSITORY_NAME="WordPress-Android"
       'app-store-name': File.join(metadata_folder, 'title.txt'),
     }
 
-    # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.
-    #   This will require a change in the sandbox to update the path that the cron job uses to import this file into GlotPress.
-    #   In the meantime, `jetpack_metadata/PlayStoreStrings.po` is a symlink to the real `../metadata/JetpackPlayStoreStrings.po`
     android_update_metadata_source(
-      po_file_path: metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'JetpackPlayStoreStrings.po'),
+      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
       source_files: files,
       release_version: options[:version]
     )
@@ -374,7 +371,7 @@ REPOSITORY_NAME="WordPress-Android"
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: 'wp_jp')
 
-    android_finalize_prechecks(options)
+    android_finalize_prechecks(options.merge({app: 'wp_jp'}))
     configure_apply(force: is_ci)
 
     UI.message('Checking app strings translation status...')
@@ -417,13 +414,13 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_release [skip_confirm:<skip confirm>] [skip_prechecks:<skip prechecks>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [skip_prechecks:<skip prechecks>] [create_release:<Create release on GH> ]
   #
   # Example:
-  # bundle exec fastlane build_and_upload_release
-  # bundle exec fastlane build_and_upload_release skip_confirm:true
-  # bundle exec fastlane build_and_upload_release skip_prechecks:true
-  # bundle exec fastlane build_and_upload_release create_release:true
+  # bundle exec fastlane build_and_upload_release app:wordpress
+  # bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true
+  # bundle exec fastlane build_and_upload_release app:jetpack skip_prechecks:true
+  # bundle exec fastlane build_and_upload_release app:wordpress create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do |options|
@@ -445,7 +442,7 @@ REPOSITORY_NAME="WordPress-Android"
     upload_build_to_play_store(version: version, track: "production", app: app)
 
     if (options[:create_release])
-      create_gh_release(version: version, app: app)
+      create_gh_release(app: app, version: version)
     end
   end
 
@@ -483,12 +480,12 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_alpha app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
   #
   # Example:
-  # bundle exec fastlane build_alpha
-  # bundle exec fastlane build_alpha skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_alpha create_release:true
+  # bundle exec fastlane build_alpha app:wordpress create_release:true
+  # bundle exec fastlane build_alpha app:wordpress skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_alpha app:jetpack
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do |options|
@@ -506,7 +503,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true, app: app)
+      create_gh_release(app: app, version: version, prerelease: true)
     end
   end
 
@@ -516,12 +513,12 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_beta app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
   #
   # Example:
-  # bundle exec fastlane build_beta
-  # bundle exec fastlane build_beta skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_beta create_release:true
+  # bundle exec fastlane build_beta app:wordpress create_release:true
+  # bundle exec fastlane build_beta app:wordpress skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_beta app:jetpack create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do |options|
@@ -539,7 +536,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true, app: app)
+      create_gh_release(app: app, version: version, prerelease: true)
     end
   end
 
@@ -549,12 +546,12 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_internal [app:<name of app>] [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_internal app:<wordpress|jetpack>] [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
   #
   # Example:
-  # bundle exec fastlane build_internal
-  # bundle exec fastlane build_internal skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_internal create_release:true
+  # bundle exec fastlane build_internal app:wordpress
+  # bundle exec fastlane build_internal app:wordpress skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_internal app:jetpack create_release:true
   #####################################################################################
   desc "Builds and updates for internal testing"
   lane :build_internal do |options|
@@ -572,7 +569,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true, app: app)
+      create_gh_release(app: app, version: version, prerelease: true)
     end
   end
 
@@ -752,8 +749,7 @@ REPOSITORY_NAME="WordPress-Android"
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
-    {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   binary_imported_libraries = [
@@ -773,6 +769,14 @@ REPOSITORY_NAME="WordPress-Android"
       strings_file_path: "WordPressLoginFlow/src/main/res/values/strings.xml",
       github_release_prefix: "",
       exclusions: ["default_web_client_id"]
+    },
+    {
+      name: "Stories Library",
+      import_key: "storiesVersion",
+      repository: "Automattic/stories-android",
+      strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
     },
   ]
 
@@ -836,21 +840,6 @@ REPOSITORY_NAME="WordPress-Android"
     unless is_repo_clean then
       commit_strings(options)
     end
-  end
-
-  # This lane verifies that new strings which have been added to the main strings.xml
-  # and which belongs to features of subtrees and submodules have also been added
-  # to the library strings.xml file.
-  lane :validate_submodules_strings do | options |
-    pr_number = options[:pr_number]
-    pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
-
-    diff_url = nil
-    if (pr_number.nil? == false)
-      diff_url = "https://patch-diff.githubusercontent.com/raw/wordpress-mobile/WordPress-Android/pull/#{pr_number}.diff"
-    end
-
-    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path, diff_url: diff_url)
   end
 
 ########################################################################
@@ -941,79 +930,64 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
-  # trigger_ci
+  # create_gh_release
   # -----------------------------------------------------------------------------------
-  # This lane triggers a CircleCI build on demand, with custom parameters
+  # This lane creates a GitHub release for the current version
+  #   - Attaching the existing .aab files in `build/` as the release assets
+  #   - Using the WP & JP release_notes.txt as description
+  #   - If `prerelease:<true|false>`` is not provided, the pre-release status will be inferred from the version name
   # -----------------------------------------------------------------------------------
   # Usage:
-  #   trigger_ci(
-  #     [token:<circleci_token>,]
-  #     [fork:<github_fork_name>,]
-  #     [branch:<git branch>,]
-  #     [parameters:<CircleCI pipeline parameters>]
-  #   )
-  # -----------------------------------------------------------------------------------
-  # Notes:
-  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
-  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
+  # bundle exec fastlane create_gh_release [app:<wordpress|jetpack>] [version:<Hash{name,code}>] [prerelease:<true|false>]
+  #
+  # Examples:
+  # bundle exec fastlane create_gh_release     # Guesses prerelease status based on version name. Includes existing assets for WPAlpha+WPBeta+JPBeta
+  # bundle exec fastlane create_gh_release app:wordpress prerelease:true                        # Includes existing assets for WPAlpha+WPBeta
+  # bundle exec fastlane create_gh_release version:{name:12.3-rc-4} prerelease:true             # Includes existing assets for WPBeta+JPBeta 12.3-rc-4
+  # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
-  desc "Trigger a CircleCI Build"
-  private_lane :trigger_ci do |options|
-    token = options[:token] || ENV['CIRCLECI_TOKEN']
-    UI.user_error!("You need to provide a CircleCI token either via the token: option or CIRCLECI_TOKEN env var") if token.nil?
+  lane :create_gh_release do |options|
+    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
+    versions = options[:version].nil? ? [android_get_alpha_version(app: 'wp_jp'), android_get_release_version(app: 'wp_jp')] : [options[:version]]
 
-    require 'net/http'
-    require 'uri'
-    require 'json'
+    release_assets = apps.flat_map do |app|
+      versions.flat_map { |vers| bundle_file_path(app, vers) }
+    end.select { |f| File.exist?(f) }
 
-    fork = options[:fork] || 'wordpress-mobile'
-    uri = URI.parse("https://circleci.com/api/v2/project/github/#{fork}/WordPress-Android/pipeline")
-    headers = {
-      'Content-Type' => 'application/json',
-      'Accept' => 'application/json',
-      "Circle-Token" => token
-    }
+    release_title = versions.last['name']
+    set_prerelease_flag = options[:prerelease].nil? ? /-rc-|alpha-/.match?(release_title) : options[:prerelease]
 
-    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-      request = Net::HTTP::Post.new(uri.request_uri, headers)
-      body = { "branch": options[:branch], "parameters": options[:parameters] }
-      request.body = body.to_json
-      response = http.request(request)
-      UI.message(response.body)
-    end
+    UI.message("Creating release for #{release_title} with the following assets: #{release_assets.inspect}")
+
+    app_titles = { 'wordpress' => 'WordPress', 'jetpack' => 'Jetpack' }
+    tmp_file = File.absolute_path('unified-release-notes.txt')
+    unified_notes = apps.map do |app|
+      notes = File.read(release_notes_path(app))
+      "\#\# #{app_titles[app]}\n\n#{notes}"
+    end.join("\n\n")
+    File.write(tmp_file, unified_notes)
+
+    create_release(
+      repository: GHHELPER_REPO,
+      version: release_title,
+      release_notes_file_path: tmp_file,
+      prerelease: set_prerelease_flag,
+      release_assets: release_assets.join(',')
+    )
+
+    FileUtils.rm(tmp_file)
   end
 
 #####################################################################################
 # Private lanes
 #####################################################################################
+
   private_lane :delete_old_changelogs do |options|
     app = options[:app] || 'wordpress'
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
       File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
     end
-  end
-
-  private_lane :create_gh_release do | options |
-    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
-    version = options[:version]
-
-    if version.nil?
-      UI.message("Ignoring request to create GH version since version specified is nil")
-      next
-    end
-
-    apk_file_path = universal_apk_file_path(options[:app], version)
-    aab_file_path = bundle_file_path(options[:app], version)
-    # APKs built on CI are unsigned, so don't upload them until we have a fix
-    release_assets = [aab_file_path]
-    release_assets.append(apk_file_path) unless is_ci
-    create_release(repository:GHHELPER_REPO,
-      version: version["name"],
-      release_notes_file_path: release_notes_path(options[:app]),
-      prerelease: set_prerelease_flag,
-      release_assets: release_assets.join(',')
-    )
   end
 
   private_lane :cleanup_release_files do | options |
@@ -1046,20 +1020,9 @@ REPOSITORY_NAME="WordPress-Android"
     ]
   end
 
-  def universal_apk_name(app, version)
-    basenames = { wordpress: 'wpandroid', jetpack: 'jpandroid' }
-    basename = basenames[app.to_sym] || basenames[:wordpress]
-    "#{basename}-#{version["name"]}-universal.apk"
-  end
-
   def bundle_file_path(app, version)
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
-  end
-
-  def universal_apk_file_path(app, version)
-    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", universal_apk_name(app, version))
+    File.join(project_root, "build", "#{prefix}-#{version["name"]}.aab")
   end
 end

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -27,6 +29,7 @@ import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapter
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,9 +156,11 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     @Override
     public void onTaskTapped(QuickStartTask task) {
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
-        Bundle result = new Bundle();
-        result.putSerializable(RESULT_TASK, task);
-        mDialogController.confirm(result);
+        if (!showSnackbarIfNeeded(task)) {
+            Bundle result = new Bundle();
+            result.putSerializable(RESULT_TASK, task);
+            mDialogController.confirm(result);
+        }
     }
 
     @Override
@@ -220,6 +225,15 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             AniUtils.fadeIn(mQuickStartCompleteView, Duration.SHORT);
         } else {
             AniUtils.fadeOut(mQuickStartCompleteView, Duration.SHORT);
+        }
+    }
+
+    private boolean showSnackbarIfNeeded(QuickStartTask task) {
+        if (task == QuickStartTask.CREATE_SITE) {
+            WPSnackbar.make(requireView(), R.string.quick_start_list_create_site_message, Snackbar.LENGTH_LONG).show();
+            return true;
+        } else {
+            return false;
         }
     }
 }

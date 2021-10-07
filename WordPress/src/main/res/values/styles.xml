@@ -336,6 +336,10 @@
         <item name="android:textColorHint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+    <style name="WordPress.ActionBar.MenuAlign" parent="WordPress.ActionBar">
+        <item name="android:paddingEnd">2dp</item>
+    </style>
+
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
@@ -820,30 +824,15 @@
         <item name="android:background">?android:listDivider</item>
     </style>
 
-    <!--Quick Start Prompt Dialog Styles (Old) -->
-    <style name="QuickStartPromptDialogTitle">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="QuickStartPromptDialogDescription">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    <style name="PostSettingsSwitch">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-    </style>
-
-    <style name="QuickStartPromptDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:letterSpacing">-0.005</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <!--Quick Start Prompt Dialog Styles (New)-->
+    <!--Quick Start Prompt Dialog Styles -->
+
     <style name="QuickStartPromptDialogTitleNew">
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:fontFamily">sans-serif-medium</item>

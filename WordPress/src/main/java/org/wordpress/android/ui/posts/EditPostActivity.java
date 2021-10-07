@@ -118,6 +118,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -410,6 +411,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
+    @Inject ZendeskHelper mZendeskHelper;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -1267,7 +1269,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (helpMenuItem != null) {
             if (mEditorFragment instanceof GutenbergEditorFragment
-                && canViewEditorOnboarding()
                 && showMenuItems
             ) {
                 helpMenuItem.setVisible(true);
@@ -2308,6 +2309,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return new GutenbergPropsBuilder(
                 SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsLayoutGridFeature(mSite),
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
@@ -2322,6 +2327,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 canViewEditorOnboarding(),
                 !AppPrefs.hasLaunchedGutenbergEditor()
         );
+    }
+
+    /**
+     * Checks if the theme supports the new gallery block with image blocks.
+     * Note that if the editor theme has not been initialized (usually on the first app run)
+     * the value returned is null and the `unstable_gallery_with_image_blocks` analytics property will not be reported.
+     * @return true if the the supports the new gallery block with image blocks or null if the theme is not initialized.
+     */
+    private Boolean themeSupportsGalleryWithImageBlocks() {
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        if (editorTheme == null) {
+            return null;
+        }
+        return editorTheme.getThemeSupport().getGalleryWithImageBlocks();
     }
 
     /**
@@ -3301,9 +3320,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-            Boolean supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
-            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
+            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding(), themeSupportsGalleryWithImageBlocks());
         }
     }
 
@@ -3316,15 +3333,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Boolean supportsGalleryWithImageBlocks = null;
-        if (editorTheme != null) {
-            // Note that if the editor theme has not been initialized (usually on the first app run) the
-            // `unstableGalleryWithImageBlocks` analytics property will not be reported
-            supportsGalleryWithImageBlocks = editorTheme.getThemeSupport().getGalleryWithImageBlocks();
-        }
         mPostEditorAnalyticsSession
-                .start(unsupportedBlocksList, canViewEditorOnboarding(), supportsGalleryWithImageBlocks);
+                .start(unsupportedBlocksList, canViewEditorOnboarding(), themeSupportsGalleryWithImageBlocks());
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
@@ -3456,6 +3466,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
         AppPrefs.setGutenbergBlockTypeImpressions(impressions);
+    }
+
+    @Override public void onContactCustomerSupport() {
+        EditPostCustomerSupportHelper.INSTANCE.onContactCustomerSupport(mZendeskHelper, this, getSite());
+    }
+
+    @Override public void onGotoCustomerSupportOptions() {
+        EditPostCustomerSupportHelper.INSTANCE.onGotoCustomerSupportOptions(this, getSite());
     }
 
     // FluxC events

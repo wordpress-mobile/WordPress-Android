@@ -166,7 +166,8 @@ public class AppPrefs {
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
-        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
     }
 
     /**
@@ -221,9 +222,6 @@ public class AppPrefs {
         // last user access status in reader
         LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
         LAST_READER_KNOWN_USER_ID,
-
-        // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED,
 
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
@@ -998,14 +996,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-    public static void setQuickStartDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
-    }
-
-    public static boolean isQuickStartDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }
@@ -1298,6 +1288,18 @@ public class AppPrefs {
 
     public static boolean shouldScheduleCreateSiteNotification() {
         return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
+    }
+
+    public static void setShouldShowWeeklyRoundupNotification(long remoteSiteId, boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), shouldShow).apply();
+    }
+
+    public static boolean shouldShowWeeklyRoundupNotification(long remoteSiteId) {
+        return prefs().getBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), true);
+    }
+
+    @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
     }
 
     /*

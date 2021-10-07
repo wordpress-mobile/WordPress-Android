@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-31 13:54:49+0000
+Translation-Revision-Date: 2021-09-29 11:54:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="weekly_roundup">סיכום שבועי</string>
+    <string name="gutenberg_native_embed_options">אפשרויות הטמעה</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">יש להקיש פעמיים כדי להציג את אפשרויות ההטמעה.</string>
+    <string name="quick_start_list_create_site_message">האתר נוצר! להשלים משימה אחרת.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ בלוגרים&lt;/a&gt; סימנו לזה לייק.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;בלוגר אחד&lt;/a&gt; סימן לזה לייק.</string>
+    <string name="like_faces_you_plus_others_like_text">הפוסט קיבל לייק &lt;a href=\"\"&gt;ממך ומ-⁦%1$s⁩ בלוגרים&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;המשתמש שלך ועוד בלוגר אחד&lt;/a&gt; סימנו לזה לייק.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;סימנת&lt;/a&gt; לזה לייק.</string>
+    <string name="gutenberg_native_line_height">גובה השורה</string>
+    <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
+    <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>
+    <string name="recommend_app_bad_format_response">התקבלה תגובה לא חוקית</string>
+    <string name="recommend_app_null_response">לא התקבלו תגובות</string>
+    <string name="recommend_app_subject">האפליקציה של WordPress – אפליקציות לכל סוגי המסכים</string>
+    <string name="me_btn_share">לשתף את WordPress עם חברים</string>
+    <string name="my_site_quick_actions_title">קישורים מהירים</string>
+    <string name="my_site_btn_domains">דומיינים</string>
+    <string name="site_settings_site_domains_title">דומיינים באתר</string>
     <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
@@ -36,6 +55,7 @@ Language: he_IL
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">הבלוקים מאפשרים לך להתמקד בכתיבת התוכן ולדעת שכל כלי העיצוב שנדרשים לך נמצאים בהישג יד כדי לעזור לך להעביר את המסר.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">אפשר לארגן את התוכן בטורים, להוסיף כפתורים של קריאה לפעולה ולהוסיף שכבה של טקסט על תמונות.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">ניתן להוסיף בלוק בכל עת על ידי הקשה על הסמל \'+\' בסרגל הכלים שנמצא בפינה השמאלית התחתונה. </string>
+    <string name="quick_start_sites_type_tasks_completed">הושלמו ⁦%1$s⁩ מתוך ⁦%2$s⁩</string>
     <string name="quick_start_dialog_need_help_manage_site_message">כדאי ללמוד את השלבים הבסיסיים באמצעות סקירה זריזה.</string>
     <string name="comment_batch_moderation_error">לא ניתן היה לאשר תגובה אחת או יותר</string>
     <string name="create_site_notification_create_site_action">יצירת אתר</string>
@@ -46,9 +66,13 @@ Language: he_IL
     <string name="stats_disabled_subtitle">יש להפעיל את הנתונים הסטטיסטיים כדי להציג מידע מפורט אודות התעבורה, הלייקים, התגובות והמינויים שלך.</string>
     <string name="stats_disabled_title">רוצה להציג את הנתונים הסטטיסטיים?</string>
     <string name="gutenberg_native_what_is_a_block">מהו בלוק?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">אנחנו משקיעים מאמצים כדי להוסיף תמיכה בתצוגות מקדימות של %s. בינתיים אפשר לראות תצוגה מקדימה של התוכן המוטמע בפוסט.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">אנחנו משקיעים מאמצים כדי להוסיף תמיכה בתצוגות מקדימות של %s. בינתיים אפשר לראות תצוגה מקדימה של התוכן המוטמע בעמוד.</string>
     <string name="gutenberg_native_unable_to_embed_media">לא ניתן להטמיע מדיה</string>
     <string name="gutenberg_native_try_another_search_term">נסה מונח חיפוש אחר</string>
     <string name="gutenberg_native_no_blocks_found">לא נמצאו בלוקים</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">תצוגות מקדימות של %s עדיין לא זמינות</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s תצוגות מקדימות של בלוק ההטמעה יהיו זמינות בקרוב</string>
     <string name="gutenberg_native_double_tap_to_preview_post">הקש פעמיים לתצוגה מקדימה של הפוסט.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">הקש פעמיים לתצוגה מקדימה של העמוד.</string>
     <string name="quick_start_list_upload_icon_subtitle">מוצג בלשונית הדפדפן של המבקרים באתר שלך ובמיקומים שונים באינטרנט.</string>
@@ -156,9 +180,13 @@ Language: he_IL
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
     <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
     <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
+    <string name="gutenberg_native_retry">לנסות שוב</string>
+    <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
+    <string name="gutenberg_native_column_d">טור %d</string>
+    <string name="gutenberg_native_none">ללא</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -716,6 +744,7 @@ Language: he_IL
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
     <string name="enter_your_site_address">יש להזין את כתובת האתר החדש שלך</string>
+    <string name="gutenberg_native_convert_to_link">להמיר לקישור</string>
     <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
     <string name="signup_confirmation_message">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
     <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור להרשמה כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
@@ -1308,7 +1337,6 @@ Language: he_IL
     <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
     <string name="plugin_install_custom_domain_required_dialog_message">כדי להתקין תוספים, עליך לספק דומיין מותאם אישית שמקושר לאתר שלך.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">התקנת תוסף</string>
-    <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות להתאים אישית את המראה והאווירה של האתר שלך בשלב מאוחר יותר</string>
     <string name="publish_on">פרסום בתאריך: %s</string>
     <string name="schedule_for">תזמון לתאריך: %s</string>
     <string name="published_on">פורסם בתאריך: %s</string>
@@ -1889,11 +1917,11 @@ Language: he_IL
     <string name="plugin_byline">מאת %s</string>
     <string name="change_photo">שינוי התמונה</string>
     <string name="plugin_fetch_error">לא ניתן לטעון את התוספים</string>
-    <string name="my_site_btn_site_pages">עמודי האתר</string>
     <string name="site_settings_tags_hint">ניהול התגיות באתר שלך</string>
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
     <string name="dlg_confirm_delete_tag">האם למחוק את התגית \'%s\' לצמיתות?</string>
+    <string name="my_site_btn_site_pages">עמודים</string>
     <string name="error_tag_exists">כבר קיימת תגית עם שם זה</string>
     <string name="add_new_tag">הוספת תגית חדשה</string>
     <string name="tag_description_hint">תיאור</string>
@@ -2649,10 +2677,10 @@ Language: he_IL
     <string name="my_site_btn_view_site">הצגת אתר</string>
     <string name="site_picker_title">בחירת אתר</string>
     <string name="my_site_btn_switch_site">החלפת אתר</string>
-    <string name="my_site_btn_blog_posts">פוסטים בבלוג</string>
     <string name="my_site_header_look_and_feel">סגנון</string>
     <string name="my_site_header_publish">פרסום</string>
     <string name="my_site_btn_site_settings">הגדרות אתר</string>
+    <string name="my_site_btn_blog_posts">פוסטים</string>
     <string name="my_site_header_configuration">הגדרות תצורה</string>
     <string name="reader_label_new_posts_subtitle">יש ללחוץ כדי להציג</string>
     <string name="select_all">בחר הכל</string>

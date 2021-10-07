@@ -1,15 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-07 10:35:56+0000
+Translation-Revision-Date: 2021-10-04 18:39:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Поиск домена</string>
+    <string name="domains_free_plan_get_your_domain_caption">Домены зарегистрированные на этом сайте направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
+    <string name="domains_manage_domains">Управление доменами</string>
+    <string name="domains_redirected_domains_blurb">Ваши домены будут перенаправлять на сайт &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Узнать больше&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Добавить домен</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires">Истекает %s</string>
+    <string name="domains_site_domains">Домены вашего сайта</string>
+    <string name="domains_primary_site_address_blurb">Основной домен — это адрес, который будут видеть пользователи в браузере при посещении вашего сайта.</string>
+    <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
+    <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / в год&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /в год&lt;span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Хотите отменить их?</string>
+    <string name="comment_edit_cancel_dialog_title">Имеются несохраненные изменения</string>
+    <string name="comment_edit_comment_error">Комментарий не может быть пустым</string>
+    <string name="comment_edit_user_email_error">Email пользователя неверен</string>
+    <string name="comment_edit_web_address_error">Адрес сайта неверен</string>
+    <string name="comment_edit_user_name_error">Имя пользователя не может быть пустым</string>
+    <string name="comment_edit_email_address">Адрес Email</string>
+    <string name="comment_edit_web_address">Адрес сайта</string>
+    <string name="comment_edit_comment">Коментарий</string>
+    <string name="comment_edit_user_name">Имя</string>
+    <string name="comment_edit_menu_done">Готово</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Просмотр блоков встроенных объектов пока не доступен</string>
+    <string name="weekly_roundup">За неделю</string>
+    <string name="gutenberg_native_embed_options">Параметры встраивания</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Нажмите дважды, чтобы просмотреть возможности встраивания.</string>
+    <string name="quick_start_list_create_site_message">Сайт создан! Выполните ещё задачу.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блоггерам&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;Одному блоггеру&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вам и еще %1$s блоггерам&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вам и еще одному блоггеру&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вам&lt;/a&gt; это нравится.</string>
     <string name="gutenberg_native_line_height">Высота строки</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">ОСНОВНОЙ АДРЕС САЙТА</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>
     <string name="recommend_app_bad_format_response">Получен неверный ответ</string>
     <string name="recommend_app_null_response">Ответ не получен</string>
@@ -17,13 +53,6 @@ Language: ru
     <string name="me_btn_share">Поделитесь WordPress с друзьями</string>
     <string name="my_site_quick_actions_title">Быстрые ссылки</string>
     <string name="my_site_btn_domains">Домены</string>
-    <string name="like_faces_more_bloggers_text">%1$s блоггерам %2$s.</string>
-    <string name="like_faces_one_blogger_text">Одному блоггеру %1$s.</string>
-    <string name="like_faces_plural_with_you_text">Вам и %1$s блоггерам %2$s.</string>
-    <string name="like_faces_you_plus_one_text">Вам и 1 блоггеру %1$s.</string>
-    <string name="like_faces_you_text">Вам %1$s.</string>
-    <string name="likes_this">нравится это</string>
-    <string name="like_this">нравится это</string>
     <string name="site_settings_site_domains_title">Домены сайта</string>
     <string name="weekly_roundup_notification_text">Ваш сайт просмотрен %1$d раз, %2$d отметок \"понравилось\" и %3$d комментариев.</string>
     <string name="weekly_roundup_notification_title">За неделю: %s</string>
@@ -55,7 +84,7 @@ Language: ru
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Блоки - это части содержимого, которые можно вставлять, переставлять и стилизовать, без необходимости использования кода. Блоки - это простой и современный способ создавать красивые макеты.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Блоки позволяют вам сосредоточиться на написании, знайте о том, что все инструменты форматирования доступны здесь, чтобы оформить ваше сообщение.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Оформите содержимое в столбцы, добавьте кнопки призыва к действию и изображения с наложением текста.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов  внизу слева.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов внизу слева. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s из %2$s завершено</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Изучите основы с помощью быстрого пошагового руководства.</string>
     <string name="comment_batch_moderation_error">Неудалось отмодерировать один или несколько комментариев</string>
@@ -71,9 +100,9 @@ Language: ru
     <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Мы усердно работаем над добавлением поддержки для просмотра объектов %s. А пока вы можете предварительно просмотреть встроенное содержимое на странице.</string>
     <string name="gutenberg_native_unable_to_embed_media">Невозможно встроить медиасодержимое</string>
     <string name="gutenberg_native_try_another_search_term">Попробуйте другие условия поиска</string>
-    <string name="gutenberg_native_no_blocks_found">Блоков не найдено.</string>
+    <string name="gutenberg_native_no_blocks_found">Блоков не найдено</string>
     <string name="gutenberg_native_s_previews_not_yet_available">Просмотр объектов типа %s пока не доступен</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">Просмотр блоков объектов типа %s пока не доступен</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Просмотр блоков объектов типа %s пока не доступен</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Нажмите дважды для предварительного просмотра записи.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Нажмите дважды для предварительного просмотра страницы.</string>
     <string name="quick_start_list_upload_icon_subtitle">Показывается посетителям на вкладках браузера и некоторых других местах онлайн.</string>
@@ -181,9 +210,14 @@ Language: ru
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
     <string name="gutenberg_native_post_content_settings">Настройки содержимого записи</string>
+    <string name="gutenberg_native_retry">Повторить</string>
+    <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
+    <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
+    <string name="gutenberg_native_column_d">Столбец %d</string>
+    <string name="gutenberg_native_none">Нет</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
     <string name="gutenberg_native_add_blocks">Добавить блоки</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
@@ -734,6 +768,7 @@ Language: ru
     <string name="pick_file">Добавить файл</string>
     <string name="gutenberg_native_replace_video">Заменить видео</string>
     <string name="gutenberg_native_replace_image_or_video">Заменить изображение или видео</string>
+    <string name="gutenberg_native_convert_to_link">Преобразовать в ссылку</string>
     <string name="gutenberg_native_choose_video">Выбор видео</string>
     <string name="gutenberg_native_choose_image_or_video">Выбор изображения или видео</string>
     <string name="gutenberg_native_choose_image">Выбор изображения</string>
@@ -1914,7 +1949,7 @@ Language: ru
     <string name="plugin_byline">от автора %s</string>
     <string name="change_photo">Изменить фото</string>
     <string name="plugin_fetch_error">Невозможно загрузить  плагины</string>
-    <string name="my_site_btn_site_pages">Страницы сайта</string>
+    <string name="my_site_btn_site_pages">Страницы</string>
     <string name="site_settings_tags_hint">Управлять метками сайта</string>
     <string name="dlg_saving_tag">Сохранение</string>
     <string name="dlg_deleting_tag">Удаление</string>
@@ -2675,7 +2710,7 @@ Language: ru
     <string name="my_site_btn_view_admin">Перейти в консоль сайта</string>
     <string name="my_site_btn_switch_site">Сменить сайт</string>
     <string name="my_site_btn_site_settings">Настройки сайта</string>
-    <string name="my_site_btn_blog_posts">Записи в блоге</string>
+    <string name="my_site_btn_blog_posts">Записи</string>
     <string name="my_site_header_publish">Публикация</string>
     <string name="my_site_header_look_and_feel">Внешний вид</string>
     <string name="my_site_header_configuration">Конфигурация</string>
@@ -2741,6 +2776,7 @@ Language: ru
     <string name="older_month">Больше месяца назад</string>
     <string name="older_last_week">Больше недели</string>
     <string name="older_two_days">Больше двух дней назад</string>
+    <string name="help_and_support">Помощь и техническая поддержка</string>
     <string name="mnu_comment_liked">Понравилось</string>
     <string name="comment">Комментировать</string>
     <string name="comment_trashed">Комментарий перемещен в корзину</string>

@@ -611,7 +611,6 @@ Language: bg
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
     <string name="my_site_header_look_and_feel">Изглед</string>
     <string name="my_site_header_publish">Публикуване</string>
-    <string name="my_site_btn_blog_posts">Публикации</string>
     <string name="my_site_header_configuration">Настройки</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
     <string name="hide">Скриване</string>

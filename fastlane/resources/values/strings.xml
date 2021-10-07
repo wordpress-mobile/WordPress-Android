@@ -488,6 +488,17 @@
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
+    <string name="comment_edit_menu_done">Done</string>
+    <string name="comment_edit_user_name">Name</string>
+    <string name="comment_edit_comment">Comment</string>
+    <string name="comment_edit_web_address">Web address</string>
+    <string name="comment_edit_email_address">Email address</string>
+    <string name="comment_edit_user_name_error">User name cannot be empty</string>
+    <string name="comment_edit_web_address_error">Web address not valid</string>
+    <string name="comment_edit_user_email_error">User email not valid</string>
+    <string name="comment_edit_comment_error">Comment cannot be empty</string>
+    <string name="comment_edit_cancel_dialog_title">There are unsaved changes</string>
+    <string name="comment_edit_cancel_dialog_message">Do you want to discard them?</string>
 
     <!-- context menu -->
     <string name="remove_account">Remove site</string>
@@ -913,11 +924,12 @@
     <string name="debug_settings_restart_app" translatable="false">Restart the app</string>
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
+    <string name="debug_settings_force_show_weekly_roundup" translatable="false">Force show Weekly Roundup notification</string>
 
     <!-- Debug cookies -->
     <string name="debug_cookies_title" translatable="false">Debug cookies</string>
     <string name="debug_cookies_set_cookie" translatable="false">Set cookie</string>
-    <string name="debug_cookies_cookie_domain_hint" translatable="false">wordpress.com</string>
+    <string name="debug_cookies_cookie_host_hint" translatable="false">wordpress.com</string>
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
@@ -1505,14 +1517,15 @@
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
-    <string name="like_this">like this</string>
-    <string name="likes_this">likes this</string>
-    <string name="like_faces_you_text">You %1$s.</string>
-    <string name="like_faces_you_plus_one_text">You and 1 blogger %1$s.</string>
-    <string name="like_faces_plural_with_you_text">You and %1$s bloggers %2$s.</string>
-    <string name="like_faces_one_blogger_text">1 blogger %1$s.</string>
-    <string name="like_faces_more_bloggers_text">%1$s bloggers %2$s.</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
+    <!-- Note for translators: the '&lt;a href=""&gt;' and '&lt;/a&gt;' must be kept without
+    translations/modifications and are used to enclose the portion of the text
+    that will be rendered as underlined. -->
+    <string name="like_faces_you_like_text">&lt;a href=""&gt;You&lt;/a&gt; like this.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=""&gt;You and 1 blogger&lt;/a&gt; like this.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=""&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=""&gt;1 blogger&lt;/a&gt; likes this.</string>
+    <string name="like_faces_others_like_text">&lt;a href=""&gt;%1$s bloggers&lt;/a&gt; like this.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -2121,6 +2134,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
+    <string name="help_and_support">Help &amp; Support</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2140,8 +2154,8 @@
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_site_pages">Pages</string>
+    <string name="my_site_btn_blog_posts">Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="my_site_btn_site_settings">Site Settings</string>
@@ -2414,6 +2428,8 @@
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style="color:#008000;"&gt;Free for the first year &lt;/span&gt;&lt;/strong&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
@@ -2444,17 +2460,22 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_domain">PRIMARY SITE ADDRESS</string>
-    <string name="domains_primary_domain_address">%s</string>
-<!--    <string name="domains_primary_domain_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>-->
-<!--    <string name="domains_redirected_domains">REDIRECTED DOMAINS</string>-->
-<!--    <string name="domains_redirected_domains_blurb">Redirected domains are domains that you own and redirect to your site at %s. Anyone visiting your redirected domains will land on your site. Learn more.</string>-->
-<!--    <string name="domains_manage_domains">Manage Domains</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>-->
-<!--    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your domain</string>-->
+    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="domains_primary_site_address_chip">Primary site address</string>
+    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
+    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
+    <string name="domains_add_a_domain">Add a domain</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href="https://wordpress.com/support/site-redirect/"&gt;Learn more&lt;/a&gt;.</string>
+    <string name="domains_manage_domains">Manage Domains</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-<!--    <string name="domains_free_plan_get_your_domain_caption">Redirect a custom domain to your site at %s</string>-->
-<!--    <string name="domains_free_plan_redirect_learn_more">Learn more about domain redirects</string>-->
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
@@ -2968,6 +2989,7 @@
     <string name="quick_start_list_check_stats_title">Check your stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
+    <string name="quick_start_list_create_site_message">Site created! Complete another task.</string>
     <string name="quick_start_list_update_site_title_title">Check your site title</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
@@ -3104,7 +3126,7 @@
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
+    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize the look and feel of your site later</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
@@ -3353,7 +3375,10 @@
     <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Choose images</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
     <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Clear search</string>
+    <!-- translators: %d: column index. -->
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Column %d</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Convert to link</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
@@ -3404,6 +3429,7 @@
     <!-- translators: accessibility text (hint for switches) -->
     <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Double tap to toggle setting</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources">Double tap to view embed options.</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources">Drag to adjust focal point</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
     <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources">Each block has its own settings. To find them, tap on a block. Its settings will appear on the toolbar at the bottom of the screen.</string>
@@ -3416,12 +3442,14 @@
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">Embed block previews are coming soon</string>
     <!-- translators: accessibility text. Empty Embed caption. -->
     <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Embed caption. Empty</string>
     <!-- translators: accessibility text. %s: Embed caption. -->
     <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Embed caption. %s</string>
     <string name="gutenberg_native_embed_link" tools:ignore="UnusedResources">Embed link</string>
     <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources">Embed media</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources">Embed options</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3490,6 +3518,8 @@
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
     <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources">No blocks found</string>
     <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">No custom placeholder set</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">No preview available</string>
+    <string name="gutenberg_native_none" tools:ignore="UnusedResources">None</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
     <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Once you become familiar with the names of different blocks, you can add a block by typing a forward slash followed by the block name — for example, /image or /heading.</string>
@@ -3524,6 +3554,7 @@
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources">Retry</string>
     <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources">Rich text editing</string>
     <!-- translators: %s: Block name e.g. "Image block"
 translators: Block name. %s: The localized block name -->
@@ -3534,18 +3565,20 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources">%s block, newly available</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s block options</string>
-    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
-    <string name="gutenberg_native_s_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s block previews are coming soon</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s block. This block has invalid content</string>
     <!-- translators: %s: name of the reusable block -->
     <string name="gutenberg_native_s_converted_to_regular_blocks" tools:ignore="UnusedResources">%s converted to regular blocks</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources">%s embed block previews are coming soon</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources">%s has no URL set</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s has URL set</string>
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
+    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
@@ -3786,6 +3819,7 @@ translators: Block name. %s: The localized block name -->
     <string name="create_site_notification_create_site_action">Create site</string>
 
     <!-- Weekly Roundup Notification -->
+    <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
 </resources>

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 12:54:08+0000
+Translation-Revision-Date: 2021-10-04 12:11:34+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Gömülü blok önizlemeleri yakında geliyor</string>
+    <string name="weekly_roundup">Haftalık Özet</string>
+    <string name="gutenberg_native_embed_options">Gömme seçenekleri</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Gömme seçeneklerini görüntülemek için iki kez dokunun.</string>
+    <string name="quick_start_list_create_site_message">Site oluşturuldu! Başka bir görevi tamamlayın.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Sizinle birlikte %1$s blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Sizinle birlikte 1 blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
+    <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
+    <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
+    <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
+    <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
+    <string name="recommend_app_null_response">Yanıt alınamadı</string>
+    <string name="recommend_app_subject">WordPress Uygulamaları - Her ekran için uygulamalar</string>
+    <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
+    <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
+    <string name="my_site_btn_domains">Alan adları</string>
+    <string name="site_settings_site_domains_title">Site alan adları</string>
     <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
@@ -48,9 +68,13 @@ Language: tr
     <string name="stats_disabled_subtitle">Trafiğiniz, beğenileriniz, yorumlarınız ve aboneleriniz hakkındaki ayrıntılı bilgileri görmek için site istatistiklerini etkinleştirin.</string>
     <string name="stats_disabled_title">İstatistikleri mi arıyorsunuz?</string>
     <string name="gutenberg_native_what_is_a_block">Blok nedir?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">%s önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, gönderideki gömülü içeriği önizleyebilirsiniz.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">%s önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, sayfadaki gömülü içeriği önizleyebilirsiniz.</string>
     <string name="gutenberg_native_unable_to_embed_media">Ortam gömülemiyor</string>
     <string name="gutenberg_native_try_another_search_term">Başka bir arama terimi deneyin</string>
     <string name="gutenberg_native_no_blocks_found">Blok bulunamadı</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s önizlemeleri henüz kullanılamıyor</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s gömülü blok önizlemeleri yakında geliyor</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Yazıyı önizlemek için iki kez dokunun.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Sayfayı önizlemek için iki kez dokunun.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrimiçi yerlerde gösterilir.</string>
@@ -158,9 +182,13 @@ Language: tr
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_post_meta_settings">Yazı meta ayarları</string>
     <string name="gutenberg_native_post_content_settings">Yazı içeriği ayarları</string>
+    <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
+    <string name="gutenberg_native_column_d">Sütun %d</string>
+    <string name="gutenberg_native_none">Hiçbiri</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="gutenberg_native_add_blocks">Blok ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
@@ -711,6 +739,7 @@ Language: tr
     <string name="pick_file">Dosya ekle</string>
     <string name="gutenberg_native_replace_video">Videoyu değiştir</string>
     <string name="gutenberg_native_replace_image_or_video">Video veya görseli değiştir</string>
+    <string name="gutenberg_native_convert_to_link">Bağlantıya dönüştür</string>
     <string name="gutenberg_native_choose_video">Video seç</string>
     <string name="gutenberg_native_choose_image_or_video">Görsel veya video seç</string>
     <string name="gutenberg_native_choose_image">Görsel seç</string>
@@ -1891,7 +1920,7 @@ Language: tr
     <string name="plugin_byline">%s tarafından</string>
     <string name="change_photo">Fotoğrafı değiştir</string>
     <string name="plugin_fetch_error">Eklentiler yüklenemedi</string>
-    <string name="my_site_btn_site_pages">Site sayfaları</string>
+    <string name="my_site_btn_site_pages">Sayfalar</string>
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
@@ -2652,7 +2681,7 @@ Language: tr
     <string name="my_site_btn_view_admin">Yöneticiyi görüntüle</string>
     <string name="my_site_btn_switch_site">Site değiştir</string>
     <string name="my_site_btn_site_settings">Site Ayarları</string>
-    <string name="my_site_btn_blog_posts">Blog yazıları</string>
+    <string name="my_site_btn_blog_posts">Gönderiler</string>
     <string name="my_site_header_publish">Yayımla</string>
     <string name="my_site_header_look_and_feel">Genel görünüm</string>
     <string name="my_site_header_configuration">Yapılandırma</string>

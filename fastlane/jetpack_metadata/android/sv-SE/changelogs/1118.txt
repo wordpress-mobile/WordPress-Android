@@ -1,0 +1,4 @@
+18.3:
+I blockredigeraren har vi åtgärdat ett verktygsfältsproblem på enheter inställda på ett RTL-språk och genomfört uppdateringar av inbäddningsblocket. Bland annat har vi aktiverat WordPress-, Instagram- och Vimeo-förhandsgranskningar och lagt till alternativ för att försöka igen eller konvertera mediainnehållet till en länk.
+
+Ytterligare uppdateringar inkluderar en korrigering som påverkar videofiler på vissa webbplatser och en uppdatering av etiketterna i menyn Min webbplats ("Inlägg" och "Sidor").

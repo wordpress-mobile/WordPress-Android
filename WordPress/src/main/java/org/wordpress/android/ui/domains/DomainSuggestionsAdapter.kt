@@ -9,6 +9,8 @@ class DomainSuggestionsAdapter(
 ) : Adapter<DomainSuggestionsViewHolder>() {
     private val list = mutableListOf<DomainSuggestionResponse>()
     var selectedPosition = -1
+    var isSiteDomainsFeatureEnabled: Boolean = false
+    var isDomainCreditAvailable: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainSuggestionsViewHolder {
         return DomainSuggestionsViewHolder(
@@ -22,7 +24,12 @@ class DomainSuggestionsAdapter(
     }
 
     override fun onBindViewHolder(holder: DomainSuggestionsViewHolder, position: Int) {
-        holder.bind(list[position], position, selectedPosition == position)
+        holder.bind(
+                list[position],
+                position,
+                selectedPosition == position,
+                isSiteDomainsFeatureEnabled,
+                isDomainCreditAvailable)
     }
 
     private fun onDomainSuggestionSelected(suggestion: DomainSuggestionResponse?, position: Int) {
@@ -39,5 +46,10 @@ class DomainSuggestionsAdapter(
         list.clear()
         list.addAll(items)
         notifyDataSetChanged()
+    }
+
+    internal fun updateDomainCreditAvailable(siteDomainsFeatureEnabled: Boolean, isDomainCreditAvailable: Boolean) {
+        this.isSiteDomainsFeatureEnabled = siteDomainsFeatureEnabled
+        this.isDomainCreditAvailable = isDomainCreditAvailable
     }
 }
