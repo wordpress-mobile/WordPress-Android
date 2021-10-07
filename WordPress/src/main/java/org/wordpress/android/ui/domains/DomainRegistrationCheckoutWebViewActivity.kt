@@ -22,6 +22,8 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
         return true
     }
 
+    override fun createWebViewClient(allowedURL: List<String>?) = DomainRegistrationCheckoutWebViewClient(this)
+
     override fun onCheckoutSuccess() {
         setResult(RESULT_OK, intent)
         finish()
