@@ -33,8 +33,6 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var binding: DomainSuggestionsActivityBinding
-    private lateinit var site: SiteModel
-    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +41,8 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             setContentView(root)
             binding = this
 
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-
-            domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
+            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
                     as DomainRegistrationPurpose
 
             setupToolbar()
