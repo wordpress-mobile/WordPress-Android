@@ -2,12 +2,11 @@ package org.wordpress.android.ui.domains
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsAdapter(
-    private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
+    private val itemSelectionListener: (DomainSuggestionItem?, Int) -> Unit
 ) : Adapter<DomainSuggestionsViewHolder>() {
-    private val list = mutableListOf<DomainSuggestionResponse>()
+    private val list = mutableListOf<DomainSuggestionItem>()
     var selectedPosition = -1
     var isSiteDomainsFeatureEnabled: Boolean = false
     var isDomainCreditAvailable: Boolean = false
@@ -32,7 +31,7 @@ class DomainSuggestionsAdapter(
                 isDomainCreditAvailable)
     }
 
-    private fun onDomainSuggestionSelected(suggestion: DomainSuggestionResponse?, position: Int) {
+    private fun onDomainSuggestionSelected(suggestion: DomainSuggestionItem?, position: Int) {
         val previousSelectedPosition = selectedPosition
         selectedPosition = position
         notifyItemChanged(previousSelectedPosition)
@@ -42,7 +41,7 @@ class DomainSuggestionsAdapter(
         itemSelectionListener(suggestion, position)
     }
 
-    internal fun updateSuggestionsList(items: List<DomainSuggestionResponse>) {
+    internal fun updateSuggestionsList(items: List<DomainSuggestionItem>) {
         list.clear()
         list.addAll(items)
         notifyDataSetChanged()

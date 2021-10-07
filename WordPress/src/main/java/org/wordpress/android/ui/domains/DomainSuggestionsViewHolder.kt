@@ -8,11 +8,10 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsViewHolder(
     parent: ViewGroup,
-    private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
+    private val itemSelectionListener: (DomainSuggestionItem?, Int) -> Unit
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
@@ -22,13 +21,13 @@ class DomainSuggestionsViewHolder(
     private val container: View = itemView.findViewById(R.id.domain_suggestions_container)
 
     fun bind(
-        suggestion: DomainSuggestionResponse,
+        suggestion: DomainSuggestionItem,
         position: Int,
         isSelectedPosition: Boolean,
         isSiteDomainsFeatureEnabled: Boolean,
         isDomainCreditAvailable: Boolean
     ) {
-        domainName.text = suggestion.domain_name
+        domainName.text = suggestion.domainName
         if (isSiteDomainsFeatureEnabled) {
             domainCost.visibility = View.VISIBLE
             domainCost.text = getFormattedCost(suggestion, isDomainCreditAvailable)
@@ -49,10 +48,10 @@ class DomainSuggestionsViewHolder(
     }
 
     private fun getFormattedCost(
-        suggestion: DomainSuggestionResponse,
+        suggestion: DomainSuggestionItem,
         isDomainCreditAvailable: Boolean
     ) = when {
-        suggestion.is_free -> {
+        suggestion.isFree -> {
             suggestion.cost
         }
         isDomainCreditAvailable -> {

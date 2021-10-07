@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainSuggestionsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
@@ -64,8 +63,8 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
             mainViewModel.selectDomain(
                     DomainProductDetails(
-                            selectedDomain!!.product_id,
-                            selectedDomain.domain_name
+                            selectedDomain!!.productId,
+                            selectedDomain.domainName
                     )
             )
         }
@@ -96,13 +95,13 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
     }
 
-    private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {
+    private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         adapter.selectedPosition = viewModel.selectedPosition.value ?: -1
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 

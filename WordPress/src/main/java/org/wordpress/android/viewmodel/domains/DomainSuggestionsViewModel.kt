@@ -10,12 +10,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainSuggestionItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -26,13 +26,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
-
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
-    siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
@@ -40,18 +38,18 @@ class DomainSuggestionsViewModel @Inject constructor(
     private var isStarted = false
     private var isQueryTrackingCompleted = false
 
-    private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
-    val suggestionsLiveData: LiveData<DomainSuggestionsListState> = _suggestions
+    private val _suggestions = MutableLiveData<ListState<DomainSuggestionItem>>()
+    val suggestionsLiveData: LiveData<ListState<DomainSuggestionItem>> = _suggestions
 
-    private var suggestions: ListState<DomainSuggestionResponse>
+    private var suggestions: ListState<DomainSuggestionItem>
             by Delegates.observable(ListState.Init()) { _, _, new ->
                 _suggestions.postValue(new)
             }
 
-    private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
-    val selectedSuggestion: LiveData<DomainSuggestionResponse?> = _selectedSuggestion
+    private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
+    val selectedSuggestion: LiveData<DomainSuggestionItem?> = _selectedSuggestion
 
-    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
+    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
     private val _selectedPosition = MutableLiveData<Int>()
     val selectedPosition: LiveData<Int> = _selectedPosition
@@ -137,11 +135,30 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
 
-        val sortedDomainSuggestions = event.suggestions.sortedBy { it.relevance }.asReversed()
-        suggestions = ListState.Success(sortedDomainSuggestions)
+        event.suggestions
+                .map {
+                    DomainSuggestionItem(
+                            domainName = it.domain_name,
+                            cost = it.cost,
+                            isFree = it.is_free,
+                            supportsPrivacy = it.supports_privacy,
+                            productId = it.product_id,
+                            productSlug = it.product_slug,
+                            vendor = it.vendor,
+                            relevance = it.relevance,
+                            isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
+                            isCostVisible = siteDomainsFeatureConfig.isEnabled(),
+                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+                    )
+                }
+                .sortedBy { it.relevance }
+                .asReversed()
+                .let {
+                    suggestions = ListState.Success(it)
+                }
     }
 
-    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?, selectedPosition: Int) {
         _selectedPosition.postValue(selectedPosition)
         _selectedSuggestion.postValue(selectedSuggestion)
     }
