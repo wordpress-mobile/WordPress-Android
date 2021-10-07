@@ -1,11 +1,49 @@
 package org.wordpress.android.ui.domains
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContract
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.util.SiteUtils
 
 class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
+    }
+
+    class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent>() {
+        override fun createIntent(context: Context, input: CheckoutDetails) =
+                Intent(context, DomainRegistrationCheckoutWebViewActivity::class.java).apply {
+                    putExtra(USE_GLOBAL_WPCOM_USER, true)
+                    putExtra(URL_TO_LOAD, getCheckoutUrl(input.site))
+                    putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
+                    putExtra(REGISTRATION_DOMAIN_NAME, input.domainName)
+                    putExtra(REGISTRATION_EMAIL, input.site.email)
+                }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): DomainRegistrationCompletedEvent? {
+            if (resultCode == RESULT_OK) {
+                val domainName = intent?.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
+                val email = intent?.getStringExtra(REGISTRATION_EMAIL).orEmpty()
+                // TODO Handle empty domain and email
+                return DomainRegistrationCompletedEvent(domainName, email)
+            }
+            // TODO Handle checkout failure
+            return null
+        }
+
+        data class CheckoutDetails(val site: SiteModel, val domainName: String)
+
+        private fun getCheckoutUrl(site: SiteModel) =
+                "https://wordpress.com/checkout/${SiteUtils.getHomeURLOrHostName(site)}"
+
+        companion object {
+            const val REGISTRATION_DOMAIN_NAME = "REGISTRATION_DOMAIN_NAME"
+            const val REGISTRATION_EMAIL = "REGISTRATION_EMAIL"
+        }
     }
 }
