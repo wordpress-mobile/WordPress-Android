@@ -800,7 +800,7 @@ public class AnalyticsUtils {
     }
 
     public static void trackBlockEditorEvent(String event, Map<String, Object> properties) {
-        if(event.equals("insertBlock")) {
+        if (event.equals("insertBlock")) {
             AnalyticsTracker.track(Stat.EDITOR_BLOCK_INSERTED, properties);
         }
     }

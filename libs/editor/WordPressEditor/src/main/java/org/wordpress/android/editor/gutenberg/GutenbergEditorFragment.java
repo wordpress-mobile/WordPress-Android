@@ -520,12 +520,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
 
-                new OnSendEventToHostListener() {
-                    @Override
-                    public void onSendEventToHost(String eventName, Map<String, Object> properties) {
-                        mEditorFragmentListener.onSendEventToHost(eventName, properties);
-                    }
-                },
+                mEditorFragmentListener::onSendEventToHost,
 
                 GutenbergUtils.isDarkMode(getActivity()));
 
