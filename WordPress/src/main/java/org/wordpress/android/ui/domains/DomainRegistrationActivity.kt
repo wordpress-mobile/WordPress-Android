@@ -11,7 +11,9 @@ import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationCheckout
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
@@ -33,6 +35,14 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var binding: DomainSuggestionsActivityBinding
+
+    private val openCheckout = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenCheckout()) {
+        if (it != null) {
+            viewModel.completeDomainRegistration(it)
+        } else {
+            // TODO Handle checkout failure
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +74,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
+                is OpenDomainRegistrationCheckout -> openDomainRegistrationWebView(it.site, it.details)
                 is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
                 is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
                 is FinishDomainRegistration -> finishDomainRegistration(it.event)
@@ -75,6 +86,10 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         showFragment(DomainSuggestionsFragment.TAG, true) {
             DomainSuggestionsFragment.newInstance()
         }
+    }
+
+    private fun openDomainRegistrationWebView(site: SiteModel, details: DomainProductDetails) {
+        openCheckout.launch(CheckoutDetails(site, details.domainName))
     }
 
     private fun showDomainRegistrationDetails(details: DomainProductDetails) {
