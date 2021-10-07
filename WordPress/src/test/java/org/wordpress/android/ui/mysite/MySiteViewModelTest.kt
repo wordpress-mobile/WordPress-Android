@@ -875,149 +875,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenMedia(site))
     }
 
-    /* ITEM CLICK */
-    @Test
-    fun `activity item click emits OpenActivity navigation event`() {
-        invokeItemClickAction(ACTIVITY_LOG)
-
-        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
-    }
-
-    @Test
-    fun `scan item click emits OpenScan navigation event`() {
-        invokeItemClickAction(SCAN)
-
-        assertThat(navigationActions).containsExactly(OpenScan(site))
-    }
-
-    @Test
-    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
-        invokeItemClickAction(PLAN)
-
-        verify(quickStartRepository).completeTask(EXPLORE_PLANS)
-        assertThat(navigationActions).containsExactly(OpenPlan(site))
-    }
-
-    @Test
-    fun `posts item click emits OpenPosts navigation event`() {
-        invokeItemClickAction(POSTS)
-
-        assertThat(navigationActions).containsExactly(OpenPosts(site))
-    }
-
-    @Test
-    fun `pages item click emits OpenPages navigation event`() {
-        invokeItemClickAction(PAGES)
-
-        verify(quickStartRepository).completeTask(REVIEW_PAGES)
-        assertThat(navigationActions).containsExactly(OpenPages(site))
-    }
-
-    @Test
-    fun `admin item click emits OpenAdmin navigation event`() {
-        invokeItemClickAction(ADMIN)
-
-        assertThat(navigationActions).containsExactly(OpenAdmin(site))
-    }
-
-    @Test
-    fun `sharing item click emits OpenSharing navigation event`() {
-        invokeItemClickAction(SHARING)
-
-        assertThat(navigationActions).containsExactly(OpenSharing(site))
-    }
-
-    @Test
-    fun `site settings item click emits OpenSiteSettings navigation event`() {
-        invokeItemClickAction(SITE_SETTINGS)
-
-        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
-    }
-
-    @Test
-    fun `themes item click emits OpenThemes navigation event`() {
-        invokeItemClickAction(THEMES)
-
-        assertThat(navigationActions).containsExactly(OpenThemes(site))
-    }
-
-    @Test
-    fun `plugins item click emits OpenPlugins navigation event`() {
-        invokeItemClickAction(PLUGINS)
-
-        assertThat(navigationActions).containsExactly(OpenPlugins(site))
-    }
-
-    @Test
-    fun `media item click emits OpenMedia navigation event`() {
-        invokeItemClickAction(MEDIA)
-
-        assertThat(navigationActions).containsExactly(OpenMedia(site))
-    }
-
-    @Test
-    fun `comments item click emits OpenMedia navigation event`() {
-        invokeItemClickAction(COMMENTS)
-
-        assertThat(navigationActions).containsExactly(OpenComments(site))
-    }
-
-    @Test
-    fun `view site item click emits OpenSite navigation event`() {
-        invokeItemClickAction(VIEW_SITE)
-
-        assertThat(navigationActions).containsExactly(OpenSite(site))
-    }
-
-    @Test
-    fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsWPCom(true)
-
-        invokeItemClickAction(STATS)
-
-        assertThat(navigationActions).containsExactly(OpenStats(site))
-    }
-
-    @Test
-    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        site.setIsJetpackConnected(true)
-        site.setIsJetpackInstalled(true)
-
-        invokeItemClickAction(STATS)
-
-        assertThat(navigationActions).containsExactly(OpenStats(site))
-    }
-
-    @Test
-    fun `stats item click completes CHECK_STATS task`() {
-        invokeItemClickAction(STATS)
-
-        verify(quickStartRepository).completeTask(CHECK_STATS)
-    }
-
-    @Test
-    fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        site.setIsJetpackConnected(true)
-
-        invokeItemClickAction(STATS)
-
-        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
-    }
-
-    @Test
-    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        site.setIsJetpackConnected(false)
-        site.setIsWPCom(false)
-
-        invokeItemClickAction(STATS)
-
-        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
-    }
-
     /* DOMAIN REGISTRATION CARD */
     @Test
     fun `domain registration item click opens domain registration`() {
@@ -1064,75 +921,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         val message = UiStringResWithParams(R.string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
 
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
-    }
-
-    /* ITEM VISIBILITY */
-    @Test
-    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(false),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
-    }
-
-    @Test
-    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
-
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(false),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
-    }
-
-    @Test
-    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(true),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
-    }
-
-    @Test
-    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
-        initSelectedSite()
-
-        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
-
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(true),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
     }
 
     /* QUICK START CARD + DYNAMIC CARD */
@@ -1348,6 +1136,218 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.ignoreQuickStart()
 
         verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    /* ITEM CLICK */
+    @Test
+    fun `activity item click emits OpenActivity navigation event`() {
+        invokeItemClickAction(ACTIVITY_LOG)
+
+        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
+    }
+
+    @Test
+    fun `scan item click emits OpenScan navigation event`() {
+        invokeItemClickAction(SCAN)
+
+        assertThat(navigationActions).containsExactly(OpenScan(site))
+    }
+
+    @Test
+    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
+        invokeItemClickAction(PLAN)
+
+        verify(quickStartRepository).completeTask(EXPLORE_PLANS)
+        assertThat(navigationActions).containsExactly(OpenPlan(site))
+    }
+
+    @Test
+    fun `posts item click emits OpenPosts navigation event`() {
+        invokeItemClickAction(POSTS)
+
+        assertThat(navigationActions).containsExactly(OpenPosts(site))
+    }
+
+    @Test
+    fun `pages item click emits OpenPages navigation event`() {
+        invokeItemClickAction(PAGES)
+
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
+        assertThat(navigationActions).containsExactly(OpenPages(site))
+    }
+
+    @Test
+    fun `admin item click emits OpenAdmin navigation event`() {
+        invokeItemClickAction(ADMIN)
+
+        assertThat(navigationActions).containsExactly(OpenAdmin(site))
+    }
+
+    @Test
+    fun `sharing item click emits OpenSharing navigation event`() {
+        invokeItemClickAction(SHARING)
+
+        assertThat(navigationActions).containsExactly(OpenSharing(site))
+    }
+
+    @Test
+    fun `site settings item click emits OpenSiteSettings navigation event`() {
+        invokeItemClickAction(SITE_SETTINGS)
+
+        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
+    }
+
+    @Test
+    fun `themes item click emits OpenThemes navigation event`() {
+        invokeItemClickAction(THEMES)
+
+        assertThat(navigationActions).containsExactly(OpenThemes(site))
+    }
+
+    @Test
+    fun `plugins item click emits OpenPlugins navigation event`() {
+        invokeItemClickAction(PLUGINS)
+
+        assertThat(navigationActions).containsExactly(OpenPlugins(site))
+    }
+
+    @Test
+    fun `media item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(MEDIA)
+
+        assertThat(navigationActions).containsExactly(OpenMedia(site))
+    }
+
+    @Test
+    fun `comments item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(COMMENTS)
+
+        assertThat(navigationActions).containsExactly(OpenComments(site))
+    }
+
+    @Test
+    fun `view site item click emits OpenSite navigation event`() {
+        invokeItemClickAction(VIEW_SITE)
+
+        assertThat(navigationActions).containsExactly(OpenSite(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsWPCom(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsJetpackConnected(true)
+        site.setIsJetpackInstalled(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click completes CHECK_STATS task`() {
+        invokeItemClickAction(STATS)
+
+        verify(quickStartRepository).completeTask(CHECK_STATS)
+    }
+
+    @Test
+    fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(false)
+        site.setIsWPCom(false)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
+    }
+
+    /* ITEM VISIBILITY */
+    @Test
+    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
+
+        verify(siteItemsBuilder, times(1)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = eq(false),
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = eq(false),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
+        )
+    }
+
+    @Test
+    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
+
+        verify(siteItemsBuilder, times(1)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = eq(false),
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
+        )
+    }
+
+    @Test
+    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = eq(true),
+                showViewSiteFocusPoint = eq(false),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
+        )
+    }
+
+    @Test
+    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        initSelectedSite()
+
+        jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = eq(true),
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
+        )
     }
 
     /* ADD SITE ICON DIALOG */
