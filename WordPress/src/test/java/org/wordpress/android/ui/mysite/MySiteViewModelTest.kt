@@ -321,18 +321,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.iconUrl = siteIcon
         site.siteId = siteLocalId.toLong()
 
-        siteInfoCard = SiteInfoCard(
-                title = siteName,
-                url = siteUrl,
-                iconState = IconState.Visible(siteIcon),
-                showTitleFocusPoint = false,
-                showIconFocusPoint = false,
-                onTitleClick = mock(),
-                onIconClick = mock(),
-                onUrlClick = mock(),
-                onSwitchSiteClick = mock()
-        )
-
         setUpCardsBuilder()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -1394,20 +1382,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            siteInfoCard = siteInfoCard.copy(
-                    onTitleClick = ListItemInteraction.create {
-                        (it.getArgument(CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-                    },
-                    onIconClick = ListItemInteraction.create {
-                        (it.getArgument(CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-                    },
-                    onUrlClick = ListItemInteraction.create {
-                        (it.getArgument(CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-                    },
-                    onSwitchSiteClick = ListItemInteraction.create {
-                        (it.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
-                    }
-            )
+            siteInfoCard = initSiteInfoCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             listOf<MySiteCardAndItem>(siteInfoCard, domainRegistrationCard, quickStartCard)
@@ -1430,6 +1405,26 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onQuickStartTaskTypeItemClick = any()
         )
     }
+
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
+            title = siteName,
+            url = siteUrl,
+            iconState = IconState.Visible(siteIcon),
+            showTitleFocusPoint = false,
+            showIconFocusPoint = false,
+            onTitleClick = ListItemInteraction.create {
+                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+            },
+            onIconClick = ListItemInteraction.create {
+                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+            },
+            onUrlClick = ListItemInteraction.create {
+                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION) as () -> Unit).invoke()
+            },
+            onSwitchSiteClick = ListItemInteraction.create {
+                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
+            }
+    )
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
             ListItemInteraction.create {
