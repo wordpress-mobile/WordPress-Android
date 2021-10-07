@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
@@ -161,18 +162,7 @@ class CardsBuilderTest {
 
     fun setUpSiteInfoCardBuilder() {
         doAnswer {
-            val siteInfoCard = SiteInfoCard(
-                    title = "",
-                    url = "",
-                    iconState = IconState.Visible(""),
-                    showTitleFocusPoint = it.getArgument(SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION),
-                    showIconFocusPoint = it.getArgument(SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION),
-                    onTitleClick = mock(),
-                    onIconClick = mock(),
-                    onUrlClick = mock(),
-                    onSwitchSiteClick = mock()
-            )
-            siteInfoCard
+            initSiteInfoCard(it)
         }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
                 site = eq(site),
                 showSiteIconProgressBar = any(),
@@ -187,17 +177,7 @@ class CardsBuilderTest {
 
     fun setUpQuickActionsBuilder() {
         doAnswer {
-            val siteInfoCard = QuickActionsCard(
-                    title = UiStringText(""),
-                    onStatsClick = mock(),
-                    onPagesClick = mock(),
-                    onPostsClick = mock(),
-                    onMediaClick = mock(),
-                    showPages = false,
-                    showPagesFocusPoint = it.getArgument(QUICK_ACTION_SHOW_PAGES_FOCUS_POINT_PARAM_POSITION),
-                    showStatsFocusPoint = it.getArgument(QUICK_ACTION_SHOW_STATS_FOCUS_POINT_PARAM_POSITION)
-            )
-            siteInfoCard
+            initQuickActionsCard(it)
         }.whenever(quickActionsCardBuilder).build(
                 onQuickActionStatsClick = any(),
                 onQuickActionPagesClick = any(),
@@ -215,6 +195,42 @@ class CardsBuilderTest {
         }.whenever(quickStartCardBuilder).build(any(), any(), any())
     }
 
+    private fun setUpCardsBuilder() {
+        cardsBuilder = CardsBuilder(
+                buildConfigWrapper,
+                quickStartDynamicCardsFeatureConfig,
+                siteInfoCardBuilder,
+                analyticsTrackerWrapper,
+                quickActionsCardBuilder,
+                quickStartCardBuilder
+        )
+    }
+
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
+            title = "",
+            url = "",
+            iconState = IconState.Visible(""),
+            showTitleFocusPoint = mockInvocation
+                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION),
+            showIconFocusPoint = mockInvocation
+                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION),
+            onTitleClick = mock(),
+            onIconClick = mock(),
+            onUrlClick = mock(),
+            onSwitchSiteClick = mock()
+    )
+
+    private fun initQuickActionsCard(mockInvocation: InvocationOnMock) = QuickActionsCard(
+            title = UiStringText(""),
+            onStatsClick = mock(),
+            onPagesClick = mock(),
+            onPostsClick = mock(),
+            onMediaClick = mock(),
+            showPages = false,
+            showPagesFocusPoint = mockInvocation.getArgument(QUICK_ACTION_SHOW_PAGES_FOCUS_POINT_PARAM_POSITION),
+            showStatsFocusPoint = mockInvocation.getArgument(QUICK_ACTION_SHOW_STATS_FOCUS_POINT_PARAM_POSITION)
+    )
+
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),
             onRemoveMenuItemClick = mock(),
@@ -231,15 +247,4 @@ class CardsBuilderTest {
                     )
             )
     )
-
-    private fun setUpCardsBuilder() {
-        cardsBuilder = CardsBuilder(
-                buildConfigWrapper,
-                quickStartDynamicCardsFeatureConfig,
-                siteInfoCardBuilder,
-                analyticsTrackerWrapper,
-                quickActionsCardBuilder,
-                quickStartCardBuilder
-        )
-    }
 }
