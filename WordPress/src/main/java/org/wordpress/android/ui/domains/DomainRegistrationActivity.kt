@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -16,6 +15,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.Finis
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -94,9 +94,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
-        val intent = Intent()
-        intent.putExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL, event.email)
-        setResult(Activity.RESULT_OK, intent)
+        setResult(RESULT_OK, Intent().apply { putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email) })
         finish()
     }
 
