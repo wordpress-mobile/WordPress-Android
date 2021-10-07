@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -38,6 +39,8 @@ class DomainSuggestionsViewModel @Inject constructor(
     siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
+    lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+
     private var isStarted = false
     private var isQueryTrackingCompleted = false
 
@@ -103,11 +106,12 @@ class DomainSuggestionsViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         if (isStarted) {
             return
         }
         this.site = site
+        this.domainRegistrationPurpose = domainRegistrationPurpose
         checkDomainCreditAvailability()
         initializeDefaultSuggestions()
         isStarted = true

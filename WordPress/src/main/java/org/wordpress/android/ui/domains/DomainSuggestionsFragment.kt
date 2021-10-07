@@ -47,10 +47,12 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         with(DomainSuggestionsFragmentBinding.bind(view)) {
             val intent = requireActivity().intent
             val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
+                    as DomainRegistrationPurpose
 
             setupViews()
             setupObservers()
-            viewModel.start(site)
+            viewModel.start(site, domainRegistrationPurpose)
         }
     }
 
