@@ -1,15 +1,14 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainSuggestionsFragmentBinding
@@ -17,6 +16,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel
 import javax.inject.Inject
@@ -35,18 +36,17 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
 
         mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
 
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainSuggestionsViewModel::class.java)
+
         with(DomainSuggestionsFragmentBinding.bind(view)) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            val site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val intent = requireActivity().intent
+            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
             setupViews()
             setupObservers()
@@ -55,11 +55,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     }
 
     private fun DomainSuggestionsFragmentBinding.setupViews() {
-        domainSuggestionsList.layoutManager = LinearLayoutManager(
-                activity,
-                RecyclerView.VERTICAL,
-                false
-        )
+        domainSuggestionsList.layoutManager = LinearLayoutManager(activity)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
         choseDomainButton.setOnClickListener {
             val selectedDomain = viewModel.selectedSuggestion.value
@@ -71,56 +67,35 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
                     )
             )
         }
-        domainSuggestionKeywordInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(view: Editable?) {
-                viewModel.updateSearchQuery(view.toString())
-            }
-        })
-        val adapter = DomainSuggestionsAdapter(this@DomainSuggestionsFragment::onDomainSuggestionSelected)
-        domainSuggestionsList.adapter = adapter
+        domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
+        domainSuggestionsList.adapter = DomainSuggestionsAdapter(::onDomainSuggestionSelected)
     }
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
-        viewModel.isIntroVisible.observe(viewLifecycleOwner, Observer {
-            it?.let { isIntroVisible ->
-                introductionContainer.visibility = if (isIntroVisible) View.VISIBLE else View.GONE
+        viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
+        viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
+            val isLoading = listState is ListState.Loading<*>
+
+            domainSuggestionsContainer.isInvisible = isLoading
+            suggestionProgressBar.isVisible = isLoading
+            suggestionSearchIcon.isGone = isLoading
+
+            if (!isLoading) {
+                reloadSuggestions(listState.data)
             }
-        })
-        viewModel.suggestionsLiveData.observe(viewLifecycleOwner, Observer { listState ->
-            if (listState != null) {
-                val isLoading = listState is ListState.Loading<*>
 
-                domainSuggestionsContainer.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-                suggestionProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-                suggestionSearchIcon.visibility = if (isLoading) View.GONE else View.VISIBLE
-
-                if (!isLoading) {
-                    reloadSuggestions(listState.data)
+            if (listState is ListState.Error<*>) {
+                val errorMessage = listState.errorMessage.orEmpty().ifEmpty {
+                    getString(R.string.domain_suggestions_fetch_error)
                 }
-
-                if (listState is ListState.Error<*>) {
-                    val errorMessage = if (TextUtils.isEmpty(listState.errorMessage)) {
-                        getString(R.string.domain_suggestions_fetch_error)
-                    } else {
-                        listState.errorMessage
-                    }
-                    ToastUtils.showToast(context, errorMessage)
-                }
+                ToastUtils.showToast(context, errorMessage)
             }
-        })
-        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner, Observer {
-            choseDomainButton.isEnabled = it ?: false
-        })
-
-        viewModel.isDomainCreditAvailable.observe(viewLifecycleOwner, {
-            it?.let {
-                val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-                adapter.updateDomainCreditAvailable(viewModel.isSiteDomainsFeatureConfigEnabled, it)
-            }
-        })
+        }
+        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
+        viewModel.isDomainCreditAvailable.observe(viewLifecycleOwner) {
+            val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
+            adapter.updateDomainCreditAvailable(viewModel.isSiteDomainsFeatureConfigEnabled, it)
+        }
     }
 
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionResponse>) {
@@ -129,17 +104,12 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(
-        domainSuggestion: DomainSuggestionResponse?,
-        selectedPosition: Int
-    ) {
+    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 
     override fun onResume() {
         super.onResume()
-        if (activity is ScrollableViewInitializedListener) {
-            (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(R.id.domain_suggestions_list)
-        }
+        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(R.id.domain_suggestions_list)
     }
 }
