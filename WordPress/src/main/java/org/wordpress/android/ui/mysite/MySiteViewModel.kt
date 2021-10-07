@@ -20,13 +20,13 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
+import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -49,7 +49,6 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -104,7 +103,8 @@ class MySiteViewModel
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
-    private val snackbarSequencer: SnackbarSequencer
+    private val snackbarSequencer: SnackbarSequencer,
+    private val cardsBuilder: CardsBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -211,51 +211,24 @@ class MySiteViewModel
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>
-    ): List<MySiteCardAndItem> {
-        val cards = mutableListOf<MySiteCardAndItem>()
-        cards.add(
-                siteInfoCardBuilder.buildSiteInfoCard(
-                        site,
-                        showSiteIconProgressBar,
-                        this::titleClick,
-                        this::iconClick,
-                        this::urlClick,
-                        this::switchSiteClick,
-                        activeTask == QuickStartTask.UPDATE_SITE_TITLE,
-                        activeTask == QuickStartTask.UPLOAD_SITE_ICON
-                )
-        )
-        if (!buildConfigWrapper.isJetpackApp) {
-            cards.add(
-                    quickActionsCardBuilder.build(
-                            this::quickActionStatsClick,
-                            this::quickActionPagesClick,
-                            this::quickActionPostsClick,
-                            this::quickActionMediaClick,
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                            activeTask == QuickStartTask.CHECK_STATS,
-                            activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
-                    )
-            )
-        }
-        if (isDomainCreditAvailable) {
-            analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
-            cards.add(DomainRegistrationCard(ListItemInteraction.create(this::domainRegistrationClick)))
-        }
-
-        if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                cards.add(
-                        quickStartCardBuilder.build(
-                                quickStartCategories,
-                                this::onQuickStartBlockRemoveMenuItemClick,
-                                this::onQuickStartTaskTypeItemClick
-                        )
-                )
-            }
-        }
-        return cards
-    }
+    ) = cardsBuilder.build(
+            site,
+            showSiteIconProgressBar,
+            activeTask,
+            isDomainCreditAvailable,
+            quickStartCategories,
+            this::titleClick,
+            this::iconClick,
+            this::urlClick,
+            this::switchSiteClick,
+            this::quickActionStatsClick,
+            this::quickActionPagesClick,
+            this::quickActionPostsClick,
+            this::quickActionMediaClick,
+            this::domainRegistrationClick,
+            this::onQuickStartBlockRemoveMenuItemClick,
+            this::onQuickStartTaskTypeItemClick
+    )
 
     fun buildDynamicCards(
         quickStartCategories: List<QuickStartCategory>,
