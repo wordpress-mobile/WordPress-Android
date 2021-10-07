@@ -124,7 +124,6 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -161,7 +160,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
-    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
@@ -295,7 +293,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickActionsCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
-                buildConfigWrapper,
                 unifiedCommentsListFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
                 quickStartUtilsWrapper,
@@ -725,28 +722,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* QUICK ACTIONS CARD */
-    @Test
-    fun `when build is Jetpack, then quick action card is not built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-
-        initSelectedSite()
-
-        val quickActionsCard = findQuickActionsCard()
-
-        assertThat(quickActionsCard).isNull()
-    }
-
-    @Test
-    fun `when build is WordPress, then quick action card is built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-
-        initSelectedSite()
-
-        val quickActionsCard = findQuickActionsCard()
-
-        assertThat(quickActionsCard).isNotNull
-    }
-
     @Test
     fun `quick actions does not show pages button when site doesn't have the required capability`() {
         site.hasCapabilityEditPages = false
