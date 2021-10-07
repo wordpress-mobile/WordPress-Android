@@ -140,6 +140,8 @@ private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 6
 private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 7
 private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
 private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 13
+private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 14
+private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 15
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -207,26 +209,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 taskType = QuickStartTaskType.CUSTOMIZE,
                 uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
                 completedTasks = emptyList()
-        )
-    private val quickStartCard: QuickStartCard
-        get() = QuickStartCard(
-                title = UiStringText(""),
-                onRemoveMenuItemClick = ListItemInteraction.create { removeMenuItemClickAction },
-                taskTypeItems = listOf(
-                        QuickStartTaskTypeItem(
-                                quickStartTaskType = QuickStartTaskType.CUSTOMIZE,
-                                title = UiStringText(""),
-                                titleEnabled = true,
-                                subtitle = UiStringText(""),
-                                strikeThroughTitle = false,
-                                progressColor = 0,
-                                progress = 0,
-                                onClick = ListItemInteraction.create(
-                                        QuickStartTaskType.CUSTOMIZE,
-                                        { quickStartTaskTypeItemClickAction }
-                                )
-                        )
-                )
         )
     private val dynamicQuickStartTaskCard: QuickStartDynamicCard
         get() = QuickStartDynamicCard(
@@ -1385,11 +1367,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     ) {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         doAnswer {
-            removeMenuItemClickAction = (it.getArgument(1) as () -> Unit)
-            quickStartTaskTypeItemClickAction = (it.getArgument(2) as (QuickStartTaskType) -> Unit)
-            quickStartCard
-        }.whenever(quickStartCardBuilder).build(any(), any(), any())
-        doAnswer {
             dynamicCardMoreClick = (it.getArgument(2) as (DynamicCardMenuModel) -> Unit)
             dynamicQuickStartTaskCard
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
@@ -1432,7 +1409,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     }
             )
             val domainRegistrationCard = initDomainRegistrationCard(it)
-            listOf<MySiteCardAndItem>(siteInfoCard, domainRegistrationCard)
+            val quickStartCard = initQuickStartCard(it)
+            listOf<MySiteCardAndItem>(siteInfoCard, domainRegistrationCard, quickStartCard)
         }.whenever(cardsBuilder).build(
                 site = eq(site),
                 showSiteIconProgressBar = any(),
@@ -1459,4 +1437,34 @@ class MySiteViewModelTest : BaseUnitTest() {
                         .invoke()
             }
     )
+
+    private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
+        removeMenuItemClickAction = mockInvocation.getArgument(
+                CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION
+        ) as () -> Unit
+        quickStartTaskTypeItemClickAction = mockInvocation.getArgument(
+                CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION
+        ) as ((QuickStartTaskType) -> Unit)
+        return QuickStartCard(
+                title = UiStringText(""),
+                onRemoveMenuItemClick = ListItemInteraction.create {
+                    (removeMenuItemClickAction as () -> Unit).invoke()
+                },
+                taskTypeItems = listOf(
+                        QuickStartTaskTypeItem(
+                                quickStartTaskType = mock(),
+                                title = UiStringText(""),
+                                titleEnabled = true,
+                                subtitle = UiStringText(""),
+                                strikeThroughTitle = false,
+                                progressColor = 0,
+                                progress = 0,
+                                onClick = ListItemInteraction.create(
+                                        mock(),
+                                        (quickStartTaskTypeItemClickAction as ((QuickStartTaskType) -> Unit))
+                                )
+                        )
+                )
+        )
+    }
 }
