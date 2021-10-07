@@ -97,12 +97,11 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        adapter.selectedPosition = viewModel.selectedPosition.value ?: -1
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?, selectedPosition: Int) {
-        viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
+    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?) {
+        viewModel.onDomainSuggestionsSelected(domainSuggestion)
     }
 
     override fun onResume() {

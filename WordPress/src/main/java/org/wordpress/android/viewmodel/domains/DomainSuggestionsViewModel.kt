@@ -51,9 +51,6 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
-    private val _selectedPosition = MutableLiveData<Int>()
-    val selectedPosition: LiveData<Int> = _selectedPosition
-
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
 
@@ -116,7 +113,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
-        onDomainSuggestionsSelected(null, -1)
+        onDomainSuggestionsSelected(null)
     }
 
     // Network Callback
@@ -158,9 +155,11 @@ class DomainSuggestionsViewModel @Inject constructor(
                 }
     }
 
-    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?, selectedPosition: Int) {
-        _selectedPosition.postValue(selectedPosition)
+    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?) {
         _selectedSuggestion.postValue(selectedSuggestion)
+        suggestions = suggestions.transform { list ->
+            list.map { it.copy(isSelected = selectedSuggestion?.domainName == it.domainName) }
+        }
     }
 
     fun updateSearchQuery(query: String) {
