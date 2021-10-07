@@ -19,6 +19,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Compani
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
@@ -47,7 +48,6 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
             setupToolbar()
             setupViewModel(site, domainRegistrationPurpose)
-            setupObservers()
         }
     }
 
@@ -62,9 +62,6 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private fun setupViewModel(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
         viewModel.start(site, domainRegistrationPurpose)
-    }
-
-    private fun setupObservers() {
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
