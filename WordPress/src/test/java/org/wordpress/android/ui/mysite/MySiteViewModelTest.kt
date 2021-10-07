@@ -375,6 +375,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
+    /* SITE STATE */
     @Test
     fun `model is empty with no selected site`() {
         onSiteSelected.value = null
@@ -393,6 +394,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
     }
 
+    /* SITE INFO CARD */
     @Test
     fun `site info card title click shows snackbar message when network not available`() = test {
         initQuickActionsCard()
@@ -626,6 +628,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(findSiteInfoCard()!!.showIconFocusPoint).isTrue
     }
 
+    /* AVATAR */
     @Test
     fun `account avatar url value is emitted and updated from the source`() {
         initSelectedSite()
@@ -642,6 +645,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenMeScreen)
     }
 
+    /* QUICK ACTIONS CARD */
     @Test
     fun `quick actions does not show pages button when site doesn't have the required capability`() {
         site.hasCapabilityEditPages = false
@@ -770,6 +774,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenMedia(site))
     }
 
+    /* LOGIN - NAVIGATION TO STATS */
     @Test
     fun `handling successful login result opens stats screen`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -779,6 +784,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenStats(site))
     }
 
+    /* ITEM CLICK */
     @Test
     fun `activity item click emits OpenActivity navigation event`() {
         invokeItemClickAction(ACTIVITY_LOG)
@@ -921,6 +927,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
     }
 
+    /* DOMAIN REGISTRATION CARD */
     @Test
     fun `domain registration item click opens domain registration`() {
         initSelectedSite()
@@ -968,6 +975,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
+    /* ITEM VISIBILITY */
     @Test
     fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
         initSelectedSite()
@@ -1036,6 +1044,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
+    /* EMPTY VIEW */
     @Test
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
@@ -1058,6 +1067,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
     }
 
+    /* ADD NEW SITE */
     @Test
     fun `add new site press is handled correctly`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
@@ -1067,6 +1077,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
+    /* QUICK START CARD + DYNAMIC CARD */
     @Test
     fun `hides quick start menu item in quickStartRepository`() {
         val id = CUSTOMIZE_QUICK_START
@@ -1209,6 +1220,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).setActiveTask(task)
     }
 
+    /* QUICK ACTIONS CARD */
     @Test
     fun `when build is Jetpack, then quick action card is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
@@ -1231,6 +1243,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(quickActionsCard).isNotNull
     }
 
+    /* START/IGNORE QUICK START + QUICK START DIALOG */
     @Test
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
@@ -1302,6 +1315,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
+    /* REFRESH */
     @Test
     fun `when refresh is triggered, then update site settings if necessary`() {
         viewModel.refresh()
@@ -1337,6 +1351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
+    /* ADD SITE ICON DIALOG */
     @Test
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
@@ -1418,6 +1433,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
+    /* SITE CHOOSER DIALOG */
     @Test
     fun `when site chooser is dismissed, then check and show quick start notice`() {
         viewModel.onSiteNameChooserDismissed()
