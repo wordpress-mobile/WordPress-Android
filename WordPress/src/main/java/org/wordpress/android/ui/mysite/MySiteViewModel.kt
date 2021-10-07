@@ -28,7 +28,6 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
-import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -93,7 +92,6 @@ class MySiteViewModel
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
