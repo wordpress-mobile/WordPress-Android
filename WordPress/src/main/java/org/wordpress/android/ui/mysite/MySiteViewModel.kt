@@ -36,6 +36,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
@@ -98,7 +99,8 @@ class MySiteViewModel
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
-    private val cardsBuilder: CardsBuilder
+    private val cardsBuilder: CardsBuilder,
+    private val dynamicCardsBuilder: DynamicCardsBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -228,25 +230,13 @@ class MySiteViewModel
         quickStartCategories: List<QuickStartCategory>,
         pinnedDynamicCard: DynamicCardType?,
         visibleDynamicCards: List<DynamicCardType>
-    ): List<DynamicCard> {
-        val dynamicCards = mutableListOf<DynamicCard>().also { list ->
-            // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
-            // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
-            // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
-            // current solution is good enough for a few sources.
-            if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-                list.addAll(quickStartCategories.map { category ->
-                    quickStartItemBuilder.build(
-                            category,
-                            pinnedDynamicCard,
-                            this::onDynamicCardMoreClick,
-                            this::onQuickStartTaskCardClick
-                    )
-                })
-            }
-        }.associateBy { it.dynamicCardType }
-        return visibleDynamicCards.mapNotNull { dynamicCardType -> dynamicCards[dynamicCardType] }
-    }
+    ): List<DynamicCard> = dynamicCardsBuilder.build(
+            quickStartCategories,
+            pinnedDynamicCard,
+            visibleDynamicCards,
+            this::onDynamicCardMoreClick,
+            this::onQuickStartTaskCardClick
+    )
 
     private fun buildSiteItems(
         site: SiteModel,
