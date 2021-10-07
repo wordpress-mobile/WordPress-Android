@@ -46,39 +46,35 @@ class CardsBuilder
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(
-                siteInfoCardBuilder.buildSiteInfoCard(
+                buildSiteInfoCard(
                         site,
                         showSiteIconProgressBar,
                         titleClick,
                         iconClick,
                         urlClick,
                         switchSiteClick,
-                        activeTask == QuickStartTask.UPDATE_SITE_TITLE,
-                        activeTask == QuickStartTask.UPLOAD_SITE_ICON
+                        activeTask
                 )
         )
         if (!buildConfigWrapper.isJetpackApp) {
             cards.add(
-                    quickActionsCardBuilder.build(
+                    buildQuickActionsCard(
                             quickActionStatsClick,
                             quickActionPagesClick,
                             quickActionPostsClick,
                             quickActionMediaClick,
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                            activeTask == QuickStartTask.CHECK_STATS,
-                            activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
+                            site,
+                            activeTask
                     )
             )
         }
         if (isDomainCreditAvailable) {
-            analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
-            cards.add(DomainRegistrationCard(ListItemInteraction.create(domainRegistrationClick)))
+            cards.add(buildAndTrackDomainRegistrationCard(domainRegistrationClick))
         }
-
         if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartCategories.takeIf { it.isNotEmpty() }?.let {
                 cards.add(
-                        quickStartCardBuilder.build(
+                        buildQuickStartCard(
                                 quickStartCategories,
                                 onQuickStartBlockRemoveMenuItemClick,
                                 onQuickStartTaskTypeItemClick
@@ -88,4 +84,57 @@ class CardsBuilder
         }
         return cards
     }
+
+    @Suppress("LongParameterList")
+    private fun buildSiteInfoCard(
+        site: SiteModel,
+        showSiteIconProgressBar: Boolean,
+        titleClick: () -> Unit,
+        iconClick: () -> Unit,
+        urlClick: () -> Unit,
+        switchSiteClick: () -> Unit,
+        activeTask: QuickStartTask?
+    ) = siteInfoCardBuilder.buildSiteInfoCard(
+            site,
+            showSiteIconProgressBar,
+            titleClick,
+            iconClick,
+            urlClick,
+            switchSiteClick,
+            activeTask == QuickStartTask.UPDATE_SITE_TITLE,
+            activeTask == QuickStartTask.UPLOAD_SITE_ICON
+    )
+
+    @Suppress("LongParameterList")
+    private fun buildQuickActionsCard(
+        quickActionStatsClick: () -> Unit,
+        quickActionPagesClick: () -> Unit,
+        quickActionPostsClick: () -> Unit,
+        quickActionMediaClick: () -> Unit,
+        site: SiteModel,
+        activeTask: QuickStartTask?
+    ) = quickActionsCardBuilder.build(
+            quickActionStatsClick,
+            quickActionPagesClick,
+            quickActionPostsClick,
+            quickActionMediaClick,
+            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+            activeTask == QuickStartTask.CHECK_STATS,
+            activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
+    )
+
+    private fun buildAndTrackDomainRegistrationCard(domainRegistrationClick: () -> Unit): DomainRegistrationCard {
+        analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
+        return DomainRegistrationCard(ListItemInteraction.create(domainRegistrationClick))
+    }
+
+    private fun buildQuickStartCard(
+        quickStartCategories: List<QuickStartCategory>,
+        onQuickStartBlockRemoveMenuItemClick: () -> Unit,
+        onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
+    ) = quickStartCardBuilder.build(
+            quickStartCategories,
+            onQuickStartBlockRemoveMenuItemClick,
+            onQuickStartTaskTypeItemClick
+    )
 }
