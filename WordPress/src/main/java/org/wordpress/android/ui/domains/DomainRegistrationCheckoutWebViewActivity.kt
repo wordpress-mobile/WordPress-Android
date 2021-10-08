@@ -3,6 +3,7 @@ package org.wordpress.android.ui.domains
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContract
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
@@ -13,6 +14,11 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // We don't want any menu items
+        return true
     }
 
     class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent>() {
