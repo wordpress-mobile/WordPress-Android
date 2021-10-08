@@ -9,8 +9,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
-import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -47,7 +47,7 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, ::handleNavigationAction)
     }
 
-    private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
+    private fun handleNavigationAction(action: DomainsDashboardNavigationAction) = when (action) {
         is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,

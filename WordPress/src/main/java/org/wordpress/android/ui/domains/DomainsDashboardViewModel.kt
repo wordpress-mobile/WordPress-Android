@@ -19,8 +19,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
-import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -46,7 +46,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
-    private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
+    private val _onNavigation = MutableLiveData<Event<DomainsDashboardNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _uiModel = MutableLiveData<List<DomainsDashboardItem>>()
