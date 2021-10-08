@@ -2,19 +2,19 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.MenuItem
-import org.wordpress.android.databinding.ActivityDomainsDashboardBinding
+import org.wordpress.android.databinding.DomainsDashboardActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class DomainsDashboardActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        with(ActivityDomainsDashboardBinding.inflate(layoutInflater)) {
+        with(DomainsDashboardActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             setupToolbar()
         }
     }
 
-    private fun ActivityDomainsDashboardBinding.setupToolbar() {
+    private fun DomainsDashboardActivityBinding.setupToolbar() {
         setSupportActionBar(toolbarDomains)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
