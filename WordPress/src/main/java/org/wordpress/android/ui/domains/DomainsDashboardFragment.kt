@@ -31,10 +31,7 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
 
         with(FragmentDomainsDashboardBinding.bind(view)) {
             setupViews()
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                    .get(DomainsDashboardViewModel::class.java)
-
-            viewModel.start()
+            setupViewModel()
 
             viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
                 (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
@@ -46,6 +43,11 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
 
     private fun FragmentDomainsDashboardBinding.setupViews() {
         contentRecyclerView.adapter = DomainsDashboardAdapter(uiHelpers)
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
+        viewModel.start()
     }
 
     private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
