@@ -58,7 +58,8 @@ class TransactionsRestClient @Inject constructor(
         site: SiteModel,
         productId: Int,
         domainName: String,
-        isPrivacyProtectionEnabled: Boolean
+        isPrivacyProtectionEnabled: Boolean,
+        isTemporary: Boolean
     ): CreatedShoppingCartPayload {
         val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
 
@@ -69,7 +70,7 @@ class TransactionsRestClient @Inject constructor(
         )
 
         val body = mapOf(
-                "temporary" to true,
+                "temporary" to isTemporary,
                 "products" to arrayOf(domainProduct)
         )
 
