@@ -9,8 +9,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartItemBui
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
-class DynamicCardsBuilder
-@Inject constructor(
+class DynamicCardsBuilder @Inject constructor(
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartItemBuilder: QuickStartItemBuilder
 ) {

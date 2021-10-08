@@ -32,8 +32,7 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
-class SiteListItemBuilder
-@Inject constructor(
+class SiteListItemBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,

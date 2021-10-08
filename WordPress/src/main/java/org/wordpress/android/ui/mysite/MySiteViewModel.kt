@@ -70,8 +70,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("LongMethod")
-class MySiteViewModel
-@Inject constructor(
+class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
