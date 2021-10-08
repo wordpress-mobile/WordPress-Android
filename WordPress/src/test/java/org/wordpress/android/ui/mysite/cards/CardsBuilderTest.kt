@@ -164,7 +164,7 @@ class CardsBuilderTest {
         )
     }
 
-    fun setUpSiteInfoCardBuilder() {
+    private fun setUpSiteInfoCardBuilder() {
         doAnswer {
             initSiteInfoCard(it)
         }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
@@ -179,7 +179,7 @@ class CardsBuilderTest {
         )
     }
 
-    fun setUpQuickActionsBuilder() {
+    private fun setUpQuickActionsBuilder() {
         doAnswer {
             initQuickActionsCard(it)
         }.whenever(quickActionsCardBuilder).build(
@@ -193,7 +193,7 @@ class CardsBuilderTest {
         )
     }
 
-    fun setUpQuickStartCardBuilder() {
+    private fun setUpQuickStartCardBuilder() {
         doAnswer {
             initQuickStartCard()
         }.whenever(quickStartCardBuilder).build(any(), any(), any())

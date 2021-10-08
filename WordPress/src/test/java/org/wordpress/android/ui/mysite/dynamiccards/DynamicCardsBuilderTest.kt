@@ -64,7 +64,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
 
     private fun List<DynamicCard>.findQuickStartDynamicCard() = this.find { it is QuickStartDynamicCard }
 
-    fun buildDynamicCards(
+    private fun buildDynamicCards(
         isQuickStartDynamicCardEnabled: Boolean,
         isQuickStartInProgress: Boolean
     ): List<DynamicCard> {
@@ -85,7 +85,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         dynamicCardsBuilder = DynamicCardsBuilder(quickStartDynamicCardsFeatureConfig, quickStartItemBuilder)
     }
 
-    fun setUpQuickStartDynamicCardBuilder() {
+    private fun setUpQuickStartDynamicCardBuilder() {
         doAnswer {
             initQuickStartDynamicCard()
         }.whenever(quickStartItemBuilder).build(any(), anyOrNull(), any(), any())
