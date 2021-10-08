@@ -24,13 +24,13 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.viewBinding
 
-sealed class DomainDashboardViewHolder<T : ViewBinding>(
+sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     protected val binding: T
 ) : RecyclerView.ViewHolder(binding.root) {
     class PrimaryDomainViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : DomainDashboardViewHolder<DomainPrimarySiteAddressCardBinding>(
+    ) : DomainsDashboardViewHolder<DomainPrimarySiteAddressCardBinding>(
             parent.viewBinding(DomainPrimarySiteAddressCardBinding::inflate)
     ) {
         fun onBind(item: PrimaryDomain) = with(binding) {
@@ -52,7 +52,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     class SiteDomainsHeaderViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : DomainDashboardViewHolder<DomainSiteDomainsHeaderBinding>(
+    ) : DomainsDashboardViewHolder<DomainSiteDomainsHeaderBinding>(
             parent.viewBinding(DomainSiteDomainsHeaderBinding::inflate)
     ) {
         fun onBind(item: SiteDomainsHeader) = with(binding) {
@@ -63,7 +63,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     class SiteDomainsViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : DomainDashboardViewHolder<DomainSiteDomainsCardBinding>(
+    ) : DomainsDashboardViewHolder<DomainSiteDomainsCardBinding>(
             parent.viewBinding(DomainSiteDomainsCardBinding::inflate)
     ) {
         fun onBind(item: SiteDomains) = with(binding) {
@@ -74,7 +74,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
 
     class AddDomainViewHolder(
         parent: ViewGroup
-    ) : DomainDashboardViewHolder<DomainAddDomainCtaBinding>(
+    ) : DomainsDashboardViewHolder<DomainAddDomainCtaBinding>(
             parent.viewBinding(DomainAddDomainCtaBinding::inflate)
     ) {
         fun onBind(item: AddDomain) = with(binding) {
@@ -85,7 +85,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
 
     class ManageDomainsViewHolder(
         parent: ViewGroup
-    ) : DomainDashboardViewHolder<DomainManageDomainsCtaBinding>(
+    ) : DomainsDashboardViewHolder<DomainManageDomainsCtaBinding>(
             parent.viewBinding(DomainManageDomainsCtaBinding::inflate)
     ) {
         fun onBind(item: ManageDomains) = with(binding) {
@@ -97,7 +97,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     class PurchaseDomainViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : DomainDashboardViewHolder<DomainPurchaseCardBinding>(
+    ) : DomainsDashboardViewHolder<DomainPurchaseCardBinding>(
             parent.viewBinding(DomainPurchaseCardBinding::inflate)
     ) {
         fun onBind(item: PurchaseDomain) = with(binding) {
@@ -111,7 +111,7 @@ sealed class DomainDashboardViewHolder<T : ViewBinding>(
     class DomainBlurbViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : DomainDashboardViewHolder<DomainSiteDomainsBlurbBinding>(
+    ) : DomainsDashboardViewHolder<DomainSiteDomainsBlurbBinding>(
             parent.viewBinding(DomainSiteDomainsBlurbBinding::inflate)
     ) {
         fun onBind(item: DomainBlurb) = with(binding) {

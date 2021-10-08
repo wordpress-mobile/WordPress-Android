@@ -3,13 +3,13 @@ package org.wordpress.android.ui.domains
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.AddDomainViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.DomainBlurbViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.ManageDomainsViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.PrimaryDomainViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.PurchaseDomainViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.SiteDomainsHeaderViewHolder
-import org.wordpress.android.ui.domains.DomainDashboardViewHolder.SiteDomainsViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.AddDomainViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.DomainBlurbViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.ManageDomainsViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PrimaryDomainViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PurchaseDomainViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsHeaderViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsViewHolder
 import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
@@ -30,8 +30,8 @@ import javax.inject.Inject
 
 class DomainsDashboardAdapter @Inject constructor(
     private val uiHelpers: UiHelpers
-) : ListAdapter<DomainsListItem, DomainDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainDashboardViewHolder<*> {
+) : ListAdapter<DomainsListItem, DomainsDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainsDashboardViewHolder<*> {
         return when (Type.values()[viewType]) {
             PRIMARY_DOMAIN -> PrimaryDomainViewHolder(parent, uiHelpers)
             SITE_DOMAINS_HEADER -> SiteDomainsHeaderViewHolder(parent, uiHelpers)
@@ -43,7 +43,7 @@ class DomainsDashboardAdapter @Inject constructor(
         }
     }
 
-    override fun onBindViewHolder(holder: DomainDashboardViewHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: DomainsDashboardViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
             is PrimaryDomainViewHolder -> holder.onBind(item as PrimaryDomain)
