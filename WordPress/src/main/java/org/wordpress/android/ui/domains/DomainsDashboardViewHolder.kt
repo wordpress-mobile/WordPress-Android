@@ -13,13 +13,13 @@ import org.wordpress.android.databinding.DomainPurchaseCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsBlurbBinding
 import org.wordpress.android.databinding.DomainSiteDomainsCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsHeaderBinding
-import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
-import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
-import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
+import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.viewBinding
@@ -41,7 +41,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         private fun popupMenuClick(item: PrimaryDomain, v: View) {
             val popup = PopupMenu(v.context, v)
             popup.setOnMenuItemClickListener { menuItem ->
-                val action = DomainsListItem.Action.fromItemId(menuItem.itemId)
+                val action = DomainsDashboardItem.Action.fromItemId(menuItem.itemId)
                 item.onPopupMenuClick(action)
             }
             popup.menuInflater.inflate(R.menu.domains_more, popup.menu)

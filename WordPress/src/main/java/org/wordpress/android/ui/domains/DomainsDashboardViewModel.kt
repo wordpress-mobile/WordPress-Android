@@ -11,14 +11,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.domains.DomainsListItem.Action
-import org.wordpress.android.ui.domains.DomainsListItem.Action.CHANGE_SITE_ADDRESS
-import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
-import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
+import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsNavigationEvents.GetDomain
 import org.wordpress.android.ui.domains.DomainsNavigationEvents.OpenManageDomains
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -49,7 +49,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<DomainsNavigationEvents>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<List<DomainsListItem>>()
+    private val _uiModel = MutableLiveData<List<DomainsDashboardItem>>()
     val uiModel = _uiModel
 
     val siteUrl: String = SiteUtils.getHomeURLOrHostName(selectedSiteRepository.selectedSiteChange.value)
@@ -70,14 +70,14 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.value = buildSiteDomainsList()
     }
 
-    private fun buildSiteDomainsList(): List<DomainsListItem> = when {
+    private fun buildSiteDomainsList(): List<DomainsDashboardItem> = when {
         hasCustomDomain -> manageDomainsItems()
         hasDomainCredit -> claimDomainItems()
         else -> getDomainItems()
     }
 
-    private fun getDomainItems(): List<DomainsListItem> {
-        val listItems = mutableListOf<DomainsListItem>()
+    private fun getDomainItems(): List<DomainsDashboardItem> {
+        val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
         // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
@@ -93,8 +93,8 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun claimDomainItems(): List<DomainsListItem> {
-        val listItems = mutableListOf<DomainsListItem>()
+    private fun claimDomainItems(): List<DomainsDashboardItem> {
+        val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
 
@@ -110,7 +110,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     // if site has a registered domain then show Site Domains, Add Domain and Manage Domains
-    private fun manageDomainsItems(): List<DomainsListItem> {
+    private fun manageDomainsItems(): List<DomainsDashboardItem> {
         launch {
             val result = siteStore.fetchSiteDomains(selectedSite)
             when {
@@ -126,8 +126,8 @@ class DomainsDashboardViewModel @Inject constructor(
         return manageDomainsListItems(null)
     }
 
-    private fun manageDomainsListItems(domains: List<Domain>?): List<DomainsListItem> {
-        val listItems = mutableListOf<DomainsListItem>()
+    private fun manageDomainsListItems(domains: List<Domain>?): List<DomainsDashboardItem> {
+        val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick)
 

@@ -3,6 +3,21 @@ package org.wordpress.android.ui.domains
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
+import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
+import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.DOMAIN_BLURB
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PRIMARY_DOMAIN
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS_HEADER
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.AddDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.DomainBlurbViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.ManageDomainsViewHolder
@@ -10,27 +25,12 @@ import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PurchaseDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsHeaderViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsViewHolder
-import org.wordpress.android.ui.domains.DomainsListItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsListItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsListItem.ManageDomains
-import org.wordpress.android.ui.domains.DomainsListItem.PrimaryDomain
-import org.wordpress.android.ui.domains.DomainsListItem.PurchaseDomain
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomains
-import org.wordpress.android.ui.domains.DomainsListItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsListItem.Type
-import org.wordpress.android.ui.domains.DomainsListItem.Type.ADD_DOMAIN
-import org.wordpress.android.ui.domains.DomainsListItem.Type.DOMAIN_BLURB
-import org.wordpress.android.ui.domains.DomainsListItem.Type.MANAGE_DOMAINS
-import org.wordpress.android.ui.domains.DomainsListItem.Type.PRIMARY_DOMAIN
-import org.wordpress.android.ui.domains.DomainsListItem.Type.PURCHASE_DOMAIN
-import org.wordpress.android.ui.domains.DomainsListItem.Type.SITE_DOMAINS
-import org.wordpress.android.ui.domains.DomainsListItem.Type.SITE_DOMAINS_HEADER
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 class DomainsDashboardAdapter @Inject constructor(
     private val uiHelpers: UiHelpers
-) : ListAdapter<DomainsListItem, DomainsDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
+) : ListAdapter<DomainsDashboardItem, DomainsDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainsDashboardViewHolder<*> {
         return when (Type.values()[viewType]) {
             PRIMARY_DOMAIN -> PrimaryDomainViewHolder(parent, uiHelpers)
@@ -61,12 +61,12 @@ class DomainsDashboardAdapter @Inject constructor(
     }
 }
 
-object DomainsDashboardDiffCallback : DiffUtil.ItemCallback<DomainsListItem>() {
-    override fun areItemsTheSame(oldItem: DomainsListItem, newItem: DomainsListItem): Boolean {
+object DomainsDashboardDiffCallback : DiffUtil.ItemCallback<DomainsDashboardItem>() {
+    override fun areItemsTheSame(oldItem: DomainsDashboardItem, newItem: DomainsDashboardItem): Boolean {
         return oldItem.type == newItem.type
     }
 
-    override fun areContentsTheSame(oldItem: DomainsListItem, newItem: DomainsListItem): Boolean {
+    override fun areContentsTheSame(oldItem: DomainsDashboardItem, newItem: DomainsDashboardItem): Boolean {
         return oldItem == newItem
     }
 }
