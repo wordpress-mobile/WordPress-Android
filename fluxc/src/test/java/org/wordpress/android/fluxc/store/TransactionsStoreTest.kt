@@ -64,7 +64,8 @@ class TransactionsStoreTest {
                         siteModel,
                         TEST_DOMAIN_PRODUCT_ID,
                         TEST_DOMAIN_NAME,
-                        true
+                        isPrivacyProtectionEnabled = true,
+                        isTemporary = true
                 )
         ).thenReturn(
                 CreatedShoppingCartPayload(
@@ -75,7 +76,9 @@ class TransactionsStoreTest {
         val payload = CreateShoppingCartPayload(
                 siteModel,
                 TEST_DOMAIN_PRODUCT_ID,
-                TEST_DOMAIN_NAME, true
+                TEST_DOMAIN_NAME,
+                isPrivacyEnabled = true,
+                isTemporary = true
         )
 
         val action = TransactionActionBuilder.newCreateShoppingCartAction(payload)
@@ -85,7 +88,8 @@ class TransactionsStoreTest {
                 payload.site,
                 payload.productId,
                 payload.domainName,
-                payload.isPrivacyEnabled
+                payload.isPrivacyEnabled,
+                payload.isTemporary
         )
 
         val expectedEvent = TransactionsStore.OnShoppingCartCreated(CREATE_SHOPPING_CART_RESPONSE)
