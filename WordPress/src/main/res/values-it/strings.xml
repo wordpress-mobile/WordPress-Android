@@ -17,9 +17,7 @@ Language: it
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A te&lt;/a&gt; piace questo.</string>
     <string name="gutenberg_native_line_height">Altezza linea</string>
     <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
-    <string name="domains_primary_domain">INDIRIZZO DEL SITO PRINCIPALE</string>
     <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
     <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
     <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>

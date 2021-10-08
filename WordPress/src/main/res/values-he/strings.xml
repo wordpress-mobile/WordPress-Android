@@ -17,9 +17,7 @@ Language: he_IL
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;סימנת&lt;/a&gt; לזה לייק.</string>
     <string name="gutenberg_native_line_height">גובה השורה</string>
     <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
-    <string name="domains_primary_domain">כתובת האתר הראשי</string>
     <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">התקבלה תגובה לא חוקית</string>
     <string name="recommend_app_null_response">לא התקבלו תגובות</string>
     <string name="recommend_app_subject">האפליקציה של WordPress – אפליקציות לכל סוגי המסכים</string>

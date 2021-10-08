@@ -1,78 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/default_dialog_width"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
 
-    <LinearLayout
-        android:id="@+id/quick_start_prompt_dialog_image_container"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/site_layout"
+        layout="@layout/base_site_listitem"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/quick_start_prompt_dialog_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@null"
-            android:src="@drawable/img_promo_editor" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/quick_start_prompt_dialog_text"
-        android:layout_width="match_parent"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/quick_start_prompt_dialog_title"
+        style="@style/QuickStartPromptDialogTitleNew"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quick_start_prompt_dialog_image_container"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_dialog">
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/site_layout"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_title" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/quick_start_prompt_dialog_title"
-            style="@style/QuickStartPromptDialogTitle"
-            tools:text="Promotional Feature" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/quick_start_prompt_dialog_description"
-            style="@style/QuickStartPromptDialogDescription"
-            tools:text="This is a short description about the promotional feature." />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/quick_start_prompt_dialog_description"
+        style="@style/QuickStartPromptDialogDescriptionNew"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quick_start_prompt_dialog_text"
-        android:padding="@dimen/margin_large">
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_prompt_dialog_title"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_message" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/quick_start_prompt_dialog_button_positive"
-            style="@style/QuickStartPromptDialogButton"
-            android:layout_alignParentEnd="true"
-            tools:text="Yes" />
+    <include
+        android:id="@+id/quick_start_prompt_dialog_buttons"
+        layout="@layout/quick_start_prompt_bottom_buttons_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_prompt_dialog_description" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/quick_start_prompt_dialog_button_negative"
-            style="@style/QuickStartPromptDialogButton"
-            android:layout_toStartOf="@+id/quick_start_prompt_dialog_button_positive"
-            android:visibility="gone"
-            tools:text="No"
-            tools:visibility="visible" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/quick_start_prompt_dialog_button_neutral"
-            style="@style/QuickStartPromptDialogButton"
-            android:layout_alignParentStart="true"
-            android:letterSpacing="-0.005"
-            android:visibility="gone"
-            tools:text="Maybe"
-            tools:visibility="visible" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

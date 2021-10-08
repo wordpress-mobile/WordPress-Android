@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-01 03:47:13+0000
+Translation-Revision-Date: 2021-10-04 20:23:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
@@ -8,8 +8,7 @@ Language: gl_ES
 <resources>
     <string name="gutenberg_native_line_height">Altura da liña</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén o teu dominio</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">DIRECCIÓN PRINCIPAL DO SITIO</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Erro descoñecido ao recuperar o modelo recomendado da aplicación</string>
     <string name="recommend_app_bad_format_response">Resposta recibida non válida</string>
     <string name="recommend_app_null_response">Non se recibiu ningunha resposta</string>
@@ -176,6 +175,7 @@ Language: gl_ES
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
+    <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>

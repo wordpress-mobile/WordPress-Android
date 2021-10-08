@@ -17,9 +17,7 @@ Language: zh_TW
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;你&lt;/a&gt;說這個讚。</string>
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
-    <string name="domains_primary_domain">主要網站位址</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
     <string name="recommend_app_null_response">未收到回應</string>
     <string name="recommend_app_subject">WordPress 應用程式 - 適用任何螢幕</string>

@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-21 05:54:09+0000
+Translation-Revision-Date: 2021-10-05 03:49:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Buscar un dominio</string>
+    <string name="domains_free_plan_get_your_domain_caption">Los dominios comprados en este sitio redirigirán a los visitantes a &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Con tu plan, tienes incluido el registro de dominio gratis durante un año</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Reclama tu dominio gratuito</string>
+    <string name="domains_manage_domains">Gestionar los dominios</string>
+    <string name="domains_redirected_domains_blurb">Tus dominios redirigirán a tu sitio en &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Aprende más&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Añadir un dominio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Caduca el %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires">Caduca el %s</string>
+    <string name="domains_site_domains">Dominios de tu sitio</string>
+    <string name="domains_primary_site_address_blurb">La dirección principal de tu sitio es la que los visitantes ven en la barra de direcciones del navegador al visitar tu web.</string>
+    <string name="domains_primary_site_address_chip">Dirección principal del sitio</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Cambiar la dirección del sitio</string>
+    <string name="domains_primary_site_caption">Tu dirección gratuita de WordPress.com es</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /año&lt;span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">¿Quieres descartarlos?</string>
+    <string name="comment_edit_cancel_dialog_title">Hay cambios sin guardar</string>
+    <string name="comment_edit_comment_error">El comentario no puede estar vacío</string>
+    <string name="comment_edit_user_email_error">Correo electrónico del usuario no válido</string>
+    <string name="comment_edit_web_address_error">Dirección web no válida</string>
+    <string name="comment_edit_user_name_error">El nombre de usuario no puede estar vacío</string>
+    <string name="comment_edit_email_address">Dirección de correo electrónico</string>
+    <string name="comment_edit_web_address">Dirección web</string>
+    <string name="comment_edit_comment">Comentario</string>
+    <string name="comment_edit_user_name">Nombre</string>
+    <string name="comment_edit_menu_done">Hecho</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Pronto llegarán las vistas previas de los bloques incrustados</string>
     <string name="weekly_roundup">Resumen semanal</string>
     <string name="gutenberg_native_embed_options">Opciones de incrustación</string>
@@ -18,8 +45,7 @@ Language: es_VE
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; te gusta.</string>
     <string name="gutenberg_native_line_height">Altura de la línea</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén tu dominio</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">DIRECCIÓN PRINCIPAL DEL SITIO</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Error desconocido al recuperar la plantilla recomendada de la aplicación</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
@@ -186,6 +212,7 @@ Language: es_VE
     <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible.</string>
+    <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
@@ -2749,6 +2776,7 @@ Language: es_VE
     <string name="older_month">Hace más de 1 mes</string>
     <string name="older_last_week">Hace más de 1 semana</string>
     <string name="older_two_days">Hace más de 2 días</string>
+    <string name="help_and_support">Ayuda y soporte</string>
     <string name="mnu_comment_liked">Me gustó</string>
     <string name="comment">Comentario</string>
     <string name="comment_trashed">El comentario se ha enviado a la papelera.</string>
