@@ -133,7 +133,8 @@ class TransactionsStore @Inject constructor(
         val site: SiteModel,
         val productId: Int,
         val domainName: String,
-        val isPrivacyEnabled: Boolean
+        val isPrivacyEnabled: Boolean,
+        val isTemporary: Boolean = true
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class RedeemShoppingCartPayload(
