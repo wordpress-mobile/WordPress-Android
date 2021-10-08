@@ -32,12 +32,7 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
         with(FragmentDomainsDashboardBinding.bind(view)) {
             setupViews()
             setupViewModel()
-
-            viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
-                (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
-            }
-
-            viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+            setupObservers()
         }
     }
 
@@ -48,6 +43,13 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
     private fun setupViewModel() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
         viewModel.start()
+    }
+
+    private fun FragmentDomainsDashboardBinding.setupObservers() {
+        viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
+            (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
+        }
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, ::handleNavigationAction)
     }
 
     private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
