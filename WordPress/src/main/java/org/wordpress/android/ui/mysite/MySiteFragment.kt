@@ -290,10 +290,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+                action.site
         )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
