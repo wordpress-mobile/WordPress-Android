@@ -69,7 +69,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "LongParameterList", "TooManyFunctions")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -238,8 +238,8 @@ class MySiteViewModel @Inject constructor(
     )
 
     private fun buildNoSiteState(): NoSites {
-        // Hide actionable empty view image when screen height is under 600 pixels.
-        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+        // Hide actionable empty view image when screen height is under specified min height.
+        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(shouldShowImage)
     }
 
@@ -254,6 +254,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             val navigationAction = when (action) {
@@ -548,6 +549,7 @@ class MySiteViewModel @Inject constructor(
         _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
     }
 
+    @Suppress("ReturnCount")
     private fun startSiteIconUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
@@ -682,6 +684,7 @@ class MySiteViewModel @Inject constructor(
     )
 
     companion object {
+        private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
