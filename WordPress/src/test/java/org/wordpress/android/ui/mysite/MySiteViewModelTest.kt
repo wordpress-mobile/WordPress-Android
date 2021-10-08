@@ -1254,7 +1254,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false
     ) {
-        if (isQuickStartDynamicCardEnabled) setUpDynamicCardsBuilder()
+        setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
@@ -1293,10 +1293,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun setUpDynamicCardsBuilder() {
+    private fun setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled: Boolean) {
         doAnswer {
-            val dynamicQuickStartCard = initDynamicQuickStartCard(it)
-            listOf<DynamicCard>(dynamicQuickStartCard)
+            mutableListOf<DynamicCard>().apply {
+                if (isQuickStartDynamicCardEnabled) add(initDynamicQuickStartCard(it))
+            }.toList()
         }.whenever(dynamicCardsBuilder).build(
                 quickStartCategories = any(),
                 pinnedDynamicCard = anyOrNull(),
