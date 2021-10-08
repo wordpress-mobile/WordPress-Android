@@ -68,7 +68,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             )
         }
         domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
-        domainSuggestionsList.adapter = DomainSuggestionsAdapter(::onDomainSuggestionSelected)
+        domainSuggestionsList.adapter = DomainSuggestionsAdapter(viewModel::onDomainSuggestionSelected)
     }
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
@@ -97,10 +97,6 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         adapter.submitList(domainSuggestions)
-    }
-
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?) {
-        viewModel.onDomainSuggestionsSelected(domainSuggestion)
     }
 
     override fun onResume() {

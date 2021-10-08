@@ -112,7 +112,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
-        onDomainSuggestionsSelected(null)
+        onDomainSuggestionSelected(null)
     }
 
     // Network Callback
@@ -154,7 +154,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 }
     }
 
-    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?) {
+    fun onDomainSuggestionSelected(selectedSuggestion: DomainSuggestionItem?) {
         _selectedSuggestion.postValue(selectedSuggestion)
         suggestions = suggestions.transform { list ->
             list.map { it.copy(isSelected = selectedSuggestion?.domainName == it.domainName) }
