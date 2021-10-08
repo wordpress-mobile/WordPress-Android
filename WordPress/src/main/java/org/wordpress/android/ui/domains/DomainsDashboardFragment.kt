@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -17,7 +15,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class DomainsDashboardFragment : Fragment() {
+class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var adapter: DomainsDashboardAdapter
@@ -28,14 +26,6 @@ class DomainsDashboardFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component()?.inject(this)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_domains_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
