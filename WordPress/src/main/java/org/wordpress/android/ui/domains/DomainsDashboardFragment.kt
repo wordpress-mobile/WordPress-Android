@@ -20,7 +20,6 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var adapter: DomainsDashboardAdapter
     private lateinit var viewModel: DomainsDashboardViewModel
-    private var binding: FragmentDomainsDashboardBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +31,6 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
         super.onViewCreated(view, savedInstanceState)
 
         with(FragmentDomainsDashboardBinding.bind(view)) {
-            binding = this
             val adapter = DomainsDashboardAdapter(uiHelpers)
             contentRecyclerView.adapter = adapter
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
