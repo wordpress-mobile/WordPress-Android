@@ -725,24 +725,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* QUICK START CARD */
     @Test
-    fun `hides quick start menu item in quickStartRepository`() {
-        val id = DynamicCardType.CUSTOMIZE_QUICK_START
-        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
-
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
-        verify(quickStartRepository).refresh()
-    }
-
-    @Test
-    fun `removes quick start menu item in quickStartRepository`() {
-        val id = DynamicCardType.CUSTOMIZE_QUICK_START
-        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
-
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
-        verify(quickStartRepository).refresh()
-    }
-
-    @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
@@ -904,6 +886,26 @@ class MySiteViewModelTest : BaseUnitTest() {
         findQuickStartDynamicCard()!!.onMoreClick.click()
 
         assertThat(dynamicCardMenu.last()).isNotNull
+    }
+
+    @Test
+    fun `when dynamic QS hide menu item is clicked, then the card is hidden`() = test {
+        val id = DynamicCardType.CUSTOMIZE_QUICK_START
+        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+        verify(dynamicCardsSource).hideItem(id)
+        verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `when dynamic QS remove menu item is clicked, then the card is removed`() = test {
+        val id = DynamicCardType.CUSTOMIZE_QUICK_START
+        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+        verify(dynamicCardsSource).removeItem(id)
+        verify(quickStartRepository).refresh()
     }
 
     /* ITEM CLICK */
