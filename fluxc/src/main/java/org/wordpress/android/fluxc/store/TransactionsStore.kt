@@ -74,7 +74,8 @@ class TransactionsStore @Inject constructor(
                 payload.site,
                 payload.productId,
                 payload.domainName,
-                payload.isPrivacyEnabled
+                payload.isPrivacyEnabled,
+                payload.isTemporary
         )
 
         return if (!createdShoppingCartPayload.isError) {
