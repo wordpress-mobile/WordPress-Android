@@ -25,6 +25,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnNativeNoticeListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
@@ -79,6 +80,7 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidRequestPreviewListener,
                                   OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
                                   OnCustomerSupportOptionsListener onCustomerSupportOptionsListener,
+                                  OnNativeNoticeListener onNativeNoticeListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -100,6 +102,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,
                     onCustomerSupportOptionsListener,
+                    onNativeNoticeListener,
                     isDarkMode);
     }
 
