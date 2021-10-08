@@ -282,6 +282,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SITE STATE */
+
     @Test
     fun `model is empty with no selected site`() {
         onSiteSelected.value = null
@@ -300,6 +301,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* AVATAR */
+
     @Test
     fun `account avatar url value is emitted and updated from the source`() {
         initSelectedSite()
@@ -317,6 +319,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* LOGIN - NAVIGATION TO STATS */
+
     @Test
     fun `handling successful login result opens stats screen`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -327,6 +330,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW */
+
     @Test
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
@@ -350,6 +354,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW - ADD SITE */
+
     @Test
     fun `add new site press is handled correctly`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
@@ -360,6 +365,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* REFRESH */
+
     @Test
     fun `when refresh is triggered, then update site settings if necessary`() {
         viewModel.refresh()
@@ -396,6 +402,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SITE INFO CARD */
+
     @Test
     fun `site info card title click shows snackbar message when network not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
@@ -560,6 +567,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* QUICK ACTIONS CARD */
+
     @Test
     fun `quick actions does not show pages button when site doesn't have the required capability`() {
         site.hasCapabilityEditPages = false
@@ -909,6 +917,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ITEM CLICK */
+
     @Test
     fun `activity item click emits OpenActivity navigation event`() {
         invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
@@ -1052,6 +1061,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ITEM VISIBILITY */
+
     @Test
     fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
         initSelectedSite()
@@ -1121,6 +1131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ADD SITE ICON DIALOG */
+
     @Test
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
@@ -1203,6 +1214,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SITE CHOOSER DIALOG */
+
     @Test
     fun `when site chooser is dismissed, then check and show quick start notice`() {
         viewModel.onSiteNameChooserDismissed()

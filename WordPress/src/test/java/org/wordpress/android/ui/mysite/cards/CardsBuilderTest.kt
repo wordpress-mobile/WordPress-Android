@@ -65,6 +65,7 @@ class CardsBuilderTest {
     }
 
     /* SITE INFO CARD */
+
     @Test
     fun `when active task is update site title, then title focus point is shown in the site info card`() {
         val cards = buildCards(activeTask = QuickStartTask.UPDATE_SITE_TITLE)
@@ -80,6 +81,7 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
+
     @Test
     fun `when domain credit is available, then correct event is tracked`() {
         buildCards(isDomainCreditAvailable = true)
@@ -88,6 +90,7 @@ class CardsBuilderTest {
     }
 
     /* QUICK ACTIONS CARD */
+
     @Test
     fun `when build is Jetpack, then quick action card is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
@@ -105,6 +108,7 @@ class CardsBuilderTest {
     }
 
     /* QUICK START CARD */
+
     @Test
     fun `given quick start is not in progress, then quick start card not built`() {
         val cards = buildCards(isQuickStartInProgress = false)

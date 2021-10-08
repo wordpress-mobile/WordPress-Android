@@ -40,6 +40,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     /* QUICK START DYNAMIC CARD */
+
     @Test
     fun `given quick start is not in progress, when site is selected, then QS dynamic card not built`() {
         val dynamicCards = buildDynamicCards(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = false)
