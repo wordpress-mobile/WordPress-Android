@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -148,7 +147,7 @@ class MySiteViewModel
             visibleDynamicCards
     ) ->
         val state = if (site != null) {
-            buildSiteSelectedState(
+            buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
                     activeTask,
@@ -166,7 +165,7 @@ class MySiteViewModel
     }
 
     @Suppress("LongParameterList")
-    private fun buildSiteSelectedState(
+    private fun buildSiteSelectedStateAndScroll(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -177,34 +176,35 @@ class MySiteViewModel
         backupAvailable: Boolean,
         scanAvailable: Boolean
     ): SiteSelected {
-        val siteItems = mutableListOf<MySiteCardAndItem>()
-        siteItems.addAll(
-                buildCards(
-                        site,
-                        showSiteIconProgressBar,
-                        activeTask,
-                        isDomainCreditAvailable,
-                        quickStartCategories
-                )
+        val siteItems = buildSiteSelectedState(
+                site,
+                showSiteIconProgressBar,
+                activeTask,
+                isDomainCreditAvailable,
+                quickStartCategories,
+                pinnedDynamicCard,
+                visibleDynamicCards,
+                backupAvailable,
+                scanAvailable
         )
-        siteItems.addAll(buildDynamicCards(quickStartCategories, pinnedDynamicCard, visibleDynamicCards))
-        siteItems.addAll(buildSiteItems(site, backupAvailable, scanAvailable, activeTask))
-        scrollToQuickStartTaskIfNecessary(activeTask, siteItems.indexOfFirst { it.activeQuickStartItem })
+        scrollToQuickStartTaskIfNecessary(
+                activeTask,
+                siteItems.indexOfFirst { it.activeQuickStartItem }
+        )
         return SiteSelected(siteItems)
     }
 
-    private fun buildNoSiteState(): NoSites {
-        // Hide actionable empty view image when screen height is under 600 pixels.
-        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
-        return NoSites(shouldShowImage)
-    }
-
-    private fun buildCards(
+    @Suppress("LongParameterList")
+    private fun buildSiteSelectedState(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
-        quickStartCategories: List<QuickStartCategory>
+        quickStartCategories: List<QuickStartCategory>,
+        pinnedDynamicCard: DynamicCardType?,
+        visibleDynamicCards: List<DynamicCardType>,
+        backupAvailable: Boolean,
+        scanAvailable: Boolean
     ) = cardsBuilder.build(
             site,
             showSiteIconProgressBar,
@@ -222,26 +222,13 @@ class MySiteViewModel
             this::domainRegistrationClick,
             this::onQuickStartBlockRemoveMenuItemClick,
             this::onQuickStartTaskTypeItemClick
-    )
-
-    fun buildDynamicCards(
-        quickStartCategories: List<QuickStartCategory>,
-        pinnedDynamicCard: DynamicCardType?,
-        visibleDynamicCards: List<DynamicCardType>
-    ): List<DynamicCard> = dynamicCardsBuilder.build(
+    ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,
             visibleDynamicCards,
             this::onDynamicCardMoreClick,
             this::onQuickStartTaskCardClick
-    )
-
-    private fun buildSiteItems(
-        site: SiteModel,
-        backupAvailable: Boolean,
-        scanAvailable: Boolean,
-        activeTask: QuickStartTask?
-    ) = siteItemsBuilder.buildSiteItems(
+    ) + siteItemsBuilder.buildSiteItems(
             site,
             this::onItemClick,
             backupAvailable,
@@ -250,6 +237,12 @@ class MySiteViewModel
             activeTask == QuickStartTask.ENABLE_POST_SHARING,
             activeTask == QuickStartTask.EXPLORE_PLANS
     )
+
+    private fun buildNoSiteState(): NoSites {
+        // Hide actionable empty view image when screen height is under 600 pixels.
+        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+        return NoSites(shouldShowImage)
+    }
 
     private fun scrollToQuickStartTaskIfNecessary(
         quickStartTask: QuickStartTask?,
