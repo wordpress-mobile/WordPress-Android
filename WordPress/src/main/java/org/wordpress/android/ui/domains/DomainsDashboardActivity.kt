@@ -7,14 +7,11 @@ import org.wordpress.android.databinding.ActivityDomainsDashboardBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class DomainsDashboardActivity : LocaleAwareActivity() {
-    private lateinit var binding: ActivityDomainsDashboardBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         with(ActivityDomainsDashboardBinding.inflate(layoutInflater)) {
             setContentView(root)
-            binding = this
 
             setSupportActionBar(toolbarDomains)
             supportActionBar?.let {
