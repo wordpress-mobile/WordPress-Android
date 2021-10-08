@@ -30,8 +30,7 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
         super.onViewCreated(view, savedInstanceState)
 
         with(FragmentDomainsDashboardBinding.bind(view)) {
-            val adapter = DomainsDashboardAdapter(uiHelpers)
-            contentRecyclerView.adapter = adapter
+            setupViews()
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(DomainsDashboardViewModel::class.java)
 
@@ -43,6 +42,10 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
 
             viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         }
+    }
+
+    private fun FragmentDomainsDashboardBinding.setupViews() {
+        contentRecyclerView.adapter = DomainsDashboardAdapter(uiHelpers)
     }
 
     private fun handleNavigationAction(action: DomainsNavigationEvents) = when (action) {
