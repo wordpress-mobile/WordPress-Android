@@ -175,12 +175,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
         when (domainRegistrationPurpose) {
             DOMAIN_PURCHASE -> createCart(selectedSuggestion)
-            else -> _onDomainSelected.value = Event(
-                    DomainProductDetails(
-                            selectedSuggestion.productId,
-                            selectedSuggestion.domainName
-                    )
-            )
+            else -> selectDomain(selectedSuggestion)
         }
     }
 
@@ -215,8 +210,12 @@ class DomainSuggestionsViewModel @Inject constructor(
             // TODO Handle failed cart creation
         } else {
             AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation: ${event.cartDetails}")
-            val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
-            _onDomainSelected.postValue(Event(domainProductDetails))
+            selectDomain(selectedSuggestion)
         }
+    }
+
+    private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {
+        val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
+        _onDomainSelected.postValue(Event(domainProductDetails))
     }
 }
