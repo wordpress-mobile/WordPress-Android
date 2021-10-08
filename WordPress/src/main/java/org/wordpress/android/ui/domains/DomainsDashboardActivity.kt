@@ -2,29 +2,15 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.MenuItem
-import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityDomainsDashboardBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class DomainsDashboardActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         with(ActivityDomainsDashboardBinding.inflate(layoutInflater)) {
             setContentView(root)
-
             setupToolbar()
-
-            val fm = supportFragmentManager
-            var domainsDashboardFragment =
-                    fm.findFragmentByTag(DomainsDashboardFragment.TAG) as? DomainsDashboardFragment
-
-            if (domainsDashboardFragment == null) {
-                domainsDashboardFragment = DomainsDashboardFragment.newInstance()
-                fm.beginTransaction()
-                        .add(R.id.fragment_container, domainsDashboardFragment, DomainsDashboardFragment.TAG)
-                        .commit()
-            }
         }
     }
 
