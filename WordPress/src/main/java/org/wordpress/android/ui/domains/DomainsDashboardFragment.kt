@@ -18,7 +18,6 @@ import javax.inject.Inject
 class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var adapter: DomainsDashboardAdapter
     private lateinit var viewModel: DomainsDashboardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
