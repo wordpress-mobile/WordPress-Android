@@ -20,14 +20,9 @@ class DomainsDashboardFragment : Fragment(R.layout.fragment_domains_dashboard) {
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: DomainsDashboardViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
 
         with(FragmentDomainsDashboardBinding.bind(view)) {
             setupViews()
