@@ -15,12 +15,14 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
+import org.wordpress.android.viewmodel.Event
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -46,12 +48,14 @@ class DomainSuggestionsViewModel @Inject constructor(
             }
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
-    val selectedSuggestion: LiveData<DomainSuggestionItem?> = _selectedSuggestion
 
     val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
+
+    private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
+    val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -158,6 +162,19 @@ class DomainSuggestionsViewModel @Inject constructor(
         _selectedSuggestion.postValue(selectedSuggestion)
         suggestions = suggestions.transform { list ->
             list.map { it.copy(isSelected = selectedSuggestion?.domainName == it.domainName) }
+        }
+    }
+
+    fun onSelectDomainButtonClicked() {
+        val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
+        when (domainRegistrationPurpose) {
+            DOMAIN_PURCHASE -> TODO("Not implemented yet")
+            else -> _onDomainSelected.value = Event(
+                    DomainProductDetails(
+                            selectedSuggestion.productId,
+                            selectedSuggestion.domainName
+                    )
+            )
         }
     }
 
