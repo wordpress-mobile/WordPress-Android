@@ -57,10 +57,11 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var transactionsStore: TransactionsStore
