@@ -74,7 +74,8 @@ class TransactionsStore @Inject constructor(
                 payload.site,
                 payload.productId,
                 payload.domainName,
-                payload.isPrivacyEnabled
+                payload.isPrivacyEnabled,
+                payload.isTemporary
         )
 
         return if (!createdShoppingCartPayload.isError) {
@@ -133,7 +134,8 @@ class TransactionsStore @Inject constructor(
         val site: SiteModel,
         val productId: Int,
         val domainName: String,
-        val isPrivacyEnabled: Boolean
+        val isPrivacyEnabled: Boolean,
+        val isTemporary: Boolean = true
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class RedeemShoppingCartPayload(
