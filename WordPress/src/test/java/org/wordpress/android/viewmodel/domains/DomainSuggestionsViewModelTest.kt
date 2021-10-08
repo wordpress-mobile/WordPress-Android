@@ -17,7 +17,8 @@ import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
@@ -27,17 +28,17 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var debouncer: Debouncer
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
-    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 
     private lateinit var site: SiteModel
+    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     @Before
     fun setUp() {
         site = SiteModel().also { it.name = "Test Site" }
-        viewModel = DomainSuggestionsViewModel(
-                tracker, dispatcher, debouncer, domainRegistrationHandler, siteDomainsFeatureConfig)
+        domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
+        viewModel = DomainSuggestionsViewModel(tracker, dispatcher, debouncer, siteDomainsFeatureConfig)
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable
@@ -47,7 +48,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `intro is visible at start`() {
-        viewModel.start(site)
+        viewModel.start(site, domainRegistrationPurpose)
         assertNotNull(viewModel.isIntroVisible.value)
         viewModel.isIntroVisible.value?.let { isIntroVisible ->
             assert(isIntroVisible)
@@ -56,7 +57,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `intro is hidden when search query is not empty`() {
-        viewModel.start(site)
+        viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("Hello World")
 
         assertNotNull(viewModel.isIntroVisible.value)
@@ -67,7 +68,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `intro is visible when search query is empty`() {
-        viewModel.start(site)
+        viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("Hello World")
         viewModel.updateSearchQuery("")
 
@@ -80,7 +81,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Test
     fun `site on blogger plan is requesting only dot blog domain suggestions`() {
         site.planId = PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
-        viewModel.start(site)
+        viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
@@ -104,7 +105,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Test
     fun `site on non blogger plan is requesting all possible domain suggestions`() {
         site.planId = PlansConstants.PREMIUM_PLAN_ID
-        viewModel.start(site)
+        viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)

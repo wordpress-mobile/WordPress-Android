@@ -1,55 +1,23 @@
 package org.wordpress.android.ui.domains
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
 class DomainSuggestionsAdapter(
-    private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
-) : Adapter<DomainSuggestionsViewHolder>() {
-    private val list = mutableListOf<DomainSuggestionResponse>()
-    var selectedPosition = -1
-    var isSiteDomainsFeatureEnabled: Boolean = false
-    var isDomainCreditAvailable: Boolean = false
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainSuggestionsViewHolder {
-        return DomainSuggestionsViewHolder(
-                parent,
-                this::onDomainSuggestionSelected
-        )
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    private val itemSelectionListener: (DomainSuggestionItem?) -> Unit
+) : ListAdapter<DomainSuggestionItem, DomainSuggestionsViewHolder>(DomainSuggestionItemDiffCallback()) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            DomainSuggestionsViewHolder(parent, itemSelectionListener)
 
     override fun onBindViewHolder(holder: DomainSuggestionsViewHolder, position: Int) {
-        holder.bind(
-                list[position],
-                position,
-                selectedPosition == position,
-                isSiteDomainsFeatureEnabled,
-                isDomainCreditAvailable)
+        holder.bind(getItem(position))
     }
 
-    private fun onDomainSuggestionSelected(suggestion: DomainSuggestionResponse?, position: Int) {
-        val previousSelectedPosition = selectedPosition
-        selectedPosition = position
-        notifyItemChanged(previousSelectedPosition)
-        if (previousSelectedPosition != selectedPosition) {
-            notifyItemChanged(selectedPosition)
-        }
-        itemSelectionListener(suggestion, position)
-    }
+    private class DomainSuggestionItemDiffCallback : DiffUtil.ItemCallback<DomainSuggestionItem>() {
+        override fun areItemsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) =
+                old.domainName == new.domainName
 
-    internal fun updateSuggestionsList(items: List<DomainSuggestionResponse>) {
-        list.clear()
-        list.addAll(items)
-        notifyDataSetChanged()
-    }
-
-    internal fun updateDomainCreditAvailable(siteDomainsFeatureEnabled: Boolean, isDomainCreditAvailable: Boolean) {
-        this.isSiteDomainsFeatureEnabled = siteDomainsFeatureEnabled
-        this.isDomainCreditAvailable = isDomainCreditAvailable
+        override fun areContentsTheSame(old: DomainSuggestionItem, new: DomainSuggestionItem) = old == new
     }
 }

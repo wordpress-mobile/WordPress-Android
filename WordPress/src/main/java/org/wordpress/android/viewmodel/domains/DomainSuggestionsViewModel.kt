@@ -1,24 +1,21 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.text.TextUtils
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.viewModelScope
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainSuggestionItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
@@ -29,53 +26,33 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
-
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
-    private val domainRegistrationHandler: DomainRegistrationHandler,
-    siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
+    lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+
     private var isStarted = false
     private var isQueryTrackingCompleted = false
 
-    private val _siteIdLiveData = MutableLiveData<Int>()
-    private val siteIdLiveData: LiveData<Int>
-            get() = _siteIdLiveData
+    private val _suggestions = MutableLiveData<ListState<DomainSuggestionItem>>()
+    val suggestionsLiveData: LiveData<ListState<DomainSuggestionItem>> = _suggestions
 
-    private val _domainCreditAvailable = Transformations.switchMap(siteIdLiveData) {
-        domainRegistrationHandler.buildSource(viewModelScope, it).distinctUntilChanged()
-    }
-
-    val isSiteDomainsFeatureConfigEnabled = siteDomainsFeatureConfig.isEnabled()
-    val isDomainCreditAvailable = MediatorLiveData<Boolean>()
-
-    private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
-    val suggestionsLiveData: LiveData<DomainSuggestionsListState>
-        get() = _suggestions
-
-    private var suggestions: ListState<DomainSuggestionResponse>
+    private var suggestions: ListState<DomainSuggestionItem>
             by Delegates.observable(ListState.Init()) { _, _, new ->
                 _suggestions.postValue(new)
             }
 
-    private val _selectedSuggestion = MutableLiveData<DomainSuggestionResponse?>()
-    val selectedSuggestion: LiveData<DomainSuggestionResponse?>
-        get() = _selectedSuggestion
+    private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
+    val selectedSuggestion: LiveData<DomainSuggestionItem?> = _selectedSuggestion
 
-    val choseDomainButtonEnabledState: LiveData<Boolean>
-        get() = Transformations.map(_selectedSuggestion) { it is DomainSuggestionResponse }
+    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
-    private val _selectedPosition = MutableLiveData<Int>()
-    val selectedPosition: LiveData<Int>
-        get() = _selectedPosition
-
-    private val _isIntroVisible = MutableLiveData<Boolean>().apply { value = true }
-    val isIntroVisible: LiveData<Boolean>
-        get() = _isIntroVisible
+    private val _isIntroVisible = MutableLiveData(true)
+    val isIntroVisible: LiveData<Boolean> = _isIntroVisible
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -105,31 +82,21 @@ class DomainSuggestionsViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         debouncer.shutdown()
-        domainRegistrationHandler.clear()
         super.onCleared()
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         if (isStarted) {
             return
         }
         this.site = site
-        checkDomainCreditAvailability()
+        this.domainRegistrationPurpose = domainRegistrationPurpose
         initializeDefaultSuggestions()
         isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
-    }
-
-    private fun checkDomainCreditAvailability() {
-        if (isSiteDomainsFeatureConfigEnabled) {
-            _siteIdLiveData.value = site.id
-            isDomainCreditAvailable.addSource(_domainCreditAvailable) {
-                isDomainCreditAvailable.value = it.isDomainCreditAvailable
-            }
-        }
     }
 
     // Network Request
@@ -146,7 +113,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
-        onDomainSuggestionsSelected(null, -1)
+        onDomainSuggestionsSelected(null)
     }
 
     // Network Callback
@@ -165,19 +132,40 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
 
-        val sortedDomainSuggestions = event.suggestions.sortedBy { it.relevance }.asReversed()
-        suggestions = ListState.Success(sortedDomainSuggestions)
+        event.suggestions
+                .map {
+                    DomainSuggestionItem(
+                            domainName = it.domain_name,
+                            cost = it.cost,
+                            isFree = it.is_free,
+                            supportsPrivacy = it.supports_privacy,
+                            productId = it.product_id,
+                            productSlug = it.product_slug,
+                            vendor = it.vendor,
+                            relevance = it.relevance,
+                            isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
+                            isCostVisible = siteDomainsFeatureConfig.isEnabled(),
+                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+                    )
+                }
+                .sortedBy { it.relevance }
+                .asReversed()
+                .let {
+                    suggestions = ListState.Success(it)
+                }
     }
 
-    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
-        _selectedPosition.postValue(selectedPosition)
+    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?) {
         _selectedSuggestion.postValue(selectedSuggestion)
+        suggestions = suggestions.transform { list ->
+            list.map { it.copy(isSelected = selectedSuggestion?.domainName == it.domainName) }
+        }
     }
 
     fun updateSearchQuery(query: String) {
-        _isIntroVisible.value = query.isEmpty()
+        _isIntroVisible.value = query.isBlank()
 
-        if (!TextUtils.isEmpty(query)) {
+        if (query.isNotBlank()) {
             searchQuery = query
         } else if (searchQuery != site.name) {
             // Only reinitialize the search query, if it has changed.
