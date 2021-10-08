@@ -13,11 +13,7 @@ class DomainsDashboardActivity : LocaleAwareActivity() {
         with(ActivityDomainsDashboardBinding.inflate(layoutInflater)) {
             setContentView(root)
 
-            setSupportActionBar(toolbarDomains)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
-            }
+            setupToolbar()
 
             val fm = supportFragmentManager
             var domainsDashboardFragment =
@@ -29,6 +25,14 @@ class DomainsDashboardActivity : LocaleAwareActivity() {
                         .add(R.id.fragment_container, domainsDashboardFragment, DomainsDashboardFragment.TAG)
                         .commit()
             }
+        }
+    }
+
+    private fun ActivityDomainsDashboardBinding.setupToolbar() {
+        setSupportActionBar(toolbarDomains)
+        supportActionBar?.let {
+            it.setHomeButtonEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
         }
     }
 
