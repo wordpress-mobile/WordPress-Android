@@ -27,6 +27,8 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -96,7 +98,8 @@ class MySiteViewModel @Inject constructor(
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
-    private val dynamicCardsBuilder: DynamicCardsBuilder
+    private val dynamicCardsBuilder: DynamicCardsBuilder,
+    private val postCardsSource: PostCardsSource
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -132,7 +135,8 @@ class MySiteViewModel @Inject constructor(
             currentAvatarSource,
             domainRegistrationHandler,
             scanAndBackupSource,
-            dynamicCardsSource
+            dynamicCardsSource,
+            postCardsSource
     ).state.map { (
             currentAvatarUrl,
             site,
@@ -143,7 +147,8 @@ class MySiteViewModel @Inject constructor(
             activeTask,
             quickStartCategories,
             pinnedDynamicCard,
-            visibleDynamicCards
+            visibleDynamicCards,
+            mockedPostData
     ) ->
         val state = if (site != null) {
             buildSiteSelectedStateAndScroll(
@@ -155,7 +160,8 @@ class MySiteViewModel @Inject constructor(
                     pinnedDynamicCard,
                     visibleDynamicCards,
                     backupAvailable,
-                    scanAvailable
+                    scanAvailable,
+                    mockedPostData
             )
         } else {
             buildNoSiteState()
@@ -173,7 +179,8 @@ class MySiteViewModel @Inject constructor(
         pinnedDynamicCard: DynamicCardType?,
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
-        scanAvailable: Boolean
+        scanAvailable: Boolean,
+        mockedPostsData: MockedPostsData?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -184,7 +191,8 @@ class MySiteViewModel @Inject constructor(
                 pinnedDynamicCard,
                 visibleDynamicCards,
                 backupAvailable,
-                scanAvailable
+                scanAvailable,
+                mockedPostsData
         )
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -203,13 +211,15 @@ class MySiteViewModel @Inject constructor(
         pinnedDynamicCard: DynamicCardType?,
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
-        scanAvailable: Boolean
+        scanAvailable: Boolean,
+        mockedPostsData: MockedPostsData?
     ) = cardsBuilder.build(
             site,
             showSiteIconProgressBar,
             activeTask,
             isDomainCreditAvailable,
             quickStartCategories,
+            mockedPostsData,
             this::titleClick,
             this::iconClick,
             this::urlClick,
