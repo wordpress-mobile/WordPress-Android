@@ -61,6 +61,7 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
+        android:preserveLegacyExternalStorage="true"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
