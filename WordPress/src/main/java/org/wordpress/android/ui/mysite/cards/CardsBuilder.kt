@@ -88,7 +88,7 @@ class CardsBuilder @Inject constructor(
                 )
             }
         }
-        if (!mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             mockedPostsData?.let { cards.addAll(buildPostCards(it)) }
         }
         return cards
