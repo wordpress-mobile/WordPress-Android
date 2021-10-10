@@ -25,4 +25,3 @@ class MockedDataJsonUtils @Inject constructor(
         return Gson().fromJson(json, MockedPostsData::class.java) as MockedPostsData
     }
 }
-

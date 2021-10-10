@@ -19,6 +19,7 @@ class MySiteAdapterDiffCallback(
 
     override fun getNewListSize(): Int = updatedCardAndItems.size
 
+    @Suppress("ComplexMethod")
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = oldCardAndItems[oldItemPosition]
         val updatedItem = updatedCardAndItems[newItemPosition]
