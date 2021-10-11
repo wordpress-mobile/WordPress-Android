@@ -2455,7 +2455,7 @@
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_register_domain_button">Register Domain</string>
-    <string name="domain_registration_result_title">Congratulations</string>
+    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
     <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
         doing somersaults in excitement!</string>
     <string name="domain_registration_result_continue_button">continue</string>
