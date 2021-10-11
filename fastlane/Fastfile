@@ -427,7 +427,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
-    app = options[:app]
+    app = get_app_name_option!(options)
     version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
@@ -460,8 +460,9 @@ REPOSITORY_NAME="WordPress-Android"
       final: false
     )
     android_build_preflight() unless (options[:skip_prechecks])
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
+    app = get_app_name_option!(options)
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: app)
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: app)
   end
 
   #####################################################################################
@@ -483,7 +484,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
+    app = get_app_name_option!(options)
     version = android_get_alpha_version()
     build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Release")
 
@@ -515,7 +516,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
+    app = get_app_name_option!(options)
     version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
@@ -547,7 +548,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
+    app = get_app_name_option!(options)
     version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Debug")
 
@@ -576,7 +577,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do |options|
 
-    app = options[:app]
+    app = get_app_name_option!(options)
     package_name = app.downcase == "jetpack" ? JP_PACKAGE_NAME : WP_PACKAGE_NAME
 
     version = options[:version]
@@ -857,7 +858,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :build_bundle do | options |
     # Create the file names
     version = options[:version]
-    app = options[:app]
+    app = get_app_name_option!(options)
 
     if version.nil?
       UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
@@ -942,7 +943,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
-    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
+    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
     versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version()] : [options[:version]]
 
     release_assets = apps.flat_map do |app|
@@ -978,7 +979,7 @@ REPOSITORY_NAME="WordPress-Android"
 #####################################################################################
 
   private_lane :delete_old_changelogs do |options|
-    app = options[:app] || 'wordpress'
+    app = get_app_name_option!(options)
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
       File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
@@ -999,6 +1000,12 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # Utils
   #####################################################################################
+  def get_app_name_option!(options)
+    app = options[:app].downcase
+    UI.user_error!("Invalid 'app' parameter '#{app}'. Expected 'wordpress' or 'jetpack'") unless ['wordpress', 'jetpack'].include?(app)
+    return app
+  end
+
   def release_notes_path(app)
     paths = {
       wordpress: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt",
