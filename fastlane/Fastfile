@@ -1,9 +1,7 @@
 default_platform(:android)
 fastlane_require 'dotenv'
 
-unless FastlaneCore::Helper.bundler?
-  UI.user_error!('Please run fastlane via `bundle exec`')
-end
+UI.user_error!('Please run fastlane via `bundle exec`') unless FastlaneCore::Helper.bundler?
 
 # NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
 # of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
@@ -430,9 +428,7 @@ REPOSITORY_NAME='WordPress-Android'
 
     upload_build_to_play_store(app: app, version: version, track: 'production')
 
-    if options[:create_release]
-      create_gh_release(app: app, version: version)
-    end
+    create_gh_release(app: app, version: version) if options[:create_release]
   end
 
   #####################################################################################
@@ -485,13 +481,9 @@ REPOSITORY_NAME='WordPress-Android'
     version = android_get_alpha_version()
     build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
 
-    if options[:upload_to_play_store] then
-       upload_build_to_play_store(app: app, version: version, track: 'alpha')
-    end
+    upload_build_to_play_store(app: app, version: version, track: 'alpha') if options[:upload_to_play_store]
 
-    if options[:create_release]
-      create_gh_release(app: app, version: version, prerelease: true)
-    end
+    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -517,13 +509,9 @@ REPOSITORY_NAME='WordPress-Android'
     version = android_get_release_version()
     build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
 
-    if options[:upload_to_play_store] then
-       upload_build_to_play_store(app: app, version: version, track: 'beta')
-    end
+    upload_build_to_play_store(app: app, version: version, track: 'beta') if options[:upload_to_play_store]
 
-    if options[:create_release]
-      create_gh_release(app: app, version: version, prerelease: true)
-    end
+    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -549,13 +537,9 @@ REPOSITORY_NAME='WordPress-Android'
     version = android_get_release_version()
     build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
 
-    if options[:upload_to_play_store] then
-       upload_build_to_play_store(app: app, version: version, track: 'internal')
-    end
+    upload_build_to_play_store(app: app, version: version, track: 'internal') if options[:upload_to_play_store]
 
-    if options[:create_release]
-      create_gh_release(app: app, version: version, prerelease: true)
-    end
+    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -815,9 +799,7 @@ REPOSITORY_NAME='WordPress-Android'
     end
 
     is_repo_clean = ('git status --porcelain').empty?
-    unless is_repo_clean then
-      commit_strings(options)
-    end
+    commit_strings(options) unless is_repo_clean
   end
 
   # This lane verifies that new strings which have been added to the main strings.xml
@@ -979,7 +961,9 @@ REPOSITORY_NAME='WordPress-Android'
     app = get_app_name_option!(options)
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
-      File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
+      if Integer(File.basename(file, '.*')) < Integer(options[:build])
+        File.delete(file)
+      end rescue puts "Cannot delete file #{file}"
     end
   end
 
@@ -1000,7 +984,9 @@ REPOSITORY_NAME='WordPress-Android'
   def get_app_name_option!(options)
     app = options[:app]&.downcase
     UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
-    UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless ['wordpress', 'jetpack'].include?(app)
+    unless ['wordpress', 'jetpack'].include?(app)
+      UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'")
+    end
     return app
   end
 
