@@ -570,7 +570,7 @@ REPOSITORY_NAME = 'WordPress-Android'
 
     aab_file_path = bundle_file_path(app, version)
 
-    if File.exists? aab_file_path then
+    if File.exist? aab_file_path then
       upload_to_play_store(
         package_name: package_name,
         aab: aab_file_path,
