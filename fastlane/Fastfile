@@ -112,9 +112,9 @@ import './ScreenshotFastfile'
 # Environment
 ########################################################################
 Dotenv.load(USER_ENV_FILE_PATH)
-ENV[GHHELPER_REPO='wordpress-mobile/WordPress-Android']
-ENV['PROJECT_ROOT_FOLDER']=File.dirname(File.expand_path(__dir__)) + '/'
-REPOSITORY_NAME='WordPress-Android'
+ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
+ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
+REPOSITORY_NAME = 'WordPress-Android'
 
 ########################################################################
 # Release Lanes
@@ -847,10 +847,10 @@ REPOSITORY_NAME='WordPress-Android'
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
     name = "#{prefix}-#{version['name']}.aab"
 
-    aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
-    output_dir='WordPress/build/outputs/bundle/'
-    build_dir='build/'
-    logfile_path="#{build_dir}build.log"
+    aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
+    output_dir = 'WordPress/build/outputs/bundle/'
+    build_dir = 'build/'
+    logfile_path = "#{build_dir}build.log"
 
     # Intermediate Variables
     bundle_path = "#{output_dir}#{app}#{options[:flavor].capitalize}#{options[:buildType].capitalize}/#{aab_file}"
