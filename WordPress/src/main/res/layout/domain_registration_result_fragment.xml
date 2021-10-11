@@ -18,10 +18,12 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="serif"
         android:gravity="center"
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/domain_registration_result_title"
-        android:textAppearance="?attr/textAppearanceHeadline6" />
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_registration_result_message"
