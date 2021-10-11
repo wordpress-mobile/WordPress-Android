@@ -312,7 +312,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
     send_strings_for_translation()
     download_translations()
-    android_bump_version_beta(app: 'wp_jp')
+    android_bump_version_beta()
     new_version = android_get_app_version(app: 'wp_jp')
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
