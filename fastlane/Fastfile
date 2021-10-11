@@ -430,7 +430,7 @@ REPOSITORY_NAME='WordPress-Android'
 
     upload_build_to_play_store(app: app, version: version, track: 'production')
 
-    if (options[:create_release])
+    if options[:create_release]
       create_gh_release(app: app, version: version)
     end
   end
@@ -456,7 +456,7 @@ REPOSITORY_NAME='WordPress-Android'
       beta: true,
       final: false
     )
-    android_build_preflight() unless (options[:skip_prechecks])
+    android_build_preflight() unless options[:skip_prechecks]
     app = get_app_name_option!(options)
     build_alpha(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
@@ -477,19 +477,19 @@ REPOSITORY_NAME='WordPress-Android'
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_alpha do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
-    android_build_preflight() unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless options[:skip_prechecks]
+    android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_alpha_version()
     build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
 
-    if (options[:upload_to_play_store]) then
+    if options[:upload_to_play_store] then
        upload_build_to_play_store(app: app, version: version, track: 'alpha')
     end
 
-    if (options[:create_release])
+    if options[:create_release]
       create_gh_release(app: app, version: version, prerelease: true)
     end
   end
@@ -509,19 +509,19 @@ REPOSITORY_NAME='WordPress-Android'
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
-    android_build_preflight() unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
+    android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
     build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
 
-    if (options[:upload_to_play_store]) then
+    if options[:upload_to_play_store] then
        upload_build_to_play_store(app: app, version: version, track: 'beta')
     end
 
-    if (options[:create_release])
+    if options[:create_release]
       create_gh_release(app: app, version: version, prerelease: true)
     end
   end
@@ -541,19 +541,19 @@ REPOSITORY_NAME='WordPress-Android'
   #####################################################################################
   desc 'Builds and updates for internal testing'
   lane :build_internal do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless (options[:skip_prechecks])
-    android_build_preflight() unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless options[:skip_prechecks]
+    android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
     build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
 
-    if (options[:upload_to_play_store]) then
+    if options[:upload_to_play_store] then
        upload_build_to_play_store(app: app, version: version, track: 'internal')
     end
 
-    if (options[:create_release])
+    if options[:create_release]
       create_gh_release(app: app, version: version, prerelease: true)
     end
   end
@@ -765,7 +765,7 @@ REPOSITORY_NAME='WordPress-Android'
   end
 
   private_lane :commit_strings do |options|
-    if (options[:auto_commit]) then
+    if options[:auto_commit] then
        sh("cd .. && git add #{main_strings_path}")
        sh("git commit -m 'Update strings for translation'")
        sh('git push origin HEAD')
@@ -778,7 +778,7 @@ REPOSITORY_NAME='WordPress-Android'
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libs do |options|
-    if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
+    if an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path) then
       commit_strings(options)
     end
   end
@@ -828,7 +828,7 @@ REPOSITORY_NAME='WordPress-Android'
     pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
 
     diff_url = nil
-    if (pr_number.nil? == false)
+    if pr_number.nil? == false
       diff_url = "https://patch-diff.githubusercontent.com/raw/wordpress-mobile/WordPress-Android/pull/#{pr_number}.diff"
     end
 
