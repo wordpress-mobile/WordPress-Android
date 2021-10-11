@@ -57,6 +57,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
             setupToolbar()
             setupViewModel(site, domainRegistrationPurpose)
+            setupObservers()
         }
     }
 
@@ -71,6 +72,9 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private fun setupViewModel(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
         viewModel.start(site, domainRegistrationPurpose)
+    }
+
+    private fun setupObservers() {
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
