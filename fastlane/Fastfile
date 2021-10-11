@@ -429,7 +429,7 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
+    build_bundle(app: app, version: version, flavor:"Vanilla", buildType: "Release")
 
     upload_build_to_play_store(app: app, version: version, track: "production")
 
@@ -461,8 +461,8 @@ REPOSITORY_NAME="WordPress-Android"
     )
     android_build_preflight() unless (options[:skip_prechecks])
     app = get_app_name_option!(options)
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: app)
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: app)
+    build_alpha(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -486,7 +486,7 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_alpha_version()
-    build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Release")
+    build_bundle(app: app, version: version, flavor:"Zalpha", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(app: app, version: version, track: "alpha")
@@ -518,7 +518,7 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
+    build_bundle(app: app, version: version, flavor:"Vanilla", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(app: app, version: version, track: "beta")
@@ -550,7 +550,7 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Debug")
+    build_bundle(app: app, version: version, flavor:"Zalpha", buildType: "Debug")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(app: app, version: version, track: "internal")
