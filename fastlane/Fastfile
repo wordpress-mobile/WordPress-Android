@@ -309,7 +309,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Updates a release branch for a new beta release"
   lane :new_beta_release do |options|
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    android_betabuild_prechecks(options.merge({app: 'wp_jp'}))
+    android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
     send_strings_for_translation()
     download_translations()
     android_bump_version_beta(app: 'wp_jp')
