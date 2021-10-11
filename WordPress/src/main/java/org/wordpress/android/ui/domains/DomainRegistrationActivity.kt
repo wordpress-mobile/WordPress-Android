@@ -79,7 +79,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
-                is OpenDomainRegistrationCheckout -> openDomainRegistrationWebView(it.site, it.details)
+                is OpenDomainRegistrationCheckout -> openDomainRegistrationCheckoutWebView(it.site, it.details)
                 is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
                 is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
                 is FinishDomainRegistration -> finishDomainRegistration(it.event)
@@ -93,7 +93,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
     }
 
-    private fun openDomainRegistrationWebView(site: SiteModel, details: DomainProductDetails) {
+    private fun openDomainRegistrationCheckoutWebView(site: SiteModel, details: DomainProductDetails) {
         openCheckout.launch(CheckoutDetails(site, details.domainName))
     }
 
