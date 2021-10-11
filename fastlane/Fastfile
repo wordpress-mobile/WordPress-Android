@@ -438,7 +438,7 @@ REPOSITORY_NAME="WordPress-Android"
     version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
-    upload_build_to_play_store(version: version, track: "production", app: app)
+    upload_build_to_play_store(app: app, version: version, track: "production")
 
     if (options[:create_release])
       create_gh_release(app: app, version: version)
@@ -497,7 +497,7 @@ REPOSITORY_NAME="WordPress-Android"
     build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "alpha", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "alpha")
     end
 
     if (options[:create_release])
@@ -530,7 +530,7 @@ REPOSITORY_NAME="WordPress-Android"
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "beta", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "beta")
     end
 
     if (options[:create_release])
@@ -563,7 +563,7 @@ REPOSITORY_NAME="WordPress-Android"
     build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Debug")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "internal", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "internal")
     end
 
     if (options[:create_release])
@@ -577,12 +577,12 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_build_to_play_store version:<version> track:<track>
+  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version:<version> track:<track>
   #
   # Example:
-  # bundle exec fastlane upload_build_to_play_store version:15.0 track:production
-  # bundle exec fastlane upload_build_to_play_store version:alpha-228 track:alpha
-  # bundle exec fastlane upload_build_to_play_store version:15.0-rc-1 track:beta
+  # bundle exec fastlane upload_build_to_play_store app:wordpress version:15.0 track:production
+  # bundle exec fastlane upload_build_to_play_store app:wordpress version:alpha-228 track:alpha
+  # bundle exec fastlane upload_build_to_play_store app:jetpack version:15.0-rc-1 track:beta
   #####################################################################################
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do |options|
@@ -867,7 +867,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds an app bundle"
   lane :build_bundle do | options |
     # Create the file names
-    version=options[:version]
+    version = options[:version]
     app = options[:app]
 
     if version.nil?
