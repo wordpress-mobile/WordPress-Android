@@ -40,12 +40,11 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
