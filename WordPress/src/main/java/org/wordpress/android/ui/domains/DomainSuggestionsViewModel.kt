@@ -91,6 +91,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         debouncer.shutdown()
+        createCartUseCase.clear()
         super.onCleared()
     }
 
