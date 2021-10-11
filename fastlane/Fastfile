@@ -333,7 +333,7 @@ REPOSITORY_NAME="WordPress-Android"
     hotfix_version = options[:version_name] || UI.input('Version number for the new hotfix?')
     previous_tag = android_hotfix_prechecks(version_name: hotfix_version, skip_confirm: options[:skip_confirm])
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code], app: 'wp_jp')
+    android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code])
   end
 
   #####################################################################################
