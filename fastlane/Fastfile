@@ -138,7 +138,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
   desc "Creates a new release branch from the current develop"
-  lane :code_freeze do | options |
+  lane :code_freeze do |options|
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     android_bump_version_release()
@@ -186,7 +186,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane complete_code_freeze skip_confirm:true
   #####################################################################################
   desc "Trigger a release build for a given app after code freeze"
-  lane :complete_code_freeze do | options |
+  lane :complete_code_freeze do |options|
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
@@ -362,7 +362,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane finalize_release skip_confirm:true
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
-  lane :finalize_release do | options |
+  lane :finalize_release do |options|
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix()
 
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
@@ -615,7 +615,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
   #
   #####################################################################################
-  lane :trigger_release_build do | options |
+  lane :trigger_release_build do |options|
     circleci_trigger_job(
       circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
       repository: REPOSITORY_NAME,
@@ -638,7 +638,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane upload_and_replace_screenshots_in_play_store
   #####################################################################################
   desc "Upload Screenshots to Play Store and Replaces the existing ones"
-  lane :upload_and_replace_screenshots_in_play_store do | options |
+  lane :upload_and_replace_screenshots_in_play_store do |options|
     upload_to_play_store(
       package_name: 'org.wordpress.android',
       skip_upload_apk: true,
@@ -761,13 +761,13 @@ REPOSITORY_NAME="WordPress-Android"
     },
   ]
 
-  private_lane :send_strings_for_translation do | options |
+  private_lane :send_strings_for_translation do |options|
     sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
     sh("git diff-index --quiet HEAD || git commit -m \"Send strings to translation.\"")
     sh("git push origin HEAD")
   end
 
-  private_lane :commit_strings do | options |
+  private_lane :commit_strings do |options|
     if (options[:auto_commit]) then
        sh("cd .. && git add #{main_strings_path}")
        sh("git commit -m 'Update strings for translation'")
@@ -780,14 +780,14 @@ REPOSITORY_NAME="WordPress-Android"
 
 
   desc "Merge libraries strings files into the main app one"
-  lane :localize_libs do | options |
+  lane :localize_libs do |options|
     if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
       commit_strings(options)
     end
   end
 
   desc "Import strings from binary dependencies"
-  lane :localize_binary_deps do | options |
+  lane :localize_binary_deps do |options|
     binary_imported_libraries.each do  | lib |
       download_path = android_download_file_by_version(
         library_name: lib[:name],
@@ -826,7 +826,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane verifies that new strings which have been added to the main strings.xml
   # and which belongs to features of subtrees and submodules have also been added
   # to the library strings.xml file.
-  lane :validate_submodules_strings do | options |
+  lane :validate_submodules_strings do |options|
     pr_number = options[:pr_number]
     pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
 
@@ -842,7 +842,7 @@ REPOSITORY_NAME="WordPress-Android"
 # Helper Lanes
 ########################################################################
   desc "Get a list of pull request from `start_tag` to the current state"
-  lane :get_pullrequests_list do | options |
+  lane :get_pullrequests_list do |options|
     get_prs_list(repository:GHHELPER_REPO, milestone:"#{options[:milestone]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
@@ -855,7 +855,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<version> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc "Builds an app bundle"
-  lane :build_bundle do | options |
+  lane :build_bundle do |options|
     # Create the file names
     version = options[:version]
     app = get_app_name_option!(options)
@@ -986,7 +986,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
   end
 
-  private_lane :cleanup_release_files do | options |
+  private_lane :cleanup_release_files do |options|
     files = options[:files]
 
     files.each do | f |
