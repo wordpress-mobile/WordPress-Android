@@ -142,7 +142,7 @@ REPOSITORY_NAME="WordPress-Android"
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     old_version = android_codefreeze_prechecks(options.merge({app: 'wp_jp'}))
 
-    android_bump_version_release(app: 'wp_jp')
+    android_bump_version_release()
     new_version = android_get_app_version(app: 'wp_jp')
 
     # need to get prs list before version update to frozen tag
