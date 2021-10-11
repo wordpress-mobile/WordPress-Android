@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.domains
+package org.wordpress.android.ui.domains
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
@@ -23,12 +23,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsR
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.test
-import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
-import org.wordpress.android.ui.domains.DomainSuggestionItem
-import org.wordpress.android.ui.domains.DomainSuggestionsViewModel
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
