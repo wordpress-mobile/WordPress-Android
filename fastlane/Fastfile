@@ -195,8 +195,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/metadata/ and
-  # WordPress/jetpack_metadata folders and updates the .po files that is then
+  # This lane gets the data from the txt files in the `WordPress/metadata/` and
+  # `WordPress/jetpack_metadata/` folders and updates the `.po` files that is then
   # picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
@@ -214,8 +214,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_wordpress_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/metadata/ folder
-  # and updates the .po file that is then picked by GlotPress for translations.
+  # This lane gets the data from the txt files in the `WordPress/metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane update_wordpress_appstore_strings version:<version>
@@ -260,8 +260,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_jetpack_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/jetpack_metadata/ folder
-  # and updates the .po file that is then picked by GlotPress for translations.
+  # This lane gets the data from the txt files in the `WordPress/jetpack_metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane update_jetpack_appstore_strings version:<version>
