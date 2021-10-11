@@ -852,7 +852,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<version> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc "Builds an app bundle"
   lane :build_bundle do | options |
