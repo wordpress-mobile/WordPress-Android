@@ -785,7 +785,7 @@ REPOSITORY_NAME="WordPress-Android"
 
   desc "Import strings from binary dependencies"
   lane :localize_binary_deps do |options|
-    binary_imported_libraries.each do  | lib |
+    binary_imported_libraries.each do |lib|
       download_path = android_download_file_by_version(
         library_name: lib[:name],
         import_key: lib[:import_key],
@@ -986,7 +986,7 @@ REPOSITORY_NAME="WordPress-Android"
   private_lane :cleanup_release_files do |options|
     files = options[:files]
 
-    files.each do | f |
+    files.each do |f|
       File.open(f, "w") {}
       sh("git add #{f}")
     end
