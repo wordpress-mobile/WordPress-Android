@@ -394,7 +394,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     download_translations()
 
-    android_bump_version_final_release(app: 'wp_jp')
+    android_bump_version_final_release()
     version = android_get_release_version(app: 'wp_jp')
     download_metadata_strings(version: version["name"], build_number: version["code"])
 
