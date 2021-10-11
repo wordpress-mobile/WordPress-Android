@@ -110,7 +110,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
-        setResult(RESULT_OK, Intent().apply { putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email) })
+        setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email))
         finish()
     }
 
