@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -12,6 +13,7 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -20,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainSuggestionsViewModel
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
@@ -30,16 +33,25 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var debouncer: Debouncer
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    @Mock lateinit var createCartUseCase: CreateCartUseCase
 
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var viewModel: DomainSuggestionsViewModel
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         site = SiteModel().also { it.name = "Test Site" }
         domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
-        viewModel = DomainSuggestionsViewModel(tracker, dispatcher, debouncer, siteDomainsFeatureConfig)
+        viewModel = DomainSuggestionsViewModel(
+                tracker,
+                dispatcher,
+                debouncer,
+                siteDomainsFeatureConfig,
+                createCartUseCase,
+                TEST_DISPATCHER
+        )
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable
