@@ -143,7 +143,7 @@ REPOSITORY_NAME="WordPress-Android"
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     android_bump_version_release()
-    new_version = android_get_app_version(app: 'wp_jp')
+    new_version = android_get_app_version()
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -190,7 +190,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :complete_code_freeze do | options |
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
-    new_version = android_get_app_version(app: 'wp_jp')
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -313,7 +313,7 @@ REPOSITORY_NAME="WordPress-Android"
     send_strings_for_translation()
     download_translations()
     android_bump_version_beta()
-    new_version = android_get_app_version(app: 'wp_jp')
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -350,7 +350,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Finalizes a hotfix release by triggering a release build"
   lane :finalize_hotfix_release do |options|
     # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    new_version = android_get_app_version(app: 'wp_jp')
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
