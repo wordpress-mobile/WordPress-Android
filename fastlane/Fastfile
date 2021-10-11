@@ -395,7 +395,7 @@ REPOSITORY_NAME="WordPress-Android"
     download_translations()
 
     android_bump_version_final_release()
-    version = android_get_release_version(app: 'wp_jp')
+    version = android_get_release_version()
     download_metadata_strings(version: version["name"], build_number: version["code"])
 
     # Wrap up
@@ -435,7 +435,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
+    version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
     upload_build_to_play_store(version: version, track: "production", app: app)
@@ -526,7 +526,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
+    version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
@@ -559,7 +559,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
+    version = android_get_release_version()
     build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Debug")
 
     if (options[:upload_to_play_store]) then
@@ -954,7 +954,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   lane :create_gh_release do |options|
     apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
-    versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version(app: 'wp_jp')] : [options[:version]]
+    versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version()] : [options[:version]]
 
     release_assets = apps.flat_map do |app|
       versions.flat_map { |vers| bundle_file_path(app, vers) }
