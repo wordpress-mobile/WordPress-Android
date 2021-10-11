@@ -429,8 +429,7 @@ REPOSITORY_NAME="WordPress-Android"
       skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
-      final: true,
-      app: 'wp_jp'
+      final: true
     )
     android_build_preflight() unless options[:skip_prechecks]
 
@@ -466,8 +465,7 @@ REPOSITORY_NAME="WordPress-Android"
       skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
-      final: false,
-      app: 'wp_jp'
+      final: false
     )
     android_build_preflight() unless (options[:skip_prechecks])
     build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
@@ -490,7 +488,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds and updates for distribution"
   lane :build_alpha do |options|
     # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true, app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
@@ -523,7 +521,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds and updates for distribution"
   lane :build_beta do |options|
     # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true, app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
@@ -556,7 +554,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds and updates for internal testing"
   lane :build_internal do |options|
     # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
