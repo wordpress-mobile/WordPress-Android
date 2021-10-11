@@ -139,7 +139,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     android_bump_version_release()
@@ -188,7 +187,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Trigger a release build for a given app after code freeze"
   lane :complete_code_freeze do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
@@ -308,7 +306,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates a release branch for a new beta release"
   lane :new_beta_release do |options|
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
     send_strings_for_translation()
     download_translations()
@@ -332,7 +329,6 @@ REPOSITORY_NAME="WordPress-Android"
   lane :new_hotfix_release do |options|
     hotfix_version = options[:version_name] || UI.input('Version number for the new hotfix?')
     previous_tag = android_hotfix_prechecks(version_name: hotfix_version, skip_confirm: options[:skip_confirm])
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code])
   end
 
@@ -349,7 +345,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Finalizes a hotfix release by triggering a release build"
   lane :finalize_hotfix_release do |options|
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
@@ -368,7 +363,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix()
 
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
@@ -424,7 +418,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(
       skip_confirm: options[:skip_confirm],
       alpha: false,
@@ -460,7 +453,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(
       skip_confirm: options[:skip_confirm],
       alpha: true,
@@ -487,7 +479,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
@@ -520,7 +511,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
@@ -553,7 +543,6 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for internal testing"
   lane :build_internal do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(skip_confirm: options[:skip_confirm]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
