@@ -448,10 +448,10 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_and_upload_pre_releases
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for both internal and external distribution and uploads them
+  # This lane builds the app for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] [skip_prechecks:<true|false>] <[create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
@@ -475,7 +475,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_alpha
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing and optionally uploads it
+  # This lane builds the app for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_alpha app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
@@ -508,7 +508,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_beta
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing and optionally uploads it
+  # This lane builds the app for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_beta app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
@@ -544,7 +544,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_internal app:<wordpress|jetpack>] [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
+  # bundle exec fastlane build_internal app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_internal app:wordpress
