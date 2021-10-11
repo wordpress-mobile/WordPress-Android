@@ -2456,8 +2456,7 @@
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_registration_result_title">Congratulations on your purchase!</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
-        doing somersaults in excitement!</string>
+    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being setup. It may take up to 30 minutes for your domain to start working.</string>
     <string name="domain_registration_result_continue_button">continue</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
