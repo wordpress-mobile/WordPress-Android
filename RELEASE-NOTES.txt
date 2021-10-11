@@ -6,6 +6,7 @@
 * [*] Allow users to mark Posts as sticky [https://github.com/wordpress-mobile/WordPress-Android/pull/15351]
 * [*] Fixed a crash in Page Template chooser [https://github.com/wordpress-mobile/WordPress-Android/pull/15415]
 * [**] Block editor: Embed block: Include Jetpack embed variants. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4008]
+* [*] Block inserter: Display the reason why a block is unavailable to be added. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4005]
 
 18.4
 -----
