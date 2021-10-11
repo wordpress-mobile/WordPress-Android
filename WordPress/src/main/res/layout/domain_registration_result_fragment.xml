@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@null"
         android:scaleType="center"
-        android:src="@drawable/img_confetti_284dp" />
+        android:src="@drawable/img_illustration_domain_registration_success_218dp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
