@@ -6,11 +6,51 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/redirect_message_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_extra_large">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/redirect_message"
+                android:text="@string/domains_primary_site_address"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Domains purchase on this site will redirect to travelwithkids.wordpress.com"/>
+
+            <View
+                android:id="@+id/time_line_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_5"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                app:layout_constraintTop_toBottomOf="@id/redirect_message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <LinearLayout
         android:id="@+id/introduction_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/redirect_message_card"
         android:orientation="vertical"
         android:paddingStart="@dimen/domain_suggestions_intro_horizontal_padding"
         android:paddingTop="@dimen/domain_suggestions_intro_vertical_padding"
