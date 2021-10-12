@@ -46,9 +46,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_button"
-        style="@style/WordPress.Button.Primary"
+        style="@style/Domains.Button.Primary.Unelevated.White"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         android:text="@string/domain_registration_result_continue_button" />
 </LinearLayout>
