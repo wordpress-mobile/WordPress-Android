@@ -125,7 +125,6 @@ class DomainsDashboardViewModel @Inject constructor(
                     ListItemInteraction.create(this::onGetDomainClick)
             ))
 
-
     private fun getClaimDomainItems() =
             listOf(PurchaseDomain(
                     R.drawable.media_image_placeholder,
@@ -142,22 +141,21 @@ class DomainsDashboardViewModel @Inject constructor(
 //        listItems += DomainBlurb(UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
 //                        string.domains_redirected_domains_blurb, siteUrl)))
 
-       domains?.forEach {
+        domains?.forEach {
             listItems += SiteDomains(
-                    UiStringText(it.domain.toString()),
-                    if (it.expirySoon) {
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        string.domains_site_domain_expires_soon, it.expiry.toString()))
+                UiStringText(it.domain.toString()),
+                if (it.expirySoon) {
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            string.domains_site_domain_expires_soon, it.expiry.toString()))
                     } else {
-                        UiStringResWithParams(
-                                string.domains_site_domain_expires, listOf(UiStringText(it.expiry.toString())))
+                    UiStringResWithParams(
+                        string.domains_site_domain_expires, listOf(UiStringText(it.expiry.toString())))
                     }
-            )
-        }
+                )
+            }
 
         listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
-
 
 //        NOTE: Manage domains option is de-scoped for v1 release
 //        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
