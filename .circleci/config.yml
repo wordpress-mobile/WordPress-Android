@@ -360,6 +360,7 @@ workflows:
               only:
                 - develop
                 - /^release.*/
+                - /^gutenberg\/integrate_release_.*/
   Optional Tests:
     unless:
       or:
