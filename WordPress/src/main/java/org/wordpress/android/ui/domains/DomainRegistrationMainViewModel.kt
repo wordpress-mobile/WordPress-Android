@@ -9,6 +9,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationCheckout
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
@@ -41,8 +42,13 @@ class DomainRegistrationMainViewModel @Inject constructor(
     }
 
     fun selectDomain(domainProductDetails: DomainProductDetails) {
-        analyticsTracker.track(Stat.DOMAIN_CREDIT_NAME_SELECTED)
-        _onNavigation.value = Event(OpenDomainRegistrationDetails(domainProductDetails))
+        _onNavigation.value = when (domainRegistrationPurpose) {
+            DOMAIN_PURCHASE -> Event(OpenDomainRegistrationCheckout(site, domainProductDetails))
+            else -> {
+                analyticsTracker.track(Stat.DOMAIN_CREDIT_NAME_SELECTED)
+                Event(OpenDomainRegistrationDetails(domainProductDetails))
+            }
+        }
     }
 
     fun completeDomainRegistration(event: DomainRegistrationCompletedEvent) {

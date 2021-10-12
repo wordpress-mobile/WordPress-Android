@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.domains
+package org.wordpress.android.ui.domains
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -6,13 +6,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.AUTOMATED_TRANSFER
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
-import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
-import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel
-import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
