@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
+import android.text.Html
 import android.view.View
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -17,6 +19,7 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -65,6 +68,16 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
+        viewModel.showRedirectMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                introductionContainer.isVisible = false
+                redirectMessageCard.isVisible = true
+                redirectMessage.text = HtmlCompat.fromHtml(
+                        getString(R.string.domains_free_plan_get_your_domain_caption, it),
+                        HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+            }
+        }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
