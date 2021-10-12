@@ -1593,4 +1593,17 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
+
+    <!-- Domains -->
+    <style name="Domains.Button.Primary.Unelevated.White" parent="WordPress.Button.Primary.Unelevated">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.Domains.Button.Primary.Unelevated.White
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.Domains.Button.Primary.Unelevated.White" parent="">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
 </resources>
