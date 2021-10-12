@@ -19,6 +19,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -174,8 +175,8 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onClaimDomainClick() {
-        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
-        _onNavigation.value = Event(GetDomain(selectedSite))
+        // TODO Add tracking
+        _onNavigation.value = Event(ClaimDomain(selectedSite))
     }
 
     private fun onAddDomainClick() {

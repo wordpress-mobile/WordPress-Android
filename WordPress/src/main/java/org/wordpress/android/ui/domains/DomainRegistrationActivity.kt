@@ -11,7 +11,9 @@ import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationCheckout
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
@@ -19,6 +21,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Compani
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
@@ -34,6 +37,14 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var binding: DomainSuggestionsActivityBinding
 
+    private val openCheckout = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenCheckout()) {
+        if (it != null) {
+            viewModel.completeDomainRegistration(it)
+        } else {
+            // TODO Handle checkout failure
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -47,6 +58,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
             setupToolbar()
             setupViewModel(site, domainRegistrationPurpose)
+            setupObservers()
         }
     }
 
@@ -61,9 +73,13 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private fun setupViewModel(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
         viewModel.start(site, domainRegistrationPurpose)
+    }
+
+    private fun setupObservers() {
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
+                is OpenDomainRegistrationCheckout -> openDomainRegistrationCheckoutWebView(it.site, it.details)
                 is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
                 is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
                 is FinishDomainRegistration -> finishDomainRegistration(it.event)
@@ -75,6 +91,10 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         showFragment(DomainSuggestionsFragment.TAG, true) {
             DomainSuggestionsFragment.newInstance()
         }
+    }
+
+    private fun openDomainRegistrationCheckoutWebView(site: SiteModel, details: DomainProductDetails) {
+        openCheckout.launch(CheckoutDetails(site, details.domainName))
     }
 
     private fun showDomainRegistrationDetails(details: DomainProductDetails) {
@@ -90,7 +110,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
-        setResult(RESULT_OK, Intent().apply { putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email) })
+        setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email))
         finish()
     }
 

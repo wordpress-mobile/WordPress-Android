@@ -3,7 +3,7 @@ package org.wordpress.android.ui.domains
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -13,24 +13,32 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
+import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.properties.Delegates
 
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
-    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
-) : ViewModel() {
+    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig,
+    private val createCartUseCase: CreateCartUseCase,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
 
@@ -46,12 +54,14 @@ class DomainSuggestionsViewModel @Inject constructor(
             }
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
-    val selectedSuggestion: LiveData<DomainSuggestionItem?> = _selectedSuggestion
 
     val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
+
+    private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
+    val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -81,6 +91,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         debouncer.shutdown()
+        createCartUseCase.clear()
         super.onCleared()
     }
 
@@ -112,7 +123,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated
-        onDomainSuggestionsSelected(null)
+        onDomainSuggestionSelected(null)
     }
 
     // Network Callback
@@ -154,10 +165,18 @@ class DomainSuggestionsViewModel @Inject constructor(
                 }
     }
 
-    fun onDomainSuggestionsSelected(selectedSuggestion: DomainSuggestionItem?) {
+    fun onDomainSuggestionSelected(selectedSuggestion: DomainSuggestionItem?) {
         _selectedSuggestion.postValue(selectedSuggestion)
         suggestions = suggestions.transform { list ->
             list.map { it.copy(isSelected = selectedSuggestion?.domainName == it.domainName) }
+        }
+    }
+
+    fun onSelectDomainButtonClicked() {
+        val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
+        when (domainRegistrationPurpose) {
+            DOMAIN_PURCHASE -> createCart(selectedSuggestion)
+            else -> selectDomain(selectedSuggestion)
         }
     }
 
@@ -170,5 +189,34 @@ class DomainSuggestionsViewModel @Inject constructor(
             // Only reinitialize the search query, if it has changed.
             initializeDefaultSuggestions()
         }
+    }
+
+    private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
+        AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
+
+        // TODO Show progress bar
+
+        val event = createCartUseCase.execute(
+                site,
+                selectedSuggestion.productId,
+                selectedSuggestion.domainName,
+                selectedSuggestion.supportsPrivacy,
+                false
+        )
+
+        // TODO Hide progress bar
+
+        if (event.isError) {
+            AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation: ${event.error.message}")
+            // TODO Handle failed cart creation
+        } else {
+            AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation: ${event.cartDetails}")
+            selectDomain(selectedSuggestion)
+        }
+    }
+
+    private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {
+        val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
+        _onDomainSelected.postValue(Event(domainProductDetails))
     }
 }
