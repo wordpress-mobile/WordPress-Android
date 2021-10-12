@@ -799,9 +799,9 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.RECOMMEND_APP_CONTENT_FETCH_FAILED, properties);
     }
 
-    public static void trackBlockEditorEvent(String event, Map<String, Object> properties) {
+    public static void trackBlockEditorEvent(String event, SiteModel site, Map<String, Object> properties) {
         if (event.equals("insertBlock")) {
-            AnalyticsTracker.track(Stat.EDITOR_BLOCK_INSERTED, properties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_INSERTED, site, properties);
         }
     }
 }
