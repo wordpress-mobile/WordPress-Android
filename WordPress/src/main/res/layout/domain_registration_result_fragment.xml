@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
+    android:background="?attr/colorPrimarySurface"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingEnd="@dimen/margin_extra_large"
@@ -28,6 +29,7 @@
         android:gravity="center"
         android:text="@string/domain_registration_result_title"
         android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnPrimarySurface"
         android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -37,7 +39,8 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
         android:text="@string/domain_registration_result_description"
-        android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/colorOnPrimarySurface" />
 
     <Space
         android:layout_width="match_parent"
