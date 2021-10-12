@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment) {
@@ -57,18 +58,9 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.setupViews() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
-        choseDomainButton.setOnClickListener {
-            val selectedDomain = viewModel.selectedSuggestion.value
-
-            mainViewModel.selectDomain(
-                    DomainProductDetails(
-                            selectedDomain!!.productId,
-                            selectedDomain.domainName
-                    )
-            )
-        }
+        choseDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
         domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
-        domainSuggestionsList.adapter = DomainSuggestionsAdapter(::onDomainSuggestionSelected)
+        domainSuggestionsList.adapter = DomainSuggestionsAdapter(viewModel::onDomainSuggestionSelected)
     }
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
@@ -92,15 +84,12 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             }
         }
         viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
+        viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
     }
 
     private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
         val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
         adapter.submitList(domainSuggestions)
-    }
-
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?) {
-        viewModel.onDomainSuggestionsSelected(domainSuggestion)
     }
 
     override fun onResume() {

@@ -176,7 +176,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onClaimDomainClick() {
-        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+        // TODO Add tracking
         _onNavigation.value = Event(ClaimDomain(site))
     }
 
