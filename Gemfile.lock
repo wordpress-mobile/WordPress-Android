@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:wordpress-mobile/release-toolkit.git
-  revision: b3d5a36bb3cc4f4718a9f89acf3a164ea75d33e7
+  revision: 4885e0fc55f445e82a30f9eeb875f0ada9e5118c
   branch: jetpack/cleanup
   specs:
     fastlane-plugin-wpmreleasetoolkit (1.4.0)
@@ -64,7 +64,7 @@ GEM
     dotenv (2.7.6)
     emoji_regex (3.2.2)
     excon (0.85.0)
-    faraday (1.7.0)
+    faraday (1.8.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -189,7 +189,7 @@ GEM
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.1)
-    nokogiri (1.12.3)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     octokit (4.21.0)
