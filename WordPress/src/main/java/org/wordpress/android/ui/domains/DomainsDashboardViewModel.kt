@@ -89,6 +89,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun checkDomainCredit() {
+        // TODO: Refactor this to domains specific function
         val domainCreditAvailable =
                 domainRegistrationHandler.buildSource(viewModelScope, site.id).distinctUntilChanged()
         hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
@@ -100,13 +101,7 @@ class DomainsDashboardViewModel @Inject constructor(
         listItems += getPrimaryDomainItems(siteUrl)
 
         val customDomains = domains?.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
-
         val hasCustomDomain = customDomains?.isNotEmpty() == true
-
-//        AppLog.e(T.DOMAIN_REGISTRATION, domains?.toString())
-//        AppLog.e(T.DOMAIN_REGISTRATION, customDomains?.toString())
-//        AppLog.e(T.DOMAIN_REGISTRATION, hasCustomDomain.toString())
-//        AppLog.e(T.DOMAIN_REGISTRATION, hasDomainCredit.toString())
 
         listItems += when {
             hasCustomDomain -> getManageDomainsItems(siteUrl, customDomains)
