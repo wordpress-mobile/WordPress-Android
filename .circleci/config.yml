@@ -374,6 +374,7 @@ workflows:
               ignore:
                 - develop
                 - /^release.*/
+                - /^gutenberg\/integrate_release_.*/
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
