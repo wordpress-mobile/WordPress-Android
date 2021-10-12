@@ -31,6 +31,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
+@Suppress("TooManyFunctions")
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,

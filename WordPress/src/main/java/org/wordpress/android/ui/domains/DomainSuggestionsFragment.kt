@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isGone
@@ -19,7 +18,6 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
-import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
