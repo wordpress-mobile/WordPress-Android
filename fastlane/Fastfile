@@ -77,21 +77,18 @@ JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
 APP_SPECIFIC_VALUES = {
   wordpress: {
     metadata_dir: 'metadata',
-    gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/'
+    gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/',
+    package_name: 'org.wordpress.android',
+    bundle_name_prefix: 'wpandroid'
   },
   jetpack: {
     metadata_dir: 'jetpack_metadata',
-    gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/'
+    gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/',
+    package_name: 'com.jetpack.android',
+    bundle_name_prefix: 'jpandroid'
   }
 }.freeze
 
-# Global app vars (TODO: move them to APP_SPECIFIC_VALUES)
-
-WP_PACKAGE_NAME = "org.wordpress.android"
-WP_PREFIX = "wpandroid"
-
-JP_PACKAGE_NAME = "com.jetpack.android"
-JP_PREFIX = "jpandroid"
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
@@ -138,12 +135,11 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
   desc "Creates a new release branch from the current develop"
-  lane :code_freeze do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    old_version = android_codefreeze_prechecks(options.merge({app: 'wp_jp'}))
+  lane :code_freeze do |options|
+    old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
-    android_bump_version_release(app: 'wp_jp')
-    new_version = android_get_app_version(app: 'wp_jp')
+    android_bump_version_release()
+    new_version = android_get_app_version()
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -187,18 +183,17 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane complete_code_freeze skip_confirm:true
   #####################################################################################
   desc "Trigger a release build for a given app after code freeze"
-  lane :complete_code_freeze do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    android_completecodefreeze_prechecks(options.merge({app: 'wp_jp'}))
-    new_version = android_get_app_version(app: 'wp_jp')
+  lane :complete_code_freeze do |options|
+    android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
   # update_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/metadata/ and
-  # WordPress/jetpack_metadata folders and updates the .po files that is then
+  # This lane gets the data from the txt files in the `WordPress/metadata/` and
+  # `WordPress/jetpack_metadata/` folders and updates the `.po` files that is then
   # picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
@@ -216,8 +211,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_wordpress_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/metadata/ folder
-  # and updates the .po file that is then picked by GlotPress for translations.
+  # This lane gets the data from the txt files in the `WordPress/metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane update_wordpress_appstore_strings version:<version>
@@ -262,8 +257,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_jetpack_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/jetpack_metadata/ folder
-  # and updates the .po file that is then picked by GlotPress for translations.
+  # This lane gets the data from the txt files in the `WordPress/jetpack_metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane update_jetpack_appstore_strings version:<version>
@@ -308,12 +303,11 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates a release branch for a new beta release"
   lane :new_beta_release do |options|
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    android_betabuild_prechecks(options.merge({app: 'wp_jp'}))
+    android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
     send_strings_for_translation()
     download_translations()
-    android_bump_version_beta(app: 'wp_jp')
-    new_version = android_get_app_version(app: 'wp_jp')
+    android_bump_version_beta()
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -332,8 +326,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :new_hotfix_release do |options|
     hotfix_version = options[:version_name] || UI.input('Version number for the new hotfix?')
     previous_tag = android_hotfix_prechecks(version_name: hotfix_version, skip_confirm: options[:skip_confirm])
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code], app: 'wp_jp')
+    android_bump_version_hotfix(previous_version_name: previous_tag, version_name: hotfix_version, version_code: options[:version_code])
   end
 
   #####################################################################################
@@ -349,8 +342,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Finalizes a hotfix release by triggering a release build"
   lane :finalize_hotfix_release do |options|
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    new_version = android_get_app_version(app: 'wp_jp')
+    new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -367,11 +359,10 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane finalize_release skip_confirm:true
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
-  lane :finalize_release do | options |
-    # TODO: remove 'app' parameter entirely in toolkit. For now just use a dummy value to not break API until toolkit is updated.
-    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: 'wp_jp')
+  lane :finalize_release do |options|
+    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix()
 
-    android_finalize_prechecks(options.merge({app: 'wp_jp'}))
+    android_finalize_prechecks(skip_confirm: options[:skip_confirm])
     configure_apply(force: is_ci)
 
     UI.message('Checking app strings translation status...')
@@ -394,8 +385,8 @@ REPOSITORY_NAME="WordPress-Android"
 
     download_translations()
 
-    android_bump_version_final_release(app: 'wp_jp')
-    version = android_get_release_version(app: 'wp_jp')
+    android_bump_version_final_release()
+    version = android_get_release_version()
     download_metadata_strings(version: version["name"], build_number: version["code"])
 
     # Wrap up
@@ -424,22 +415,20 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(
       skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
-      final: true,
-      app: 'wp_jp'
+      final: true
     )
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
-    app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
+    app = get_app_name_option!(options)
+    version = android_get_release_version()
+    build_bundle(app: app, version: version, flavor:"Vanilla", buildType: "Release")
 
-    upload_build_to_play_store(version: version, track: "production", app: app)
+    upload_build_to_play_store(app: app, version: version, track: "production")
 
     if (options[:create_release])
       create_gh_release(app: app, version: version)
@@ -449,10 +438,10 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_and_upload_pre_releases
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for both internal and external distribution and uploads them
+  # This lane builds the app for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] [skip_prechecks:<true|false>] <[create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
@@ -461,23 +450,22 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
     android_build_prechecks(
       skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
-      final: false,
-      app: 'wp_jp'
+      final: false
     )
     android_build_preflight() unless (options[:skip_prechecks])
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
+    app = get_app_name_option!(options)
+    build_alpha(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
   # build_alpha
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing and optionally uploads it
+  # This lane builds the app for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_alpha app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
@@ -489,17 +477,16 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true, app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
-    version = android_get_alpha_version(app: 'wp_jp')
-    build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Release")
+    app = get_app_name_option!(options)
+    version = android_get_alpha_version()
+    build_bundle(app: app, version: version, flavor:"Zalpha", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "alpha", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "alpha")
     end
 
     if (options[:create_release])
@@ -510,7 +497,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_beta
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing and optionally uploads it
+  # This lane builds the app for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_beta app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
@@ -522,17 +509,16 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true, app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "Release")
+    app = get_app_name_option!(options)
+    version = android_get_release_version()
+    build_bundle(app: app, version: version, flavor:"Vanilla", buildType: "Release")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "beta", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "beta")
     end
 
     if (options[:create_release])
@@ -546,7 +532,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_internal app:<wordpress|jetpack>] [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
+  # bundle exec fastlane build_internal app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_internal app:wordpress
@@ -555,17 +541,16 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for internal testing"
   lane :build_internal do |options|
-    # TODO: remove 'app' parameter from this toolkit action. For now since it's not used anymore as JP and WP are being unified, use a dummy value to not break API
-    android_build_prechecks(skip_confirm: options[:skip_confirm], app: 'wp_jp') unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    app = options[:app]
-    version = android_get_release_version(app: 'wp_jp')
-    build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "Debug")
+    app = get_app_name_option!(options)
+    version = android_get_release_version()
+    build_bundle(app: app, version: version, flavor:"Zalpha", buildType: "Debug")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "internal", app: app)
+       upload_build_to_play_store(app: app, version: version, track: "internal")
     end
 
     if (options[:create_release])
@@ -579,18 +564,18 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_build_to_play_store version:<version> track:<track>
+  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version:<version> track:<track>
   #
   # Example:
-  # bundle exec fastlane upload_build_to_play_store version:15.0 track:production
-  # bundle exec fastlane upload_build_to_play_store version:alpha-228 track:alpha
-  # bundle exec fastlane upload_build_to_play_store version:15.0-rc-1 track:beta
+  # bundle exec fastlane upload_build_to_play_store app:wordpress version:15.0 track:production
+  # bundle exec fastlane upload_build_to_play_store app:wordpress version:alpha-228 track:alpha
+  # bundle exec fastlane upload_build_to_play_store app:jetpack version:15.0-rc-1 track:beta
   #####################################################################################
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do |options|
 
-    app = options[:app]
-    package_name = app.downcase == "jetpack" ? JP_PACKAGE_NAME : WP_PACKAGE_NAME
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
 
     version = options[:version]
 
@@ -627,7 +612,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
   #
   #####################################################################################
-  lane :trigger_release_build do | options |
+  lane :trigger_release_build do |options|
     circleci_trigger_job(
       circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
       repository: REPOSITORY_NAME,
@@ -650,7 +635,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane upload_and_replace_screenshots_in_play_store
   #####################################################################################
   desc "Upload Screenshots to Play Store and Replaces the existing ones"
-  lane :upload_and_replace_screenshots_in_play_store do | options |
+  lane :upload_and_replace_screenshots_in_play_store do |options|
     upload_to_play_store(
       package_name: 'org.wordpress.android',
       skip_upload_apk: true,
@@ -773,13 +758,13 @@ REPOSITORY_NAME="WordPress-Android"
     },
   ]
 
-  private_lane :send_strings_for_translation do | options |
+  private_lane :send_strings_for_translation do |options|
     sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
     sh("git diff-index --quiet HEAD || git commit -m \"Send strings to translation.\"")
     sh("git push origin HEAD")
   end
 
-  private_lane :commit_strings do | options |
+  private_lane :commit_strings do |options|
     if (options[:auto_commit]) then
        sh("cd .. && git add #{main_strings_path}")
        sh("git commit -m 'Update strings for translation'")
@@ -792,15 +777,15 @@ REPOSITORY_NAME="WordPress-Android"
 
 
   desc "Merge libraries strings files into the main app one"
-  lane :localize_libs do | options |
+  lane :localize_libs do |options|
     if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
       commit_strings(options)
     end
   end
 
   desc "Import strings from binary dependencies"
-  lane :localize_binary_deps do | options |
-    binary_imported_libraries.each do  | lib |
+  lane :localize_binary_deps do |options|
+    binary_imported_libraries.each do |lib|
       download_path = android_download_file_by_version(
         library_name: lib[:name],
         import_key: lib[:import_key],
@@ -838,7 +823,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane verifies that new strings which have been added to the main strings.xml
   # and which belongs to features of subtrees and submodules have also been added
   # to the library strings.xml file.
-  lane :validate_submodules_strings do | options |
+  lane :validate_submodules_strings do |options|
     pr_number = options[:pr_number]
     pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
 
@@ -854,7 +839,7 @@ REPOSITORY_NAME="WordPress-Android"
 # Helper Lanes
 ########################################################################
   desc "Get a list of pull request from `start_tag` to the current state"
-  lane :get_pullrequests_list do | options |
+  lane :get_pullrequests_list do |options|
     get_prs_list(repository:GHHELPER_REPO, milestone:"#{options[:milestone]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
@@ -864,21 +849,21 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<version> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc "Builds an app bundle"
-  lane :build_bundle do | options |
+  lane :build_bundle do |options|
     # Create the file names
-    version=options[:version]
-    app = options[:app]
+    version = options[:version]
+    app = get_app_name_option!(options)
 
     if version.nil?
       UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
       next
     end
 
-    prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
-    name="#{prefix}-#{version["name"]}.aab"
+    prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
+    name = "#{prefix}-#{version["name"]}.aab"
 
     aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
@@ -955,8 +940,8 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane create_gh_release app:jetpack version:{name:12.3-rc-4} prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
-    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [options[:app]]
-    versions = options[:version].nil? ? [android_get_alpha_version(app: 'wp_jp'), android_get_release_version(app: 'wp_jp')] : [options[:version]]
+    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
+    versions = options[:version].nil? ? [android_get_alpha_version(), android_get_release_version()] : [options[:version]]
 
     release_assets = apps.flat_map do |app|
       versions.flat_map { |vers| bundle_file_path(app, vers) }
@@ -991,17 +976,17 @@ REPOSITORY_NAME="WordPress-Android"
 #####################################################################################
 
   private_lane :delete_old_changelogs do |options|
-    app = options[:app] || 'wordpress'
+    app = get_app_name_option!(options)
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
       File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
     end
   end
 
-  private_lane :cleanup_release_files do | options |
+  private_lane :cleanup_release_files do |options|
     files = options[:files]
 
-    files.each do | f |
+    files.each do |f|
       File.open(f, "w") {}
       sh("git add #{f}")
     end
@@ -1012,6 +997,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # Utils
   #####################################################################################
+  def get_app_name_option!(options)
+    app = options[:app]&.downcase
+    UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
+    UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless ['wordpress', 'jetpack'].include?(app)
+    return app
+  end
+
   def release_notes_path(app)
     paths = {
       wordpress: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt",
@@ -1029,7 +1021,7 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   def bundle_file_path(app, version)
-    prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
+    prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
     File.join(project_root, "build", "#{prefix}-#{version["name"]}.aab")
   end
