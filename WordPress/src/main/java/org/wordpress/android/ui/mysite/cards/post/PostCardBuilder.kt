@@ -10,14 +10,20 @@ class PostCardBuilder  @Inject constructor() {
         val cards = mutableListOf<PostCard>()
         mockedPostsData.posts?.draft?.map {
             cards.add(PostCard(
-                    title = UiStringText("Draft Post"),
-                    postTitle = UiStringText(it.title ?:"No title")))
+                    title = UiStringText(DRAFT_TITLE),
+                    postTitle = UiStringText(it.title ?:NO_TITLE)))
         }
         mockedPostsData.posts?.scheduled?.map {
             cards.add(PostCard(
-                    title = UiStringText("Scheduled Post"),
-                    postTitle = UiStringText(it.title ?:"No title")))
+                    title = UiStringText(SCHEDULED_TITLE),
+                    postTitle = UiStringText(it.title ?:NO_TITLE)))
         }
         return cards
+    }
+
+    companion object{
+        const val DRAFT_TITLE = "Draft Post"
+        const val SCHEDULED_TITLE = "Scheduled Post"
+        const val NO_TITLE = "No title"
     }
 }
