@@ -31,7 +31,6 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val domainName = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_NAME).orEmpty()
         val email = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_EMAIL).orEmpty()
 
@@ -39,17 +38,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         setupToolbar()
 
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
-            continueButton.setOnClickListener {
-                with(requireActivity()) {
-                    setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email))
-                    finish()
-                }
-            }
-
-            domainRegistrationResultMessage.text = getString(
-                    R.string.domain_registration_result_description,
-                    domainName
-            ).parseAsHtml(FROM_HTML_MODE_COMPACT)
+            setupViews(domainName, email)
         }
     }
 
@@ -65,6 +54,20 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     private fun setupToolbar() = with(requireAppCompatActivity()) {
         supportActionBar?.hide()
+    }
+
+    private fun DomainRegistrationResultFragmentBinding.setupViews(domainName: String, email: String) {
+        continueButton.setOnClickListener {
+            with(requireActivity()) {
+                setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email))
+                finish()
+            }
+        }
+
+        domainRegistrationResultMessage.text = getString(
+                R.string.domain_registration_result_description,
+                domainName
+        ).parseAsHtml(FROM_HTML_MODE_COMPACT)
     }
 
     private fun requireAppCompatActivity() = requireActivity() as AppCompatActivity
