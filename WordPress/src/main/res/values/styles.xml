@@ -421,7 +421,13 @@
     </style>
 
     <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.WordPress.Button.Primary.Unelevated</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.WordPress.Button.Primary.Unelevated" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
     </style>
 
     <!-- NUX Styles -->
@@ -1605,5 +1611,4 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
-
 </resources>
