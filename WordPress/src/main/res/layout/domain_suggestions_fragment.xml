@@ -127,7 +127,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/chose_domain_button"
-            style="@style/WordPress.Button.Primary"
+            style="@style/WordPress.Button.Primary.Unelevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
