@@ -618,7 +618,6 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_site_domains_title">Site domains</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
@@ -1586,12 +1585,14 @@
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
+    <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
+    <string name="post_settings_post_sticky">Stick post to the front page</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
@@ -1635,6 +1636,7 @@
     <string name="post_status_publish_post">Publish</string>
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
+    <string name="post_status_sticky">Sticky</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_post_scheduled">Scheduled</string>
     <string name="post_status_post_trashed">Trashed</string>
@@ -2422,6 +2424,7 @@
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
 
     <!-- Domain Registration -->
+    <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
@@ -2928,18 +2931,11 @@
 
     <string name="content_description_more">More</string>
 
-    <!-- Quick Start Promo Dialog (Old) -->
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-
-    <!-- Quick Start Promo Dialog (New) -->
+    <!-- Quick Start Promo Dialog -->
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
 
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>

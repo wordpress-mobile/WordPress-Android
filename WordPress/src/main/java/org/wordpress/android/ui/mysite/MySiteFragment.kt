@@ -290,10 +290,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+                action.site
         )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
@@ -305,8 +304,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.title,
                 action.message,
                 action.positiveButtonLabel,
-                action.negativeButtonLabel,
-                action.neutralButtonLabel
+                action.negativeButtonLabel
         )
         is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
     }
@@ -485,8 +483,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         @StringRes title: Int,
         @StringRes message: Int,
         @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int,
-        @StringRes neutralButtonLabel: Int? = null
+        @StringRes negativeButtonLabel: Int
     ) {
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
@@ -496,8 +493,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 getString(message),
                 getString(positiveButtonLabel),
                 R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonLabel),
-                neutralButtonLabel?.let { getString(it) } ?: ""
+                getString(negativeButtonLabel)
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
@@ -560,10 +556,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onNegativeClicked(instanceTag: String) {
         viewModel.ignoreQuickStart()
-    }
-
-    override fun onNeutralClicked(instanceTag: String) {
-        viewModel.disableQuickStart()
     }
 
     override fun onConfirm(result: Bundle?) {

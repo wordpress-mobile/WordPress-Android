@@ -1,11 +1,10 @@
-package org.wordpress.android.viewmodel.domains
+package org.wordpress.android.ui.domains
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -32,8 +31,6 @@ import org.wordpress.android.fluxc.store.TransactionsStore.OnSupportedCountriesF
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.domains.DomainProductDetails
-import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DomainPhoneNumberUtils

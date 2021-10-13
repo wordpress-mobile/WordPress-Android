@@ -12,8 +12,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
-class SiteItemsBuilder
-@Inject constructor(
+class SiteItemsBuilder @Inject constructor(
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
