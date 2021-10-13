@@ -166,14 +166,26 @@ public class WPActivityUtils {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 
+    /**
+     * @deprecated Use {@link WindowExtensionsKt} instead.
+     */
+    @Deprecated
     public static void setLightStatusBar(Window window, boolean showInLightMode) {
         WindowExtensionsKt.setLightStatusBar(window, showInLightMode);
     }
 
+    /**
+     * @deprecated Use {@link WindowExtensionsKt} instead.
+     */
+    @Deprecated
     public static void setLightNavigationBar(Window window, boolean showInLightMode) {
         WindowExtensionsKt.setLightNavigationBar(window, showInLightMode, true);
     }
 
+    /**
+     * @deprecated Use {@link WindowExtensionsKt} instead.
+     */
+    @Deprecated
     public static void showFullScreen(View decorView) {
         int flags = decorView.getSystemUiVisibility();
         flags = flags | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
