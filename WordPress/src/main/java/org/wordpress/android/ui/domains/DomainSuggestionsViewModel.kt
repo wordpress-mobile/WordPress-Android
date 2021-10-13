@@ -60,6 +60,9 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
 
+    private val _isButtonProgressBarVisible = MutableLiveData(false)
+    val isButtonProgressBarVisible: LiveData<Boolean> = _isButtonProgressBarVisible
+
     private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
     val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
 
@@ -194,7 +197,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
 
-        // TODO Show progress bar
+        _isButtonProgressBarVisible.postValue(true)
 
         val event = createCartUseCase.execute(
                 site,
@@ -204,7 +207,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 false
         )
 
-        // TODO Hide progress bar
+        _isButtonProgressBarVisible.postValue(false)
 
         if (event.isError) {
             AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation: ${event.error.message}")
