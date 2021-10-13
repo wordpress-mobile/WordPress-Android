@@ -65,6 +65,11 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
+        viewModel.isButtonProgressBarVisible.observe(viewLifecycleOwner) { isVisible ->
+            buttonProgressBar.isVisible = isVisible
+            choseDomainButton.textScaleX = if (isVisible) 0f else 1f
+            choseDomainButton.isClickable = !isVisible
+        }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
