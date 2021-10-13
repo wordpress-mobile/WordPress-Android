@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -48,7 +46,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
             setupViews(domainName, email)
-            setupObservers(email)
+            setupObservers(domainName, email)
         }
     }
 
@@ -68,7 +66,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     private fun DomainRegistrationResultFragmentBinding.setupViews(domainName: String, email: String) {
         continueButton.setOnClickListener {
-            finishRegistration(email)
+            finishRegistration(domainName, email)
         }
 
         domainRegistrationResultMessage.text = getString(
@@ -77,17 +75,16 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         ).parseAsHtml(FROM_HTML_MODE_COMPACT)
     }
 
-    private fun setupObservers(email: String) = with(requireActivity()) {
+    private fun setupObservers(domainName: String, email: String) = with(requireActivity()) {
         onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                finishRegistration(email)
+                finishRegistration(domainName, email)
             }
         })
     }
 
-    private fun finishRegistration(email: String) = with(requireActivity()) {
-        setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email))
-        finish()
+    private fun finishRegistration(domainName: String, email: String) {
+        mainViewModel.finishDomainRegistration(DomainRegistrationCompletedEvent(domainName, email))
     }
 
     private fun requireAppCompatActivity() = requireActivity() as AppCompatActivity
