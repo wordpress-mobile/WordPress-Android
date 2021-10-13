@@ -23,7 +23,6 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
     companion object {
         private const val EXTRA_REGISTERED_DOMAIN_NAME = "extra_registered_domain_name"
         private const val EXTRA_REGISTERED_DOMAIN_EMAIL = "extra_registered_domain_email"
-        const val RESULT_REGISTERED_DOMAIN_EMAIL = "RESULT_REGISTERED_DOMAIN_EMAIL"
         const val TAG = "DOMAIN_REGISTRATION_RESULT_FRAGMENT"
 
         fun newInstance(domainName: String, email: String?) = DomainRegistrationResultFragment().apply {
