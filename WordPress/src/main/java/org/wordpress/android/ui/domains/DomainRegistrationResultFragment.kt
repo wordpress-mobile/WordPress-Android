@@ -43,6 +43,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWindow()
+        setupToolbar()
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
             continueButton.setOnClickListener {
                 val intent = Intent()
@@ -69,6 +70,10 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
             setLightStatusBar(false)
             setLightNavigationBar(false)
         }
+    }
+
+    private fun setupToolbar() = with(requireAppCompatActivity()) {
+        supportActionBar?.hide()
     }
 
     private fun requireAppCompatActivity() = requireActivity() as AppCompatActivity
