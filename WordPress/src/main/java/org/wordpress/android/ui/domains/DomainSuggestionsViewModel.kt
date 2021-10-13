@@ -158,7 +158,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                             relevance = it.relevance,
                             isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
                             isCostVisible = siteDomainsFeatureConfig.isEnabled(),
-                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION,
+                            isEnabled = true
                     )
                 }
                 .sortedBy { it.relevance }
