@@ -134,5 +134,15 @@
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/domains_suggestions_choose_domain" />
+
+        <ProgressBar
+            android:id="@+id/button_progress_bar"
+            android:layout_width="@dimen/domain_suggestions_progress_indicator_size"
+            android:layout_height="@dimen/domain_suggestions_progress_indicator_size"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="?attr/colorOnSecondary"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </FrameLayout>
 </RelativeLayout>
