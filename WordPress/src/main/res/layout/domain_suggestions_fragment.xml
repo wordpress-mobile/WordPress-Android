@@ -125,7 +125,7 @@
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/chose_domain_button"
+            android:id="@+id/select_domain_button"
             style="@style/WordPress.Button.Primary.Unelevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
             android:enabled="false"
-            android:text="@string/domains_suggestions_choose_domain"
+            android:text="@string/domains_suggestions_select_domain"
             tools:enabled="true" />
 
         <ProgressBar

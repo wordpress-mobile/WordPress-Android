@@ -55,7 +55,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
 
-    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
+    val selectDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible

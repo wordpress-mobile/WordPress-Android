@@ -2426,7 +2426,7 @@
     <!-- Domain Registration -->
     <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
-    <string name="domains_suggestions_choose_domain">Select domain</string>
+    <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>

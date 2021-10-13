@@ -58,7 +58,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.setupViews() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
-        choseDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
+        selectDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
         domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
         domainSuggestionsList.adapter = DomainSuggestionsAdapter(viewModel::onDomainSuggestionSelected)
     }
@@ -67,8 +67,8 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
         viewModel.isButtonProgressBarVisible.observe(viewLifecycleOwner) { isVisible ->
             buttonProgressBar.isVisible = isVisible
-            choseDomainButton.textScaleX = if (isVisible) 0f else 1f
-            choseDomainButton.isClickable = !isVisible
+            selectDomainButton.textScaleX = if (isVisible) 0f else 1f
+            selectDomainButton.isClickable = !isVisible
         }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
@@ -88,7 +88,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
                 ToastUtils.showToast(context, errorMessage)
             }
         }
-        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
+        viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
     }
 
