@@ -4,12 +4,15 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationResultFragmentBinding
+import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.setLightNavigationBar
+import org.wordpress.android.util.setLightStatusBar
 
 class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {
     private var domainName: String? = null
@@ -39,8 +42,7 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        checkNotNull((activity?.application as WordPress).component())
+        setupWindow()
         with(DomainRegistrationResultFragmentBinding.bind(view)) {
             continueButton.setOnClickListener {
                 val intent = Intent()
@@ -58,4 +60,16 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
             )
         }
     }
+
+    private fun setupWindow() = with(requireAppCompatActivity()) {
+        val colorPrimarySurface = getColorFromAttribute(R.attr.colorPrimarySurface)
+        window.apply {
+            statusBarColor = colorPrimarySurface
+            navigationBarColor = colorPrimarySurface
+            setLightStatusBar(false)
+            setLightNavigationBar(false)
+        }
+    }
+
+    private fun requireAppCompatActivity() = requireActivity() as AppCompatActivity
 }
