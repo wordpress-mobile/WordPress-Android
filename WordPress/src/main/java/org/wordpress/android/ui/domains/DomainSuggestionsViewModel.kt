@@ -198,7 +198,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
 
-        _isButtonProgressBarVisible.postValue(true)
+        showLoadingButton(true)
 
         val event = createCartUseCase.execute(
                 site,
@@ -208,7 +208,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 false
         )
 
-        _isButtonProgressBarVisible.postValue(false)
+        showLoadingButton(false)
 
         if (event.isError) {
             AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation: ${event.error.message}")
@@ -222,5 +222,12 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {
         val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
         _onDomainSelected.postValue(Event(domainProductDetails))
+    }
+
+    private fun showLoadingButton(isLoading: Boolean) {
+        _isButtonProgressBarVisible.postValue(isLoading)
+        suggestions = suggestions.transform { list ->
+            list.map { it.copy(isEnabled = !isLoading) }
+        }
     }
 }
