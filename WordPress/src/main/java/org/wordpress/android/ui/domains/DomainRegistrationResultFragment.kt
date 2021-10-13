@@ -8,13 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.core.text.parseAsHtml
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationResultFragmentBinding
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.setLightNavigationBar
 import org.wordpress.android.util.setLightStatusBar
+import javax.inject.Inject
 
 class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_result_fragment) {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var mainViewModel: DomainRegistrationMainViewModel
+
     companion object {
         private const val EXTRA_REGISTERED_DOMAIN_NAME = "extra_registered_domain_name"
         private const val EXTRA_REGISTERED_DOMAIN_EMAIL = "extra_registered_domain_email"
@@ -31,6 +37,8 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
+
         val domainName = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_NAME).orEmpty()
         val email = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_EMAIL).orEmpty()
 
