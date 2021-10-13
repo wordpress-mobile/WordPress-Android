@@ -78,7 +78,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             suggestionSearchIcon.isGone = isLoading
 
             if (!isLoading) {
-                reloadSuggestions(listState.data)
+                (domainSuggestionsList.adapter as DomainSuggestionsAdapter).submitList(listState.data)
             }
 
             if (listState is ListState.Error<*>) {
@@ -90,11 +90,6 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         }
         viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
-    }
-
-    private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
-        val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        adapter.submitList(domainSuggestions)
     }
 
     override fun onResume() {
