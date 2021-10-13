@@ -58,16 +58,18 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
 
     private fun DomainRegistrationResultFragmentBinding.setupViews(domainName: String, email: String) {
         continueButton.setOnClickListener {
-            with(requireActivity()) {
-                setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email))
-                finish()
-            }
+            finishRegistration(email)
         }
 
         domainRegistrationResultMessage.text = getString(
                 R.string.domain_registration_result_description,
                 domainName
         ).parseAsHtml(FROM_HTML_MODE_COMPACT)
+    }
+
+    private fun finishRegistration(email: String) = with(requireActivity()) {
+        setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email))
+        finish()
     }
 
     private fun requireAppCompatActivity() = requireActivity() as AppCompatActivity
