@@ -6,5 +6,5 @@ group :screenshots, optional: true do
   gem 'rmagick', '~> 4.1'
 end
 
-# Pointing to the result of merging https://github.com/wordpress-mobile/release-toolkit/pull/298 until we're ready to do a breaking release.
-gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', ref: '908ff74c45a3ccd022adb028b2b4a2fad296e27a'
+# Pointing to develop which contains pending breaking changes from #300, so we use it for a while to be sure it works as expected in the clients before doing the official major version release.
+gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', branch: 'develop'
