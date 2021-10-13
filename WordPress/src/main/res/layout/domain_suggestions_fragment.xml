@@ -118,12 +118,11 @@
             tools:visibility="visible" />
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <FrameLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp">
+        android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/chose_domain_button"
@@ -135,5 +134,5 @@
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/domains_suggestions_choose_domain" />
-    </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 </RelativeLayout>
