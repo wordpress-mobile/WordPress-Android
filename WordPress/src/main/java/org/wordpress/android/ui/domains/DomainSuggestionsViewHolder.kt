@@ -26,15 +26,20 @@ class DomainSuggestionsViewHolder(
         domainCost.isVisible = suggestion.isCostVisible
         domainCost.text = getFormattedCost(suggestion)
         selectionRadioButton.isChecked = suggestion.isSelected
+        selectionRadioButton.isEnabled = suggestion.isEnabled
 
-        container.setOnClickListener {
-            val isSuggestionSelected = !selectionRadioButton.isChecked
-            selectionRadioButton.isChecked = isSuggestionSelected
-            if (isSuggestionSelected) {
-                itemSelectionListener(suggestion)
-            } else {
-                itemSelectionListener(null)
+        if (suggestion.isEnabled) {
+            container.setOnClickListener {
+                val isSuggestionSelected = !selectionRadioButton.isChecked
+                selectionRadioButton.isChecked = isSuggestionSelected
+                if (isSuggestionSelected) {
+                    itemSelectionListener(suggestion)
+                } else {
+                    itemSelectionListener(null)
+                }
             }
+        } else {
+            container.isClickable = false
         }
     }
 
