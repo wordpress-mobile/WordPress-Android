@@ -129,11 +129,13 @@
             style="@style/WordPress.Button.Primary.Unelevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:text="@string/domains_suggestions_choose_domain" />
+            android:enabled="false"
+            android:text="@string/domains_suggestions_choose_domain"
+            tools:enabled="true" />
 
         <ProgressBar
             android:id="@+id/button_progress_bar"
