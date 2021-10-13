@@ -1,11 +1,13 @@
 buildscript {
-    ext.aztecVersion = 'v1.3.45'
+    ext.aztecVersion = '941-2f19466228b2290105b111881dfbabc454be19c2'
 }
 
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
@@ -24,7 +26,6 @@ repositories {
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
