@@ -68,6 +68,16 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `redirect message is visible when purchasing a domain at start`() {
+        domainRegistrationPurpose = DOMAIN_PURCHASE
+        viewModel.start(site, domainRegistrationPurpose)
+        assertNotNull(viewModel.showRedirectMessage.value)
+        viewModel.showRedirectMessage.value?.let { siteUrl ->
+            assertNotNull(siteUrl)
+        }
+    }
+
+    @Test
     fun `intro is visible at start`() {
         viewModel.start(site, domainRegistrationPurpose)
         assertNotNull(viewModel.isIntroVisible.value)

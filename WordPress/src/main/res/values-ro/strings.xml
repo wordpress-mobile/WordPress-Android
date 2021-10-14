@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-05 15:11:32+0000
+Translation-Revision-Date: 2021-10-07 05:14:10+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -13,15 +13,15 @@ Language: ro
     <string name="domains_manage_domains">Administrează domeniile</string>
     <string name="domains_redirected_domains_blurb">Domeniile tale vor redirecționa la site-ul tău, la &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Află mai multe&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Adaugă un domeniu</string>
-    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expiră pe %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expiră pe %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expiră pe %s</string>
     <string name="domains_site_domains">Domeniile site-ului tău</string>
     <string name="domains_primary_site_more_menu_change_site_address">Schimbă adresa site-ului</string>
     <string name="domains_primary_site_address_chip">Adresă principală site</string>
     <string name="domains_primary_site_address_blurb">Adresa principală a site-ului este ceea ce vor vedea vizitatorii în bara de adrese a navigatorului lor când îți vizitează site-ul.</string>
     <string name="domains_primary_site_caption">Adresa ta gratuită pentru WordPress.com este</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;span&gt;</string>
-    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vrei să le elimini?</string>
     <string name="comment_edit_cancel_dialog_title">Ai modificări nesalvate</string>
     <string name="comment_edit_comment_error">Comentariul trebuie să conțină un text</string>
@@ -1682,7 +1682,7 @@ Language: ro
     <string name="reader_save_posts_locally_dialog_message">Salvează acest articol și te poți întoarce să-l citești oricând vrei. El va fi disponibil numai pe acest dispozitiv - articolele salvate nu sunt sincronizate pe alte dispozitive.</string>
     <string name="reader_save_posts_locally_dialog_title">Salvează articole pentru mai târziu</string>
     <string name="reader_empty_search_request_failed">Nu pot efectua căutarea</string>
-    <string name="reader_empty_search_title">Niciun rezultat găsit</string>
+    <string name="reader_empty_search_title">Nu am găsit niciun rezultat</string>
     <string name="comment_read_source_post">Citește articolul sursă</string>
     <string name="sites">Site-uri</string>
     <string name="signup_magic_link_title">Legătura magică a fost trimisă</string>

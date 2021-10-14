@@ -2,6 +2,7 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -65,6 +66,16 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
+        viewModel.showRedirectMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                introLine1.isVisible = false
+                introLine2.isVisible = false
+
+                redirectMessage.isVisible = true
+                redirectDivider.isVisible = true
+                redirectMessage.text = getString(R.string.domains_free_plan_get_your_domain_caption, it).parseAsHtml()
+            }
+        }
         viewModel.isButtonProgressBarVisible.observe(viewLifecycleOwner) { isVisible ->
             buttonProgressBar.isVisible = isVisible
             selectDomainButton.textScaleX = if (isVisible) 0f else 1f
