@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -270,20 +269,20 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/register_domain_button_container"
+        style="@style/Widget.Domains.CardView.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp">
+        android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_domain_button"
             style="@style/WordPress.Button.Primary.Unelevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/domain_contact_information_register_domain_button" />
     </com.google.android.material.card.MaterialCardView>
 
