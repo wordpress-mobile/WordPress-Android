@@ -76,7 +76,8 @@
             android:id="@+id/shimmer_view_container"
             app:shimmer_auto_start="false"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/button_follow_comments"
