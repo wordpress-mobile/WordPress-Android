@@ -172,19 +172,22 @@ class ReaderCommentListViewModel
     }
 
     private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
+        val stateType = when (followCommentsState) {
+            Loading -> LOADING
+            is FollowStateChanged -> VISIBLE_WITH_STATE
+            is Failure, FollowCommentsNotAllowed -> DISABLED
+            UserNotAuthenticated -> GONE
+        }
+        val isFollowing = if (followCommentsState is FollowStateChanged) {
+            followCommentsState.isFollowing
+        } else {
+            false
+        }
+
         return FollowCommentsUiState(
-                type = when (followCommentsState) {
-                    Loading -> LOADING
-                    is FollowStateChanged -> VISIBLE_WITH_STATE
-                    is Failure, FollowCommentsNotAllowed -> DISABLED
-                    UserNotAuthenticated -> GONE
-                },
+                type = stateType,
                 showFollowButton = followCommentsState !is UserNotAuthenticated,
-                isFollowing = if (followCommentsState is FollowStateChanged) {
-                    followCommentsState.isFollowing
-                } else {
-                    false
-                },
+                isFollowing = isFollowing,
                 animate = if (followCommentsState is FollowStateChanged) {
                     !followCommentsState.isInit
                 } else {
@@ -199,7 +202,17 @@ class ReaderCommentListViewModel
                     followCommentsState.isReceivingNotifications
                 } else {
                     false
-                }
+                },
+                isMenuEnabled = stateType != DISABLED && stateType != LOADING,
+                showMenuShimmer = stateType == LOADING,
+                isBellMenuVisible = if (stateType != VISIBLE_WITH_STATE) false else isFollowing,
+                isFollowMenuVisible = when (stateType) {
+                    DISABLED, LOADING -> true
+                    GONE -> false
+                    VISIBLE_WITH_STATE -> !isFollowing
+                },
+                onFollowTapped = if (listOf(DISABLED, LOADING).contains(stateType)) null else ::onFollowTapped,
+                onManageNotificationsTapped = ::onManageNotificationsTapped
         )
     }
 

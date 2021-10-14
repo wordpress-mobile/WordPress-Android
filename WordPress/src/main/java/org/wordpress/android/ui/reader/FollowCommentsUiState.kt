@@ -6,7 +6,13 @@ data class FollowCommentsUiState(
     val isFollowing: Boolean,
     val animate: Boolean,
     val onFollowButtonClick: ((Boolean) -> Unit)?,
-    val isReceivingNotifications: Boolean
+    val isReceivingNotifications: Boolean,
+    val isMenuEnabled: Boolean,
+    val showMenuShimmer: Boolean,
+    val isBellMenuVisible: Boolean,
+    val isFollowMenuVisible: Boolean,
+    val onFollowTapped: (() -> Unit)?,
+    val onManageNotificationsTapped: () -> Unit
 )
 
 enum class FollowCommentsUiStateType {

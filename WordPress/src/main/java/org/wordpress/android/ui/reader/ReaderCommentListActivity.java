@@ -469,73 +469,39 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                                         followItem.getActionView().findViewById(R.id.shimmer_view_container);
                                 TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
 
-                                FollowCommentsUiStateType stateType = uiState.getType();
-                                boolean isButtonEnabled = stateType != FollowCommentsUiStateType.DISABLED
-                                                          && stateType != FollowCommentsUiStateType.LOADING;
-
-                                followItem.getActionView().setOnClickListener(v -> mViewModel.onFollowTapped());
+                                followItem.getActionView().setOnClickListener(
+                                        uiState.getOnFollowTapped() != null
+                                                ? v -> uiState.getOnFollowTapped().invoke()
+                                                : null
+                                );
 
                                 bellItem.setOnMenuItemClickListener(item -> {
-                                    mViewModel.onManageNotificationsTapped();
+                                    uiState.getOnManageNotificationsTapped().invoke();
                                     return true;
                                 });
 
-                                setMenuStatesByStateType(stateType,
-                                        followItem,
-                                        bellItem,
-                                        followText,
-                                        shimmerView,
-                                        isButtonEnabled,
-                                        uiState.isFollowing());
+                                followItem.getActionView().setEnabled(uiState.isMenuEnabled());
+                                followText.setEnabled(uiState.isMenuEnabled());
+                                bellItem.setEnabled(uiState.isMenuEnabled());
+
+                                if (uiState.getShowMenuShimmer()) {
+                                    if (!shimmerView.isShimmerVisible()) {
+                                        shimmerView.showShimmer(true);
+                                    } else if (!shimmerView.isShimmerStarted()) {
+                                        shimmerView.startShimmer();
+                                    }
+                                } else {
+                                    shimmerView.hideShimmer();
+                                }
+
+                                followItem.setVisible(uiState.isFollowMenuVisible());
+                                bellItem.setVisible(uiState.isBellMenuVisible());
                             }
                         }
                     }
             );
         }
         return true;
-    }
-
-    private void setMenuStatesByStateType(FollowCommentsUiStateType stateType,
-                                          MenuItem followItem,
-                                          MenuItem bellItem,
-                                          TextView followText,
-                                          ShimmerFrameLayout shimmerView,
-                                          boolean isButtonEnabled,
-                                          boolean isFollowing) {
-        followItem.getActionView().setEnabled(isButtonEnabled);
-        followText.setEnabled(isButtonEnabled);
-        bellItem.setEnabled(isButtonEnabled);
-
-        shimmerView.hideShimmer();
-
-        switch (stateType) {
-            case DISABLED:
-                followItem.getActionView().setEnabled(false);
-                followText.setEnabled(false);
-                followItem.getActionView().setOnClickListener(null);
-                followItem.setVisible(true);
-                bellItem.setVisible(false);
-                break;
-            case LOADING:
-                followItem.getActionView().setOnClickListener(null);
-                followItem.setVisible(true);
-                if (!shimmerView.isShimmerVisible()) {
-                    shimmerView.showShimmer(true);
-                } else if (!shimmerView.isShimmerStarted()) {
-                    shimmerView.startShimmer();
-                }
-
-                bellItem.setVisible(false);
-                break;
-            case GONE:
-                followItem.setVisible(false);
-                bellItem.setVisible(false);
-                break;
-            case VISIBLE_WITH_STATE:
-                followItem.setVisible(!isFollowing);
-                bellItem.setVisible(isFollowing);
-                break;
-        }
     }
 
     @Override
