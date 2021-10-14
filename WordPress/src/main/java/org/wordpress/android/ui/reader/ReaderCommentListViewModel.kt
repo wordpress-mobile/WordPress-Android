@@ -154,16 +154,21 @@ class ReaderCommentListViewModel
     private fun onFollowConversationClicked(askSubscribe: Boolean) {
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
-            followCommentsHandler.handleFollowCommentsClicked(
-                    blogId,
-                    postId,
-                    askSubscribe,
-                    if (followByPushNotificationFeatureConfig.isEnabled() && askSubscribe) {
+            if (followByPushNotificationFeatureConfig.isEnabled() && askSubscribe) {
+                followCommentsHandler.handleFollowCommentsClicked(
+                        blogId,
+                        postId,
+                        askSubscribe,
                         ::enablePushNotificationsFromSnackbarAction
-                    } else {
+                )
+            } else {
+                followCommentsHandler.handleFollowCommentsClicked(
+                        blogId,
+                        postId,
+                        askSubscribe,
                         null
-                    }
-            )
+                )
+            }
         }
     }
 
