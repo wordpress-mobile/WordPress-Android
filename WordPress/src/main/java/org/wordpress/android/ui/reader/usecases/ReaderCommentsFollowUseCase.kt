@@ -7,7 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.DISABLE_PUSH_NOTIICATION
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.DISABLE_PUSH_NOTIFICATION
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.ENABLE_PUSH_NOTIFICATION
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.FOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.UNFOLLOW_COMMENTS
@@ -228,7 +228,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         FOLLOW_COMMENTS("followed"),
         UNFOLLOW_COMMENTS("unfollowed"),
         ENABLE_PUSH_NOTIFICATION("enable_push_notifications"),
-        DISABLE_PUSH_NOTIICATION("disable_push_notifications")
+        DISABLE_PUSH_NOTIFICATION("disable_push_notifications")
     }
 
     private enum class AnalyticsFollowCommentsActionResult(val actionResult: String) {
@@ -253,7 +253,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         this[FOLLOW_COMMENT_ACTION] = if (enable) {
             ENABLE_PUSH_NOTIFICATION.action
         } else {
-            DISABLE_PUSH_NOTIICATION.action
+            DISABLE_PUSH_NOTIFICATION.action
         }
         return this
     }
