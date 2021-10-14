@@ -35,7 +35,6 @@ public class PostEditorAnalyticsSession implements Serializable {
     private String mSessionId = UUID.randomUUID().toString();
     private SiteModel mSiteModel;
     private String mPostType;
-    private String mBlogType;
     private String mContentType;
     private boolean mStarted = false;
     private Editor mCurrentEditor;
@@ -72,15 +71,6 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
 
         mSiteModel = site;
-
-        // fill in mBlogType
-        if (site.isWPCom()) {
-            mBlogType = "wpcom";
-        } else if (site.isJetpackConnected()) {
-            mBlogType = "jetpack";
-        } else {
-            mBlogType = "core";
-        }
 
         // fill in mContentType
         String postContent = post.getContent();
@@ -186,12 +176,22 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
     }
 
+    private String getBlockType() {
+        if (mSiteModel.isWPCom()) {
+            return "wpcom";
+        } else if (mSiteModel.isJetpackConnected()) {
+            return "jetpack";
+        }
+
+        return "core";
+    }
+
     private Map<String, Object> getCommonProperties() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(KEY_EDITOR, mCurrentEditor.toString().toLowerCase(Locale.ROOT));
         properties.put(KEY_CONTENT_TYPE, mContentType);
         properties.put(KEY_POST_TYPE, mPostType);
-        properties.put(KEY_BLOG_TYPE, mBlogType);
+        properties.put(KEY_BLOG_TYPE, getBlockType());
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
         properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, mHWAccOff ? "1" : "0");
