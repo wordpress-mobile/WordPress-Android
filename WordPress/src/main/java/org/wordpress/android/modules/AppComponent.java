@@ -53,6 +53,7 @@ import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.domains.DomainsDashboardFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
@@ -703,6 +704,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BloggingReminderTimePicker object);
 
     void inject(DebugCookiesFragment object);
+
+    void inject(DomainRegistrationResultFragment object);
 
     void inject(CommentNotificationsBottomSheetFragment object);
 

@@ -618,7 +618,6 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_site_domains_title">Site domains</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
@@ -2435,8 +2434,9 @@
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
 
     <!-- Domain Registration -->
+    <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
+    <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
@@ -2464,11 +2464,10 @@
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
-        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_continue_button">continue</string>
+    <string name="domain_contact_information_register_domain_button">Register domain</string>
+    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
+    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being setup. It may take up to 30 minutes for your domain to start working.</string>
+    <string name="domain_registration_result_continue_button" translatable="false">@string/label_done_button</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
@@ -2487,7 +2486,7 @@
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->

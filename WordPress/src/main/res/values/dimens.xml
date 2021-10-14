@@ -549,6 +549,7 @@
     <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
+    <dimen name="domain_suggestions_progress_indicator_size">24dp</dimen>
 
     <dimen name="keyline_second">72dp</dimen>
 

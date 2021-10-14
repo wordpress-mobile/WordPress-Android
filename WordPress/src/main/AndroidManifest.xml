@@ -61,6 +61,7 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
+        android:preserveLegacyExternalStorage="true"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
@@ -688,15 +689,19 @@
             android:label="@string/threat_details"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <!--Domain Registration-->
+        <!-- Domains -->
         <activity
             android:name=".ui.domains.DomainsDashboardActivity"
-            android:label="@string/site_settings_site_domains_title"
+            android:label="@string/domains_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.domains.DomainRegistrationCheckoutWebViewActivity"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Me activities -->

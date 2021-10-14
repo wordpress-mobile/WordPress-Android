@@ -70,11 +70,11 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.25'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
         exclude group: "com.android.volley"
     }
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.

@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.domains
+package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -55,12 +54,10 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartErr
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
 import org.wordpress.android.test
-import org.wordpress.android.ui.domains.DomainProductDetails
-import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var transactionsStore: TransactionsStore
@@ -202,7 +199,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchDomainContactAction(actionsDispatched[1])
         validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(5)
+        assertThat(uiStateResults.size).isEqualTo(5)
 
         val initialState = uiStateResults[0]
 

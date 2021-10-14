@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-04 20:23:29+0000
+Translation-Revision-Date: 2021-10-13 08:16:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Buscar un dominio</string>
+    <string name="domains_free_plan_get_your_domain_caption">Os dominios comprados neste sitio redirixirán aos visitantes a &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Co teu plan, tes incluído o rexistro de dominio gratis durante un ano</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Reclama o teu dominio gratuíto</string>
+    <string name="domains_manage_domains">Xestionar os dominios</string>
+    <string name="domains_redirected_domains_blurb">Os teus dominios redirixirán ao teu sitio en &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Aprende máis&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Engadir un dominio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Caduca o %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Caduca o %s</string>
+    <string name="domains_site_domains">Dominios do teu sitio</string>
+    <string name="domains_primary_site_address_blurb">O enderezo principal do teu sitio é o que os visitantes ven na barra de direccións do navegador ao visitar a túa web.</string>
+    <string name="domains_primary_site_address_chip">Enderezo principal do sitio</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Cambiar o enderezo do sitio</string>
+    <string name="domains_primary_site_caption">O teu enderezo gratuíto de WordPress.com é</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis o primeiro ano &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /ano&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /ano&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Queres descartalos?</string>
+    <string name="comment_edit_cancel_dialog_title">Hai cambios sen gardar</string>
+    <string name="comment_edit_comment_error">O comentario non pode estar baleiro</string>
+    <string name="comment_edit_user_email_error">Correo electrónico do usuario non válido</string>
+    <string name="comment_edit_web_address_error">Enderezo web non válido</string>
+    <string name="comment_edit_user_name_error">O nome de usuario non pode estar baleiro</string>
+    <string name="comment_edit_email_address">Enderezo de correo electrónico</string>
+    <string name="comment_edit_web_address">Enderezo web</string>
+    <string name="comment_edit_comment">Comentario</string>
+    <string name="comment_edit_user_name">Nome</string>
+    <string name="comment_edit_menu_done">Feito</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Pronto chegarán as vistas previas dos bloques incrustados</string>
+    <string name="weekly_roundup">Resumo semanal</string>
+    <string name="gutenberg_native_embed_options">Opcións de incrustación</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Dobre toque para ver as opcións de incrustación.</string>
+    <string name="quick_start_list_create_site_message">Sitio creado! Completa outra tarefa.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogueiros&lt;/a&gt; gústalles.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 blogueiro&lt;/a&gt; gústalle.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A ti e a %1$s blogueiros&lt;/a&gt; gústavos.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A ti e a 1 blogueiro&lt;/a&gt; gústavos.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; gústache.</string>
     <string name="gutenberg_native_line_height">Altura da liña</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén o teu dominio</string>
     <string name="domains_primary_site_address">%s</string>
@@ -2739,6 +2776,7 @@ Language: gl_ES
     <string name="older_month">Con máis dun mes de antigüidade</string>
     <string name="older_last_week">Con máis dunha semana de antigüidade</string>
     <string name="older_two_days">Con máis de dous días de antigüidade</string>
+    <string name="help_and_support">Axuda e soporte</string>
     <string name="mnu_comment_liked">Gustou</string>
     <string name="comment">Comentario</string>
     <string name="comment_trashed">Comentario no lixo</string>
