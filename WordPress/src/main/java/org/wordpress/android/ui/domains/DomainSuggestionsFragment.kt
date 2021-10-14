@@ -2,7 +2,8 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -68,12 +69,12 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
         viewModel.showRedirectMessage.observe(viewLifecycleOwner) {
             it?.let {
-                introductionContainer.isVisible = false
-                redirectMessageCard.isVisible = true
-                redirectMessage.text = HtmlCompat.fromHtml(
-                        getString(R.string.domains_free_plan_get_your_domain_caption, it),
-                        HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
+                introLine1.isVisible = false
+                introLine2.isVisible = false
+
+                redirectMessage.isVisible = true
+                redirectDivider.isVisible = true
+                redirectMessage.text = getString(R.string.domains_free_plan_get_your_domain_caption, it).parseAsHtml()
             }
         }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
