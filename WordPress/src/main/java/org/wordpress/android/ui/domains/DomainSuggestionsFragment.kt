@@ -2,7 +2,6 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
