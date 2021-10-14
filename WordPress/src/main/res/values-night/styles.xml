@@ -137,8 +137,5 @@
     </style>
 
     <!-- Domains -->
-    <style name="ThemeOverlay.Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="">
-        <item name="colorPrimary">?attr/colorSecondary</item>
-        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
-    </style>
+    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
 </resources>
