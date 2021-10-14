@@ -5,9 +5,7 @@
     android:layout_centerVertical="true"
     android:background="?attr/colorPrimarySurface"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:orientation="vertical">
 
     <Space
         android:layout_width="match_parent"
