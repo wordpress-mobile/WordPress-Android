@@ -33,13 +33,10 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val isReceivingPushNotifications = requireArguments().getBoolean(ARG_IS_RECEIVING_PUSH_NOTIFICATIONS)
-
         with(CommentNotificationsBottomSheetBinding.bind(view)) {
-            viewModel = ViewModelProvider(
-                    requireActivity(),
-                    viewModelFactory
-            ).get(ReaderCommentListViewModel::class.java)
+            val isReceivingPushNotifications = requireArguments().getBoolean(ARG_IS_RECEIVING_PUSH_NOTIFICATIONS)
+
+            initViewModel()
 
             if (savedInstanceState == null) {
                 enablePushNotifications.isChecked = isReceivingPushNotifications
@@ -53,25 +50,36 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
                 viewModel.onChangePushNotificationsRequest((it as SwitchCompat).isChecked)
             }
 
-            viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { messageHolder ->
-                if (!isAdded) return@observeEvent
-
-                WPSnackbar.make(
-                        coordinator,
-                        uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
-                        Snackbar.LENGTH_LONG
-                ).show()
-            })
-
-            viewModel.pushNotificationsStatusUpdate.observeEvent(viewLifecycleOwner, { isReceivingPushNotifications ->
-                enablePushNotifications.isChecked = isReceivingPushNotifications
-            })
+            initObservers()
         }
 
         (dialog as? BottomSheetDialog)?.apply {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.skipCollapsed = true
         }
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+        ).get(ReaderCommentListViewModel::class.java)
+    }
+
+    private fun CommentNotificationsBottomSheetBinding.initObservers() {
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { messageHolder ->
+            if (!isAdded) return@observeEvent
+
+            WPSnackbar.make(
+                    coordinator,
+                    uiHelpers.getTextOfUiString(contextProvider.getContext(), messageHolder.message),
+                    Snackbar.LENGTH_LONG
+            ).show()
+        })
+
+        viewModel.pushNotificationsStatusUpdate.observeEvent(viewLifecycleOwner, { isReceivingPushNotifications ->
+            enablePushNotifications.isChecked = isReceivingPushNotifications
+        })
     }
 
     override fun onAttach(context: Context) {
