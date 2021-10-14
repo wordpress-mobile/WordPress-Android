@@ -44,6 +44,7 @@ class ReaderFollowCommentsHandlerTest {
                 blogId = blogId,
                 postId = postId,
                 isFollowing = true,
+                isReceivingNotifications = false,
                 isInit = false,
                 userMessage = userMessage
         )
@@ -72,6 +73,7 @@ class ReaderFollowCommentsHandlerTest {
                 blogId = blogId,
                 postId = postId,
                 isFollowing = true,
+                isReceivingNotifications = false,
                 isInit = false,
                 userMessage = userMessage
         )
@@ -82,7 +84,7 @@ class ReaderFollowCommentsHandlerTest {
 
         setupObservers()
 
-        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true)
+        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, null)
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)
