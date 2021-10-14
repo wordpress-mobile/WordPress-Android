@@ -1603,7 +1603,6 @@
     <!-- Domains -->
     <style name="Widget.Domains.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">0dp</item>
-        <item name="cardElevation">@dimen/appbar_elevation</item>
     </style>
 
     <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated">
