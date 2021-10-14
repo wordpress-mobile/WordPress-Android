@@ -31,6 +31,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
+@Suppress("TooManyFunctions")
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
@@ -59,6 +60,9 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
+
+    private val _showRedirectMessage = MutableLiveData<String?>()
+    val showRedirectMessage: LiveData<String?> = _showRedirectMessage
 
     private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
     val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
@@ -102,11 +106,18 @@ class DomainSuggestionsViewModel @Inject constructor(
         this.site = site
         this.domainRegistrationPurpose = domainRegistrationPurpose
         initializeDefaultSuggestions()
+        shouldShowRedirectMessage()
         isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
+    }
+
+    private fun shouldShowRedirectMessage() {
+        if (this.domainRegistrationPurpose == DOMAIN_PURCHASE) {
+            _showRedirectMessage.value = SiteUtils.getHomeURLOrHostName(site)
+        }
     }
 
     // Network Request

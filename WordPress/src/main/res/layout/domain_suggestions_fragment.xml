@@ -18,6 +18,25 @@
         android:paddingBottom="@dimen/domain_suggestions_intro_vertical_padding">
 
         <TextView
+            android:id="@+id/redirect_message"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="@string/domains_free_plan_get_your_domain_caption"
+            tools:visibility="visible"/>
+
+        <View
+            android:id="@+id/redirect_divider"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/intro_line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -26,6 +45,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         <TextView
+            android:id="@+id/intro_line2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
