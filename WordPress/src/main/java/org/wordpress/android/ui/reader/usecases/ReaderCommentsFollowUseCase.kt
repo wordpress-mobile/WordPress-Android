@@ -33,10 +33,6 @@ class ReaderCommentsFollowUseCase @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 ) {
-    private val FOLLOW_COMMENT_ACTION = "follow_action"
-    private val FOLLOW_COMMENT_ACTION_RESULT = "follow_action_result"
-    private val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"
-
     suspend fun getMySubscriptionToPost(blogId: Long, postId: Long, isInit: Boolean) = flow {
         if (!accountStore.hasAccessToken()) {
             emit(UserNotAuthenticated)
@@ -271,5 +267,11 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             this[FOLLOW_COMMENT_ACTION_ERROR] = errorMessage
         }
         return this
+    }
+
+    companion object {
+        private const val FOLLOW_COMMENT_ACTION = "follow_action"
+        private const val FOLLOW_COMMENT_ACTION_RESULT = "follow_action_result"
+        private const val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"
     }
 }
