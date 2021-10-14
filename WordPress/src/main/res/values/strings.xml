@@ -2477,7 +2477,7 @@
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
