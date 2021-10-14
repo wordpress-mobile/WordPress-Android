@@ -7,6 +7,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.HapticFeedbackConstants;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +22,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -74,6 +79,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -96,6 +102,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
+    private static final String NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG";
+
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
@@ -105,6 +113,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ReaderRecyclerView mRecyclerView;
+    private CoordinatorLayout mCoordinator;
     private SuggestionAutoCompleteText mEditComment;
     private View mSubmitReplyBtn;
     private ViewGroup mCommentBox;
@@ -124,6 +133,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderTracker mReaderTracker;
+    @Inject FollowByPushNotificationFeatureConfig mFollowByPushNotificationFeatureConfig;
 
     private ReaderCommentListViewModel mViewModel;
 
@@ -167,22 +177,56 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             }
         });
 
-        mViewModel.getSnackbarEvents().observe(this, event ->
-                event.applyIfNotHandled(holder -> {
-                    WPSnackbar.make(mRecyclerView,
-                            mUiHelpers.getTextOfUiString(this, holder.getMessage()),
-                            Snackbar.LENGTH_LONG)
-                              .show();
-                    return Unit.INSTANCE;
-                })
-        );
+        mViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
+            FragmentManager fm = getSupportFragmentManager();
+            CommentNotificationsBottomSheetFragment bottomSheet =
+                    (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
 
-        mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                    if (mCommentAdapter != null) {
-                        mCommentAdapter.updateFollowingState(uiState);
+            if (bottomSheet != null) return;
+
+            snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
+                WPSnackbar.make(mCoordinator,
+                        mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
+                        Snackbar.LENGTH_LONG)
+                          .setAction(
+                                  holder.getButtonTitle() != null
+                                          ? mUiHelpers.getTextOfUiString(
+                                                ReaderCommentListActivity.this,
+                                                holder.getButtonTitle())
+                                          : null,
+                                  v -> holder.getButtonAction().invoke())
+                          .show();
+                return Unit.INSTANCE;
+            });
+        });
+
+        if (!mFollowByPushNotificationFeatureConfig.isEnabled()) {
+            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                        if (mCommentAdapter != null) {
+                            mCommentAdapter.updateFollowingState(uiState);
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            mViewModel.getShowBottomSheetEvent().observe(this, event ->
+                    event.applyIfNotHandled(isShowingData -> {
+                        FragmentManager fm = getSupportFragmentManager();
+                        CommentNotificationsBottomSheetFragment bottomSheet =
+                                (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
+                                        NOTIFICATIONS_BOTTOM_SHEET_TAG
+                                );
+                        if (isShowingData.getShow() && bottomSheet == null) {
+                            bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                                    isShowingData.isReceivingNotifications()
+                            );
+                            bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
+                        } else if (!isShowingData.getShow() && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
+                        return Unit.INSTANCE;
+                    })
+            );
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -216,6 +260,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     updatePostAndComments();
                 }
         );
+
+        mCoordinator = findViewById(R.id.coordinator_layout);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;
@@ -400,12 +446,98 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        if (mFollowByPushNotificationFeatureConfig.isEnabled()) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.threaded_comments_menu, menu);
+
+            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                        if (menu != null) {
+                            MenuItem bellItem = menu.findItem(R.id.manage_notifications_item);
+                            MenuItem followItem = menu.findItem(R.id.follow_item);
+
+                            if (bellItem != null && followItem != null) {
+                                ShimmerFrameLayout shimmerView = followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                                TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
+
+                                FollowCommentsUiStateType stateType = uiState.getType();
+                                boolean isButtonEnabled = stateType != FollowCommentsUiStateType.DISABLED
+                                                          && stateType != FollowCommentsUiStateType.LOADING;
+
+                                followItem.getActionView().setOnClickListener(v -> mViewModel.onFollowTapped());
+
+                                bellItem.setOnMenuItemClickListener(item -> {
+                                    mViewModel.onManageNotificationsTapped();
+                                    return true;
+                                });
+
+                                setMenuStatesByStateType(stateType,
+                                        followItem,
+                                        bellItem,
+                                        followText,
+                                        shimmerView,
+                                        isButtonEnabled,
+                                        uiState.isFollowing());
+                            }
+                        }
+                    }
+            );
+        }
+        return true;
+    }
+
+    private void setMenuStatesByStateType(FollowCommentsUiStateType stateType,
+                                          MenuItem followItem,
+                                          MenuItem bellItem,
+                                          TextView followText,
+                                          ShimmerFrameLayout shimmerView,
+                                          boolean isButtonEnabled,
+                                          boolean isFollowing) {
+        followItem.getActionView().setEnabled(isButtonEnabled);
+        followText.setEnabled(isButtonEnabled);
+        bellItem.setEnabled(isButtonEnabled);
+
+        shimmerView.hideShimmer();
+
+        switch (stateType) {
+            case DISABLED:
+                followItem.getActionView().setEnabled(false);
+                followText.setEnabled(false);
+                followItem.getActionView().setOnClickListener(null);
+                followItem.setVisible(true);
+                bellItem.setVisible(false);
+                break;
+            case LOADING:
+                followItem.getActionView().setOnClickListener(null);
+                followItem.setVisible(true);
+                if (!shimmerView.isShimmerVisible()) {
+                    shimmerView.showShimmer(true);
+                } else if (!shimmerView.isShimmerStarted()) {
+                    shimmerView.startShimmer();
+                }
+
+                bellItem.setVisible(false);
+                break;
+            case GONE:
+                followItem.setVisible(false);
+                bellItem.setVisible(false);
+                break;
+            case VISIBLE_WITH_STATE:
+                followItem.setVisible(!isFollowing);
+                bellItem.setVisible(isFollowing);
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -584,7 +716,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 case COMMENT_LIKE:
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     if (!mAccountStore.hasAccessToken()) {
-                        WPSnackbar.make(mRecyclerView,
+                        WPSnackbar.make(mCoordinator,
                                 R.string.reader_snackbar_err_cannot_like_post_logged_out,
                                 Snackbar.LENGTH_INDEFINITE)
                                   .setAction(R.string.sign_in, mSignInClickListener)
