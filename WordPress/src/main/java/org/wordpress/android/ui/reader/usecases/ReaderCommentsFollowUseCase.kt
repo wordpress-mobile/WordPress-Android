@@ -105,19 +105,19 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                                     isReceivingNotifications = status.isReceivingNotifications,
                                     false,
                                     userMessage = UiStringRes(
-                                            if (status.isFollowing)
+                                            if (status.isFollowing) {
                                                 if (followByPushNotificationFeatureConfig.isEnabled()) {
                                                     R.string.reader_follow_comments_subscribe_success_enable_push
                                                 } else {
                                                     R.string.reader_follow_comments_subscribe_success
                                                 }
-                                            else
+                                            } else {
                                                 if (followByPushNotificationFeatureConfig.isEnabled()) {
                                                     R.string.reader_follow_comments_unsubscribe_from_all_success
                                                 } else {
                                                     R.string.reader_follow_comments_unsubscribe_success
                                                 }
-                                            )
+                                            })
                             )
                     )
                     properties.addFollowActionResult(SUCCEEDED)
@@ -146,7 +146,6 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         enable: Boolean
     ): Flow<FollowCommentsState> = flow {
         val properties = mutableMapOf<String, Any?>()
-
         properties.addEnablePushNotificationAction(enable)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -156,32 +155,26 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                     isFollowing = true,
                     isReceivingNotifications = !enable,
                     false,
-                    userMessage = UiStringRes(R.string.error_network_connection)
-                    ,
+                    userMessage = UiStringRes(R.string.error_network_connection),
                     true
             ))
             properties.addFollowActionResult(ERROR, NO_NETWORK.errorMessage)
         } else {
-            val status = postSubscribersApiCallsProvider.managePushNotificationsForPost(blogId, postId, enable)
-
-            when (status) {
+            when (val status = postSubscribersApiCallsProvider.managePushNotificationsForPost(blogId, postId, enable)) {
                 is Success -> {
-                    emit(
-                            FollowCommentsState.FollowStateChanged(
+                    emit(FollowCommentsState.FollowStateChanged(
                                     blogId = blogId,
                                     postId = postId,
                                     isFollowing = status.isFollowing,
                                     isReceivingNotifications = status.isReceivingNotifications,
                                     false,
-                                    userMessage = UiStringRes(
-                                            if (enable)
+                                    userMessage = UiStringRes(if (enable) {
                                                 R.string.reader_follow_comments_subscribe_to_push_success
-                                            else
+                                            } else {
                                                 R.string.reader_follow_comments_unsubscribe_from_push_success
-                                    ),
+                                            }),
                                     false
-                            )
-                    )
+                    ))
                     properties.addFollowActionResult(SUCCEEDED)
                 }
                 is Failure -> {
@@ -191,26 +184,22 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                             isFollowing = true,
                             isReceivingNotifications = !enable,
                             false,
-                            userMessage = UiStringRes(
-                                    if (enable)
+                            userMessage = UiStringRes(if (enable) {
                                         R.string.reader_follow_comments_could_not_subscribe_to_push_error
-                                    else
+                                    } else {
                                         R.string.reader_follow_comments_could_not_unsubscribe_from_push_error
-                            ),
+                                    }),
                             true
                     ))
                     properties.addFollowActionResult(ERROR, status.error)
                 }
             }
         }
-
-        val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
-
         readerTracker.trackPostComments(
                 Stat.COMMENT_FOLLOW_CONVERSATION,
                 blogId,
                 postId,
-                post,
+                readerPostTableWrapper.getBlogPost(blogId, postId, true),
                 properties
         )
     }

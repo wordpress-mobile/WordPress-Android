@@ -81,7 +81,7 @@ class ReaderFollowCommentsHandler @Inject constructor(
                                     UiStringRes(R.string.reader_followed_blog_notifications_action)
                                 }
                             },
-                            buttonAction = onSuccessSnackbarAction ?: {},
+                            buttonAction = onSuccessSnackbarAction ?: {}
                     )))
                 }
             }

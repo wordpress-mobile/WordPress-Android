@@ -458,7 +458,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                             MenuItem followItem = menu.findItem(R.id.follow_item);
 
                             if (bellItem != null && followItem != null) {
-                                ShimmerFrameLayout shimmerView = followItem.getActionView().findViewById(R.id.shimmer_view_container);
+                                ShimmerFrameLayout shimmerView =
+                                        followItem.getActionView().findViewById(R.id.shimmer_view_container);
                                 TextView followText = followItem.getActionView().findViewById(R.id.follow_button);
 
                                 FollowCommentsUiStateType stateType = uiState.getType();

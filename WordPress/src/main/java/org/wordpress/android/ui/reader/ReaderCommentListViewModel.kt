@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions")
 class ReaderCommentListViewModel
 @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
@@ -153,7 +154,16 @@ class ReaderCommentListViewModel
     private fun onFollowConversationClicked(askSubscribe: Boolean) {
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
-            followCommentsHandler.handleFollowCommentsClicked(blogId, postId, askSubscribe, if (followByPushNotificationFeatureConfig.isEnabled() && askSubscribe) ::enablePushNotificationsFromSnackbarAction else null)
+            followCommentsHandler.handleFollowCommentsClicked(
+                    blogId,
+                    postId,
+                    askSubscribe,
+                    if (followByPushNotificationFeatureConfig.isEnabled() && askSubscribe) {
+                        ::enablePushNotificationsFromSnackbarAction
+                    } else {
+                        null
+                    }
+            )
         }
     }
 

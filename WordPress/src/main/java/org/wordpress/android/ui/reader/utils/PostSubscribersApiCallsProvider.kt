@@ -17,6 +17,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("TooManyFunctions")
 class PostSubscribersApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider,
     private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
@@ -183,8 +184,12 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun getFollowingStateResult(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            if (it.has("i_subscribe") && (it.has("receives_notifications") || !followByPushNotificationFeatureConfig.isEnabled())) {
-                Success(it.optBoolean("i_subscribe", false), it.optBoolean("receives_notifications", false))
+            if (it.has("i_subscribe") &&
+                    (it.has("receives_notifications") || !followByPushNotificationFeatureConfig.isEnabled())) {
+                Success(
+                        it.optBoolean("i_subscribe", false),
+                        it.optBoolean("receives_notifications", false)
+                )
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
             }
@@ -280,7 +285,10 @@ class PostSubscribersApiCallsProvider @Inject constructor(
     }
 
     sealed class PostSubscribersCallResult {
-        data class Success(val isFollowing: Boolean, val isReceivingNotifications: Boolean) : PostSubscribersCallResult()
+        data class Success(
+            val isFollowing: Boolean,
+            val isReceivingNotifications: Boolean
+        ) : PostSubscribersCallResult()
         data class Failure(val error: String) : PostSubscribersCallResult()
     }
 }
