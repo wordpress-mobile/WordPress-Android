@@ -53,7 +53,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_button"
-        style="@style/Domains.Button.Primary.Unelevated.White"
+        style="@style/Domains.Button.Primary.Unelevated.OnPrimarySurface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"

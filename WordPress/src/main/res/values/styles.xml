@@ -1595,15 +1595,12 @@
     </style>
 
     <!-- Domains -->
-    <style name="Domains.Button.Primary.Unelevated.White" parent="WordPress.Button.Primary.Unelevated">
-        <item name="materialThemeOverlay">
-            @style/ThemeOverlay.Domains.Button.Primary.Unelevated.White
-        </item>
+    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Domains.Button.Primary.Unelevated.OnPrimarySurface</item>
     </style>
 
-    <style name="ThemeOverlay.Domains.Button.Primary.Unelevated.White" parent="">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorOnPrimary">@color/black</item>
+    <style name="ThemeOverlay.Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="">
+        <item name="colorPrimary">?attr/colorSurface</item>
+        <item name="colorOnPrimary">?attr/colorOnSurface</item>
     </style>
-
 </resources>
