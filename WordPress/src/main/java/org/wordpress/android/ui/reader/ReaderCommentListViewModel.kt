@@ -171,28 +171,22 @@ class ReaderCommentListViewModel
         }
     }
 
+    private fun mapToStateType(followCommentsState: FollowCommentsState) = when (followCommentsState) {
+        Loading -> LOADING
+        is FollowStateChanged -> VISIBLE_WITH_STATE
+        is Failure, FollowCommentsNotAllowed -> DISABLED
+        UserNotAuthenticated -> GONE
+    }
+
     private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
-        val stateType = when (followCommentsState) {
-            Loading -> LOADING
-            is FollowStateChanged -> VISIBLE_WITH_STATE
-            is Failure, FollowCommentsNotAllowed -> DISABLED
-            UserNotAuthenticated -> GONE
-        }
-        val isFollowing = if (followCommentsState is FollowStateChanged) {
-            followCommentsState.isFollowing
-        } else {
-            false
-        }
+        val stateType = mapToStateType(followCommentsState)
+        val isFollowing = if (followCommentsState is FollowStateChanged) followCommentsState.isFollowing else false
 
         return FollowCommentsUiState(
                 type = stateType,
                 showFollowButton = followCommentsState !is UserNotAuthenticated,
                 isFollowing = isFollowing,
-                animate = if (followCommentsState is FollowStateChanged) {
-                    !followCommentsState.isInit
-                } else {
-                    false
-                },
+                animate = if (followCommentsState is FollowStateChanged) !followCommentsState.isInit else false,
                 onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated) {
                     ::onFollowConversationClicked
                 } else {
