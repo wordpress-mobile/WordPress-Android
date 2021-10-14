@@ -37,6 +37,9 @@ class DomainRegistrationResultFragment : Fragment(R.layout.domain_registration_r
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
 
+        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(DomainRegistrationMainViewModel::class.java)
+
         val domainName = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_NAME).orEmpty()
         val email = requireArguments().getString(EXTRA_REGISTERED_DOMAIN_EMAIL).orEmpty()
 
