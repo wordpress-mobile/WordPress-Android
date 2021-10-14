@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -34,6 +33,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_ENDPOINT = "endpoint";
 
     private String mSessionId = UUID.randomUUID().toString();
+    private SiteModel mSiteModel;
     private String mPostType;
     private String mBlogType;
     private String mContentType;
@@ -70,6 +70,8 @@ public class PostEditorAnalyticsSession implements Serializable {
         } else {
             mPostType = "post";
         }
+
+        mSiteModel = site;
 
         // fill in mBlogType
         if (site.isWPCom()) {
@@ -120,7 +122,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             // difference to be significant enough, and doing that would add more complexity to how we are initializing
             // the session.
             properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_SESSION_START, mSiteModel, properties);
             mStarted = true;
         } else {
             AppLog.w(T.EDITOR, "An editor session cannot be attempted to be started more than once, "
@@ -139,7 +141,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void switchEditor(Editor editor) {
         mCurrentEditor = editor;
         Map<String, Object> properties = getCommonProperties();
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_SESSION_SWITCH_EDITOR, mSiteModel, properties);
     }
 
     public void setOutcome(Outcome newOutcome) {
@@ -155,14 +157,14 @@ public class PostEditorAnalyticsSession implements Serializable {
         mTemplate = template;
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_SESSION_TEMPLATE_APPLY, mSiteModel, properties);
     }
 
     public void editorSettingsFetched(Boolean fullSiteEditing, String endpoint) {
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
         properties.put(KEY_ENDPOINT, endpoint);
-        AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_SETTINGS_FETCHED, mSiteModel, properties);
     }
 
     public void end(Boolean canViewEditorOnboarding) {
@@ -178,7 +180,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             if (canViewEditorOnboarding != null) {
                 properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
             }
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_SESSION_END, mSiteModel, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
         }
