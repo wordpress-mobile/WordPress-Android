@@ -15,6 +15,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:contentDescription="@null"
         android:scaleType="center"
         android:src="@drawable/img_illustration_domain_registration_success_218dp" />
