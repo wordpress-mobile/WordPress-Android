@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
+import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
@@ -30,11 +31,15 @@ class ReaderCommentListViewModel
 @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var followStatusGetJob: Job? = null
     private var followStatusSetJob: Job? = null
+
+    private val _showBottomSheetEvent = MutableLiveData<Event<ShowBottomSheetData>>()
+    val showBottomSheetEvent: LiveData<Event<ShowBottomSheetData>> = _showBottomSheetEvent
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
@@ -43,12 +48,18 @@ class ReaderCommentListViewModel
     val updateFollowUiState: LiveData<FollowCommentsUiState> =
             _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
 
+    private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowStateChanged>()
+    val pushNotificationsStatusUpdate: LiveData<Event<Boolean>> =
+            _pushNotificationsStatusUpdate.map { state -> buildPushNotificationsUiState(state) }
+
     private val _scrollTo = MutableLiveData<Event<ScrollPosition>>()
     val scrollTo: LiveData<Event<ScrollPosition>> = _scrollTo.distinct()
     private var blogId: Long = 0
     private var postId: Long = 0
 
     private var scrollJob: Job? = null
+
+    data class ShowBottomSheetData(val show: Boolean, val isReceivingNotifications: Boolean = false)
 
     fun scrollToPosition(position: Int, isSmooth: Boolean) {
         scrollJob?.cancel()
@@ -76,6 +87,53 @@ class ReaderCommentListViewModel
         getFollowConversationStatus(blogId, postId, false)
     }
 
+    fun onFollowTapped() {
+        onFollowConversationClicked(true)
+    }
+
+    fun onUnfollowTapped() {
+        onFollowConversationClicked(false)
+        _showBottomSheetEvent.value = Event(ShowBottomSheetData(false))
+    }
+
+    fun onChangePushNotificationsRequest(enable: Boolean, fromSnackbar: Boolean = false) {
+        followStatusSetJob?.cancel()
+        followStatusSetJob = launch(bgDispatcher) {
+            followCommentsHandler.handleEnableByPushNotificationsClicked(
+                    blogId,
+                    postId,
+                    enable,
+                    getSnackbarAction(fromSnackbar, enable)
+            )
+        }
+    }
+
+    private fun getSnackbarAction(fromSnackbar: Boolean, askingEnable: Boolean): (() -> Unit)? {
+        return if (fromSnackbar) {
+            if (askingEnable) {
+                ::disablePushNotificationsFromSnackbarAction
+            } else {
+                ::enablePushNotificationsFromSnackbarAction
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun enablePushNotificationsFromSnackbarAction() {
+        onChangePushNotificationsRequest(true, true)
+    }
+
+    private fun disablePushNotificationsFromSnackbarAction() {
+        onChangePushNotificationsRequest(false, true)
+    }
+
+    fun onManageNotificationsTapped() {
+        val currentState = updateFollowUiState.value
+        val currentPushNotificationsValue = currentState?.isReceivingNotifications ?: false
+        _showBottomSheetEvent.value = Event(ShowBottomSheetData(true, currentPushNotificationsValue))
+    }
+
     private fun init() {
         _snackbarEvents.addSource(followCommentsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
@@ -85,13 +143,17 @@ class ReaderCommentListViewModel
             _updateFollowStatus.value = event
         }
 
+        _pushNotificationsStatusUpdate.addSource(followCommentsHandler.pushNotificationsStatusUpdate) { event ->
+            _pushNotificationsStatusUpdate.value = event
+        }
+
         getFollowConversationStatus(blogId, postId, true)
     }
 
     private fun onFollowConversationClicked(askSubscribe: Boolean) {
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
-            followCommentsHandler.handleFollowCommentsClicked(blogId, postId, askSubscribe)
+            followCommentsHandler.handleFollowCommentsClicked(blogId, postId, askSubscribe, if (followByPushNotificationFeatureConfig.isEnabled() && askSubscribe) ::enablePushNotificationsFromSnackbarAction else null)
         }
     }
 
@@ -104,29 +166,38 @@ class ReaderCommentListViewModel
 
     private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
         return FollowCommentsUiState(
-                    type = when (followCommentsState) {
-                        Loading -> LOADING
-                        is FollowStateChanged -> VISIBLE_WITH_STATE
-                        is Failure, FollowCommentsNotAllowed -> DISABLED
-                        UserNotAuthenticated -> GONE
-                    },
-                    showFollowButton = followCommentsState !is UserNotAuthenticated,
-                    isFollowing = if (followCommentsState is FollowStateChanged) {
-                        followCommentsState.isFollowing
-                    } else {
-                        false
-                    },
-                    animate = if (followCommentsState is FollowStateChanged) {
-                        !followCommentsState.isInit
-                    } else {
-                        false
-                    },
-                    onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated) {
-                        ::onFollowConversationClicked
-                    } else {
-                        null
-                    }
+                type = when (followCommentsState) {
+                    Loading -> LOADING
+                    is FollowStateChanged -> VISIBLE_WITH_STATE
+                    is Failure, FollowCommentsNotAllowed -> DISABLED
+                    UserNotAuthenticated -> GONE
+                },
+                showFollowButton = followCommentsState !is UserNotAuthenticated,
+                isFollowing = if (followCommentsState is FollowStateChanged) {
+                    followCommentsState.isFollowing
+                } else {
+                    false
+                },
+                animate = if (followCommentsState is FollowStateChanged) {
+                    !followCommentsState.isInit
+                } else {
+                    false
+                },
+                onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated) {
+                    ::onFollowConversationClicked
+                } else {
+                    null
+                },
+                isReceivingNotifications = if (followCommentsState is FollowStateChanged) {
+                    followCommentsState.isReceivingNotifications
+                } else {
+                    false
+                }
         )
+    }
+
+    private fun buildPushNotificationsUiState(followStateChanged: FollowStateChanged): Event<Boolean> {
+        return Event(followStateChanged.isReceivingNotifications)
     }
 
     override fun onCleared() {
