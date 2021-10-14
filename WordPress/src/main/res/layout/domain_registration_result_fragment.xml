@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
     android:background="?attr/colorPrimarySurface"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:orientation="vertical">
 
     <Space
         android:layout_width="match_parent"
@@ -17,6 +16,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:contentDescription="@null"
         android:scaleType="center"
         android:src="@drawable/img_illustration_domain_registration_success_218dp" />
@@ -24,6 +25,8 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
         android:fontFamily="serif"
         android:gravity="center"
@@ -36,6 +39,8 @@
         android:id="@+id/domain_registration_result_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
         android:text="@string/domain_registration_result_description"
@@ -47,12 +52,22 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/continue_button"
-        style="@style/Domains.Button.Primary.Unelevated.White"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottom_buttons"
+        style="@style/Widget.Domains.CardView.BottomBar"
+        app:cardBackgroundColor="?attr/colorPrimarySurface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_large"
-        android:text="@string/domain_registration_result_continue_button" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continue_button"
+            style="@style/Domains.Button.Primary.Unelevated.OnPrimarySurface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/domain_registration_result_continue_button" />
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
