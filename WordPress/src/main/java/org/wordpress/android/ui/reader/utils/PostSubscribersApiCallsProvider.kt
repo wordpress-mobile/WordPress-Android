@@ -187,8 +187,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
             if (it.has(KEY_I_SUBSCRIBE) &&
                     (it.has(KEY_RECEIVES_NOTIFICATIONS) || !followByPushNotificationFeatureConfig.isEnabled())) {
                 Success(
-                        it.optBoolean(KEY_I_SUBSCRIBE, false),
-                        it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
+                        isFollowing = it.optBoolean(KEY_I_SUBSCRIBE, false),
+                        isReceivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
                 )
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -199,7 +199,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
     private fun canFollowComments(blogId: Long, json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
             if (it.has("ID") && it.optLong("ID", -1) == blogId) {
-                Success(false, false)
+                Success(isFollowing = false, isReceivingNotifications = false)
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
             }
@@ -214,7 +214,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
             if (success) {
                 if (subscribed) {
-                    Success(true, receivingNotifications)
+                    Success(isFollowing = true, isReceivingNotifications = receivingNotifications)
                 } else {
                     Failure(contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_subscribe_error
@@ -234,7 +234,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
             if (success) {
                 if (!subscribed) {
-                    Success(false, receivingNotifications)
+                    Success(isFollowing = false, isReceivingNotifications = receivingNotifications)
                 } else {
                     Failure(contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
@@ -253,7 +253,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
             if (subscribed) {
                 if (receivingNotifications) {
-                    Success(subscribed, receivingNotifications)
+                    Success(isFollowing = subscribed, isReceivingNotifications = receivingNotifications)
                 } else {
                     Failure(contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
@@ -272,7 +272,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
             if (subscribed) {
                 if (!receivingNotifications) {
-                    Success(subscribed, receivingNotifications)
+                    Success(isFollowing = subscribed, isReceivingNotifications = receivingNotifications)
                 } else {
                     Failure(contextProvider.getContext().getString(
                             R.string.reader_follow_comments_could_not_unsubscribe_error
