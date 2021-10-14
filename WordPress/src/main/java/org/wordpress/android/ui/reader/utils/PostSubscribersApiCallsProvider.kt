@@ -184,11 +184,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun getFollowingStateResult(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            if (it.has("i_subscribe") &&
-                    (it.has("receives_notifications") || !followByPushNotificationFeatureConfig.isEnabled())) {
+            if (it.has(KEY_I_SUBSCRIBE) &&
+                    (it.has(KEY_RECEIVES_NOTIFICATIONS) || !followByPushNotificationFeatureConfig.isEnabled())) {
                 Success(
-                        it.optBoolean("i_subscribe", false),
-                        it.optBoolean("receives_notifications", false)
+                        it.optBoolean(KEY_I_SUBSCRIBE, false),
+                        it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
                 )
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -208,9 +208,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun wasSubscribed(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            val success = it.optBoolean("success", false)
-            val subscribed = it.optBoolean("i_subscribe", false)
-            val receivingNotifications = it.optBoolean("receives_notifications", false)
+            val success = it.optBoolean(KEY_SUCCESS, false)
+            val subscribed = it.optBoolean(KEY_I_SUBSCRIBE, false)
+            val receivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
 
             if (success) {
                 if (subscribed) {
@@ -228,9 +228,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun wasUnsubscribed(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            val success = it.optBoolean("success", false)
-            val subscribed = it.optBoolean("i_subscribe", true)
-            val receivingNotifications = it.optBoolean("receives_notifications", false)
+            val success = it.optBoolean(KEY_SUCCESS, false)
+            val subscribed = it.optBoolean(KEY_I_SUBSCRIBE, true)
+            val receivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
 
             if (success) {
                 if (!subscribed) {
@@ -248,8 +248,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun wasSubscribedForPushNotifications(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            val subscribed = it.optBoolean("i_subscribe", false)
-            val receivingNotifications = it.optBoolean("receives_notifications", false)
+            val subscribed = it.optBoolean(KEY_I_SUBSCRIBE, false)
+            val receivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
 
             if (subscribed) {
                 if (receivingNotifications) {
@@ -267,8 +267,8 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun wasUnsubscribedFromPushNotifications(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            val subscribed = it.optBoolean("i_subscribe", false)
-            val receivingNotifications = it.optBoolean("receives_notifications", true)
+            val subscribed = it.optBoolean(KEY_I_SUBSCRIBE, false)
+            val receivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, true)
 
             if (subscribed) {
                 if (!receivingNotifications) {
@@ -290,5 +290,11 @@ class PostSubscribersApiCallsProvider @Inject constructor(
             val isReceivingNotifications: Boolean
         ) : PostSubscribersCallResult()
         data class Failure(val error: String) : PostSubscribersCallResult()
+    }
+
+    companion object {
+        private const val KEY_I_SUBSCRIBE = "i_subscribe"
+        private const val KEY_RECEIVES_NOTIFICATIONS = "receives_notifications"
+        private const val KEY_SUCCESS = "success"
     }
 }
