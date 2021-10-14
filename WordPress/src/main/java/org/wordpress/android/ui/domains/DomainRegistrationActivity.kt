@@ -17,7 +17,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenD
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
-import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -30,6 +29,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     companion object {
+        const val RESULT_REGISTERED_DOMAIN_EMAIL = "RESULT_REGISTERED_DOMAIN_EMAIL"
         const val DOMAIN_REGISTRATION_PURPOSE_KEY = "DOMAIN_REGISTRATION_PURPOSE_KEY"
     }
 

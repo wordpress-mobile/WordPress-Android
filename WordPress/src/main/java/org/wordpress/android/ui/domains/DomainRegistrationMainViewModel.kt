@@ -57,4 +57,8 @@ class DomainRegistrationMainViewModel @Inject constructor(
             else -> Event(FinishDomainRegistration(event))
         }
     }
+
+    fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        _onNavigation.value = Event(FinishDomainRegistration(event))
+    }
 }

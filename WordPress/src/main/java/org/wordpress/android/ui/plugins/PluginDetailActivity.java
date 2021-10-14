@@ -73,8 +73,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
-import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.util.AniUtils;
@@ -336,7 +336,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 return;
             }
             if (data != null) {
-                String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                String email = data.getStringExtra(DomainRegistrationActivity.RESULT_REGISTERED_DOMAIN_EMAIL);
                 requestEmailValidation(this, email);
             }
             AnalyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED);
