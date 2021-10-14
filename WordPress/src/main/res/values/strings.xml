@@ -2426,7 +2426,7 @@
     <!-- Domain Registration -->
     <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
+    <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
@@ -2454,7 +2454,7 @@
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
+    <string name="domain_contact_information_register_domain_button">Register domain</string>
     <string name="domain_registration_result_title">Congratulations on your purchase!</string>
     <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being setup. It may take up to 30 minutes for your domain to start working.</string>
     <string name="domain_registration_result_continue_button" translatable="false">@string/label_done_button</string>

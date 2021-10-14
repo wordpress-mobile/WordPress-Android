@@ -202,7 +202,8 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
                 relevance = 1.0f,
                 isSelected = true,
                 isCostVisible = true,
-                isFreeWithCredits = false
+                isFreeWithCredits = false,
+                isEnabled = true
         )
     }
 }

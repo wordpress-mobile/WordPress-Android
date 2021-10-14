@@ -421,7 +421,13 @@
     </style>
 
     <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.WordPress.Button.Primary.Unelevated</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.WordPress.Button.Primary.Unelevated" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
     </style>
 
     <!-- NUX Styles -->
@@ -1597,7 +1603,6 @@
     <!-- Domains -->
     <style name="Widget.Domains.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">0dp</item>
-        <item name="cardElevation">@dimen/appbar_elevation</item>
     </style>
 
     <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated">

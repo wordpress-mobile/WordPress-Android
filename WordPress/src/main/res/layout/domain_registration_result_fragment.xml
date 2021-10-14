@@ -55,9 +55,9 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_buttons"
         style="@style/Widget.Domains.CardView.BottomBar"
-        app:cardBackgroundColor="?attr/colorPrimarySurface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="?attr/colorPrimarySurface">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/continue_button"

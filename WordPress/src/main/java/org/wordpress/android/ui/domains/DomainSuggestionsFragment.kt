@@ -59,7 +59,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.setupViews() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
-        choseDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
+        selectDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
         domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
         domainSuggestionsList.adapter = DomainSuggestionsAdapter(viewModel::onDomainSuggestionSelected)
     }
@@ -76,6 +76,12 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
                 redirectMessage.text = getString(R.string.domains_free_plan_get_your_domain_caption, it).parseAsHtml()
             }
         }
+        viewModel.isButtonProgressBarVisible.observe(viewLifecycleOwner) { isVisible ->
+            buttonProgressBar.isVisible = isVisible
+            selectDomainButton.textScaleX = if (isVisible) 0f else 1f
+            selectDomainButton.isClickable = !isVisible
+            domainSuggestionKeywordInput.isEnabled = !isVisible
+        }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
@@ -84,7 +90,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             suggestionSearchIcon.isGone = isLoading
 
             if (!isLoading) {
-                reloadSuggestions(listState.data)
+                (domainSuggestionsList.adapter as DomainSuggestionsAdapter).submitList(listState.data)
             }
 
             if (listState is ListState.Error<*>) {
@@ -94,13 +100,8 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
                 ToastUtils.showToast(context, errorMessage)
             }
         }
-        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
+        viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
-    }
-
-    private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
-        val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        adapter.submitList(domainSuggestions)
     }
 
     override fun onResume() {
