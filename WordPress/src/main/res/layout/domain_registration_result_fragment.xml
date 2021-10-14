@@ -38,6 +38,8 @@
         android:id="@+id/domain_registration_result_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
         android:text="@string/domain_registration_result_description"
