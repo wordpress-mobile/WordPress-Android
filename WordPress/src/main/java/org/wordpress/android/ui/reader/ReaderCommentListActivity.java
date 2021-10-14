@@ -154,79 +154,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
-        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
-
-        AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
-
-        mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
-            ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
-            LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-            if (content != null && layoutManager != null) {
-                if (content.isSmooth()) {
-                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
-                        @Override protected int getVerticalSnapPreference() {
-                            return LinearSmoothScroller.SNAP_TO_START;
-                        }
-                    };
-                    smoothScrollerToTop.setTargetPosition(content.getPosition());
-                    layoutManager.startSmoothScroll(smoothScrollerToTop);
-                } else {
-                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
-                }
-                appBarLayout.post(appBarLayout::requestLayout);
-            }
-        });
-
-        mViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
-            FragmentManager fm = getSupportFragmentManager();
-            CommentNotificationsBottomSheetFragment bottomSheet =
-                    (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
-
-            if (bottomSheet != null) return;
-
-            snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
-                WPSnackbar.make(mCoordinator,
-                        mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
-                        Snackbar.LENGTH_LONG)
-                          .setAction(
-                                  holder.getButtonTitle() != null
-                                          ? mUiHelpers.getTextOfUiString(
-                                                ReaderCommentListActivity.this,
-                                                holder.getButtonTitle())
-                                          : null,
-                                  v -> holder.getButtonAction().invoke())
-                          .show();
-                return Unit.INSTANCE;
-            });
-        });
-
-        if (!mFollowByPushNotificationFeatureConfig.isEnabled()) {
-            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                        if (mCommentAdapter != null) {
-                            mCommentAdapter.updateFollowingState(uiState);
-                        }
-                    }
-            );
-        } else {
-            mViewModel.getShowBottomSheetEvent().observe(this, event ->
-                    event.applyIfNotHandled(isShowingData -> {
-                        FragmentManager fm = getSupportFragmentManager();
-                        CommentNotificationsBottomSheetFragment bottomSheet =
-                                (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
-                                        NOTIFICATIONS_BOTTOM_SHEET_TAG
-                                );
-                        if (isShowingData.getShow() && bottomSheet == null) {
-                            bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                                    isShowingData.isReceivingNotifications()
-                            );
-                            bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
-                        } else if (!isShowingData.getShow() && bottomSheet != null) {
-                            bottomSheet.dismiss();
-                        }
-                        return Unit.INSTANCE;
-                    })
-            );
-        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -237,21 +164,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
-            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
-            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
-        } else {
-            mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-            mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mDirectOperation = (DirectOperation) getIntent()
-                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
-            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-        }
-        mViewModel.start(mBlogId, mPostId);
+        initViewModel();
+        initObservers(savedInstanceState);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 findViewById(R.id.swipe_to_refresh),
@@ -369,6 +283,99 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             fragment.setOnCollapseListener(this);
             fragment.setOnConfirmListener(this);
         }
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
+    }
+    private void initObservers(Bundle savedInstanceState) {
+        AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
+
+        mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
+            ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
+            LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+            if (content != null && layoutManager != null) {
+                if (content.isSmooth()) {
+                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
+                        @Override protected int getVerticalSnapPreference() {
+                            return LinearSmoothScroller.SNAP_TO_START;
+                        }
+                    };
+                    smoothScrollerToTop.setTargetPosition(content.getPosition());
+                    layoutManager.startSmoothScroll(smoothScrollerToTop);
+                } else {
+                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
+                }
+                appBarLayout.post(appBarLayout::requestLayout);
+            }
+        });
+
+        mViewModel.getSnackbarEvents().observe(this, snackbarMessageHolderEvent -> {
+            FragmentManager fm = getSupportFragmentManager();
+            CommentNotificationsBottomSheetFragment bottomSheet =
+                    (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG);
+
+            if (bottomSheet != null) return;
+
+            snackbarMessageHolderEvent.applyIfNotHandled(holder -> {
+                WPSnackbar.make(mCoordinator,
+                        mUiHelpers.getTextOfUiString(ReaderCommentListActivity.this, holder.getMessage()),
+                        Snackbar.LENGTH_LONG)
+                          .setAction(
+                                  holder.getButtonTitle() != null
+                                          ? mUiHelpers.getTextOfUiString(
+                                          ReaderCommentListActivity.this,
+                                          holder.getButtonTitle())
+                                          : null,
+                                  v -> holder.getButtonAction().invoke())
+                          .show();
+                return Unit.INSTANCE;
+            });
+        });
+
+        if (!mFollowByPushNotificationFeatureConfig.isEnabled()) {
+            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                        if (mCommentAdapter != null) {
+                            mCommentAdapter.updateFollowingState(uiState);
+                        }
+                    }
+            );
+        } else {
+            mViewModel.getShowBottomSheetEvent().observe(this, event ->
+                    event.applyIfNotHandled(isShowingData -> {
+                        FragmentManager fm = getSupportFragmentManager();
+                        CommentNotificationsBottomSheetFragment bottomSheet =
+                                (CommentNotificationsBottomSheetFragment) fm.findFragmentByTag(
+                                        NOTIFICATIONS_BOTTOM_SHEET_TAG
+                                );
+                        if (isShowingData.getShow() && bottomSheet == null) {
+                            bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                                    isShowingData.isReceivingNotifications()
+                            );
+                            bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG);
+                        } else if (!isShowingData.getShow() && bottomSheet != null) {
+                            bottomSheet.dismiss();
+                        }
+                        return Unit.INSTANCE;
+                    })
+            );
+        }
+
+        if (savedInstanceState != null) {
+            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
+            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
+            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
+        } else {
+            mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+            mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mDirectOperation = (DirectOperation) getIntent()
+                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
+            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
+            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
+        }
+        mViewModel.start(mBlogId, mPostId);
     }
 
 
