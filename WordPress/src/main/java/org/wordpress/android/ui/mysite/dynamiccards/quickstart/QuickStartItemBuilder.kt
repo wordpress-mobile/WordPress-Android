@@ -122,7 +122,7 @@ class QuickStartItemBuilder
         )
     }
 
-    @DrawableRes
+    @Suppress("ComplexMethod") @DrawableRes
     private fun getIllustration(task: QuickStartTask): Int {
         return when (task) {
             UPDATE_SITE_TITLE -> drawable.img_illustration_quick_start_task_set_site_title
