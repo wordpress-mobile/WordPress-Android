@@ -29,7 +29,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOM
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CLAIM_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
 import org.wordpress.android.testScope
@@ -170,7 +172,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
                 triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(result.last().categories.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
+                assertThat(result.last().categories.map { it.taskType }).isEqualTo(
+                        listOf(CUSTOMIZE, CLAIM_DOMAIN, GET_DOMAIN, GROW))
             }
 
     @Test
@@ -494,13 +497,15 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private fun assertModel() {
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.let { categories ->
-            assertThat(categories).hasSize(2)
+            assertThat(categories).hasSize(4)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
             assertThat(categories[0].uncompletedTasks).containsExactly(CREATE_SITE_TUTORIAL)
             assertThat(categories[0].completedTasks).containsExactly(QuickStartTaskDetails.UPDATE_SITE_TITLE)
-            assertThat(categories[1].taskType).isEqualTo(GROW)
-            assertThat(categories[1].uncompletedTasks).containsExactly(SHARE_SITE_TUTORIAL)
-            assertThat(categories[1].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
+            assertThat(categories[1].taskType).isEqualTo(CLAIM_DOMAIN)
+            assertThat(categories[2].taskType).isEqualTo(GET_DOMAIN)
+            assertThat(categories[3].taskType).isEqualTo(GROW)
+            assertThat(categories[3].uncompletedTasks).containsExactly(SHARE_SITE_TUTORIAL)
+            assertThat(categories[3].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
         }
     }
 }
