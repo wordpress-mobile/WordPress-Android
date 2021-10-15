@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -13,7 +14,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
@@ -79,7 +79,7 @@ class ReaderCommentsFollowUseCaseTest {
         val flow = followCommentsUseCase.getMySubscriptionToPost(blogId, postId, false)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+                listOf(Loading, Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         )
     }
 
@@ -134,7 +134,7 @@ class ReaderCommentsFollowUseCaseTest {
         val flow = followCommentsUseCase.setMySubscriptionToPost(blogId, postId, true)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+                listOf(Loading, Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         )
     }
 
@@ -171,6 +171,65 @@ class ReaderCommentsFollowUseCaseTest {
         assertThat(flow.toList()).isEqualTo(listOf(
                 Loading,
                 Failure(blogId, postId, UiStringText(errorMessage))
+        ))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when no network`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(FollowStateChanged(
+                        blogId = blogId,
+                        postId = postId,
+                        isFollowing = true,
+                        isReceivingNotifications = false,
+                        false,
+                        userMessage = UiStringRes(R.string.error_network_connection),
+                        true
+        )))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when subscribing with success`() = test {
+        whenever(postSubscribersApiCallsProvider.managePushNotificationsForPost(anyLong(), anyLong(), eq(true)))
+                .thenReturn(PostSubscribersCallResult.Success(true, true))
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(
+                FollowStateChanged(
+                        blogId,
+                        postId,
+                        true,
+                        true,
+                        false,
+                        UiStringRes(R.string.reader_follow_comments_subscribe_to_push_success),
+                        false
+                )
+        ))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when subscribing with failure`() = test {
+        val errorMessage = "There was an error"
+
+        whenever(postSubscribersApiCallsProvider.managePushNotificationsForPost(anyLong(), anyLong(), eq(true)))
+                .thenReturn(PostSubscribersCallResult.Failure(errorMessage))
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(
+                FollowStateChanged(
+                        blogId = blogId,
+                        postId = postId,
+                        isFollowing = true,
+                        isReceivingNotifications = false,
+                        false,
+                        userMessage = UiStringRes(R.string.reader_follow_comments_could_not_subscribe_to_push_error),
+                        true
+                )
         ))
     }
 }
