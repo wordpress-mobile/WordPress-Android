@@ -482,7 +482,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    post, site, isNewPost);
+                    post, site, isNewPost, mAnalyticsTrackerWrapper);
         }
     }
 
