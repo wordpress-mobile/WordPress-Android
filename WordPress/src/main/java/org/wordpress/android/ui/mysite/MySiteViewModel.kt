@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CLAIM_DOMAIN
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_DOMAIN
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -312,9 +314,24 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        _onNavigation.value = Event(
-                SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
-        )
+
+        if (type == GET_DOMAIN || type == CLAIM_DOMAIN) {
+            val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+
+            if (type == CLAIM_DOMAIN) {
+                analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+            } else {
+                // TODO: add tracker for purchase domain
+            }
+
+            _onNavigation.value = Event(
+                    SiteNavigationAction.OpenDomains(selectedSite) // Should this open dashboard or search?
+            )
+        } else {
+            _onNavigation.value = Event(
+                    SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
+            )
+        }
     }
 
     fun onQuickStartTaskCardClick(task: QuickStartTask) {
