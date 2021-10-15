@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-02 12:17:08+0000
+Translation-Revision-Date: 2021-10-13 11:59:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Cari domain</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domain yang dibeli di situs ini akan mengalihkan pengunjung ke &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Anda memiliki registrasi domain gratis selama satu tahun dengan paket Anda</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Klaim domain gratis Anda</string>
+    <string name="domains_manage_domains">Kelola Domain</string>
+    <string name="domains_redirected_domains_blurb">Domain Anda akan mengalihkan ke situs Anda di &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Baca selengkapnya&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Tambah domain</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Kedaluwarsa pada %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Kedaluwarsa pada %s</string>
+    <string name="domains_site_domains">Domain situs Anda</string>
+    <string name="domains_primary_site_address_blurb">Alamat situs utama akan muncul pada kotak alamat browser pengunjung saat mengunjungi situs Anda.</string>
+    <string name="domains_primary_site_address_chip">Alamat situs utama</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Ubah alamat situs</string>
+    <string name="domains_primary_site_caption">Alamat WordPress.com Anda adalah</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis untuk tahun pertama &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /tahun&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/tahun&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Anda ingin membuang perubahan?</string>
+    <string name="comment_edit_cancel_dialog_title">Ada perubahan yang belum disimpan</string>
+    <string name="comment_edit_comment_error">Komentar tidak boleh kosong</string>
+    <string name="comment_edit_user_email_error">Email pengguna tidak valid</string>
+    <string name="comment_edit_web_address_error">Alamat web tidak valid</string>
+    <string name="comment_edit_user_name_error">Nama pengguna tidak boleh kosong</string>
+    <string name="comment_edit_email_address">Alamat email</string>
+    <string name="comment_edit_web_address">Alamat situs web</string>
+    <string name="comment_edit_comment">Komentar</string>
+    <string name="comment_edit_user_name">Nama</string>
+    <string name="comment_edit_menu_done">Selesai</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Pratinjau blok sematan akan segera hadir</string>
     <string name="weekly_roundup">Ringkasan Mingguan</string>
     <string name="gutenberg_native_embed_options">Pilihan sematan</string>
@@ -184,6 +211,7 @@ Language: id
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
+    <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_featured">Andalan</string>
     <string name="gutenberg_native_embed_link">Sematkan tautan</string>
     <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
@@ -2753,6 +2781,7 @@ Language: id
     <string name="comment_reply_to_user">Balas ke %s</string>
     <string name="signing_out">Log out…</string>
     <string name="reader_empty_posts_in_tag">Tidak ada pos dengan topik ini</string>
+    <string name="help_and_support">Bantuan &amp; Dukungan</string>
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
     <string name="reader_toast_err_block_blog">Tidak bisa memblokir situs ini</string>
     <string name="reader_menu_block_blog">Blokir situs ini</string>

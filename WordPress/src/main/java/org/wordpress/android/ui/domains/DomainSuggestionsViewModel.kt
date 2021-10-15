@@ -31,6 +31,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
+@Suppress("TooManyFunctions")
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
@@ -55,10 +56,16 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
 
-    val choseDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
+    val selectDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
+
+    private val _showRedirectMessage = MutableLiveData<String?>()
+    val showRedirectMessage: LiveData<String?> = _showRedirectMessage
+
+    private val _isButtonProgressBarVisible = MutableLiveData(false)
+    val isButtonProgressBarVisible: LiveData<Boolean> = _isButtonProgressBarVisible
 
     private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
     val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
@@ -102,11 +109,18 @@ class DomainSuggestionsViewModel @Inject constructor(
         this.site = site
         this.domainRegistrationPurpose = domainRegistrationPurpose
         initializeDefaultSuggestions()
+        shouldShowRedirectMessage()
         isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
+    }
+
+    private fun shouldShowRedirectMessage() {
+        if (this.domainRegistrationPurpose == DOMAIN_PURCHASE) {
+            _showRedirectMessage.value = SiteUtils.getHomeURLOrHostName(site)
+        }
     }
 
     // Network Request
@@ -155,7 +169,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                             relevance = it.relevance,
                             isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
                             isCostVisible = siteDomainsFeatureConfig.isEnabled(),
-                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+                            isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION,
+                            isEnabled = true
                     )
                 }
                 .sortedBy { it.relevance }
@@ -194,7 +209,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
 
-        // TODO Show progress bar
+        showLoadingButton(true)
 
         val event = createCartUseCase.execute(
                 site,
@@ -204,7 +219,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                 false
         )
 
-        // TODO Hide progress bar
+        showLoadingButton(false)
 
         if (event.isError) {
             AppLog.e(T.DOMAIN_REGISTRATION, "Failed cart creation: ${event.error.message}")
@@ -218,5 +233,12 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {
         val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
         _onDomainSelected.postValue(Event(domainProductDetails))
+    }
+
+    private fun showLoadingButton(isLoading: Boolean) {
+        _isButtonProgressBarVisible.postValue(isLoading)
+        suggestions = suggestions.transform { list ->
+            list.map { it.copy(isEnabled = !isLoading) }
+        }
     }
 }

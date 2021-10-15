@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-04 18:07:54+0000
+Translation-Revision-Date: 2021-10-06 20:29:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
@@ -13,15 +13,15 @@ Language: sv_SE
     <string name="domains_manage_domains">Hantera domäner</string>
     <string name="domains_redirected_domains_blurb">Dina domäner kommer att omdirigeras till din webbplats på &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Läs mer&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Lägg till en domän</string>
-    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;span&gt;</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Upphör att gälla %s</string>
     <string name="domains_site_domains">Domänerna för din webbplats</string>
     <string name="domains_primary_site_address_blurb">Din primära webbplatsadress är vad besökarna kommer att se i sitt adressfält när de besöker din webbplats.</string>
     <string name="domains_primary_site_address_chip">Primär webbplatsadress</string>
     <string name="domains_primary_site_more_menu_change_site_address">Ändra webbplatsens adress</string>
     <string name="domains_primary_site_caption">Din gratisadress hos WordPress.com är</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis första året &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /år&lt;/s&gt;&lt;span&gt;</string>
-    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /år&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis första året &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /år&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /år&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vill du kasta dem?</string>
     <string name="comment_edit_cancel_dialog_title">Det finns osparade ändringar</string>
     <string name="comment_edit_comment_error">Kommentarfältet får inte vara tomt</string>
