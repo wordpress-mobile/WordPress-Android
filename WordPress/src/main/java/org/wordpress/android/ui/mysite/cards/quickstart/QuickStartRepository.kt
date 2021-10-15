@@ -7,11 +7,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.DynamicCardType.CLAIM_DOMAIN_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GET_DOMAIN_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.DynamicCardStore
@@ -20,7 +23,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CLAIM_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
@@ -127,7 +132,7 @@ class QuickStartRepository
         return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             dynamicCardStore.getCards(siteLocalId).dynamicCardTypes.map { it.toQuickStartTaskType() }
         } else {
-            listOf(CUSTOMIZE, GROW)
+            listOf(CUSTOMIZE, CLAIM_DOMAIN, GET_DOMAIN, GROW)
         }
     }
 
@@ -226,8 +231,10 @@ class QuickStartRepository
     }
 
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
-        CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
-        GROW -> R.string.quick_start_completed_type_grow_message
+        CUSTOMIZE -> string.quick_start_completed_type_customize_message
+        CLAIM_DOMAIN -> string.quick_start_completed_type_customize_message
+        GET_DOMAIN -> string.quick_start_completed_type_customize_message
+        GROW -> string.quick_start_completed_type_grow_message
         UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
     }.let { resourceProvider.getString(it) }
 
@@ -236,6 +243,8 @@ class QuickStartRepository
     private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
         return when (this) {
             CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            CLAIM_DOMAIN_QUICK_START -> CLAIM_DOMAIN
+            GET_DOMAIN_QUICK_START -> GET_DOMAIN
             GROW_QUICK_START -> GROW
         }
     }
@@ -243,6 +252,8 @@ class QuickStartRepository
     private fun QuickStartTaskType.toDynamicCardType(): DynamicCardType {
         return when (this) {
             CUSTOMIZE -> CUSTOMIZE_QUICK_START
+            CLAIM_DOMAIN -> CLAIM_DOMAIN_QUICK_START
+            GET_DOMAIN -> GET_DOMAIN_QUICK_START
             GROW -> GROW_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
