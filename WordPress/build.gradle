@@ -181,8 +181,6 @@ android {
 
             versionName versionProperties.getProperty("alpha.versionName")
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
-
-            buildConfigField "boolean", "FOLLOW_BY_PUSH_NOTIFICATION", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
