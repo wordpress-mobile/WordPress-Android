@@ -303,6 +303,11 @@
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
+    <style name="WordPress.FollowComments.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
     <!-- EditTexts -->
     <style name="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>
