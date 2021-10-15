@@ -31,7 +31,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -47,7 +48,6 @@ class DomainsDashboardViewModel @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     lateinit var site: SiteModel
-    lateinit var siteUrl: String
     private var hasDomainCredit: Boolean = false
     private var isStarted: Boolean = false
 
@@ -62,8 +62,6 @@ class DomainsDashboardViewModel @Inject constructor(
             return
         }
         this.site = site
-        this.siteUrl = SiteUtils.getHomeURLOrHostName(site)
-        _uiModel.value = getPrimaryDomainItems(siteUrl)
         checkDomainCredit()
         getSiteDomainsList()
         isStarted = true
@@ -75,6 +73,9 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun getSiteDomainsList() {
+        // TODO: Probably needs a loading spinner here instead
+        _uiModel.value = getPrimaryDomainItems(getHomeUrlOrHostName(site.unmappedUrl), false)
+
         launch {
             val result = siteStore.fetchSiteDomains(site)
             when {
@@ -98,22 +99,28 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun buildDashboardItems(domains: List<Domain>?) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        listItems += getPrimaryDomainItems(siteUrl)
-
+        val freeDomain = domains?.firstOrNull { it.wpcomDomain || it.isWpcomStagingDomain }
         val customDomains = domains?.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
-        val hasCustomDomain = customDomains?.isNotEmpty() == true
 
-        listItems += when {
-            hasCustomDomain -> getManageDomainsItems(siteUrl, customDomains)
-            hasDomainCredit -> getClaimDomainItems()
-            else -> getPurchaseDomainItems(siteUrl)
+        freeDomain?.let {
+            listItems += getPrimaryDomainItems(it.domain.toString(), it.primaryDomain)
+        }
+
+        customDomains?.let {
+            listItems += getManageDomainsItems(freeDomain?.domain.toString(), customDomains)
+        }
+
+        listItems += if (hasDomainCredit) {
+            getClaimDomainItems()
+        } else {
+            getPurchaseDomainItems(freeDomain?.domain.toString())
         }
 
         _uiModel.value = listItems
     }
 
-    private fun getPrimaryDomainItems(siteUrl: String) =
-        listOf(PrimaryDomain(UiStringText(siteUrl), this::onChangeSiteClick))
+    private fun getPrimaryDomainItems(siteUrl: String, isPrimary: Boolean) =
+        listOf(PrimaryDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
 
     // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
     private fun getPurchaseDomainItems(siteUrl: String) =
@@ -134,28 +141,35 @@ class DomainsDashboardViewModel @Inject constructor(
             ))
 
     // if site has a custom registered domain then show Site Domains, Add Domain and Manage Domains
-    private fun getManageDomainsItems(siteUrl: String, domains: List<Domain>?): List<DomainsDashboardItem> {
+    private fun getManageDomainsItems(siteUrl: String, domains: List<Domain>): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
+        if (domains.isNotEmpty()) {
+            listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 //        listItems += DomainBlurb(UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
 //                        string.domains_redirected_domains_blurb, siteUrl)))
+        }
 
-        domains?.forEach {
+        domains.forEach {
             listItems += SiteDomains(
-                UiStringText(it.domain.toString()),
-                if (it.expirySoon) {
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            string.domains_site_domain_expires_soon, it.expiry.toString()))
+                    UiStringText(it.domain.toString()),
+                    if (it.expirySoon) {
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        string.domains_site_domain_expires_soon, it.expiry.toString()
+                                )
+                        )
                     } else {
-                    UiStringResWithParams(
-                        string.domains_site_domain_expires, listOf(UiStringText(it.expiry.toString())))
-                    }
-                )
-            }
+                        UiStringResWithParams(
+                                string.domains_site_domain_expires,
+                                listOf(UiStringText(it.expiry.toString()))
+                        )
+                    },
+                    it.primaryDomain
+            )
+        }
 
-        listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
+        if (domains.isNotEmpty()) listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
 
 //        NOTE: Manage domains option is de-scoped for v1 release
 //        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
@@ -163,18 +177,24 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
+    private fun getHomeUrlOrHostName(unmappedUrl: String): String {
+        var homeURL = UrlUtils.removeScheme(unmappedUrl)
+        homeURL = StringUtils.removeTrailingSlash(homeURL)
+        return homeURL
+    }
+
     private fun onGetDomainClick() {
-        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+        // TODO Add tracking
         _onNavigation.value = Event(GetDomain(site))
     }
 
     private fun onClaimDomainClick() {
-        // TODO Add tracking
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
         _onNavigation.value = Event(ClaimDomain(site))
     }
 
     private fun onAddDomainClick() {
-        onClaimDomainClick()
+        if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
     }
 
     private fun onManageDomainClick() {
