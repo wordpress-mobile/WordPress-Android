@@ -95,6 +95,38 @@ class ReaderFollowCommentsHandlerTest {
         }
     }
 
+    @Test
+    fun `handleFollowCommentsClicked adds a snackbar with action`() = test {
+        val userMessage = UiStringText("handleFollowCommentsClicked")
+        val snackbarAction = {}
+        val state = FollowCommentsState.FollowStateChanged(
+                blogId = blogId,
+                postId = postId,
+                isFollowing = true,
+                isReceivingNotifications = false,
+                isInit = false,
+                userMessage = userMessage
+        )
+
+        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, true)).thenReturn(
+                flow { emit(state) }
+        )
+
+        setupObservers()
+
+
+        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, snackbarAction)
+
+        requireNotNull(uiState).let {
+            assertThat(it).isEqualTo(state)
+        }
+
+        requireNotNull(holder).let {
+            assertThat(it.message).isEqualTo(userMessage)
+            assertThat(it.buttonAction == snackbarAction).isTrue()
+        }
+    }
+
     private fun setupObservers() {
         uiState = null
 
