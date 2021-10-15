@@ -6,6 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -35,13 +36,7 @@ class QuickStartCardBuilder @Inject constructor() {
                 quickStartTaskType = quickStartTaskType,
                 title = UiStringRes(getTitle(quickStartTaskType)),
                 titleEnabled = countUncompleted > 0,
-                subtitle = UiStringResWithParams(
-                        R.string.quick_start_sites_type_tasks_completed,
-                        listOf(
-                                UiStringText("$countCompleted"),
-                                UiStringText("${countCompleted + countUncompleted}")
-                        )
-                ),
+                subtitle = getSubTitle(quickStartTaskType, countCompleted, countUncompleted),
                 strikeThroughTitle = countUncompleted == 0,
                 progressColor = R.color.colorPrimary,
                 progress = getProgress(countCompleted, countCompleted + countUncompleted),
@@ -52,7 +47,29 @@ class QuickStartCardBuilder @Inject constructor() {
     fun getTitle(taskType: QuickStartTaskType): Int {
         return when (taskType) {
             QuickStartTaskType.CUSTOMIZE -> R.string.quick_start_sites_type_customize
+            QuickStartTaskType.CLAIM_DOMAIN -> R.string.quick_start_sites_type_claim_domain_title
+            QuickStartTaskType.GET_DOMAIN -> R.string.quick_start_sites_type_get_domain_title
             QuickStartTaskType.GROW -> R.string.quick_start_sites_type_grow
+            QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
+        }
+    }
+
+    fun getSubTitle(taskType: QuickStartTaskType, countCompleted: Int, countUncompleted: Int): UiString {
+        return when (taskType) {
+            QuickStartTaskType.CUSTOMIZE, QuickStartTaskType.GROW -> {
+                UiStringResWithParams(
+                    R.string.quick_start_sites_type_tasks_completed,
+                    listOf(
+                            UiStringText("$countCompleted"),
+                            UiStringText("${countCompleted + countUncompleted}")
+                    ))
+            }
+            QuickStartTaskType.CLAIM_DOMAIN -> {
+                UiStringRes(R.string.quick_start_sites_type_claim_domain_sub_title)
+            }
+            QuickStartTaskType.GET_DOMAIN -> {
+                UiStringRes(R.string.quick_start_sites_type_get_domain_sub_title)
+            }
             QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
         }
     }
