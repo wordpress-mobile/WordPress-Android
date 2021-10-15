@@ -26,12 +26,17 @@ sealed class DomainsDashboardItem(val type: Type) {
 
     data class PrimaryDomain(
         val domain: UiString,
+        val isPrimary: Boolean,
         val onPopupMenuClick: (Action) -> Boolean
     ) : DomainsDashboardItem(PRIMARY_DOMAIN)
 
     data class SiteDomainsHeader(val title: UiString) : DomainsDashboardItem(SITE_DOMAINS_HEADER)
 
-    data class SiteDomains(val domain: UiString, val expiry: UiString) : DomainsDashboardItem(SITE_DOMAINS)
+    data class SiteDomains(
+        val domain: UiString,
+        val expiry: UiString,
+        val isPrimary: Boolean
+    ) : DomainsDashboardItem(SITE_DOMAINS)
 
     data class AddDomain(val onClick: ListItemInteraction) : DomainsDashboardItem(ADD_DOMAIN)
 
