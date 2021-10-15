@@ -1,0 +1,5 @@
+18.4:
+Los bloques de incrustación específicos para YouTube, Twitter, WordPress y Vimeo cuentan con unas URL que se pueden editar después de que las hayas seleccionado.
+Ahora, el bloque de la galería añade imágenes incluso si la entrada se cierra durante la subida.
+Los comentarios del sitio permiten editar el nombre, el correo electrónico y la dirección del sitio web del autor.
+Ahora, puedes ponerte en contacto con el soporte técnico directamente desde la pantalla del editor.

@@ -1,4 +1,0 @@
-18.3:
-Nell'editor a blocchi, risolto un problema alla barra degli strumenti per i dispositivi impostati su una lingua RTL ed eseguito aggiornamenti al blocco Incorporamenti, come l'abilitazione delle anteprime di WordPress, Instagram e Vimeo e l'aggiunta di opzioni per riprovare o convertire gli elementi multimediali in un link.
-
-Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e 'aggiornamento delle etichette del menu Il mio sito ("Articoli" e "Pagine").
