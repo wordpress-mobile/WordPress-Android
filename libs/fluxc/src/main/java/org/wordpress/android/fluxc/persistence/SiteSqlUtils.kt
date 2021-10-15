@@ -13,6 +13,7 @@ import com.wellsql.generated.SiteModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,6 +37,13 @@ class SiteSqlUtils
     object DuplicateSiteException : Exception() {
         private const val serialVersionUID = -224883903136726226L
     }
+
+    fun getSiteWithLocalId(id: LocalId): SiteModel? = WellSql.select(SiteModel::class.java)
+            .where()
+            .equals(SiteModelTable.ID, id.value)
+            .endWhere()
+            .asModel
+            .firstOrNull()
 
     fun getSitesWithLocalId(id: Int): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
