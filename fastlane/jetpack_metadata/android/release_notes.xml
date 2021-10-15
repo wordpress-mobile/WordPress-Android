@@ -1,101 +1,114 @@
 <en-US>
-Lots of improvements in the block editor! We fixed an image displaying issue, a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.
-
-Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).
+Dedicated embed blocks for YouTube, Twitter, WordPress, and Vimeo, with URLs that can be edited after they are selected.
+The gallery block now adds images even if the post is closed during the upload.
+Site comments allow the author’s name, email, and web address to be edited.
+You can now contact support directly from the editor screen.
 </en-US>
 <ar>
-18.3:
-الكثير من التحسينات في محرِّر المكوِّن! قمنا بإصلاح مشكلة شريط الأدوات التي تؤثر في الأجهزة التي تم تعيينها إلى لغة RTL، وأجرينا العديد من التحديثات على مكوِّن التضمين، بما في ذلك تمكين معاينات ووردبريس وإنستغرام وفيميو وتقديم خيارات لإعادة تجربة الوسائط أو تحويلها إلى رابط إذا لم تكن قابلة للتضمين.
-
-تتضمن بعض التحديثات الأخرى إصلاحًا يؤثر في مقاطع الفيديو التي تكون بتنسيق .mp4 على بعض المواقع وتبسيط تسميات قوائم موقعي ("المقالات" و"الصفحات").
+18.4: مكوِّنات تضمين مخصصة ليوتيوب، وتويتر، ووردبريس، وفيميو، بالإضافة إلى عناوين URL التي يمكن تحريرها بعد تحديدها. يضيف الآن مكوِّن المعرض صورًا حتى إذا أغلِقت المقالة أثناء الرفع. تسمح تعليقات الموقع بتحرير اسم المؤلف، والبريد الإلكتروني، وعنوان الويب. يمكنك الآن الاتصال بالدعم مباشرة من شاشة المحرِّر.
 </ar>
 <de-DE>
-18.3:
-Wir haben Probleme im Block-Editor mit der Werkzeugleiste bei Geräten mit linksläufiger Sprache behoben und einige Updates am Embed-Block vorgenommen, u. a. eine Vorschau für WordPress, Instagram und Vimeo sowie Optionen zum Wiederholen oder Konvertieren von Medien in einen Link.
-
-Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos auftrat, und die „Meine Website“-Menübeschriftungen aktualisiert („Beiträge“ und „Seiten“).
+18.4:
+Dedizierte Embed-Blocks für YouTube, Twitter, WordPress und Vimeo mit URLS, die du noch nach dem Aussuchen bearbeiten kannst.
+Der Galerieblock fügt jetzt auch Bilder hinzu, wenn der Beitrag während des Hochladens geschlossen wird.
+In Website-Kommentaren können der Name des Autors, die E-Mail-Adresse und die Web-Adresse bearbeitet werden.
+Du kannst den Support jetzt direkt vom Bildschirm „Editor“ aus kontaktieren.
 </de-DE>
 <es-ES>
-18.3:
-En el editor de bloques, hemos solucionado un problema con la barra de herramientas en los dispositivos configurados en un idioma RTL. Además, hemos realizado actualizaciones en el bloque de incrustar, como activar las vistas previas de WordPress, Instagram y Vimeo y añadir opciones para reintentar o convertir los medios en un enlace.
-
-También se incluye una corrección que afecta a los videos en algunos sitios.
+18.4:
+Los bloques de incrustación específicos para YouTube, Twitter, WordPress y Vimeo cuentan con unas URL que se pueden editar después de que las hayas seleccionado.
+Ahora, el bloque de la galería añade imágenes incluso si la entrada se cierra durante la subida.
+Los comentarios del sitio permiten editar el nombre, el correo electrónico y la dirección del sitio web del autor.
+Ahora, puedes ponerte en contacto con el soporte técnico directamente desde la pantalla del editor.
 </es-ES>
 <fr-FR>
-18.3 :
-Dans l’éditeur de blocs, nous avons résolu un problème de barre d’outils sur les appareils utilisant une langue RTL et avons mis à jour les blocs de contenu embarqué, permettant notamment les aperçus WordPress, Instagram et Vimeo, et offrant l’option de réessayer ou de convertir le média.
-
-Nous avons également corrigé un problème affectant les vidéos sur certains sites, et simplifié les libellés du menu Mon site (« Articles » et « Pages »).
+18.4 :
+Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
+Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
+Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
+Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
 </fr-FR>
 <iw-IL>
-18.3:
-המון שיפורים בעורך הבלוקים! תיקנו בעיה בסרגל הכלים שהשפיעה על מכשירים שמוגדרים לשפה שנקראת מימין לשמאל והוספנו הרבה עדכונים לבלוק ההטמעה, כולל הפעלה של תצוגות מקדימות של תוכן מ-WordPress, מאינסטגרם ומ-Vimeo ואפשרויות לנסות שוב או להמיר את המדיה לקישורים אם סוג המדיה לא ניתן להטמעה.
-
-עדכונים אחרים כוללים תיקון שהשפיע על סרטוני וידאו בפורמט ‎.mp4 בחלק מהאתרים ושיפור בתצוגה של תוויות התפריט 'האתר שלי' ('פוסטים' ו'עמודים').
+18.4:
+בלוקים ייעודיים להטמעה עבור YouTube, טוויטר, WordPress, ו-Vimeo עם אפשרות לעריכה של כתובת ה-URL גם לאחר שנבחרה.
+בלוק הגלריה כעת יכול להוסיף תמונות גם כאשר הפוסט נסגר במהלך ההעלאה.
+אפשר לערוך את השם, כתובת האימייל וכתובת האינטרנט של המחבר בתגובות באתר.
+כעת אפשר ליצור קשר עם התמיכה ישירות מהמסך של העורך.
 </iw-IL>
 <id>
-18.3:
-Di Editor blok, kami memperbaiki masalah bilah peralatan pada perangkat yang disetel ke bahasa RTL, dan membuat pembaruan pada blok Sematan, seperti mengaktifkan pratinjau WordPress, Instagram, dan Vimeo dan menambahkan pilihan untuk mencoba lagi atau mengonversi media menjadi tautan.
-
-Pembaruan lainnya mencakup perbaikan yang memengaruhi video .mp4 di beberapa situs, dan memperbarui label menu Situs Saya (“Pos” dan “Halaman”).
+18.4:
+Blok sematan khusus untuk YouTube, Twitter, WordPress, dan Vimeo, dengan URL yang dapat disunting setelah dipilih.
+Blok galeri sekarang dapat menambahkan gambar meski pos terkait telah ditutup saat pengunggahan.
+Komentar situs memungkinkan nama, email, dan alamat web penulis disunting.
+Sekarang Anda dapat menghubungi dukungan langsung dari layar editor.
 </id>
 <it-IT>
-18.3:
-Nell'editor a blocchi, risolto un problema alla barra degli strumenti per i dispositivi impostati su una lingua RTL ed eseguito aggiornamenti al blocco Incorporamenti, come l'abilitazione delle anteprime di WordPress, Instagram e Vimeo e l'aggiunta di opzioni per riprovare o convertire gli elementi multimediali in un link.
-
-Ulteriori aggiornamenti: una correzione che interessava i video su alcuni siti e 'aggiornamento delle etichette del menu Il mio sito ("Articoli" e "Pagine").
+18.4:
+Blocchi incorporati dedicati per YouTube, Twitter, WordPress e Vimeo, con URL che possono essere modificati dopo la loro selezione. 
+Il blocco Galleria aggiunge ora immagini perfino se l'articolo viene chiuso durante il caricamento.
+I commenti del sito consentono di modificare il nome dell'autore, l'e-mail e l'indirizzo web.
+Ora puoi contattare il supporto direttamente dalla schermata dell'editor.
 </it-IT>
 <ja-JP>
-18.3:
-ブロックエディターが多くの点で改良されました。 右から左に表示される言語に設定されているデバイスに影響を及ぼすツールバーの問題を修正しました。また、WordPress、Instagram、Vimeo でのプレビューの有効化や、メディアを埋め込めない場合に埋め込みをリトライしたり、リンクに変換したりするためのオプションの導入など、埋め込みブロックに対して多数アップデートを行っています。
-
-一部のサイトの .mp4 動画に影響する問題の修正や、「参加サイト」メニューのラベルの整理 (「投稿」と「ページ」) なども行っています。
+18.4: 
+YouTube、Twitter、WordPress、Vimeo 専用の埋め込みブロックができました。URL は選択後でも編集できます。
+ギャラリーブロックではアップロード中に投稿を閉じても画像を追加できるようになりました。
+サイトのコメントでは投稿者の名前、メールアドレス、ウェブアドレスを編集できます。
+また、エディター画面からサポートに直接問い合わせができるようになりました。
 </ja-JP>
 <ko-KR>
-18.3:
-블록 편집기가 아주 많이 개선되었습니다! RTL 언어로 설정된 기기에 영향을 주는 도구 모음 문제를 해결했으며, WordPress, Instagram, Vimeo 미리보기를 활성화하고 미디어를 임베드할 수 없는 경우 다시 시도하거나 링크로 변환하는 옵션을 제공하는 등 임베드 블록을 많이 업데이트했습니다.
-
-기타 업데이트에는 일부 사이트의 .mp4 비디오에 영향을 주는 수정 사항과 "글"과 "페이지"로 간소화한 내 사이트 메뉴 레이블이 포함됩니다.
+18.4:
+선택한 후 편집할 수 있는 URL이 포함된 유튜브, 트위터, 워드프레스, 비메오 전용 임베드 블록입니다.
+이제는 업로드 중 글을 닫아도 갤러리 블록을 통해 이미지가 추가됩니다.
+사이트 댓글을 통해 글쓴이 이름, 이메일 및 웹 주소를 편집할 수 있습니다.
+이제는 편집기 화면에서 바로 지원팀에 문의할 수 있습니다.
 </ko-KR>
 <nl-NL>
-18.3:
-In de blok-editor, hebben we een probleem met de toolbar opgelost op apparaten die zijn ingesteld op een RTL taal, en hebben we updates aangebracht aan het blok Insluiten, zoals het inschakelen van WordPress-, Instagram- en Vimeo-voorvertoningen en het toevoegen van opties om het opnieuw te proberen of media om te zetten in een link.
-
-Meer updates omvatten een oplossing voor video op sommige sites en het updaten van menulabels voor Mijn site ("Berichten" en "Pagina's").
+18.4:
+Insluitblokken speciaal voor YouTube, Twitter, WordPress en Vimeo, met URL's die kunnen worden bewerkt nadat ze zijn geselecteerd.
+Met het galerijblok kunnen nu afbeeldingen worden toegevoegd zelfs als het bericht wordt gesloten tijdens het uploaden.
+Bij sitereacties kunnen de naam, het e-mailadres en het webadres van de auteur worden bewerkt.
+Je kunt nu rechtstreeks contact opnemen met de ondersteuning vanuit het editorscherm.
 </nl-NL>
 <pt-BR>
-18.3:
-No editor de blocos, corrigimos um erro na barra de ferramentas de dispositivos configurados em RTL e fizemos atualizações no bloco de mídia incorporada, como habilitar prévias para o WordPress, Instagram e Vimeo e incluir a opção de tentar novamente ou converter a mídia em um link.
-
-Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos os rótulos do menu Meu site (agora "Posts" e "Páginas").
+18.4:
+Blocos de mídia incorporada dedicados para YouTube, Twitter, WordPress e Vimeo, com URLs que podem ser editadas após a seleção.
+Agora o bloco de galeria adicionará as imagens mesmo se o post for fechado durante o upload.
+Os comentários no site permitem que o endereço da Web, e-mail e nome do autor sejam editados.
+Agora você pode falar com o suporte diretamente na tela do editor.
 </pt-BR>
 <ru-RU>
-18.3:
-В редакторе блоков исправлена проблема с панелью инструментов на устройствах, где выбран язык с написанием справа налево. Обновлены некоторые функции в блоке "Вставка", добавлены предварительный просмотр элементов WordPress, Instagram и Vimeo и возможности повторной вставки и преобразования медиафайла в ссылку.
-
-Кроме того, устранена ошибка с воспроизведением видеофайлов на некоторых сайтах, улучшены ярлыки меню "Мой сайт" ("Записи" и "Страницы").
+18.4:
+Специальные блоки вставки для YouTube, Twitter, WordPress и Vimeo. Выбрав URL-адрес, его можно изменить.
+Теперь блок галереи позволяет добавлять изображения, даже если идёт загрузка, а запись закрыта.
+В комментариях к сайту можно изменять имя, электронную почту и веб-адрес автора.
+Поддержка доступна прямо на экране редактора.
 </ru-RU>
 <sv-SE>
-18.3:
-Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
-
-Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).
+18.4:
+Dedikerade inbäddningsblock för YouTube, Twitter, WordPress och Vimeo, med URL:er som kan redigeras efter att de har valts.
+Galleriblocket lägger nu till bilder även om inlägget är stängt under uppladdningen.
+Webbplatskommentarer tillåter att författarens namn, e-postadress och webbadress redigeras.
+Du kan nu kontakta supporten direkt från redigerarens skärm.
 </sv-SE>
 <tr-TR>
-18.3:
-Blok düzenleyicide, RTL diline ayarlanmış cihazlarda araç çubuğunda yaşanan bir sorunu düzelttik ve Gömülü blokta WordPress, Instagram ve Vimeo önizlemelerini etkinleştirmek, medyayı yeniden denemek veya bir bağlantıya dönüştürmek için seçenekler eklemek gibi güncellemeler yaptık.
-
-Diğer güncellemeler olarak, bazı sitelerdeki videoyu etkileyen bir düzeltmeyi ve Sitem menü etiketlerinin (“Gönderiler” ve “Sayfalar”) güncellenmesini sayabiliriz.
+18.4:
+YouTube, Twitter, WordPress ve Vimeo için, seçildikten sonra düzenlenebilen URL'lere sahip özel gömme blokları.
+Galeri bloku, yükleme sırasında gönderi kapatılsa bile artık görsel ekleyebilir.
+Site yorumları, yazarın adının, e-postasının ve web adresinin düzenlenmesine izin verir.
+Artık doğrudan düzenleyici ekranından desteğe başvurabilirsiniz.
 </tr-TR>
 <zh-CN>
-18.3：
-区块编辑器中有许多改进！ 我们修复了影响将设备设置为 RTL 语言的工具栏问题，并对嵌入区块进行了许多更新，包括启用 WordPress、Instagram 和 Vimeo 预览，并在无法嵌入媒体时提供了重试媒体嵌入或将媒体转换为链接的选项。
-
-其他更新包括修复了影响某些站点上 .mp4 视频的问题，以及简化了“我的站点”菜单标签（“文章”和“页面”）。
+18.4：
+YouTube、Twitter、WordPress 和 Vimeo 的专用嵌入区块，带有可在选中后进行编辑的 URL。
+现在，即使在上传过程中关闭文章，画廊区块也会添加图片。
+站点评论允许编辑作者的姓名、电子邮件和网址。
+现在，您可以直接从编辑器界面联系支持人员。
 </zh-CN>
 <zh-TW>
-18.3:
-我們改善了區塊編輯器的諸多功能！ 修正了讓裝置無法選擇 RTL 語言的工具列問題，也對嵌入內容區塊做了諸多更新，包括啟用 WordPress、Instagram 和 Vimeo 預覽，並提供了重試或將媒體轉換成連結的選項 (如果媒體不能嵌入的話)。
-
-其他更新包括修正了某些網站 .mp4 影片的問題，以及簡化了「我的網站」選單標籤 (現在是「文章」和「頁面」)。
+18.4：
+我們新增了 YouTube、Twitter、WordPress 和 Vimeo 專用嵌入內容區塊，而且現在選取 URL 後仍然可以編輯。
+現在即使在圖片上傳過程中關閉文章，仍會在圖庫區塊加入圖片。
+現在可以在網站留言中編輯作者的姓名、電子郵件和網址。
+你現在可以直接從編輯器畫面聯絡支援團隊。
 </zh-TW>

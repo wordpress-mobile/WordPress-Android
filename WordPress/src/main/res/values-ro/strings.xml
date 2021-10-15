@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-07 05:14:10+0000
+Translation-Revision-Date: 2021-10-15 09:24:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -1263,7 +1263,6 @@ Language: ro
     <string name="my_site_custom_domain_name">Toate planurile WordPress.com includ un nume de domeniu personalizat. Înregistrează-ți domeniul premium gratuit acum.</string>
     <string name="post_list_search_nothing_found">Nu se potrivește niciun articol cu căutarea ta</string>
     <string name="stats_widget_color_dark">Întunecat</string>
-    <string name="stats_widget_color_light">Luminos</string>
     <string name="stats_widget_color">Culoare</string>
     <string name="stats_widget_all_time_title">Total general</string>
     <string name="stats_widget_views_title">Vizualizări în această săptămână</string>
@@ -1277,6 +1276,7 @@ Language: ro
     <string name="stats_widget_site">Site</string>
     <string name="stats_widget_site_caption">Selectează-ți site-ul</string>
     <string name="stats_widget_select_your_site">Selectează-ți site-ul</string>
+    <string name="stats_widget_color_light">Luminoasă</string>
     <string name="plugin_fetching_error_after_at">Reîmprospătarea detaliilor modulului durează mai mult decât de obicei. Te rog verifică din nou mai târziu.</string>
     <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest site.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
@@ -2291,7 +2291,7 @@ Language: ro
     <string name="media_upload_state_uploading">Se încarcă</string>
     <string name="media_upload_state_queued">În coada de așteptare</string>
     <string name="media_upload_state_deleting">Ștergere</string>
-    <string name="media_upload_state_failed">Încărcare eșuată</string>
+    <string name="media_upload_state_failed">Încărcarea a eșuat</string>
     <string name="image_quality">Calitate imagine</string>
     <string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
     <string name="error_unknown_post_type">Format de articol necunoscut</string>
@@ -2325,7 +2325,7 @@ Language: ro
     <string name="reader_err_get_post_not_authorized_fallback">Nu ești autorizat să vezi acest articol. Folosește butonul de acțiune de sus pentru a încerca un navigator în schimb.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Nu poți aprecia în timp ce ești dezautentificat din WordPress.com</string>
     <string name="reader_toast_err_already_liked">Ai apreciat deja acest comentariu</string>
-    <string name="reader_toast_err_comment_not_found">Comentariu negăsit!</string>
+    <string name="reader_toast_err_comment_not_found">Nu am găsit comentariul!</string>
     <string name="reader_toast_err_cannot_like_post">Aprecierea acestui articol a eșuat</string>
     <string name="error_notif_q_action_reply">Nu am putut răspunde la comentariu. Te rog încearcă din nou mai târziu.</string>
     <string name="error_notif_q_action_approve">Nu am putut aproba comentariul. Te rog încearcă din nou mai târziu.</string>
@@ -2499,7 +2499,7 @@ Language: ro
     <string name="post_settings_featured_image">Imagine reprezentativă</string>
     <string name="email_address">Adresă email</string>
     <string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
-    <string name="dlg_sure_to_delete_comment">Șterg permanent acest comentariu?</string>
+    <string name="dlg_sure_to_delete_comment">Ștergi definitiv acest comentariu?</string>
     <string name="mnu_comment_delete_permanently">Ștergere</string>
     <string name="comment_deleted_permanently">Comentariu șters</string>
     <string name="mnu_comment_untrash">Restaurare</string>
@@ -2640,8 +2640,8 @@ Language: ro
     <string name="active">Activă</string>
     <string name="post_published">Articol publicat</string>
     <string name="page_published">Pagină publicată</string>
-    <string name="page_updated">Pagină actualizată</string>
     <string name="post_updated">Articolul a fost actualizat</string>
+    <string name="page_updated">Pagina a fost actualizată</string>
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu se potrivește cu „%s”</string>
