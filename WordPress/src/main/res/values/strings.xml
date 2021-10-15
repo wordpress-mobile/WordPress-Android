@@ -2476,7 +2476,6 @@
     <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_address_chip">Primary site address</string>
-    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
