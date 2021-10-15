@@ -22,11 +22,11 @@ gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.storiesAndroidPath = "com.automattic:stories"
 gradle.ext.storiesAndroidMp4ComposePath = "com.automattic.stories:mp4compose"
 gradle.ext.storiesAndroidPhotoEditorPath = "com.automattic.stories:photoeditor"
-gradle.ext.aztecAndroidAztecPath = "com.github.wordpress-mobile.WordPress-Aztec-Android:aztec"
-gradle.ext.aztecAndroidWordPressShortcodesPath = "com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes"
-gradle.ext.aztecAndroidWordPressCommentsPath = "com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments"
-gradle.ext.aztecAndroidGlideLoaderPath = "com.github.wordpress-mobile.WordPress-Aztec-Android:glide-loader"
-gradle.ext.aztecAndroidPicassoLoaderPath = "com.github.wordpress-mobile.WordPress-Aztec-Android:picasso-loader"
+gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
+gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
+gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
+gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
+gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
