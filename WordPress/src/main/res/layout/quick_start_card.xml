@@ -21,13 +21,31 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/quick_start_customize"
+            android:id="@+id/quick_start_domains"
             layout="@layout/quick_start_task_type_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
+
+        <View
+            android:id="@+id/divider_domain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quick_start_domains" />
+
+        <include
+            android:id="@+id/quick_start_customize"
+            layout="@layout/quick_start_task_type_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_domain" />
 
         <View
             android:id="@+id/divider"

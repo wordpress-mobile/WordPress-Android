@@ -13,7 +13,9 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.QuickStartCardBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CLAIM_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_DOMAIN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -29,6 +31,8 @@ class QuickStartCardViewHolder(
     fun bind(card: QuickStartCard) = with(binding) {
         mySiteCardToolbar.update(card)
         quickStartCustomize.update(card.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
+        quickStartDomains.updateDomains(card.taskTypeItems.first { it.quickStartTaskType == CLAIM_DOMAIN })
+        quickStartDomains.updateDomains(card.taskTypeItems.first { it.quickStartTaskType == GET_DOMAIN })
         quickStartGrow.update(card.taskTypeItems.first { it.quickStartTaskType == GROW })
     }
 
@@ -56,6 +60,13 @@ class QuickStartCardViewHolder(
         }
         itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
         itemProgress.update(item)
+        itemRoot.setOnClickListener { item.onClick.click() }
+    }
+
+    private fun QuickStartTaskTypeItemBinding.updateDomains(item: QuickStartTaskTypeItem) {
+        itemTitle.text = uiHelpers.getTextOfUiString(itemView.context, item.title)
+        itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+        itemProgress.isVisible = false
         itemRoot.setOnClickListener { item.onClick.click() }
     }
 
