@@ -16,6 +16,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
@@ -31,6 +32,7 @@ class ReaderFollowCommentsHandlerTest {
     private val postId = 1000L
     private var uiState: FollowCommentsState? = null
     private var holder: SnackbarMessageHolder? = null
+    private var followStateChanged: FollowStateChanged? = null
 
     @Before
     fun setup() {
@@ -114,7 +116,6 @@ class ReaderFollowCommentsHandlerTest {
 
         setupObservers()
 
-
         followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, snackbarAction)
 
         requireNotNull(uiState).let {
@@ -124,6 +125,37 @@ class ReaderFollowCommentsHandlerTest {
         requireNotNull(holder).let {
             assertThat(it.message).isEqualTo(userMessage)
             assertThat(it.buttonAction == snackbarAction).isTrue()
+        }
+    }
+
+    @Test
+    fun `handleEnableByPushNotificationsClicked triggers an update for push status`() = test {
+        val userMessage = UiStringText("handleFollowCommentsClicked")
+        val snackbarAction = {}
+        val state = FollowCommentsState.FollowStateChanged(
+                blogId = blogId,
+                postId = postId,
+                isFollowing = true,
+                isReceivingNotifications = true,
+                isInit = false,
+                userMessage = userMessage,
+                forcePushNotificationsUpdate = true
+        )
+
+        whenever(readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, true)).thenReturn(
+                flow { emit(state) }
+        )
+
+        setupObservers()
+
+        followCommentsHandler.handleEnableByPushNotificationsClicked(blogId, postId, true, snackbarAction)
+
+        requireNotNull(uiState).let {
+            assertThat(it).isEqualTo(state)
+        }
+
+        requireNotNull(followStateChanged).let {
+            assertThat(it.isReceivingNotifications).isTrue()
         }
     }
 
@@ -139,6 +171,11 @@ class ReaderFollowCommentsHandlerTest {
             event.applyIfNotHandled {
                 holder = this
             }
+        }
+
+        followStateChanged = null
+        followCommentsHandler.pushNotificationsStatusUpdate.observeForever {
+            followStateChanged = it
         }
     }
 }
