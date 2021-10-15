@@ -2,16 +2,19 @@ package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
@@ -23,7 +26,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -31,6 +34,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -41,9 +46,9 @@ import javax.inject.Named
 
 @Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val domainRegistrationHandler: DomainRegistrationHandler,
     private val htmlMessageUtils: HtmlMessageUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -62,13 +67,14 @@ class DomainsDashboardViewModel @Inject constructor(
             return
         }
         this.site = site
+        dispatcher.register(this)
         checkDomainCredit()
         getSiteDomainsList()
         isStarted = true
     }
 
     override fun onCleared() {
-        domainRegistrationHandler.clear()
+        dispatcher.unregister(this)
         super.onCleared()
     }
 
@@ -90,10 +96,22 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun checkDomainCredit() {
-        // TODO: Refactor this to domains specific function
-        val domainCreditAvailable =
-                domainRegistrationHandler.buildSource(viewModelScope, site.id).distinctUntilChanged()
-        hasDomainCredit = domainCreditAvailable.value?.isDomainCreditAvailable == true
+        // TODO: Refactor this
+        if (shouldFetchPlans(site)) fetchPlans(site)
+    }
+
+    private fun shouldFetchPlans(site: SiteModel) = !SiteUtils.onFreePlan(site) && !SiteUtils.hasCustomDomain(site)
+
+    private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPlansFetched(event: OnPlansFetched) {
+        if (event.isError) {
+            val message = "An error occurred while fetching plans : " + event.error.message
+            AppLog.e(DOMAIN_REGISTRATION, message)
+        } else if (site.id == event.site.id) {
+            hasDomainCredit = isDomainCreditAvailable(event.plans)
+        }
     }
 
     private fun buildDashboardItems(domains: List<Domain>?) {
