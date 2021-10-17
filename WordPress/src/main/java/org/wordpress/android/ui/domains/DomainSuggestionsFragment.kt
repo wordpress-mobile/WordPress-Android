@@ -2,6 +2,7 @@ package org.wordpress.android.ui.domains
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -18,7 +19,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment) {
@@ -58,22 +59,29 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
     private fun DomainSuggestionsFragmentBinding.setupViews() {
         domainSuggestionsList.layoutManager = LinearLayoutManager(activity)
         domainSuggestionsList.setEmptyView(actionableEmptyView)
-        choseDomainButton.setOnClickListener {
-            val selectedDomain = viewModel.selectedSuggestion.value
-
-            mainViewModel.selectDomain(
-                    DomainProductDetails(
-                            selectedDomain!!.productId,
-                            selectedDomain.domainName
-                    )
-            )
-        }
+        selectDomainButton.setOnClickListener { viewModel.onSelectDomainButtonClicked() }
         domainSuggestionKeywordInput.doAfterTextChanged { viewModel.updateSearchQuery(it.toString()) }
-        domainSuggestionsList.adapter = DomainSuggestionsAdapter(::onDomainSuggestionSelected)
+        domainSuggestionsList.adapter = DomainSuggestionsAdapter(viewModel::onDomainSuggestionSelected)
     }
 
     private fun DomainSuggestionsFragmentBinding.setupObservers() {
         viewModel.isIntroVisible.observe(viewLifecycleOwner) { introductionContainer.isVisible = it }
+        viewModel.showRedirectMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                introLine1.isVisible = false
+                introLine2.isVisible = false
+
+                redirectMessage.isVisible = true
+                redirectDivider.isVisible = true
+                redirectMessage.text = getString(R.string.domains_free_plan_get_your_domain_caption, it).parseAsHtml()
+            }
+        }
+        viewModel.isButtonProgressBarVisible.observe(viewLifecycleOwner) { isVisible ->
+            buttonProgressBar.isVisible = isVisible
+            selectDomainButton.textScaleX = if (isVisible) 0f else 1f
+            selectDomainButton.isClickable = !isVisible
+            domainSuggestionKeywordInput.isEnabled = !isVisible
+        }
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
@@ -82,7 +90,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             suggestionSearchIcon.isGone = isLoading
 
             if (!isLoading) {
-                reloadSuggestions(listState.data)
+                (domainSuggestionsList.adapter as DomainSuggestionsAdapter).submitList(listState.data)
             }
 
             if (listState is ListState.Error<*>) {
@@ -92,16 +100,8 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
                 ToastUtils.showToast(context, errorMessage)
             }
         }
-        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner) { choseDomainButton.isEnabled = it }
-    }
-
-    private fun DomainSuggestionsFragmentBinding.reloadSuggestions(domainSuggestions: List<DomainSuggestionItem>) {
-        val adapter = domainSuggestionsList.adapter as DomainSuggestionsAdapter
-        adapter.submitList(domainSuggestions)
-    }
-
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionItem?) {
-        viewModel.onDomainSuggestionsSelected(domainSuggestion)
+        viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
+        viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
     }
 
     override fun onResume() {

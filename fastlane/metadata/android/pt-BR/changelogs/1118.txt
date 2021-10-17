@@ -1,4 +1,0 @@
-18.3:
-No editor de blocos, corrigimos um erro na barra de ferramentas de dispositivos configurados em RTL e fizemos atualizações no bloco de mídia incorporada, como habilitar prévias para o WordPress, Instagram e Vimeo e incluir a opção de tentar novamente ou converter a mídia em um link.
-
-Além disso, corrigimos um bug que afetava vídeos em alguns sites e atualizamos os rótulos do menu Meu site (agora "Posts" e "Páginas").

@@ -19,4 +19,5 @@ ext {
     //localGutenbergMobilePath = "../gutenberg-mobile"
     //localLoginFlowPath = "../WordPress-Login-Flow-Android"
     //localStoriesAndroidPath = "../stories-android"
+    //localAztecAndroidPath = "../AztecEditor-Android"
 }
