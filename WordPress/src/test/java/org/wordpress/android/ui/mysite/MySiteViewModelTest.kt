@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -45,6 +46,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -78,6 +80,11 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -106,16 +113,18 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
-private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 5
-private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 6
-private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 7
-private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
-private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 13
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 14
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 15
+/* These values can change if a new parameter is added to CardsBuilder constructor before clicks */
+private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 6
+private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 7
+private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 8
+private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 9
+private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 14
+private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 15
+private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 16
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
@@ -142,6 +151,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
+    @Mock lateinit var postCardsSource: PostCardsSource
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -183,12 +193,24 @@ class MySiteViewModelTest : BaseUnitTest() {
                 completedTasks = emptyList()
         )
 
+
+    private val mockedPostsData: MockedPostsData
+        get() = MockedPostsData(
+                posts = Posts(
+                        hasPublishedPosts = true,
+                        draft = listOf(Post(id = "1", title = PostCardBuilder.DRAFT_TITLE)),
+                        scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE)),
+                ),
+        )
+    private val postsUpdate = MutableLiveData(PostsUpdate(mockedPostsData))
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
     private var quickActionsMediaClickAction: (() -> Unit)? = null
 
     @InternalCoroutinesApi
+    @Suppress("LongMethod")
     @Before
     fun setUp() = test {
         onSiteChange.value = null
@@ -204,6 +226,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
+        whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -230,7 +253,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartUtilsWrapper,
                 snackbarSequencer,
                 cardsBuilder,
-                dynamicCardsBuilder
+                dynamicCardsBuilder,
+                postCardsSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1284,13 +1308,15 @@ class MySiteViewModelTest : BaseUnitTest() {
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
-            listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard)
+            val postCard = initPostCard()
+            listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
         }.whenever(cardsBuilder).build(
                 site = eq(site),
                 showSiteIconProgressBar = any(),
                 activeTask = anyOrNull(),
                 isDomainCreditAvailable = anyBoolean(),
                 quickStartCategories = any(),
+                mockedPostsData = any(),
                 titleClick = any(),
                 iconClick = any(),
                 urlClick = any(),
@@ -1340,10 +1366,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     )
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        quickActionsStatsClickAction = mockInvocation.getArgument(9)
-        quickActionsPagesClickAction = mockInvocation.getArgument(10)
-        quickActionsPostsClickAction = mockInvocation.getArgument(11)
-        quickActionsMediaClickAction = mockInvocation.getArgument(12)
+        quickActionsStatsClickAction = mockInvocation.getArgument(10)
+        quickActionsPagesClickAction = mockInvocation.getArgument(11)
+        quickActionsPostsClickAction = mockInvocation.getArgument(12)
+        quickActionsMediaClickAction = mockInvocation.getArgument(13)
         return QuickActionsCard(
                 title = UiStringText(""),
                 onStatsClick = ListItemInteraction.create { (quickActionsStatsClickAction as () -> Unit).invoke() },
@@ -1408,4 +1434,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
         )
     }
+
+    private fun initPostCard() = PostCard(title = UiStringRes(0), postTitle = UiStringRes(0))
 }
