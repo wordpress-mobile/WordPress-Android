@@ -2,9 +2,12 @@ package org.wordpress.android.viewmodel.domains
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -15,10 +18,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -29,11 +34,24 @@ typealias DomainSuggestionsListState = ListState<DomainSuggestionResponse>
 class DomainSuggestionsViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
-    private val debouncer: Debouncer
+    private val debouncer: Debouncer,
+    private val domainRegistrationHandler: DomainRegistrationHandler,
+    siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
     private var isQueryTrackingCompleted = false
+
+    private val _siteIdLiveData = MutableLiveData<Int>()
+    private val siteIdLiveData: LiveData<Int>
+            get() = _siteIdLiveData
+
+    private val _domainCreditAvailable = Transformations.switchMap(siteIdLiveData) {
+        domainRegistrationHandler.buildSource(viewModelScope, it).distinctUntilChanged()
+    }
+
+    val isSiteDomainsFeatureConfigEnabled = siteDomainsFeatureConfig.isEnabled()
+    val isDomainCreditAvailable = MediatorLiveData<Boolean>()
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<DomainSuggestionsListState>
@@ -87,6 +105,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         debouncer.shutdown()
+        domainRegistrationHandler.clear()
         super.onCleared()
     }
 
@@ -95,12 +114,22 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         this.site = site
+        checkDomainCreditAvailability()
         initializeDefaultSuggestions()
         isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
         searchQuery = site.name
+    }
+
+    private fun checkDomainCreditAvailability() {
+        if (isSiteDomainsFeatureConfigEnabled) {
+            _siteIdLiveData.value = site.id
+            isDomainCreditAvailable.addSource(_domainCreditAvailable) {
+                isDomainCreditAvailable.value = it.isDomainCreditAvailable
+            }
+        }
     }
 
     // Network Request

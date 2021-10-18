@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 09:54:08+0000
+Translation-Revision-Date: 2021-10-13 12:04:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">搜索域</string>
+    <string name="domains_free_plan_get_your_domain_caption">在此站点上购买的域会将访客重定向至 &lt;b&gt;%s。&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">您的套餐中包括为期一年的免费域名注册</string>
+    <string name="domains_paid_plan_claim_your_domain_title">声明您的免费域</string>
+    <string name="domains_manage_domains">管理域</string>
+    <string name="domains_redirected_domains_blurb">您的域将重定向至您在 &lt;b&gt;%s&lt;/b&gt; 上的站点。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;了解更多。&lt;/a&gt;</string>
+    <string name="domains_add_a_domain">添加域</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日期 %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">到期日期 %s</string>
+    <string name="domains_site_domains">您的站点域名</string>
+    <string name="domains_primary_site_address_blurb">您的主站点地址是访客访问您的网站时，在其浏览器中所看到的地址。</string>
+    <string name="domains_primary_site_address_chip">主站点地址</string>
+    <string name="domains_primary_site_more_menu_change_site_address">更改站点地址</string>
+    <string name="domains_primary_site_caption">您的免费 WordPress.com 地址是</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;第一年免费 &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /年&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">是否要放弃？</string>
+    <string name="comment_edit_cancel_dialog_title">存在未保存的更改</string>
+    <string name="comment_edit_comment_error">评论不能为空</string>
+    <string name="comment_edit_user_email_error">用户电子邮件无效</string>
+    <string name="comment_edit_web_address_error">网址无效</string>
+    <string name="comment_edit_user_name_error">用户名不能为空</string>
+    <string name="comment_edit_email_address">电子邮件地址</string>
+    <string name="comment_edit_web_address">网址</string>
+    <string name="comment_edit_comment">评论</string>
+    <string name="comment_edit_user_name">名称</string>
+    <string name="comment_edit_menu_done">完成</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入区块预览即将推出</string>
     <string name="weekly_roundup">每周综述</string>
     <string name="gutenberg_native_embed_options">嵌入选项</string>
@@ -18,8 +45,6 @@ Language: zh_CN
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;您&lt;/a&gt;赞过此内容。</string>
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">获取您的域名</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">主要站点地址</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
     <string name="site_settings_site_domains_title">站点域</string>
     <string name="my_site_btn_domains">域名</string>
@@ -186,6 +211,7 @@ Language: zh_CN
     <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_retry">重试</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
+    <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
@@ -1341,6 +1367,7 @@ Language: zh_CN
     <string name="plugin_install_custom_domain_required_dialog_register_btn">注册域</string>
     <string name="plugin_install_custom_domain_required_dialog_message">要安装插件，您需要拥有一个与站点相关联的自定义域。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">安装插件</string>
+    <string name="new_site_creation_preview_subtitle">您可以稍后定制站点的外观和风格</string>
     <string name="publish_on">发布日期：%s</string>
     <string name="schedule_for">预计发布日期：%s</string>
     <string name="published_on">发布日期：%s</string>

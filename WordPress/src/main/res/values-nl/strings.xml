@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-20 21:28:16+0000
+Translation-Revision-Date: 2021-10-09 15:36:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Zoek naar een domein</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domeinen aangeschaft op deze site, zullen bezoekers omleiden naar &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Je hebt een gratis één-jaar domein registratie met je abonnement</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Claim je gratis domein</string>
+    <string name="domains_manage_domains">Beheer domeinen</string>
+    <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Meer weten&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Voeg een domein toe</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Verloopt op %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Verloopt op %s</string>
+    <string name="domains_site_domains">Je site domeinen</string>
+    <string name="domains_primary_site_address_blurb">Je primaire site adres is wat je bezoekers zullen zien in hun browser adresbalk wanneer ze je site bezoeken.</string>
+    <string name="domains_primary_site_address_chip">Primair site adres</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Site adres wijzigen</string>
+    <string name="domains_primary_site_caption">Je gratis WordPress.com adres is</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /jaar&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Wil je ze negeren?</string>
+    <string name="comment_edit_cancel_dialog_title">Er zijn niet opgeslagen wijzigingen</string>
+    <string name="comment_edit_comment_error">Reactie mag niet leeg zijn</string>
+    <string name="comment_edit_user_email_error">Gebruiker e-mail is niet geldig</string>
+    <string name="comment_edit_web_address_error">Webadres is niet geldig</string>
+    <string name="comment_edit_user_name_error">Gebruikersnaam mag niet leeg zijn</string>
+    <string name="comment_edit_email_address">E-mailadres</string>
+    <string name="comment_edit_web_address">Webadres</string>
+    <string name="comment_edit_comment">Reactie</string>
+    <string name="comment_edit_user_name">Naam</string>
+    <string name="comment_edit_menu_done">Klaar</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Insluit blok voorbeelden komen binnenkort</string>
     <string name="weekly_roundup">Wekelijks overzicht</string>
     <string name="gutenberg_native_embed_options">Insluit opties</string>
@@ -18,8 +45,7 @@ Language: nl
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Je&lt;/a&gt; vind dit leuk.</string>
     <string name="gutenberg_native_line_height">Regelafstand</string>
     <string name="domains_free_plan_get_your_domain_title">Krijg je domein</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">ADRES VAN DE PRIMAIRE SITE</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Onbekende fout bij het ophalen van aanbevolen app template</string>
     <string name="recommend_app_bad_format_response">Ongeldige reactie ontvangen</string>
     <string name="recommend_app_null_response">Geen reactie ontvangen</string>
@@ -186,6 +212,7 @@ Language: nl
     <string name="gutenberg_native_post_content_settings">Berichtinhoud instellingen</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
     <string name="gutenberg_native_embed_link">Sluit link in</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
@@ -2710,7 +2737,7 @@ Language: nl
     <string name="reader_empty_posts_in_blog">Deze site is leeg</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
-    <string name="post_uploading">Uploaden bericht</string>
+    <string name="post_uploading">Bericht wordt geüpload</string>
     <string name="stats_followers_years">%1$d jaren</string>
     <string name="stats_followers_a_year">Per jaar</string>
     <string name="stats_followers_months">%1$d maanden</string>
@@ -2749,7 +2776,8 @@ Language: nl
     <string name="older_month">Ouder dan een maand</string>
     <string name="older_last_week">Ouder dan een week</string>
     <string name="older_two_days">Ouder dan 2 dagen</string>
-    <string name="mnu_comment_liked">Liked</string>
+    <string name="help_and_support">Help &amp; ondersteuning</string>
+    <string name="mnu_comment_liked">Leuk gevonden</string>
     <string name="comment">Reactie</string>
     <string name="comment_trashed">Reactie verwijderd</string>
     <string name="comment_reply_to_user">Antwoord op %s</string>
@@ -2798,11 +2826,11 @@ Language: nl
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
     <string name="reader_toast_err_remove_tag">Niet mogelijk om dit onderwerp te verwijderen</string>
     <string name="reader_toast_err_add_tag">Niet mogelijk om dit onderwerp toe te voegen</string>
-    <string name="reader_title_applog">Applicatielogboek</string>
+    <string name="reader_title_applog">Applicatie log</string>
     <string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
     <string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
     <string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
-    <string name="wordpress_blog">WordPress-blog</string>
+    <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Afbeeldingsinstellingen</string>
     <string name="local_changes">Lokale wijzigingen</string>
     <string name="privacy_policy">Privacybeleid</string>
@@ -2841,7 +2869,7 @@ Language: nl
     <string name="post_settings">Berichtinstellingen</string>
     <string name="file_not_found">Kan het bestand voor upload niet vinden. Is het verplaatst of verwijderd?</string>
     <string name="local_draft">Lokaal concept</string>
-    <string name="page_settings">Pagina-instellingen</string>
+    <string name="page_settings">Pagina instellingen</string>
     <string name="link_enter_url_text">Linktekst (optioneel)</string>
     <string name="cannot_delete_multi_media_items">Sommige media kan niet worden verwijderd. Probeer het later opnieuw.</string>
     <string name="media_error_no_permission">Je hebt geen rechten om de mediabibliotheek te bekijken</string>
@@ -2909,7 +2937,7 @@ Language: nl
     <string name="follows">Volgt</string>
     <string name="note_reply_successful">Reactie gepubliceerd</string>
     <string name="sign_in">Inloggen</string>
-    <string name="loading">Laden…</string>
+    <string name="loading">Aan het laden…</string>
     <string name="httppassword">HTTP wachtwoord</string>
     <string name="httpuser">HTTP gebruikersnaam</string>
     <string name="error_media_upload">Er is een fout opgetreden tijdens het uploaden van media</string>

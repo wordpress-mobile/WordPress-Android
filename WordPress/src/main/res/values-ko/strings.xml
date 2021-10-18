@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 11:54:55+0000
+Translation-Revision-Date: 2021-10-13 12:03:53+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">도메인 검색</string>
+    <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 사용자가 &lt;b&gt;%s(으)로 리디렉팅됩니다.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">이용 중인 요금제에 1년 무료 도메인 등록이 포함되어 있음</string>
+    <string name="domains_paid_plan_claim_your_domain_title">무료 도메인 신청</string>
+    <string name="domains_manage_domains">도메인 관리</string>
+    <string name="domains_redirected_domains_blurb">도메인이 &lt;b&gt;%s&lt;/b&gt;의 사이트로 리디렉팅됩니다. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;자세히 알아보세요&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">도메인 추가</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;만료 날짜 %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">만료 날짜 %s</string>
+    <string name="domains_site_domains">사이트 도메인</string>
+    <string name="domains_primary_site_address_blurb">기본 사이트 주소는 방문자가 웹사이트 방문 시 브라우저의 주소 표시줄에 표시되는 주소입니다.</string>
+    <string name="domains_primary_site_address_chip">기본 사이트 주소</string>
+    <string name="domains_primary_site_more_menu_change_site_address">사이트 주소 변경</string>
+    <string name="domains_primary_site_caption">무료 워드프레스닷컴 주소:</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/년&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">취소하시겠어요?</string>
+    <string name="comment_edit_cancel_dialog_title">저장되지 않은 변경 사항이 있음</string>
+    <string name="comment_edit_comment_error">댓글은 비워 둘 수 없음</string>
+    <string name="comment_edit_user_email_error">사용자 이메일이 유효하지 않음</string>
+    <string name="comment_edit_web_address_error">웹 주소가 유효하지 않음</string>
+    <string name="comment_edit_user_name_error">사용자 이름은 비워 둘 수 없음</string>
+    <string name="comment_edit_email_address">이메일 주소</string>
+    <string name="comment_edit_web_address">웹 주소</string>
+    <string name="comment_edit_comment">댓글</string>
+    <string name="comment_edit_user_name">이름</string>
+    <string name="comment_edit_menu_done">완료</string>
     <string name="weekly_roundup">주간 총정리</string>
     <string name="gutenberg_native_embed_options">임베드 옵션</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">임베드 옵션을 보려면 두 번 누릅니다.</string>
@@ -17,9 +44,7 @@ Language: ko_KR
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;회원님&lt;/a&gt;이 좋아합니다.</string>
     <string name="gutenberg_native_line_height">줄 높이</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
-    <string name="domains_primary_domain">기본 사이트 주소</string>
     <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
     <string name="recommend_app_null_response">수신된 응답 없음</string>
     <string name="recommend_app_subject">WordPress 앱 - 모든 화면에 알맞은 앱</string>
@@ -184,6 +209,7 @@ Language: ko_KR
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
+    <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_embed_link">링크 임베드</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
@@ -2753,6 +2779,7 @@ Language: ko_KR
     <string name="comment_reply_to_user">%s에 응답</string>
     <string name="signing_out">로그아웃…</string>
     <string name="reader_empty_posts_in_tag">이 토픽의 글이 없습니다</string>
+    <string name="help_and_support">도움 및 지원</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
     <string name="reader_toast_err_block_blog">이 블로그를 차단할 수 없습니다</string>
     <string name="reader_toast_blog_blocked">이 블로그에서 글 올리기는  더 이상 보이지 않을 것입니다</string>

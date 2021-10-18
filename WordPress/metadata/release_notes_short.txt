@@ -1,3 +1,0 @@
-In the block editor, we fixed a toolbar issue on devices set to an RTL language, and made updates to the Embed block, like enabling WordPress, Instagram, and Vimeo previews and adding options to retry or convert media into a link.
-
-More updates include a fix affecting video on some sites, and updating My Site menu labels (“Posts” and “Pages”).

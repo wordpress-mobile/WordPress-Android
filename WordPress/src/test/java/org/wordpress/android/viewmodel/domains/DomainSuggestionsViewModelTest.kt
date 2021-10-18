@@ -17,14 +17,18 @@ import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.helpers.Debouncer
 
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var debouncer: Debouncer
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: DomainSuggestionsViewModel
@@ -32,7 +36,8 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         site = SiteModel().also { it.name = "Test Site" }
-        viewModel = DomainSuggestionsViewModel(tracker, dispatcher, debouncer)
+        viewModel = DomainSuggestionsViewModel(
+                tracker, dispatcher, debouncer, domainRegistrationHandler, siteDomainsFeatureConfig)
 
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable

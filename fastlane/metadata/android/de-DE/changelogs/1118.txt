@@ -1,4 +1,0 @@
-18.3:
-Wir haben Probleme im Block-Editor mit der Werkzeugleiste bei Geräten mit linksläufiger Sprache behoben und einige Updates am Embed-Block vorgenommen, u. a. eine Vorschau für WordPress, Instagram und Vimeo sowie Optionen zum Wiederholen oder Konvertieren von Medien in einen Link.
-
-Wir haben außerdem einen Fehler behoben, der auf manchen Websites bei Videos auftrat, und die „Meine Website“-Menübeschriftungen aktualisiert („Beiträge“ und „Seiten“).

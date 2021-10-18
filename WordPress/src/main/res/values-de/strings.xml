@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 13:54:08+0000
+Translation-Revision-Date: 2021-10-14 11:09:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Domain suchen</string>
+    <string name="domains_free_plan_get_your_domain_caption">Auf dieser Website erworbene Domains werden Besucher zu &lt;b&gt;%s weiterleiten.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">In deinem Tarif ist eine kostenlose Domain-Registrierung für ein Jahr enthalten</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Kostenlose Domain in Anspruch nehmen</string>
+    <string name="domains_manage_domains">Domains verwalten</string>
+    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter &lt;b&gt;%s&lt;/b&gt; weiterleiten. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Weitere Informationen&lt;/a&gt;</string>
+    <string name="domains_add_a_domain">Domain hinzufügen</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft ab am %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Läuft ab am %s</string>
+    <string name="domains_site_domains">Deine Website-Domains</string>
+    <string name="domains_primary_site_address_blurb">Die Adresse deiner Haupt-Website ist das, was Besucher in der Adressleiste des Browsers sehen, wenn sie deine Website besuchen.</string>
+    <string name="domains_primary_site_address_chip">Adresse der Haupt-Website</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Website-Adresse ändern</string>
+    <string name="domains_primary_site_caption">Deine kostenlose WordPress.com-Adresse lautet</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/Jahr&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Möchtest du sie verwerfen?</string>
+    <string name="comment_edit_cancel_dialog_title">Es sind nicht gespeicherte Änderungen vorhanden.</string>
+    <string name="comment_edit_comment_error">Kommentar darf nicht leer sein</string>
+    <string name="comment_edit_user_email_error">Benutzer-E-Mail-Adresse ist ungültig</string>
+    <string name="comment_edit_web_address_error">Web-Adresse ist ungültig</string>
+    <string name="comment_edit_user_name_error">Benutzername darf nicht leer sein</string>
+    <string name="comment_edit_email_address">E-Mail-Adresse</string>
+    <string name="comment_edit_web_address">Web-Adresse</string>
+    <string name="comment_edit_comment">Kommentar</string>
+    <string name="comment_edit_user_name">Name</string>
+    <string name="comment_edit_menu_done">Fertig</string>
     <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
-    <string name="domains_primary_domain">HAUPTADRESSE DER WEBSITE</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
     <string name="gutenberg_native_line_height">Zeilenhöhe</string>
     <string name="site_settings_site_domains_title">Website-Domains</string>
@@ -176,6 +201,7 @@ Language: de
     <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
     <string name="gutenberg_native_retry">Erneut versuchen</string>
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
+    <string name="gutenberg_native_s_link">%s Link</string>
     <string name="gutenberg_native_featured">Beitragsbild</string>
     <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
@@ -2743,6 +2769,7 @@ Language: de
     <string name="comment_reply_to_user">Antwort zu %s</string>
     <string name="signing_out">Abmelden …</string>
     <string name="reader_empty_posts_in_tag">Keine Beiträge mit diesem Thema</string>
+    <string name="help_and_support">Hilfe &amp; Support</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
     <string name="reader_menu_block_blog">Diese Website blockieren</string>
     <string name="reader_toast_err_block_blog">Kann diese Website nicht blockieren</string>

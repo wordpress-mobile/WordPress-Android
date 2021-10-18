@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-01 15:09:03+0000
+Translation-Revision-Date: 2021-10-13 12:04:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Rechercher un domaine</string>
+    <string name="domains_free_plan_get_your_domain_caption">Les domaines achetés sur ce site redirigeront les visiteurs vers &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Demander votre domaine gratuit</string>
+    <string name="domains_manage_domains">Gérer les domaines</string>
+    <string name="domains_redirected_domains_blurb">Vos domaines redirigeront les visiteurs vers votre site à l’adresse &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;En savoir plus&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Ajouter un domaine</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expire le %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Expire le %s</string>
+    <string name="domains_site_domains">Les domaines de votre site</string>
+    <string name="domains_primary_site_address_blurb">L’adresse de votre site principal est celle qui s’affichera dans la barre d’adresse du navigateur des visiteurs qui consulteront votre site Web.</string>
+    <string name="domains_primary_site_address_chip">Adresse principale du site</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Modifier l’adresse du site</string>
+    <string name="domains_primary_site_caption">Votre adresse WordPress.com gratuite est</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit la première année &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Voulez-vous les annuler ?</string>
+    <string name="comment_edit_cancel_dialog_title">Certaines modifications ne sont pas enregistrées.</string>
+    <string name="comment_edit_comment_error">Le champ Commentaire ne peut pas être vide.</string>
+    <string name="comment_edit_user_email_error">L’adresse e-mail de l’utilisateur n’est pas valide.</string>
+    <string name="comment_edit_web_address_error">Adresse Web non valide</string>
+    <string name="comment_edit_user_name_error">Le champ Nom de l’utilisateur ne peut pas être vide.</string>
+    <string name="comment_edit_email_address">Adresse email</string>
+    <string name="comment_edit_web_address">Adresse web</string>
+    <string name="comment_edit_comment">Commentaire</string>
+    <string name="comment_edit_user_name">Nom</string>
+    <string name="comment_edit_menu_done">Terminé</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Les aperçus de bloc embarqués seront prochainement disponibles</string>
     <string name="weekly_roundup">Résumé hebdomadaire</string>
     <string name="gutenberg_native_embed_options">Options d’intégration</string>
@@ -16,8 +43,6 @@ Language: fr
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Vous et %1$s blogueurs&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Vous et 1 blogueur&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
-    <string name="domains_primary_domain">ADRESSE DU SITE PRINCIPAL</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
@@ -186,6 +211,7 @@ Language: fr
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
+    <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_featured">À la Une</string>
     <string name="gutenberg_native_embed_link">Lien intégré</string>
     <string name="gutenberg_native_display_post_date">Affiche la date du contenu</string>
@@ -2755,6 +2781,7 @@ Language: fr
     <string name="comment_reply_to_user">Réponse à %s</string>
     <string name="signing_out">Déconnexion…</string>
     <string name="reader_empty_posts_in_tag">Pas d\'article avec ce sujet</string>
+    <string name="help_and_support">Aide &amp; Support</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
     <string name="reader_menu_block_blog">Bloquer ce site</string>
     <string name="reader_toast_blog_blocked">Les articles de ce site ne seront plus affichés</string>
