@@ -193,16 +193,17 @@ class MySiteViewModelTest : BaseUnitTest() {
                 completedTasks = emptyList()
         )
 
-
-    private val mockedPostsData: MockedPostsData
-        get() = MockedPostsData(
-                posts = Posts(
-                        hasPublishedPosts = true,
-                        draft = listOf(Post(id = "1", title = PostCardBuilder.DRAFT_TITLE)),
-                        scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE)),
-                ),
-        )
-    private val postsUpdate = MutableLiveData(PostsUpdate(mockedPostsData))
+    private val postsUpdate = MutableLiveData(
+            PostsUpdate(
+                    MockedPostsData(
+                            posts = Posts(
+                                    hasPublishedPosts = true,
+                                    draft = listOf(Post(id = "1", title = PostCardBuilder.DRAFT_TITLE)),
+                                    scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE)),
+                            )
+                    )
+            )
+    )
 
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null

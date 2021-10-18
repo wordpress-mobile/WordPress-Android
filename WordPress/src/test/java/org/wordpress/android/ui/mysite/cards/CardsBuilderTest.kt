@@ -198,7 +198,7 @@ class CardsBuilderTest {
                 domainRegistrationClick = mock(),
                 onQuickStartBlockRemoveMenuItemClick = mock(),
                 onQuickStartTaskTypeItemClick = mock(),
-                mockedPostsData = mock()
+                mockedPostsData = mockedPostsData
         )
     }
 
