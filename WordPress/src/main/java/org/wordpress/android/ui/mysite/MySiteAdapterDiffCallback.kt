@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.recyclerview.widget.DiffUtil
 import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
@@ -18,6 +19,7 @@ class MySiteAdapterDiffCallback(
 
     override fun getNewListSize(): Int = updatedCardAndItems.size
 
+    @Suppress("ComplexMethod")
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = oldCardAndItems[oldItemPosition]
         val updatedItem = updatedCardAndItems[newItemPosition]
@@ -29,6 +31,7 @@ class MySiteAdapterDiffCallback(
             oldItem is QuickStartDynamicCard && updatedItem is QuickStartDynamicCard -> oldItem.id == updatedItem.id
             oldItem is CategoryHeaderItem && updatedItem is CategoryHeaderItem -> oldItem.title == updatedItem.title
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
+            oldItem is PostCard && updatedItem is PostCard -> true
             else -> throw NotImplementedException("Diff not implemented yet")
         }
     }

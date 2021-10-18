@@ -18,11 +18,13 @@ import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_ST
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
+import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
+    @Mock lateinit var followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var viewModel: ReaderCommentListViewModel
     private val blogId = 100L
@@ -35,11 +37,13 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(followCommentsHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(followCommentsHandler.followStatusUpdate).thenReturn(followStatusUpdate)
+        whenever(followByPushNotificationFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel = ReaderCommentListViewModel(
                 followCommentsHandler,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                followByPushNotificationFeatureConfig
         )
     }
 
@@ -71,7 +75,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSwipeToRefresh updates follow conversation status`() = test {
-        var stateChanged = FollowStateChanged(blogId, postId, true, true)
+        var stateChanged = FollowStateChanged(blogId, postId, true, false, true)
         doAnswer {
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
@@ -98,15 +102,15 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onFollowConversationClicked toggles follow button status`() = test {
-        var stateChanged = FollowStateChanged(blogId, postId, true)
+        var stateChanged = FollowStateChanged(blogId, postId, true, false)
         doAnswer {
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
 
         doAnswer {
-            stateChanged = FollowStateChanged(blogId, postId, false)
+            stateChanged = FollowStateChanged(blogId, postId, false, false)
             followStatusUpdate.postValue(stateChanged)
-        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, false)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, false, null)
 
         setupObserversAndStart()
 
@@ -119,6 +123,84 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         requireNotNull(uiState).let {
             assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
             assertThat(it.isFollowing).isFalse()
+        }
+    }
+
+    @Test
+    fun `onFollowTapped toggles follow status`() = test {
+        var stateChanged = FollowStateChanged(blogId, postId, false, false)
+        doAnswer {
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
+
+        doAnswer {
+            stateChanged = FollowStateChanged(blogId, postId, true, false)
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, true, null)
+
+        setupObserversAndStart()
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isFollowing).isFalse()
+            it.onFollowTapped?.invoke()
+        }
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isFollowing).isTrue()
+        }
+    }
+
+    @Test
+    fun `onUnfollowTapped toggles follow status`() = test {
+        var stateChanged = FollowStateChanged(blogId, postId, true, false)
+        doAnswer {
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
+
+        doAnswer {
+            stateChanged = FollowStateChanged(blogId, postId, false, false)
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, false, null)
+
+        setupObserversAndStart()
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isFollowing).isTrue()
+            viewModel.onUnfollowTapped()
+        }
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isFollowing).isFalse()
+        }
+    }
+
+    @Test
+    fun `onChangePushNotificationsRequest toggles push notifications status`() = test {
+        var stateChanged = FollowStateChanged(blogId, postId, true, false)
+        doAnswer {
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
+
+        doAnswer {
+            stateChanged = FollowStateChanged(blogId, postId, true, true)
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleEnableByPushNotificationsClicked(blogId, postId, true, null)
+
+        setupObserversAndStart()
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isReceivingNotifications).isFalse()
+            viewModel.onChangePushNotificationsRequest(true)
+        }
+
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.isReceivingNotifications).isTrue()
         }
     }
 

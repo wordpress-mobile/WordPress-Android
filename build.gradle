@@ -6,10 +6,10 @@ buildscript {
     ext.coroutinesVersion = '1.3.9'
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = 'develop-eebc5d8e91a1d90190919f900f924b39c861a528'
-    ext.wordPressLoginVersion = '71-da6693f4a6a8480bdbcf752edbf27c6d11c8d592'
+    ext.wordPressLoginVersion = '0.0.8'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'develop-31cae6abc011a38f7a63f32d4306735358e144d4'
-    ext.storiesVersion = 'develop-6919e0039bba4204321f9d644250abfd0c900f2d'
+    ext.gutenbergMobileVersion = 'v1.65.0-alpha1'
+    ext.storiesVersion = '1.1.0'
 
     repositories {
         maven {

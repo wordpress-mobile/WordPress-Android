@@ -113,6 +113,7 @@ android {
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
+        buildConfigField "boolean", "FOLLOW_BY_PUSH_NOTIFICATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

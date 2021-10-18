@@ -1558,9 +1558,19 @@
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Following this conversation\nEnable in-app notifications?</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Unsubscribed from this conversation</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">In-app notifications enabled</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">In-app notifications disabled</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Could not enable in-app notifications</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Could not disable in-app notifications</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Manage follow conversation options, Popup window</string>
+    <string name="reader_follow_comments_message">You\'re following this conversation. You will receive notifications by email when new comments are published.</string>
+    <string name="reader_follow_comments_enable_push_notifications">Enable in-app notifications</string>
+    <string name="reader_follow_comments_unfollow_conversation">Unfollow conversation</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
@@ -2426,7 +2436,7 @@
     <!-- Domain Registration -->
     <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
+    <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
@@ -2454,11 +2464,10 @@
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
-        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_continue_button">continue</string>
+    <string name="domain_contact_information_register_domain_button">Register domain</string>
+    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
+    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being setup. It may take up to 30 minutes for your domain to start working.</string>
+    <string name="domain_registration_result_continue_button" translatable="false">@string/label_done_button</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
@@ -2467,7 +2476,6 @@
     <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_address_chip">Primary site address</string>
-    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
@@ -2477,7 +2485,7 @@
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
