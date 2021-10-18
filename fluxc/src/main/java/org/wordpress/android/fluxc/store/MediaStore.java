@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPV2MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
@@ -467,15 +468,21 @@ public class MediaStore extends Store {
 
     private final MediaRestClient mMediaRestClient;
     private final MediaXMLRPCClient mMediaXmlrpcClient;
+    private final WPV2MediaRestClient mWPV2MediaRestClient;
     // Ensures that the UploadStore is initialized whenever the MediaStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
-    @Inject public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
+    @Inject public MediaStore(
+            Dispatcher dispatcher,
+            MediaRestClient restClient,
+            MediaXMLRPCClient xmlrpcClient,
+            WPV2MediaRestClient wpv2MediaRestClient) {
         super(dispatcher);
         mMediaRestClient = restClient;
         mMediaXmlrpcClient = xmlrpcClient;
+        mWPV2MediaRestClient = wpv2MediaRestClient;
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -788,6 +795,8 @@ public class MediaStore extends Store {
         }
 
         if (payload.site.isUsingWpComRestApi()) {
+            mMediaRestClient.uploadMedia(payload.site, payload.media);
+        } else if (payload.site.isJetpackCPConnected()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
