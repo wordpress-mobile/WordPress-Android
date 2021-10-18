@@ -24,6 +24,6 @@ class PostCardsSourceTest : BaseUnitTest() {
         var result: PostsUpdate? = null
         postCardSource.buildSource(testScope(), 1).observeForever { it?.let { result = it } }
 
-        assertThat(result!!.mockedPostsData).isNotNull
+        assertThat(result?.mockedPostsData).isNotNull
     }
 }
