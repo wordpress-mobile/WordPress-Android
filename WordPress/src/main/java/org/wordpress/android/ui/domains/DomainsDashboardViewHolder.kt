@@ -104,7 +104,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             parent.viewBinding(DomainPurchaseCardBinding::inflate)
     ) {
         fun onBind(item: PurchaseDomain) = with(binding) {
-            purchaseDomainImage.setImageResource(item.image)
             uiHelpers.setTextOrHide(purchaseDomainTitle, item.title)
             uiHelpers.setTextOrHide(purchaseDomainCaption, item.body)
             searchDomainsButton.setOnClickListener { item.onClick.click() }

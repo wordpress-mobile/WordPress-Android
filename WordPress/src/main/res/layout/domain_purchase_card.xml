@@ -25,11 +25,10 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/purchase_domain_image"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/img_illustration_quick_start_task_placeholder"
-                app:tint="@color/wp_grey"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/img_illustration_domains_card_header"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
