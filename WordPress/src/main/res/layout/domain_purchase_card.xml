@@ -38,7 +38,7 @@
                 android:id="@+id/purchase_domain_title"
                 android:text="@string/domains_free_plan_get_your_domain_title"
                 android:textAlignment="center"
-                style="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                style="@style/BloggingRemindersText.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_large"

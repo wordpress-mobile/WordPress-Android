@@ -16,7 +16,7 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_domain"
             android:text="@string/domains_primary_site_address"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="?attr/textAppearanceSubtitle1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/margin_extra_large"
