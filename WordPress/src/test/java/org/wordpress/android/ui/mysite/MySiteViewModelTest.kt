@@ -199,7 +199,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                             posts = Posts(
                                     hasPublishedPosts = true,
                                     draft = listOf(Post(id = "1", title = PostCardBuilder.DRAFT_TITLE)),
-                                    scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE)),
+                                    scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE))
                             )
                     )
             )

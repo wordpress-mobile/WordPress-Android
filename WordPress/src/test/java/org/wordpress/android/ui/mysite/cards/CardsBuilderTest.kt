@@ -69,8 +69,8 @@ class CardsBuilderTest {
                 posts = Posts(
                         hasPublishedPosts = true,
                         draft = listOf(Post(id = "1", title = "draft")),
-                        scheduled = listOf(Post(id = "1", title = "scheduled")),
-                ),
+                        scheduled = listOf(Post(id = "1", title = "scheduled"))
+                )
         )
 
     @Before
