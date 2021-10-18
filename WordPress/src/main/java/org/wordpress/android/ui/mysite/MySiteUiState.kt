@@ -7,9 +7,11 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 
 data class MySiteUiState(
@@ -22,7 +24,8 @@ data class MySiteUiState(
     val activeTask: QuickStartTask? = null,
     val quickStartCategories: List<QuickStartCategory> = listOf(),
     val pinnedDynamicCard: DynamicCardType? = null,
-    val visibleDynamicCards: List<DynamicCardType> = listOf()
+    val visibleDynamicCards: List<DynamicCardType> = listOf(),
+    val mockedPostsData: MockedPostsData? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -39,6 +42,8 @@ data class MySiteUiState(
             val pinnedDynamicCard: DynamicCardType? = null,
             val cards: List<DynamicCardType>
         ) : PartialState()
+
+        data class PostsUpdate(val mockedPostsData: MockedPostsData? = null) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
@@ -59,6 +64,7 @@ data class MySiteUiState(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
+            is PostsUpdate -> this.copy(mockedPostsData = partialState.mockedPostsData)
         }
     }
 }

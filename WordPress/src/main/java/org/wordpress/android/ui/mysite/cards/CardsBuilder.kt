@@ -6,6 +6,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -13,16 +15,20 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
+@Suppress("LongParameterList")
 class CardsBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val siteInfoCardBuilder: SiteInfoCardBuilder,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
-    private val quickStartCardBuilder: QuickStartCardBuilder
+    private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val postCardBuilder: PostCardBuilder,
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
     @Suppress("LongParameterList")
     fun build(
@@ -31,6 +37,7 @@ class CardsBuilder @Inject constructor(
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
+        mockedPostsData: MockedPostsData? = null,
         titleClick: () -> Unit,
         iconClick: () -> Unit,
         urlClick: () -> Unit,
@@ -80,6 +87,9 @@ class CardsBuilder @Inject constructor(
                         )
                 )
             }
+        }
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            mockedPostsData?.let { cards.addAll(buildPostCards(it)) }
         }
         return cards
     }
@@ -136,4 +146,6 @@ class CardsBuilder @Inject constructor(
             onQuickStartBlockRemoveMenuItemClick,
             onQuickStartTaskTypeItemClick
     )
+
+    private fun buildPostCards(mockedPostsData: MockedPostsData) = postCardBuilder.build(mockedPostsData)
 }

@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
@@ -23,7 +24,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         QUICK_START_CARD,
         QUICK_START_DYNAMIC_CARD,
         CATEGORY_HEADER_ITEM,
-        LIST_ITEM
+        LIST_ITEM,
+        POST_CARD
     }
 
     sealed class Card(
@@ -77,6 +79,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onClick: ListItemInteraction
             )
         }
+
+        data class PostCard(
+            val title: UiString,
+            val postTitle: UiString
+        ) : Card(POST_CARD)
     }
 
     sealed class DynamicCard(
