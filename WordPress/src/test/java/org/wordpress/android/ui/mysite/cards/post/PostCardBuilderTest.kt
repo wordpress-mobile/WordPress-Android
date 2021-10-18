@@ -36,6 +36,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     @Test
     fun `when toolbar is built, then card title exists`() {
         val postCards = buildPostCards()
+        
         assertThat(postCards[0].title).isEqualTo(UiStringText(DRAFT_TITLE))
         assertThat(postCards[1].title).isEqualTo(UiStringText(SCHEDULED_TITLE))
     }
