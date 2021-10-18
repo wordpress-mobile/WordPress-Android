@@ -10,7 +10,7 @@
         android:id="@+id/add_domain_button"
         android:text="@string/domains_add_a_domain"
         android:textAllCaps="false"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/WordPress.Button.Primary.Unelevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"

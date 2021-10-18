@@ -64,7 +64,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_domains_button"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/WordPress.Button.Primary.Unelevated"
                 android:text="@string/domains_search_for_a_domain_button"
                 android:textAllCaps="false"
                 android:layout_width="match_parent"
