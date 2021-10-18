@@ -20,7 +20,7 @@ class PostCardsSource @Inject constructor(
         val result = MutableLiveData<PostsUpdate>()
         result.value = PostsUpdate(MockedPostsData())
         coroutineScope.launch {
-            val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(R.raw.dashboard_cards)
+            val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(R.raw.mocked_posts_data)
             val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
             result.postValue(PostsUpdate(mockedPostsData = mockedPostsData))
         }
