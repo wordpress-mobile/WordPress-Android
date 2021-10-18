@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -22,7 +24,11 @@ class DomainSuggestionsViewHolder(
     private val container: View = itemView.findViewById(R.id.domain_suggestions_container)
 
     fun bind(suggestion: DomainSuggestionItem) {
-        domainName.text = suggestion.domainName
+        domainName.text = buildSpannedString {
+            val tld = suggestion.domainName.split('.').last()
+            append(suggestion.domainName.removeSuffix(tld))
+            bold { append(tld) }
+        }
         domainCost.isVisible = suggestion.isCostVisible
         domainCost.text = getFormattedCost(suggestion)
         selectionRadioButton.isChecked = suggestion.isSelected
