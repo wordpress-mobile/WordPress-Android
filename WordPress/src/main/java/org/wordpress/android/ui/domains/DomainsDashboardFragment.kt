@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
@@ -38,8 +39,10 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
     }
 
     private fun setupViewModel() {
+        val intent = requireActivity().intent
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
-        viewModel.start()
+        viewModel.start(site)
     }
 
     private fun DomainsDashboardFragmentBinding.setupObservers() {

@@ -11,5 +11,6 @@ data class DomainSuggestionItem(
     val relevance: Float,
     val isSelected: Boolean,
     val isCostVisible: Boolean,
-    val isFreeWithCredits: Boolean
+    val isFreeWithCredits: Boolean,
+    val isEnabled: Boolean
 )

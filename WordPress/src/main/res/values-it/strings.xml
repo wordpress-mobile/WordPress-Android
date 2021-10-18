@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 10:54:08+0000
+Translation-Revision-Date: 2021-10-14 19:40:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Cerca un dominio</string>
+    <string name="domains_free_plan_get_your_domain_caption">I domini acquistati su questo sito reindirizzeranno i visitatori a &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Il tuo piano include la registrazione del dominio per un anno gratuitamente</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
+    <string name="domains_manage_domains">Gestisci domini</string>
+    <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Scopri di più&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Aggiungi un dominio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Scade il giorno %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Scade il giorno %s</string>
+    <string name="domains_site_domains">I domini del tuo sito</string>
+    <string name="domains_primary_site_address_blurb">L\'indirizzo principale del tuo sito è quello che i visitatori vedranno nella barra degli indirizzi del browser quando visiteranno il tuo sito web.</string>
+    <string name="domains_primary_site_address_chip">Indirizzo principale del sito</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Modifica l\'indirizzo del sito</string>
+    <string name="domains_primary_site_caption">Il tuo indirizzo WordPress.com gratuito è</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/anno&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Desideri eliminare?</string>
+    <string name="comment_edit_cancel_dialog_title">Sono presenti modifiche non salvate</string>
+    <string name="comment_edit_comment_error">Il campo Commento non può essere vuoto</string>
+    <string name="comment_edit_user_email_error">E-mail utente non valida</string>
+    <string name="comment_edit_web_address_error">Indirizzo web non valido</string>
+    <string name="comment_edit_user_name_error">Il nome utente non può essere vuoto</string>
+    <string name="comment_edit_email_address">Indirizzo e-mail</string>
+    <string name="comment_edit_web_address">Indirizzo web</string>
+    <string name="comment_edit_comment">Commento</string>
+    <string name="comment_edit_user_name">Nome</string>
+    <string name="comment_edit_menu_done">Fatto</string>
     <string name="weekly_roundup">Resoconto settimanale</string>
     <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
@@ -183,6 +210,7 @@ Language: it
     <string name="gutenberg_native_preview_post">Anteprima articolo</string>
     <string name="gutenberg_native_retry">Riprova</string>
     <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
@@ -2749,6 +2777,7 @@ Language: it
     <string name="comment_reply_to_user">Replica a %s</string>
     <string name="signing_out">Disconnessione in corso…</string>
     <string name="reader_empty_posts_in_tag">Nessun articolo con questo argomento</string>
+    <string name="help_and_support">Guida e supporto</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="reader_toast_err_block_blog">Impossibile bloccare questo sito</string>
     <string name="reader_menu_block_blog">Blocca questo sito</string>

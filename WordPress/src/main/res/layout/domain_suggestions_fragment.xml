@@ -18,6 +18,25 @@
         android:paddingBottom="@dimen/domain_suggestions_intro_vertical_padding">
 
         <TextView
+            android:id="@+id/redirect_message"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="@string/domains_free_plan_get_your_domain_caption"
+            tools:visibility="visible"/>
+
+        <View
+            android:id="@+id/redirect_divider"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/intro_line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -26,6 +45,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         <TextView
+            android:id="@+id/intro_line2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -120,20 +140,32 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_buttons"
+        style="@style/Widget.Domains.CardView.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp">
+        android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/chose_domain_button"
-            style="@style/WordPress.Button.Primary"
+            android:id="@+id/select_domain_button"
+            style="@style/WordPress.Button.Primary.Unelevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:text="@string/domains_suggestions_choose_domain" />
+            android:enabled="false"
+            android:text="@string/domains_suggestions_select_domain"
+            tools:enabled="true" />
+
+        <ProgressBar
+            android:id="@+id/button_progress_bar"
+            android:layout_width="@dimen/domain_suggestions_progress_indicator_size"
+            android:layout_height="@dimen/domain_suggestions_progress_indicator_size"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="?attr/colorOnSecondary"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>
