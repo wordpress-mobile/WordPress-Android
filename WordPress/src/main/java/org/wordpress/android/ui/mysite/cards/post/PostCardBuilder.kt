@@ -9,14 +9,20 @@ class PostCardBuilder @Inject constructor() {
     fun build(mockedPostsData: MockedPostsData): List<PostCard> {
         val cards = mutableListOf<PostCard>()
         mockedPostsData.posts?.draft?.map {
-            cards.add(PostCard(
-                    title = UiStringText(DRAFT_TITLE),
-                    postTitle = UiStringText(it.title ?: NO_TITLE)))
+            cards.add(
+                    PostCard(
+                            title = UiStringText(DRAFT_TITLE),
+                            postTitle = UiStringText(it.title ?: NO_TITLE)
+                    )
+            )
         }
         mockedPostsData.posts?.scheduled?.map {
-            cards.add(PostCard(
-                    title = UiStringText(SCHEDULED_TITLE),
-                    postTitle = UiStringText(it.title ?: NO_TITLE)))
+            cards.add(
+                    PostCard(
+                            title = UiStringText(SCHEDULED_TITLE),
+                            postTitle = UiStringText(it.title ?: NO_TITLE)
+                    )
+            )
         }
         return cards
     }
