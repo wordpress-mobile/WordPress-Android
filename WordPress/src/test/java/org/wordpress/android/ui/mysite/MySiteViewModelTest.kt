@@ -1330,7 +1330,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
-        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>() [0])
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
         return SiteInfoCard(
                 title = siteName,
                 url = siteUrl,
@@ -1345,7 +1345,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>() [0])
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
         quickActionsStatsClickAction = params.onQuickActionStatsClick
         quickActionsPagesClickAction = params.onQuickActionPagesClick
         quickActionsPostsClickAction = params.onQuickActionPostsClick
@@ -1364,13 +1364,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
             ListItemInteraction.create {
-                (mockInvocation.arguments.filterIsInstance<DomainRegistrationCardBuilderParams>() [0])
+                (mockInvocation.arguments.filterIsInstance<DomainRegistrationCardBuilderParams>()).first()
                         .domainRegistrationClick.invoke()
             }
     )
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>() [0])
+        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
         removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
         quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(

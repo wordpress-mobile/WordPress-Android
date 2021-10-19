@@ -248,7 +248,7 @@ class CardsBuilderTest {
     }
 
     private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
-        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()[0])
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
         return SiteInfoCard(
                 title = "",
                 url = "",
@@ -263,7 +263,7 @@ class CardsBuilderTest {
     }
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()[0])
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
         return QuickActionsCard(
                 title = UiStringText(""),
                 onStatsClick = mock(),
