@@ -30,7 +30,6 @@ class CardsBuilder @Inject constructor(
     private val postCardBuilder: PostCardBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
-    @Suppress("LongParameterList")
     fun build(
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         postCardBuilderParams: PostCardBuilderParams,
