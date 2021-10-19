@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.Qui
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -196,11 +197,11 @@ class CardsBuilderTest {
                 quickActionMediaClick = mock(),
                 onQuickStartBlockRemoveMenuItemClick = mock(),
                 onQuickStartTaskTypeItemClick = mock(),
-                mockedPostsData = mockedPostsData,
                 domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
-                )
+                ),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData)
         )
     }
 

@@ -114,12 +114,12 @@ import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 /* These values can change if a new parameter is added to CardsBuilder constructor before clicks */
-private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 5
-private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 6
-private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 7
-private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 8
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 13
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 14
+private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 4
+private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 5
+private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 6
+private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 7
+private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 12
+private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 13
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
@@ -1315,7 +1315,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 showSiteIconProgressBar = any(),
                 activeTask = anyOrNull(),
                 quickStartCategories = any(),
-                mockedPostsData = any(),
                 titleClick = any(),
                 iconClick = any(),
                 urlClick = any(),
@@ -1326,7 +1325,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickActionMediaClick = any(),
                 onQuickStartBlockRemoveMenuItemClick = any(),
                 onQuickStartTaskTypeItemClick = any(),
-                domainRegistrationCardBuilderParams = any()
+                domainRegistrationCardBuilderParams = any(),
+                postCardBuilderParams = any()
         )
     }
 
@@ -1365,10 +1365,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     )
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        quickActionsStatsClickAction = mockInvocation.getArgument(9)
-        quickActionsPagesClickAction = mockInvocation.getArgument(10)
-        quickActionsPostsClickAction = mockInvocation.getArgument(11)
-        quickActionsMediaClickAction = mockInvocation.getArgument(12)
+        quickActionsStatsClickAction = mockInvocation.getArgument(8)
+        quickActionsPagesClickAction = mockInvocation.getArgument(9)
+        quickActionsPostsClickAction = mockInvocation.getArgument(10)
+        quickActionsMediaClickAction = mockInvocation.getArgument(11)
         return QuickActionsCard(
                 title = UiStringText(""),
                 onStatsClick = ListItemInteraction.create { (quickActionsStatsClickAction as () -> Unit).invoke() },

@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder.Companion.DRAFT_TITLE
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder.Companion.SCHEDULED_TITLE
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
@@ -31,7 +32,7 @@ class PostCardBuilderTest : BaseUnitTest() {
         builder = PostCardBuilder()
     }
 
-    private fun buildPostCards() = builder.build(mockedPostsData)
+    private fun buildPostCards() = builder.build(PostCardBuilderParams(mockedPostsData))
 
     @Test
     fun `when toolbar is built, then card title exists`() {
