@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -217,7 +218,6 @@ class MySiteViewModel @Inject constructor(
             site,
             showSiteIconProgressBar,
             activeTask,
-            isDomainCreditAvailable,
             quickStartCategories,
             mockedPostsData,
             this::titleClick,
@@ -228,9 +228,12 @@ class MySiteViewModel @Inject constructor(
             this::quickActionPagesClick,
             this::quickActionPostsClick,
             this::quickActionMediaClick,
-            this::domainRegistrationClick,
             this::onQuickStartBlockRemoveMenuItemClick,
-            this::onQuickStartTaskTypeItemClick
+            this::onQuickStartTaskTypeItemClick,
+            DomainRegistrationCardBuilderParams(
+                    isDomainCreditAvailable = isDomainCreditAvailable,
+                    domainRegistrationClick = this::domainRegistrationClick
+            )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,

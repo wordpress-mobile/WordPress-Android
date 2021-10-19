@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
@@ -35,7 +36,6 @@ class CardsBuilder @Inject constructor(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
-        isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
         mockedPostsData: MockedPostsData? = null,
         titleClick: () -> Unit,
@@ -46,9 +46,10 @@ class CardsBuilder @Inject constructor(
         quickActionPagesClick: () -> Unit,
         quickActionPostsClick: () -> Unit,
         quickActionMediaClick: () -> Unit,
-        domainRegistrationClick: () -> Unit,
         onQuickStartBlockRemoveMenuItemClick: () -> Unit,
-        onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
+        onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
+        // Start transition to using param classes - alphabetically starting
+        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(
@@ -74,8 +75,8 @@ class CardsBuilder @Inject constructor(
                     )
             )
         }
-        if (isDomainCreditAvailable) {
-            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationClick))
+        if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
+            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
         }
         if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartCategories.takeIf { it.isNotEmpty() }?.let {
@@ -132,9 +133,10 @@ class CardsBuilder @Inject constructor(
             activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
     )
 
-    private fun trackAndBuildDomainRegistrationCard(domainRegistrationClick: () -> Unit): DomainRegistrationCard {
+    private fun trackAndBuildDomainRegistrationCard(params: DomainRegistrationCardBuilderParams
+    ): DomainRegistrationCard {
         analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
-        return DomainRegistrationCard(ListItemInteraction.create(domainRegistrationClick))
+        return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
     }
 
     private fun buildQuickStartCard(
