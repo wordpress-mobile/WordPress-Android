@@ -22,6 +22,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -224,17 +225,21 @@ class MySiteViewModel @Inject constructor(
             this::iconClick,
             this::urlClick,
             this::switchSiteClick,
-            this::quickActionStatsClick,
-            this::quickActionPagesClick,
-            this::quickActionPostsClick,
-            this::quickActionMediaClick,
             this::onQuickStartBlockRemoveMenuItemClick,
             this::onQuickStartTaskTypeItemClick,
             DomainRegistrationCardBuilderParams(
                     isDomainCreditAvailable = isDomainCreditAvailable,
                     domainRegistrationClick = this::domainRegistrationClick
             ),
-            PostCardBuilderParams(mockedPostsData = mockedPostsData)
+            PostCardBuilderParams(mockedPostsData = mockedPostsData),
+            QuickActionsCardBuilderParams(
+                    siteModel = site,
+                    activeTask = activeTask,
+                    onQuickActionStatsClick = this::quickActionStatsClick,
+                    onQuickActionPagesClick = this::quickActionPagesClick,
+                    onQuickActionPostsClick = this::quickActionPostsClick,
+                    onQuickActionMediaClick = this::quickActionMediaClick,
+                    )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,

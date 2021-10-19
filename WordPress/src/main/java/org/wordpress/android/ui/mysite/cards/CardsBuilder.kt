@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -41,15 +42,12 @@ class CardsBuilder @Inject constructor(
         iconClick: () -> Unit,
         urlClick: () -> Unit,
         switchSiteClick: () -> Unit,
-        quickActionStatsClick: () -> Unit,
-        quickActionPagesClick: () -> Unit,
-        quickActionPostsClick: () -> Unit,
-        quickActionMediaClick: () -> Unit,
         onQuickStartBlockRemoveMenuItemClick: () -> Unit,
         onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
         // Start transition to using param classes - alphabetically starting
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
-        postCardBuilderParams: PostCardBuilderParams
+        postCardBuilderParams: PostCardBuilderParams,
+        quickActionsCardBuilderParams: QuickActionsCardBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(
@@ -64,16 +62,7 @@ class CardsBuilder @Inject constructor(
                 )
         )
         if (!buildConfigWrapper.isJetpackApp) {
-            cards.add(
-                    buildQuickActionsCard(
-                            quickActionStatsClick,
-                            quickActionPagesClick,
-                            quickActionPostsClick,
-                            quickActionMediaClick,
-                            site,
-                            activeTask
-                    )
-            )
+            cards.add(buildQuickActionsCard(quickActionsCardBuilderParams))
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
@@ -115,23 +104,8 @@ class CardsBuilder @Inject constructor(
             activeTask == QuickStartTask.UPLOAD_SITE_ICON
     )
 
-    @Suppress("LongParameterList")
-    private fun buildQuickActionsCard(
-        quickActionStatsClick: () -> Unit,
-        quickActionPagesClick: () -> Unit,
-        quickActionPostsClick: () -> Unit,
-        quickActionMediaClick: () -> Unit,
-        site: SiteModel,
-        activeTask: QuickStartTask?
-    ) = quickActionsCardBuilder.build(
-            quickActionStatsClick,
-            quickActionPagesClick,
-            quickActionPostsClick,
-            quickActionMediaClick,
-            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-            activeTask == QuickStartTask.CHECK_STATS,
-            activeTask == QuickStartTask.EDIT_HOMEPAGE || activeTask == QuickStartTask.REVIEW_PAGES
-    )
+    private fun buildQuickActionsCard(params: QuickActionsCardBuilderParams
+    ) = quickActionsCardBuilder.build(params)
 
     private fun trackAndBuildDomainRegistrationCard(params: DomainRegistrationCardBuilderParams
     ): DomainRegistrationCard {
