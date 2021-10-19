@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -99,7 +100,6 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
-
     @Test
     fun `when domain credit is available, then correct event is tracked`() {
         buildCards(isDomainCreditAvailable = true)
@@ -185,7 +185,6 @@ class CardsBuilderTest {
                 site = site,
                 showSiteIconProgressBar = false,
                 activeTask = activeTask,
-                isDomainCreditAvailable = isDomainCreditAvailable,
                 quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
                 titleClick = mock(),
                 iconClick = mock(),
@@ -195,10 +194,13 @@ class CardsBuilderTest {
                 quickActionPagesClick = mock(),
                 quickActionPostsClick = mock(),
                 quickActionMediaClick = mock(),
-                domainRegistrationClick = mock(),
                 onQuickStartBlockRemoveMenuItemClick = mock(),
                 onQuickStartTaskTypeItemClick = mock(),
-                mockedPostsData = mockedPostsData
+                mockedPostsData = mockedPostsData,
+                domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = mock()
+                )
         )
     }
 
