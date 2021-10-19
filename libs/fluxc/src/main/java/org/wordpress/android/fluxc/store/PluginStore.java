@@ -345,6 +345,11 @@ public class PluginStore extends Store {
             this.type = InstallSitePluginErrorType.fromGenericErrorType(type);
             this.message = message;
         }
+
+        public InstallSitePluginError(InstallSitePluginErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
     }
 
     public static class UpdateSitePluginError implements OnChangedError {
