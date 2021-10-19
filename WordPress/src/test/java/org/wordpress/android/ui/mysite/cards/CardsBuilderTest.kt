@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -185,13 +186,10 @@ class CardsBuilderTest {
                 site = site,
                 showSiteIconProgressBar = false,
                 activeTask = activeTask,
-                quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
                 titleClick = mock(),
                 iconClick = mock(),
                 urlClick = mock(),
                 switchSiteClick = mock(),
-                onQuickStartBlockRemoveMenuItemClick = mock(),
-                onQuickStartTaskTypeItemClick = mock(),
                 domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
@@ -204,6 +202,11 @@ class CardsBuilderTest {
                         onQuickActionPagesClick = mock(),
                         onQuickActionPostsClick = mock(),
                         onQuickActionStatsClick = mock()
+                ),
+                quickStartCardBuilderParams = QuickStartCardBuilderParams(
+                        if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
+                        mock(),
+                        mock()
                 )
         )
     }
@@ -232,7 +235,7 @@ class CardsBuilderTest {
     private fun setUpQuickStartCardBuilder() {
         doAnswer {
             initQuickStartCard()
-        }.whenever(quickStartCardBuilder).build(any(), any(), any())
+        }.whenever(quickStartCardBuilder).build(any())
     }
 
     private fun setUpPostCardBuilder() {

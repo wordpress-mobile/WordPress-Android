@@ -43,6 +43,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -115,12 +116,10 @@ import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 /* These values can change if a new parameter is added to CardsBuilder constructor before clicks */
-private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 4
-private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 5
-private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 6
-private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 7
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 8
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 9
+private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 3
+private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 4
+private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 5
+private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 6
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
@@ -1315,16 +1314,14 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site = eq(site),
                 showSiteIconProgressBar = any(),
                 activeTask = anyOrNull(),
-                quickStartCategories = any(),
                 titleClick = any(),
                 iconClick = any(),
                 urlClick = any(),
                 switchSiteClick = any(),
-                onQuickStartBlockRemoveMenuItemClick = any(),
-                onQuickStartTaskTypeItemClick = any(),
                 domainRegistrationCardBuilderParams = any(),
                 postCardBuilderParams = any(),
-                quickActionsCardBuilderParams = any()
+                quickActionsCardBuilderParams = any(),
+                quickStartCardBuilderParams = any()
         )
     }
 
@@ -1388,17 +1385,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     )
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
-        removeMenuItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION
-        ) as () -> Unit
-        quickStartTaskTypeItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION
-        ) as ((QuickStartTaskType) -> Unit)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>() [0])
+        removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
+        quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create {
-                    (removeMenuItemClickAction as () -> Unit).invoke()
-                },
+                    params.onQuickStartBlockRemoveMenuItemClick.invoke()
+                                                                   },
                 taskTypeItems = listOf(
                         QuickStartTaskTypeItem(
                                 quickStartTaskType = mock(),
