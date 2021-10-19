@@ -4,6 +4,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -13,14 +14,15 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class QuickStartCardBuilder @Inject constructor() {
-    fun build(
-        categories: List<QuickStartCategory>,
-        onRemoveMenuItemClick: () -> Unit,
-        onItemClick: (QuickStartTaskType) -> Unit
-    ) = QuickStartCard(
+    fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
             title = UiStringRes(R.string.quick_start_sites),
-            onRemoveMenuItemClick = ListItemInteraction.create { onRemoveMenuItemClick.invoke() },
-            taskTypeItems = categories.map { buildQuickStartTaskTypeItem(it, onItemClick) }
+            onRemoveMenuItemClick = ListItemInteraction.create { params.onQuickStartBlockRemoveMenuItemClick.invoke() },
+            taskTypeItems = params.quickStartCategories.map {
+                buildQuickStartTaskTypeItem(
+                        it,
+                        params.onQuickStartTaskTypeItemClick
+                )
+            }
     )
 
     private fun buildQuickStartTaskTypeItem(

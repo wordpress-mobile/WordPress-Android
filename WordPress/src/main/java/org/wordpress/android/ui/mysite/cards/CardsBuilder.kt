@@ -3,16 +3,15 @@ package org.wordpress.android.ui.mysite.cards
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
@@ -37,17 +36,15 @@ class CardsBuilder @Inject constructor(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
-        quickStartCategories: List<QuickStartCategory>,
         titleClick: () -> Unit,
         iconClick: () -> Unit,
         urlClick: () -> Unit,
         switchSiteClick: () -> Unit,
-        onQuickStartBlockRemoveMenuItemClick: () -> Unit,
-        onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
         // Start transition to using param classes - alphabetically starting
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         postCardBuilderParams: PostCardBuilderParams,
-        quickActionsCardBuilderParams: QuickActionsCardBuilderParams
+        quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
+        quickStartCardBuilderParams: QuickStartCardBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(
@@ -68,14 +65,8 @@ class CardsBuilder @Inject constructor(
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
         }
         if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                cards.add(
-                        buildQuickStartCard(
-                                quickStartCategories,
-                                onQuickStartBlockRemoveMenuItemClick,
-                                onQuickStartTaskTypeItemClick
-                        )
-                )
+            quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+                cards.add(buildQuickStartCard(quickStartCardBuilderParams))
             }
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
@@ -113,15 +104,7 @@ class CardsBuilder @Inject constructor(
         return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
     }
 
-    private fun buildQuickStartCard(
-        quickStartCategories: List<QuickStartCategory>,
-        onQuickStartBlockRemoveMenuItemClick: () -> Unit,
-        onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
-    ) = quickStartCardBuilder.build(
-            quickStartCategories,
-            onQuickStartBlockRemoveMenuItemClick,
-            onQuickStartTaskTypeItemClick
-    )
+    private fun buildQuickStartCard(params: QuickStartCardBuilderParams) = quickStartCardBuilder.build(params)
 
     private fun buildPostCards(params: PostCardBuilderParams) = postCardBuilder.build(params)
 }

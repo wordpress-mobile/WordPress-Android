@@ -23,6 +23,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -220,13 +221,10 @@ class MySiteViewModel @Inject constructor(
             site,
             showSiteIconProgressBar,
             activeTask,
-            quickStartCategories,
             this::titleClick,
             this::iconClick,
             this::urlClick,
             this::switchSiteClick,
-            this::onQuickStartBlockRemoveMenuItemClick,
-            this::onQuickStartTaskTypeItemClick,
             DomainRegistrationCardBuilderParams(
                     isDomainCreditAvailable = isDomainCreditAvailable,
                     domainRegistrationClick = this::domainRegistrationClick
@@ -239,7 +237,12 @@ class MySiteViewModel @Inject constructor(
                     onQuickActionPagesClick = this::quickActionPagesClick,
                     onQuickActionPostsClick = this::quickActionPostsClick,
                     onQuickActionMediaClick = this::quickActionMediaClick,
-                    )
+                    ),
+            QuickStartCardBuilderParams(
+                    quickStartCategories,
+                    this::onQuickStartBlockRemoveMenuItemClick,
+                    this::onQuickStartTaskTypeItemClick
+            )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,
