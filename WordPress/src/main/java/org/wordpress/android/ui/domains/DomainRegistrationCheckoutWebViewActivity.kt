@@ -29,7 +29,7 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
         finish()
     }
 
-    class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent>() {
+    class OpenCheckout : ActivityResultContract<CheckoutDetails, DomainRegistrationCompletedEvent?>() {
         override fun createIntent(context: Context, input: CheckoutDetails) =
                 Intent(context, DomainRegistrationCheckoutWebViewActivity::class.java).apply {
                     putExtra(USE_GLOBAL_WPCOM_USER, true)
@@ -40,13 +40,11 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
                 }
 
         override fun parseResult(resultCode: Int, intent: Intent?): DomainRegistrationCompletedEvent? {
-            if (resultCode == RESULT_OK) {
-                val domainName = intent?.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
-                val email = intent?.getStringExtra(REGISTRATION_EMAIL).orEmpty()
-                // TODO Handle empty domain and email
+            val domainName = intent?.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
+            val email = intent?.getStringExtra(REGISTRATION_EMAIL).orEmpty()
+            if (resultCode == RESULT_OK && domainName.isNotBlank() && email.isNotBlank()) {
                 return DomainRegistrationCompletedEvent(domainName, email)
             }
-            // TODO Handle checkout failure
             return null
         }
 

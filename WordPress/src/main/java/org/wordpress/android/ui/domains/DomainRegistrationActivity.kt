@@ -38,10 +38,8 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     private lateinit var binding: DomainSuggestionsActivityBinding
 
     private val openCheckout = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenCheckout()) {
-        if (it != null) {
+        it?.let {
             viewModel.completeDomainRegistration(it)
-        } else {
-            // TODO Handle checkout failure
         }
     }
 
