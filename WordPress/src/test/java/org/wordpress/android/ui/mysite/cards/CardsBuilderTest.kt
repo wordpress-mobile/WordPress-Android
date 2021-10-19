@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -42,9 +42,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-
-private const val SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION = 6
-private const val SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION = 7
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
@@ -183,13 +180,6 @@ class CardsBuilderTest {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         return cardsBuilder.build(
-                site = site,
-                showSiteIconProgressBar = false,
-                activeTask = activeTask,
-                titleClick = mock(),
-                iconClick = mock(),
-                urlClick = mock(),
-                switchSiteClick = mock(),
                 domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
@@ -207,6 +197,15 @@ class CardsBuilderTest {
                         if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
                         mock(),
                         mock()
+                ),
+                siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
+                        site,
+                        showSiteIconProgressBar = false,
+                        mock(),
+                        mock(),
+                        mock(),
+                        mock(),
+                        activeTask
                 )
         )
     }
@@ -214,16 +213,7 @@ class CardsBuilderTest {
     private fun setUpSiteInfoCardBuilder() {
         doAnswer {
             initSiteInfoCard(it)
-        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
-                site = eq(site),
-                showSiteIconProgressBar = any(),
-                titleClick = any(),
-                iconClick = any(),
-                urlClick = any(),
-                switchSiteClick = any(),
-                showUpdateSiteTitleFocusPoint = any(),
-                showUploadSiteIconFocusPoint = any()
-        )
+        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(any())
     }
 
     private fun setUpQuickActionsBuilder() {
@@ -257,19 +247,20 @@ class CardsBuilderTest {
         )
     }
 
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
-            title = "",
-            url = "",
-            iconState = IconState.Visible(""),
-            showTitleFocusPoint = mockInvocation
-                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION),
-            showIconFocusPoint = mockInvocation
-                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION),
-            onTitleClick = mock(),
-            onIconClick = mock(),
-            onUrlClick = mock(),
-            onSwitchSiteClick = mock()
-    )
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()[0])
+        return SiteInfoCard(
+                title = "",
+                url = "",
+                iconState = IconState.Visible(""),
+                showTitleFocusPoint = params.activeTask == QuickStartTask.UPDATE_SITE_TITLE,
+                showIconFocusPoint = params.activeTask == QuickStartTask.UPLOAD_SITE_ICON,
+                onTitleClick = mock(),
+                onIconClick = mock(),
+                onUrlClick = mock(),
+                onSwitchSiteClick = mock()
+        )
+    }
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock) : QuickActionsCard {
         val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>() [0])
