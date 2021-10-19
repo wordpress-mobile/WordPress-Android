@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.mysite.cards
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -33,31 +32,14 @@ class CardsBuilder @Inject constructor(
 ) {
     @Suppress("LongParameterList")
     fun build(
-        site: SiteModel,
-        showSiteIconProgressBar: Boolean,
-        activeTask: QuickStartTask?,
-        titleClick: () -> Unit,
-        iconClick: () -> Unit,
-        urlClick: () -> Unit,
-        switchSiteClick: () -> Unit,
-        // Start transition to using param classes - alphabetically starting
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         postCardBuilderParams: PostCardBuilderParams,
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
-        quickStartCardBuilderParams: QuickStartCardBuilderParams
+        quickStartCardBuilderParams: QuickStartCardBuilderParams,
+        siteInfoCardBuilderParams: SiteInfoCardBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        cards.add(
-                buildSiteInfoCard(
-                        site,
-                        showSiteIconProgressBar,
-                        titleClick,
-                        iconClick,
-                        urlClick,
-                        switchSiteClick,
-                        activeTask
-                )
-        )
+        cards.add(buildSiteInfoCard(siteInfoCardBuilderParams))
         if (!buildConfigWrapper.isJetpackApp) {
             cards.add(buildQuickActionsCard(quickActionsCardBuilderParams))
         }
@@ -75,25 +57,7 @@ class CardsBuilder @Inject constructor(
         return cards
     }
 
-    @Suppress("LongParameterList")
-    private fun buildSiteInfoCard(
-        site: SiteModel,
-        showSiteIconProgressBar: Boolean,
-        titleClick: () -> Unit,
-        iconClick: () -> Unit,
-        urlClick: () -> Unit,
-        switchSiteClick: () -> Unit,
-        activeTask: QuickStartTask?
-    ) = siteInfoCardBuilder.buildSiteInfoCard(
-            site,
-            showSiteIconProgressBar,
-            titleClick,
-            iconClick,
-            urlClick,
-            switchSiteClick,
-            activeTask == QuickStartTask.UPDATE_SITE_TITLE,
-            activeTask == QuickStartTask.UPLOAD_SITE_ICON
-    )
+    private fun buildSiteInfoCard(params: SiteInfoCardBuilderParams) = siteInfoCardBuilder.buildSiteInfoCard(params)
 
     private fun buildQuickActionsCard(params: QuickActionsCardBuilderParams
     ) = quickActionsCardBuilder.build(params)

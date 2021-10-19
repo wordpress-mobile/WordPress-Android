@@ -28,4 +28,14 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickStartBlockRemoveMenuItemClick: () -> Unit,
         val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
     ) : MySiteCardAndItemBuilderParams()
+
+    data class SiteInfoCardBuilderParams(
+        val site: SiteModel,
+        val showSiteIconProgressBar: Boolean,
+        val titleClick: () -> Unit,
+        val iconClick: () -> Unit,
+        val urlClick: () -> Unit,
+        val switchSiteClick: () -> Unit,
+        val activeTask: QuickStartTask?
+    ) : MySiteCardAndItemBuilderParams()
 }
