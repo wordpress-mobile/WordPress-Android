@@ -1377,7 +1377,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create {
                     params.onQuickStartBlockRemoveMenuItemClick.invoke()
-                                                                   },
+                },
                 taskTypeItems = listOf(
                         QuickStartTaskTypeItem(
                                 quickStartTaskType = mock(),

@@ -59,10 +59,12 @@ class CardsBuilder @Inject constructor(
 
     private fun buildSiteInfoCard(params: SiteInfoCardBuilderParams) = siteInfoCardBuilder.buildSiteInfoCard(params)
 
-    private fun buildQuickActionsCard(params: QuickActionsCardBuilderParams
+    private fun buildQuickActionsCard(
+        params: QuickActionsCardBuilderParams
     ) = quickActionsCardBuilder.build(params)
 
-    private fun trackAndBuildDomainRegistrationCard(params: DomainRegistrationCardBuilderParams
+    private fun trackAndBuildDomainRegistrationCard(
+        params: DomainRegistrationCardBuilderParams
     ): DomainRegistrationCard {
         analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
         return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))

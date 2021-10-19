@@ -230,8 +230,8 @@ class MySiteViewModel @Inject constructor(
                     onQuickActionStatsClick = this::quickActionStatsClick,
                     onQuickActionPagesClick = this::quickActionPagesClick,
                     onQuickActionPostsClick = this::quickActionPostsClick,
-                    onQuickActionMediaClick = this::quickActionMediaClick,
-                    ),
+                    onQuickActionMediaClick = this::quickActionMediaClick
+            ),
             QuickStartCardBuilderParams(
                     quickStartCategories,
                     this::onQuickStartBlockRemoveMenuItemClick,
@@ -245,7 +245,7 @@ class MySiteViewModel @Inject constructor(
                     this::urlClick,
                     this::switchSiteClick,
                     activeTask
-            ),
+            )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,

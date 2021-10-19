@@ -262,8 +262,8 @@ class CardsBuilderTest {
         )
     }
 
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock) : QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>() [0])
+    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()[0])
         return QuickActionsCard(
                 title = UiStringText(""),
                 onStatsClick = mock(),
@@ -276,7 +276,6 @@ class CardsBuilderTest {
                         params.activeTask == QuickStartTask.REVIEW_PAGES
         )
     }
-
 
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),
