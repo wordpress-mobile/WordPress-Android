@@ -42,6 +42,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -118,8 +119,8 @@ private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 4
 private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 5
 private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 6
 private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 7
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 12
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 13
+private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 8
+private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 9
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
@@ -1319,14 +1320,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 iconClick = any(),
                 urlClick = any(),
                 switchSiteClick = any(),
-                quickActionStatsClick = any(),
-                quickActionPagesClick = any(),
-                quickActionPostsClick = any(),
-                quickActionMediaClick = any(),
                 onQuickStartBlockRemoveMenuItemClick = any(),
                 onQuickStartTaskTypeItemClick = any(),
                 domainRegistrationCardBuilderParams = any(),
-                postCardBuilderParams = any()
+                postCardBuilderParams = any(),
+                quickActionsCardBuilderParams = any()
         )
     }
 
@@ -1365,16 +1363,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     )
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        quickActionsStatsClickAction = mockInvocation.getArgument(8)
-        quickActionsPagesClickAction = mockInvocation.getArgument(9)
-        quickActionsPostsClickAction = mockInvocation.getArgument(10)
-        quickActionsMediaClickAction = mockInvocation.getArgument(11)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>() [0])
+        quickActionsStatsClickAction = params.onQuickActionStatsClick
+        quickActionsPagesClickAction = params.onQuickActionPagesClick
+        quickActionsPostsClickAction = params.onQuickActionPostsClick
+        quickActionsMediaClickAction = params.onQuickActionMediaClick
         return QuickActionsCard(
                 title = UiStringText(""),
-                onStatsClick = ListItemInteraction.create { (quickActionsStatsClickAction as () -> Unit).invoke() },
-                onPagesClick = ListItemInteraction.create { (quickActionsPagesClickAction as () -> Unit).invoke() },
-                onPostsClick = ListItemInteraction.create { (quickActionsPostsClickAction as () -> Unit).invoke() },
-                onMediaClick = ListItemInteraction.create { (quickActionsMediaClickAction as () -> Unit).invoke() },
+                onStatsClick = ListItemInteraction.create { params.onQuickActionStatsClick.invoke() },
+                onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
+                onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
+                onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
                 showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
