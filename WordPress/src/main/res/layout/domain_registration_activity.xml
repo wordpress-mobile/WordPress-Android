@@ -14,7 +14,7 @@
             android:id="@+id/toolbar_domain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/ic_cross_white_24dp"
+            app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
             app:theme="@style/WordPress.ActionBar" />
     </com.google.android.material.appbar.AppBarLayout>
 
