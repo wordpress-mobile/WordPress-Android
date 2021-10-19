@@ -233,18 +233,18 @@ class MySiteViewModel @Inject constructor(
                     onQuickActionMediaClick = this::quickActionMediaClick
             ),
             QuickStartCardBuilderParams(
-                    quickStartCategories,
-                    this::onQuickStartBlockRemoveMenuItemClick,
-                    this::onQuickStartTaskTypeItemClick
+                    quickStartCategories = quickStartCategories,
+                    onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                    onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
             ),
             SiteInfoCardBuilderParams(
-                    site,
-                    showSiteIconProgressBar,
-                    this::titleClick,
-                    this::iconClick,
-                    this::urlClick,
-                    this::switchSiteClick,
-                    activeTask
+                    site = site,
+                    showSiteIconProgressBar = showSiteIconProgressBar,
+                    titleClick = this::titleClick,
+                    iconClick = this::iconClick,
+                    urlClick = this::urlClick,
+                    switchSiteClick = this::switchSiteClick,
+                    activeTask = activeTask
             )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
