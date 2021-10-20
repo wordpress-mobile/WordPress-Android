@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -45,6 +44,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -166,7 +166,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
-    private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
+    private val jetpackCapabilities = MutableLiveData(
+            JetpackCapabilities(
+                    scanAvailable = false,
+                    backupAvailable = false
+            )
+    )
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
@@ -1088,15 +1093,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(false),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(1)).build(any())
     }
 
     @Test
@@ -1105,15 +1102,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(false),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(1)).build(any())
     }
 
     @Test
@@ -1122,15 +1111,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(true),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(2)).build(any())
     }
 
     @Test
@@ -1139,15 +1120,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(true),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(2)).build(any())
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1272,9 +1245,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun invokeItemClickAction(action: ListItemAction) {
         var clickAction: ((ListItemAction) -> Unit)? = null
         doAnswer {
-            clickAction = it.getArgument(1)
+            val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
+            clickAction = params.onClick
             listOf<MySiteCardAndItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).build(any())
 
         initSelectedSite()
 
