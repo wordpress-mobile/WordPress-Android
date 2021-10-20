@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray_5"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_large"
             app:layout_constraintTop_toBottomOf="@id/primary_site_address_chip"
             app:layout_constraintStart_toStartOf="parent"
