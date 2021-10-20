@@ -84,4 +84,3 @@ class DomainRegistrationCheckoutWebViewNavigationDelegateTest : BaseUnitTest() {
         private fun buildUrls(vararg paths: String) = paths.toList().map { Url("wordpress.com", it) }
     }
 }
-
