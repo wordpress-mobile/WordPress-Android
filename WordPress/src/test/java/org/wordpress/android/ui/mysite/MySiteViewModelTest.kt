@@ -19,7 +19,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
@@ -42,6 +41,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -113,14 +116,6 @@ import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
-/* These values can change if a new parameter is added to CardsBuilder constructor before clicks */
-private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 6
-private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 7
-private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 8
-private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 9
-private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 14
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 15
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 16
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
@@ -1312,23 +1307,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             val postCard = initPostCard()
             listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
         }.whenever(cardsBuilder).build(
-                site = eq(site),
-                showSiteIconProgressBar = any(),
-                activeTask = anyOrNull(),
-                isDomainCreditAvailable = anyBoolean(),
-                quickStartCategories = any(),
-                mockedPostsData = any(),
-                titleClick = any(),
-                iconClick = any(),
-                urlClick = any(),
-                switchSiteClick = any(),
-                quickActionStatsClick = any(),
-                quickActionPagesClick = any(),
-                quickActionPostsClick = any(),
-                quickActionMediaClick = any(),
-                domainRegistrationClick = any(),
-                onQuickStartBlockRemoveMenuItemClick = any(),
-                onQuickStartTaskTypeItemClick = any()
+                domainRegistrationCardBuilderParams = any(),
+                postCardBuilderParams = any(),
+                quickActionsCardBuilderParams = any(),
+                quickStartCardBuilderParams = any(),
+                siteInfoCardBuilderParams = any()
         )
     }
 
@@ -1346,37 +1329,33 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
-            title = siteName,
-            url = siteUrl,
-            iconState = IconState.Visible(siteIcon),
-            showTitleFocusPoint = false,
-            showIconFocusPoint = false,
-            onTitleClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onIconClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onUrlClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onSwitchSiteClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
-            }
-    )
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
+        return SiteInfoCard(
+                title = siteName,
+                url = siteUrl,
+                iconState = IconState.Visible(siteIcon),
+                showTitleFocusPoint = false,
+                showIconFocusPoint = false,
+                onTitleClick = ListItemInteraction.create { params.titleClick.invoke() },
+                onIconClick = ListItemInteraction.create { params.iconClick.invoke() },
+                onUrlClick = ListItemInteraction.create { params.urlClick.invoke() },
+                onSwitchSiteClick = ListItemInteraction.create { params.switchSiteClick.invoke() }
+        )
+    }
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        quickActionsStatsClickAction = mockInvocation.getArgument(10)
-        quickActionsPagesClickAction = mockInvocation.getArgument(11)
-        quickActionsPostsClickAction = mockInvocation.getArgument(12)
-        quickActionsMediaClickAction = mockInvocation.getArgument(13)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
+        quickActionsStatsClickAction = params.onQuickActionStatsClick
+        quickActionsPagesClickAction = params.onQuickActionPagesClick
+        quickActionsPostsClickAction = params.onQuickActionPostsClick
+        quickActionsMediaClickAction = params.onQuickActionMediaClick
         return QuickActionsCard(
                 title = UiStringText(""),
-                onStatsClick = ListItemInteraction.create { (quickActionsStatsClickAction as () -> Unit).invoke() },
-                onPagesClick = ListItemInteraction.create { (quickActionsPagesClickAction as () -> Unit).invoke() },
-                onPostsClick = ListItemInteraction.create { (quickActionsPostsClickAction as () -> Unit).invoke() },
-                onMediaClick = ListItemInteraction.create { (quickActionsMediaClickAction as () -> Unit).invoke() },
+                onStatsClick = ListItemInteraction.create { params.onQuickActionStatsClick.invoke() },
+                onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
+                onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
+                onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
                 showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
@@ -1385,22 +1364,19 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
             ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION) as () -> Unit)
-                        .invoke()
+                (mockInvocation.arguments.filterIsInstance<DomainRegistrationCardBuilderParams>()).first()
+                        .domainRegistrationClick.invoke()
             }
     )
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
-        removeMenuItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION
-        ) as () -> Unit
-        quickStartTaskTypeItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION
-        ) as ((QuickStartTaskType) -> Unit)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
+        removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
+        quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create {
-                    (removeMenuItemClickAction as () -> Unit).invoke()
+                    params.onQuickStartBlockRemoveMenuItemClick.invoke()
                 },
                 taskTypeItems = listOf(
                         QuickStartTaskTypeItem(

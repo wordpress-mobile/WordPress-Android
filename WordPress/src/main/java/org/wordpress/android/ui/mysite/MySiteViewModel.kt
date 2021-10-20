@@ -20,6 +20,11 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -214,23 +219,33 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         mockedPostsData: MockedPostsData?
     ) = cardsBuilder.build(
-            site,
-            showSiteIconProgressBar,
-            activeTask,
-            isDomainCreditAvailable,
-            quickStartCategories,
-            mockedPostsData,
-            this::titleClick,
-            this::iconClick,
-            this::urlClick,
-            this::switchSiteClick,
-            this::quickActionStatsClick,
-            this::quickActionPagesClick,
-            this::quickActionPostsClick,
-            this::quickActionMediaClick,
-            this::domainRegistrationClick,
-            this::onQuickStartBlockRemoveMenuItemClick,
-            this::onQuickStartTaskTypeItemClick
+            DomainRegistrationCardBuilderParams(
+                    isDomainCreditAvailable = isDomainCreditAvailable,
+                    domainRegistrationClick = this::domainRegistrationClick
+            ),
+            PostCardBuilderParams(mockedPostsData = mockedPostsData),
+            QuickActionsCardBuilderParams(
+                    siteModel = site,
+                    activeTask = activeTask,
+                    onQuickActionStatsClick = this::quickActionStatsClick,
+                    onQuickActionPagesClick = this::quickActionPagesClick,
+                    onQuickActionPostsClick = this::quickActionPostsClick,
+                    onQuickActionMediaClick = this::quickActionMediaClick
+            ),
+            QuickStartCardBuilderParams(
+                    quickStartCategories = quickStartCategories,
+                    onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                    onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
+            ),
+            SiteInfoCardBuilderParams(
+                    site = site,
+                    showSiteIconProgressBar = showSiteIconProgressBar,
+                    titleClick = this::titleClick,
+                    iconClick = this::iconClick,
+                    urlClick = this::urlClick,
+                    switchSiteClick = this::switchSiteClick,
+                    activeTask = activeTask
+            )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,
