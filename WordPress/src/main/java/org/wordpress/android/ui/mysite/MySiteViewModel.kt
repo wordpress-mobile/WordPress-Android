@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -252,14 +253,14 @@ class MySiteViewModel @Inject constructor(
             visibleDynamicCards,
             this::onDynamicCardMoreClick,
             this::onQuickStartTaskCardClick
-    ) + siteItemsBuilder.buildSiteItems(
-            site,
-            this::onItemClick,
-            backupAvailable,
-            scanAvailable,
-            activeTask == QuickStartTask.VIEW_SITE,
-            activeTask == QuickStartTask.ENABLE_POST_SHARING,
-            activeTask == QuickStartTask.EXPLORE_PLANS
+    ) + siteItemsBuilder.build(
+            SiteItemsBuilderParams(
+                    site = site,
+                    activeTask = activeTask,
+                    backupAvailable = backupAvailable,
+                    scanAvailable = scanAvailable,
+                    onClick = this::onItemClick,
+            )
     )
 
     private fun buildNoSiteState(): NoSites {
