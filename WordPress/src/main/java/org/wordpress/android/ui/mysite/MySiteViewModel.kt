@@ -259,7 +259,7 @@ class MySiteViewModel @Inject constructor(
                     activeTask = activeTask,
                     backupAvailable = backupAvailable,
                     scanAvailable = scanAvailable,
-                    onClick = this::onItemClick,
+                    onClick = this::onItemClick
             )
     )
 
