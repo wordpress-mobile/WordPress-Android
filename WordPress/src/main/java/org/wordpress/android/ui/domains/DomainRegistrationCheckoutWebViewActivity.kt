@@ -40,9 +40,10 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
                 }
 
         override fun parseResult(resultCode: Int, intent: Intent?): DomainRegistrationCompletedEvent? {
-            val domainName = intent?.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
-            val email = intent?.getStringExtra(REGISTRATION_EMAIL).orEmpty()
-            if (resultCode == RESULT_OK && domainName.isNotBlank() && email.isNotBlank()) {
+            val data = intent?.takeIf { it.hasExtra(REGISTRATION_DOMAIN_NAME) && it.hasExtra(REGISTRATION_EMAIL) }
+            if (resultCode == RESULT_OK && data != null) {
+                val domainName = data.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
+                val email = data.getStringExtra(REGISTRATION_EMAIL).orEmpty()
                 return DomainRegistrationCompletedEvent(domainName, email)
             }
             return null
