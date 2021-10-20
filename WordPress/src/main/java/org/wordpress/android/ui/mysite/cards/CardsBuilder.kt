@@ -38,29 +38,23 @@ class CardsBuilder @Inject constructor(
         siteInfoCardBuilderParams: SiteInfoCardBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        cards.add(buildSiteInfoCard(siteInfoCardBuilderParams))
+        cards.add(siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams))
         if (!buildConfigWrapper.isJetpackApp) {
-            cards.add(buildQuickActionsCard(quickActionsCardBuilderParams))
+            cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
         }
         if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
             quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-                cards.add(buildQuickStartCard(quickStartCardBuilderParams))
+                cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
             }
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            cards.addAll(buildPostCards(postCardBuilderParams))
+            cards.addAll(postCardBuilder.build(postCardBuilderParams))
         }
         return cards
     }
-
-    private fun buildSiteInfoCard(params: SiteInfoCardBuilderParams) = siteInfoCardBuilder.buildSiteInfoCard(params)
-
-    private fun buildQuickActionsCard(
-        params: QuickActionsCardBuilderParams
-    ) = quickActionsCardBuilder.build(params)
 
     private fun trackAndBuildDomainRegistrationCard(
         params: DomainRegistrationCardBuilderParams
@@ -68,8 +62,4 @@ class CardsBuilder @Inject constructor(
         analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
         return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
     }
-
-    private fun buildQuickStartCard(params: QuickStartCardBuilderParams) = quickStartCardBuilder.build(params)
-
-    private fun buildPostCards(params: PostCardBuilderParams) = postCardBuilder.build(params)
 }
