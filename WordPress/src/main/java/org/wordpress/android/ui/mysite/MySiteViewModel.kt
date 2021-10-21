@@ -64,6 +64,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
@@ -104,7 +105,8 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    postCardsSource: PostCardsSource
+    private val postCardsSource: PostCardsSource,
+    val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -113,6 +115,7 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
+    private val _onShowSwipeRefreshLayout = MutableLiveData((Event(mySiteDashboardPhase2FeatureConfig.isEnabled())))
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -132,6 +135,8 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
+    val onRefreshFinished = postCardsSource.refreshFinished
+    val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             viewModelScope,
@@ -142,7 +147,7 @@ class MySiteViewModel @Inject constructor(
             scanAndBackupSource,
             dynamicCardsSource,
             postCardsSource
-    ).state.map { (
+    ).state.map  { (
             currentAvatarUrl,
             site,
             showSiteIconProgressBar,
@@ -687,6 +692,10 @@ class MySiteViewModel @Inject constructor(
 
     fun ignoreQuickStart() {
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    fun onPullToRefresh() {
+        postCardsSource.refresh(viewModelScope)
     }
 
     data class UiModel(
