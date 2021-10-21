@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.PARSE_ERROR
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -62,7 +63,7 @@ class WPV2MediaRestClient @Inject constructor(
             val request = Request.Builder()
                     .url(url)
                     .post(body = body)
-                    .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, accessToken.get())
+                    .header(WPComGsonRequest.REST_AUTHORIZATION_HEADER, "Bearer ${accessToken.get()}")
                     .build()
 
             val call = okHttpClient.newCall(request)
@@ -84,16 +85,23 @@ class WPV2MediaRestClient @Inject constructor(
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
                             val uploadedMedia = res.toMediaModel()
-                            cont.resume(ProgressPayload(uploadedMedia, 1f, true, false))
+                            val payload = ProgressPayload(uploadedMedia, 1f, true, false)
+                            mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+                            cont.resume(payload)
                         } catch (e: JsonSyntaxException) {
+                            AppLog.e(MEDIA, e)
                             val error = MediaError(PARSE_ERROR)
                             cont.handleFailure(media, error)
                         } catch (e: NullPointerException) {
+                            AppLog.e(MEDIA, e)
                             val error = MediaError(PARSE_ERROR)
                             cont.handleFailure(media, error)
                         }
                     } else {
-                        TODO()
+                        // TODO
+                        AppLog.w(MEDIA, response.body!!.string())
+
+                        cont.handleFailure(media, MediaError(GENERIC_ERROR))
                     }
                 }
             })
@@ -107,7 +115,7 @@ class WPV2MediaRestClient @Inject constructor(
     private fun CancellableContinuation<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
         media.setUploadState(FAILED)
         val payload = ProgressPayload(media, 1f, false, error)
-        mDispatcher.emitChange(payload)
+        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
         resume(payload)
     }
 }
