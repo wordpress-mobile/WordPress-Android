@@ -11,6 +11,7 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.FAILED
@@ -36,7 +37,7 @@ import kotlin.coroutines.resume
 class WPV2MediaRestClient @Inject constructor(
     dispatcher: Dispatcher,
     private val coroutineEngine: CoroutineEngine,
-    private val okHttpClient: OkHttpClient,
+    @Named("regular") private val okHttpClient: OkHttpClient,
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
@@ -53,7 +54,10 @@ class WPV2MediaRestClient @Inject constructor(
     suspend fun syncUploadMedia(site: SiteModel, media: MediaModel): ProgressPayload {
         return suspendCancellableCoroutine { cont ->
             val url = WPAPI.media.getWPComUrl(site.siteId)
-            val body = TODO()
+            val body = WPRestUploadRequestBody(media) { media, progress ->
+                val payload = ProgressPayload(media, progress, false, null)
+                mDispatcher.emitChange(UploadActionBuilder.newUploadedMediaAction(payload))
+            }
 
             val request = Request.Builder()
                     .url(url)
@@ -79,8 +83,8 @@ class WPV2MediaRestClient @Inject constructor(
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
-                            val media = res.toMediaModel()
-                            cont.resume(ProgressPayload(media, 1f, true, false))
+                            val uploadedMedia = res.toMediaModel()
+                            cont.resume(ProgressPayload(uploadedMedia, 1f, true, false))
                         } catch (e: JsonSyntaxException) {
                             val error = MediaError(PARSE_ERROR)
                             cont.handleFailure(media, error)
