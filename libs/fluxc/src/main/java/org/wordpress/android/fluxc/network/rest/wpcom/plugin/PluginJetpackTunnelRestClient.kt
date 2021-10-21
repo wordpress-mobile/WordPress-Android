@@ -35,6 +35,34 @@ class PluginJetpackTunnelRestClient @Inject constructor(
         private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
     }
 
+    suspend fun fetchPlugin(site: SiteModel, pluginSlug: String): InstalledSitePluginPayload {
+        val response = jetpackTunnelGsonRequestBuilder.syncGetRequest(
+                restClient = this,
+                site = site,
+                url = "$PLUGINS_API_PATH/$pluginSlug",
+                params = emptyMap(),
+                PluginResponseModel::class.java
+        )
+
+        return when (response) {
+            is JetpackSuccess -> InstalledSitePluginPayload(
+                    site,
+                    sitePluginModelFromResponse(site, response.data!!)
+            )
+
+            is JetpackError -> {
+                InstalledSitePluginPayload(
+                        site,
+                        pluginSlug,
+                        InstallSitePluginError(
+                                InstallSitePluginErrorType.NOT_AVAILABLE,
+                                response.error.message
+                        )
+                )
+            }
+        }
+    }
+
     suspend fun installPlugin(site: SiteModel, pluginSlug: String): InstalledSitePluginPayload {
         val body = mapOf(
                 "slug" to pluginSlug
