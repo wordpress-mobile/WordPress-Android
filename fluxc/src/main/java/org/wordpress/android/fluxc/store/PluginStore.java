@@ -78,6 +78,17 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
+    public static class FetchSitePluginPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String slug;
+
+        public FetchSitePluginPayload(SiteModel site, String slug) {
+            this.site = site;
+            this.slug = slug;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class InstallSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String slug;
@@ -205,6 +216,21 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
+    public static class FetchedSitePluginPayload extends Payload<FetchSitePluginError> {
+        public SitePluginModel plugin;
+        public String slug;
+
+        public FetchedSitePluginPayload(SitePluginModel plugin) {
+            this.plugin = plugin;
+        }
+
+        public FetchedSitePluginPayload(String slug, FetchSitePluginError error) {
+            this.slug = slug;
+            this.error = error;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
         public SiteModel site;
         public String slug;
@@ -324,6 +350,14 @@ public class PluginStore extends Store {
         public FetchWPOrgPluginErrorType type;
 
         public FetchWPOrgPluginError(FetchWPOrgPluginErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class FetchSitePluginError implements OnChangedError {
+        public FetchSitePluginErrorType type;
+
+        public FetchSitePluginError(FetchSitePluginErrorType type) {
             this.type = type;
         }
     }
@@ -507,6 +541,12 @@ public class PluginStore extends Store {
     }
 
     public enum FetchWPOrgPluginErrorType {
+        EMPTY_RESPONSE,
+        GENERIC_ERROR,
+        PLUGIN_DOES_NOT_EXIST
+    }
+
+    public enum FetchSitePluginErrorType {
         EMPTY_RESPONSE,
         GENERIC_ERROR,
         PLUGIN_DOES_NOT_EXIST
@@ -718,6 +758,8 @@ public class PluginStore extends Store {
             case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
+            case FETCH_SITE_PLUGIN:
+                // TODO
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
                 break;
@@ -744,6 +786,8 @@ public class PluginStore extends Store {
             case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
+            case FETCHED_SITE_PLUGIN:
+                // TODO
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
                 break;

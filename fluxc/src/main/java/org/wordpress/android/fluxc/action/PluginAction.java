@@ -9,7 +9,9 @@ import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload;
+import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginDirectoryPayload;
+import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
@@ -29,6 +31,8 @@ public enum PluginAction implements IAction {
     FETCH_PLUGIN_DIRECTORY,
     @Action(payloadType = String.class)
     FETCH_WPORG_PLUGIN,
+    @Action(payloadType = FetchSitePluginPayload.class)
+    FETCH_SITE_PLUGIN,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
     @Action(payloadType = SearchPluginDirectoryPayload.class)
@@ -45,6 +49,8 @@ public enum PluginAction implements IAction {
     FETCHED_PLUGIN_DIRECTORY,
     @Action(payloadType = FetchedWPOrgPluginPayload.class)
     FETCHED_WPORG_PLUGIN,
+    @Action(payloadType = FetchedSitePluginPayload.class)
+    FETCHED_SITE_PLUGIN,
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
     @Action(payloadType = SearchedPluginDirectoryPayload.class)
