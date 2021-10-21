@@ -112,6 +112,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -147,6 +148,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -154,6 +156,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
+    private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
+    private lateinit var isRefreshFinished: MutableList<Unit>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -206,9 +210,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickActionsMediaClickAction: (() -> Unit)? = null
 
     @InternalCoroutinesApi
-    @Suppress("LongMethod")
     @Before
-    fun setUp() = test {
+    fun setUp() {
+        init()
+    }
+
+    @InternalCoroutinesApi
+    @Suppress("LongMethod")
+    fun init(enableMySiteDashboardConfig: Boolean = false) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
@@ -223,6 +232,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
+
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -250,7 +261,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                postCardsSource
+                postCardsSource,
+                mySiteDashboardPhase2FeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -258,6 +270,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
+        showSwipeRefreshLayout = mutableListOf()
+        isRefreshFinished = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -286,6 +300,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onDynamicCardMenuShown.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 dynamicCardMenu.add(it)
+            }
+        }
+        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                showSwipeRefreshLayout.add(it)
             }
         }
         site = SiteModel()
@@ -1240,6 +1259,23 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onSiteNameChooserDismissed()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    /* SWIPE REFRESH */
+    @InternalCoroutinesApi
+    @Test
+    fun `when my site feature flag is enabled, then swipe refresh layout is enabled`() = test {
+        init(enableMySiteDashboardConfig = true)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `when my site feature flag is disabled, then swipe refresh layout is disabled`() {
+        init(enableMySiteDashboardConfig = false)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
