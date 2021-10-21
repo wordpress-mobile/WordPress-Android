@@ -13,7 +13,7 @@ import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
 
-private const val FILE_DATA_KEY = "file[0]"
+private const val FILE_DATA_KEY = "file"
 
 class WPRestUploadRequestBody(
     media: MediaModel,
