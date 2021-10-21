@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
+import org.wordpress.android.databinding.DomainRegistrationActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
@@ -35,20 +35,18 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
-    private lateinit var binding: DomainSuggestionsActivityBinding
+    private lateinit var binding: DomainRegistrationActivityBinding
 
     private val openCheckout = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenCheckout()) {
-        if (it != null) {
+        it?.let {
             viewModel.completeDomainRegistration(it)
-        } else {
-            // TODO Handle checkout failure
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        with(DomainSuggestionsActivityBinding.inflate(layoutInflater)) {
+        with(DomainRegistrationActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             binding = this
 
@@ -62,7 +60,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
     }
 
-    private fun DomainSuggestionsActivityBinding.setupToolbar() {
+    private fun DomainRegistrationActivityBinding.setupToolbar() {
         setSupportActionBar(toolbarDomain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
