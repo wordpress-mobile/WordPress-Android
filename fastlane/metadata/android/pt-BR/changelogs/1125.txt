@@ -1,0 +1,5 @@
+18.4:
+Blocos de mídia incorporada dedicados para YouTube, Twitter, WordPress e Vimeo, com URLs que podem ser editadas após a seleção.
+Agora o bloco de galeria adicionará as imagens mesmo se o post for fechado durante o upload.
+Os comentários no site permitem que o endereço da Web, e-mail e nome do autor sejam editados.
+Agora você pode falar com o suporte diretamente na tela do editor.

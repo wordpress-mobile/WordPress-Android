@@ -1,0 +1,5 @@
+18.4:
+Dedikerade inbäddningsblock för YouTube, Twitter, WordPress och Vimeo, med URL:er som kan redigeras efter att de har valts.
+Galleriblocket lägger nu till bilder även om inlägget är stängt under uppladdningen.
+Webbplatskommentarer tillåter att författarens namn, e-postadress och webbadress redigeras.
+Du kan nu kontakta supporten direkt från redigerarens skärm.

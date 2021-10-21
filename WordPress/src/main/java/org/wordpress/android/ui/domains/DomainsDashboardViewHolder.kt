@@ -3,6 +3,7 @@ package org.wordpress.android.ui.domains
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
@@ -35,7 +36,8 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     ) {
         fun onBind(item: PrimaryDomain) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteAddress, item.domain)
-            primarySiteAdressActions.setOnClickListener { view -> popupMenuClick(item, view) }
+            primarySiteAddressChip.isVisible = item.isPrimary
+            primarySiteAddressActions.setOnClickListener { view -> popupMenuClick(item, view) }
         }
 
         private fun popupMenuClick(item: PrimaryDomain, v: View) {
@@ -69,6 +71,7 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         fun onBind(item: SiteDomains) = with(binding) {
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
+            primarySiteAddressChip.isVisible = item.isPrimary
         }
     }
 

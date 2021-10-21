@@ -160,6 +160,10 @@
     <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
+    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
+    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
+    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
+    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
 
     <!-- reader more menu spacer height -->
     <dimen name="reader_more_menu_spacer_height">16dp</dimen>

@@ -618,7 +618,6 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_site_domains_title">Site domains</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
@@ -1559,9 +1558,19 @@
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Following this conversation\nEnable in-app notifications?</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Unsubscribed from this conversation</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">In-app notifications enabled</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">In-app notifications disabled</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Could not enable in-app notifications</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Could not disable in-app notifications</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Manage follow conversation options, Popup window</string>
+    <string name="reader_follow_comments_message">You\'re following this conversation. You will receive notifications by email when new comments are published.</string>
+    <string name="reader_follow_comments_enable_push_notifications">Enable in-app notifications</string>
+    <string name="reader_follow_comments_unfollow_conversation">Unfollow conversation</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
@@ -1586,12 +1595,14 @@
     <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
+    <string name="post_settings_mark_as_sticky_options_header">Mark as sticky</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_excerpt">Excerpt</string>
     <string name="post_settings_slug">Slug</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_post_format">Post Format</string>
+    <string name="post_settings_post_sticky">Stick post to the front page</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
@@ -1635,6 +1646,7 @@
     <string name="post_status_publish_post">Publish</string>
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
+    <string name="post_status_sticky">Sticky</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_post_scheduled">Scheduled</string>
     <string name="post_status_post_trashed">Trashed</string>
@@ -2422,8 +2434,9 @@
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
 
     <!-- Domain Registration -->
+    <string name="domains_title">Domains</string>
     <string name="register_domain">Register Domain</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
+    <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
     <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
@@ -2451,11 +2464,10 @@
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
-        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_continue_button">continue</string>
+    <string name="domain_contact_information_register_domain_button">Register domain</string>
+    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
+    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being setup. It may take up to 30 minutes for your domain to start working.</string>
+    <string name="domain_registration_result_continue_button" translatable="false">@string/label_done_button</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
@@ -2464,7 +2476,6 @@
     <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_address_chip">Primary site address</string>
-    <string name="domains_primary_site_address_blurb">Your primary site address is what visitors will see in browser address bar when they visit your website.</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
@@ -2474,7 +2485,7 @@
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Automated Transfer Eligibility Errors -->
@@ -2928,18 +2939,11 @@
 
     <string name="content_description_more">More</string>
 
-    <!-- Quick Start Promo Dialog (Old) -->
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-
-    <!-- Quick Start Promo Dialog (New) -->
+    <!-- Quick Start Promo Dialog -->
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Learn the basics with a quick walkthrough.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
 
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
@@ -3382,6 +3386,8 @@
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Create embed</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Create link</string>
     <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Crosspost</string>
     <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Current placeholder text is</string>
     <!-- translators: accessibility text. Inform about current unit value. %s: Current unit value. -->
