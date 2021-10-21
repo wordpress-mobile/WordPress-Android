@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-11 15:59:42+0000
+Translation-Revision-Date: 2021-10-18 16:31:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">Tìm tên miền</string>
-    <string name="domains_free_plan_get_your_domain_caption">Tên miền đã mua trên trang này sẽ chuyển hướng truy cập tới &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Bạn được tặng kèm tên miền miễn phí một năm kèm theo gói</string>
     <string name="domains_paid_plan_claim_your_domain_title">Chọn tên miền miễn phí</string>
     <string name="domains_manage_domains">Quản lý tên miền</string>
@@ -16,7 +15,6 @@ Language: vi_VN
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Hết hạn vào %s&lt;span&gt;</string>
     <string name="domains_site_domain_expires">Hết hạn vào %s</string>
     <string name="domains_site_domains">Những tên miền của bạn</string>
-    <string name="domains_primary_site_address_blurb">Địa chỉ tên miền chính của bạn là dòng chữ sẽ xuất hiện trên trình duyệt của khách truy cập.</string>
     <string name="domains_primary_site_address_chip">Địa chỉ tên miền chính</string>
     <string name="domains_primary_site_more_menu_change_site_address">Đổi tên miền chính</string>
     <string name="domains_primary_site_caption">Địa chỉ WordPress.com miễn phí của bạn là</string>
@@ -53,7 +51,6 @@ Language: vi_VN
     <string name="me_btn_share">Giới thiệu WordPress cho bạn bè</string>
     <string name="my_site_quick_actions_title">Lối Tắt</string>
     <string name="my_site_btn_domains">Tên miền</string>
-    <string name="site_settings_site_domains_title">Tên miền trang</string>
     <string name="weekly_roundup_notification_text">%1$d lượt xem, %2$d lượt thích, %3$d bình luận.</string>
     <string name="weekly_roundup_notification_title">Tóm Tắt Tuần: %s</string>
     <string name="blogging_reminders_notification_time">Thời gian thông báo</string>
@@ -281,8 +278,8 @@ Language: vi_VN
     <string name="invite_links_disable_dialog_title">Vô hiệu hóa thư mời</string>
     <string name="invite_links_bad_format_response">Phản hồi đã nhận không hợp lệ</string>
     <string name="invite_links_null_response">Không nhận được phản hồi</string>
-    <string name="invite_links_cannot_get_role_data_error">Xảy ra lỗi khi tải dữ liệu quyền %1$s</string>
-    <string name="invite_links_cannot_get_roles_error">Xảy ra lỗi khi tải dữ liệu quyền</string>
+    <string name="invite_links_cannot_get_role_data_error">Xảy ra lỗi khi tải vai trò trên trang %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">Xảy ra lỗi khi tải vai trò</string>
     <string name="invite_links_generic_get_data_error">Xảy ra lỗi khi tải dữ liệu thư mời</string>
     <string name="invite_links_helper_text">Sử dụng liên kết này để mời thành viên nhóm tham gia mà không cần gửi từng người một. Bất cứ ai có URL này sẽ có thể đăng ký gia nhập nhóm, cho nên hãy chia sẻ với những người mà bạn tin tưởng.</string>
     <string name="invite_links_expire_date">Hết hạn %1$s</string>
@@ -344,7 +341,7 @@ Language: vi_VN
     <string name="photo_picker_use_audio">Dùng âm thanh này</string>
     <string name="photo_picker_choose_audio">Chọn âm thanh từ thiết bị</string>
     <string name="people_optional_custom_message_helper_text">Tùy chọn: nhập một thông điệp gửi tới những người được mời.</string>
-    <string name="people_learn_more_about_roles">Tìm hiểu về quyền</string>
+    <string name="people_learn_more_about_roles">Tìm hiểu về vai trò trên trang</string>
     <string name="threat_status_fixed">Đã sửa</string>
     <string name="threat_found_header">Tìm thấy</string>
     <string name="scan_here_to_help">ở đây hỗ trợ</string>
@@ -540,7 +537,7 @@ Language: vi_VN
     <string name="dialog_confirm_copy_local_edit_button">Sửa bài viết trước</string>
     <string name="dialog_confirm_copy_local_message">Bài viết mà bạn sao chép có hai phiên bản đang xung đột bởi vì bạn đã chỉnh sửa nhưng chưa lưu.\nSửa bài viết để hết xung đột hoặc tiếp tục sao chép phiên bản từ ứng dụng này.</string>
     <string name="dialog_confirm_copy_local_title">Lỗi đồng bộ bài viết</string>
-    <string name="button_copy">Nhân đôi</string>
+    <string name="button_copy">Tạo bản sao</string>
     <string name="toast_edit_story_update_in_progress_title">Đang lưu story, xin chờ…</string>
     <string name="gutenberg_native_file_name">Tên tập tin</string>
     <string name="gutenberg_native_file_block_settings">Thiết lập khối tập tin</string>
@@ -1292,10 +1289,6 @@ Language: vi_VN
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Đang đăng kí tên miền…</string>
     <string name="domain_registration_state_picker_dialog_title">Chọn tiểu bang</string>
     <string name="domain_registration_country_picker_dialog_title">Chọn quốc gia</string>
-    <string name="domain_registration_result_continue_button">tiếp tục</string>
-    <string name="domain_registration_result_description">đang tạo tên miền &lt;b&gt;%s&lt;/b&gt; mới của bạn. Trang\n        của bạn sắp tiến hóa!</string>
-    <string name="domain_registration_result_title">Xin chúc mừng</string>
-    <string name="domain_contact_information_register_domain_button">Đăng ký Tên miền</string>
     <string name="domain_contact_information_postal_code_hint">Mã bưu chính</string>
     <string name="domain_contact_information_state_hint">Tiểu bang</string>
     <string name="domain_contact_information_city_hint">Thành phố</string>
@@ -1312,7 +1305,6 @@ Language: vi_VN
     <string name="domain_registration_privacy_protection_description">Chủ sở hữu tên miền phải công khai thông tin liên hệ cho cơ sở dữ liệu tên miền.\n        Với bảo mật, chúng tôi sẽ dùng thông tin của chúng tôi thay vì bạn và chuyển liên hệ trung gian đến với bạn.</string>
     <string name="domain_registration_privacy_protection_title">Bảo Mật</string>
     <string name="domain_registration_contact_form_input_error">Hãy nhập giá trị %s</string>
-    <string name="domains_suggestions_choose_domain">Chọn tên miền</string>
     <string name="stats_management_new">Mới</string>
     <string name="stats_management_dismiss_insights_news_card">Hủy</string>
     <string name="stats_management_try_it_now">Thử ngay</string>
@@ -1394,11 +1386,11 @@ Language: vi_VN
     <string name="stats_more_posts">Nhiều bài hơn</string>
     <string name="stats_fewer_posts">Ít bài hơn</string>
     <string name="new_site_creation_preview_back_pressed_warning">Bạn sẽ mất quá trình này. Bạn có chắc muốn thoát?</string>
-    <string name="plans_loading_error_with_cache_button">Vẫn xem Nâng Cấp</string>
-    <string name="plans_loading_error_with_cache_subtitle">Cần có kết nối mạng để xem Nâng Cấp, những chi tiết vì vậy có thể lỗi thời.</string>
-    <string name="plans_loading_error_no_cache_subtitle">Cần có kết nối mạng để xem Nâng Cấp.</string>
-    <string name="plans_loading_error_no_plans_subtitle">Không thể tải Nâng Cấp vào lúc này. Hãy thử lại sau.</string>
-    <string name="plans_loading_error_no_plans_title">Không thể tải Nâng Cấp</string>
+    <string name="plans_loading_error_with_cache_button">Vẫn xem các Gói</string>
+    <string name="plans_loading_error_with_cache_subtitle">Thông chi tiết về các Gói có thể bị lỗi thời nếu không dùng mạng.</string>
+    <string name="plans_loading_error_no_cache_subtitle">Cần có kết nối mạng để xem các Gói.</string>
+    <string name="plans_loading_error_no_plans_subtitle">Không thể tải các Gói vào lúc này. Hãy thử lại sau.</string>
+    <string name="plans_loading_error_no_plans_title">Không thể tải các Gói</string>
     <string name="plans_loading_error_network_title">Không có mạng</string>
     <string name="menu_switch_to_gutenberg_editor">Dùng trình soạn thảo khối</string>
     <string name="stats_loading_block_error">Xảy ra lỗi khi tải dữ liệu của bạn, làm tươi trang để thử lại.</string>
@@ -1413,11 +1405,10 @@ Language: vi_VN
     <string name="quick_start_dialog_view_site_message">Tận hưởng thành quả!</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng trang</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Nâng Cấp %2$s để xem gói hiện tại của bạn và những gói khác.</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Gói dịch vụ %2$s để xem gói hiện tại của bạn và những gói khác.</string>
     <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất trang.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Trang %2$s để tải lên ngay.</string>
     <string name="quick_start_dialog_publish_post_message">Đăng và chuyển và nháp.</string>
-    <string name="quick_start_dialog_need_help_message">Chúng tôi sẽ hướng dẫn bạn cách cơ bản để xây dựng trang web.</string>
     <string name="quick_start_dialog_explore_plans_title">Tìm hiểu các gói</string>
     <string name="quick_start_dialog_explore_plans_message">Học về marketing và công cụ SEO trong các gói nâng cấp.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
@@ -1600,9 +1591,6 @@ Language: vi_VN
     <string name="quick_start_dialog_share_site_message">Kết nối tới các tài khoản mạng xã hội của bạn - trang của bạn sẽ tự động chia sẻ các bài viết mới.</string>
     <string name="quick_start_dialog_publish_post_title">Viết bài</string>
     <string name="quick_start_dialog_publish_post_message_short">Nhấn %1$s Viết bài %2$s để tạo 1 bài viết mới</string>
-    <string name="quick_start_dialog_need_help_title">Muốn 1 chút trợ giúp khi bắt đầu?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Có</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Không bao giờ</string>
     <string name="quick_start_dialog_need_help_button_negative">Để sau</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các trang khác</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Nhấn %1$s Tìm kiếm %2$s để tìm các trang có chủ đề tương tự</string>
@@ -1782,7 +1770,7 @@ Language: vi_VN
     <string name="photo_picker_wpmedia_desc">chọn từ media của WordPress</string>
     <string name="photo_picker_camera_desc">dùng camera</string>
     <string name="photo_picker_device_desc">chọn từ thiết bị</string>
-    <string name="people_invite_role_info_desc">quyền</string>
+    <string name="people_invite_role_info_desc">vai trò</string>
     <string name="media_settings_play">phát</string>
     <string name="media_settings_image_preview_desc">xem trước ảnh</string>
     <string name="media_preview_desc">xem trước</string>
@@ -2192,7 +2180,7 @@ Language: vi_VN
     <string name="site_settings_video_width_hint">Thay đổi video trong bài đăng thành kích thước này</string>
     <string name="site_settings_optimize_video_summary">Thay đổi độ phân giải và nén video</string>
     <string name="site_settings_optimize_videos">Tối ưu Video</string>
-    <string name="draft_uploaded">Đã tải lên bản nháp</string>
+    <string name="draft_uploaded">đã lưu thành bản nháp</string>
     <string name="report_bug">Báo lỗi</string>
     <string name="video_quality">Chất lượng video</string>
     <string name="permission_camera">Máy ảnh</string>
@@ -2404,11 +2392,11 @@ Language: vi_VN
     <string name="person_removed">Đã chặn @%1$s</string>
     <string name="user_remove_confirmation_message">Nếu bạn chặn %1$s, họ sẽ không còn có thể truy cập trang này, nhưng bất kì nội dung nào được tạo bởi %1$s sẽ vẫn còn trên trang.\n\nBạn vẫn muốn chặn người dùng này?</string>
     <string name="person_remove_confirmation_title">Chặn %1$s</string>
-    <string name="role">Quyền</string>
+    <string name="role">Vai trò</string>
     <string name="people">Mọi người</string>
     <string name="reader_empty_posts_in_custom_list">Các trang trong danh sách này không có bài mới gần đây</string>
     <string name="error_remove_user">Không thể chặn người dùng</string>
-    <string name="error_update_role">Không thể đổi quyền người dùng</string>
+    <string name="error_update_role">Không thể đổi vai trò người dùng</string>
     <string name="error_fetch_viewers_list">Không tải được danh sách độc giả</string>
     <string name="error_updating_gravatar">Lỗi cập nhật Gravatar của bạn</string>
     <string name="error_refreshing_gravatar">Lỗi nạp lại Gravatar của bạn</string>
@@ -2420,7 +2408,7 @@ Language: vi_VN
     <string name="web_address_dialog_hint">Hiển thị công khai khi bạn bình luận.</string>
     <string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
     <string name="plans">Các gói dịch vụ</string>
-    <string name="plan">Nâng cấp</string>
+    <string name="plan">Gói dịch vụ</string>
     <string name="export_your_content_message">Các bài viết, trang con và thiết lập sẽ được gửi tới email %s.</string>
     <string name="export_your_content">Xuất nội dung của bạn</string>
     <string name="export_email_sent">Dữ liệu xuất đã được gửi qua email!</string>
@@ -2593,8 +2581,8 @@ Language: vi_VN
     <string name="site_settings_sort_by_title">Xếp theo</string>
     <string name="site_settings_account_required_title">Người dùng phải đăng nhập</string>
     <string name="site_settings_identity_required_title">Phải bao gồm tên và email</string>
-    <string name="site_settings_receive_pingbacks_title">Nhận Pingback</string>
-    <string name="site_settings_send_pingbacks_title">Gửi các Pingback</string>
+    <string name="site_settings_receive_pingbacks_title">Cho phép được đăng lại</string>
+    <string name="site_settings_send_pingbacks_title">Cho phép bản thân đăng lại</string>
     <string name="site_settings_allow_comments_title">Cho phép bình luận</string>
     <string name="site_settings_default_format_title">Định dạng mặc định</string>
     <string name="site_settings_default_category_title">Chuyên mục mặc định</string>
@@ -2641,7 +2629,7 @@ Language: vi_VN
     <string name="page_updated">Trang con đã cập nhật</string>
     <string name="post_updated">Bài viết đã cập nhật</string>
     <string name="page_published">Trang con đã tạo</string>
-    <string name="post_published">Bài viết đã đăng</string>
+    <string name="post_published">Bài viết đã được đăng</string>
     <string name="theme_no_search_result_found">Rất tiếc, không tìm thấy chủ đề nào.</string>
     <string name="reader_label_gap_marker">Xem các bài viết khác</string>
     <string name="notifications_no_search_results">Không có trang \'%s\' nào</string>
@@ -2660,7 +2648,7 @@ Language: vi_VN
     <string name="reader_discover_attribution_blog">Đăng trên %s</string>
     <string name="reader_discover_attribution_author">Bởi %s</string>
     <string name="reader_discover_attribution_author_and_blog">Được viết bởi %1$s vào %2$s</string>
-    <string name="reader_short_like_count_multi">%s lượt thích</string>
+    <string name="reader_short_like_count_multi">%s Lượt thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
     <string name="reader_short_like_count_none">Thích</string>
     <string name="reader_label_follow_count">%,d theo dõi</string>
@@ -2931,7 +2919,7 @@ Language: vi_VN
     <string name="media_gallery_type_squares">Hình vuông</string>
     <string name="themes">Chủ đề</string>
     <string name="discard">Hủy bỏ</string>
-    <string name="manage">Quản lý</string>
+    <string name="manage">Quản trị viên</string>
     <string name="more_notifications">và %d thông báo nữa.</string>
     <string name="new_notifications">%d thông báo mới</string>
     <string name="follows">Lượt theo dõi</string>

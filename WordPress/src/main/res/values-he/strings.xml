@@ -7,7 +7,6 @@ Language: he_IL
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">לחפש דומיין</string>
-    <string name="domains_free_plan_get_your_domain_caption">רכישות דומיין באתר זה ינתבו את המבקרים אל &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">אנחנו מעניקים לך רישום דומיין בחינם לשנה עם התוכנית שלך</string>
     <string name="domains_paid_plan_claim_your_domain_title">לקבל דומיין בחינם</string>
     <string name="domains_manage_domains">לנהל דומיינים</string>
@@ -16,7 +15,6 @@ Language: he_IL
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;התוקף פג בתאריך %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">התוקף פג בתאריך %s</string>
     <string name="domains_site_domains">הדומיינים באתר שלך</string>
-    <string name="domains_primary_site_address_blurb">כתובת האתר הראשי היא הכתובת שהמבקרים יראו בסרגל הכתובות בדפדפן כאשר הם יבקרו באתר שלך.</string>
     <string name="domains_primary_site_address_chip">כתובת האתר הראשי</string>
     <string name="domains_primary_site_more_menu_change_site_address">שינוי כתובת האתר</string>
     <string name="domains_primary_site_caption">הכתובת החינמית שלך ב-WordPress.com היא</string>
@@ -51,7 +49,6 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
-    <string name="site_settings_site_domains_title">דומיינים באתר</string>
     <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
@@ -1289,10 +1286,6 @@ Language: he_IL
     <string name="domain_registration_registering_domain_name_progress_dialog_message">רושם את שם הדומיין…</string>
     <string name="domain_registration_state_picker_dialog_title">בחירת מדינה</string>
     <string name="domain_registration_country_picker_dialog_title">בחירת ארץ</string>
-    <string name="domain_registration_result_continue_button">המשך</string>
-    <string name="domain_registration_result_description">כעת מתבצע תהליך ההגדרה של הדומיין החדש שלך, &lt;b&gt;%s&lt;/b&gt;. האתר שלך\n עושה סלטות מרוב התרגשות!</string>
-    <string name="domain_registration_result_title">ברכותינו</string>
-    <string name="domain_contact_information_register_domain_button">רישום דומיין</string>
     <string name="domain_contact_information_postal_code_hint">מיקוד</string>
     <string name="domain_contact_information_state_hint">מדינה</string>
     <string name="domain_contact_information_city_hint">עיר</string>
@@ -1309,7 +1302,6 @@ Language: he_IL
     <string name="domain_registration_privacy_protection_description">בעלי דומיינים מחויבים לשתף את פרטי הקשר שלהם בבסיס נתונים ציבורי של כל הדומיינים.\n בזכות הגנת פרטיות, אנחנו מפרסמים את הפרטים שלנו ולא את שלך ומעבירים אליך באופן פרטי כל התקשרות שתהיה.</string>
     <string name="domain_registration_privacy_protection_title">הגנת פרטיות</string>
     <string name="domain_registration_contact_form_input_error">יש להזין נתונים תקפים עבור %s</string>
-    <string name="domains_suggestions_choose_domain">בחירת דומיין</string>
     <string name="stats_management_new">חדש</string>
     <string name="stats_management_dismiss_insights_news_card">ביטול</string>
     <string name="stats_management_try_it_now">כדאי לנסות עכשיו</string>
@@ -1412,7 +1404,6 @@ Language: he_IL
     <string name="quick_start_dialog_upload_icon_title">בחירת סמל אתר ייחודי</string>
     <string name="quick_start_dialog_check_stats_message_short">יש להקיש על %1$s נתונים סטטיסטיים %2$s כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
-    <string name="quick_start_dialog_need_help_message">אנחנו נלווה אותך בביצוע הפעולות הבסיסיות לבנייה של האתר שלך ולהגדלתו.</string>
     <string name="quick_start_dialog_publish_post_message">רישום טיוטה ופרסום פוסט.</string>
     <string name="quick_start_dialog_explore_plans_title">עיון בתוכניות</string>
     <string name="quick_start_dialog_explore_plans_message">מידע נוסף על כלי שיווק ו-SEO בתוכניות שלנו בתשלום.</string>
@@ -1596,9 +1587,6 @@ Language: he_IL
     <string name="quick_start_dialog_enable_sharing_message_short_connections">יש להקיש על %1$s חשבונות מקושרים %2$s כדי להוסיף חשבונות של רשתות חברתיות</string>
     <string name="quick_start_dialog_publish_post_title">פרסום פוסט</string>
     <string name="quick_start_dialog_publish_post_message_short">יש להקיש על %1$sיצירת פוסט%2$s כדי ליצור פוסט חדש</string>
-    <string name="quick_start_dialog_need_help_title">נדרשת לך עזרה כדי לצאת לדרך?</string>
-    <string name="quick_start_dialog_need_help_button_positive">אשר</string>
-    <string name="quick_start_dialog_need_help_button_neutral">לעולם לא</string>
     <string name="quick_start_dialog_follow_sites_title">מעקב אחר אתרים אחרים</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
     <string name="quick_start_dialog_follow_sites_message">כדאי לחפש אתרים שנותנים לך השראה ולעקוב אחריהם כדי לקבל עדכונים כשהם יפרסמו תוכן חדש.</string>
