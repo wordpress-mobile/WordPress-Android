@@ -10,7 +10,6 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
-#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "release_note_185"
 msgid ""
