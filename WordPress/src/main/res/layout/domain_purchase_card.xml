@@ -29,11 +29,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/purchase_domain_caption" />
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <ImageView
             android:id="@+id/purchase_domain_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +42,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/purchase_domain_caption"
-            style="@style/TextAppearance.AppCompat.Body1"
+            style="?attr/textAppearanceBody2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
