@@ -29,8 +29,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -87,13 +87,16 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
@@ -118,6 +121,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
 
@@ -191,8 +195,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.adapter = adapter
+
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            if (NetworkUtils.checkConnection(requireActivity())) {
+                viewModel.onPullToRefresh()
+            } else {
+                swipeToRefreshHelper.isRefreshing = false
+            }
+        }
     }
 
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
@@ -251,6 +264,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewModel.onQuickStartMenuInteraction(interaction)
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
+        viewModel.onRefreshFinished.observeEvent(viewLifecycleOwner, { swipeToRefreshHelper.isRefreshing = false })
+        viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
     }
 
     @Suppress("ComplexMethod")
@@ -504,12 +519,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
+        swipeToRefreshHelper.isRefreshing=false
         actionableEmptyView.setVisible(false)
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
+        swipeToRefreshHelper.isRefreshing=false
         actionableEmptyView.setVisible(true)
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
@@ -534,6 +551,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     )
             )
         }
+    }
+
+    private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
+        swipeToRefreshHelper.setEnabled(isEnabled)
     }
 
     companion object {
