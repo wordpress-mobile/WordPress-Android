@@ -4,17 +4,21 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PluginActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginResponseModel
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackError
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequestBuilder.JetpackResponse.JetpackSuccess
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,7 +26,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PluginJetpackTunnelRestClient @Inject constructor(
-    dispatcher: Dispatcher,
+    private val dispatcher: Dispatcher,
     private val jetpackTunnelGsonRequestBuilder: JetpackTunnelGsonRequestBuilder,
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
@@ -63,42 +67,45 @@ class PluginJetpackTunnelRestClient @Inject constructor(
         }
     }
 
-    suspend fun installPlugin(site: SiteModel, pluginSlug: String): InstalledSitePluginPayload {
+    fun installPlugin(site: SiteModel, pluginSlug: String) {
         val body = mapOf(
                 "slug" to pluginSlug
         )
 
-        val response = jetpackTunnelGsonRequestBuilder.syncPostRequest(
-                this,
-                site,
+        val request = JetpackTunnelGsonRequest.buildPostRequest(
                 PLUGINS_API_PATH,
+                site.siteId,
                 body,
-                PluginResponseModel::class.java
-        )
-        return when (response) {
-            is JetpackSuccess -> InstalledSitePluginPayload(
-                    site,
-                    sitePluginModelFromResponse(site, response.data!!)
-            )
-
-            is JetpackError -> {
-                val error = when (response.error.message) {
-                    PLUGIN_ALREADY_EXISTS -> {
-                        InstallSitePluginError(
-                                InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED,
-                                response.error.message
+                PluginResponseModel::class.java,
+                { response: PluginResponseModel? ->
+                    response?.let {
+                        val payload = InstalledSitePluginPayload(
+                                site,
+                                sitePluginModelFromResponse(site, response)
                         )
+                        dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
                     }
-                    else -> {
-                        InstallSitePluginError(
-                                InstallSitePluginErrorType.GENERIC_ERROR,
-                                response.error.message
-                        )
+                },
+                { error ->
+                    val installError = when (error.message) {
+                        PLUGIN_ALREADY_EXISTS -> {
+                            InstallSitePluginError(
+                                    PLUGIN_ALREADY_INSTALLED,
+                                    error.message
+                            )
+                        }
+                        else -> {
+                            InstallSitePluginError(
+                                    GENERIC_ERROR,
+                                    error.message
+                            )
+                        }
                     }
+                    val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
+                    dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
                 }
-                return InstalledSitePluginPayload(site, pluginSlug, error)
-            }
-        }
+        )
+        add(request)
     }
 
     private fun sitePluginModelFromResponse(siteModel: SiteModel, response: PluginResponseModel): SitePluginModel {
