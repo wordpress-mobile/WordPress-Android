@@ -56,7 +56,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/purchase_domain_title"
-            style="@style/BloggingRemindersText.Title"
+            style="@style/DomainsPurchaseCardTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
