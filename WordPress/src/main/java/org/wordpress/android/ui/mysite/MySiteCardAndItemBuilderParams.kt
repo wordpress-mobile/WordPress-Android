@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 
 sealed class MySiteCardAndItemBuilderParams {
     data class DomainRegistrationCardBuilderParams(
@@ -37,5 +38,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val urlClick: () -> Unit,
         val switchSiteClick: () -> Unit,
         val activeTask: QuickStartTask?
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class SiteItemsBuilderParams(
+        val site: SiteModel,
+        val activeTask: QuickStartTask? = null,
+        val backupAvailable: Boolean = false,
+        val scanAvailable: Boolean = false,
+        val onClick: (ListItemAction) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 }

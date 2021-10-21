@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 
@@ -27,7 +29,10 @@ class SiteItemsBuilderTest {
     fun `always adds stats, publish, posts, media, comment, external and view site items`() {
         setupHeaders(addJetpackHeader = false, addLookAndFeelHeader = false, addConfigurationHeader = false)
 
-        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, SITE_ITEM_ACTION)
+        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
+                site = siteModel,
+                onClick = SITE_ITEM_ACTION)
+        )
 
         assertThat(buildSiteItems).containsExactly(
                 STATS_ITEM,
@@ -60,7 +65,10 @@ class SiteItemsBuilderTest {
                 addScanItem = true
         )
 
-        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, SITE_ITEM_ACTION)
+        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
+                site = siteModel,
+                onClick = SITE_ITEM_ACTION)
+        )
 
         assertThat(buildSiteItems).containsExactly(
                 PLAN_ITEM,
@@ -93,15 +101,16 @@ class SiteItemsBuilderTest {
         val showPlansFocusPoint = true
         setupHeaders(addPlanItem = true, showPlansFocusPoint = showPlansFocusPoint)
 
-        val buildSiteItems = siteItemsBuilder.buildSiteItems(
-                siteModel,
-                SITE_ITEM_ACTION,
-                showExplorePlansFocusPoint = showPlansFocusPoint
+        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
+                site = siteModel,
+                onClick = SITE_ITEM_ACTION,
+                activeTask = EXPLORE_PLANS)
         )
 
         assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
     }
 
+    @Suppress("ComplexMethod", "LongMethod", "LongParameterList")
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
         addJetpackSettings: Boolean = false,
