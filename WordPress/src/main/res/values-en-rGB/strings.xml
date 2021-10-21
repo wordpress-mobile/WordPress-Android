@@ -11,7 +11,7 @@ Language: en_GB
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_manage_domains">Manage domains</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Learn more&lt;/a&gt;.</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="domains_add_a_domain">Add a domain</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expires on %s</string>

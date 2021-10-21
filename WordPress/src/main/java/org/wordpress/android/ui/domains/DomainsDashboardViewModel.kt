@@ -19,6 +19,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
@@ -162,11 +163,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun getManageDomainsItems(siteUrl: String, domains: List<Domain>): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        if (domains.isNotEmpty()) {
-            listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
-//        listItems += DomainBlurb(UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-//                        string.domains_redirected_domains_blurb, siteUrl)))
-        }
+        if (domains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
 
         domains.forEach {
             listItems += SiteDomains(
@@ -187,7 +184,11 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         }
 
-        if (domains.isNotEmpty()) listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
+        if (domains.isNotEmpty()) {
+            listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
+            listItems += DomainBlurb(UiStringResWithParams(
+                    string.domains_redirected_domains_blurb, listOf(UiStringText(siteUrl))))
+        }
 
 //        NOTE: Manage domains option is de-scoped for v1 release
 //        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))

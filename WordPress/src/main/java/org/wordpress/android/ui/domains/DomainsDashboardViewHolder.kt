@@ -81,7 +81,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             parent.viewBinding(DomainAddDomainCtaBinding::inflate)
     ) {
         fun onBind(item: AddDomain) = with(binding) {
-            addDomainCard.setOnClickListener { item.onClick.click() }
             addDomainButton.setOnClickListener { item.onClick.click() }
         }
     }
@@ -118,10 +117,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     ) {
         fun onBind(item: DomainBlurb) = with(binding) {
             uiHelpers.setTextOrHide(primarySiteRedirectBlurb, item.blurb)
-
-            // this is necessary in order for anchor tags in the comment text to be clickable
-            primarySiteRedirectBlurb.linksClickable = true
-            primarySiteRedirectBlurb.movementMethod = WPLinkMovementMethod.getInstance()
         }
     }
 }
