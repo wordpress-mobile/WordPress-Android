@@ -20,7 +20,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
@@ -81,7 +81,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
     private fun getSiteDomainsList() {
         // TODO: Probably needs a loading spinner here instead
-        _uiModel.value = getPrimaryDomainItems(getHomeUrlOrHostName(site.unmappedUrl), false)
+        _uiModel.value = getFreeDomainItems(getHomeUrlOrHostName(site.unmappedUrl), false)
 
         launch {
             val result = siteStore.fetchSiteDomains(site)
@@ -122,7 +122,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val customDomains = domains?.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
 
         freeDomain?.let {
-            listItems += getPrimaryDomainItems(it.domain.toString(), it.primaryDomain)
+            listItems += getFreeDomainItems(it.domain.toString(), it.primaryDomain)
         }
 
         customDomains?.let {
@@ -138,8 +138,8 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.value = listItems
     }
 
-    private fun getPrimaryDomainItems(siteUrl: String, isPrimary: Boolean) =
-        listOf(PrimaryDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
+    private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
+        listOf(FreeDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
 
     // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
     private fun getPurchaseDomainItems(siteUrl: String) =
