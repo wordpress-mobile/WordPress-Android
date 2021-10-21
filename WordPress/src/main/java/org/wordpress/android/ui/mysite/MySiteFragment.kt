@@ -519,14 +519,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
-        swipeToRefreshHelper.isRefreshing=false
+        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.setVisible(false)
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
-        swipeToRefreshHelper.isRefreshing=false
+        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.setVisible(true)
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }

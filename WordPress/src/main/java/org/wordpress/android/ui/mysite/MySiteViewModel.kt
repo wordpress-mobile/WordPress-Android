@@ -147,7 +147,7 @@ class MySiteViewModel @Inject constructor(
             scanAndBackupSource,
             dynamicCardsSource,
             postCardsSource
-    ).state.map  { (
+    ).state.map { (
             currentAvatarUrl,
             site,
             showSiteIconProgressBar,
