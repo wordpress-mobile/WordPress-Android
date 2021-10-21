@@ -1,12 +1,5 @@
-* [**] Reader: allow users to enable push notifications to follow a post comments conversation [WPAndroid - https://github.com/wordpress-mobile/WordPress-Android/pull/15459]
-* [*] Fixed an issue where navigating through a couple of related posts in Reader caused the incorrect post to be loaded after rotation [https://github.com/wordpress-mobile/WordPress-Android/issues/14195]
-* [*] Allow users to mark Posts as sticky [https://github.com/wordpress-mobile/WordPress-Android/pull/15351]
-* [*] Fixed a crash in Page Template chooser [https://github.com/wordpress-mobile/WordPress-Android/pull/15415]
-* [**] Block editor: Embed block: Include Jetpack embed variants. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4008]
-* [*] Block editor: Unsupported Block Editor: Fix text selection bug for Android [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3937]
-* [*] Block editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4072]
-* [*] Block editor: Embed block: Fix URL not editable after dismissing the edit URL bottom sheet with empty value [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4094]
-* [**] Block editor: Embed block: Detect when an embeddable URL is pasted into an empty paragraph. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4048]
-* [**] Block editor: Pullquote block - Added support for text and background color customization [https://github.com/WordPress/gutenberg/pull/34451]
-* [**] Block editor: Preformatted block - Added support for text and background color customization [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4071]
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
 
+Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.
+
+Finally, Pullquote and Preformatted blocks now have customizable text and background color.

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:04:54+0000
+Translation-Revision-Date: 2021-10-20 12:47:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Créer un lien</string>
+    <string name="domains_title">Domaines</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Vous suivez cette conversation.\nActiver les notifications de l’app ?</string>
     <string name="domains_search_for_a_domain_button">Rechercher un domaine</string>
     <string name="domains_free_plan_get_your_domain_caption">Les domaines achetés sur ce site redirigeront les visiteurs vers &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
@@ -16,7 +19,6 @@ Language: fr
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expire le %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expire le %s</string>
     <string name="domains_site_domains">Les domaines de votre site</string>
-    <string name="domains_primary_site_address_blurb">L’adresse de votre site principal est celle qui s’affichera dans la barre d’adresse du navigateur des visiteurs qui consulteront votre site Web.</string>
     <string name="domains_primary_site_address_chip">Adresse principale du site</string>
     <string name="domains_primary_site_more_menu_change_site_address">Modifier l’adresse du site</string>
     <string name="domains_primary_site_caption">Votre adresse WordPress.com gratuite est</string>
@@ -43,6 +45,7 @@ Language: fr
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Vous et %1$s blogueurs&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Vous et 1 blogueur&lt;/a&gt; aimez ceci.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
@@ -52,7 +55,6 @@ Language: fr
     <string name="recommend_app_subject">Applications WordPress - Des applications pour tous les écrans</string>
     <string name="me_btn_share">Partager WordPress avec un ami</string>
     <string name="my_site_quick_actions_title">Liens rapides</string>
-    <string name="site_settings_site_domains_title">Domaines de sites</string>
     <string name="weekly_roundup_notification_text">Votre site a obtenu %1$d vues, %2$d mentions J’aime, %3$d commentaires.</string>
     <string name="weekly_roundup_notification_title">Résumé hebdomadaire : %s</string>
     <string name="blogging_reminders_notification_time">Heure de notification</string>
@@ -215,6 +217,7 @@ Language: fr
     <string name="gutenberg_native_featured">À la Une</string>
     <string name="gutenberg_native_embed_link">Lien intégré</string>
     <string name="gutenberg_native_display_post_date">Affiche la date du contenu</string>
+    <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
     <string name="gutenberg_native_none">Aucun</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
@@ -1291,9 +1294,6 @@ Language: fr
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Enregistrement du nom de domaine…</string>
     <string name="domain_registration_state_picker_dialog_title">Sélectionner un État</string>
     <string name="domain_registration_country_picker_dialog_title">Choisir le pays</string>
-    <string name="domain_registration_result_continue_button">continuer</string>
-    <string name="domain_registration_result_description">votre nouveau domaine &lt;b&gt;%s&lt;/b&gt; est en cours de configuration. Votre site\n fonctionne parfaitement !</string>
-    <string name="domain_registration_result_title">Bravo</string>
     <string name="domain_contact_information_register_domain_button">Enregistrer un domaine</string>
     <string name="domain_contact_information_postal_code_hint">Code postal</string>
     <string name="domain_contact_information_state_hint">État</string>
@@ -1311,7 +1311,6 @@ Language: fr
     <string name="domain_registration_privacy_protection_description">Les propriétaires de domaines sont tenus de partager leurs informations de contact dans une base de données publique de domaines.\n Grâce à la fonction de protection de la vie privée, nous publions nos propres informations à la place des vôtres et vous transmettons les communications en privé.</string>
     <string name="domain_registration_privacy_protection_title">Protection de la vie privée</string>
     <string name="domain_registration_contact_form_input_error">Veuillez saisir un(e) %s valide</string>
-    <string name="domains_suggestions_choose_domain">Choisir le domaine</string>
     <string name="stats_management_new">Nouvelles</string>
     <string name="stats_management_dismiss_insights_news_card">Ignorer</string>
     <string name="stats_management_try_it_now">Essayer maintenant</string>
@@ -1415,7 +1414,6 @@ Language: fr
     <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_check_stats_message_short">Appuyez sur %1$s Stats %2$s pour voir comment votre site est performant.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Appuyez sur %1$s Votre icône de site %2$s pour en téléverser une nouvelle</string>
-    <string name="quick_start_dialog_need_help_message">Nous allons vous expliquer les bases de la construction et de la croissance de votre site.</string>
     <string name="quick_start_dialog_publish_post_message">Rédiger un brouillon et publier un article de blog.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorer les plans</string>
     <string name="quick_start_dialog_enable_sharing_title">Activer le partage d’article</string>
@@ -1599,9 +1597,6 @@ Language: fr
     <string name="quick_start_dialog_share_site_message">Connectez vos comptes de réseaux sociaux. Votre site partagera automatiquement vos nouveaux articles.</string>
     <string name="quick_start_dialog_publish_post_title">Publier un article</string>
     <string name="quick_start_dialog_publish_post_message_short">Appuyez sur %1$s Créer un article %2$s pour créer un article</string>
-    <string name="quick_start_dialog_need_help_title">Besoin d\'un petit coup de pouce pour commencer ?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accepter</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Jamais</string>
     <string name="quick_start_dialog_follow_sites_title">S\'abonner à d\'autres sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Appuyez sur %1$s Lecteur %2$s pour continuer</string>
     <string name="quick_start_dialog_follow_sites_message">Trouvez des sites qui vous inspirent, et suivez-les pour recevoir une notification quand ils publient.</string>

@@ -7,7 +7,6 @@ Language: zh_CN
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">搜索域</string>
-    <string name="domains_free_plan_get_your_domain_caption">在此站点上购买的域会将访客重定向至 &lt;b&gt;%s。&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">您的套餐中包括为期一年的免费域名注册</string>
     <string name="domains_paid_plan_claim_your_domain_title">声明您的免费域</string>
     <string name="domains_manage_domains">管理域</string>
@@ -16,7 +15,6 @@ Language: zh_CN
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日期 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">到期日期 %s</string>
     <string name="domains_site_domains">您的站点域名</string>
-    <string name="domains_primary_site_address_blurb">您的主站点地址是访客访问您的网站时，在其浏览器中所看到的地址。</string>
     <string name="domains_primary_site_address_chip">主站点地址</string>
     <string name="domains_primary_site_more_menu_change_site_address">更改站点地址</string>
     <string name="domains_primary_site_caption">您的免费 WordPress.com 地址是</string>
@@ -46,7 +44,6 @@ Language: zh_CN
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">获取您的域名</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
-    <string name="site_settings_site_domains_title">站点域</string>
     <string name="my_site_btn_domains">域名</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
@@ -1291,10 +1288,6 @@ Language: zh_CN
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
     <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
     <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
-    <string name="domain_registration_result_continue_button">继续</string>
-    <string name="domain_registration_result_description">您的新域 &lt;b&gt;%s&lt;/b&gt; 正在设置中。您的站点\n真是太棒了！</string>
-    <string name="domain_registration_result_title">恭喜</string>
-    <string name="domain_contact_information_register_domain_button">注册域</string>
     <string name="domain_contact_information_postal_code_hint">邮政编码</string>
     <string name="domain_contact_information_state_hint">州/省/自治区/直辖市</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -1311,7 +1304,6 @@ Language: zh_CN
     <string name="domain_registration_privacy_protection_description">域所有者必须在所有域的公共数据库中共享联系信息。\n通过隐私保护功能，我们会发布自己的信息（而不是您的信息），并以私密方式将所有邮件转发给您。</string>
     <string name="domain_registration_privacy_protection_title">隐私保护</string>
     <string name="domain_registration_contact_form_input_error">请输入有效的“%s”</string>
-    <string name="domains_suggestions_choose_domain">选择域</string>
     <string name="stats_management_new">新增</string>
     <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即试用</string>
@@ -1415,7 +1407,6 @@ Language: zh_CN
     <string name="quick_start_dialog_upload_icon_title">选择您的唯一站点图标</string>
     <string name="quick_start_dialog_check_stats_message_short">点击%1$s统计信息%2$s查看您站点的效果。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
-    <string name="quick_start_dialog_need_help_message">我们将带您了解构建和提升站点的基本知识。</string>
     <string name="quick_start_dialog_publish_post_message">起草并发布文章。</string>
     <string name="quick_start_dialog_explore_plans_title">了解各个套餐</string>
     <string name="quick_start_dialog_explore_plans_message">了解付费套餐中的营销和搜索引擎优化工具。</string>
@@ -1598,10 +1589,7 @@ Language: zh_CN
     <string name="quick_start_dialog_enable_sharing_message_short_connections">轻按 %1$s 连接 %2$s 可添加您的社交媒体账户</string>
     <string name="quick_start_dialog_share_site_message">连接至您的社交媒体账户 - 您的站点将自动共享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">发布文章</string>
-    <string name="quick_start_dialog_need_help_title">不知从何入手，需要一点帮助？</string>
-    <string name="quick_start_dialog_need_help_button_positive">接受</string>
     <string name="quick_start_dialog_publish_post_message_short">轻按%1$s“创建文章”%2$s，撰写一篇新文章</string>
-    <string name="quick_start_dialog_need_help_button_neutral">从不</string>
     <string name="quick_start_dialog_follow_sites_title">关注其他站点</string>
     <string name="quick_start_dialog_follow_sites_message">查找并关注您喜爱的站点，在他们发布新内容时可及时获取更新。</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">轻按%1$s“阅读器”%2$s并继续</string>
