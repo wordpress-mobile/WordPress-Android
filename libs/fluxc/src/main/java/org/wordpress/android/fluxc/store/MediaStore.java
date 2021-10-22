@@ -864,6 +864,8 @@ public class MediaStore extends Store {
 
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.cancelUpload(media);
+        } else if (payload.site.isJetpackCPConnected()) {
+            mWPV2MediaRestClient.cancelUpload(media);
         } else {
             mMediaXmlrpcClient.cancelUpload(media);
         }
