@@ -763,7 +763,8 @@ public class PluginStore extends Store {
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
             case FETCH_SITE_PLUGIN:
-                // TODO
+                fetchSitePlugin((FetchSitePluginPayload) action.getPayload());
+                break;
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
                 break;
@@ -898,6 +899,15 @@ public class PluginStore extends Store {
 
     private void fetchWPOrgPlugin(String pluginSlug) {
         mPluginWPOrgClient.fetchWPOrgPlugin(pluginSlug);
+    }
+
+    /* Fetch a single plugin from a site, to get its information and whether it exists or not.
+       Currently this is only supported on sites connected using Jetpack Connection Package.
+     */
+    private void fetchSitePlugin(FetchSitePluginPayload payload) {
+        if (payload.site.isJetpackCPConnected()) {
+            mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.slug);
+        }
     }
 
     private void installSitePlugin(InstallSitePluginPayload payload) {
