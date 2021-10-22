@@ -10,6 +10,9 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONException
+import org.json.JSONObject
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
@@ -21,8 +24,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.REQUEST_TOO_LARGE
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -81,6 +85,7 @@ class WPV2MediaRestClient @Inject constructor(
                 }
 
                 override fun onResponse(call: Call, response: okhttp3.Response) {
+                    if (!cont.isActive) return
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
@@ -98,10 +103,8 @@ class WPV2MediaRestClient @Inject constructor(
                             cont.handleFailure(media, error)
                         }
                     } else {
-                        // TODO
-                        AppLog.w(MEDIA, response.body!!.string())
-
-                        cont.handleFailure(media, MediaError(GENERIC_ERROR))
+                        val error = response.parseError()
+                        cont.handleFailure(media, error)
                     }
                 }
             })
@@ -117,5 +120,37 @@ class WPV2MediaRestClient @Inject constructor(
         val payload = ProgressPayload(media, 1f, false, error)
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
         resume(payload)
+    }
+
+    private fun Response.parseError(): MediaError {
+        val mediaError = MediaError(MediaErrorType.fromHttpStatusCode(code))
+        mediaError.statusCode = code
+        mediaError.logMessage = message
+        if (mediaError.type == REQUEST_TOO_LARGE) {
+            // 413 (Request too large) errors are coming from the web server and are not an API response like the rest
+            mediaError.message = message
+            return mediaError
+        }
+        try {
+            val responseBody = body
+            if (responseBody == null) {
+                AppLog.e(MEDIA, "error uploading media, response body was empty $this")
+                mediaError.type = PARSE_ERROR
+                return mediaError
+            }
+            val jsonBody = JSONObject(responseBody.string())
+            jsonBody.optString("message").takeIf { it.isNotEmpty() }?.let {
+                mediaError.message = it
+            }
+            jsonBody.optString("code").takeIf { it.isNotEmpty() }?.let {
+                mediaError.logMessage = it
+            }
+        } catch (e: JSONException) {
+            // no op
+            mediaError.logMessage = e.message
+        } catch (e: IOException) {
+            mediaError.logMessage = e.message
+        }
+        return mediaError
     }
 }
