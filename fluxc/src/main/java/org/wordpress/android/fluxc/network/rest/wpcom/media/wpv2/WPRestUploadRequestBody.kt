@@ -13,7 +13,12 @@ import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
 
-private const val FILE_DATA_KEY = "file"
+private const val FILE_FORM_KEY = "file"
+private const val TITLE_FORM_KEY = "title"
+private const val DESCRIPTION_FORM_KEY = "description"
+private const val CAPTION_FORM_KEY = "caption"
+private const val ALT_FORM_KEY = "alt_text"
+private const val POST_ID_FORM_KEY = "post"
 
 class WPRestUploadRequestBody(
     media: MediaModel,
@@ -40,12 +45,12 @@ class WPRestUploadRequestBody(
 
         val builder: MultipartBody.Builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart(FILE_DATA_KEY, fileName, body)
-                .addParamIfNotEmpty("title", media.title)
-                .addParamIfNotEmpty("description", media.description)
-                .addParamIfNotEmpty("caption", media.caption)
-                .addParamIfNotEmpty("alt_text", media.alt)
-                .addParamIfNotEmpty("post", media.postId.takeIf { it > 0L }?.toString())
+                .addFormDataPart(FILE_FORM_KEY, fileName, body)
+                .addParamIfNotEmpty(TITLE_FORM_KEY, media.title)
+                .addParamIfNotEmpty(DESCRIPTION_FORM_KEY, media.description)
+                .addParamIfNotEmpty(CAPTION_FORM_KEY, media.caption)
+                .addParamIfNotEmpty(ALT_FORM_KEY, media.alt)
+                .addParamIfNotEmpty(POST_ID_FORM_KEY, media.postId.takeIf { it > 0L }?.toString())
 
         return builder.build()
     }
