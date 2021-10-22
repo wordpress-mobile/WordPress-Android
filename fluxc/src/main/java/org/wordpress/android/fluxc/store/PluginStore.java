@@ -708,6 +708,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class OnSitePluginFetched extends OnChanged<FetchSitePluginError> {
+        public SitePluginModel plugin;
+        public String slug;
+
+        public OnSitePluginFetched(FetchedSitePluginPayload payload) {
+            this.plugin = payload.plugin;
+            this.slug = payload.slug;
+        }
+    }
+
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginsRemoved extends OnChanged<RemoveSitePluginsError> {
         public SiteModel site;
@@ -792,7 +802,8 @@ public class PluginStore extends Store {
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
             case FETCHED_SITE_PLUGIN:
-                // TODO
+                fetchedSitePlugin((FetchedSitePluginPayload) action.getPayload());
+                break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
                 break;
@@ -1010,6 +1021,14 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else if (event.pluginSlug != null) {
             PluginSqlUtils.insertOrUpdateWPOrgPlugin(payload.wpOrgPlugin);
+        }
+        emitChange(event);
+    }
+
+    private void fetchedSitePlugin(FetchedSitePluginPayload payload) {
+        OnSitePluginFetched event = new OnSitePluginFetched(payload);
+        if (payload.isError()) {
+            event.error = payload.error;
         }
         emitChange(event);
     }
