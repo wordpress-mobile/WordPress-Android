@@ -5,12 +5,15 @@ import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.DELETED
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
+import org.wordpress.android.util.DateTimeUtils
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val DELETED_STATUS = "deleted"
 
 data class MediaWPRESTResponse(
     val id: Long,
-    val date: String,
+    @SerializedName("date_gmt") val dateGmt: String,
     val guid: Attribute,
     val slug: String,
     val status: String,
@@ -59,7 +62,8 @@ data class MediaWPRESTResponse(
 fun MediaWPRESTResponse.toMediaModel(): MediaModel {
     val mediaModel = MediaModel()
     mediaModel.mediaId = id
-    mediaModel.uploadDate = date
+    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).parse(dateGmt)
+    mediaModel.uploadDate = DateTimeUtils.iso8601FromDate(date)
     mediaModel.postId = post ?: 0L
     mediaModel.authorId = author
     mediaModel.url = sourceURL
