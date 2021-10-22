@@ -5,6 +5,16 @@ import com.android.volley.RequestQueue
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -51,17 +61,22 @@ class WPV2MediaRestClient @Inject constructor(
     private val gson: Gson by lazy { Gson() }
 
     fun uploadMedia(site: SiteModel, media: MediaModel) {
-        coroutineEngine.launch(T.MEDIA, this, "Upload Media using WPCom's /wp/v2 API") {
+        coroutineEngine.launch(MEDIA, this, "Upload Media using WPCom's /wp/v2 API") {
             syncUploadMedia(site, media)
+                    .collect { payload ->
+                        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
+                    }
         }
     }
 
-    suspend fun syncUploadMedia(site: SiteModel, media: MediaModel): ProgressPayload {
-        return suspendCancellableCoroutine { cont ->
+    fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
+        return callbackFlow {
             val url = WPAPI.media.getWPComUrl(site.siteId)
             val body = WPRestUploadRequestBody(media) { media, progress ->
-                val payload = ProgressPayload(media, progress, false, null)
-                mDispatcher.emitChange(UploadActionBuilder.newUploadedMediaAction(payload))
+                if (!isClosedForSend) {
+                    val payload = ProgressPayload(media, progress, false, null)
+                    offer(payload)
+                }
             }
 
             val request = Request.Builder()
@@ -75,51 +90,51 @@ class WPV2MediaRestClient @Inject constructor(
             call.enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     // If the continuation has been canceled, then ignore errors
-                    if (cont.isActive) {
+                    if (!isClosedForSend) {
                         val message = "media upload failed: $e"
                         AppLog.w(MEDIA, message)
                         val error = MediaError.fromIOException(e)
                         error.logMessage = message
-                        cont.handleFailure(media, error)
+                        handleFailure(media, error)
                     }
                 }
 
-                override fun onResponse(call: Call, response: okhttp3.Response) {
-                    if (!cont.isActive) return
+                override fun onResponse(call: Call, response: Response) {
+                    if (isClosedForSend) return
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
                             val uploadedMedia = res.toMediaModel()
                             val payload = ProgressPayload(uploadedMedia, 1f, true, false)
-                            mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-                            cont.resume(payload)
+                            sendBlocking(payload)
+                            close()
                         } catch (e: JsonSyntaxException) {
                             AppLog.e(MEDIA, e)
                             val error = MediaError(PARSE_ERROR)
-                            cont.handleFailure(media, error)
+                            handleFailure(media, error)
                         } catch (e: NullPointerException) {
                             AppLog.e(MEDIA, e)
                             val error = MediaError(PARSE_ERROR)
-                            cont.handleFailure(media, error)
+                            handleFailure(media, error)
                         }
                     } else {
                         val error = response.parseError()
-                        cont.handleFailure(media, error)
+                        handleFailure(media, error)
                     }
                 }
             })
 
-            cont.invokeOnCancellation {
+            awaitClose {
                 call.cancel()
             }
         }
     }
 
-    private fun CancellableContinuation<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
+    private fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
         media.setUploadState(FAILED)
         val payload = ProgressPayload(media, 1f, false, error)
-        mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
-        resume(payload)
+        sendBlocking(payload)
+        close()
     }
 
     private fun Response.parseError(): MediaError {
