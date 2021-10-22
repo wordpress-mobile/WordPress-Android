@@ -38,6 +38,13 @@ class PluginJetpackTunnelRestClient @Inject constructor(
         private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
     }
 
+    /**
+     * Fetch a plugin's information from a site.
+     *
+     * @param [pluginSlug] Note that this is not the same as the WordPress.org plugin directory slug that can be used
+     * to install a plugin. Instead, it needs to be the value of the `plugin` key inside a plugin object as returned
+     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value should be `jetpack/jetpack`.
+     */
     fun fetchPlugin(site: SiteModel, pluginSlug: String) {
         val url = "$PLUGINS_API_PATH/$pluginSlug"
 
