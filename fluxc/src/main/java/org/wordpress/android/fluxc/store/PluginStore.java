@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
+import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginJetpackTunnelRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
@@ -721,15 +722,18 @@ public class PluginStore extends Store {
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
     private final PluginCoroutineStore mPluginCoroutineStore;
+    private final PluginJetpackTunnelRestClient mPluginJetpackTunnelRestClient;
 
     @Inject public PluginStore(Dispatcher dispatcher,
                                PluginRestClient pluginRestClient,
                                PluginWPOrgClient pluginWPOrgClient,
-                               PluginCoroutineStore pluginCoroutineStore) {
+                               PluginCoroutineStore pluginCoroutineStore,
+                               PluginJetpackTunnelRestClient pluginJetpackTunnelRestClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
         mPluginWPOrgClient = pluginWPOrgClient;
         mPluginCoroutineStore = pluginCoroutineStore;
+        mPluginJetpackTunnelRestClient = pluginJetpackTunnelRestClient;
     }
 
     @Override
@@ -901,6 +905,8 @@ public class PluginStore extends Store {
             mPluginRestClient.installSitePlugin(payload.site, payload.slug);
         } else if (!payload.site.isUsingWpComRestApi()) {
             mPluginCoroutineStore.installSitePlugin(payload.site, payload.slug);
+        } else if (payload.site.isJetpackCPConnected()) {
+            mPluginJetpackTunnelRestClient.installPlugin(payload.site, payload.slug);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
