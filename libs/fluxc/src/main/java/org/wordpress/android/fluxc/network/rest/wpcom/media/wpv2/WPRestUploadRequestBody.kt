@@ -26,6 +26,14 @@ class WPRestUploadRequestBody(
     }
 
     private fun buildMultipartBody(): MultipartBody {
+        fun MultipartBody.Builder.addParamIfNotEmpty(key: String, attribute: String?): MultipartBody.Builder {
+            return apply {
+                attribute?.takeIf { it.isNotEmpty() }?.let {
+                    addFormDataPart(key, it)
+                }
+            }
+        }
+
         val mediaFile = File(media.filePath)
         val body = mediaFile.asRequestBody(media.mimeType.toMediaType())
         val fileName = URLEncoder.encode(media.fileName, "UTF-8")
@@ -33,6 +41,11 @@ class WPRestUploadRequestBody(
         val builder: MultipartBody.Builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(FILE_DATA_KEY, fileName, body)
+                .addParamIfNotEmpty("title", media.title)
+                .addParamIfNotEmpty("description", media.description)
+                .addParamIfNotEmpty("caption", media.caption)
+                .addParamIfNotEmpty("alt_text", media.alt)
+                .addParamIfNotEmpty("post", media.postId.takeIf { it > 0L }?.toString())
 
         return builder.build()
     }
