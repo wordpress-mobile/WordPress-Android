@@ -117,8 +117,3 @@ project.afterEvaluate {
         }
    }
 }
-
-publishToS3Plugin {
-    mavenPublishGroupId "org.wordpress"
-    mavenPublishArtifactId "fluxc"
-}
