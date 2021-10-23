@@ -24,8 +24,3 @@ project.afterEvaluate {
         }
    }
 }
-
-publishToS3Plugin {
-    mavenPublishGroupId "org.wordpress.fluxc"
-    mavenPublishArtifactId "fluxc-annotations"
-}
