@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.DELETED
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
 import org.wordpress.android.util.DateTimeUtils
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 private const val DELETED_STATUS = "deleted"
 
