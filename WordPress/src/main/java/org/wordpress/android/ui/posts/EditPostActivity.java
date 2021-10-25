@@ -952,10 +952,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
-
-        if (mShowGutenbergEditor) {
-            AppPrefs.setHasLaunchedGutenbergEditor(true);
-        }
     }
 
     @Override
@@ -2314,8 +2310,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
-                themeBundle,
-                !AppPrefs.hasLaunchedGutenbergEditor()
+                themeBundle
         );
     }
 
