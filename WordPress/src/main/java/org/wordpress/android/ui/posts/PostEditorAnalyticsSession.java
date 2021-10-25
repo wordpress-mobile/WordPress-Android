@@ -23,7 +23,6 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_EDITOR = "editor";
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
     private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
-    private static final String KEY_CAN_VIEW_EDITOR_ONBOARDING = "can_view_editor_onboarding";
     private static final String KEY_GALLERY_WITH_IMAGE_BLOCKS = "unstable_gallery_with_image_blocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
@@ -98,17 +97,12 @@ public class PostEditorAnalyticsSession implements Serializable {
         return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
     }
 
-    public void start(ArrayList<Object> unsupportedBlocksList,
-                      Boolean canViewEditorOnboarding,
-                      Boolean galleryWithImageBlocks) {
+    public void start(ArrayList<Object> unsupportedBlocksList, Boolean galleryWithImageBlocks) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
-            if (canViewEditorOnboarding != null) {
-                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
-            }
             if (galleryWithImageBlocks != null) {
                 properties.put(KEY_GALLERY_WITH_IMAGE_BLOCKS, galleryWithImageBlocks);
             }
@@ -165,7 +159,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
     }
 
-    public void end(Boolean canViewEditorOnboarding) {
+    public void end() {
         // don't try to send an "end" event if the session wasn't started in the first place
         if (mStarted) {
             if (mOutcome == null) {
@@ -175,9 +169,6 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
-            if (canViewEditorOnboarding != null) {
-                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
-            }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");

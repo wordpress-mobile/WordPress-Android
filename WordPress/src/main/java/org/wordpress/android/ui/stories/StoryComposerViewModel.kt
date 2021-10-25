@@ -127,7 +127,7 @@ class StoryComposerViewModel @Inject constructor(
     }
 
     fun onStoryComposerStartAnalyticsSession() {
-        this.postEditorAnalyticsSession?.start(null, null, null)
+        this.postEditorAnalyticsSession?.start(null, null)
     }
 
     fun onStoryComposerAnalyticsSessionStartTimeReset() {
@@ -192,6 +192,6 @@ class StoryComposerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        postEditorAnalyticsSession?.end(null)
+        postEditorAnalyticsSession?.end()
     }
 }
