@@ -1,11 +1,23 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.6
+-----
+
+
 18.5
 -----
+* [**] Reader: allow users to enable push notifications to follow a post comments conversation [WPAndroid - https://github.com/wordpress-mobile/WordPress-Android/pull/15459]
 * [*] Fixed an issue where navigating through a couple of related posts in Reader caused the incorrect post to be loaded after rotation [https://github.com/wordpress-mobile/WordPress-Android/issues/14195]
 * [*] Allow users to mark Posts as sticky [https://github.com/wordpress-mobile/WordPress-Android/pull/15351]
 * [*] Fixed a crash in Page Template chooser [https://github.com/wordpress-mobile/WordPress-Android/pull/15415]
 * [**] Block editor: Block inserter indicates newly available block types [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4047]
+* [**] Block editor: Embed block: Include Jetpack embed variants. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4008]
+* [*] Block editor: Unsupported Block Editor: Fix text selection bug for Android [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3937]
+* [*] Block editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4072]
+* [*] Block editor: Embed block: Fix URL not editable after dismissing the edit URL bottom sheet with empty value [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4094]
+* [**] Block editor: Embed block: Detect when an embeddable URL is pasted into an empty paragraph. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4048]
+* [**] Block editor: Pullquote block - Added support for text and background color customization [https://github.com/WordPress/gutenberg/pull/34451]
+* [**] Block editor: Preformatted block - Added support for text and background color customization [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4071]
 
 18.4
 -----
@@ -13,6 +25,7 @@
 * [*] Embed block: Fix URL update when edited after setting a bad URL of a provider. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4002]
 * [**] Users can now contact support from inside the block editor screen. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3975]
 * [**] Site Comments: when editing a Comment, the author's name, email address, and web address can now be changed. (https://github.com/wordpress-mobile/WordPress-Android/pull/15402)
+* [**] Block editor: Help menu with guides about how to work with blocks [#15421]
 
 18.3
 -----

@@ -527,8 +527,6 @@ Language: sr_RS
     <string name="site_settings_disconnected_toast">Нема интернет везе. Уређивање је онемогућено.</string>
     <string name="domain_registration_country_picker_dialog_title">Одабери државу</string>
     <string name="domain_registration_state_picker_dialog_title">Одабери покрајину</string>
-    <string name="domain_registration_result_title">Честитамо</string>
-    <string name="domain_contact_information_register_domain_button">Региструјте домен</string>
     <string name="domain_contact_information_postal_code_hint">Поштански број</string>
     <string name="domain_contact_information_state_hint">Покрајина</string>
     <string name="domain_contact_information_city_hint">Град</string>
@@ -537,13 +535,11 @@ Language: sr_RS
     <string name="domain_contact_information_country_hint">Држава</string>
     <string name="domain_contact_information_country_code_hint">Код државе</string>
     <string name="domain_contact_information_phone_number_hint">Телефон</string>
-    <string name="domain_registration_result_continue_button">настави</string>
     <string name="domain_contact_information_organization_hint">Организација (опционо)</string>
     <string name="domain_privacy_option_off_title">Региструј јавно</string>
     <string name="domain_privacy_option_on_title">Региструј приватно са Заштитом приватности</string>
     <string name="domain_registration_privacy_protection_title">Заштита приватности</string>
     <string name="domain_registration_contact_form_input_error">Молимо унесите исправан %s</string>
-    <string name="domains_suggestions_choose_domain">Одаберите домен</string>
     <string name="stats_management_new">Ново</string>
     <string name="stats_management_dismiss_insights_news_card">Одбаци</string>
     <string name="stats_management_try_it_now">Испробајте сада</string>
@@ -771,9 +767,7 @@ Language: sr_RS
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
     <string name="quick_start_dialog_view_site_message_short">Додирни %1$s Види сајт %2$s за преглед свог сајта</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
-    <string name="quick_start_dialog_need_help_button_positive">Прихвати</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Никад</string>
     <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>

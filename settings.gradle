@@ -22,6 +22,11 @@ gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.storiesAndroidPath = "com.automattic:stories"
 gradle.ext.storiesAndroidMp4ComposePath = "com.automattic.stories:mp4compose"
 gradle.ext.storiesAndroidPhotoEditorPath = "com.automattic.stories:photoeditor"
+gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
+gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
+gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
+gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
+gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -82,6 +87,19 @@ if (localBuilds.exists()) {
                 substitute module("$gradle.ext.storiesAndroidPath") with project(':stories')
                 substitute module("$gradle.ext.storiesAndroidMp4ComposePath") with project(':mp4compose')
                 substitute module("$gradle.ext.storiesAndroidPhotoEditorPath") with project(':photoeditor')
+            }
+        }
+    }
+
+    if (ext.has("localAztecAndroidPath")) {
+        includeBuild(ext.localAztecAndroidPath) {
+            dependencySubstitution {
+                println "Substituting AztecEditor-Android with the local build"
+                substitute module("$gradle.ext.aztecAndroidAztecPath") with project(':aztec')
+                substitute module("$gradle.ext.aztecAndroidWordPressShortcodesPath") with project(':wordpress-shortcodes')
+                substitute module("$gradle.ext.aztecAndroidWordPressCommentsPath") with project(':wordpress-comments')
+                substitute module("$gradle.ext.aztecAndroidGlideLoaderPath") with project(':glide-loader')
+                substitute module("$gradle.ext.aztecAndroidPicassoLoaderPath") with project(':picasso-loader')
             }
         }
     }

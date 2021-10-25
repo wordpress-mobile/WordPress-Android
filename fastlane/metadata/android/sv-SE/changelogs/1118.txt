@@ -1,4 +1,0 @@
-18.3:
-Många förbättringar i blockredigeraren! Vi har gjort många uppdateringar av inbäddningsblocket, bl.a. ordnat förhandsvisning av inbäddning från WordPress, Instagram och Vimeo samt lagt till val för förnyat försök eller konvertering media till en länk om adressen inte går att bädda in.
-
-Vi har också rättat ett problem med .mp4-video på vissa webbplatser och fått ordning på etiketterna i menyn för ”min webbplats” (”Inlägg” och ”Sidor”).

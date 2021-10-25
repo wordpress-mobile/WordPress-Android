@@ -1178,15 +1178,11 @@ Language: cs_CZ
     <string name="domain_contact_information_city_hint">Město</string>
     <string name="domain_contact_information_state_hint">Země</string>
     <string name="domain_contact_information_postal_code_hint">PSČ</string>
-    <string name="domain_contact_information_register_domain_button">Registrovat doménu</string>
-    <string name="domain_registration_result_title">Gratulace!</string>
-    <string name="domain_registration_result_continue_button">Další</string>
     <string name="domain_contact_information_address_hint_two">Adresa 2</string>
     <string name="domain_contact_information_address_hint">Adresa</string>
     <string name="domain_contact_information_country_hint">Země</string>
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
     <string name="domain_contact_information_country_code_hint">Předvolba země</string>
-    <string name="domain_registration_result_description">nastavuje se vaše nová doména &lt;b&gt;%s&lt;/b&gt;. Váš web bude\n         dělat kotrmelce vzrušením!</string>
     <string name="domain_contact_information_organization_hint">Organizace (volitelné)</string>
     <string name="domain_contact_information_description">Pro vaše pohodlí jsme předvyplnili vaše kontaktní informace na WordPress.com. Zkontrolujte prosím, zda jsou to správné informace, které chcete pro tuto doménu použít.</string>
     <string name="domain_registration_privacy_protection_description">Vlastníci domén musí sdílet kontaktní informace ve veřejné databázi všech domén. Díky ochraně soukromí zveřejňujeme namísto vašich vlastních vlastních informací a soukromě vám předáváme veškerou komunikaci.</string>
@@ -1200,7 +1196,6 @@ Language: cs_CZ
     <string name="stats_management_try_it_now">Vyzkoušet</string>
     <string name="stats_manage_your_stats">Spravujte své statistiky</string>
     <string name="stats_management_news_card_message">Vyberte, jaké statistiky chcete zobrazit, a zaměřte se na data, na kterých vám nejvíce záleží. Klepnutím na %1$s ve spodní části Statistik můžete upravit své statistiky.</string>
-    <string name="domains_suggestions_choose_domain">Vyberte doménu</string>
     <string name="history_fetching_revisions">Načítání revizí …</string>
     <string name="editor_uploading_draft">Váš koncept se nahrává</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Vložení média se nezdařilo.\nProsím, klikněte pro opakování.</string>
@@ -1297,7 +1292,6 @@ Language: cs_CZ
     <string name="quick_start_complete_tasks_header">Kompletní (%d)</string>
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
-    <string name="quick_start_dialog_need_help_message">Provedeme vás základy budování a rozšiřování vašeho webu</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
     <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
@@ -1481,11 +1475,8 @@ Language: cs_CZ
     <string name="quick_start_dialog_view_site_message_short">Klikněte na %1$s Zobrazit web %2$s pro zobrazení náhledu.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Klikněte na %1$s Sdílení %2$s</string>
     <string name="quick_start_dialog_share_site_message">Propojte se socialní sítí - příspěvky se budou automaticky sdílet.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Ano</string>
     <string name="quick_start_dialog_publish_post_title">Zveřejnit příspěvek</string>
     <string name="quick_start_dialog_publish_post_message_short">Klikněte na %1$s Vytvořit příspěvek %2$s</string>
-    <string name="quick_start_dialog_need_help_title">Chcete pomoci se základním nastavením?</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
     <string name="quick_start_dialog_follow_sites_title">Sledujte další stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Klikněte na %1$s Čtečka %2$s</string>
     <string name="quick_start_dialog_follow_sites_message">Přidáním stránky do sledovaných budete vždy vědět o nových příspěvcích.</string>

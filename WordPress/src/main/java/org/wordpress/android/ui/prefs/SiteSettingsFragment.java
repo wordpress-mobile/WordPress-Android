@@ -1982,10 +1982,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
     }
 
-    private void removeSiteDomainsPref() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_domains);
-    }
-
     private void removePrivateOptionFromPrivacySetting() {
         if (mPrivacyPref == null) {
             return;

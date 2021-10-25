@@ -18,8 +18,10 @@ import androidx.core.view.WindowInsetsCompat;
  * Basic idea for this solution found here: http://stackoverflow.com/a/9108219/325479
  */
 public class KeyboardResizeViewUtil {
-    private final View mDecorView;
-    private final View mContentView;
+    @SuppressWarnings("FieldMayBeFinal")
+    private View mDecorView;
+    @SuppressWarnings("FieldMayBeFinal")
+    private View mContentView;
 
     public KeyboardResizeViewUtil(Activity activity, View contentView) {
         this.mDecorView = activity.getWindow().getDecorView();
@@ -70,8 +72,14 @@ public class KeyboardResizeViewUtil {
     };
 
     private int getInsetBottom() {
-        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mContentView);
-        return insets != null ? insets.getSystemWindowInsetBottom() : 0;
+        int insetsBottom = 0;
+        try {
+            WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mContentView);
+            insetsBottom = insets != null ? insets.getSystemWindowInsetBottom() : 0;
+        } catch (NullPointerException e) {
+            AppLog.e(AppLog.T.PREPUBLISHING_NUDGES, "Error in getting window insets on keyboard resize:", e);
+        }
+        return insetsBottom;
     }
 
     private int getRealScreenHeight() {

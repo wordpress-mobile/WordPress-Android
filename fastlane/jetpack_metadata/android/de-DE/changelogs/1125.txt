@@ -1,0 +1,5 @@
+18.4:
+Dedizierte Embed-Blocks für YouTube, Twitter, WordPress und Vimeo mit URLS, die du noch nach dem Aussuchen bearbeiten kannst.
+Der Galerieblock fügt jetzt auch Bilder hinzu, wenn der Beitrag während des Hochladens geschlossen wird.
+In Website-Kommentaren können der Name des Autors, die E-Mail-Adresse und die Web-Adresse bearbeitet werden.
+Du kannst den Support jetzt direkt vom Bildschirm „Editor“ aus kontaktieren.

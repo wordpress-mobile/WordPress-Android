@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 10:54:08+0000
+Translation-Revision-Date: 2021-10-14 19:40:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Cerca un dominio</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Il tuo piano include la registrazione del dominio per un anno gratuitamente</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
+    <string name="domains_manage_domains">Gestisci domini</string>
+    <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Scopri di più&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Aggiungi un dominio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Scade il giorno %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Scade il giorno %s</string>
+    <string name="domains_site_domains">I domini del tuo sito</string>
+    <string name="domains_primary_site_address_chip">Indirizzo principale del sito</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Modifica l\'indirizzo del sito</string>
+    <string name="domains_primary_site_caption">Il tuo indirizzo WordPress.com gratuito è</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/anno&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Desideri eliminare?</string>
+    <string name="comment_edit_cancel_dialog_title">Sono presenti modifiche non salvate</string>
+    <string name="comment_edit_comment_error">Il campo Commento non può essere vuoto</string>
+    <string name="comment_edit_user_email_error">E-mail utente non valida</string>
+    <string name="comment_edit_web_address_error">Indirizzo web non valido</string>
+    <string name="comment_edit_user_name_error">Il nome utente non può essere vuoto</string>
+    <string name="comment_edit_email_address">Indirizzo e-mail</string>
+    <string name="comment_edit_web_address">Indirizzo web</string>
+    <string name="comment_edit_comment">Commento</string>
+    <string name="comment_edit_user_name">Nome</string>
+    <string name="comment_edit_menu_done">Fatto</string>
     <string name="weekly_roundup">Resoconto settimanale</string>
     <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
@@ -17,16 +42,13 @@ Language: it
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A te&lt;/a&gt; piace questo.</string>
     <string name="gutenberg_native_line_height">Altezza linea</string>
     <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
-    <string name="domains_primary_domain">INDIRIZZO DEL SITO PRINCIPALE</string>
     <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
-    <string name="domains_primary_domain_address">%s</string>
     <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
     <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
     <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
     <string name="me_btn_share">Condividi WordPress con un amico</string>
     <string name="my_site_quick_actions_title">Link veloci</string>
     <string name="my_site_btn_domains">Domini</string>
-    <string name="site_settings_site_domains_title">Domini del sito</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -185,6 +207,7 @@ Language: it
     <string name="gutenberg_native_preview_post">Anteprima articolo</string>
     <string name="gutenberg_native_retry">Riprova</string>
     <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
@@ -1264,10 +1287,6 @@ Language: it
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrazione del nome di dominio in corso…</string>
     <string name="domain_registration_state_picker_dialog_title">Seleziona uno stato</string>
     <string name="domain_registration_country_picker_dialog_title">Seleziona il Paese</string>
-    <string name="domain_registration_result_continue_button">continua</string>
-    <string name="domain_registration_result_description">il tuo nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Un\'ottima cosa\n per il tuo sito!</string>
-    <string name="domain_registration_result_title">Complimenti</string>
-    <string name="domain_contact_information_register_domain_button">Registra dominio</string>
     <string name="domain_contact_information_postal_code_hint">CAP</string>
     <string name="domain_contact_information_state_hint">Stato</string>
     <string name="domain_contact_information_city_hint">Città</string>
@@ -1284,7 +1303,6 @@ Language: it
     <string name="domain_registration_privacy_protection_description">I proprietari del dominio devono condividere le informazioni di contatto in un database pubblico di tutti i domini.\n Con la Protezione della privacy, pubblichiamo le nostre informazioni al posto delle tue e ti inoltriamo privatamente qualsiasi comunicazione.</string>
     <string name="domain_registration_privacy_protection_title">Protezione della privacy</string>
     <string name="domain_registration_contact_form_input_error">Per %s, inserisci un valore valido</string>
-    <string name="domains_suggestions_choose_domain">Scegli dominio</string>
     <string name="stats_management_new">Nuovo</string>
     <string name="stats_management_dismiss_insights_news_card">Chiudi</string>
     <string name="stats_management_try_it_now">Prova ora</string>
@@ -1385,7 +1403,6 @@ Language: it
     <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
-    <string name="quick_start_dialog_need_help_message">Ti guideremo attraverso le basi per costruire e far crescere il tuo sito.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
@@ -1571,9 +1588,6 @@ Language: it
     <string name="quick_start_dialog_share_site_message">Collega gli account dei tuoi social media: il tuo sito condividerà automaticamente i nuovi articoli.</string>
     <string name="quick_start_dialog_publish_post_title">Pubblica un articolo</string>
     <string name="quick_start_dialog_publish_post_message_short">Tocca %1$s Crea un articolo %2$s per creare un nuovo articolo</string>
-    <string name="quick_start_dialog_need_help_title">Desideri un po\' di aiuto per iniziare?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accetta</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Mai</string>
     <string name="quick_start_dialog_follow_sites_title">Segui altri siti</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
     <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti interessano e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
@@ -2751,6 +2765,7 @@ Language: it
     <string name="comment_reply_to_user">Replica a %s</string>
     <string name="signing_out">Disconnessione in corso…</string>
     <string name="reader_empty_posts_in_tag">Nessun articolo con questo argomento</string>
+    <string name="help_and_support">Guida e supporto</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="reader_toast_err_block_blog">Impossibile bloccare questo sito</string>
     <string name="reader_menu_block_blog">Blocca questo sito</string>

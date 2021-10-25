@@ -12,6 +12,10 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 data class GutenbergPropsBuilder(
     private val enableContactInfoBlock: Boolean,
     private val enableLayoutGridBlock: Boolean,
+    private val enableFacebookEmbed: Boolean,
+    private val enableInstagramEmbed: Boolean,
+    private val enableLoomEmbed: Boolean,
+    private val enableSmartframeEmbed: Boolean,
     private val enableMediaFilesCollectionBlocks: Boolean,
     private val enableMentions: Boolean,
     private val enableXPosts: Boolean,
@@ -27,6 +31,10 @@ data class GutenbergPropsBuilder(
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
             enableContactInfoBlock = enableContactInfoBlock,
             enableLayoutGridBlock = enableLayoutGridBlock,
+            enableFacebookEmbed = enableFacebookEmbed,
+            enableInstagramEmbed = enableInstagramEmbed,
+            enableLoomEmbed = enableLoomEmbed,
+            enableSmartframeEmbed = enableSmartframeEmbed,
             enableMediaFilesCollectionBlocks = enableMediaFilesCollectionBlocks,
             enableMentions = enableMentions,
             enableXPosts = enableXPosts,

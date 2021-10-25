@@ -1,4 +1,0 @@
-18.3:
-En el editor de bloques, hemos solucionado un problema con la barra de herramientas en los dispositivos configurados en un idioma RTL. Además, hemos realizado actualizaciones en el bloque de incrustar, como activar las vistas previas de WordPress, Instagram y Vimeo y añadir opciones para reintentar o convertir los medios en un enlace.
-
-También se incluye una corrección que afecta a los videos en algunos sitios y se han actualizado las etiquetas del menú de Mi Sitio ("Entradas" y "Páginas").

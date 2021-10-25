@@ -1,5 +1,5 @@
-* [**] Embed block: Add the top 5 specific embed blocks to the Block inserter list. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3995]
-* [*] Embed block: Fix URL update when edited after setting a bad URL of a provider. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4002]
-* [**] Users can now contact support from inside the block editor screen. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3975]
-* [**] Site Comments: when editing a Comment, the author's name, email address, and web address can now be changed. (https://github.com/wordpress-mobile/WordPress-Android/pull/15402)
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
 
+Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.
+
+Finally, Pullquote and Preformatted blocks now have customizable text and background color.

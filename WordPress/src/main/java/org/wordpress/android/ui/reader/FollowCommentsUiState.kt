@@ -2,10 +2,17 @@ package org.wordpress.android.ui.reader
 
 data class FollowCommentsUiState(
     val type: FollowCommentsUiStateType,
-    val showFollowButton: Boolean = false,
-    val isFollowing: Boolean = false,
-    val animate: Boolean = false,
-    val onFollowButtonClick: ((Boolean) -> Unit)? = null
+    val showFollowButton: Boolean,
+    val isFollowing: Boolean,
+    val animate: Boolean,
+    val onFollowButtonClick: ((Boolean) -> Unit)?,
+    val isReceivingNotifications: Boolean,
+    val isMenuEnabled: Boolean,
+    val showMenuShimmer: Boolean,
+    val isBellMenuVisible: Boolean,
+    val isFollowMenuVisible: Boolean,
+    val onFollowTapped: (() -> Unit)?,
+    val onManageNotificationsTapped: () -> Unit
 )
 
 enum class FollowCommentsUiStateType {
