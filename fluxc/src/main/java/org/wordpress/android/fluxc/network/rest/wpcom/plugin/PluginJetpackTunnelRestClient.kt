@@ -14,12 +14,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
+import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginErrorType.PLUGIN_DOES_NOT_EXIST
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginPayload
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError
-import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload
 import javax.inject.Inject
 import javax.inject.Named
@@ -106,6 +108,47 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     }
                     val payload = InstalledSitePluginPayload(site, pluginSlug, installError)
                     dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
+                }
+        )
+        add(request)
+    }
+
+    /**
+     * Configure a plugin's status in a site. This supports making it 'active', or 'inactive'. The API also supports
+     * the 'network-active' status, but it is not supported yet here.
+     *
+     * @param [pluginSlug] Note that this is not the same as the WordPress.org plugin directory slug that can be used
+     * to install a plugin. Instead, it needs to be the value of the `plugin` key inside a plugin object as returned
+     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value should be `jetpack/jetpack`.
+     */
+    fun configurePlugin(site: SiteModel, pluginSlug: String, active: Boolean) {
+        val url = WPAPI.plugins.slug(pluginSlug).urlV2
+        val body = mapOf(
+                "status" to if (active) "active" else "inactive"
+        )
+
+        val request = JetpackTunnelGsonRequest.buildPostRequest(
+                url,
+                site.siteId,
+                body,
+                PluginResponseModel::class.java,
+                { response: PluginResponseModel? ->
+                    response?.let {
+                        val payload = ConfiguredSitePluginPayload(
+                                site,
+                                sitePluginModelFromResponse(site, it)
+                        )
+                        dispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload))
+                    }
+                },
+                { error ->
+
+                    val configurePluginError = ConfigureSitePluginError(
+                            error.apiError, error.message
+                    )
+
+                    val payload = ConfiguredSitePluginPayload(site, pluginSlug, pluginSlug, configurePluginError)
+                    dispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload))
                 }
         )
         add(request)
