@@ -859,6 +859,8 @@ public class PluginStore extends Store {
                     payload.isAutoUpdateEnabled);
         } else if (!payload.site.isUsingWpComRestApi()) {
             mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
+        } else if (payload.site.isJetpackCPConnected()) {
+            mPluginJetpackTunnelRestClient.configurePlugin(payload.site, payload.slug, payload.isActive);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, payload.slug,
