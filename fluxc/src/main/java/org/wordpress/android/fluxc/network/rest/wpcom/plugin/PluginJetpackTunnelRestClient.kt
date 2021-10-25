@@ -71,6 +71,12 @@ class PluginJetpackTunnelRestClient @Inject constructor(
         add(request)
     }
 
+    /**
+     * Install a plugin to a site.
+     *
+     * @param [pluginSlug] This can use the value of the plugin's URL slug on the plugin directory, in the form of
+     * https://wordpress.org/plugins/<slug>. For example, for Jetpack, the value should be 'jetpack'.
+     */
     fun installPlugin(site: SiteModel, pluginSlug: String) {
         val url = WPAPI.plugins.urlV2
         val body = mapOf(
