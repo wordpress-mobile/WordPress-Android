@@ -54,7 +54,7 @@ class WPV2MediaRestClientTest {
                 okHttpClient = okHttpClient,
                 requestQueue = requestQueue,
                 accessToken = accessToken,
-                userAgent = userAgent,
+                userAgent = userAgent
         )
         EventBus.getDefault().register(this)
     }
