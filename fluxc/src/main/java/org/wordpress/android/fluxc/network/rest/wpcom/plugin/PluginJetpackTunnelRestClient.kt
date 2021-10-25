@@ -5,6 +5,7 @@ import com.android.volley.RequestQueue
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PluginActionBuilder
+import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.UserAgent
@@ -33,7 +34,6 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     companion object {
-        private const val PLUGINS_API_PATH = "/wp/v2/plugins"
         private const val INACTIVE_STATUS = "inactive"
         private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
     }
@@ -46,7 +46,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
      * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value should be `jetpack/jetpack`.
      */
     fun fetchPlugin(site: SiteModel, pluginSlug: String) {
-        val url = "$PLUGINS_API_PATH/$pluginSlug"
+        val url = WPAPI.plugins.slug(pluginSlug).urlV2
 
         val request = JetpackTunnelGsonRequest.buildGetRequest(
                 url,
@@ -70,12 +70,13 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     }
 
     fun installPlugin(site: SiteModel, pluginSlug: String) {
+        val url = WPAPI.plugins.urlV2
         val body = mapOf(
                 "slug" to pluginSlug
         )
 
         val request = JetpackTunnelGsonRequest.buildPostRequest(
-                PLUGINS_API_PATH,
+                url,
                 site.siteId,
                 body,
                 PluginResponseModel::class.java,
