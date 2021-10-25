@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPV2MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -41,7 +42,9 @@ import static org.wordpress.android.fluxc.media.MediaTestUtils.insertRandomMedia
 @RunWith(RobolectricTestRunner.class)
 public class MediaStoreTest {
     private MediaStore mMediaStore = new MediaStore(new Dispatcher(),
-            Mockito.mock(MediaRestClient.class), Mockito.mock(MediaXMLRPCClient.class));
+            Mockito.mock(MediaRestClient.class),
+            Mockito.mock(MediaXMLRPCClient.class),
+            Mockito.mock(WPV2MediaRestClient.class));
 
     @Before
     public void setUp() {
