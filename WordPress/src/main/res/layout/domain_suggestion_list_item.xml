@@ -31,18 +31,20 @@
         app:layout_constraintStart_toEndOf="@id/domain_selection_radio_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/domain_cost"
         tools:text="travelwithkids.com"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_cost"
+        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceListItemSecondary"
-        app:layout_constraintStart_toEndOf="@id/domain_selection_radio_button"
+        app:layout_constraintStart_toStartOf="@id/domain_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/domain_name"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Free for the first year US$18.99/year"/>
+        tools:text="Free for the first year US$18.99/year"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

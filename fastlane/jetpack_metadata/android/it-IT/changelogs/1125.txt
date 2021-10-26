@@ -1,0 +1,5 @@
+18.4:
+Blocchi incorporati dedicati per YouTube, Twitter, WordPress e Vimeo, con URL che possono essere modificati dopo la loro selezione. 
+Il blocco Galleria aggiunge ora immagini perfino se l'articolo viene chiuso durante il caricamento.
+I commenti del sito consentono di modificare il nome dell'autore, l'e-mail e l'indirizzo web.
+Ora puoi contattare il supporto direttamente dalla schermata dell'editor.

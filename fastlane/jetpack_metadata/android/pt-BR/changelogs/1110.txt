@@ -1,2 +1,0 @@
-18.2:
-Fizemos alguns ajustes práticos no editor de blocos: o bloco de mídia incorporada agora fornece uma prévia quando você adiciona mídia do YouTube ou Twitter (em breve mais provedores). Além disso, quando você quer inserir um bloco e não encontra nada, agora aparece uma visualização "Nenhum resultado".

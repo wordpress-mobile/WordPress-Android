@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
@@ -29,7 +30,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -122,6 +123,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // The following prevents the soft keyboard from leaving a white space when dismissed.
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
@@ -290,10 +293,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+                action.site
         )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
@@ -305,8 +307,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.title,
                 action.message,
                 action.positiveButtonLabel,
-                action.negativeButtonLabel,
-                action.neutralButtonLabel
+                action.negativeButtonLabel
         )
         is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
     }
@@ -485,8 +486,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         @StringRes title: Int,
         @StringRes message: Int,
         @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int,
-        @StringRes neutralButtonLabel: Int? = null
+        @StringRes negativeButtonLabel: Int
     ) {
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
@@ -496,8 +496,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 getString(message),
                 getString(positiveButtonLabel),
                 R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonLabel),
-                neutralButtonLabel?.let { getString(it) } ?: ""
+                getString(negativeButtonLabel)
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
@@ -560,10 +559,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onNegativeClicked(instanceTag: String) {
         viewModel.ignoreQuickStart()
-    }
-
-    override fun onNeutralClicked(instanceTag: String) {
-        viewModel.disableQuickStart()
     }
 
     override fun onConfirm(result: Bundle?) {

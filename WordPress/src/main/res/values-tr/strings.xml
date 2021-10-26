@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-29 21:54:09+0000
+Translation-Revision-Date: 2021-10-13 12:04:35+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="domains_search_for_a_domain_button">Alan adı ara</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Paketiniz ücretsiz bir yıllık alan adı kaydını içerir</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Ücretsiz alan adınızı isteyin</string>
+    <string name="domains_manage_domains">Alan Adlarını Yönet</string>
+    <string name="domains_redirected_domains_blurb">Etki alanlarınız &lt;b&gt;%s&lt;/b&gt; adresindeki sitenize yönlendirilecektir. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Daha fazla bilgi&lt;/a&gt;.</string>
+    <string name="domains_add_a_domain">Alan adı ekle</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Sona erme tarihi: %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Sona erme tarihi: %s</string>
+    <string name="domains_site_domains">Sitenizin alan adları</string>
+    <string name="domains_primary_site_address_chip">Birincil site adresi</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Site adresini değiştir</string>
+    <string name="domains_primary_site_caption">Ücretsiz WordPress.com adresiniz</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/yıl&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Bunları iptal etmek istiyor musunuz?</string>
+    <string name="comment_edit_cancel_dialog_title">Kaydedilmemiş değişiklikler var</string>
+    <string name="comment_edit_comment_error">Yorum boş olamaz</string>
+    <string name="comment_edit_user_email_error">Kullanıcı e-postası geçerli değil</string>
+    <string name="comment_edit_web_address_error">Web adresi geçerli değil</string>
+    <string name="comment_edit_user_name_error">Kullanıcı adı boş olamaz</string>
+    <string name="comment_edit_email_address">E-posta adresi</string>
+    <string name="comment_edit_web_address">Web adresi</string>
+    <string name="comment_edit_comment">Yorum yap</string>
+    <string name="comment_edit_user_name">İsim</string>
+    <string name="comment_edit_menu_done">Bitti</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Gömülü blok önizlemeleri yakında geliyor</string>
     <string name="weekly_roundup">Haftalık Özet</string>
     <string name="gutenberg_native_embed_options">Gömme seçenekleri</string>
@@ -18,8 +43,6 @@ Language: tr
     <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
     <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
     <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">BİRİNCİL SİTE ADRESİ</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
@@ -27,7 +50,6 @@ Language: tr
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
-    <string name="site_settings_site_domains_title">Site alan adları</string>
     <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
@@ -186,6 +208,7 @@ Language: tr
     <string name="gutenberg_native_post_content_settings">Yazı içeriği ayarları</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
+    <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
@@ -1265,10 +1288,6 @@ Language: tr
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
-    <string name="domain_registration_result_continue_button">devam</string>
-    <string name="domain_registration_result_description">Alan adınız &lt;b&gt;%s&lt;/b&gt; kuruluyor. Siteniz heyecanla takla atıyor!</string>
-    <string name="domain_registration_result_title">Tebrikler</string>
-    <string name="domain_contact_information_register_domain_button">Alan adı kaydet</string>
     <string name="domain_contact_information_postal_code_hint">Posta kodu</string>
     <string name="domain_contact_information_state_hint">Eyalet</string>
     <string name="domain_contact_information_city_hint">Şehir</string>
@@ -1285,7 +1304,6 @@ Language: tr
     <string name="domain_registration_privacy_protection_description">Alan adı sahiplerinin, tüm alan adlarının herkese açık bir veritabanında iletişim bilgilerini paylaşmaları gerekir. Privacy Protection özelliğiyle sizin bilgileriniz yerine kendi bilgilerimizi yayımlıyoruz ve her türlü iletişimi size gizlice iletiyoruz.</string>
     <string name="domain_registration_privacy_protection_title">Gizlilik koruması</string>
     <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>
-    <string name="domains_suggestions_choose_domain">Alan adını seç</string>
     <string name="stats_management_new">Yeni</string>
     <string name="stats_management_dismiss_insights_news_card">Kapat</string>
     <string name="stats_management_try_it_now">Şimdi deneyin</string>
@@ -1341,6 +1359,7 @@ Language: tr
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Alan adı kaydet</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Eklentileri yüklemek için sitenizle ilişkili özel bir alan adına sahip olmanız gerekir.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Eklenti yükle</string>
+    <string name="new_site_creation_preview_subtitle">Daha sonra sitenizin görünümünü kişiselleştirebileceksiniz</string>
     <string name="publish_on">Yayın tarihi: %s</string>
     <string name="schedule_for">Zamanlanan: %s</string>
     <string name="published_on">Yayınlanma tarihi: %s</string>
@@ -1389,7 +1408,6 @@ Language: tr
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">Bir yazıyı taslak olarak yazın ve yayınlayın.</string>
-    <string name="quick_start_dialog_need_help_message">Sitenizi oluşturma ve geliştirme konusundaki temel bilgiler hakkında size rehberlik edeceğiz.</string>
     <string name="quick_start_dialog_explore_plans_title">Paketleri keşfedin</string>
     <string name="quick_start_dialog_explore_plans_message">Ücretli paketlerimizdeki pazarlama ve SEO araçları hakkında bilgi edinin.</string>
     <string name="quick_start_dialog_enable_sharing_title">Gönderi paylaşımına izin verin</string>
@@ -1572,9 +1590,6 @@ Language: tr
     <string name="quick_start_dialog_share_site_message">Sosyal medya hesaplarınıza bağlanın - siteniz yeni yazıları otomatik olarak paylaşır.</string>
     <string name="quick_start_dialog_publish_post_title">Bir yazı yayınla</string>
     <string name="quick_start_dialog_publish_post_message_short">Yeni bir yazı oluşturmak için %1$s yazı oluştur %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_need_help_title">Başlamak için ufak bir yardım ister misin?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Evet</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_need_help_button_negative">Hayır, teşekkürler</string>
     <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Benzer konulara sahip siteleri aramak için %1$sAra%2$s\'ya dokunun</string>

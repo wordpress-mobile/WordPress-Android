@@ -413,6 +413,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         initLikeFacesRecycler(savedInstanceState)
         initViewModel(binding, savedInstanceState)
+        restoreState(savedInstanceState)
+        setHasOptionsMenu(true)
 
         showPost()
     }
@@ -839,12 +841,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
-        restoreState(savedInstanceState)
     }
 
     private fun restoreState(savedInstanceState: Bundle?) {

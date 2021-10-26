@@ -699,16 +699,12 @@ Language: ku_TR
     <string name="domain_registration_state_picker_dialog_title">Herêmê Hilbijêre</string>
     <string name="domain_contact_information_city_hint">Bajar</string>
     <string name="domain_contact_information_address_hint_two">Navnîşan 2</string>
-    <string name="domain_registration_result_continue_button">bidomîne</string>
     <string name="domain_contact_information_state_hint">Herêm</string>
     <string name="domain_contact_information_address_hint">Navnîşan</string>
     <string name="domain_contact_information_country_hint">Welat</string>
     <string name="domain_contact_information_country_code_hint">Koda Welêt</string>
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
     <string name="domain_contact_information_postal_code_hint">Koda Posteyê</string>
-    <string name="domain_registration_result_title">Bijî!</string>
-    <string name="domain_contact_information_register_domain_button">Domain\'ê Tomar Bike</string>
-    <string name="domain_registration_result_description">navê domaina te &lt;b&gt;%s&lt;/b&gt; tê sazkirin. Malpera te ji kêfan\n        çirifîtkan diavêje!</string>
     <string name="domain_contact_information_organization_hint">Organîzasyon (li gor daxwazê)</string>
     <string name="domain_contact_information_description">Ji bo rehetiya te, me agahiyên te yên têkiliyê yên WordPress.com\'ê\n        ji berê vê dagirt. Ji kerema xwe, kontrol bike bê ka agahiyên rast ên tu dixwazî ji bo vê domainê hatiye bikaranin.</string>
     <string name="domain_contact_information_title">Agahiyên têkiliyê yên navperê(domain)</string>
@@ -720,7 +716,6 @@ Language: ku_TR
     <string name="stats_management_new">Nû</string>
     <string name="stats_management_try_it_now">Aniha biceribîne</string>
     <string name="stats_management_dismiss_insights_news_card">Veşêre</string>
-    <string name="domains_suggestions_choose_domain">Domain\'ê Hilbijêre</string>
     <string name="stats_management_news_card_message">Amarên ku tu dixwazî bibînî hilbijêrî û bala xwe bide daneyên bi kêrî te tên. Ji bo amarên xwe kesane bikî, li hêmana %1$s\'ê ya di binê \"Kûrbînî\"yê de ye bitikîne.</string>
     <string name="stats_manage_your_stats">Amarên xwe bi rê ve bibe</string>
     <string name="history_fetching_revisions">Guherto tên stendin…</string>
@@ -817,7 +812,6 @@ Language: ku_TR
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo tu pakêta xwe ya heyî û pakêtên din ên berdest bibînî li %1$sPakêt%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_check_stats_message_short">Ji bo tu performansa malpera xwe bibînî li %1$sAmar%2$s\'an bitepîne.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din lê hilxînî, li %1$sÎkona Malpera Te%2$s\'yê bitepîne</string>
-    <string name="quick_start_dialog_need_help_message">Em ê ji bo bingehên avakirin û mezinkirina malpera te ji te re rêberiyê bikin.</string>
     <string name="quick_start_dialog_enable_sharing_title">Parvekirina şandiyê biçalakîne</string>
     <string name="quick_start_dialog_explore_plans_title">Pakêtan keşf bike</string>
     <string name="quick_start_dialog_explore_plans_message">Di derbarê alavên SEO\'yê û bazarkirinê yên pakêtên bipere de, agahî bi dest bixe.</string>
@@ -998,12 +992,9 @@ Language: ku_TR
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Ji bo domandinê li %1$sParvekirin%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Ji bo tu hesabên xwe yên medyaya civakî tevlî bikî li %1$sGirêdan%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_share_site_message">Hesabên xwe yên medyaya civakî girêbide – malpera te ew ê şandiyên nû bixweber parve bike.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Bipejirîne</string>
     <string name="quick_start_dialog_publish_post_title">Şandiyekê biweşîne</string>
-    <string name="quick_start_dialog_need_help_title">Ji bo dest pê bikî alîkariyeke biçûk dixwazî?</string>
     <string name="quick_start_dialog_publish_post_message_short">Ji bo şandiyeke nû biafirînî li %1$sŞandî Biafirîne%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_title">Malperên din bişopîne</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Qet</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ji bo domandinê li %1$sXwîner%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_message">Malperên ku îlhamê didine te bibîne û wan bişopîne ji bo ku hayê te ji hildemandinên weşanên wan çêbibe.</string>
     <string name="quick_start_button_positive">Here</string>

@@ -1,119 +1,122 @@
 <ar>
-18.2:
-- يمنحك الآن مكوِّن التضمين معاينة عندما تقوم بالإضافة من يوتيوب أو تويتر.
-- إذا لم يتم العثور على أي شيء في بحث أداة إدراج المكوِّن، فسيظهر طريقة عرض "لا توجد نتائج".
-- تحتوي شاشة صفحتي الرئيسية على زر "مشاركة ووردبريس مع صديق"، ما يتيح لك مشاركة رابط تطبيق ووردبريس.
-- يؤدي كذلك الإعجاب بمقالة في القارئ إلى إضافة صورة أفاتار الخاصة بك إلى الإعجابات.
+18.4: مكوِّنات تضمين مخصصة ليوتيوب، وتويتر، ووردبريس، وفيميو، بالإضافة إلى عناوين URL التي يمكن تحريرها بعد تحديدها. يضيف الآن مكوِّن المعرض صورًا حتى إذا أغلِقت المقالة أثناء الرفع. تسمح تعليقات الموقع بتحرير اسم المؤلف، والبريد الإلكتروني، وعنوان الويب. يمكنك الآن الاتصال بالدعم مباشرة من شاشة المحرِّر.
 </ar>
 <de-DE>
-18.2:
-- Der Embed-Block zeigt dir jetzt eine Vorschau an, wenn du Inhalte aus YouTube oder Twitter einfügst.
-- Wenn bei einer Block-Einfüge-Suche nichts gefunden wird, wird jetzt der Bildschirm „Keine Ergebnisse“ angezeigt.
-Der Bildschirm „Ich“ verfügt jetzt über den Button „Teile WordPress mit Freunden“, über den du einen Link zur WordPress-App teilen kannst.
-- Wenn du einen Beitrag im Reader mit „Gefällt mir“ markierst, wird zu deiner Gefällt mir-Angabe auch dein Avatar hinzugefügt.
+18.4:
+Dedizierte Embed-Blocks für YouTube, Twitter, WordPress und Vimeo mit URLS, die du noch nach dem Aussuchen bearbeiten kannst.
+Der Galerieblock fügt jetzt auch Bilder hinzu, wenn der Beitrag während des Hochladens geschlossen wird.
+In Website-Kommentaren können der Name des Autors, die E-Mail-Adresse und die Web-Adresse bearbeitet werden.
+Du kannst den Support jetzt direkt vom Bildschirm „Editor“ aus kontaktieren.
 </de-DE>
 <en-US>
-18.2:
-- The Embed block now gives a preview when you add from YouTube or Twitter.
-- If nothing is found in a block inserter search a “no results” view appears.
-- The Me screen has a new “Share WordPress with a friend” button, allowing you to share a WordPress app link.
-- Liking a post in the Reader also adds your avatar to the like.
+18.4:
+Dedicated embed blocks for YouTube, Twitter, WordPress, and Vimeo, with URLs that can be edited after they are selected.
+The gallery block now adds images even if the post is closed during the upload.
+Site comments allow the author’s name, email, and web address to be edited.
+You can now contact support directly from the editor screen.
 </en-US>
 <es-ES>
-18.2:
-- El bloque incrustado ahora da una vista previa cuando añades desde YouTube o Twitter.
-- Si no se encuentra nada en una búsqueda de inserción de bloques, aparece una vista de «sin resultados».
-- La pantalla «Yo» tiene un nuevo botón «Compartir WordPress con un amigo», permitiéndote compartir un enlace de la aplicación de WordPress.
-- Al pulsar «Me gusta» en una entrada en el lector, también se añade tu avatar al «Me gusta».
+18.4:
+Bloques de incrustación dedicados para YouTube, Twitter, WordPress y Vimeo, con URL que pueden ser editadas después de ser seleccionadas.
+Ahora, el bloque de galería añade imágenes incluso si la entrada está cerrada durante la subida.
+Los comentarios del sitio permiten editar el nombre, el correo electrónico y la dirección web del autor.
+Ahora puedes contactar directamente con el soporte desde la pantalla del editor.
 </es-ES>
 <fr-CA>
-18.2 :
-- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
-- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
-- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
-- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
+18.4 :
+Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
+Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
+Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
+Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
 </fr-CA>
 <fr-FR>
-18.2 :
-- Le bloc de contenu embarqué donne désormais un aperçu lorsque vous effectuez un ajout depuis YouTube ou Twitter.
-- Si un bloc introuvable est recherché dans l’outil d’insertion de bloc, le message « Aucun résultat » s’affiche.
-- L’écran Moi présente un nouveau bouton « Partager WordPress avec un ami » qui permet de partager un lien vers l’application WordPress.
-- Si vous aimez un article dans le lecteur, votre avatar s’ajoute également à la mention J’aime.
+18.4 :
+Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
+Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
+Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
+Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
 </fr-FR>
 <iw-IL>
-18.2:
-- בלוק ההטמעה כעת מאפשר לך לראות תצוגה מקדימה כאשר מוסיפים תוכן מ-YouTube או מטוויטר.
-- כאשר לא מוצאים שום דבר בחיפוש של מוסיף הבלוקים, תופיע תצוגה עם המלל "אין תוצאות".
-- המסך 'אני' כולל כפתור חדש "לשתף את WordPress עם חברים" שמאפשר לך לשתף קישור לאפליקציה של WordPress.
-- סימון לייק לפוסט ב-Reader יוסיף גם את תמונת הפרופיל שלך ללייק.
+18.4:
+בלוקים ייעודיים להטמעה עבור YouTube, טוויטר, WordPress, ו-Vimeo עם אפשרות לעריכה של כתובת ה-URL גם לאחר שנבחרה.
+בלוק הגלריה כעת יכול להוסיף תמונות גם כאשר הפוסט נסגר במהלך ההעלאה.
+אפשר לערוך את השם, כתובת האימייל וכתובת האינטרנט של המחבר בתגובות באתר.
+כעת אפשר ליצור קשר עם התמיכה ישירות מהמסך של העורך.
 </iw-IL>
 <id>
-18.2:
-- Blok Sematan sekarang dilengkapi pratinjau untuk konten yang ditambahkan dari YouTube atau Twitter.
-- Jika tidak ada konten yang ditemukan di penyisip blok, tulisan "tidak ada hasil" akan ditampilkan.
-- Layar Saya dilengkapi dengan tombol baru “Bagikan WordPress ke teman” yang dan memungkinkan Anda berbagi tautan aplikasi WordPress.
-- Sekarang avatar Anda juga akan ditampilkan saat menyukai pos lewat Pembaca.
+18.4:
+Blok sematan khusus untuk YouTube, Twitter, WordPress, dan Vimeo, dengan URL yang dapat disunting setelah dipilih.
+Blok galeri sekarang dapat menambahkan gambar meski pos terkait telah ditutup saat pengunggahan.
+Komentar situs memungkinkan nama, email, dan alamat web penulis disunting.
+Sekarang Anda dapat menghubungi dukungan langsung dari layar editor.
 </id>
 <it-IT>
-18.2:
-- Il blocco Incorporamenti ora offre un'anteprima quando aggiungi da YouTube o Twitter.
-- Se non viene trovato nulla in una ricerca nello strumento per l'inserimento dei blocchi, viene mostrata una visualizzazione "nessun risultato".
-- La schermata Io ha un nuovo pulsante "Condividi WordPress con un amico", che ti consente di condividere un link dell'app WordPress.
-- Mettendo Mi piace a un articolo nel Reader viene aggiunto anche il tuo avatar ai Mi piace.
+18.4:
+Blocchi incorporati dedicati per YouTube, Twitter, WordPress e Vimeo, con URL che possono essere modificati dopo la loro selezione. 
+Il blocco Galleria aggiunge ora immagini perfino se l'articolo viene chiuso durante il caricamento.
+I commenti del sito consentono di modificare il nome dell'autore, l'e-mail e l'indirizzo web.
+Ora puoi contattare il supporto direttamente dalla schermata dell'editor.
 </it-IT>
 <ja-JP>
-18.2:
-- YouTube または Twitter からコンテンツを追加したときに埋め込みブロックでプレビューが見られるようになりました。
-- ブロック挿入の検索で何も見つからなかった場合は「見つかりませんでした」と表示されるようになりました。
-- Me 画面に「WordPress を友達と共有する」ボタンが追加され、WordPress のアプリリンクをシェアできるようになりました。
-- Reader に投稿をリンクすると「いいね」にもアバターが追加されるようになりました。
+18.4: 
+YouTube、Twitter、WordPress、Vimeo 専用の埋め込みブロックができました。URL は選択後でも編集できます。
+ギャラリーブロックではアップロード中に投稿を閉じても画像を追加できるようになりました。
+サイトのコメントでは投稿者の名前、メールアドレス、ウェブアドレスを編集できます。
+また、エディター画面からサポートに直接問い合わせができるようになりました。
 </ja-JP>
 <ko-KR>
-18.2:
-- 이제 YouTube 또는 Twitter에서 추가하면 임베드 블록에서 미리보기가 제공됩니다.
-- 블록 삽입기에서 아무것도 찾을 수 없으면 '결과 없음' 보기가 나타납니다.
-- WordPress 앱 링크를 공유할 수 있는 새로운 '친구와 WordPress 공유' 버튼이 내 계정 화면에 있습니다.
-- 리더에서 글에 좋아요를 표시하면 아바타도 좋아요에 추가됩니다.
+18.4:
+선택한 후 편집할 수 있는 URL이 포함된 유튜브, 트위터, 워드프레스, 비메오 전용 임베드 블록입니다.
+이제는 업로드 중 글을 닫아도 갤러리 블록을 통해 이미지가 추가됩니다.
+사이트 댓글을 통해 글쓴이 이름, 이메일 및 웹 주소를 편집할 수 있습니다.
+이제는 편집기 화면에서 바로 지원팀에 문의할 수 있습니다.
 </ko-KR>
 <nl-NL>
-18.2:
-- Het insluit blok geeft nu een voorbeeld als je toevoegt van YouTube of Twitter.
-- Als er niets gevonden wordt met een blok invoeger zoekopdracht verschijnt er een "geen resultaten" weergave.
-- Het Mij scherm heeft een nieuwe "Deel WordPress met een vriend" knop, waarmee je een WordPress app link kunt delen.
-- Een bericht liken in de Reader voegt nu ook je avatar toe aan de like.
+18.4:
+Speciale insluit blokken voor YouTube, Twitter, WordPress, en Vimeo, met URL's die bewerkt kunnen worden nadat ze geselecteerd zijn.
+Het galerij blok voegt nu afbeeldingen toe, zelfs als het bericht tijdens het uploaden gesloten wordt.
+Site reacties maken het mogelijk de auteursnaam, het e-mailadres en het webadres te bewerken.
+Je kunt nu rechtstreeks vanuit het editor scherm contact opnemen met ondersteuning.
 </nl-NL>
+<pt-BR>
+18.4:
+Blocos de mídia incorporada dedicados para YouTube, Twitter, WordPress e Vimeo, com URLs que podem ser editadas após a seleção.
+Agora o bloco de galeria adicionará as imagens mesmo se o post for fechado durante o upload.
+Os comentários no site permitem que o endereço da Web, e-mail e nome do autor sejam editados.
+Agora você pode falar com o suporte diretamente na tela do editor.
+</pt-BR>
 <ru-RU>
-18.2:
-- Блок встраивания теперь имеет предварительный просмотр при добавлении с YouTube или Twitter.
-- Если ничего не найдено в поиске при вставке блока, то будет показан экран отсутствия результатов.
-- На экране профиля появилась новая кнопка «Поделиться WordPress с другом», с помощью которой вы можете поделиться ссылкой на приложение WordPress.
-- Если вы поставите отметку "нравится" в Чтиве, ваш аватар будет добавлен в список отметивших "нравится".
+18.4:
+Специальные блоки вставки для YouTube, Twitter, WordPress и Vimeo. Выбрав URL-адрес, его можно изменить.
+Теперь блок галереи позволяет добавлять изображения, даже если идёт загрузка, а запись закрыта.
+В комментариях к сайту можно изменять имя, электронную почту и веб-адрес автора.
+Поддержка доступна прямо на экране редактора.
 </ru-RU>
 <sv-SE>
-18.2:
-- Inbäddningsblocket innehåller nu en förhandsvisning när du bäddar in från YouTube eller Twitter.
-- Om inget hittas vid sökning för infogning av block visas en vy för ”inget resultat”.
-- Skärmen Jag har en ny knapp ”Dela WordPress med en vän” så att du kan skicka en länk till en WordPress-app.
-- Om du gillar ett inlägg i läsaren läggs även din avatar in med gillamarkeringen.
+18.4:
+Dedikerade inbäddningsblock för YouTube, Twitter, WordPress och Vimeo, med URL:er som kan redigeras efter att de har valts.
+Galleriblocket lägger nu till bilder även om inlägget är stängt under uppladdningen.
+Webbplatskommentarer tillåter att författarens namn, e-postadress och webbadress redigeras.
+Du kan nu kontakta supporten direkt från redigerarens skärm.
 </sv-SE>
 <tr-TR>
-18.2:
-- Gömülü blok artık YouTube veya Twitter'dan eklediğinizde bir önizleme görüntüler.
-- Blok yerleştirici aramasında hiçbir şey bulunamazsa, “sonuç yok” görünümü görüntülenir.
-- Ben ekranında, bir WordPress uygulama bağlantısını paylaşmanıza olanak tanıyan yeni bir "WordPress'i bir arkadaşınızla paylaşın" düğmesi bulunur.
-- Okuyucu'da bir gönderi beğenildiğinde avatarınız da beğeniye eklenir.
+18.4:
+YouTube, Twitter, WordPress ve Vimeo için, seçildikten sonra düzenlenebilen URL'lere sahip özel gömme blokları.
+Galeri bloku, yükleme sırasında gönderi kapatılsa bile artık görsel ekleyebilir.
+Site yorumları, yazarın adının, e-postasının ve web adresinin düzenlenmesine izin verir.
+Artık doğrudan düzenleyici ekranından desteğe başvurabilirsiniz.
 </tr-TR>
 <zh-CN>
-18.2：
-- 现在，嵌入区块允许您从 YouTube 或 Twitter 添加内容时进行预览。
-- 如果您在区块插入器搜索中没有找到任何内容，“无结果”视图将显示。
--“我”屏幕拥有新的“与朋友共享 WordPress”按钮，允许您共享 WordPress 应用程序链接。
-- 在阅读器中点赞文章还会将您的头像添加到该赞中。
+18.4：
+YouTube、Twitter、WordPress 和 Vimeo 的专用嵌入区块，带有可在选中后进行编辑的 URL。
+现在，即使在上传过程中关闭文章，画廊区块也会添加图片。
+站点评论允许编辑作者的姓名、电子邮件和网址。
+现在，您可以直接从编辑器界面联系支持人员。
 </zh-CN>
 <zh-TW>
-18.2：
-- 嵌入區塊現在可預覽從 YouTube 或 Twitter 新增的內容。
-- 如果區塊插入器搜尋功能中找不到結果，現在會顯示「無結果」畫面。
--「我的」畫面現在新增「向朋友推薦 WordPress」按鈕，讓你能夠分享 WordPress 應用程式連結。
-- 在閱讀器中對文章按讚現在也會新增你的大頭貼。
+18.4：
+我們新增了 YouTube、Twitter、WordPress 和 Vimeo 專用嵌入內容區塊，而且現在選取 URL 後仍然可以編輯。
+現在即使在圖片上傳過程中關閉文章，仍會在圖庫區塊加入圖片。
+現在可以在網站留言中編輯作者的姓名、電子郵件和網址。
+你現在可以直接從編輯器畫面聯絡支援團隊。
 </zh-TW>

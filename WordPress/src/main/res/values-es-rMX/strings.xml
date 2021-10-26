@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-05 20:46:34+0000
+Translation-Revision-Date: 2021-10-19 13:05:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
@@ -813,10 +813,6 @@ Language: es_MX
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando el nombre de dominio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecciona el Estado</string>
     <string name="domain_registration_country_picker_dialog_title">Selecciona el País</string>
-    <string name="domain_registration_result_continue_button">continuar</string>
-    <string name="domain_registration_result_description">tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; se está configurando. ¡Tu sitio está\n    dando volteretas de emoción!</string>
-    <string name="domain_registration_result_title">Felicidades</string>
-    <string name="domain_contact_information_register_domain_button">Registrar Dominio</string>
     <string name="domain_contact_information_state_hint">Estado</string>
     <string name="domain_contact_information_city_hint">Ciudad</string>
     <string name="domain_contact_information_address_hint_two">Dirección 2</string>
@@ -825,6 +821,7 @@ Language: es_MX
     <string name="domain_contact_information_country_code_hint">Código del país</string>
     <string name="domain_contact_information_phone_number_hint">Teléfono</string>
     <string name="domain_contact_information_postal_code_hint">Código postal</string>
+    <string name="domain_contact_information_register_domain_button">Registrar un dominio</string>
     <string name="domain_contact_information_organization_hint">Organización (opcional)</string>
     <string name="domain_contact_information_description">Para tu comodidad, hemos precompletado tu información de contacto\n de WordPress.com. Por favor, comprueba que es la información correcta que quieres usar para este dominio.</string>
     <string name="domain_contact_information_title">Información de contacto del dominio</string>
@@ -836,7 +833,6 @@ Language: es_MX
     <string name="stats_management_new">Nuevo</string>
     <string name="stats_management_dismiss_insights_news_card">Descartar</string>
     <string name="stats_management_try_it_now">Pruébalo ahora</string>
-    <string name="domains_suggestions_choose_domain">Elegir dominio</string>
     <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
     <string name="stats_manage_your_stats">Gestiona tus estadísticas</string>
     <string name="history_fetching_revisions">Recuperando revisiones…</string>
@@ -933,7 +929,6 @@ Language: es_MX
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
-    <string name="quick_start_dialog_need_help_message">Te guiaremos por los básicos de la construcción y el crecimiento de tu sitio.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar planes</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de mercadotecnia y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -1116,9 +1111,6 @@ Language: es_MX
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Toca en %1$s Conexiones %2$s para añadir tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_publish_post_title">Publica una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Toca en %1$s Crear entrada %2$s para crear una nueva entrada</string>
-    <string name="quick_start_dialog_need_help_title">¿Quieres un poco de ayuda para empezar?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Aceptar</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>

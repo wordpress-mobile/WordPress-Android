@@ -1,3 +1,5 @@
-Lots of improvements in the block editor! We fixed a toolbar issue affecting devices set to an RTL language, and made many updates to the Embed block, including enabling WordPress, Instagram, and Vimeo previews and offering options to retry or convert media into a link if it’s not embeddable.
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
 
-Other updates include a fix affecting .mp4 video on some sites, and streamlining My Site menu labels (“Posts” and “Pages”).
+Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.
+
+Finally, Pullquote and Preformatted blocks now have customizable text and background color.

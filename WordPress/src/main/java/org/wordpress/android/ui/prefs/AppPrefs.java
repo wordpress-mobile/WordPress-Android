@@ -223,9 +223,6 @@ public class AppPrefs {
         LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
         LAST_READER_KNOWN_USER_ID,
 
-        // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED,
-
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -255,9 +252,6 @@ public class AppPrefs {
 
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
-
-        // Used to determine if editor onboarding features should be displayed
-        HAS_LAUNCHED_GUTENBERG_EDITOR,
 
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
@@ -999,14 +993,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-    public static void setQuickStartDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
-    }
-
-    public static boolean isQuickStartDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }
@@ -1221,14 +1207,6 @@ public class AppPrefs {
 
     public static boolean shouldShowStoriesIntro() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
-    }
-
-    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
-        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
-    }
-
-    public static boolean hasLaunchedGutenbergEditor() {
-        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {

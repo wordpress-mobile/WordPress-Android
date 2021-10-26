@@ -1,0 +1,5 @@
+18.4:
+YouTube, Twitter, WordPress ve Vimeo için, seçildikten sonra düzenlenebilen URL'lere sahip özel gömme blokları.
+Galeri bloku, yükleme sırasında gönderi kapatılsa bile artık görsel ekleyebilir.
+Site yorumları, yazarın adının, e-postasının ve web adresinin düzenlenmesine izin verir.
+Artık doğrudan düzenleyici ekranından desteğe başvurabilirsiniz.

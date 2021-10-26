@@ -136,4 +136,6 @@
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
+    <!-- Domains -->
+    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
 </resources>

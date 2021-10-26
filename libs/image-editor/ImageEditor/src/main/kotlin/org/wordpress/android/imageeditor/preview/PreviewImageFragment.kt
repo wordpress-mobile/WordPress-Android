@@ -156,7 +156,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
 
-        viewModel.onCreateView(inputData, ImageEditor.instance)
+        inputData?.let { viewModel.onCreateView(it, ImageEditor.instance) }
     }
 
     private fun PreviewImageFragmentBinding.setupObservers() {

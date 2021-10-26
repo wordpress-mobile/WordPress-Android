@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/site_domains_header"
-    style="?attr/textAppearanceHeadline6"
+    style="?attr/textAppearanceSubtitle2"
+    android:textColor="?attr/colorPrimary"
     android:text="@string/domains_site_domains"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_extra_large" />
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_medium"/>
 
 

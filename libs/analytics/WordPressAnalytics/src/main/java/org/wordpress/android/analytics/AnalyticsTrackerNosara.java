@@ -417,9 +417,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
                 predefinedEventProperties.put("type", "positive");
                 break;
-            case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
-                predefinedEventProperties.put("type", "neutral");
-                break;
             case APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA:
                 predefinedEventProperties.put("source", "media_upload");
                 break;
@@ -1804,7 +1801,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_request_dialog_viewed";
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
-            case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
                 return "quick_start_request_dialog_button_tapped";
             case QUICK_START_NOTIFICATION_DISMISSED:
                 return "quick_start_notification_dismissed";

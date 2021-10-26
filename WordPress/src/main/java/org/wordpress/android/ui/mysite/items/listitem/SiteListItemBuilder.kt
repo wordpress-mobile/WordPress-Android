@@ -32,8 +32,8 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
-class SiteListItemBuilder
-@Inject constructor(
+@Suppress("TooManyFunctions")
+class SiteListItemBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
@@ -87,6 +87,7 @@ class SiteListItemBuilder
         } else null
     }
 
+    @Suppress("ComplexCondition")
     fun buildPlanItemIfAvailable(
         site: SiteModel,
         showFocusPoint: Boolean,
