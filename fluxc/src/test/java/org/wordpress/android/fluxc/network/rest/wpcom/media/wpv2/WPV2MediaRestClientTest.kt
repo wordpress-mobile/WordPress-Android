@@ -61,80 +61,87 @@ class WPV2MediaRestClientTest {
 
     @Test
     fun `emit success action when upload finishes`() {
-        val file = File("./image.jpg")
-        file.createNewFile()
-        whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
-        whenever(mockedCall.enqueue(any())).then {
-            (it.arguments.first() as Callback).onResponse(
-                    mockedCall,
-                    mock {
-                        on { body } doReturn UnitTestUtils.getStringFromResourceFile(
-                                this::class.java,
-                                "media/media-upload-wp-api-success.json"
-                        ).toResponseBody("application/json".toMediaType())
-                        on { isSuccessful } doReturn true
-                    }
-            )
-            countDownLatch.countDown()
+        createFileThenRunTest {
+            whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
+            whenever(mockedCall.enqueue(any())).then {
+                (it.arguments.first() as Callback).onResponse(
+                        mockedCall,
+                        mock {
+                            on { body } doReturn UnitTestUtils.getStringFromResourceFile(
+                                    this::class.java,
+                                    "media/media-upload-wp-api-success.json"
+                            ).toResponseBody("application/json".toMediaType())
+                            on { isSuccessful } doReturn true
+                        }
+                )
+                countDownLatch.countDown()
+            }
+
+            countDownLatch = CountDownLatch(1)
+            restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
+
+            countDownLatch.await()
+
+            verify(dispatcher).dispatch(argThat {
+                type == UPLOADED_MEDIA && (payload as ProgressPayload).completed
+            })
         }
-
-        countDownLatch = CountDownLatch(1)
-        restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
-
-        countDownLatch.await()
-        file.delete()
-
-        verify(dispatcher).dispatch(argThat {
-            type == UPLOADED_MEDIA && (payload as ProgressPayload).completed
-        })
     }
 
     @Test
     fun `emit failure action when upload fails`() {
-        val file = File("./image.jpg")
-        file.createNewFile()
-        whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
-        whenever(mockedCall.enqueue(any())).then {
-            (it.arguments.first() as Callback).onFailure(mock(), IOException())
-            countDownLatch.countDown()
+        createFileThenRunTest {
+            whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
+            whenever(mockedCall.enqueue(any())).then {
+                (it.arguments.first() as Callback).onFailure(mock(), IOException())
+                countDownLatch.countDown()
+            }
+
+            countDownLatch = CountDownLatch(1)
+            restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
+
+            countDownLatch.await()
+
+            verify(dispatcher).dispatch(argThat {
+                type == UPLOADED_MEDIA && (payload as ProgressPayload).error != null
+            })
         }
-
-        countDownLatch = CountDownLatch(1)
-        restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
-
-        countDownLatch.await()
-        file.delete()
-
-        verify(dispatcher).dispatch(argThat {
-            type == UPLOADED_MEDIA && (payload as ProgressPayload).error != null
-        })
     }
 
     @Test
     fun `emit failure action when we can't parse the response`() {
+        createFileThenRunTest {
+            whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
+            whenever(mockedCall.enqueue(any())).then {
+                (it.arguments.first() as Callback).onResponse(
+                        mockedCall,
+                        mock {
+                            on { body } doReturn "".toResponseBody("application/json".toMediaType())
+                            on { isSuccessful } doReturn true
+                        }
+                )
+                countDownLatch.countDown()
+            }
+
+            countDownLatch = CountDownLatch(1)
+            restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
+
+            countDownLatch.await()
+
+            verify(dispatcher).dispatch(argThat {
+                type == UPLOADED_MEDIA && (payload as ProgressPayload).error != null
+            })
+        }
+    }
+
+    private fun createFileThenRunTest(test: () -> Unit) {
         val file = File("./image.jpg")
         file.createNewFile()
-        whenever(okHttpClient.newCall(any())).thenReturn(mockedCall)
-        whenever(mockedCall.enqueue(any())).then {
-            (it.arguments.first() as Callback).onResponse(
-                    mockedCall,
-                    mock {
-                        on { body } doReturn "".toResponseBody("application/json".toMediaType())
-                        on { isSuccessful } doReturn true
-                    }
-            )
-            countDownLatch.countDown()
+        try {
+            test()
+        } finally {
+            file.delete()
         }
-
-        countDownLatch = CountDownLatch(1)
-        restClient.uploadMedia(SiteModel(), MediaTestUtils.generateMediaFromPath(0, 0L, "./image.jpg"))
-
-        countDownLatch.await()
-        file.delete()
-
-        verify(dispatcher).dispatch(argThat {
-            type == UPLOADED_MEDIA && (payload as ProgressPayload).error != null
-        })
     }
 
     @Subscribe
