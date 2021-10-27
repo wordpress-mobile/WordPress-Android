@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
@@ -51,6 +52,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUp
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -149,6 +152,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var postCardsSource: PostCardsSource
     @Mock lateinit var quickStartCardSource: QuickStartCardSource
+    @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
+    @Mock lateinit var selectedSiteSource: SelectedSiteSource
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -168,6 +173,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
+    private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
+    private val selectedSite = MutableLiveData<SelectedSite>()
+
     private val jetpackCapabilities = MutableLiveData(
             JetpackCapabilities(
                     scanAvailable = false,
@@ -224,12 +232,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
         whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
-        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
         whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
+        whenever(siteIconProgressSource.buildSource(any(), any())).thenReturn(showSiteIconProgressBar)
+        whenever(selectedSiteSource.buildSource(any(), any())).thenReturn(selectedSite)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -258,7 +266,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 postCardsSource,
-                quickStartCardSource
+                quickStartCardSource,
+                selectedSiteSource,
+                siteIconProgressSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1233,6 +1243,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
         onSiteSelected.value = siteLocalId
+        selectedSite.value = SelectedSite(site)
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
@@ -1269,6 +1280,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
+        selectedSite.value = SelectedSite(site)
     }
 
     private enum class SiteInfoCardAction {
