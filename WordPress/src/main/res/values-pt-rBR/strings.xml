@@ -7,7 +7,6 @@ Language: pt_BR
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">Pesquisar por um domínio</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domínios comprados neste site redirecionarão visitantes para &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Você tem um registro de domínio gratuito por um ano incluso em seu plano.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Resgatar seu domínio gratuito</string>
     <string name="domains_manage_domains">Gerenciar domínios</string>
@@ -15,7 +14,6 @@ Language: pt_BR
     <string name="domains_add_a_domain">Adicionar um domínio</string>
     <string name="domains_site_domain_expires">Expira em %s</string>
     <string name="domains_site_domains">Domínios do seu site</string>
-    <string name="domains_primary_site_address_blurb">O endereço principal do site é o que visitantes verão na barra de endereço do navegador ao acessar seu site.</string>
     <string name="domains_primary_site_address_chip">Endereço principal do site</string>
     <string name="domains_primary_site_more_menu_change_site_address">Alterar o endereço do site</string>
     <string name="domains_primary_site_caption">Seu endereço gratuito WordPress.com é</string>
@@ -50,7 +48,6 @@ Language: pt_BR
     <string name="me_btn_share">Compartilhe o WordPress com um amigo</string>
     <string name="my_site_quick_actions_title">Links rápidos</string>
     <string name="my_site_btn_domains">Domínios</string>
-    <string name="site_settings_site_domains_title">Domínios do site</string>
     <string name="weekly_roundup_notification_text">Seu site teve %1$d visualizações, %2$d curtidas e %3$d comentários.</string>
     <string name="weekly_roundup_notification_title">Resumo semanal: %s</string>
     <string name="blogging_reminders_notification_time">Horário da notificação</string>
@@ -1289,10 +1286,6 @@ Language: pt_BR
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando o domínio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecionar o estado</string>
     <string name="domain_registration_country_picker_dialog_title">Selecionar país</string>
-    <string name="domain_registration_result_continue_button">continuar</string>
-    <string name="domain_registration_result_description">seu novo domínio &lt;b&gt;%s&lt;/b&gt; está sendo configurado.\nSeu site está animado!</string>
-    <string name="domain_registration_result_title">Parabéns</string>
-    <string name="domain_contact_information_register_domain_button">Registrar domínio</string>
     <string name="domain_contact_information_postal_code_hint">CEP</string>
     <string name="domain_contact_information_state_hint">Estado</string>
     <string name="domain_contact_information_city_hint">Cidade</string>
@@ -1309,7 +1302,6 @@ Language: pt_BR
     <string name="domain_registration_privacy_protection_description">Donos de domínios precisam compartilhar as informações de contato em um banco de dados público para todos os domínios.\nCom a proteção de privacidade, nós publicaremos nossos próprios dados ao invés dos seus e encaminharemos qualquer comunicação para você de forma privada.</string>
     <string name="domain_registration_privacy_protection_title">Proteção de privacidade</string>
     <string name="domain_registration_contact_form_input_error">Digite um %s válido</string>
-    <string name="domains_suggestions_choose_domain">Escolher o domínio</string>
     <string name="stats_management_new">Novo</string>
     <string name="stats_management_dismiss_insights_news_card">Dispensar</string>
     <string name="stats_management_try_it_now">Faça um teste</string>
@@ -1414,7 +1406,6 @@ Language: pt_BR
     <string name="quick_start_dialog_check_stats_message_short">Toque em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toque em %1$s Ícone do seu site %2$s para enviar um ícone</string>
     <string name="quick_start_dialog_publish_post_message">Crie um rascunho e publique um post.</string>
-    <string name="quick_start_dialog_need_help_message">Te guiaremos pelos passos básicos em criar um site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore planos</string>
     <string name="quick_start_dialog_explore_plans_message">Aprenda mais sobre as ferramentas de marketing e SEO de nossos planos pagos.</string>
     <string name="quick_start_dialog_enable_sharing_title">Ative o compartilhamento de post</string>
@@ -1597,9 +1588,6 @@ Language: pt_BR
     <string name="quick_start_dialog_share_site_message">Conectar suas contas em redes sociais para compartilhar novos posts automaticamente.</string>
     <string name="quick_start_dialog_publish_post_title">Publique um post</string>
     <string name="quick_start_dialog_publish_post_message_short">Toque em %1$s Criar post %2$s para criar um novo post</string>
-    <string name="quick_start_dialog_need_help_title">Precisa de alguma ajuda para iniciar?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Aceitar</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_need_help_button_negative">Não, obrigado</string>
     <string name="quick_start_dialog_follow_sites_title">Siga outros sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Toque em %1$s Pesquisar %2$s para procurar por sites com assuntos similares</string>

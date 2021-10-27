@@ -1,5 +1,10 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.6
+-----
+* [**] Block editor: Block inserter indicates newly available block types [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4047]
+
+
 18.5
 -----
 * [**] Reader: allow users to enable push notifications to follow a post comments conversation [WPAndroid - https://github.com/wordpress-mobile/WordPress-Android/pull/15459]

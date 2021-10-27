@@ -7,7 +7,6 @@ Language: it
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">Cerca un dominio</string>
-    <string name="domains_free_plan_get_your_domain_caption">I domini acquistati su questo sito reindirizzeranno i visitatori a &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Il tuo piano include la registrazione del dominio per un anno gratuitamente</string>
     <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
     <string name="domains_manage_domains">Gestisci domini</string>
@@ -16,7 +15,6 @@ Language: it
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Scade il giorno %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Scade il giorno %s</string>
     <string name="domains_site_domains">I domini del tuo sito</string>
-    <string name="domains_primary_site_address_blurb">L\'indirizzo principale del tuo sito è quello che i visitatori vedranno nella barra degli indirizzi del browser quando visiteranno il tuo sito web.</string>
     <string name="domains_primary_site_address_chip">Indirizzo principale del sito</string>
     <string name="domains_primary_site_more_menu_change_site_address">Modifica l\'indirizzo del sito</string>
     <string name="domains_primary_site_caption">Il tuo indirizzo WordPress.com gratuito è</string>
@@ -51,7 +49,6 @@ Language: it
     <string name="me_btn_share">Condividi WordPress con un amico</string>
     <string name="my_site_quick_actions_title">Link veloci</string>
     <string name="my_site_btn_domains">Domini</string>
-    <string name="site_settings_site_domains_title">Domini del sito</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -1290,10 +1287,6 @@ Language: it
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrazione del nome di dominio in corso…</string>
     <string name="domain_registration_state_picker_dialog_title">Seleziona uno stato</string>
     <string name="domain_registration_country_picker_dialog_title">Seleziona il Paese</string>
-    <string name="domain_registration_result_continue_button">continua</string>
-    <string name="domain_registration_result_description">il tuo nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Un\'ottima cosa\n per il tuo sito!</string>
-    <string name="domain_registration_result_title">Complimenti</string>
-    <string name="domain_contact_information_register_domain_button">Registra dominio</string>
     <string name="domain_contact_information_postal_code_hint">CAP</string>
     <string name="domain_contact_information_state_hint">Stato</string>
     <string name="domain_contact_information_city_hint">Città</string>
@@ -1310,7 +1303,6 @@ Language: it
     <string name="domain_registration_privacy_protection_description">I proprietari del dominio devono condividere le informazioni di contatto in un database pubblico di tutti i domini.\n Con la Protezione della privacy, pubblichiamo le nostre informazioni al posto delle tue e ti inoltriamo privatamente qualsiasi comunicazione.</string>
     <string name="domain_registration_privacy_protection_title">Protezione della privacy</string>
     <string name="domain_registration_contact_form_input_error">Per %s, inserisci un valore valido</string>
-    <string name="domains_suggestions_choose_domain">Scegli dominio</string>
     <string name="stats_management_new">Nuovo</string>
     <string name="stats_management_dismiss_insights_news_card">Chiudi</string>
     <string name="stats_management_try_it_now">Prova ora</string>
@@ -1411,7 +1403,6 @@ Language: it
     <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
-    <string name="quick_start_dialog_need_help_message">Ti guideremo attraverso le basi per costruire e far crescere il tuo sito.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
@@ -1597,9 +1588,6 @@ Language: it
     <string name="quick_start_dialog_share_site_message">Collega gli account dei tuoi social media: il tuo sito condividerà automaticamente i nuovi articoli.</string>
     <string name="quick_start_dialog_publish_post_title">Pubblica un articolo</string>
     <string name="quick_start_dialog_publish_post_message_short">Tocca %1$s Crea un articolo %2$s per creare un nuovo articolo</string>
-    <string name="quick_start_dialog_need_help_title">Desideri un po\' di aiuto per iniziare?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accetta</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Mai</string>
     <string name="quick_start_dialog_follow_sites_title">Segui altri siti</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
     <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti interessano e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>

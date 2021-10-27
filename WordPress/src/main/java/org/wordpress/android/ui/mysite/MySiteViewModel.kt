@@ -20,6 +20,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -27,6 +33,8 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -96,7 +104,8 @@ class MySiteViewModel @Inject constructor(
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
-    private val dynamicCardsBuilder: DynamicCardsBuilder
+    private val dynamicCardsBuilder: DynamicCardsBuilder,
+    postCardsSource: PostCardsSource
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -132,7 +141,8 @@ class MySiteViewModel @Inject constructor(
             currentAvatarSource,
             domainRegistrationHandler,
             scanAndBackupSource,
-            dynamicCardsSource
+            dynamicCardsSource,
+            postCardsSource
     ).state.map { (
             currentAvatarUrl,
             site,
@@ -143,7 +153,8 @@ class MySiteViewModel @Inject constructor(
             activeTask,
             quickStartCategories,
             pinnedDynamicCard,
-            visibleDynamicCards
+            visibleDynamicCards,
+            mockedPostData
     ) ->
         val state = if (site != null) {
             buildSiteSelectedStateAndScroll(
@@ -155,7 +166,8 @@ class MySiteViewModel @Inject constructor(
                     pinnedDynamicCard,
                     visibleDynamicCards,
                     backupAvailable,
-                    scanAvailable
+                    scanAvailable,
+                    mockedPostData
             )
         } else {
             buildNoSiteState()
@@ -173,7 +185,8 @@ class MySiteViewModel @Inject constructor(
         pinnedDynamicCard: DynamicCardType?,
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
-        scanAvailable: Boolean
+        scanAvailable: Boolean,
+        mockedPostsData: MockedPostsData?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -184,7 +197,8 @@ class MySiteViewModel @Inject constructor(
                 pinnedDynamicCard,
                 visibleDynamicCards,
                 backupAvailable,
-                scanAvailable
+                scanAvailable,
+                mockedPostsData
         )
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -203,38 +217,50 @@ class MySiteViewModel @Inject constructor(
         pinnedDynamicCard: DynamicCardType?,
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
-        scanAvailable: Boolean
+        scanAvailable: Boolean,
+        mockedPostsData: MockedPostsData?
     ) = cardsBuilder.build(
-            site,
-            showSiteIconProgressBar,
-            activeTask,
-            isDomainCreditAvailable,
-            quickStartCategories,
-            this::titleClick,
-            this::iconClick,
-            this::urlClick,
-            this::switchSiteClick,
-            this::quickActionStatsClick,
-            this::quickActionPagesClick,
-            this::quickActionPostsClick,
-            this::quickActionMediaClick,
-            this::domainRegistrationClick,
-            this::onQuickStartBlockRemoveMenuItemClick,
-            this::onQuickStartTaskTypeItemClick
+            DomainRegistrationCardBuilderParams(
+                    isDomainCreditAvailable = isDomainCreditAvailable,
+                    domainRegistrationClick = this::domainRegistrationClick
+            ),
+            PostCardBuilderParams(mockedPostsData = mockedPostsData),
+            QuickActionsCardBuilderParams(
+                    siteModel = site,
+                    activeTask = activeTask,
+                    onQuickActionStatsClick = this::quickActionStatsClick,
+                    onQuickActionPagesClick = this::quickActionPagesClick,
+                    onQuickActionPostsClick = this::quickActionPostsClick,
+                    onQuickActionMediaClick = this::quickActionMediaClick
+            ),
+            QuickStartCardBuilderParams(
+                    quickStartCategories = quickStartCategories,
+                    onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                    onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
+            ),
+            SiteInfoCardBuilderParams(
+                    site = site,
+                    showSiteIconProgressBar = showSiteIconProgressBar,
+                    titleClick = this::titleClick,
+                    iconClick = this::iconClick,
+                    urlClick = this::urlClick,
+                    switchSiteClick = this::switchSiteClick,
+                    activeTask = activeTask
+            )
     ) + dynamicCardsBuilder.build(
             quickStartCategories,
             pinnedDynamicCard,
             visibleDynamicCards,
             this::onDynamicCardMoreClick,
             this::onQuickStartTaskCardClick
-    ) + siteItemsBuilder.buildSiteItems(
-            site,
-            this::onItemClick,
-            backupAvailable,
-            scanAvailable,
-            activeTask == QuickStartTask.VIEW_SITE,
-            activeTask == QuickStartTask.ENABLE_POST_SHARING,
-            activeTask == QuickStartTask.EXPLORE_PLANS
+    ) + siteItemsBuilder.build(
+            SiteItemsBuilderParams(
+                    site = site,
+                    activeTask = activeTask,
+                    backupAvailable = backupAvailable,
+                    scanAvailable = scanAvailable,
+                    onClick = this::onItemClick
+            )
     )
 
     private fun buildNoSiteState(): NoSites {

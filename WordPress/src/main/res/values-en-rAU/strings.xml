@@ -164,10 +164,6 @@ Language: en_AU
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
-    <string name="domain_registration_result_continue_button">continue</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is\n        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_city_hint">City</string>
@@ -184,7 +180,6 @@ Language: en_AU
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.\n        With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
@@ -282,7 +277,6 @@ Language: en_AU
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -463,9 +457,6 @@ Language: en_AU
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>

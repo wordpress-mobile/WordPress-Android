@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
+import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PrimaryDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
@@ -20,8 +20,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS_HEADER
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.AddDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.DomainBlurbViewHolder
+import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.FreeDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.ManageDomainsViewHolder
-import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PrimaryDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PurchaseDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsHeaderViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsViewHolder
@@ -33,7 +33,7 @@ class DomainsDashboardAdapter @Inject constructor(
 ) : ListAdapter<DomainsDashboardItem, DomainsDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainsDashboardViewHolder<*> {
         return when (Type.values()[viewType]) {
-            PRIMARY_DOMAIN -> PrimaryDomainViewHolder(parent, uiHelpers)
+            PRIMARY_DOMAIN -> FreeDomainViewHolder(parent, uiHelpers)
             SITE_DOMAINS_HEADER -> SiteDomainsHeaderViewHolder(parent, uiHelpers)
             SITE_DOMAINS -> SiteDomainsViewHolder(parent, uiHelpers)
             ADD_DOMAIN -> AddDomainViewHolder(parent)
@@ -46,7 +46,7 @@ class DomainsDashboardAdapter @Inject constructor(
     override fun onBindViewHolder(holder: DomainsDashboardViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is PrimaryDomainViewHolder -> holder.onBind(item as PrimaryDomain)
+            is FreeDomainViewHolder -> holder.onBind(item as FreeDomain)
             is SiteDomainsHeaderViewHolder -> holder.onBind(item as SiteDomainsHeader)
             is SiteDomainsViewHolder -> holder.onBind(item as SiteDomains)
             is AddDomainViewHolder -> holder.onBind(item as AddDomain)

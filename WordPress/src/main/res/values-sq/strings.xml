@@ -7,7 +7,6 @@ Language: sq_AL
 -->
 <resources>
     <string name="domains_search_for_a_domain_button">Kërkoni për një përkatësi</string>
-    <string name="domains_free_plan_get_your_domain_caption">Përkatësitë e blera në këtë sajt do t’i ridrejtojnë vizitorët te &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Me planin tuaj keni të përfshirë një regjistrim përkatësie falas për një vit</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kërkoni përkatësinë tuaj falas</string>
     <string name="domains_manage_domains">Administroni Përkatësi</string>
@@ -16,7 +15,6 @@ Language: sq_AL
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Skadon më %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Skadon më %s</string>
     <string name="domains_site_domains">Përkatësitë e sajtit tuaj</string>
-    <string name="domains_primary_site_address_blurb">Adresa parësore e sajtit tuaj është ajo çka do të shohin vizitorët te shtylla e adresave në shfletues, kur vizitojnë sajtin tuaj.</string>
     <string name="domains_primary_site_address_chip">Adresë parësore sajti</string>
     <string name="domains_primary_site_more_menu_change_site_address">Ndryshoni adresën e sajtit</string>
     <string name="domains_primary_site_caption">Adresa juaj falas WordPress.com është</string>
@@ -53,7 +51,6 @@ Language: sq_AL
     <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
     <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
     <string name="my_site_btn_domains">Përkatësi</string>
-    <string name="site_settings_site_domains_title">Përkatësi sajti</string>
     <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
@@ -1288,10 +1285,6 @@ Language: sq_AL
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Po regjistrohet emër përkatësie…</string>
     <string name="domain_registration_state_picker_dialog_title">Përzgjidhni Shtet</string>
     <string name="domain_registration_country_picker_dialog_title">Përzgjidhni Vend</string>
-    <string name="domain_registration_result_continue_button">vazhdo</string>
-    <string name="domain_registration_result_description">po ujdiset përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt;. Sajti juaj po bën\n     rrotullime në ajër nga gëzimi!</string>
-    <string name="domain_registration_result_title">Përgëzime</string>
-    <string name="domain_contact_information_register_domain_button">Regjistroni Përkatësie</string>
     <string name="domain_contact_information_postal_code_hint">Kod postar</string>
     <string name="domain_contact_information_state_hint">Shtet</string>
     <string name="domain_contact_information_city_hint">Qytet</string>
@@ -1308,7 +1301,6 @@ Language: sq_AL
     <string name="domain_registration_privacy_protection_description">Të zotëve të përkatësive u duhet të ndajnë me të tjerët të dhëna kontakti, në një bazë publike të dhënash të krejt përkatësive.\n        Me Mbrojtje Privatësie, ne botojmë të dhënat tona, në vend se tuajat, dhe ju përcjellim privatisht çfarëdo komunikimi.</string>
     <string name="domain_registration_contact_form_input_error">Ju lutemi, jepni një %s të vlefshëm</string>
     <string name="domain_registration_privacy_protection_title">Mbrojtje Privatësie</string>
-    <string name="domains_suggestions_choose_domain">Zgjidhni Përkatësi</string>
     <string name="stats_management_new">E re</string>
     <string name="stats_management_dismiss_insights_news_card">Hidhe tej</string>
     <string name="stats_management_try_it_now">Provojeni që tani</string>
@@ -1412,7 +1404,6 @@ Language: sq_AL
     <string name="quick_start_dialog_upload_icon_title">Zgjidhni një ikonë sajti unike</string>
     <string name="quick_start_dialog_check_stats_message_short">Prekni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
-    <string name="quick_start_dialog_need_help_message">Do t’ju udhëheqim përmes gjërave elementare të krijimit dhe fuqizimit të sajtit tuaj.</string>
     <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
     <string name="quick_start_dialog_explore_plans_title">Eksploroni plane</string>
     <string name="quick_start_dialog_explore_plans_message">Mësoni rreth mjetesh marketingu dhe SEO në planet tona me pagesë.</string>
@@ -1596,9 +1587,6 @@ Language: sq_AL
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuajat nga media shoqërore</string>
     <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
     <string name="quick_start_dialog_publish_post_message_short">Prekni %1$s Krijo Postim %2$s që të krijohet një postim i ri</string>
-    <string name="quick_start_dialog_need_help_title">Doni pakëz ndihmë për t’ia filluar?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Pranoj</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
     <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Prekni %1$s Lexues %2$s që të vazhdohet</string>
     <string name="quick_start_dialog_follow_sites_message">Gjeni sajte që ju frymëzojnë, dhe ndiqini që të merrni të rejat kur botojnë të tilla.</string>

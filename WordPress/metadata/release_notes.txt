@@ -1,4 +1,5 @@
-Dedicated embed blocks for YouTube, Twitter, WordPress, and Vimeo, with URLs that can be edited after they are selected.
-The gallery block now adds images even if the post is closed during the upload.
-Site comments allow the author’s name, email, and web address to be edited.
-You can now contact support directly from the editor screen.
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
+
+Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
+
+Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.

@@ -2442,7 +2442,7 @@
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;/span&gt;</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style="color:#008000;"&gt;Free for the first year &lt;/span&gt;&lt;/strong&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style="color:#008000;"&gt;Free for the first year &lt;/span&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
@@ -2480,7 +2480,7 @@
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at &lt;b&gt;%s&lt;/b&gt;. &lt;a href="https://wordpress.com/support/site-redirect/"&gt;Learn more&lt;/a&gt;.</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
@@ -3386,6 +3386,8 @@
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Create embed</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Create link</string>
     <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Crosspost</string>
     <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Current placeholder text is</string>
     <!-- translators: accessibility text. Inform about current unit value. %s: Current unit value. -->
