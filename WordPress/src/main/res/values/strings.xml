@@ -2443,6 +2443,7 @@
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style="color:#008000;"&gt;Free for the first year &lt;/span&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style="color:#B26200;"&gt;%1$s for the first year &lt;/span&gt;&lt;span style="color:#50575e;"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
