@@ -5,8 +5,10 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
@@ -26,6 +28,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -68,6 +72,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
+import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
@@ -107,7 +112,9 @@ class MySiteViewModel @Inject constructor(
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     postCardsSource: PostCardsSource,
-    quickStartCardSource: QuickStartCardSource
+    quickStartCardSource: QuickStartCardSource,
+    selectedSiteSource: SelectedSiteSource,
+    siteIconProgressSource: SiteIconProgressSource
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -136,16 +143,38 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
 
-    val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            viewModelScope,
-            selectedSiteRepository,
+    private val mySiteSources: List<MySiteSource<*>> = listOf(
+            selectedSiteSource,
+            siteIconProgressSource,
             quickStartCardSource,
             currentAvatarSource,
             domainRegistrationSource,
             scanAndBackupSource,
             dynamicCardsSource,
             postCardsSource
-    ).state.map { (
+    )
+
+    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+        val result = MediatorLiveData<SiteIdToState>()
+        val currentSources = if (siteLocalId != null) {
+            mySiteSources.map { source -> source.buildSource(viewModelScope, siteLocalId).distinctUntilChanged() }
+        } else {
+            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+                    .map { source -> source.buildSource(viewModelScope).distinctUntilChanged() }
+        }
+        for (newSource in currentSources) {
+            result.addSource(newSource) { partialState ->
+                if (partialState != null) {
+                    result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+                }
+            }
+        }
+        // We want to filter out the empty state where we have a site ID but site object is missing.
+        // Without this check there is an emission of a NoSites state even if we have the site
+        result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+    }.distinctUntilChanged()
+
+    val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
             site,
             showSiteIconProgressBar,
@@ -710,6 +739,12 @@ class MySiteViewModel @Inject constructor(
         val isMultiline: Boolean,
         val isInputEnabled: Boolean
     )
+
+    private data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
+        fun update(partialState: PartialState): SiteIdToState {
+            return this.copy(state = state.update(partialState))
+        }
+    }
 
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
