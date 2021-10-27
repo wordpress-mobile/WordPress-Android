@@ -36,6 +36,7 @@ import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrati
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
@@ -105,7 +106,8 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    postCardsSource: PostCardsSource
+    postCardsSource: PostCardsSource,
+    quickStartCardSource: QuickStartCardSource
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -137,7 +139,7 @@ class MySiteViewModel @Inject constructor(
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             viewModelScope,
             selectedSiteRepository,
-            quickStartRepository,
+            quickStartCardSource,
             currentAvatarSource,
             domainRegistrationSource,
             scanAndBackupSource,
