@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
+import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
 import org.wordpress.android.test
@@ -38,6 +39,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     @Mock lateinit var createCartUseCase: CreateCartUseCase
+    @Mock lateinit var productsStore: ProductsStore
 
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
@@ -50,6 +52,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         site = SiteModel().also { it.name = "Test Site" }
         domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
         viewModel = DomainSuggestionsViewModel(
+                productsStore,
                 tracker,
                 dispatcher,
                 debouncer,
@@ -194,6 +197,8 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         val dummySelectedDomainSuggestionItem = DomainSuggestionItem(
                 domainName = DUMMY_DOMAIN_NAME,
                 cost = "$20.00",
+                isOnSale = false,
+                saleCost = "0.0",
                 isFree = false,
                 supportsPrivacy = true,
                 productId = DUMMY_PRODUCT_ID,
