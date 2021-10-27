@@ -32,7 +32,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -92,7 +92,7 @@ class MySiteViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
-    private val domainRegistrationHandler: DomainRegistrationHandler,
+    private val domainRegistrationSource: DomainRegistrationSource,
     private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
@@ -139,7 +139,7 @@ class MySiteViewModel @Inject constructor(
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,
-            domainRegistrationHandler,
+            domainRegistrationSource,
             scanAndBackupSource,
             dynamicCardsSource,
             postCardsSource
@@ -627,7 +627,7 @@ class MySiteViewModel @Inject constructor(
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
-        domainRegistrationHandler.clear()
+        domainRegistrationSource.clear()
         quickStartRepository.clear()
         scanAndBackupSource.clear()
         super.onCleared()

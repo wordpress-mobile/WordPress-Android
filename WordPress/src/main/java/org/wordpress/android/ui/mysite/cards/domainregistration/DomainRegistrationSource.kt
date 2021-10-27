@@ -26,7 +26,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 
-class DomainRegistrationHandler
+class DomainRegistrationSource
 @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
@@ -36,7 +36,7 @@ class DomainRegistrationHandler
 ) : MySiteSource<DomainCreditAvailable> {
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "SwallowedException")
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         continuation?.cancel()
         continuation = null
