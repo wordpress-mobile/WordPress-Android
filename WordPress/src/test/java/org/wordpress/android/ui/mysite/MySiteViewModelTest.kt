@@ -89,6 +89,7 @@ import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
@@ -147,6 +148,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var quickStartCardSource: QuickStartCardSource
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -221,13 +223,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
-        whenever(quickStartRepository.buildSource(any(), any())).thenReturn(quickStartUpdate)
         whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
+        whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -255,7 +257,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                postCardsSource
+                postCardsSource,
+                quickStartCardSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
