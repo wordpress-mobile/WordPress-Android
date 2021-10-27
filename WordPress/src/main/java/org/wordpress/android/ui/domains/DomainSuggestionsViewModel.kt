@@ -113,7 +113,6 @@ class DomainSuggestionsViewModel @Inject constructor(
         this.site = site
         this.domainRegistrationPurpose = domainRegistrationPurpose
         fetchProducts() // required for finding domains on sale
-        initializeDefaultSuggestions()
         shouldShowRedirectMessage()
         isStarted = true
     }
@@ -136,10 +135,12 @@ class DomainSuggestionsViewModel @Inject constructor(
             when {
                 result.isError -> {
                     AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
+                    initializeDefaultSuggestions()
                 }
                 else -> {
                     AppLog.d(T.DOMAIN_REGISTRATION, result.products.toString())
                     result.products?.let { products = it }
+                    initializeDefaultSuggestions()
                 }
             }
         }
@@ -182,8 +183,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                     DomainSuggestionItem(
                             domainName = it.domain_name,
                             cost = it.cost,
-                            isOnSale = isSaleDomain(product),
-                            saleCost = saleCostForDisplay(product),
+                            isOnSale = product?.isSaleDomain() ?: false,
+                            saleCost = product?.saleCostForDisplay().toString(),
                             isFree = it.is_free,
                             supportsPrivacy = it.supports_privacy,
                             productId = it.product_id,
@@ -229,10 +230,9 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
     }
 
-    private fun isSaleDomain(product: Product?): Boolean = product?.saleCost?.let { it.compareTo(0.0) > 0 } == true
+    internal fun Product.isSaleDomain(): Boolean = this.saleCost?.let { it.compareTo(0.0) > 0 } == true
 
-    private fun saleCostForDisplay(product: Product?): String =
-            product?.costDisplay?.slice(0..2) + "%.2f".format(product?.saleCost)
+    internal fun Product.saleCostForDisplay(): String = this.currencyCode + "%.2f".format(this.saleCost)
 
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")
