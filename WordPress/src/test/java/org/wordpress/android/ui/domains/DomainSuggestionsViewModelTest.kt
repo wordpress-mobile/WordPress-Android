@@ -113,13 +113,14 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site on blogger plan is requesting only dot blog domain suggestions`() {
+    fun `site on blogger plan is requesting only dot blog domain suggestions`() = test {
         site.planId = PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
+
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
         val lastAction = captor.value
 
@@ -137,13 +138,13 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site on non blogger plan is requesting all possible domain suggestions`() {
+    fun `site on non blogger plan is requesting all possible domain suggestions`() = test {
         site.planId = PlansConstants.PREMIUM_PLAN_ID
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.updateSearchQuery("test")
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        verify(dispatcher, times(1)).dispatch(captor.capture())
 
         val lastAction = captor.value
 
