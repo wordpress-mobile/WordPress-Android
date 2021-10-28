@@ -16,4 +16,4 @@
 /users/me/
 
 /plugins/
-/plugins/<slug>#String
+/plugins/<name>#String
