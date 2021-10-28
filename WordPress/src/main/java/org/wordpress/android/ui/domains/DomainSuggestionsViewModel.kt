@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
