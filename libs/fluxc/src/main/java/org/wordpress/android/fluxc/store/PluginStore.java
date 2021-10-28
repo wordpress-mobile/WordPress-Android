@@ -857,10 +857,10 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive,
                     payload.isAutoUpdateEnabled);
-        } else if (!payload.site.isUsingWpComRestApi()) {
-            mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
         } else if (payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.configurePlugin(payload.site, payload.slug, payload.isActive);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, payload.slug,
@@ -926,10 +926,10 @@ public class PluginStore extends Store {
     private void installSitePlugin(InstallSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.installSitePlugin(payload.site, payload.slug);
-        } else if (!payload.site.isUsingWpComRestApi()) {
-            mPluginCoroutineStore.installSitePlugin(payload.site, payload.slug);
         } else if (payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.installPlugin(payload.site, payload.slug);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.installSitePlugin(payload.site, payload.slug);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
