@@ -81,11 +81,11 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class FetchSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public String slug;
+        public String pluginName;
 
-        public FetchSitePluginPayload(SiteModel site, String slug) {
+        public FetchSitePluginPayload(SiteModel site, String pluginName) {
             this.site = site;
-            this.slug = slug;
+            this.pluginName = pluginName;
         }
     }
 
@@ -140,6 +140,12 @@ public class PluginStore extends Store {
             this.plugin = plugin;
             this.pluginName = this.plugin.getName();
             this.slug = this.plugin.getSlug();
+        }
+
+        public ConfiguredSitePluginPayload(SiteModel site, String pluginName, ConfigureSitePluginError error) {
+            this.site = site;
+            this.pluginName = pluginName;
+            this.error = error;
         }
 
         public ConfiguredSitePluginPayload(SiteModel site, String pluginName, String slug,
@@ -219,14 +225,14 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class FetchedSitePluginPayload extends Payload<FetchSitePluginError> {
         public SitePluginModel plugin;
-        public String slug;
+        public String pluginName;
 
         public FetchedSitePluginPayload(SitePluginModel plugin) {
             this.plugin = plugin;
         }
 
-        public FetchedSitePluginPayload(String slug, FetchSitePluginError error) {
-            this.slug = slug;
+        public FetchedSitePluginPayload(String pluginName, FetchSitePluginError error) {
+            this.pluginName = pluginName;
             this.error = error;
         }
     }
@@ -710,11 +716,11 @@ public class PluginStore extends Store {
 
     public static class OnSitePluginFetched extends OnChanged<FetchSitePluginError> {
         public SitePluginModel plugin;
-        public String slug;
+        public String pluginName;
 
         public OnSitePluginFetched(FetchedSitePluginPayload payload) {
             this.plugin = payload.plugin;
-            this.slug = payload.slug;
+            this.pluginName = payload.pluginName;
         }
     }
 
@@ -919,7 +925,7 @@ public class PluginStore extends Store {
      */
     private void fetchSitePlugin(FetchSitePluginPayload payload) {
         if (payload.site.isJetpackCPConnected()) {
-            mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.slug);
+            mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
         }
     }
 
