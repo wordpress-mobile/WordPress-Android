@@ -10,6 +10,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.products.Product
+import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
@@ -33,6 +35,7 @@ import kotlin.properties.Delegates
 
 @Suppress("TooManyFunctions")
 class DomainSuggestionsViewModel @Inject constructor(
+    private val productsStore: ProductsStore,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
@@ -42,6 +45,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+    var products: List<Product>? = null
 
     private var isStarted = false
     private var isQueryTrackingCompleted = false
@@ -108,7 +112,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
         this.site = site
         this.domainRegistrationPurpose = domainRegistrationPurpose
-        initializeDefaultSuggestions()
+        fetchProducts() // required for finding domains on sale
         shouldShowRedirectMessage()
         isStarted = true
     }
@@ -124,6 +128,23 @@ class DomainSuggestionsViewModel @Inject constructor(
     }
 
     // Network Request
+
+    private fun fetchProducts() {
+        launch {
+            val result = productsStore.fetchProducts()
+            when {
+                result.isError -> {
+                    AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
+                    initializeDefaultSuggestions()
+                }
+                else -> {
+                    AppLog.d(T.DOMAIN_REGISTRATION, result.products.toString())
+                    result.products?.let { products = it }
+                    initializeDefaultSuggestions()
+                }
+            }
+        }
+    }
 
     private fun fetchSuggestions() {
         suggestions = ListState.Loading(suggestions)
@@ -158,9 +179,12 @@ class DomainSuggestionsViewModel @Inject constructor(
 
         event.suggestions
                 .map {
+                    val product = products?.firstOrNull { product -> product.productId == it.product_id }
                     DomainSuggestionItem(
                             domainName = it.domain_name,
                             cost = it.cost,
+                            isOnSale = product?.isSaleDomain() ?: false,
+                            saleCost = product?.saleCostForDisplay().toString(),
                             isFree = it.is_free,
                             supportsPrivacy = it.supports_privacy,
                             productId = it.product_id,
@@ -205,6 +229,10 @@ class DomainSuggestionsViewModel @Inject constructor(
             initializeDefaultSuggestions()
         }
     }
+
+    internal fun Product.isSaleDomain(): Boolean = this.saleCost?.let { it.compareTo(0.0) > 0 } == true
+
+    internal fun Product.saleCostForDisplay(): String = this.currencyCode + "%.2f".format(this.saleCost)
 
     private fun createCart(selectedSuggestion: DomainSuggestionItem) = launch {
         AppLog.d(T.DOMAIN_REGISTRATION, "Creating cart: $selectedSuggestion")

@@ -51,6 +51,16 @@ class DomainSuggestionsViewHolder(
 
     private fun getFormattedCost(suggestion: DomainSuggestionItem) = when {
         suggestion.isFree -> suggestion.cost
+        suggestion.isOnSale -> {
+            HtmlCompat.fromHtml(
+                    String.format(
+                            container.context.getString(R.string.domain_suggestions_list_item_cost_on_sale),
+                            suggestion.saleCost,
+                            suggestion.cost
+                    ),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        }
         suggestion.isFreeWithCredits -> {
             HtmlCompat.fromHtml(
                     String.format(
