@@ -801,7 +801,8 @@ public final class AnalyticsTracker {
         LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED,
         CREATE_SITE_NOTIFICATION_SCHEDULED,
         RECOMMEND_APP_ENGAGED,
-        RECOMMEND_APP_CONTENT_FETCH_FAILED
+        RECOMMEND_APP_CONTENT_FETCH_FAILED,
+        EDITOR_BLOCK_INSERTED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

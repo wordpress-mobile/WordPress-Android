@@ -518,6 +518,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onGotoCustomerSupportOptions();
                     }
                 },
+
+                mEditorFragmentListener::onSendEventToHost,
+
                 GutenbergUtils.isDarkMode(getActivity()));
 
         // request dependency injection. Do this after setting min/max dimensions
