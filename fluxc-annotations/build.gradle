@@ -3,6 +3,11 @@ plugins {
     id "com.automattic.android.publish-to-s3"
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
@@ -18,9 +23,4 @@ project.afterEvaluate {
             }
         }
    }
-}
-
-publishToS3Plugin {
-    mavenPublishGroupId "org.wordpress.fluxc"
-    mavenPublishArtifactId "fluxc-annotations"
 }
