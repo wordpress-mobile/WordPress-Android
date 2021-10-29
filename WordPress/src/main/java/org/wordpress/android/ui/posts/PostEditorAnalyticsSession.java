@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts;
 
+import android.os.Bundle;
+
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -32,7 +34,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
     private static final String KEY_ENDPOINT = "endpoint";
 
-    private final AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    private transient AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     private String mSessionId = UUID.randomUUID().toString();
     private SiteModel mSiteModel;
@@ -59,6 +61,14 @@ public class PostEditorAnalyticsSession implements Serializable {
                     // see https://github.com/wordpress-mobile/gutenberg-mobile/issues/556#issuecomment-462678807
         SAVE,
         PUBLISH
+    }
+
+    public static PostEditorAnalyticsSession fromBundle(Bundle extras, String key,
+                                                        AnalyticsTrackerWrapper analyticsTrackerWrapper) {
+        PostEditorAnalyticsSession postEditorAnalyticsSession =
+                (PostEditorAnalyticsSession) extras.getSerializable(key);
+        postEditorAnalyticsSession.mAnalyticsTrackerWrapper = analyticsTrackerWrapper;
+        return postEditorAnalyticsSession;
     }
 
     PostEditorAnalyticsSession(Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost,
