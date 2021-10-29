@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:04:14+0000
+Translation-Revision-Date: 2021-10-26 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_create_link">创建链接</string>
+    <string name="domain_registration_result_description">正在设置您的新域 &lt;b&gt;%s&lt;/b&gt; 。 最多可能需花费 30 分钟时间，您的域才能开始运行。</string>
+    <string name="domain_registration_result_title">恭喜您购买成功！</string>
+    <string name="domains_suggestions_select_domain">选择域</string>
+    <string name="domains_title">域名</string>
+    <string name="post_status_sticky">置顶</string>
+    <string name="post_settings_post_sticky">将文章固定到首页</string>
+    <string name="post_settings_mark_as_sticky_options_header">标记为置顶</string>
+    <string name="reader_follow_comments_unfollow_conversation">取消关注对话</string>
+    <string name="reader_follow_comments_enable_push_notifications">启用应用内通知</string>
+    <string name="reader_follow_comments_message">您已关注此对话。 有新评论时，您将通过电子邮件收到通知。</string>
+    <string name="reader_follow_comments_bottom_sheet_description">管理关注对话选项，弹出窗口</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">无法禁用应用内通知</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">无法启用应用内通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">已禁用应用内通知</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">已启用应用内通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">退订此对话</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">关注此对话\n启用应用内通知？</string>
     <string name="domains_search_for_a_domain_button">搜索域</string>
     <string name="domains_paid_plan_claim_your_domain_caption">您的套餐中包括为期一年的免费域名注册</string>
+    <string name="domains_free_plan_get_your_domain_caption">在此站点上购买的域会将访客重定向至 &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">声明您的免费域</string>
     <string name="domains_manage_domains">管理域</string>
     <string name="domains_redirected_domains_blurb">您的域将重定向至您在 &lt;b&gt;%s&lt;/b&gt; 上的站点。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;了解更多。&lt;/a&gt;</string>
@@ -212,6 +231,7 @@ Language: zh_CN
     <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
+    <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
     <string name="gutenberg_native_none">无</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>

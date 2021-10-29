@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-21 08:37:28+0000
+Translation-Revision-Date: 2021-10-24 04:48:13+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
-    <string name="gutenberg_native_create_link">Creează legătură</string>
+    <string name="gutenberg_native_create_link">Creează o legătură</string>
     <string name="domain_registration_result_description">Acum îți inițializăm noul tău domeniu &lt;b&gt;%s&lt;/b&gt;. Poate dura până la 30 de minute până când domeniul tău începe să funcționeze.</string>
     <string name="domain_registration_result_title">Felicitări, ai cumpărat!</string>
     <string name="post_settings_mark_as_sticky_options_header">Marchează ca reprezentativ</string>
@@ -1568,8 +1568,8 @@ Language: ro
     <string name="image_size_medium_label">Medie</string>
     <string name="image_size_thumbnail_label">Miniatură</string>
     <string name="menu_history">Istoric</string>
-    <string name="pages_pending">Revizie în așteptare</string>
     <string name="pages_open_page_error">Pagina selectată nu este disponibilă</string>
+    <string name="pages_pending">În curs de revizuire</string>
     <string name="pages_empty_trashed">Nu ai nicio pagină aruncată la gunoi</string>
     <string name="pages_empty_scheduled">Nu ai nicio pagină programată</string>
     <string name="pages_empty_drafts">Nu ai nicio pagină în ciornă</string>
@@ -2165,7 +2165,7 @@ Language: ro
     <string name="editor_content_hint">Partajează-ți povestea aici…</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Ciornă</string>
-    <string name="post_status_pending_review">Revizie în așteptare</string>
+    <string name="post_status_pending_review">În curs de revizuire</string>
     <string name="post_status_publish_post">Publică</string>
     <string name="now">Acum</string>
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>

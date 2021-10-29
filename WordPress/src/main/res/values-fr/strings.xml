@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-20 12:47:08+0000
+Translation-Revision-Date: 2021-10-23 20:58:58+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
     <string name="gutenberg_native_create_link">Créer un lien</string>
+    <string name="domain_registration_result_title">Félicitations pour votre achat !</string>
+    <string name="domain_registration_result_description">Le nouveau domaine &lt;b&gt;%s&lt;/b&gt; a bien été configuré. Il peut se passer jusqu’à 30 minutes avant qu’il ne fonctionne complètement.</string>
     <string name="domains_title">Domaines</string>
+    <string name="domains_suggestions_select_domain">Sélectionnez un domaine</string>
+    <string name="reader_follow_comments_unfollow_conversation">Se désabonner de cette conversation</string>
+    <string name="reader_follow_comments_enable_push_notifications">Activer les notifications dans l‘app</string>
+    <string name="reader_follow_comments_message">Vous êtes abonné-e à cette conversation. Vous recevrez des notifications par e-mail quand un nouveau commentaire sera publié.</string>
+    <string name="post_status_sticky">Mis en avant</string>
+    <string name="post_settings_post_sticky">Mettre cet article en avant sur la page d’accueil</string>
+    <string name="post_settings_mark_as_sticky_options_header">Marquer comme mis en avant</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Impossible d’activer les notifications de l’app</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Impossible de désactiver les notifications de l’app</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Options de gestion des conversations suivies, fenêtre surgissante</string>
     <string name="reader_follow_comments_subscribe_success_enable_push">Vous suivez cette conversation.\nActiver les notifications de l’app ?</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Notifications de l’app désactivées</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Notifications de l’app activées</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Désabonné de cette conversation</string>
     <string name="domains_search_for_a_domain_button">Rechercher un domaine</string>
     <string name="domains_free_plan_get_your_domain_caption">Les domaines achetés sur ce site redirigeront les visiteurs vers &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
