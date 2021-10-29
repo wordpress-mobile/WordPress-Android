@@ -41,9 +41,8 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     /**
      * Fetch a plugin's information from a site.
      *
-     * @param [pluginName] Note that this is not the same as the WordPress.org plugin directory slug that can be used
-     * to install a plugin. Instead, it needs to be the value of the `plugin` key inside a plugin object as returned
-     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value should be `jetpack/jetpack`.
+     * @param [pluginName] This should use the value of the `plugin` key inside a plugin object as returned
+     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value is `jetpack/jetpack`.
      */
     fun fetchPlugin(site: SiteModel, pluginName: String) {
         val url = WPAPI.plugins.name(pluginName).urlV2
@@ -72,8 +71,8 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     /**
      * Install a plugin to a site.
      *
-     * @param [pluginSlug] This can use the value of the plugin's URL slug on the plugin directory, in the form of
-     * https://wordpress.org/plugins/<slug>. For example, for Jetpack, the value should be 'jetpack'.
+     * @param [pluginSlug] This should use the value of the plugin's URL slug on the plugin directory, in the form of
+     * https://wordpress.org/plugins/<slug>. For example, for Jetpack, the value is 'jetpack'.
      */
     fun installPlugin(site: SiteModel, pluginSlug: String) {
         val url = WPAPI.plugins.urlV2
@@ -121,9 +120,8 @@ class PluginJetpackTunnelRestClient @Inject constructor(
      * Configure a plugin's status in a site. This supports making it 'active', or 'inactive'. The API also supports
      * the 'network-active' status, but it is not supported yet here.
      *
-     * @param [pluginName] Note that this is not the same as the WordPress.org plugin directory slug that can be used
-     * to install a plugin. Instead, it needs to be the value of the `plugin` key inside a plugin object as returned
-     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value should be `jetpack/jetpack`.
+     * @param [pluginName] This should use the value of the `plugin` key inside a plugin object as returned
+     * by the `GET wp/v2/plugins` endpoint. For example, for Jetpack, the correct value is `jetpack/jetpack`.
      */
     fun configurePlugin(site: SiteModel, pluginName: String, active: Boolean) {
         val url = WPAPI.plugins.name(pluginName).urlV2
