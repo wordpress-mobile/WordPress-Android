@@ -33,7 +33,7 @@ public class WPAPIEndpointTest {
 
         // Plugins
         assertEquals("/plugins/", WPAPI.plugins.getEndpoint());
-        assertEquals("/plugins/jetpack/jetpack/", WPAPI.plugins.slug("jetpack/jetpack").getEndpoint());
+        assertEquals("/plugins/jetpack/jetpack/", WPAPI.plugins.name("jetpack/jetpack").getEndpoint());
     }
 
     @Test
