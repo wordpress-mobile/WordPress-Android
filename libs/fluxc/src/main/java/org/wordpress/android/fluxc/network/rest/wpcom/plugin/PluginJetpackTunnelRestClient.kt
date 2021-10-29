@@ -2,14 +2,13 @@ package org.wordpress.android.fluxc.network.rest.wpcom.plugin
 
 import android.content.Context
 import com.android.volley.RequestQueue
-import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PluginActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginResponseModel
+import org.wordpress.android.fluxc.network.rest.wpapi.plugin.toDomainModel
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
@@ -36,7 +35,6 @@ class PluginJetpackTunnelRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     companion object {
-        private const val INACTIVE_STATUS = "inactive"
         private const val PLUGIN_ALREADY_EXISTS = "Destination folder already exists."
     }
 
@@ -57,11 +55,11 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 PluginResponseModel::class.java,
                 { response: PluginResponseModel? ->
                     response?.let {
-                        val payload = FetchedSitePluginPayload(sitePluginModelFromResponse(site, it))
+                        val payload = FetchedSitePluginPayload(it.toDomainModel(site.id))
                         dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
                     }
                 },
-                { _ ->
+                {
                     val fetchError = FetchSitePluginError(PLUGIN_DOES_NOT_EXIST)
                     val payload = FetchedSitePluginPayload(pluginName, fetchError)
                     dispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginAction(payload))
@@ -92,7 +90,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     response?.let {
                         val payload = InstalledSitePluginPayload(
                                 site,
-                                sitePluginModelFromResponse(site, it)
+                                it.toDomainModel(site.id)
                         )
                         dispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload))
                     }
@@ -142,7 +140,7 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                     response?.let {
                         val payload = ConfiguredSitePluginPayload(
                                 site,
-                                sitePluginModelFromResponse(site, it)
+                                it.toDomainModel(site.id)
                         )
                         dispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload))
                     }
@@ -158,25 +156,5 @@ class PluginJetpackTunnelRestClient @Inject constructor(
                 }
         )
         add(request)
-    }
-
-    private fun sitePluginModelFromResponse(siteModel: SiteModel, response: PluginResponseModel): SitePluginModel {
-        val sitePluginModel = SitePluginModel().apply {
-            localSiteId = siteModel.id
-            name = response.name
-            displayName = response.name
-            authorName = StringEscapeUtils.unescapeHtml4(response.author)
-            authorUrl = response.authorUri
-            description = response.description?.raw
-            pluginUrl = response.pluginUri
-            slug = response.plugin
-            version = response.version
-        }
-        if (response.status == INACTIVE_STATUS) {
-            sitePluginModel.setIsActive(false)
-        } else {
-            sitePluginModel.setIsActive(true)
-        }
-        return sitePluginModel
     }
 }
