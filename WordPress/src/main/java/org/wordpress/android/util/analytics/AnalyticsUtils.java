@@ -247,7 +247,11 @@ public class AnalyticsUtils {
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
-            analyticsTrackerWrapper.track(stat, properties);
+            if (properties == null) {
+                analyticsTrackerWrapper.track(stat);
+            } else {
+                analyticsTrackerWrapper.track(stat, properties);
+            }
             return;
         }
 
