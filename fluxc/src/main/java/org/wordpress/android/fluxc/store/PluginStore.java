@@ -223,7 +223,7 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedJetpackSitePluginPayload extends Payload<FetchSitePluginError> {
+    public static class FetchedJetpackSitePluginPayload extends Payload<FetchPluginForJetpackSiteError> {
         public SitePluginModel plugin;
         public String pluginName;
 
@@ -231,7 +231,7 @@ public class PluginStore extends Store {
             this.plugin = plugin;
         }
 
-        public FetchedJetpackSitePluginPayload(String pluginName, FetchSitePluginError error) {
+        public FetchedJetpackSitePluginPayload(String pluginName, FetchPluginForJetpackSiteError error) {
             this.pluginName = pluginName;
             this.error = error;
         }
@@ -361,10 +361,10 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchSitePluginError implements OnChangedError {
-        public FetchSitePluginErrorType type;
+    public static class FetchPluginForJetpackSiteError implements OnChangedError {
+        public FetchPluginForJetpackSiteErrorType type;
 
-        public FetchSitePluginError(FetchSitePluginErrorType type) {
+        public FetchPluginForJetpackSiteError(FetchPluginForJetpackSiteErrorType type) {
             this.type = type;
         }
     }
@@ -553,7 +553,8 @@ public class PluginStore extends Store {
         PLUGIN_DOES_NOT_EXIST
     }
 
-    public enum FetchSitePluginErrorType {
+    public enum FetchPluginForJetpackSiteErrorType {
+        NOT_JETPACK_SITE,
         EMPTY_RESPONSE,
         GENERIC_ERROR,
         PLUGIN_DOES_NOT_EXIST
@@ -714,7 +715,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnJetpackSitePluginFetched extends OnChanged<FetchSitePluginError> {
+    public static class OnJetpackSitePluginFetched extends OnChanged<FetchPluginForJetpackSiteError> {
         public SitePluginModel plugin;
         public String pluginName;
 
@@ -926,6 +927,13 @@ public class PluginStore extends Store {
     private void fetchPluginForJetpackSite(FetchJetpackSitePluginPayload payload) {
         if (payload.site.isJetpackConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
+        } else {
+            FetchPluginForJetpackSiteError error = new FetchPluginForJetpackSiteError(
+                    FetchPluginForJetpackSiteErrorType.NOT_JETPACK_SITE
+            );
+            FetchedJetpackSitePluginPayload errorPayload =
+                    new FetchedJetpackSitePluginPayload(payload.pluginName, error);
+            mDispatcher.dispatch(PluginActionBuilder.newFetchedJetpackSitePluginAction(errorPayload));
         }
     }
 
