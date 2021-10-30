@@ -727,11 +727,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        _onSnackbarMessage.postValue(
-                Event(
-                        SnackbarMessageHolder(UiStringText("TODO: mySiteSources.forEach { it.refresh() }"))
-                )
-        )
+        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringText("Pull to refresh activated"))))
     }
 
     data class UiModel(
