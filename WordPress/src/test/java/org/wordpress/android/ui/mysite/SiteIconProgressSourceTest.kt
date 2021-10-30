@@ -12,7 +12,7 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 
-class SiteIconProgressSourceTest  : BaseUnitTest() {
+class SiteIconProgressSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var source: SiteIconProgressSource
     private val siteLocalId = 1
