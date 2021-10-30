@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -173,7 +174,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
     private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
-    private val selectedSite = MutableLiveData<SelectedSite>()
+    private val selectedSite = MediatorLiveData<SelectedSite>()
 
     private val jetpackCapabilities = MutableLiveData(
             JetpackCapabilities(
@@ -226,6 +227,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
+        selectedSite.value = null
         whenever(domainRegistrationSource.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
         whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
