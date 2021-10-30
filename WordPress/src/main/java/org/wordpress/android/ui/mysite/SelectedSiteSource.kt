@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.util.filter
@@ -18,5 +17,4 @@ class SelectedSiteSource @Inject constructor(
     ) = selectedSiteRepository.selectedSiteChange
             .filter { it == null || it.id == siteLocalId }
             .map { SelectedSite(it) }
-            .distinctUntilChanged()
 }
