@@ -117,7 +117,7 @@ class MySiteViewModel @Inject constructor(
     quickStartCardSource: QuickStartCardSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
-    mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
+    mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
