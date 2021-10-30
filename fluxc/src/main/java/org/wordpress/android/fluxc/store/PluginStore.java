@@ -79,11 +79,11 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchSitePluginPayload extends Payload<BaseNetworkError> {
+    public static class FetchJetpackSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
 
-        public FetchSitePluginPayload(SiteModel site, String pluginName) {
+        public FetchJetpackSitePluginPayload(SiteModel site, String pluginName) {
             this.site = site;
             this.pluginName = pluginName;
         }
@@ -223,15 +223,15 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedSitePluginPayload extends Payload<FetchSitePluginError> {
+    public static class FetchedJetpackSitePluginPayload extends Payload<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public FetchedSitePluginPayload(SitePluginModel plugin) {
+        public FetchedJetpackSitePluginPayload(SitePluginModel plugin) {
             this.plugin = plugin;
         }
 
-        public FetchedSitePluginPayload(String pluginName, FetchSitePluginError error) {
+        public FetchedJetpackSitePluginPayload(String pluginName, FetchSitePluginError error) {
             this.pluginName = pluginName;
             this.error = error;
         }
@@ -714,11 +714,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class OnSitePluginFetched extends OnChanged<FetchSitePluginError> {
+    public static class OnJetpackSitePluginFetched extends OnChanged<FetchSitePluginError> {
         public SitePluginModel plugin;
         public String pluginName;
 
-        public OnSitePluginFetched(FetchedSitePluginPayload payload) {
+        public OnJetpackSitePluginFetched(FetchedJetpackSitePluginPayload payload) {
             this.plugin = payload.plugin;
             this.pluginName = payload.pluginName;
         }
@@ -778,8 +778,8 @@ public class PluginStore extends Store {
             case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
-            case FETCH_SITE_PLUGIN:
-                fetchSitePlugin((FetchSitePluginPayload) action.getPayload());
+            case FETCH_JETPACK_SITE_PLUGIN:
+                fetchPluginForJetpackSite((FetchJetpackSitePluginPayload) action.getPayload());
                 break;
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
@@ -807,8 +807,8 @@ public class PluginStore extends Store {
             case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
-            case FETCHED_SITE_PLUGIN:
-                fetchedSitePlugin((FetchedSitePluginPayload) action.getPayload());
+            case FETCHED_JETPACK_SITE_PLUGIN:
+                fetchedJetpackSitePlugin((FetchedJetpackSitePluginPayload) action.getPayload());
                 break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
@@ -921,10 +921,10 @@ public class PluginStore extends Store {
     }
 
     /* Fetch a single plugin from a site, to get its information and whether it exists or not.
-       Currently this is only supported on sites connected using Jetpack Connection Package.
+       Currently this is only supported on sites connected using Jetpack plugin or Jetpack Connection Package.
      */
-    private void fetchSitePlugin(FetchSitePluginPayload payload) {
-        if (payload.site.isJetpackCPConnected()) {
+    private void fetchPluginForJetpackSite(FetchJetpackSitePluginPayload payload) {
+        if (payload.site.isJetpackConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
         }
     }
@@ -1033,8 +1033,8 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedSitePlugin(FetchedSitePluginPayload payload) {
-        OnSitePluginFetched event = new OnSitePluginFetched(payload);
+    private void fetchedJetpackSitePlugin(FetchedJetpackSitePluginPayload payload) {
+        OnJetpackSitePluginFetched event = new OnJetpackSitePluginFetched(payload);
         if (payload.isError()) {
             event.error = payload.error;
         }
