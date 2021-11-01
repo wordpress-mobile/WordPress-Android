@@ -84,7 +84,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
     private fun getSiteDomainsList() {
         // TODO: Probably needs a loading spinner here instead
-        _uiModel.value = site.unmappedUrl?.let { getFreeDomainItems(getHomeUrlOrHostName(it), false)}
+        _uiModel.value = site.unmappedUrl?.let { getFreeDomainItems(getHomeUrlOrHostName(it), false) }
 
         launch {
             val result = siteStore.fetchSiteDomains(site)
