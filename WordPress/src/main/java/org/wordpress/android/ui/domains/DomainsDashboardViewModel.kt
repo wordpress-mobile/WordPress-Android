@@ -134,7 +134,14 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         }
 
-        if (hasCustomDomains) {
+        if (hasDomainCredit) {
+            listItems += PurchaseDomain(
+                    null,
+                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
+                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
+                    ListItemInteraction.create(this::onClaimDomainClick)
+            )
+        } else if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
             if (!hasPaidPlan) {
                 listItems += DomainBlurb(
@@ -144,17 +151,8 @@ class DomainsDashboardViewModel @Inject constructor(
                         )
                 )
             }
-        }
-
-        listItems += if (hasDomainCredit) {
-            PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
-                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
-                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
-                    ListItemInteraction.create(this::onClaimDomainClick)
-            )
         } else {
-            PurchaseDomain(
+            listItems += PurchaseDomain(
                     R.drawable.img_illustration_domains_card_header,
                     UiStringRes(R.string.domains_free_plan_get_your_domain_title),
                     UiStringText(
