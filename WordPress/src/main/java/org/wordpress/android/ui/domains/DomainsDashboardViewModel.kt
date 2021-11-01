@@ -72,6 +72,7 @@ class DomainsDashboardViewModel @Inject constructor(
         }
         this.site = site
         dispatcher.register(this)
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
         refresh()
         isStarted = true
     }
@@ -143,7 +144,6 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         _uiModel.value = listItems
-        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
     }
 
     private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
