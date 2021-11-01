@@ -36,6 +36,10 @@ public class SiteUtils {
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
+    public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_INSTAGRAM_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_LOOM_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_SMARTFRAME_EMBED_JETPACK_VERSION = "10.2";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
@@ -205,7 +209,7 @@ public class SiteUtils {
         dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
-    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+    public static boolean isBlockEditorDefaultForNewPost(@Nullable SiteModel site) {
         if (site == null) {
             return true;
         }
@@ -345,6 +349,10 @@ public class SiteUtils {
 
     public static boolean supportsLayoutGridFeature(SiteModel site) {
         return site != null && (site.isWPCom() || site.isWPComAtomic());
+    }
+
+    public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }
 
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {

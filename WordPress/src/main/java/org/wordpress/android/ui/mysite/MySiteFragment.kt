@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
@@ -29,7 +30,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -86,13 +87,16 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
@@ -117,11 +121,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // The following prevents the soft keyboard from leaving a white space when dismissed.
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
@@ -188,8 +195,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.adapter = adapter
+
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            if (NetworkUtils.checkConnection(requireActivity())) {
+                viewModel.onPullToRefresh()
+            } else {
+                swipeToRefreshHelper.isRefreshing = false
+            }
+        }
     }
 
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
@@ -248,6 +264,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewModel.onQuickStartMenuInteraction(interaction)
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
+        viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
     }
 
     @Suppress("ComplexMethod")
@@ -290,10 +307,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+                action.site
         )
         is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
@@ -305,8 +321,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.title,
                 action.message,
                 action.positiveButtonLabel,
-                action.negativeButtonLabel,
-                action.neutralButtonLabel
+                action.negativeButtonLabel
         )
         is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
     }
@@ -485,8 +500,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         @StringRes title: Int,
         @StringRes message: Int,
         @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int,
-        @StringRes neutralButtonLabel: Int? = null
+        @StringRes negativeButtonLabel: Int
     ) {
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
@@ -496,8 +510,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 getString(message),
                 getString(positiveButtonLabel),
                 R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonLabel),
-                neutralButtonLabel?.let { getString(it) } ?: ""
+                getString(negativeButtonLabel)
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
@@ -506,12 +519,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
+        swipeToRefreshHelper.isRefreshing = false
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
         actionableEmptyView.setVisible(true)
+        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
@@ -537,6 +552,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
+    private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
+        swipeToRefreshHelper.setEnabled(isEnabled)
+    }
+
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
@@ -560,10 +579,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onNegativeClicked(instanceTag: String) {
         viewModel.ignoreQuickStart()
-    }
-
-    override fun onNeutralClicked(instanceTag: String) {
-        viewModel.disableQuickStart()
     }
 
     override fun onConfirm(result: Bundle?) {

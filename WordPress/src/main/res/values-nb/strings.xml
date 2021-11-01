@@ -753,10 +753,6 @@ Language: nb_NO
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerer domenenavn…</string>
     <string name="domain_registration_state_picker_dialog_title">Velg delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Velg land</string>
-    <string name="domain_registration_result_continue_button">fortsett</string>
-    <string name="domain_registration_result_description">ditt nye domene &lt;b&gt;%s&lt;/b&gt; blir satt opp. Ditt nettsted\n        gjør saltomortaler i begeistring!</string>
-    <string name="domain_registration_result_title">Gratulerer</string>
-    <string name="domain_contact_information_register_domain_button">Registrer domene</string>
     <string name="domain_contact_information_postal_code_hint">Postnummer</string>
     <string name="domain_contact_information_state_hint">Delstat</string>
     <string name="domain_contact_information_city_hint">By/sted</string>
@@ -772,7 +768,6 @@ Language: nb_NO
     <string name="domain_privacy_option_on_title">Registrer privat med personvernbeskyttelse</string>
     <string name="domain_registration_privacy_protection_title">Personvernbeskyttelse</string>
     <string name="domain_registration_contact_form_input_error">Vennligst oppi en gyldig %s</string>
-    <string name="domains_suggestions_choose_domain">Velg domene</string>
     <string name="stats_management_new">Ny</string>
     <string name="stats_management_dismiss_insights_news_card">Avvis</string>
     <string name="stats_management_try_it_now">Prøv det nå</string>
@@ -828,7 +823,6 @@ Language: nb_NO
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrer domene</string>
     <string name="plugin_install_custom_domain_required_dialog_message">For å installere utvidelser trenger du å ha et eget domene for ditt nettsted.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installer utvidelser</string>
-    <string name="new_site_creation_preview_subtitle">Du kan tilpasse utseende på ditt nettstede senere</string>
     <string name="publish_on">Publiser på: %s</string>
     <string name="schedule_for">Planlegg for: %s</string>
     <string name="published_on">Publisert på: %s</string>
@@ -877,7 +871,6 @@ Language: nb_NO
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser et innlegg.</string>
-    <string name="quick_start_dialog_need_help_message">Vi vil gå gjennom det grunnleggende for å bygge og utvide ditt nettsted.</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
@@ -1059,9 +1052,6 @@ Language: nb_NO
     <string name="quick_start_dialog_share_site_message">Koble til dine konti i sosiale medier - ditt nettsted vil automatisk dele nye innlegg.</string>
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
     <string name="quick_start_dialog_publish_post_message_short">Trykk %1$s Lag nytt innlegg %2$s for å lage et nytt innlegg</string>
-    <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Godta</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
     <string name="quick_start_dialog_need_help_button_negative">Nei, takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
@@ -1389,7 +1379,6 @@ Language: nb_NO
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Endre bilde</string>
     <string name="plugin_fetch_error">Kan ikke laste utvidelser</string>
-    <string name="my_site_btn_site_pages">Sider på nettstedet</string>
     <string name="site_settings_tags_hint">Behandle stikkord på nettstedet</string>
     <string name="dlg_saving_tag">Lagrer</string>
     <string name="dlg_deleting_tag">Sletter</string>
@@ -2145,7 +2134,6 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_btn_switch_site">Bytt nettsted</string>
-    <string name="my_site_btn_blog_posts">Blogginnlegg</string>
     <string name="my_site_header_publish">Publiser</string>
     <string name="my_site_header_look_and_feel">Se og kjenn</string>
     <string name="my_site_header_configuration">Oppsett</string>

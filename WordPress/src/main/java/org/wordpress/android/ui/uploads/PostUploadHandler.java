@@ -476,6 +476,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             return mediaFile.getImageHtmlForUrls(fullSizeUrl, null, false);
         }
 
+        @SuppressLint("InlinedApi")
         private String uploadVideo(MediaFile mediaFile) {
             // create temp file for media upload
             String tempFileName = "wp-" + System.currentTimeMillis();

@@ -1214,7 +1214,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
                     () -> getAppCompatActivity().getSupportFragmentManager()
             );
-            mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
+            mBloggingRemindersViewModel.getBlogSettingsUiState(mSite.getId()).observe(getAppCompatActivity(), s -> {
                 if (mBloggingRemindersPref != null) {
                     CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
                     mBloggingRemindersPref.setSummary(summary);
@@ -1227,7 +1227,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-        mBloggingRemindersViewModel.onSettingsItemClicked(mSite.getId());
+        mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
     }
 
     private void showHomepageSettings() {
@@ -1980,10 +1980,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeBloggingRemindersSettings() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
-    }
-
-    private void removeSiteDomainsPref() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_domains);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

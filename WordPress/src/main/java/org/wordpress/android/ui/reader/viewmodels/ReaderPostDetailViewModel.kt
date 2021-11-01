@@ -57,10 +57,10 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -93,7 +93,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val getLikesHandler: GetLikesHandler,
     private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
-    private val engagementUtils: EngagementUtils
+    private val engagementUtils: EngagementUtils,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -601,7 +602,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         items: List<TrainOfFacesItem>
     ) = if (goingToShowFaces) {
         when (val lastItem = items.lastOrNull()) {
-            is BloggersLikingTextItem -> lastItem.textWithParams
+            is BloggersLikingTextItem -> lastItem.text
             is FaceItem, null -> UiStringText("")
         }
     } else {
@@ -609,47 +610,53 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
-        val likeThisResString = UiStringRes(R.string.like_this)
-        val likesThisResString = UiStringRes(R.string.likes_this)
-
         return when {
             showEmptyState -> {
                 listOf()
             }
             numLikes == 1 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_text, listOf(likeThisResString)),
-                        likeThisResString
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
+                        )
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_you_plus_one_text, listOf(likeThisResString)),
-                        likeThisResString
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.like_faces_you_plus_one_like_text
+                                )
+                        )
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(
-                                R.string.like_faces_plural_with_you_text,
-                                listOf(UiStringText((numLikes - 1).toString()), likeThisResString)
-                        ),
-                        likeThisResString
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.like_faces_you_plus_others_like_text,
+                                        numLikes - 1
+                                )
+                        )
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(R.string.like_faces_one_blogger_text, listOf(likesThisResString)),
-                        likesThisResString
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.like_faces_one_blogger_likes_text
+                                )
+                        )
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
                 BloggersLikingTextItem(
-                        UiStringResWithParams(
-                                R.string.like_faces_more_bloggers_text,
-                                listOf(UiStringText(numLikes.toString()), likeThisResString)
-                        ),
-                        likeThisResString
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.like_faces_others_like_text,
+                                        numLikes
+                                )
+                        )
                 ).toList()
             }
             else -> {

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/domain_suggestions_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:gravity="center_vertical"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_medium"
     android:minHeight="@dimen/min_touch_target_sz"
     android:orientation="horizontal">
 
@@ -12,15 +17,34 @@
         android:id="@+id/domain_selection_radio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium_large"
-        android:layout_marginEnd="@dimen/margin_small_medium"
-        android:clickable="false" />
+        android:clickable="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_medium_large"
-        android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:layout_marginStart="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceListItem"
+        app:layout_constraintStart_toEndOf="@id/domain_selection_radio_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/domain_cost"
+        tools:text="travelwithkids.com"/>
 
-</LinearLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/domain_cost"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceListItemSecondary"
+        app:layout_constraintStart_toStartOf="@id/domain_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/domain_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Free for the first year US$18.99/year"
+        tools:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

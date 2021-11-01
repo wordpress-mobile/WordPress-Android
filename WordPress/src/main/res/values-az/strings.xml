@@ -41,7 +41,6 @@ Language: az
     <string name="my_site_btn_view_site">Sayta Bax</string>
     <string name="site_picker_title">Sayt seç</string>
     <string name="my_site_btn_switch_site">Saytı Dəyişdir</string>
-    <string name="my_site_btn_blog_posts">Bloq Yazıları</string>
     <string name="my_site_header_look_and_feel">Əsas Görünüş</string>
     <string name="my_site_header_publish">Dərc et</string>
     <string name="my_site_header_configuration">Konfiqurasiya</string>

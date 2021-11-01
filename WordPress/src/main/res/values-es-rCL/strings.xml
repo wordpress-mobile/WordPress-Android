@@ -34,7 +34,6 @@ Language: es_CL
     <string name="stats_months_and_years_period_label">Periodo</string>
     <string name="stats_detail_months_and_years">Meses y Años</string>
     <string name="stats_insights_load_more">Cargar Más</string>
-    <string name="new_site_creation_preview_subtitle">Podrás personalizar más tarde la apariencia de tu sitio</string>
     <string name="stats_insights_today_stats">Hoy</string>
     <string name="stats_insights_best_hour">Mejor Hora</string>
     <string name="stats_insights_best_day">Mejor Día</string>
@@ -69,7 +68,6 @@ Language: es_CL
     <string name="quick_start_dialog_explore_plans_message_short">Puntea %1$s Plan %2$s para ver su plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca %1$s Estadísticas %2$s para ver cómo está funcionando tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Puntea %1$sEl Icono de tu Sitio%2$s para cargar uno nuevo</string>
-    <string name="quick_start_dialog_need_help_message">Te guiaremos a través de los fundamentos de la construcción y el crecimiento de tu sitio.</string>
     <string name="quick_start_dialog_explore_plans_title">Explora los planes</string>
     <string name="quick_start_dialog_explore_plans_message">Obtén información sobre las herramientas de marketing y SEO en nuestros planes pagados.</string>
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
@@ -249,9 +247,6 @@ Language: es_CL
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Pulsa en %1$s Conexiones %2$s para agregar tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_publish_post_title">Publicar una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Crear Entrada %2$s para crear una nueva entrada</string>
-    <string name="quick_start_dialog_need_help_title">¿Quieres un poco de ayuda para comenzar?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Aceptar</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Seguir otros sitios</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Lector %2$s para continuar</string>
     <string name="quick_start_dialog_follow_sites_message">Encuentra sitios que te inspiren y síguelos para recibir actualizaciones cuando publiquen.</string>
@@ -584,7 +579,6 @@ Language: es_CL
     <string name="dlg_saving_tag">Guardando</string>
     <string name="dlg_deleting_tag">Eliminando</string>
     <string name="dlg_confirm_delete_tag">¿Eliminar permanentemente la etiqueta \'%s\'?</string>
-    <string name="my_site_btn_site_pages">Páginas del Sitio</string>
     <string name="site_settings_tags_hint">Administra las etiquetas de tu sitio</string>
     <string name="error_tag_exists">Ya existe una etiqueta con este nombre</string>
     <string name="add_new_tag">Agregar nueva etiqueta</string>
@@ -1315,7 +1309,6 @@ Language: es_CL
     <string name="site_picker_title">Elegir sitio</string>
     <string name="my_site_btn_switch_site">Cambiar sitio</string>
     <string name="my_site_btn_view_admin">Ver Administrador</string>
-    <string name="my_site_btn_blog_posts">Entradas del blog</string>
     <string name="my_site_header_look_and_feel">Aspecto</string>
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_configuration">Configuración</string>

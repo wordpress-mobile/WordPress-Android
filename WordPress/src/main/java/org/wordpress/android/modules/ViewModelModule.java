@@ -13,10 +13,13 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
@@ -81,8 +84,6 @@ import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
-import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -567,6 +568,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UnifiedCommentActivityViewModel.class)
     abstract ViewModel unifiedCommentActivityViewModel(UnifiedCommentActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentsEditViewModel.class)
+    abstract ViewModel unifiedCommentsEditViewModel(UnifiedCommentsEditViewModel viewModel);
 
     @Binds
     @IntoMap

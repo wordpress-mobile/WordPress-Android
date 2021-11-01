@@ -18,6 +18,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
@@ -30,6 +31,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTo
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 
@@ -77,6 +79,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnGutenbergDidRequestPreviewListener
                                           onGutenbergDidRequestPreviewListener,
                                   OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
+                                  OnCustomerSupportOptionsListener onCustomerSupportOptionsListener,
+                                  OnSendEventToHostListener onSendEventToHostListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -97,6 +101,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,
+                    onCustomerSupportOptionsListener,
+                    onSendEventToHostListener,
                     isDarkMode);
     }
 

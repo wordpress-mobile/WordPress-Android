@@ -675,15 +675,13 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewDomainsDashboardActivityForResult(Activity activity, SiteModel site,
-                                            @NonNull DomainRegistrationPurpose purpose) {
+    public static void viewDomainsDashboardActivity(Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, DomainsDashboardActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
-        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+        activity.startActivity(intent);
     }
 
-    public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,
+    public static void viewDomainRegistrationActivityForResult(Activity activity, @NonNull SiteModel site,
                                                                @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -1353,13 +1351,12 @@ public class ActivityLauncher {
             Activity activity,
             boolean doLoginUpdate,
             ArrayList<Integer> oldSitesIds,
-            boolean isOnboardingImprovementsEnabled,
             boolean isJetpackApp
     ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        if (isOnboardingImprovementsEnabled && !isJetpackApp) {
+        if (!isJetpackApp) {
             activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
         } else {
             activity.startActivity(intent);

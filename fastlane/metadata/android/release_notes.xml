@@ -1,108 +1,153 @@
 <ar>
-18.1:
--موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
--زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
-- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+18.5:
+أصبح تضمين المحتوى الخارجي أكثر سهولة باستخدام مكوِّنات تضمين فيسبوك وإنستغرام وLoom وSmartframe الجديدة.
+
+كن على اطلاع دائمًا بشأن المحادثات التي تقوم بمتابعتها من خلال التنبيهات المنبثقة للقارئ الجديد الخاصة بمحادثات تعليقات المقالة التي تتم متابعتها.
+
+بالإضافة إلى ذلك، يمكنك الآن تخصيص لون النص والخلفية في المكوِّنات المهيأة والمنسَّقة سابقًا.
 </ar>
 <de-DE>
-18.1:
-- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
-- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
-- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
+18.5:
+Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
+
+Mit den neuen Reader-Push-Benachrichtigungen für Unterhaltungen zu Beitragskommentaren, denen du folgst, bist du immer auf dem Laufenden über die Unterhaltungen, denen du folgst.
+
+Außerdem kannst du jetzt in den Pullquote- und Vorformatiert-Blöcken den Text und die Hintergrundfarbe anpassen.
 </de-DE>
 <en-US>
-18.1:
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+18.5:
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
+
+Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
+
+Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.
 </en-US>
 <es-ES>
-18.1:
--Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
--Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
--Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
+18.5:
+La incrustación de contenido externo ahora es más fácil con los nuevos bloques de incrustación de Facebook, Instagram, Loom y Smartframe.
+
+Mantente siempre al día de las conversaciones que sigues a través de los nuevos avisos instantáneos del lector para los comentarios publicados en las conversaciones seguidas.
+
+Además, ahora puedes personalizar el texto y el color de fondo en los bloques de párrafo de cita y preformateado.
 </es-ES>
 <fr-CA>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.5 :
+L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
+
+Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
+
+De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
 </fr-CA>
 <fr-FR>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.5 :
+L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
+
+Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
+
+De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
 </fr-FR>
 <iw-IL>
-18.1:
-- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
-- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
-- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
+18.5:
+ההטמעה של תוכן קלה עכשיו יותר עם בלוקים להטמעת תוכן של פייסבוק, אינסטגרם, Loom ו-Smartframe.
+
+לקבל עדכונים שוטפים לגבי שיחות שנמצאות במעקב שלך דרך האפשרות החדשה ב-Reader להודעות בדחיפה שיעדכנו אותך על שיחות בתגובות שבפוסטים במעקב.
+
+בנוסף, עכשיו אפשר לבצע התאמה לטקסט ולצבע הרקע בבלוקים של ציטוטים ו-Preformatted.
 </iw-IL>
 <id>
-18.1:
-- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
-- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
-- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
+18.5:
+Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
+
+Ketahui kondisi terkini percakapan yang Anda ikuti melalui Pemberitahuan push pembaca untuk percakapan komentar pos yang diikuti.
+
+Selain itu, sekarang Anda dapat menyesuaikan teks dan warna latar belakang di blok Kutipan Besar dan blok Praformat.
 </id>
 <it-IT>
-18.1:
--Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
--Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
--Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
+18.5:
+Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
+
+Rimani sempre aggiornato sulle conversazioni che segui tramite le nuove notifiche push del Reader per le conversazioni dei commenti agli articoli seguiti.
+
+Inoltre, ora puoi personalizzare il testo e il colore di sfondo nei blocchi Citazione evidenziata e Preformattato.
 </it-IT>
 <ja-JP>
-18.1:
--1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
--埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
--時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
+18.5:
+Facebook、Instagram、Loom、SmartFrame の埋め込みブロックで、外部コンテンツの埋め込みが簡単になりました。
+
+フォロー済みの投稿コメントの会話向けの新しい Reader のプッシュ通知で、フォロー中の会話の最新情報をいつでも把握できます。
+
+さらに、プルクオートブロックと整形済みブロックで、テキスト色と背景色をカスタマイズできるようになりました。
 </ja-JP>
 <ko-KR>
-18.1:
-- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
-- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
-- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
+18.5:
+새로운 페이스북, 인스타그램, Loom 및 Smartframe 임베드 블록 덕분에 외부 콘텐츠를 임베드하는 작업이 더 쉬워졌습니다.
+
+팔로우한 글 댓글 대화에 대한 새로운 리더 푸시 알림을 통해 팔로우하는 대화를 항상 최신 상태로 유지하세요.
+
+또한, 이제는 요약글 블록과 정형화된 형식 블록에서 텍스트와 배경 색상을 사용자 정의할 수 있습니다.
 </ko-KR>
 <nl-NL>
-18.1:
--Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
--Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
--Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
+18.5:
+
+Het insluiten van externe inhoud is net eenvoudiger geworden met de nieuwe insluit blokken voor Facebook, Instagram, Loom en Smartframe.
+
+Blijf altijd op de hoogte van de gesprekken die je volgt via de nieuwe Reader push kennisgevingen voor gevolgde gesprekken over reacties op berichten.
+
+Bovendien kun je nu tekst en achtergrondkleur aanpassen in de blokken Pullquote en Preformatted.
 </nl-NL>
 <pt-BR>
-18,1:
-- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
-- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
-- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
+18.5:
+Incorporar conteúdo externo ficou ainda mais fácil com os novos blocos de mídia incorporada para Facebook, Instagram, Loom e SmartFrame.
+
+Além disso, corrigimos um bug que impedia a edição de URLs incorporáveis e agora as detectamos quando coladas em um parágrafo vazio.
+
+Por fim, os blocos de citação destacada e pré-formatado agora têm texto personalizado e cor de fundo.
 </pt-BR>
 <ru-RU>
-18.1:
--Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
--Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
--Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
+18,5:
+Встраивание внешнего содержимого стало еще проще с новыми блоками встраивания Facebook, Instagram, Loom и Smartframe.
+
+Всегда будьте в курсе бесед (и комментариев), на которые вы подписаны, с помощью новых push-уведомлений в Чтиве.
+
+Кроме того, теперь вы можете настроить цвет текста и фона в блоках выдержки и преформатированного текста.
 </ru-RU>
 <sv-SE>
-18.1:
--Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
--Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
--En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
+18.5:
+Nu har det blivit enklare att lägga in externt innehåll med inbäddningsblock för Facebook, Instagram, Loom och Smartframe.
+
+Håll koll på de konversationer du följer med hjälp av de nya push-meddelandena i läsaren.
+
+Dessutom kan du nu välja färg på text och bakgrund i blocken för framhävt citat och förformatterad text.
 </sv-SE>
 <tr-TR>
-18.1:
--Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
--Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
--Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
+18.5:
+Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
+
+Takip ettiğiniz gönderi yorumlarına yönelik yeni Okuyucu anlık bildirimleri aracılığıyla, takip ettiğiniz konuşmalardan her zaman haberdar olun.
+
+Ayrıca şimdi Alıntı ve Önceden Biçimlendirilmiş bloklarda metin ve arka plan rengini özelleştirebilirsiniz.
 </tr-TR>
+<vi>
+18.5:
+Cho phép chèn khối mã nhúng Facebook, Instagram, Loom, và Smartframe.
+
+Luôn nhận thông báo từ những thảo luận mà bạn theo dõi trên ứng dụng.
+
+Cuối cùng, bạn đã có thể chỉnh màu chữ và màu nền của hai khối Pullquote và Preformatted.
+</vi>
 <zh-CN>
-18.1:
--每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
--“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
--时间选择功能，允许您选择特定的时间来接收博客提醒。
+18.5：
+新的 Facebook、Instagram、Loom 和 Smartframe 嵌入区块让嵌入外部内容变得更加容易。
+
+通过针对已关注文章评论对话的新阅读器推送通知，随时了解您关注的对话的最新动态。
+
+此外，您现在还可以自定义醒目引文和预格式化区块中的文本和背景颜色。
 </zh-CN>
 <zh-TW>
-18.1：
--每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
--嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
--時間選取功能可讓你指定接收網誌提醒的時間。
+18.5：
+全新的 Facebook、Instagram、Loom 和 Smartframe 嵌入區塊，讓嵌入外部內容變得更簡單。
+
+透過追蹤文章留言討論用的全新閱讀器推播通知，隨時掌握你追蹤的討論進度。
+
+此外，你現在可在重要引述和預設格式區塊中自訂文字和背景色彩。
 </zh-TW>
