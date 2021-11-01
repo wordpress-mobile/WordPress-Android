@@ -687,6 +687,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
+    public static void viewDomainRegistrationActivityForResult(Fragment fragment, @NonNull SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
     private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
                                                                    @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(context, DomainRegistrationActivity.class);
