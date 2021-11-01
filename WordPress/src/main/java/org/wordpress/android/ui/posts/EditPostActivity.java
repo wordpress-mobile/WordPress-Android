@@ -1724,6 +1724,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
                 (post, result) -> {
+                    mViewModel.setSavingPostOnEditorExit(false);
                     // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
                         listener.onPostUpdatedFromUI(result);
@@ -1749,7 +1750,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditorFragment == null) {
             return;
         }
-
+        mViewModel.setSavingPostOnEditorExit(true);
         // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
         boolean isAutosavePending = mViewModel.isAutosavePending();
 
