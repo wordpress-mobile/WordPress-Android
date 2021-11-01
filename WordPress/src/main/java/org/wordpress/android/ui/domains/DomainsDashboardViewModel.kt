@@ -27,6 +27,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDo
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
+import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -105,6 +106,8 @@ class DomainsDashboardViewModel @Inject constructor(
         listItems += FreeDomain(UiStringText(freeDomainUrl), freeDomainIsPrimary, this::onChangeSiteClick)
 
         val customDomains = domains.filter { !it.wpcomDomain }
+
+        val hasDomainCredit = isDomainCreditAvailable(plans)
 
         if (customDomains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
 
