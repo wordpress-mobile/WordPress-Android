@@ -175,7 +175,9 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
 //        NOTE: Manage domains option is de-scoped for v1 release
-//        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
+//        if (hasCustomDomains) {
+//            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
+//        }
 
         _uiModel.postValue(listItems)
     }
