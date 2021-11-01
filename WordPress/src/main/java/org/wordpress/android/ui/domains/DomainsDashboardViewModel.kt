@@ -72,14 +72,18 @@ class DomainsDashboardViewModel @Inject constructor(
         }
         this.site = site
         dispatcher.register(this)
-        checkDomainCredit()
-        getSiteDomainsList()
+        refresh()
         isStarted = true
     }
 
     override fun onCleared() {
         dispatcher.unregister(this)
         super.onCleared()
+    }
+
+    private fun refresh() {
+        checkDomainCredit()
+        getSiteDomainsList()
     }
 
     private fun getSiteDomainsList() {
