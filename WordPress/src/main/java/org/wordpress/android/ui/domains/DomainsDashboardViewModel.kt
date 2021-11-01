@@ -236,4 +236,8 @@ class DomainsDashboardViewModel @Inject constructor(
         }
         return true
     }
+
+    fun onSuccessfulDomainRegistration() {
+        refresh()
+    }
 }
