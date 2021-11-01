@@ -139,9 +139,24 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         listItems += if (hasDomainCredit) {
-            getClaimDomainItems()
+            PurchaseDomain(
+                    R.drawable.media_image_placeholder,
+                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
+                    UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
+                    ListItemInteraction.create(this::onClaimDomainClick)
+            )
         } else {
-            getPurchaseDomainItems(freeDomain?.domain.toString())
+            PurchaseDomain(
+                    R.drawable.media_image_placeholder,
+                    UiStringRes(R.string.domains_free_plan_get_your_domain_title),
+                    UiStringText(
+                            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                    R.string.domains_free_plan_get_your_domain_caption,
+                                    freeDomainUrl
+                            )
+                    ),
+                    ListItemInteraction.create(this::onGetDomainClick)
+            )
         }
 
 //        NOTE: Manage domains option is de-scoped for v1 release
@@ -149,32 +164,6 @@ class DomainsDashboardViewModel @Inject constructor(
 
         _uiModel.value = listItems
     }
-
-    // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
-    private fun getPurchaseDomainItems(siteUrl: String) =
-            listOf(
-                    PurchaseDomain(
-                            R.drawable.media_image_placeholder,
-                            UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                            UiStringText(
-                                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                            R.string.domains_free_plan_get_your_domain_caption,
-                                            siteUrl
-                                    )
-                            ),
-                            ListItemInteraction.create(this::onGetDomainClick)
-                    )
-            )
-
-    private fun getClaimDomainItems() =
-            listOf(
-                    PurchaseDomain(
-                            R.drawable.media_image_placeholder,
-                            UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
-                            UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
-                            ListItemInteraction.create(this::onClaimDomainClick)
-                    )
-            )
 
     private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
