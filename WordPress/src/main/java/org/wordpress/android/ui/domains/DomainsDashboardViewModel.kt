@@ -106,8 +106,36 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val customDomains = domains.filter { !it.wpcomDomain }
 
-        customDomains.let {
-            listItems += getManageDomainsItems(freeDomain?.domain.toString(), customDomains)
+        if (customDomains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
+
+        customDomains.forEach {
+            listItems += SiteDomains(
+                    UiStringText(it.domain.toString()),
+                    if (it.expirySoon) {
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.domains_site_domain_expires_soon,
+                                        it.expiry.toString()
+                                )
+                        )
+                    } else {
+                        UiStringResWithParams(
+                                R.string.domains_site_domain_expires,
+                                listOf(UiStringText(it.expiry.toString()))
+                        )
+                    },
+                    it.primaryDomain
+            )
+        }
+
+        if (customDomains.isNotEmpty()) {
+            listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
+            listItems += DomainBlurb(
+                    UiStringResWithParams(
+                            R.string.domains_redirected_domains_blurb,
+                            listOf(UiStringText(freeDomainUrl))
+                    )
+            )
         }
 
         listItems += if (hasDomainCredit) {
@@ -115,6 +143,9 @@ class DomainsDashboardViewModel @Inject constructor(
         } else {
             getPurchaseDomainItems(freeDomain?.domain.toString())
         }
+
+//        NOTE: Manage domains option is de-scoped for v1 release
+//        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
 
         _uiModel.value = listItems
     }
@@ -144,48 +175,6 @@ class DomainsDashboardViewModel @Inject constructor(
                             ListItemInteraction.create(this::onClaimDomainClick)
                     )
             )
-
-    // if site has a custom registered domain then show Site Domains, Add Domain and Manage Domains
-    private fun getManageDomainsItems(siteUrl: String, domains: List<Domain>): List<DomainsDashboardItem> {
-        val listItems = mutableListOf<DomainsDashboardItem>()
-
-        if (domains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
-
-        domains.forEach {
-            listItems += SiteDomains(
-                    UiStringText(it.domain.toString()),
-                    if (it.expirySoon) {
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.domains_site_domain_expires_soon,
-                                        it.expiry.toString()
-                                )
-                        )
-                    } else {
-                        UiStringResWithParams(
-                                R.string.domains_site_domain_expires,
-                                listOf(UiStringText(it.expiry.toString()))
-                        )
-                    },
-                    it.primaryDomain
-            )
-        }
-
-        if (domains.isNotEmpty()) {
-            listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
-            listItems += DomainBlurb(
-                    UiStringResWithParams(
-                            R.string.domains_redirected_domains_blurb,
-                            listOf(UiStringText(siteUrl))
-                    )
-            )
-        }
-
-//        NOTE: Manage domains option is de-scoped for v1 release
-//        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
-
-        return listItems
-    }
 
     private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
