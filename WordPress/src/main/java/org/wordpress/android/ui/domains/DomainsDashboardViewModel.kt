@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
@@ -48,8 +49,8 @@ class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val fetchPlansUseCase: FetchPlansUseCase,
-    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
-) : ScopedViewModel(uiDispatcher) {
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     private var hasDomainCredit: Boolean = false
     private var isStarted: Boolean = false
