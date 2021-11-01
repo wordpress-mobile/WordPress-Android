@@ -1,5 +1,7 @@
-Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
+* [**] Block editor: Search block - Text and background color support [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4127]
+* [*] Block editor: Fix Embed Block loading glitch with resolver resolution approach [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4146]
+* [*] Block editor: Fixed an issue where the Help screens may not respect an iOS device's notch. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4110]
+* [**] Block editor: Block inserter indicates newly available block types [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4047]
+* [*] Block editor: Add support for the Mark HTML tag [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4162]
 
-Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
 
-Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.
