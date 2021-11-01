@@ -107,9 +107,10 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val customDomains = domains.filter { !it.wpcomDomain }
 
+        val hasCustomDomains = customDomains.isNotEmpty()
         val hasDomainCredit = isDomainCreditAvailable(plans)
 
-        if (customDomains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
+        if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
 
         customDomains.forEach {
             listItems += SiteDomains(
@@ -131,7 +132,7 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         }
 
-        if (customDomains.isNotEmpty()) {
+        if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
             listItems += DomainBlurb(
                     UiStringResWithParams(
