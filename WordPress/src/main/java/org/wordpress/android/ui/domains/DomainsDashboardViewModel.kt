@@ -170,7 +170,7 @@ class DomainsDashboardViewModel @Inject constructor(
 //        NOTE: Manage domains option is de-scoped for v1 release
 //        listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
 
-        _uiModel.value = listItems
+        _uiModel.postValue(listItems)
     }
 
     private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
