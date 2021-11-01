@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:05:35+0000
+Translation-Revision-Date: 2021-10-27 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_create_link">リンクを作成</string>
+    <string name="domain_registration_result_description">新しいドメイン &lt;b&gt;%s&lt;/b&gt; をセットアップ中です。 ドメインが使用可能になるまでに最大で30分かかる場合があります。</string>
+    <string name="domain_registration_result_title">ご購入いただきありがとうございます。</string>
+    <string name="domains_suggestions_select_domain">ドメインを選択</string>
+    <string name="domains_title">ドメイン</string>
+    <string name="post_status_sticky">先頭固定表示</string>
+    <string name="post_settings_post_sticky">フロントページに投稿を固定表示</string>
+    <string name="post_settings_mark_as_sticky_options_header">先頭固定表示にする</string>
+    <string name="reader_follow_comments_unfollow_conversation">会話をフォロー解除</string>
+    <string name="reader_follow_comments_enable_push_notifications">アプリ内通知を有効化</string>
+    <string name="reader_follow_comments_message">この会話をフォロー中です。 新しいコメントが投稿されると、メールで通知が届きます。</string>
+    <string name="reader_follow_comments_bottom_sheet_description">会話のフォローオプションを管理、ポップアップウィンドウ</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">アプリ内通知を無効化できませんでした</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">アプリ内通知を有効化できませんでした</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">アプリ内通知が無効</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">アプリ内通知が有効</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">この会話の購読を解除済み</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">この会話をフォロー中\nアプリ内通知を有効化しますか ?</string>
     <string name="domains_search_for_a_domain_button">ドメインを検索</string>
     <string name="domains_paid_plan_claim_your_domain_caption">このプランには、1年間の無料ドメイン登録が含まれています</string>
+    <string name="domains_free_plan_get_your_domain_caption">このサイトで購入したドメインを訪問すると &lt;b&gt;%s&lt;/b&gt; に転送されます</string>
     <string name="domains_paid_plan_claim_your_domain_title">無料ドメインを取得</string>
     <string name="domains_manage_domains">ドメインを管理</string>
     <string name="domains_redirected_domains_blurb">ドメインはご自分のサイト (&lt;b&gt;%s&lt;/b&gt;) に転送されます。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;さらに詳しく&lt;/a&gt;</string>
@@ -211,6 +230,7 @@ Language: ja_JP
     <string name="gutenberg_native_featured">おすすめ</string>
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
+    <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
     <string name="gutenberg_native_none">なし</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>

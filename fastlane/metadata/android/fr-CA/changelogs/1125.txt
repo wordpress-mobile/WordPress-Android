@@ -1,5 +1,0 @@
-18.4 :
-Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
-Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
-Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
-Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
