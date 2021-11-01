@@ -116,18 +116,18 @@ class DomainsDashboardViewModel @Inject constructor(
 
         customDomains.forEach {
             listItems += SiteDomains(
-                    UiStringText(it.domain.toString()),
+                    UiStringText(it.domain.orEmpty()),
                     if (it.expirySoon) {
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.domains_site_domain_expires_soon,
-                                        it.expiry.toString()
+                                        it.expiry.orEmpty()
                                 )
                         )
                     } else {
                         UiStringResWithParams(
                                 R.string.domains_site_domain_expires,
-                                listOf(UiStringText(it.expiry.toString()))
+                                listOf(UiStringText(it.expiry.orEmpty()))
                         )
                     },
                     it.primaryDomain
