@@ -54,12 +54,12 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     private fun handleNavigationAction(action: DomainsDashboardNavigationAction) = when (action) {
         is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity,
+                this,
                 action.site,
                 DOMAIN_PURCHASE
         )
         is ClaimDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity,
+                this,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
