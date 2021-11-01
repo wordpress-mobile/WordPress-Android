@@ -201,7 +201,7 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         if (domains.isNotEmpty()) {
-            listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
+            listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
             listItems += DomainBlurb(
                     UiStringResWithParams(
                             R.string.domains_redirected_domains_blurb,
@@ -228,7 +228,7 @@ class DomainsDashboardViewModel @Inject constructor(
         _onNavigation.value = Event(ClaimDomain(site))
     }
 
-    private fun onAddDomainClick() {
+    private fun onAddDomainClick(hasDomainCredit: Boolean) {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED, site)
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
     }
