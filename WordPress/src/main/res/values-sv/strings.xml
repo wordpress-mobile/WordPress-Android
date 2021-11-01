@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-06 20:29:04+0000
+Translation-Revision-Date: 2021-10-19 09:52:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Skapa länk</string>
+    <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Det kan dröja upp till 30 minuter innan din domän börjar fungera.</string>
+    <string name="domain_registration_result_title">Grattis till ditt köp!</string>
+    <string name="domains_suggestions_select_domain">Välj domän</string>
+    <string name="domains_title">Domäner</string>
+    <string name="post_status_sticky">Klistrat</string>
+    <string name="post_settings_post_sticky">Klistra inlägget på startsidan</string>
+    <string name="post_settings_mark_as_sticky_options_header">Märk som klistrad</string>
+    <string name="reader_follow_comments_unfollow_conversation">Sluta följ konversation</string>
+    <string name="reader_follow_comments_enable_push_notifications">Aktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_message">Du följer denna konversation och kommer att få e-postaviseringar när nya kommentarer publiceras.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Hantera val för följning av konversation, popup-fönster</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Det gick inte att inaktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Det gick inte att aktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Aviseringar i appen har inaktiverats</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Aviseringar i appen har aktiverats</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Du har slutat följa denna konversation</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Du följer denna konversation\nVill du aktivera aviseringar i appen?</string>
     <string name="domains_search_for_a_domain_button">Sök en domän</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domäner som är köpta på denna webbplats kommer att omdirigera användare till &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domäner som är köpta på denna webbplats kommer att omdirigera besökare till &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Ditt paket inkluderar en gratis domännamnsregistrering i ett år</string>
     <string name="domains_paid_plan_claim_your_domain_title">Gör anspråk på din gratisdomän</string>
     <string name="domains_manage_domains">Hantera domäner</string>
@@ -16,7 +34,6 @@ Language: sv_SE
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Upphör att gälla %s</string>
     <string name="domains_site_domains">Domänerna för din webbplats</string>
-    <string name="domains_primary_site_address_blurb">Din primära webbplatsadress är vad besökarna kommer att se i sitt adressfält när de besöker din webbplats.</string>
     <string name="domains_primary_site_address_chip">Primär webbplatsadress</string>
     <string name="domains_primary_site_more_menu_change_site_address">Ändra webbplatsens adress</string>
     <string name="domains_primary_site_caption">Din gratisadress hos WordPress.com är</string>
@@ -53,7 +70,6 @@ Language: sv_SE
     <string name="me_btn_share">Dela WordPress med en vän</string>
     <string name="my_site_quick_actions_title">Snabblänkar</string>
     <string name="my_site_btn_domains">Domäner</string>
-    <string name="site_settings_site_domains_title">Webbplatsdomäner</string>
     <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
     <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
     <string name="blogging_reminders_notification_time">Aviseringstid</string>
@@ -216,6 +232,7 @@ Language: sv_SE
     <string name="gutenberg_native_featured">Utvalda</string>
     <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
+    <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>
     <string name="gutenberg_native_none">Ingen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
@@ -1292,9 +1309,6 @@ Language: sv_SE
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerar domännamn…</string>
     <string name="domain_registration_state_picker_dialog_title">Välj delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Välj land</string>
-    <string name="domain_registration_result_continue_button">fortsätt</string>
-    <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Webbplatsen gör förväntansfulla kullerbyttor!</string>
-    <string name="domain_registration_result_title">Grattis</string>
     <string name="domain_contact_information_register_domain_button">Registrera domän</string>
     <string name="domain_contact_information_postal_code_hint">Postnummer</string>
     <string name="domain_contact_information_state_hint">Delstat</string>
@@ -1312,7 +1326,6 @@ Language: sv_SE
     <string name="domain_registration_privacy_protection_description">Domänägare måste uppge kontaktinformation i en publik databas som omfattar alla domäner. Med integritetsskydd publicerar vi våra uppgifter istället för dina, och vidarebefordrar sedan privat eventuella meddelanden till dig.</string>
     <string name="domain_registration_privacy_protection_title">Integritetsskydd</string>
     <string name="domain_registration_contact_form_input_error">Ange en giltig %s</string>
-    <string name="domains_suggestions_choose_domain">Välj domän</string>
     <string name="stats_management_new">Nytt</string>
     <string name="stats_management_dismiss_insights_news_card">Avfärda</string>
     <string name="stats_management_try_it_now">Prova det nu</string>
@@ -1417,7 +1430,6 @@ Language: sv_SE
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
-    <string name="quick_start_dialog_need_help_message">Vi hjälper dig att gå igenom grunderna för hur du bygger din webbplats och får den att växa.</string>
     <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
     <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
@@ -1600,9 +1612,6 @@ Language: sv_SE
     <string name="quick_start_dialog_share_site_message">Anslut till dina konton på sociala medier – din webbplats kommer automatiskt att dela nya inlägg.</string>
     <string name="quick_start_dialog_publish_post_title">Publicera ett inlägg</string>
     <string name="quick_start_dialog_publish_post_message_short">Tryck på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
-    <string name="quick_start_dialog_need_help_title">Vill du ha lite hjälp att komma igång?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Ja</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej tack</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>

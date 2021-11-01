@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -13,7 +14,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.Pos
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -40,6 +41,7 @@ class ReaderCommentsFollowUseCaseTest {
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock private lateinit var followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var followCommentsUseCase: ReaderCommentsFollowUseCase
 
@@ -50,13 +52,15 @@ class ReaderCommentsFollowUseCaseTest {
     fun setup() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(followByPushNotificationFeatureConfig.isEnabled()).thenReturn(false)
 
         followCommentsUseCase = ReaderCommentsFollowUseCase(
                 networkUtilsWrapper,
                 postSubscribersApiCallsProvider,
                 accountStore,
                 readerTracker,
-                readerPostTableWrapper
+                readerPostTableWrapper,
+                followByPushNotificationFeatureConfig
         )
     }
 
@@ -75,7 +79,7 @@ class ReaderCommentsFollowUseCaseTest {
         val flow = followCommentsUseCase.getMySubscriptionToPost(blogId, postId, false)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+                listOf(Loading, Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         )
     }
 
@@ -92,7 +96,7 @@ class ReaderCommentsFollowUseCaseTest {
     fun `getMySubscriptionToPost emits expected state when can follow with success`() = test {
         whenever(postSubscribersApiCallsProvider.getCanFollowComments(anyLong())).thenReturn(true)
         whenever(postSubscribersApiCallsProvider.getMySubscriptionToPost(anyLong(), anyLong()))
-                .thenReturn(PostSubscribersCallResult.Success(true))
+                .thenReturn(PostSubscribersCallResult.Success(true, false))
 
         val flow = followCommentsUseCase.getMySubscriptionToPost(blogId, postId, false)
 
@@ -130,14 +134,14 @@ class ReaderCommentsFollowUseCaseTest {
         val flow = followCommentsUseCase.setMySubscriptionToPost(blogId, postId, true)
 
         assertThat(flow.toList()).isEqualTo(
-                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+                listOf(Loading, Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         )
     }
 
     @Test
     fun `setMySubscriptionToPost emits expected state when subscribing with success`() = test {
         whenever(postSubscribersApiCallsProvider.subscribeMeToPost(anyLong(), anyLong()))
-                .thenReturn(PostSubscribersCallResult.Success(true))
+                .thenReturn(PostSubscribersCallResult.Success(true, false))
 
         val flow = followCommentsUseCase.setMySubscriptionToPost(blogId, postId, true)
 
@@ -148,7 +152,9 @@ class ReaderCommentsFollowUseCaseTest {
                         postId,
                         true,
                         false,
-                        UiStringRes(R.string.reader_follow_comments_subscribe_success)
+                        false,
+                        UiStringRes(R.string.reader_follow_comments_subscribe_success),
+                        false
                 )
         ))
     }
@@ -165,6 +171,65 @@ class ReaderCommentsFollowUseCaseTest {
         assertThat(flow.toList()).isEqualTo(listOf(
                 Loading,
                 Failure(blogId, postId, UiStringText(errorMessage))
+        ))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when no network`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(FollowStateChanged(
+                        blogId = blogId,
+                        postId = postId,
+                        isFollowing = true,
+                        isReceivingNotifications = false,
+                        false,
+                        userMessage = UiStringRes(R.string.error_network_connection),
+                        true
+        )))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when subscribing with success`() = test {
+        whenever(postSubscribersApiCallsProvider.managePushNotificationsForPost(anyLong(), anyLong(), eq(true)))
+                .thenReturn(PostSubscribersCallResult.Success(true, true))
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(
+                FollowStateChanged(
+                        blogId,
+                        postId,
+                        true,
+                        true,
+                        false,
+                        UiStringRes(R.string.reader_follow_comments_subscribe_to_push_success),
+                        false
+                )
+        ))
+    }
+
+    @Test
+    fun `setEnableByPushNotifications emits expected state when subscribing with failure`() = test {
+        val errorMessage = "There was an error"
+
+        whenever(postSubscribersApiCallsProvider.managePushNotificationsForPost(anyLong(), anyLong(), eq(true)))
+                .thenReturn(PostSubscribersCallResult.Failure(errorMessage))
+
+        val flow = followCommentsUseCase.setEnableByPushNotifications(blogId, postId, true)
+
+        assertThat(flow.toList()).isEqualTo(listOf(
+                FollowStateChanged(
+                        blogId = blogId,
+                        postId = postId,
+                        isFollowing = true,
+                        isReceivingNotifications = false,
+                        false,
+                        userMessage = UiStringRes(R.string.reader_follow_comments_could_not_subscribe_to_push_error),
+                        true
+                )
         ))
     }
 }

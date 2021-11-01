@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsViewHolder(
     parent: ViewGroup,
-    private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
+    private val itemSelectionListener: (DomainSuggestionItem?) -> Unit
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
@@ -21,46 +21,34 @@ class DomainSuggestionsViewHolder(
     private val selectionRadioButton: RadioButton = itemView.findViewById(R.id.domain_selection_radio_button)
     private val container: View = itemView.findViewById(R.id.domain_suggestions_container)
 
-    fun bind(
-        suggestion: DomainSuggestionResponse,
-        position: Int,
-        isSelectedPosition: Boolean,
-        isSiteDomainsFeatureEnabled: Boolean,
-        isDomainCreditAvailable: Boolean
-    ) {
-        domainName.text = suggestion.domain_name
-        if (isSiteDomainsFeatureEnabled) {
-            domainCost.visibility = View.VISIBLE
-            domainCost.text = getFormattedCost(suggestion, isDomainCreditAvailable)
-        } else {
-            domainCost.visibility = View.GONE
-        }
-        selectionRadioButton.isChecked = isSelectedPosition
+    fun bind(suggestion: DomainSuggestionItem) {
+        domainName.text = suggestion.domainName
+        domainCost.isVisible = suggestion.isCostVisible
+        domainCost.text = getFormattedCost(suggestion)
+        selectionRadioButton.isChecked = suggestion.isSelected
+        selectionRadioButton.isEnabled = suggestion.isEnabled
 
-        container.setOnClickListener {
-            val isSuggestionSelected = !selectionRadioButton.isChecked
-            selectionRadioButton.isChecked = isSuggestionSelected
-            if (isSuggestionSelected) {
-                itemSelectionListener(suggestion, position)
-            } else {
-                itemSelectionListener(null, -1)
+        if (suggestion.isEnabled) {
+            container.setOnClickListener {
+                val isSuggestionSelected = !selectionRadioButton.isChecked
+                selectionRadioButton.isChecked = isSuggestionSelected
+                if (isSuggestionSelected) {
+                    itemSelectionListener(suggestion)
+                } else {
+                    itemSelectionListener(null)
+                }
             }
+        } else {
+            container.isClickable = false
         }
     }
 
-    private fun getFormattedCost(
-        suggestion: DomainSuggestionResponse,
-        isDomainCreditAvailable: Boolean
-    ) = when {
-        suggestion.is_free -> {
-            suggestion.cost
-        }
-        isDomainCreditAvailable -> {
+    private fun getFormattedCost(suggestion: DomainSuggestionItem) = when {
+        suggestion.isFree -> suggestion.cost
+        suggestion.isFreeWithCredits -> {
             HtmlCompat.fromHtml(
                     String.format(
-                            container.context.getString(
-                                    R.string.domain_suggestions_list_item_cost_free
-                            ),
+                            container.context.getString(R.string.domain_suggestions_list_item_cost_free),
                             suggestion.cost
                     ),
                     HtmlCompat.FROM_HTML_MODE_LEGACY
@@ -69,9 +57,7 @@ class DomainSuggestionsViewHolder(
         else -> { // on free plan
             HtmlCompat.fromHtml(
                     String.format(
-                            container.context.getString(
-                                    R.string.domain_suggestions_list_item_cost
-                            ),
+                            container.context.getString(R.string.domain_suggestions_list_item_cost),
                             suggestion.cost
                     ),
                     HtmlCompat.FROM_HTML_MODE_LEGACY

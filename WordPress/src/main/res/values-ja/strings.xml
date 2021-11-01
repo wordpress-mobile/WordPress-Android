@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:05:35+0000
+Translation-Revision-Date: 2021-10-27 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_create_link">リンクを作成</string>
+    <string name="domain_registration_result_description">新しいドメイン &lt;b&gt;%s&lt;/b&gt; をセットアップ中です。 ドメインが使用可能になるまでに最大で30分かかる場合があります。</string>
+    <string name="domain_registration_result_title">ご購入いただきありがとうございます。</string>
+    <string name="domains_suggestions_select_domain">ドメインを選択</string>
+    <string name="domains_title">ドメイン</string>
+    <string name="post_status_sticky">先頭固定表示</string>
+    <string name="post_settings_post_sticky">フロントページに投稿を固定表示</string>
+    <string name="post_settings_mark_as_sticky_options_header">先頭固定表示にする</string>
+    <string name="reader_follow_comments_unfollow_conversation">会話をフォロー解除</string>
+    <string name="reader_follow_comments_enable_push_notifications">アプリ内通知を有効化</string>
+    <string name="reader_follow_comments_message">この会話をフォロー中です。 新しいコメントが投稿されると、メールで通知が届きます。</string>
+    <string name="reader_follow_comments_bottom_sheet_description">会話のフォローオプションを管理、ポップアップウィンドウ</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">アプリ内通知を無効化できませんでした</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">アプリ内通知を有効化できませんでした</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">アプリ内通知が無効</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">アプリ内通知が有効</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">この会話の購読を解除済み</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">この会話をフォロー中\nアプリ内通知を有効化しますか ?</string>
     <string name="domains_search_for_a_domain_button">ドメインを検索</string>
-    <string name="domains_free_plan_get_your_domain_caption">このサイトで購入したドメインを訪問すると &lt;b&gt;%s に転送されます。&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">このプランには、1年間の無料ドメイン登録が含まれています</string>
+    <string name="domains_free_plan_get_your_domain_caption">このサイトで購入したドメインを訪問すると &lt;b&gt;%s&lt;/b&gt; に転送されます</string>
     <string name="domains_paid_plan_claim_your_domain_title">無料ドメインを取得</string>
     <string name="domains_manage_domains">ドメインを管理</string>
     <string name="domains_redirected_domains_blurb">ドメインはご自分のサイト (&lt;b&gt;%s&lt;/b&gt;) に転送されます。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;さらに詳しく&lt;/a&gt;</string>
@@ -16,7 +34,6 @@ Language: ja_JP
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;有効期限日 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">有効期限日 %s</string>
     <string name="domains_site_domains">あなたのサイトドメイン</string>
-    <string name="domains_primary_site_address_blurb">主要サイトのアドレスとは訪問者がサイトにアクセスした際にブラウザーのアドレスバーに表示されるアドレスのことです。</string>
     <string name="domains_primary_site_address_chip">主要サイトのアドレス</string>
     <string name="domains_primary_site_more_menu_change_site_address">サイトのアドレスを変更</string>
     <string name="domains_primary_site_caption">あなたの WordPress.com の無料アドレスは</string>
@@ -51,7 +68,6 @@ Language: ja_JP
     <string name="me_btn_share">WordPress を友達と共有する</string>
     <string name="my_site_quick_actions_title">クイックリンク</string>
     <string name="my_site_btn_domains">ドメイン</string>
-    <string name="site_settings_site_domains_title">サイトドメイン</string>
     <string name="weekly_roundup_notification_text">サイトは%1$d回表示され、%2$d件の「いいね」と%3$d件のコメントを獲得しました。</string>
     <string name="weekly_roundup_notification_title">1週間のまとめ: %s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
@@ -214,6 +230,7 @@ Language: ja_JP
     <string name="gutenberg_native_featured">おすすめ</string>
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
+    <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
     <string name="gutenberg_native_none">なし</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
@@ -1290,10 +1307,6 @@ Language: ja_JP
     <string name="domain_registration_registering_domain_name_progress_dialog_message">ドメイン名を登録しています…</string>
     <string name="domain_registration_state_picker_dialog_title">都道府県を選択</string>
     <string name="domain_registration_country_picker_dialog_title">国を選択</string>
-    <string name="domain_registration_result_continue_button">次へ</string>
-    <string name="domain_registration_result_description">新しいドメイン &lt;b&gt;%s&lt;/b&gt; の設定中です。間もなく設定は完了しますので、\nお楽しみに !</string>
-    <string name="domain_registration_result_title">おめでとうございます</string>
-    <string name="domain_contact_information_register_domain_button">ドメインを登録</string>
     <string name="domain_contact_information_postal_code_hint">郵便番号</string>
     <string name="domain_contact_information_state_hint">都道府県</string>
     <string name="domain_contact_information_city_hint">市区町村</string>
@@ -1310,7 +1323,6 @@ Language: ja_JP
     <string name="domain_registration_privacy_protection_description">ドメイン所有者は、すべてのドメインのパブリックデータベースで連絡先情報を共有する必要があります。\nプライバシー保護として、お客様に関する情報の代わりに弊社に関する情報を公開し、お客様には個別でコミュニケーションを転送します。</string>
     <string name="domain_registration_privacy_protection_title">プライバシー保護</string>
     <string name="domain_registration_contact_form_input_error">有効な%sを入力してください</string>
-    <string name="domains_suggestions_choose_domain">ドメインを選択</string>
     <string name="stats_management_new">新規</string>
     <string name="stats_management_dismiss_insights_news_card">非表示</string>
     <string name="stats_management_try_it_now">今すぐお試しください</string>
@@ -1414,7 +1426,6 @@ Language: ja_JP
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
     <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
-    <string name="quick_start_dialog_need_help_message">サイトの構築と訪問者を増やす方法の基本について紹介します。</string>
     <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
     <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
     <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
@@ -1598,9 +1609,6 @@ Language: ja_JP
     <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには%1$sサイトを表示%2$sをタップします</string>
     <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
-    <string name="quick_start_dialog_need_help_title">始めるためのサポートが必要ですか ?</string>
-    <string name="quick_start_dialog_need_help_button_positive">はい</string>
-    <string name="quick_start_dialog_need_help_button_neutral">なし</string>
     <string name="quick_start_dialog_follow_sites_title">他のサイトをフォロー</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>

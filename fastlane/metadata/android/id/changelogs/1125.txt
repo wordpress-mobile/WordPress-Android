@@ -1,5 +1,0 @@
-18.4:
-Blok sematan khusus untuk YouTube, Twitter, WordPress, dan Vimeo, dengan URL yang dapat disunting setelah dipilih.
-Blok galeri sekarang dapat menambahkan gambar meski pos terkait telah ditutup saat pengunggahan.
-Komentar situs memungkinkan nama, email, dan alamat web penulis disunting.
-Sekarang Anda dapat menghubungi dukungan langsung dari layar editor.

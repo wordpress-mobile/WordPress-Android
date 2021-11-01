@@ -7,6 +7,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.DISABLE_PUSH_NOTIFICATION
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.ENABLE_PUSH_NOTIFICATION
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.FOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.UNFOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsActionResult.ERROR
@@ -20,6 +22,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import javax.inject.Inject
 
 class ReaderCommentsFollowUseCase @Inject constructor(
@@ -27,12 +30,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
     private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider,
     private val accountStore: AccountStore,
     private val readerTracker: ReaderTracker,
-    private val readerPostTableWrapper: ReaderPostTableWrapper
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 ) {
-    private val FOLLOW_COMMENT_ACTION = "follow_action"
-    private val FOLLOW_COMMENT_ACTION_RESULT = "follow_action_result"
-    private val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"
-
     suspend fun getMySubscriptionToPost(blogId: Long, postId: Long, isInit: Boolean) = flow {
         if (!accountStore.hasAccessToken()) {
             emit(UserNotAuthenticated)
@@ -53,10 +53,11 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                         is Success -> {
                             emit(
                                     FollowCommentsState.FollowStateChanged(
-                                            blogId,
-                                            postId,
-                                            status.isFollowing,
-                                            isInit
+                                            blogId = blogId,
+                                            postId = postId,
+                                            isFollowing = status.isFollowing,
+                                            isReceivingNotifications = status.isReceivingNotifications,
+                                            isInit = isInit
                                     )
                             )
                         }
@@ -94,16 +95,25 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                 is Success -> {
                     emit(
                             FollowCommentsState.FollowStateChanged(
-                                    blogId,
-                                    postId,
-                                    status.isFollowing,
+                                    blogId = blogId,
+                                    postId = postId,
+                                    isFollowing = status.isFollowing,
+                                    isReceivingNotifications = status.isReceivingNotifications,
                                     false,
-                                    UiStringRes(
-                                        if (status.isFollowing)
-                                            R.string.reader_follow_comments_subscribe_success
-                                        else
-                                            R.string.reader_follow_comments_unsubscribe_success
-                                    )
+                                    userMessage = UiStringRes(
+                                            if (status.isFollowing) {
+                                                if (followByPushNotificationFeatureConfig.isEnabled()) {
+                                                    R.string.reader_follow_comments_subscribe_success_enable_push
+                                                } else {
+                                                    R.string.reader_follow_comments_subscribe_success
+                                                }
+                                            } else {
+                                                if (followByPushNotificationFeatureConfig.isEnabled()) {
+                                                    R.string.reader_follow_comments_unsubscribe_from_all_success
+                                                } else {
+                                                    R.string.reader_follow_comments_unsubscribe_success
+                                                }
+                                            })
                             )
                     )
                     properties.addFollowActionResult(SUCCEEDED)
@@ -126,15 +136,81 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         )
     }
 
-    sealed class FollowCommentsState {
+    suspend fun setEnableByPushNotifications(
+        blogId: Long,
+        postId: Long,
+        enable: Boolean
+    ): Flow<FollowCommentsState> = flow {
+        val properties = mutableMapOf<String, Any?>()
+        properties.addEnablePushNotificationAction(enable)
+
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            emit(FollowCommentsState.FollowStateChanged(
+                    blogId = blogId,
+                    postId = postId,
+                    isFollowing = true,
+                    isReceivingNotifications = !enable,
+                    false,
+                    userMessage = UiStringRes(R.string.error_network_connection),
+                    true
+            ))
+            properties.addFollowActionResult(ERROR, NO_NETWORK.errorMessage)
+        } else {
+            when (val status = postSubscribersApiCallsProvider.managePushNotificationsForPost(blogId, postId, enable)) {
+                is Success -> {
+                    emit(FollowCommentsState.FollowStateChanged(
+                                    blogId = blogId,
+                                    postId = postId,
+                                    isFollowing = status.isFollowing,
+                                    isReceivingNotifications = status.isReceivingNotifications,
+                                    false,
+                                    userMessage = UiStringRes(if (enable) {
+                                                R.string.reader_follow_comments_subscribe_to_push_success
+                                            } else {
+                                                R.string.reader_follow_comments_unsubscribe_from_push_success
+                                            }),
+                                    false
+                    ))
+                    properties.addFollowActionResult(SUCCEEDED)
+                }
+                is Failure -> {
+                    emit(FollowCommentsState.FollowStateChanged(
+                            blogId = blogId,
+                            postId = postId,
+                            isFollowing = true,
+                            isReceivingNotifications = !enable,
+                            false,
+                            userMessage = UiStringRes(if (enable) {
+                                        R.string.reader_follow_comments_could_not_subscribe_to_push_error
+                                    } else {
+                                        R.string.reader_follow_comments_could_not_unsubscribe_from_push_error
+                                    }),
+                            true
+                    ))
+                    properties.addFollowActionResult(ERROR, status.error)
+                }
+            }
+        }
+        readerTracker.trackPostComments(
+                Stat.COMMENT_FOLLOW_CONVERSATION,
+                blogId,
+                postId,
+                readerPostTableWrapper.getBlogPost(blogId, postId, true),
+                properties
+        )
+    }
+
+    sealed class FollowCommentsState(open val forcePushNotificationsUpdate: Boolean = false) {
         object Loading : FollowCommentsState()
 
         data class FollowStateChanged(
             val blogId: Long,
             val postId: Long,
             val isFollowing: Boolean,
+            val isReceivingNotifications: Boolean,
             val isInit: Boolean = false,
-            val userMessage: UiString? = null
+            val userMessage: UiString? = null,
+            override val forcePushNotificationsUpdate: Boolean = false
         ) : FollowCommentsState()
 
         data class Failure(
@@ -150,7 +226,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
 
     private enum class AnalyticsFollowCommentsAction(val action: String) {
         FOLLOW_COMMENTS("followed"),
-        UNFOLLOW_COMMENTS("unfollowed")
+        UNFOLLOW_COMMENTS("unfollowed"),
+        ENABLE_PUSH_NOTIFICATION("enable_push_notifications"),
+        DISABLE_PUSH_NOTIFICATION("disable_push_notifications")
     }
 
     private enum class AnalyticsFollowCommentsActionResult(val actionResult: String) {
@@ -171,6 +249,15 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         return this
     }
 
+    private fun MutableMap<String, Any?>.addEnablePushNotificationAction(enable: Boolean): MutableMap<String, Any?> {
+        this[FOLLOW_COMMENT_ACTION] = if (enable) {
+            ENABLE_PUSH_NOTIFICATION.action
+        } else {
+            DISABLE_PUSH_NOTIFICATION.action
+        }
+        return this
+    }
+
     private fun MutableMap<String, Any?>.addFollowActionResult(
         result: AnalyticsFollowCommentsActionResult,
         errorMessage: String? = null
@@ -180,5 +267,11 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             this[FOLLOW_COMMENT_ACTION_ERROR] = errorMessage
         }
         return this
+    }
+
+    companion object {
+        private const val FOLLOW_COMMENT_ACTION = "follow_action"
+        private const val FOLLOW_COMMENT_ACTION_RESULT = "follow_action_result"
+        private const val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"
     }
 }

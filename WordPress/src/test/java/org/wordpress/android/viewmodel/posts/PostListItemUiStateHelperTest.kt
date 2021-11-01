@@ -980,17 +980,42 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.local_draft))
     }
 
+    @Test
+    fun `when a post is sticky and no errors ocurred, the "Sticky" label is displayed`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(sticky = true)
+        )
+
+        // Assert
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.post_status_sticky))
+    }
+
+    @Test
+    fun `when a post is sticky and private, the labels "Private" and "Sticky" are displayed`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PRIVATE, sticky = true)
+        )
+
+        // Assert
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_sticky))
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
         isLocallyChanged: Boolean = false,
-        authorDisplayName: String? = null
+        authorDisplayName: String? = null,
+        sticky: Boolean = false
     ): PostModel {
         val post = PostModel()
         post.setStatus(status)
         post.setIsLocalDraft(isLocalDraft)
         post.setIsLocallyChanged(isLocallyChanged)
         post.setAuthorDisplayName(authorDisplayName)
+        post.setSticky(sticky)
         return post
     }
 

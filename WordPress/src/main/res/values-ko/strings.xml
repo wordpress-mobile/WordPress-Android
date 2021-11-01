@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:03:53+0000
+Translation-Revision-Date: 2021-10-27 13:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_create_link">링크 생성</string>
+    <string name="domain_registration_result_description">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 생성하는 중입니다. 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
+    <string name="domain_registration_result_title">업그레이드를 축하합니다!</string>
+    <string name="domains_suggestions_select_domain">도메인 선택</string>
+    <string name="domains_title">도메인</string>
+    <string name="post_status_sticky">붙박이</string>
+    <string name="post_settings_post_sticky">이 글을 전면 페이지에 고정</string>
+    <string name="post_settings_mark_as_sticky_options_header">붙박이로 표시</string>
+    <string name="reader_follow_comments_unfollow_conversation">대화 팔로우 취소</string>
+    <string name="reader_follow_comments_enable_push_notifications">앱 내 알림 활성화</string>
+    <string name="reader_follow_comments_message">이 대화를 팔로우하는 중입니다. 새 댓글이 발행되면 이메일로 알림이 수신됩니다.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">대화 팔로우 관리 옵션, 팝업 창</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">앱 내 알림을 비활성화할 수 없음</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">앱 내 알림을 활성화할 수 없음</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">앱 내 알림 비활성화됨</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">앱 내 알림 활성화됨</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">이 대화 구독 해지됨</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">이 대화 팔로우 중\n앱 내 알림을 활성화하나요?</string>
     <string name="domains_search_for_a_domain_button">도메인 검색</string>
-    <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 사용자가 &lt;b&gt;%s(으)로 리디렉팅됩니다.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">이용 중인 요금제에 1년 무료 도메인 등록이 포함되어 있음</string>
+    <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 방문자가 &lt;b&gt;%s&lt;/b&gt;(으)로 리디렉팅됩니다.</string>
     <string name="domains_paid_plan_claim_your_domain_title">무료 도메인 신청</string>
     <string name="domains_manage_domains">도메인 관리</string>
     <string name="domains_redirected_domains_blurb">도메인이 &lt;b&gt;%s&lt;/b&gt;의 사이트로 리디렉팅됩니다. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;자세히 알아보세요&lt;/a&gt;.</string>
@@ -16,7 +34,6 @@ Language: ko_KR
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;만료 날짜 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">만료 날짜 %s</string>
     <string name="domains_site_domains">사이트 도메인</string>
-    <string name="domains_primary_site_address_blurb">기본 사이트 주소는 방문자가 웹사이트 방문 시 브라우저의 주소 표시줄에 표시되는 주소입니다.</string>
     <string name="domains_primary_site_address_chip">기본 사이트 주소</string>
     <string name="domains_primary_site_more_menu_change_site_address">사이트 주소 변경</string>
     <string name="domains_primary_site_caption">무료 워드프레스닷컴 주소:</string>
@@ -51,7 +68,6 @@ Language: ko_KR
     <string name="me_btn_share">친구와 WordPress 공유</string>
     <string name="my_site_quick_actions_title">퀵 링크</string>
     <string name="my_site_btn_domains">도메인</string>
-    <string name="site_settings_site_domains_title">사이트 도메인</string>
     <string name="weekly_roundup_notification_text">사이트에서 조회수 %1$d개, 좋아요 %2$d개 댓글 %3$d개를 받았습니다.</string>
     <string name="weekly_roundup_notification_title">주간 총정리: %s</string>
     <string name="blogging_reminders_notification_time">알림 시간</string>
@@ -213,6 +229,7 @@ Language: ko_KR
     <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_embed_link">링크 임베드</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
+    <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
     <string name="gutenberg_native_none">없음</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
@@ -1289,10 +1306,6 @@ Language: ko_KR
     <string name="domain_registration_registering_domain_name_progress_dialog_message">도메인 네임 등록 중…</string>
     <string name="domain_registration_state_picker_dialog_title">주 선택</string>
     <string name="domain_registration_country_picker_dialog_title">국가 선택</string>
-    <string name="domain_registration_result_continue_button">계속</string>
-    <string name="domain_registration_result_description">새 도메인 &lt;b&gt;%s&lt;/b&gt;을(를) 설정 중입니다. 회원님의 사이트를\n 마음껏 이용하세요!</string>
-    <string name="domain_registration_result_title">축하합니다.</string>
-    <string name="domain_contact_information_register_domain_button">도메인 등록</string>
     <string name="domain_contact_information_postal_code_hint">우편번호</string>
     <string name="domain_contact_information_state_hint">주</string>
     <string name="domain_contact_information_city_hint">도시</string>
@@ -1309,7 +1322,6 @@ Language: ko_KR
     <string name="domain_registration_privacy_protection_description">도메인 소유자는 모든 도메인의 공개 데이터베이스에 있는 연락처 정보를 공유해야 합니다.\n 개인정보 보호에 따라 회원님의 정보가 아닌 당사의 정보를 공개하며, 회원님이 받을 커뮤니케이션은 비공개적으로 전달합니다.</string>
     <string name="domain_registration_privacy_protection_title">개인정보 보호</string>
     <string name="domain_registration_contact_form_input_error">유효한 %s(을)를 입력하세요.</string>
-    <string name="domains_suggestions_choose_domain">도메인 선택</string>
     <string name="stats_management_new">신규</string>
     <string name="stats_management_dismiss_insights_news_card">해제</string>
     <string name="stats_management_try_it_now">지금 사용해 보기</string>
@@ -1413,7 +1425,6 @@ Language: ko_KR
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_check_stats_message_short">사이트 성능을 확인하려면 %1$s통계%2$s를 탭합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
-    <string name="quick_start_dialog_need_help_message">사이트 빌드 및 성장에 대한 기본 사항을 안내해 드립니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
     <string name="quick_start_dialog_explore_plans_title">요금제 둘러보기</string>
     <string name="quick_start_dialog_explore_plans_message">유료 요금제의 마케팅 및 SEO 도구에 대해 알아보세요.</string>
@@ -1597,9 +1608,6 @@ Language: ko_KR
     <string name="quick_start_dialog_share_site_message">소셜 미디어 계정을 연결하세요. 그러면 사이트에서 새 글을 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s 게시물 작성 %2$s을 탭하여 새 게시물 작성하기</string>
-    <string name="quick_start_dialog_need_help_title">시작하는 데 도움이 필요하십니까?</string>
-    <string name="quick_start_dialog_need_help_button_positive">수용</string>
-    <string name="quick_start_dialog_need_help_button_neutral">절대</string>
     <string name="quick_start_dialog_follow_sites_title">다른 사이트 팔로우</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$s 리더 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_follow_sites_message">도움을 받은 사이트를 찾은 다음 업데이트가 게시될 때 받을 수 있도록 팔로우하세요.</string>

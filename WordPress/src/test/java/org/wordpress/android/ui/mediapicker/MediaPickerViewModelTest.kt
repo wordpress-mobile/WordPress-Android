@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.times
@@ -278,6 +279,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `navigates to preview on item click`() = test {
+        whenever(mediaUtilsWrapper.getRealPathFromURI(anyOrNull())).thenReturn(firstItem.url)
         setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)

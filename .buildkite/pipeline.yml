@@ -25,7 +25,7 @@ steps:
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease --info
+      ./gradlew lintWordpressVanillaRelease
   - label: "Test WordPress"
     <<: *docker-container
     command: |

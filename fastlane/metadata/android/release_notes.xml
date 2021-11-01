@@ -1,122 +1,153 @@
 <ar>
-18.4: مكوِّنات تضمين مخصصة ليوتيوب، وتويتر، ووردبريس، وفيميو، بالإضافة إلى عناوين URL التي يمكن تحريرها بعد تحديدها. يضيف الآن مكوِّن المعرض صورًا حتى إذا أغلِقت المقالة أثناء الرفع. تسمح تعليقات الموقع بتحرير اسم المؤلف، والبريد الإلكتروني، وعنوان الويب. يمكنك الآن الاتصال بالدعم مباشرة من شاشة المحرِّر.
+18.5:
+أصبح تضمين المحتوى الخارجي أكثر سهولة باستخدام مكوِّنات تضمين فيسبوك وإنستغرام وLoom وSmartframe الجديدة.
+
+كن على اطلاع دائمًا بشأن المحادثات التي تقوم بمتابعتها من خلال التنبيهات المنبثقة للقارئ الجديد الخاصة بمحادثات تعليقات المقالة التي تتم متابعتها.
+
+بالإضافة إلى ذلك، يمكنك الآن تخصيص لون النص والخلفية في المكوِّنات المهيأة والمنسَّقة سابقًا.
 </ar>
 <de-DE>
-18.4:
-Dedizierte Embed-Blocks für YouTube, Twitter, WordPress und Vimeo mit URLS, die du noch nach dem Aussuchen bearbeiten kannst.
-Der Galerieblock fügt jetzt auch Bilder hinzu, wenn der Beitrag während des Hochladens geschlossen wird.
-In Website-Kommentaren können der Name des Autors, die E-Mail-Adresse und die Web-Adresse bearbeitet werden.
-Du kannst den Support jetzt direkt vom Bildschirm „Editor“ aus kontaktieren.
+18.5:
+Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
+
+Mit den neuen Reader-Push-Benachrichtigungen für Unterhaltungen zu Beitragskommentaren, denen du folgst, bist du immer auf dem Laufenden über die Unterhaltungen, denen du folgst.
+
+Außerdem kannst du jetzt in den Pullquote- und Vorformatiert-Blöcken den Text und die Hintergrundfarbe anpassen.
 </de-DE>
 <en-US>
-18.4:
-Dedicated embed blocks for YouTube, Twitter, WordPress, and Vimeo, with URLs that can be edited after they are selected.
-The gallery block now adds images even if the post is closed during the upload.
-Site comments allow the author’s name, email, and web address to be edited.
-You can now contact support directly from the editor screen.
+18.5:
+Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
+
+Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
+
+Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.
 </en-US>
 <es-ES>
-18.4:
-Bloques de incrustación dedicados para YouTube, Twitter, WordPress y Vimeo, con URL que pueden ser editadas después de ser seleccionadas.
-Ahora, el bloque de galería añade imágenes incluso si la entrada está cerrada durante la subida.
-Los comentarios del sitio permiten editar el nombre, el correo electrónico y la dirección web del autor.
-Ahora puedes contactar directamente con el soporte desde la pantalla del editor.
+18.5:
+La incrustación de contenido externo ahora es más fácil con los nuevos bloques de incrustación de Facebook, Instagram, Loom y Smartframe.
+
+Mantente siempre al día de las conversaciones que sigues a través de los nuevos avisos instantáneos del lector para los comentarios publicados en las conversaciones seguidas.
+
+Además, ahora puedes personalizar el texto y el color de fondo en los bloques de párrafo de cita y preformateado.
 </es-ES>
 <fr-CA>
-18.4 :
-Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
-Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
-Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
-Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
+18.5 :
+L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
+
+Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
+
+De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
 </fr-CA>
 <fr-FR>
-18.4 :
-Blocs de contenu embarqué dédiés pour YouTube, Twitter, WordPress et Vimeo, avec URL modifiables une fois sélectionnées.
-Le bloc Galerie ajoute désormais les images même si l’article de blog est fermé pendant leur chargement.
-Les commentaires d’un site permettent de modifier le nom, l’adresse e-mail et l’adresse Web de l’auteur.
-Vous pouvez désormais contacter l’assistance directement à partir de l’écran de l’éditeur.
+18.5 :
+L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
+
+Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
+
+De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
 </fr-FR>
 <iw-IL>
-18.4:
-בלוקים ייעודיים להטמעה עבור YouTube, טוויטר, WordPress, ו-Vimeo עם אפשרות לעריכה של כתובת ה-URL גם לאחר שנבחרה.
-בלוק הגלריה כעת יכול להוסיף תמונות גם כאשר הפוסט נסגר במהלך ההעלאה.
-אפשר לערוך את השם, כתובת האימייל וכתובת האינטרנט של המחבר בתגובות באתר.
-כעת אפשר ליצור קשר עם התמיכה ישירות מהמסך של העורך.
+18.5:
+ההטמעה של תוכן קלה עכשיו יותר עם בלוקים להטמעת תוכן של פייסבוק, אינסטגרם, Loom ו-Smartframe.
+
+לקבל עדכונים שוטפים לגבי שיחות שנמצאות במעקב שלך דרך האפשרות החדשה ב-Reader להודעות בדחיפה שיעדכנו אותך על שיחות בתגובות שבפוסטים במעקב.
+
+בנוסף, עכשיו אפשר לבצע התאמה לטקסט ולצבע הרקע בבלוקים של ציטוטים ו-Preformatted.
 </iw-IL>
 <id>
-18.4:
-Blok sematan khusus untuk YouTube, Twitter, WordPress, dan Vimeo, dengan URL yang dapat disunting setelah dipilih.
-Blok galeri sekarang dapat menambahkan gambar meski pos terkait telah ditutup saat pengunggahan.
-Komentar situs memungkinkan nama, email, dan alamat web penulis disunting.
-Sekarang Anda dapat menghubungi dukungan langsung dari layar editor.
+18.5:
+Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
+
+Ketahui kondisi terkini percakapan yang Anda ikuti melalui Pemberitahuan push pembaca untuk percakapan komentar pos yang diikuti.
+
+Selain itu, sekarang Anda dapat menyesuaikan teks dan warna latar belakang di blok Kutipan Besar dan blok Praformat.
 </id>
 <it-IT>
-18.4:
-Blocchi incorporati dedicati per YouTube, Twitter, WordPress e Vimeo, con URL che possono essere modificati dopo la loro selezione. 
-Il blocco Galleria aggiunge ora immagini perfino se l'articolo viene chiuso durante il caricamento.
-I commenti del sito consentono di modificare il nome dell'autore, l'e-mail e l'indirizzo web.
-Ora puoi contattare il supporto direttamente dalla schermata dell'editor.
+18.5:
+Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
+
+Rimani sempre aggiornato sulle conversazioni che segui tramite le nuove notifiche push del Reader per le conversazioni dei commenti agli articoli seguiti.
+
+Inoltre, ora puoi personalizzare il testo e il colore di sfondo nei blocchi Citazione evidenziata e Preformattato.
 </it-IT>
 <ja-JP>
-18.4: 
-YouTube、Twitter、WordPress、Vimeo 専用の埋め込みブロックができました。URL は選択後でも編集できます。
-ギャラリーブロックではアップロード中に投稿を閉じても画像を追加できるようになりました。
-サイトのコメントでは投稿者の名前、メールアドレス、ウェブアドレスを編集できます。
-また、エディター画面からサポートに直接問い合わせができるようになりました。
+18.5:
+Facebook、Instagram、Loom、SmartFrame の埋め込みブロックで、外部コンテンツの埋め込みが簡単になりました。
+
+フォロー済みの投稿コメントの会話向けの新しい Reader のプッシュ通知で、フォロー中の会話の最新情報をいつでも把握できます。
+
+さらに、プルクオートブロックと整形済みブロックで、テキスト色と背景色をカスタマイズできるようになりました。
 </ja-JP>
 <ko-KR>
-18.4:
-선택한 후 편집할 수 있는 URL이 포함된 유튜브, 트위터, 워드프레스, 비메오 전용 임베드 블록입니다.
-이제는 업로드 중 글을 닫아도 갤러리 블록을 통해 이미지가 추가됩니다.
-사이트 댓글을 통해 글쓴이 이름, 이메일 및 웹 주소를 편집할 수 있습니다.
-이제는 편집기 화면에서 바로 지원팀에 문의할 수 있습니다.
+18.5:
+새로운 페이스북, 인스타그램, Loom 및 Smartframe 임베드 블록 덕분에 외부 콘텐츠를 임베드하는 작업이 더 쉬워졌습니다.
+
+팔로우한 글 댓글 대화에 대한 새로운 리더 푸시 알림을 통해 팔로우하는 대화를 항상 최신 상태로 유지하세요.
+
+또한, 이제는 요약글 블록과 정형화된 형식 블록에서 텍스트와 배경 색상을 사용자 정의할 수 있습니다.
 </ko-KR>
 <nl-NL>
-18.4:
-Speciale insluit blokken voor YouTube, Twitter, WordPress, en Vimeo, met URL's die bewerkt kunnen worden nadat ze geselecteerd zijn.
-Het galerij blok voegt nu afbeeldingen toe, zelfs als het bericht tijdens het uploaden gesloten wordt.
-Site reacties maken het mogelijk de auteursnaam, het e-mailadres en het webadres te bewerken.
-Je kunt nu rechtstreeks vanuit het editor scherm contact opnemen met ondersteuning.
+18.5:
+
+Het insluiten van externe inhoud is net eenvoudiger geworden met de nieuwe insluit blokken voor Facebook, Instagram, Loom en Smartframe.
+
+Blijf altijd op de hoogte van de gesprekken die je volgt via de nieuwe Reader push kennisgevingen voor gevolgde gesprekken over reacties op berichten.
+
+Bovendien kun je nu tekst en achtergrondkleur aanpassen in de blokken Pullquote en Preformatted.
 </nl-NL>
 <pt-BR>
-18.4:
-Blocos de mídia incorporada dedicados para YouTube, Twitter, WordPress e Vimeo, com URLs que podem ser editadas após a seleção.
-Agora o bloco de galeria adicionará as imagens mesmo se o post for fechado durante o upload.
-Os comentários no site permitem que o endereço da Web, e-mail e nome do autor sejam editados.
-Agora você pode falar com o suporte diretamente na tela do editor.
+18.5:
+Incorporar conteúdo externo ficou ainda mais fácil com os novos blocos de mídia incorporada para Facebook, Instagram, Loom e SmartFrame.
+
+Além disso, corrigimos um bug que impedia a edição de URLs incorporáveis e agora as detectamos quando coladas em um parágrafo vazio.
+
+Por fim, os blocos de citação destacada e pré-formatado agora têm texto personalizado e cor de fundo.
 </pt-BR>
 <ru-RU>
-18.4:
-Специальные блоки вставки для YouTube, Twitter, WordPress и Vimeo. Выбрав URL-адрес, его можно изменить.
-Теперь блок галереи позволяет добавлять изображения, даже если идёт загрузка, а запись закрыта.
-В комментариях к сайту можно изменять имя, электронную почту и веб-адрес автора.
-Поддержка доступна прямо на экране редактора.
+18,5:
+Встраивание внешнего содержимого стало еще проще с новыми блоками встраивания Facebook, Instagram, Loom и Smartframe.
+
+Всегда будьте в курсе бесед (и комментариев), на которые вы подписаны, с помощью новых push-уведомлений в Чтиве.
+
+Кроме того, теперь вы можете настроить цвет текста и фона в блоках выдержки и преформатированного текста.
 </ru-RU>
 <sv-SE>
-18.4:
-Dedikerade inbäddningsblock för YouTube, Twitter, WordPress och Vimeo, med URL:er som kan redigeras efter att de har valts.
-Galleriblocket lägger nu till bilder även om inlägget är stängt under uppladdningen.
-Webbplatskommentarer tillåter att författarens namn, e-postadress och webbadress redigeras.
-Du kan nu kontakta supporten direkt från redigerarens skärm.
+18.5:
+Nu har det blivit enklare att lägga in externt innehåll med inbäddningsblock för Facebook, Instagram, Loom och Smartframe.
+
+Håll koll på de konversationer du följer med hjälp av de nya push-meddelandena i läsaren.
+
+Dessutom kan du nu välja färg på text och bakgrund i blocken för framhävt citat och förformatterad text.
 </sv-SE>
 <tr-TR>
-18.4:
-YouTube, Twitter, WordPress ve Vimeo için, seçildikten sonra düzenlenebilen URL'lere sahip özel gömme blokları.
-Galeri bloku, yükleme sırasında gönderi kapatılsa bile artık görsel ekleyebilir.
-Site yorumları, yazarın adının, e-postasının ve web adresinin düzenlenmesine izin verir.
-Artık doğrudan düzenleyici ekranından desteğe başvurabilirsiniz.
+18.5:
+Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
+
+Takip ettiğiniz gönderi yorumlarına yönelik yeni Okuyucu anlık bildirimleri aracılığıyla, takip ettiğiniz konuşmalardan her zaman haberdar olun.
+
+Ayrıca şimdi Alıntı ve Önceden Biçimlendirilmiş bloklarda metin ve arka plan rengini özelleştirebilirsiniz.
 </tr-TR>
+<vi>
+18.5:
+Cho phép chèn khối mã nhúng Facebook, Instagram, Loom, và Smartframe.
+
+Luôn nhận thông báo từ những thảo luận mà bạn theo dõi trên ứng dụng.
+
+Cuối cùng, bạn đã có thể chỉnh màu chữ và màu nền của hai khối Pullquote và Preformatted.
+</vi>
 <zh-CN>
-18.4：
-YouTube、Twitter、WordPress 和 Vimeo 的专用嵌入区块，带有可在选中后进行编辑的 URL。
-现在，即使在上传过程中关闭文章，画廊区块也会添加图片。
-站点评论允许编辑作者的姓名、电子邮件和网址。
-现在，您可以直接从编辑器界面联系支持人员。
+18.5：
+新的 Facebook、Instagram、Loom 和 Smartframe 嵌入区块让嵌入外部内容变得更加容易。
+
+通过针对已关注文章评论对话的新阅读器推送通知，随时了解您关注的对话的最新动态。
+
+此外，您现在还可以自定义醒目引文和预格式化区块中的文本和背景颜色。
 </zh-CN>
 <zh-TW>
-18.4：
-我們新增了 YouTube、Twitter、WordPress 和 Vimeo 專用嵌入內容區塊，而且現在選取 URL 後仍然可以編輯。
-現在即使在圖片上傳過程中關閉文章，仍會在圖庫區塊加入圖片。
-現在可以在網站留言中編輯作者的姓名、電子郵件和網址。
-你現在可以直接從編輯器畫面聯絡支援團隊。
+18.5：
+全新的 Facebook、Instagram、Loom 和 Smartframe 嵌入區塊，讓嵌入外部內容變得更簡單。
+
+透過追蹤文章留言討論用的全新閱讀器推播通知，隨時掌握你追蹤的討論進度。
+
+此外，你現在可在重要引述和預設格式區塊中自訂文字和背景色彩。
 </zh-TW>

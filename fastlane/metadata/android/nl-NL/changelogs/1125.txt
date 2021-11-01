@@ -1,5 +1,0 @@
-18.4:
-Speciale insluit blokken voor YouTube, Twitter, WordPress, en Vimeo, met URL's die bewerkt kunnen worden nadat ze geselecteerd zijn.
-Het galerij blok voegt nu afbeeldingen toe, zelfs als het bericht tijdens het uploaden gesloten wordt.
-Site reacties maken het mogelijk de auteursnaam, het e-mailadres en het webadres te bewerken.
-Je kunt nu rechtstreeks vanuit het editor scherm contact opnemen met ondersteuning.

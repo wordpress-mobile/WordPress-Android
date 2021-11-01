@@ -397,7 +397,9 @@ class MediaPickerViewModel @Inject constructor(
         }
         when (identifier) {
             is LocalUri -> {
-                _onNavigate.postValue(Event(PreviewUrl(identifier.value.toString())))
+                mediaUtilsWrapper.getRealPathFromURI(identifier.value.uri)?.let { path ->
+                    _onNavigate.postValue(Event(PreviewUrl(path)))
+                }
             }
             is StockMediaIdentifier -> {
                 if (identifier.url != null) {
