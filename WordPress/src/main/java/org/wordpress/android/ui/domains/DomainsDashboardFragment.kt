@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -67,6 +68,11 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
                 requireContext(),
                 action.url
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // TODO Handle successful domain registration
     }
 
     companion object {
