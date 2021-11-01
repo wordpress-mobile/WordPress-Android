@@ -107,7 +107,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteLocalId
         result = mutableListOf()
-        quickStartRepository.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        quickStartRepository.getQuickStartUpdate(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     @Test
@@ -342,7 +342,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
 
-        quickStartRepository.buildSource(testScope(), updatedSiteId)
+        quickStartRepository.getQuickStartUpdate(testScope(), updatedSiteId)
 
         verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
@@ -354,7 +354,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartRepository.buildSource(testScope(), updatedSiteLocalId)
+        quickStartRepository.getQuickStartUpdate(testScope(), updatedSiteLocalId)
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)
     }

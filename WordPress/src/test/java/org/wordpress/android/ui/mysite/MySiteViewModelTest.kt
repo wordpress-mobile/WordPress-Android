@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -51,6 +52,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUp
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -82,13 +85,14 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
@@ -133,7 +137,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
-    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var domainRegistrationSource: DomainRegistrationSource
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
@@ -147,6 +151,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var quickStartCardSource: QuickStartCardSource
+    @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
+    @Mock lateinit var selectedSiteSource: SelectedSiteSource
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -166,6 +173,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
+    private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
+    private val selectedSite = MediatorLiveData<SelectedSite>()
+
     private val jetpackCapabilities = MutableLiveData(
             JetpackCapabilities(
                     scanAvailable = false,
@@ -217,17 +227,18 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
-        whenever(domainRegistrationHandler.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
+        selectedSite.value = null
+        whenever(domainRegistrationSource.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
         whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
-        whenever(quickStartRepository.buildSource(any(), any())).thenReturn(quickStartUpdate)
         whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
-        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
+        whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
+        whenever(siteIconProgressSource.buildSource(any(), any())).thenReturn(showSiteIconProgressBar)
+        whenever(selectedSiteSource.buildSource(any(), any())).thenReturn(selectedSite)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -242,7 +253,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 contextProvider,
                 siteIconUploadHandler,
                 siteStoriesHandler,
-                domainRegistrationHandler,
+                domainRegistrationSource,
                 scanAndBackupSource,
                 displayUtilsWrapper,
                 quickStartRepository,
@@ -255,7 +266,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                postCardsSource
+                postCardsSource,
+                quickStartCardSource,
+                selectedSiteSource,
+                siteIconProgressSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1230,6 +1244,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
         onSiteSelected.value = siteLocalId
+        selectedSite.value = SelectedSite(site)
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
@@ -1266,6 +1281,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
+        selectedSite.value = SelectedSite(site)
     }
 
     private enum class SiteInfoCardAction {

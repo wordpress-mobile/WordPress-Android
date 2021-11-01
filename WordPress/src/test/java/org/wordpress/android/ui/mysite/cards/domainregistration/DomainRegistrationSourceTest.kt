@@ -27,7 +27,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
-class DomainRegistrationHandlerTest : BaseUnitTest() {
+class DomainRegistrationSourceTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var appLogWrapper: AppLogWrapper
@@ -35,12 +35,12 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<DomainCreditAvailable>
-    private lateinit var handler: DomainRegistrationHandler
+    private lateinit var source: DomainRegistrationSource
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        handler = DomainRegistrationHandler(
+        source = DomainRegistrationSource(
                 TEST_DISPATCHER,
                 dispatcher,
                 selectedSiteRepository,
@@ -95,7 +95,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
         val fetchedSite = SiteModel().apply { id = 2 }
 
         buildOnPlansFetchedEvent(site = fetchedSite, currentPlan = buildPlan(hasDomainCredit = true))?.let { event ->
-            handler.onPlansFetched(event)
+            source.onPlansFetched(event)
         }
 
         assertThat(result.last().isDomainCreditAvailable).isFalse
@@ -118,9 +118,9 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
         whenever(siteUtils.onFreePlan(any())).thenReturn(isFree)
         whenever(siteUtils.hasCustomDomain(any())).thenReturn(hasCustomDomain)
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
-            whenever(dispatcher.dispatch(any())).then { handler.onPlansFetched(event) }
+            whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
-        handler.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(
