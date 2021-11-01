@@ -60,6 +60,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -70,6 +71,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.filter
@@ -114,7 +116,8 @@ class MySiteViewModel @Inject constructor(
     postCardsSource: PostCardsSource,
     quickStartCardSource: QuickStartCardSource,
     selectedSiteSource: SelectedSiteSource,
-    siteIconProgressSource: SiteIconProgressSource
+    siteIconProgressSource: SiteIconProgressSource,
+    mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -123,6 +126,7 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
+    private val _onShowSwipeRefreshLayout = MutableLiveData((Event(mySiteDashboardPhase2FeatureConfig.isEnabled())))
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -142,6 +146,7 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
+    val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
 
     private val mySiteSources: List<MySiteSource<*>> = listOf(
             selectedSiteSource,
@@ -719,6 +724,10 @@ class MySiteViewModel @Inject constructor(
 
     fun ignoreQuickStart() {
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    fun onPullToRefresh() {
+        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringText("Pull to refresh activated"))))
     }
 
     data class UiModel(
