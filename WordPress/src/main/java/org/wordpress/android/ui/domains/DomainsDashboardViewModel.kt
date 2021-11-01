@@ -152,17 +152,26 @@ class DomainsDashboardViewModel @Inject constructor(
                 )
             }
         } else {
-            listItems += PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
-                    UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                    UiStringText(
-                            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                    R.string.domains_free_plan_get_your_domain_caption,
-                                    freeDomainUrl
-                            )
-                    ),
-                    ListItemInteraction.create(this::onGetDomainClick)
-            )
+            listItems += if (hasPaidPlan) {
+                PurchaseDomain(
+                        R.drawable.img_illustration_domains_card_header,
+                        UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
+                        UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
+                        ListItemInteraction.create(this::onGetDomainClick)
+                )
+            } else {
+                PurchaseDomain(
+                        R.drawable.img_illustration_domains_card_header,
+                        UiStringRes(R.string.domains_free_plan_get_your_domain_title),
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.domains_free_plan_get_your_domain_caption,
+                                        freeDomainUrl
+                                )
+                        ),
+                        ListItemInteraction.create(this::onGetDomainClick)
+                )
+            }
         }
 
 //        NOTE: Manage domains option is de-scoped for v1 release
