@@ -53,7 +53,6 @@ class DomainsDashboardViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
-    private var hasDomainCredit: Boolean = false
     private var isStarted: Boolean = false
 
     private val _onNavigation = MutableLiveData<Event<DomainsDashboardNavigationAction>>()
