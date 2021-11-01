@@ -99,11 +99,12 @@ class DomainsDashboardViewModel @Inject constructor(
         val listItems = mutableListOf<DomainsDashboardItem>()
 
         val freeDomain = domains.firstOrNull { it.wpcomDomain }
-        val customDomains = domains.filter { !it.wpcomDomain }
+        val freeDomainUrl = freeDomain?.domain ?: getCleanUrl(site.unmappedUrl)
+        val freeDomainIsPrimary = freeDomain?.primaryDomain ?: false
 
-        freeDomain?.let {
-            listItems += getFreeDomainItems(it.domain.toString(), it.primaryDomain)
-        }
+        listItems += FreeDomain(UiStringText(freeDomainUrl), freeDomainIsPrimary, this::onChangeSiteClick)
+
+        val customDomains = domains.filter { !it.wpcomDomain }
 
         customDomains.let {
             listItems += getManageDomainsItems(freeDomain?.domain.toString(), customDomains)
@@ -117,9 +118,6 @@ class DomainsDashboardViewModel @Inject constructor(
 
         _uiModel.value = listItems
     }
-
-    private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
-            listOf(FreeDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
 
     // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
     private fun getPurchaseDomainItems(siteUrl: String) =
