@@ -211,7 +211,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -1739,40 +1738,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
      *   1. Shows and hides the editor's progress dialog;
      *   2. Saves the post via {@link EditPostActivity#updateAndSavePostAsync(OnPostUpdatedFromUIListener)};
      *   3. Invokes the listener method parameter
-     *   4. If there were changes in the post that needed to be saved, for debug builds the app will crash, and
-     *      for release builds we send an exception to Sentry because this
-     *      indicates that the editor's autosave mechanism failed to save all changes to the post. Ideally,
-     *      there should never be any changes that need to be saved when exiting the editor because all changes
-     *      should be caught by the autosave mechanism, but there is a known issue where there will be unsaved
-     *      changes when the user quickly exits the editor after making changes. For that reason we send that as
-     *      a separate event to Sentry.
      */
     private void updateAndSavePostAsyncOnEditorExit(@NonNull final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             return;
         }
         mViewModel.setSavingPostOnEditorExit(true);
-        // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
-        boolean isAutosavePending = mViewModel.isAutosavePending();
-
         mViewModel.showSavingProgressDialog();
-        updateAndSavePostAsync((result) -> {
-            listener.onPostUpdatedFromUI(result);
-
-            if (result == Updated.INSTANCE) {
-                SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
-                if (BuildConfig.DEBUG) {
-                    throw new RuntimeException(
-                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
-                    );
-                } else {
-                    CrashLoggingExtKt.sendReportWithTag(mCrashLogging, exception, T.EDITOR);
-                    AppLog.e(T.EDITOR, exception.getMessage());
-                }
-            } else {
-                AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
-            }
-        });
+        updateAndSavePostAsync((result) -> listener.onPostUpdatedFromUI(result));
     }
 
     private UpdateFromEditor updateFromEditor(String oldContent) {
