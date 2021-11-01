@@ -35,6 +35,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -109,6 +110,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val hasCustomDomains = customDomains.isNotEmpty()
         val hasDomainCredit = isDomainCreditAvailable(plans)
+        val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
         if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
 
