@@ -136,12 +136,14 @@ class DomainsDashboardViewModel @Inject constructor(
 
         if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
-            listItems += DomainBlurb(
-                    UiStringResWithParams(
-                            R.string.domains_redirected_domains_blurb,
-                            listOf(UiStringText(freeDomainUrl))
-                    )
-            )
+            if (!hasPaidPlan) {
+                listItems += DomainBlurb(
+                        UiStringResWithParams(
+                                R.string.domains_redirected_domains_blurb,
+                                listOf(UiStringText(freeDomainUrl))
+                        )
+                )
+            }
         }
 
         listItems += if (hasDomainCredit) {
