@@ -15,7 +15,7 @@ class UnifiedAboutFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
         appConfig,
-        BuildConfig.UNIFIED_ABOUT,
+        BuildConfig.UNIFIED_ABOUT
 //        UNIFIED_ABOUT_REMOTE_FIELD
 ) {
     companion object {
