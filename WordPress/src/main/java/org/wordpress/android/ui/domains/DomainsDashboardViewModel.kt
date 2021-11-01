@@ -148,14 +148,14 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += if (hasDomainCredit) {
             PurchaseDomain(
-                    R.drawable.media_image_placeholder,
+                    R.drawable.img_illustration_domains_card_header,
                     UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
                     UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
                     ListItemInteraction.create(this::onClaimDomainClick)
             )
         } else {
             PurchaseDomain(
-                    R.drawable.media_image_placeholder,
+                    R.drawable.img_illustration_domains_card_header,
                     UiStringRes(R.string.domains_free_plan_get_your_domain_title),
                     UiStringText(
                             htmlMessageUtils.getHtmlMessageFromStringFormatResId(
