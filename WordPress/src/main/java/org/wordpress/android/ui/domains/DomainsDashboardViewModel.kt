@@ -88,7 +88,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
     private fun getSiteDomainsList() {
         // TODO: Probably needs a loading spinner here instead
-        _uiModel.value = getFreeDomainItems(getHomeUrlOrHostName(site.unmappedUrl), false)
+        _uiModel.value = getFreeDomainItems(getCleanUrl(site.unmappedUrl), false)
 
         launch {
             val result = siteStore.fetchSiteDomains(site)
@@ -216,11 +216,7 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun getHomeUrlOrHostName(unmappedUrl: String): String {
-        var homeURL = UrlUtils.removeScheme(unmappedUrl)
-        homeURL = StringUtils.removeTrailingSlash(homeURL)
-        return homeURL
-    }
+    private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
