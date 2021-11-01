@@ -3,20 +3,17 @@ package org.wordpress.android.ui.domains
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.async
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
@@ -29,16 +26,14 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenManageDomains
-import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -49,10 +44,10 @@ import javax.inject.Named
 
 @Suppress("TooManyFunctions")
 class DomainsDashboardViewModel @Inject constructor(
-    private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
+    private val fetchPlansUseCase: FetchPlansUseCase,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     lateinit var site: SiteModel
@@ -70,69 +65,47 @@ class DomainsDashboardViewModel @Inject constructor(
             return
         }
         this.site = site
-        dispatcher.register(this)
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
-        refresh()
+        refresh(site)
         isStarted = true
     }
 
     override fun onCleared() {
-        dispatcher.unregister(this)
+        fetchPlansUseCase.clear()
         super.onCleared()
     }
 
-    private fun refresh() {
-        checkDomainCredit()
-        getSiteDomainsList()
-    }
+    private fun refresh(site: SiteModel) = launch {
+        // TODO: Probably needs a loading spinner here
 
-    private fun getSiteDomainsList() {
-        // TODO: Probably needs a loading spinner here instead
-        _uiModel.value = getFreeDomainItems(getCleanUrl(site.unmappedUrl), false)
+        val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
+        val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
 
-        launch {
-            val result = siteStore.fetchSiteDomains(site)
-            when {
-                result.isError -> {
-                    AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
-                }
-                else -> {
-                    buildDashboardItems(result.domains)
-                }
-            }
+        val plansResult = deferredPlansResult.await()
+        val domainsResult = deferredDomainsResult.await()
+
+        if (plansResult.isError) {
+            AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans: ${plansResult.error.message}")
         }
-    }
 
-    private fun checkDomainCredit() {
-        // TODO: Refactor this
-        if (shouldFetchPlans(site)) fetchPlans(site)
-    }
-
-    private fun shouldFetchPlans(site: SiteModel) = !SiteUtils.onFreePlan(site) && !SiteUtils.hasCustomDomain(site)
-
-    private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPlansFetched(event: OnPlansFetched) {
-        if (event.isError) {
-            val message = "An error occurred while fetching plans : " + event.error.message
-            AppLog.e(DOMAIN_REGISTRATION, message)
-        } else if (site.id == event.site.id) {
-            hasDomainCredit = isDomainCreditAvailable(event.plans)
+        if (domainsResult.isError) {
+            AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching domains: ${domainsResult.error.message}")
         }
+
+        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty())
     }
 
-    private fun buildDashboardItems(domains: List<Domain>?) {
+    private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        val freeDomain = domains?.firstOrNull { it.wpcomDomain || it.isWpcomStagingDomain }
-        val customDomains = domains?.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
+        val freeDomain = domains.firstOrNull { it.wpcomDomain || it.isWpcomStagingDomain }
+        val customDomains = domains.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
 
         freeDomain?.let {
             listItems += getFreeDomainItems(it.domain.toString(), it.primaryDomain)
         }
 
-        customDomains?.let {
+        customDomains.let {
             listItems += getManageDomainsItems(freeDomain?.domain.toString(), customDomains)
         }
 
@@ -248,6 +221,6 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     fun onSuccessfulDomainRegistration() {
-        refresh()
+        refresh(site)
     }
 }
