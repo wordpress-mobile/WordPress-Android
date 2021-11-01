@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
@@ -99,8 +98,8 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        val freeDomain = domains.firstOrNull { it.wpcomDomain || it.isWpcomStagingDomain }
-        val customDomains = domains.filter { !it.wpcomDomain && !it.isWpcomStagingDomain }
+        val freeDomain = domains.firstOrNull { it.wpcomDomain }
+        val customDomains = domains.filter { !it.wpcomDomain }
 
         freeDomain?.let {
             listItems += getFreeDomainItems(it.domain.toString(), it.primaryDomain)
