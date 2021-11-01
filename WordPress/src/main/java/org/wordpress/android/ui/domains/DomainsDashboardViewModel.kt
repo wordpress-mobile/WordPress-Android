@@ -7,7 +7,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.Constants
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
@@ -147,31 +146,39 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
-        listOf(FreeDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
+            listOf(FreeDomain(UiStringText(siteUrl), isPrimary, this::onChangeSiteClick))
 
     // for v1 release image/anim is de-scoped, set the image visibility to gone in layout for now.
     private fun getPurchaseDomainItems(siteUrl: String) =
-            listOf(PurchaseDomain(
-                    R.drawable.media_image_placeholder,
-                    UiStringRes(string.domains_free_plan_get_your_domain_title),
-                    UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            string.domains_free_plan_get_your_domain_caption, siteUrl)),
-                    ListItemInteraction.create(this::onGetDomainClick)
-            ))
+            listOf(
+                    PurchaseDomain(
+                            R.drawable.media_image_placeholder,
+                            UiStringRes(R.string.domains_free_plan_get_your_domain_title),
+                            UiStringText(
+                                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                            R.string.domains_free_plan_get_your_domain_caption,
+                                            siteUrl
+                                    )
+                            ),
+                            ListItemInteraction.create(this::onGetDomainClick)
+                    )
+            )
 
     private fun getClaimDomainItems() =
-            listOf(PurchaseDomain(
-                    R.drawable.media_image_placeholder,
-                    UiStringRes(string.domains_paid_plan_claim_your_domain_title),
-                    UiStringRes(string.domains_paid_plan_claim_your_domain_caption),
-                    ListItemInteraction.create(this::onClaimDomainClick)
-            ))
+            listOf(
+                    PurchaseDomain(
+                            R.drawable.media_image_placeholder,
+                            UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
+                            UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
+                            ListItemInteraction.create(this::onClaimDomainClick)
+                    )
+            )
 
     // if site has a custom registered domain then show Site Domains, Add Domain and Manage Domains
     private fun getManageDomainsItems(siteUrl: String, domains: List<Domain>): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
-        if (domains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(string.domains_site_domains))
+        if (domains.isNotEmpty()) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
 
         domains.forEach {
             listItems += SiteDomains(
@@ -179,12 +186,13 @@ class DomainsDashboardViewModel @Inject constructor(
                     if (it.expirySoon) {
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        string.domains_site_domain_expires_soon, it.expiry.toString()
+                                        R.string.domains_site_domain_expires_soon,
+                                        it.expiry.toString()
                                 )
                         )
                     } else {
                         UiStringResWithParams(
-                                string.domains_site_domain_expires,
+                                R.string.domains_site_domain_expires,
                                 listOf(UiStringText(it.expiry.toString()))
                         )
                     },
@@ -194,8 +202,12 @@ class DomainsDashboardViewModel @Inject constructor(
 
         if (domains.isNotEmpty()) {
             listItems += AddDomain(ListItemInteraction.create(this::onAddDomainClick))
-            listItems += DomainBlurb(UiStringResWithParams(
-                    string.domains_redirected_domains_blurb, listOf(UiStringText(siteUrl))))
+            listItems += DomainBlurb(
+                    UiStringResWithParams(
+                            R.string.domains_redirected_domains_blurb,
+                            listOf(UiStringText(siteUrl))
+                    )
+            )
         }
 
 //        NOTE: Manage domains option is de-scoped for v1 release
@@ -229,10 +241,12 @@ class DomainsDashboardViewModel @Inject constructor(
         _onNavigation.postValue(Event(OpenManageDomains("${Constants.URL_MANAGE_DOMAINS}/${site.siteId}")))
     }
 
-//  NOTE: Change site option is de-scoped for v1 release
+    //  NOTE: Change site option is de-scoped for v1 release
     private fun onChangeSiteClick(action: Action): Boolean {
         when (action) {
-            CHANGE_SITE_ADDRESS -> {} // TODO: next PR
+            CHANGE_SITE_ADDRESS -> {
+                TODO("Not yet implemented")
+            }
         }
         return true
     }
