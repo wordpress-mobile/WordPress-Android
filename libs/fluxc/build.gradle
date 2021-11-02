@@ -22,6 +22,7 @@ android {
                         "room.expandProjection":"true"]
             }
         }
+        consumerProguardFiles 'proguard-rules.pro'
     }
     buildTypes {
         release {
