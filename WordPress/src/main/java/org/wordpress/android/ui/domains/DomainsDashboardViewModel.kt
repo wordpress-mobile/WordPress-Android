@@ -72,14 +72,19 @@ class DomainsDashboardViewModel @Inject constructor(
         }
         this.site = site
         dispatcher.register(this)
-        checkDomainCredit()
-        getSiteDomainsList()
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
+        refresh()
         isStarted = true
     }
 
     override fun onCleared() {
         dispatcher.unregister(this)
         super.onCleared()
+    }
+
+    private fun refresh() {
+        checkDomainCredit()
+        getSiteDomainsList()
     }
 
     private fun getSiteDomainsList() {
@@ -139,7 +144,6 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         _uiModel.value = listItems
-        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
     }
 
     private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
@@ -231,5 +235,9 @@ class DomainsDashboardViewModel @Inject constructor(
             CHANGE_SITE_ADDRESS -> {} // TODO: next PR
         }
         return true
+    }
+
+    fun onSuccessfulDomainRegistration() {
+        refresh()
     }
 }
