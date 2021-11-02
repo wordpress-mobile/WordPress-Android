@@ -244,7 +244,7 @@ object JetpackTunnelGsonRequest {
             put("path", "$path&_method=get")
             put("json", "true")
             if (params.isNotEmpty()) {
-                put("query", gson.toJson(params))
+                put("query", gson.toJson(params, object : TypeToken<Map<String, String>>() {}.type))
             }
         }
         return finalParams
@@ -260,7 +260,7 @@ object JetpackTunnelGsonRequest {
             put("path", "$path&_method=$method")
             put("json", "true")
             if (body.isNotEmpty()) {
-                put("body", gson.toJson(body))
+                put("body", gson.toJson(body, object : TypeToken<Map<String, Any>>() {}.type))
             }
         }
         return finalBody
