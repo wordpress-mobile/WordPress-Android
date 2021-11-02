@@ -15,8 +15,13 @@ class PostCardViewHolder(
 ) : MySiteCardAndItemViewHolder<MySitePostCardBinding>(
         parent.viewBinding(MySitePostCardBinding::inflate)
 ) {
+    init {
+        binding.postItems.adapter = PostItemsAdapter(uiHelpers)
+    }
+
     fun bind(card: PostCard) = with(binding) {
         mySiteToolbar.update(card)
+        (postItems.adapter as PostItemsAdapter).update(card.postItems)
     }
 
     private fun MySiteCardToolbarBinding.update(card: PostCard) {
