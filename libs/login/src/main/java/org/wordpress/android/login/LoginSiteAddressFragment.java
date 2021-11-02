@@ -428,7 +428,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             endProgressIfNeeded();
             // Not a WordPress site
             mLoginListener.handleSiteAddressError(siteInfo);
-        } else if (siteInfo.hasJetpack && siteInfo.isJetpackConnected && siteInfo.isJetpackActive) {
+        } else if (mConnectSiteInfoCalculatedHasJetpack) {
             endProgressIfNeeded();
             mLoginListener.gotConnectedSiteInfo(
                     mConnectSiteInfoUrl,
