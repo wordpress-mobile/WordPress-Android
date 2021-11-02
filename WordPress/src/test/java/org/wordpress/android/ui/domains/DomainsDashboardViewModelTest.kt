@@ -14,8 +14,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.GoogleAppsSubscription
-import org.wordpress.android.fluxc.network.rest.wpcom.site.TitanMailSubscription
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
