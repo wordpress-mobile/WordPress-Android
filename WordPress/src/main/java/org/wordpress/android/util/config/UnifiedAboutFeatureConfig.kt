@@ -9,7 +9,6 @@ import javax.inject.Inject
  */
 // TODO: Uncomment the lines @Feature and UNIFIED_ABOUT_REMOTE_FIELD when remote field is configured and
 //  remove line @FeatureInDevelopment and this to-do lines
-// @Feature(DomainPurchaseFeatureConfig.DOMAIN_PURCHASE_REMOTE_FIELD, false)
 @FeatureInDevelopment
 class UnifiedAboutFeatureConfig @Inject constructor(
     appConfig: AppConfig
