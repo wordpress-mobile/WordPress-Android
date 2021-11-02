@@ -43,7 +43,7 @@ class AnalyticsTrackerWrapper
         if (properties == null) {
             AnalyticsUtils.trackWithSiteDetails(stat, site)
         } else {
-            AnalyticsUtils.trackWithSiteDetails(stat, site, properties)
+            AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
         }
     }
 
