@@ -112,6 +112,23 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += buildCustomDomainItems(customDomains, hasCustomDomains)
 
+        listItems += buildCtaItems(freeDomainUrl, hasCustomDomains, hasDomainCredit, hasPaidPlan)
+
+//        NOTE: Manage domains option is de-scoped for v1 release
+//        if (hasCustomDomains) {
+//            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
+//        }
+
+        _uiModel.postValue(listItems)
+    }
+
+    private fun buildCtaItems(
+        freeDomainUrl: String,
+        hasCustomDomains: Boolean,
+        hasDomainCredit: Boolean,
+        hasPaidPlan: Boolean
+    ): List<DomainsDashboardItem> {
+        val listItems = mutableListOf<DomainsDashboardItem>()
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
                     null,
@@ -151,13 +168,7 @@ class DomainsDashboardViewModel @Inject constructor(
                 )
             }
         }
-
-//        NOTE: Manage domains option is de-scoped for v1 release
-//        if (hasCustomDomains) {
-//            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
-//        }
-
-        _uiModel.postValue(listItems)
+        return listItems
     }
 
     private fun buildCustomDomainItems(
