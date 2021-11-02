@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-01 09:07:41+0000
+Translation-Revision-Date: 2021-10-26 06:20:39+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -1752,10 +1752,10 @@ Language: pl
     <string name="jetpack_send_email_notifications_title">Wysyłaj powiadomienia przez email</string>
     <string name="jetpack_monitor_uptime_title">Monitoruj czas aktywności twojej witryny</string>
     <string name="jetpack_security_setting_title">Bezpieczeństwo</string>
-    <string name="jetpack_site_settings_category_title">Ustawienia Jetpack</string>
     <string name="share_intent_adding_to">Dodawanie do</string>
     <string name="share_intent_pick_site">Wybierz witrynę</string>
     <string name="share_action_media">Dodaj do biblioteki mediów</string>
+    <string name="jetpack_site_settings_category_title">Ustawienia Jetpacka</string>
     <string name="share_action_post">Dodaj do nowego wpisu</string>
     <string name="share_media_permission_required">Wymagane uprawnienia do udostępnienia obrazków lub filmów</string>
     <string name="invalid_ip_or_range">Nieprawidłowy adres IP lub zakres adresów IP</string>

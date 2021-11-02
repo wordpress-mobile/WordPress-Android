@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-19 07:22:33+0000
+Translation-Revision-Date: 2021-10-26 11:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -16,6 +16,14 @@ Language: ar
     <string name="post_settings_mark_as_sticky_options_header">وضع علامة كمُثبَّت</string>
     <string name="reader_follow_comments_unfollow_conversation">إلغاء متابعة المحادثة</string>
     <string name="reader_follow_comments_enable_push_notifications">تفعيل إشعارات التطبيق</string>
+    <string name="reader_follow_comments_message">إنك تتابع هذه المحادثة. ستتلقى تنبيهات عبر البريد الإلكتروني عند نشر تعليقات جديدة.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">إدارة خيارات متابعة المحادثة، النافذة المنبثقة</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">يتعذر تعطيل التنبيهات داخل التطبيق</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">يتعذر تمكين التنبيهات داخل التطبيق</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">تم تعطيل التنبيهات داخل التطبيق</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">تم تمكين التنبيهات داخل التطبيق</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">تم إلغاء الاشتراك من هذه المحادثة</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">متابعة هذه المحادثة\nهل تريد تمكين التنبيهات داخل التطبيق؟</string>
     <string name="domains_search_for_a_domain_button">البحث عن نطاق</string>
     <string name="domains_paid_plan_claim_your_domain_caption">لديك تسجيل مجال مجاني مدته عام واحد متضمن في خطتك</string>
     <string name="domains_free_plan_get_your_domain_caption">النطاقات التي تم شراؤها على هذا الموقع ستعيد توجيه الزائرين إلى &lt;b&gt;%s&lt;/b&gt;</string>
@@ -2884,10 +2892,10 @@ Language: ar
     <string name="share_link">رابط المشاركة</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_label_reply">رد</string>
-    <string name="comment_spammed">تم وضع علامة إزعاج على التعليق</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
     <string name="reader_likes_multi">%,d أحبوا هذا</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
+    <string name="comment_spammed">تم وضع علامة مزعج على التعليق</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
     <string name="pick_photo">تحديد صورة</string>
     <string name="pick_video">تحديد فيديو</string>

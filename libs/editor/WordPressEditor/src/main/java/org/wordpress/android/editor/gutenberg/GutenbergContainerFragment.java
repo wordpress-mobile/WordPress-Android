@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.editor.BuildConfig;
@@ -190,6 +191,12 @@ public class GutenbergContainerFragment extends Fragment {
     public CharSequence getTitle(OnGetContentTimeout onGetContentTimeout) {
         return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
     }
+
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
+                                                               OnGetContentTimeout onGetContentTimeout) {
+        return mWPAndroidGlueCode.getTitleAndContent(originalContent, onGetContentTimeout);
+    }
+
 
     public void triggerGetContentInfo(OnContentInfoReceivedListener onContentInfoReceivedListener) {
         mWPAndroidGlueCode.triggerGetContentInfo(onContentInfoReceivedListener);

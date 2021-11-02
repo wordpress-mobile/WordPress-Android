@@ -25,6 +25,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -1119,6 +1120,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         } else {
             return originalText;
         }
+    }
+
+    @Override
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException {
+        if (!isAdded()) {
+            throw new EditorFragmentNotAddedException();
+        }
+        return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentTimeout() {
+            @Override public void onGetContentTimeout(InterruptedException ie) {
+                AppLog.e(T.EDITOR, ie);
+                Thread.currentThread().interrupt();
+            }
+        });
     }
 
     /**

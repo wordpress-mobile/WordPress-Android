@@ -8,6 +8,9 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -136,6 +139,7 @@ class DomainsDashboardViewModel @Inject constructor(
         }
 
         _uiModel.value = listItems
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_VIEWED, site)
     }
 
     private fun getFreeDomainItems(siteUrl: String, isPrimary: Boolean) =
@@ -203,7 +207,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onGetDomainClick() {
-        // TODO Add tracking
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
         _onNavigation.value = Event(GetDomain(site))
     }
 
@@ -213,6 +217,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onAddDomainClick() {
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED, site)
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
     }
 

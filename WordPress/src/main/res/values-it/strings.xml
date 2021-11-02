@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-14 19:40:43+0000
+Translation-Revision-Date: 2021-10-26 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Crea link</string>
+    <string name="domain_registration_result_description">Il nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Potrebbero essere necessari fino a 30 minuti prima che il tuo dominio inizi a funzionare.</string>
+    <string name="domain_registration_result_title">Complimenti per l\'acquisto.</string>
+    <string name="domains_suggestions_select_domain">Seleziona dominio</string>
+    <string name="domains_title">Domini</string>
+    <string name="post_status_sticky">In evidenza</string>
+    <string name="post_settings_post_sticky">Metti in evidenza l\'articolo nella pagina iniziale</string>
+    <string name="post_settings_mark_as_sticky_options_header">Contrassegna come in evidenza</string>
+    <string name="reader_follow_comments_unfollow_conversation">Smetti di seguire la conversazione</string>
+    <string name="reader_follow_comments_enable_push_notifications">Attiva le notifiche in-app</string>
+    <string name="reader_follow_comments_message">Stai seguendo questa conversazione. Riceverai notifiche tramite e-mail quando vengono pubblicati nuovi commenti.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Gestisci le opzioni relative al seguire una conversazione, finestra popup</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Impossibile disattivare le notifiche in-app</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Impossibile attivare le notifiche in-app</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Notifiche in-app disattivate</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Notifiche in-app attivate</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Abbonamento a questa conversazione annullato</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Seguendo questa conversazione\nVuoi attivare le notifiche in-app?</string>
     <string name="domains_search_for_a_domain_button">Cerca un dominio</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Il tuo piano include la registrazione del dominio per un anno gratuitamente</string>
+    <string name="domains_free_plan_get_your_domain_caption">I domini acquistati su questo sito reindirizzeranno i visitatori a &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
     <string name="domains_manage_domains">Gestisci domini</string>
     <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Scopri di più&lt;/a&gt;.</string>
@@ -211,6 +230,7 @@ Language: it
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
+    <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
     <string name="gutenberg_native_none">Nessuno</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
@@ -1295,6 +1315,7 @@ Language: it
     <string name="domain_contact_information_country_hint">Paese</string>
     <string name="domain_contact_information_country_code_hint">Prefisso internazionale</string>
     <string name="domain_contact_information_phone_number_hint">Telefono</string>
+    <string name="domain_contact_information_register_domain_button">Registra il dominio</string>
     <string name="domain_contact_information_organization_hint">Organizzazione (opzionale)</string>
     <string name="domain_contact_information_description">Per agevolarti, abbiamo precompilato le tue informazioni di contatto\n di WordPress.com. Rileggi per verificare che le informazioni che desideri utilizzare per questo dominio siano corrette.</string>
     <string name="domain_contact_information_title">Informazioni di contatto per il dominio</string>

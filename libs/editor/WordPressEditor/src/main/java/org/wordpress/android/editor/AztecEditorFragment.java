@@ -50,6 +50,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -696,6 +697,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
         return StringUtils.notNullStr(mTitle.getText().toString().replaceAll("&nbsp;$", "").replaceAll("\u200B", ""));
+    }
+
+    @Override
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException {
+        return new Pair<>(getTitle(), getContent(originalContent));
     }
 
     @Override

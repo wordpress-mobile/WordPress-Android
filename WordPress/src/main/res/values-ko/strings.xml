@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:03:53+0000
+Translation-Revision-Date: 2021-10-27 13:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_create_link">링크 생성</string>
+    <string name="domain_registration_result_description">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 생성하는 중입니다. 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
+    <string name="domain_registration_result_title">업그레이드를 축하합니다!</string>
+    <string name="domains_suggestions_select_domain">도메인 선택</string>
+    <string name="domains_title">도메인</string>
+    <string name="post_status_sticky">붙박이</string>
+    <string name="post_settings_post_sticky">이 글을 전면 페이지에 고정</string>
+    <string name="post_settings_mark_as_sticky_options_header">붙박이로 표시</string>
+    <string name="reader_follow_comments_unfollow_conversation">대화 팔로우 취소</string>
+    <string name="reader_follow_comments_enable_push_notifications">앱 내 알림 활성화</string>
+    <string name="reader_follow_comments_message">이 대화를 팔로우하는 중입니다. 새 댓글이 발행되면 이메일로 알림이 수신됩니다.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">대화 팔로우 관리 옵션, 팝업 창</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">앱 내 알림을 비활성화할 수 없음</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">앱 내 알림을 활성화할 수 없음</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">앱 내 알림 비활성화됨</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">앱 내 알림 활성화됨</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">이 대화 구독 해지됨</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">이 대화 팔로우 중\n앱 내 알림을 활성화하나요?</string>
     <string name="domains_search_for_a_domain_button">도메인 검색</string>
     <string name="domains_paid_plan_claim_your_domain_caption">이용 중인 요금제에 1년 무료 도메인 등록이 포함되어 있음</string>
+    <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 방문자가 &lt;b&gt;%s&lt;/b&gt;(으)로 리디렉팅됩니다.</string>
     <string name="domains_paid_plan_claim_your_domain_title">무료 도메인 신청</string>
     <string name="domains_manage_domains">도메인 관리</string>
     <string name="domains_redirected_domains_blurb">도메인이 &lt;b&gt;%s&lt;/b&gt;의 사이트로 리디렉팅됩니다. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;자세히 알아보세요&lt;/a&gt;.</string>
@@ -210,6 +229,7 @@ Language: ko_KR
     <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_embed_link">링크 임베드</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
+    <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
     <string name="gutenberg_native_none">없음</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>

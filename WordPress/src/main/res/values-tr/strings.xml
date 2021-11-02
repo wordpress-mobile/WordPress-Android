@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:04:35+0000
+Translation-Revision-Date: 2021-10-27 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
+    <string name="domain_registration_result_description">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; oluşturuluyor. Alan adınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
+    <string name="domain_registration_result_title">Satın aldığınız için tebrikler!</string>
+    <string name="domains_suggestions_select_domain">Alan adı seç</string>
+    <string name="domains_title">Alan adları</string>
+    <string name="post_status_sticky">Yapışkan</string>
+    <string name="post_settings_post_sticky">Yazıyı ön sayfaya yapıştır</string>
+    <string name="post_settings_mark_as_sticky_options_header">Yapışkan olarak işaretle</string>
+    <string name="reader_follow_comments_unfollow_conversation">Görüşmeyi takip etmeyi bırak</string>
+    <string name="reader_follow_comments_enable_push_notifications">Uygulama içi bildirimleri etkinleştir</string>
+    <string name="reader_follow_comments_message">Bu konuşmayı takip ediyorsunuz. Yeni yorumlar yayınlandığında e-posta ile bildirim alacaksınız.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Konuşma takibi seçeneklerini yönet, Açılır pencere</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Uygulama içi bildirimler devre dışı bırakılamadı</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Uygulama içi bildirimler etkinleştirilemedi</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Uygulama içi bildirimler devre dışı bırakıldı</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Uygulama içi bildirimler etkinleştirildi</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Bu konuşmanın aboneliğinden çıkıldı</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Bu konuşmanın ardından\nUygulama içi bildirimler etkinleştirilsin mi?</string>
     <string name="domains_search_for_a_domain_button">Alan adı ara</string>
+    <string name="domains_free_plan_get_your_domain_caption">Bu siteden satın alınan alan adları ziyaretçileri &lt;b&gt;%s&lt;/b&gt; sitesine yönlendirir</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Paketiniz ücretsiz bir yıllık alan adı kaydını içerir</string>
     <string name="domains_paid_plan_claim_your_domain_title">Ücretsiz alan adınızı isteyin</string>
     <string name="domains_manage_domains">Alan Adlarını Yönet</string>
@@ -212,6 +231,7 @@ Language: tr
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
+    <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
     <string name="gutenberg_native_none">Hiçbiri</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
