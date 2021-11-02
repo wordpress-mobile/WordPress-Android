@@ -110,26 +110,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
-        if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
-        listItems += customDomains.map {
-            SiteDomains(
-                    UiStringText(it.domain.orEmpty()),
-                    if (it.expirySoon) {
-                        UiStringText(
-                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                        R.string.domains_site_domain_expires_soon,
-                                        it.expiry.orEmpty()
-                                )
-                        )
-                    } else {
-                        UiStringResWithParams(
-                                R.string.domains_site_domain_expires,
-                                listOf(UiStringText(it.expiry.orEmpty()))
-                        )
-                    },
-                    it.primaryDomain
-            )
-        }
+        listItems += buildCustomDomainItems(customDomains, hasCustomDomains)
 
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
@@ -177,6 +158,34 @@ class DomainsDashboardViewModel @Inject constructor(
 //        }
 
         _uiModel.postValue(listItems)
+    }
+
+    private fun buildCustomDomainItems(
+        customDomains: List<Domain>,
+        hasCustomDomains: Boolean
+    ): List<DomainsDashboardItem> {
+        val listItems = mutableListOf<DomainsDashboardItem>()
+        if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
+        listItems += customDomains.map {
+            SiteDomains(
+                    UiStringText(it.domain.orEmpty()),
+                    if (it.expirySoon) {
+                        UiStringText(
+                                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                        R.string.domains_site_domain_expires_soon,
+                                        it.expiry.orEmpty()
+                                )
+                        )
+                    } else {
+                        UiStringResWithParams(
+                                R.string.domains_site_domain_expires,
+                                listOf(UiStringText(it.expiry.orEmpty()))
+                        )
+                    },
+                    it.primaryDomain
+            )
+        }
+        return listItems
     }
 
     private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
