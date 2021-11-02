@@ -226,6 +226,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onSetBlockTypeImpressions(Map<String, Double> impressions);
         void onContactCustomerSupport();
         void onGotoCustomerSupportOptions();
+        void onSendEventToHost(String eventName, Map<String, Object> properties);
     }
 
     /**

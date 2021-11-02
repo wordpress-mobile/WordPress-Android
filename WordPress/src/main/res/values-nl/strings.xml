@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-09 15:36:13+0000
+Translation-Revision-Date: 2021-10-18 19:56:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Maak link</string>
+    <string name="domain_registration_result_description">Je nieuwe domein &lt;b&gt;%s&lt;/b&gt; wordt ingesteld. Het kan tot 30 minuten duren voordat je domein begint te werken.</string>
+    <string name="domain_registration_result_title">Gefeliciteerd met je aankoop!</string>
+    <string name="domains_suggestions_select_domain">Selecteer domein</string>
+    <string name="domains_title">Domeinen</string>
+    <string name="post_status_sticky">Sticky</string>
+    <string name="post_settings_post_sticky">Bericht vastmaken op voorpagina</string>
+    <string name="post_settings_mark_as_sticky_options_header">Markeer als sticky</string>
+    <string name="reader_follow_comments_unfollow_conversation">Ontvolg conversatie</string>
+    <string name="reader_follow_comments_enable_push_notifications">Schakel in-app kennisgevingen in</string>
+    <string name="reader_follow_comments_message">Je volgt deze conversatie. Je zult kennisgevingen ontvangen via e-mail, als nieuwe reacties gepubliceerd worden.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Beheer conversatie volgen opties, pop-up venster</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Kon in-app kennisgevingen niet uitschakelen</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Kon in-app kennisgevingen niet inschakelen</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">In-app kennisgevingen uitgeschakeld</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">In-app kennisgevingen ingeschakeld</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Uitgeschreven van deze conversatie</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Volgt deze conversatie\nIn-app kennisgevingen inschakelen?</string>
     <string name="domains_search_for_a_domain_button">Zoek naar een domein</string>
-    <string name="domains_free_plan_get_your_domain_caption">Domeinen aangeschaft op deze site, zullen bezoekers omleiden naar &lt;b&gt;%s.&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domeinen aangeschaft op deze site, zullen bezoekers omleiden naar &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Je hebt een gratis één-jaar domein registratie met je abonnement</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim je gratis domein</string>
     <string name="domains_manage_domains">Beheer domeinen</string>
@@ -16,7 +34,6 @@ Language: nl
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Verloopt op %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Verloopt op %s</string>
     <string name="domains_site_domains">Je site domeinen</string>
-    <string name="domains_primary_site_address_blurb">Je primaire site adres is wat je bezoekers zullen zien in hun browser adresbalk wanneer ze je site bezoeken.</string>
     <string name="domains_primary_site_address_chip">Primair site adres</string>
     <string name="domains_primary_site_more_menu_change_site_address">Site adres wijzigen</string>
     <string name="domains_primary_site_caption">Je gratis WordPress.com adres is</string>
@@ -53,7 +70,6 @@ Language: nl
     <string name="me_btn_share">Deel WordPress met een vriend</string>
     <string name="my_site_quick_actions_title">Snelle links</string>
     <string name="my_site_btn_domains">Domeinen</string>
-    <string name="site_settings_site_domains_title">Site domeinen</string>
     <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d likes, %3$d reacties gekregen.</string>
     <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
     <string name="blogging_reminders_notification_time">Kennisgeving tijd</string>
@@ -216,6 +232,7 @@ Language: nl
     <string name="gutenberg_native_featured">Uitgelicht</string>
     <string name="gutenberg_native_embed_link">Sluit link in</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
+    <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_none">Geen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
@@ -1292,9 +1309,6 @@ Language: nl
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecteer provincie</string>
     <string name="domain_registration_country_picker_dialog_title">Selecteer land</string>
-    <string name="domain_registration_result_continue_button">doorgaan</string>
-    <string name="domain_registration_result_description">je nieuwe domein &lt;b&gt;%s&lt;/b&gt; wordt ingesteld. Je site\n maakt salto\'s uit vreugde!</string>
-    <string name="domain_registration_result_title">Gefeliciteerd</string>
     <string name="domain_contact_information_register_domain_button">Registreer domein</string>
     <string name="domain_contact_information_postal_code_hint">Postcode</string>
     <string name="domain_contact_information_state_hint">Provincie</string>
@@ -1312,7 +1326,6 @@ Language: nl
     <string name="domain_registration_privacy_protection_description">Domeineigenaren moeten contactgegevens delen in een openbare database met alle domeinen.\n Met Privacybescherming publiceren we onze eigen informatie in plaats van die van jou en sturen we berichten privé naar je door.</string>
     <string name="domain_registration_privacy_protection_title">Privacybescherming</string>
     <string name="domain_registration_contact_form_input_error">Voer een geldige %s in</string>
-    <string name="domains_suggestions_choose_domain">Ander domein kiezen</string>
     <string name="stats_management_new">Nieuw</string>
     <string name="stats_management_dismiss_insights_news_card">Negeren</string>
     <string name="stats_management_try_it_now">Probeer het nu</string>
@@ -1417,7 +1430,6 @@ Language: nl
     <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
-    <string name="quick_start_dialog_need_help_message">Wij brengen je de basis bij voor het bouwen en laten groeien van je site.</string>
     <string name="quick_start_dialog_explore_plans_title">Abonnementen verkennen</string>
     <string name="quick_start_dialog_explore_plans_message">Bekijk meer informatie over de marketing- en SEO-tools van onze betaalde abonnementen.</string>
     <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
@@ -1600,9 +1612,6 @@ Language: nl
     <string name="quick_start_dialog_share_site_message">Koppel je site aan je social media-accounts en je site zal nieuwe berichten automatisch delen.</string>
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
-    <string name="quick_start_dialog_need_help_title">Heb je hulp nodig om aan de slag te kunnen gaan?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accepteer</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nooit</string>
     <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
     <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde onderwerpen</string>

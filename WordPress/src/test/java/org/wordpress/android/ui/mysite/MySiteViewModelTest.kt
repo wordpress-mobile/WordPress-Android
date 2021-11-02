@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -19,7 +19,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
@@ -42,12 +41,19 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -79,13 +85,14 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationHandler
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
@@ -109,18 +116,11 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
-/* These values can change if a new parameter is added to CardsBuilder constructor before clicks */
-private const val CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION = 6
-private const val CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION = 7
-private const val CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION = 8
-private const val CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION = 9
-private const val CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION = 14
-private const val CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION = 15
-private const val CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION = 16
 private const val DYNAMIC_CARDS_BUILDER_MORE_CLICK_PARAM_POSITION = 3
 
 @ExperimentalCoroutinesApi
@@ -138,7 +138,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
-    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var domainRegistrationSource: DomainRegistrationSource
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
@@ -152,6 +152,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var quickStartCardSource: QuickStartCardSource
+    @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
+    @Mock lateinit var selectedSiteSource: SelectedSiteSource
+    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -159,6 +163,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
+    private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -171,7 +176,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
-    private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
+    private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
+    private val selectedSite = MediatorLiveData<SelectedSite>()
+
+    private val jetpackCapabilities = MutableLiveData(
+            JetpackCapabilities(
+                    scanAvailable = false,
+                    backupAvailable = false
+            )
+    )
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
@@ -213,21 +226,28 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Suppress("LongMethod")
     @Before
-    fun setUp() = test {
+    fun setUp() {
+        init()
+    }
+
+    @InternalCoroutinesApi
+    fun init(enableMySiteDashboardConfig: Boolean = false) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
-        whenever(domainRegistrationHandler.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
+        selectedSite.value = null
+        whenever(domainRegistrationSource.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
         whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
-        whenever(quickStartRepository.buildSource(any(), any())).thenReturn(quickStartUpdate)
         whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
-        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
+        whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
+        whenever(siteIconProgressSource.buildSource(any(), any())).thenReturn(showSiteIconProgressBar)
+        whenever(selectedSiteSource.buildSource(any(), any())).thenReturn(selectedSite)
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -242,7 +262,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 contextProvider,
                 siteIconUploadHandler,
                 siteStoriesHandler,
-                domainRegistrationHandler,
+                domainRegistrationSource,
                 scanAndBackupSource,
                 displayUtilsWrapper,
                 quickStartRepository,
@@ -255,7 +275,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                postCardsSource
+                postCardsSource,
+                quickStartCardSource,
+                selectedSiteSource,
+                siteIconProgressSource,
+                mySiteDashboardPhase2FeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -263,6 +287,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
+        showSwipeRefreshLayout = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -291,6 +316,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onDynamicCardMenuShown.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 dynamicCardMenu.add(it)
+            }
+        }
+        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                showSwipeRefreshLayout.add(it)
             }
         }
         site = SiteModel()
@@ -1093,15 +1123,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(false),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(1)).build(any())
     }
 
     @Test
@@ -1110,15 +1132,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(false),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(1)).build(any())
     }
 
     @Test
@@ -1127,15 +1141,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = any(),
-                isScanAvailable = eq(true),
-                showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(2)).build(any())
     }
 
     @Test
@@ -1144,15 +1150,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder).buildSiteItems(
-                site = eq(site),
-                onClick = any(),
-                isBackupAvailable = eq(true),
-                isScanAvailable = any(),
-                showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any(),
-                showExplorePlansFocusPoint = any()
-        )
+        verify(siteItemsBuilder, times(2)).build(any())
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1247,6 +1245,23 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
 
+    /* SWIPE REFRESH */
+    @InternalCoroutinesApi
+    @Test
+    fun `when my site feature flag is enabled, then swipe refresh layout is enabled`() = test {
+        init(enableMySiteDashboardConfig = true)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `when my site feature flag is disabled, then swipe refresh layout is disabled`() {
+        init(enableMySiteDashboardConfig = false)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -1262,6 +1277,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
         onSiteSelected.value = siteLocalId
+        selectedSite.value = SelectedSite(site)
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
@@ -1277,9 +1293,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun invokeItemClickAction(action: ListItemAction) {
         var clickAction: ((ListItemAction) -> Unit)? = null
         doAnswer {
-            clickAction = it.getArgument(1)
+            val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
+            clickAction = params.onClick
             listOf<MySiteCardAndItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).build(any())
 
         initSelectedSite()
 
@@ -1297,6 +1314,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
+        selectedSite.value = SelectedSite(site)
     }
 
     private enum class SiteInfoCardAction {
@@ -1312,23 +1330,11 @@ class MySiteViewModelTest : BaseUnitTest() {
             val postCard = initPostCard()
             listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
         }.whenever(cardsBuilder).build(
-                site = eq(site),
-                showSiteIconProgressBar = any(),
-                activeTask = anyOrNull(),
-                isDomainCreditAvailable = anyBoolean(),
-                quickStartCategories = any(),
-                mockedPostsData = any(),
-                titleClick = any(),
-                iconClick = any(),
-                urlClick = any(),
-                switchSiteClick = any(),
-                quickActionStatsClick = any(),
-                quickActionPagesClick = any(),
-                quickActionPostsClick = any(),
-                quickActionMediaClick = any(),
-                domainRegistrationClick = any(),
-                onQuickStartBlockRemoveMenuItemClick = any(),
-                onQuickStartTaskTypeItemClick = any()
+                domainRegistrationCardBuilderParams = any(),
+                postCardBuilderParams = any(),
+                quickActionsCardBuilderParams = any(),
+                quickStartCardBuilderParams = any(),
+                siteInfoCardBuilderParams = any()
         )
     }
 
@@ -1346,37 +1352,33 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
-            title = siteName,
-            url = siteUrl,
-            iconState = IconState.Visible(siteIcon),
-            showTitleFocusPoint = false,
-            showIconFocusPoint = false,
-            onTitleClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_TITLE_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onIconClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_ICON_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onUrlClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_URL_CLICK_PARAM_POSITION) as () -> Unit).invoke()
-            },
-            onSwitchSiteClick = ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_SITE_INFO_SWITCH_SITE_PARAM_POSITION) as () -> Unit).invoke()
-            }
-    )
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
+        return SiteInfoCard(
+                title = siteName,
+                url = siteUrl,
+                iconState = IconState.Visible(siteIcon),
+                showTitleFocusPoint = false,
+                showIconFocusPoint = false,
+                onTitleClick = ListItemInteraction.create { params.titleClick.invoke() },
+                onIconClick = ListItemInteraction.create { params.iconClick.invoke() },
+                onUrlClick = ListItemInteraction.create { params.urlClick.invoke() },
+                onSwitchSiteClick = ListItemInteraction.create { params.switchSiteClick.invoke() }
+        )
+    }
 
     private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        quickActionsStatsClickAction = mockInvocation.getArgument(10)
-        quickActionsPagesClickAction = mockInvocation.getArgument(11)
-        quickActionsPostsClickAction = mockInvocation.getArgument(12)
-        quickActionsMediaClickAction = mockInvocation.getArgument(13)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
+        quickActionsStatsClickAction = params.onQuickActionStatsClick
+        quickActionsPagesClickAction = params.onQuickActionPagesClick
+        quickActionsPostsClickAction = params.onQuickActionPostsClick
+        quickActionsMediaClickAction = params.onQuickActionMediaClick
         return QuickActionsCard(
                 title = UiStringText(""),
-                onStatsClick = ListItemInteraction.create { (quickActionsStatsClickAction as () -> Unit).invoke() },
-                onPagesClick = ListItemInteraction.create { (quickActionsPagesClickAction as () -> Unit).invoke() },
-                onPostsClick = ListItemInteraction.create { (quickActionsPostsClickAction as () -> Unit).invoke() },
-                onMediaClick = ListItemInteraction.create { (quickActionsMediaClickAction as () -> Unit).invoke() },
+                onStatsClick = ListItemInteraction.create { params.onQuickActionStatsClick.invoke() },
+                onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
+                onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
+                onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
                 showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
@@ -1385,22 +1387,19 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
             ListItemInteraction.create {
-                (mockInvocation.getArgument(CARDS_BUILDER_DOMAIN_REGISTRATION_CLICK_PARAM_POSITION) as () -> Unit)
-                        .invoke()
+                (mockInvocation.arguments.filterIsInstance<DomainRegistrationCardBuilderParams>()).first()
+                        .domainRegistrationClick.invoke()
             }
     )
 
     private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
-        removeMenuItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_REMOVE_MENU_CLICK_PARAM_POSITION
-        ) as () -> Unit
-        quickStartTaskTypeItemClickAction = mockInvocation.getArgument(
-                CARDS_BUILDER_QUICK_START_TASK_TYPE_ITEM_CLICK_PARAM_POSITION
-        ) as ((QuickStartTaskType) -> Unit)
+        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
+        removeMenuItemClickAction = params.onQuickStartBlockRemoveMenuItemClick
+        quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
         return QuickStartCard(
                 title = UiStringText(""),
                 onRemoveMenuItemClick = ListItemInteraction.create {
-                    (removeMenuItemClickAction as () -> Unit).invoke()
+                    params.onQuickStartBlockRemoveMenuItemClick.invoke()
                 },
                 taskTypeItems = listOf(
                         QuickStartTaskTypeItem(

@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 12:04:02+0000
+Translation-Revision-Date: 2021-10-26 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_create_link">建立連結</string>
+    <string name="domain_registration_result_description">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。 網域可能需要 30 分鐘才能開始運作。</string>
+    <string name="domain_registration_result_title">謝謝你的選購！</string>
+    <string name="domains_suggestions_select_domain">選取網域</string>
+    <string name="domains_title">網域</string>
+    <string name="post_status_sticky">置頂</string>
+    <string name="post_settings_post_sticky">將文章置於首頁</string>
+    <string name="post_settings_mark_as_sticky_options_header">標記為置頂</string>
+    <string name="reader_follow_comments_unfollow_conversation">取消追蹤討論</string>
+    <string name="reader_follow_comments_enable_push_notifications">啟用應用程式內通知</string>
+    <string name="reader_follow_comments_message">你正在追蹤這個討論。 新留言發表時，你會收到電子郵件通知。</string>
+    <string name="reader_follow_comments_bottom_sheet_description">管理追蹤討論選項，彈出視窗</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">無法停用應用程式內通知</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">無法啟用應用程式內通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">已停用應用程式內通知</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">已啟用應用程式內通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">已取消訂閱此討論</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">正在追蹤此討論\n是否啟用應用程式內通知？</string>
     <string name="domains_search_for_a_domain_button">搜尋網域</string>
-    <string name="domains_free_plan_get_your_domain_caption">在本網站購買的網域會將訪客重新導向至 &lt;b&gt;%s。&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">你的方案已包含一年免費網域註冊</string>
+    <string name="domains_free_plan_get_your_domain_caption">此網站購買的網域會將訪客重新導向至 &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">索取你的免費網域</string>
     <string name="domains_manage_domains">管理網域</string>
     <string name="domains_redirected_domains_blurb">你的網域將重新導向你的網站：&lt;b&gt;%s&lt;/b&gt;。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;深入瞭解&lt;/a&gt;。</string>
@@ -16,7 +34,6 @@ Language: zh_TW
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日： %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">到期日： %s</string>
     <string name="domains_site_domains">你網站的網域名稱</string>
-    <string name="domains_primary_site_address_blurb">你的主要網域是使用者造訪你的網站時，在瀏覽器位址列上看到的位址。</string>
     <string name="domains_primary_site_address_chip">網站主要網址</string>
     <string name="domains_primary_site_more_menu_change_site_address">變更網址</string>
     <string name="domains_primary_site_caption">你的 WordPress.com 免費位址是</string>
@@ -51,7 +68,6 @@ Language: zh_TW
     <string name="me_btn_share">向朋友推薦 WordPress</string>
     <string name="my_site_quick_actions_title">快速連結</string>
     <string name="my_site_btn_domains">網域</string>
-    <string name="site_settings_site_domains_title">網站網域</string>
     <string name="weekly_roundup_notification_text">你的網站獲得 %1$d 次瀏覽、%2$d 個讚和 %3$d 個留言。</string>
     <string name="weekly_roundup_notification_title">每週綜合整理：%s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
@@ -214,6 +230,7 @@ Language: zh_TW
     <string name="gutenberg_native_featured">精選內容</string>
     <string name="gutenberg_native_embed_link">內嵌連結</string>
     <string name="gutenberg_native_display_post_date">顯示內容發佈日期</string>
+    <string name="gutenberg_native_create_embed">建立嵌入內容</string>
     <string name="gutenberg_native_column_d">欄 %d</string>
     <string name="gutenberg_native_none">無</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
@@ -1290,10 +1307,6 @@ Language: zh_TW
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在註冊網域名稱…</string>
     <string name="domain_registration_state_picker_dialog_title">選取州/省</string>
     <string name="domain_registration_country_picker_dialog_title">選取國家</string>
-    <string name="domain_registration_result_continue_button">繼續</string>
-    <string name="domain_registration_result_description">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。你的網站\n簡直令人樂不可支！</string>
-    <string name="domain_registration_result_title">恭喜</string>
-    <string name="domain_contact_information_register_domain_button">註冊網域</string>
     <string name="domain_contact_information_postal_code_hint">郵遞區號</string>
     <string name="domain_contact_information_state_hint">州</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -1310,7 +1323,6 @@ Language: zh_TW
     <string name="domain_registration_privacy_protection_description">網域擁有者必須在所有網域的公共資料庫中分享自己的聯絡資訊。\n基於隱私權保護，我們只會發佈自己的資訊而非你的資訊，並會將所有通訊內容私密轉寄給你。</string>
     <string name="domain_registration_privacy_protection_title">隱私權保護</string>
     <string name="domain_registration_contact_form_input_error">請輸入有效的 %s</string>
-    <string name="domains_suggestions_choose_domain">選擇網域</string>
     <string name="stats_management_new">新增</string>
     <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即試試</string>
@@ -1414,7 +1426,6 @@ Language: zh_TW
     <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_check_stats_message_short">點選%1$s統計資料%2$s以瞭解網站的成效。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
-    <string name="quick_start_dialog_need_help_message">我們會逐步說明建立網站以及讓網站成長的基本事項。</string>
     <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
     <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
     <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
@@ -1598,9 +1609,6 @@ Language: zh_TW
     <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
     <string name="quick_start_dialog_publish_post_message_short">點選%1$s建立文章%2$s以建立新文章</string>
-    <string name="quick_start_dialog_need_help_title">需要協助開始使用嗎？</string>
-    <string name="quick_start_dialog_need_help_button_positive">接受</string>
-    <string name="quick_start_dialog_need_help_button_neutral">從未</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>

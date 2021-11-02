@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -72,7 +71,7 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils
-) : CoroutineScope, MySiteSource<QuickStartUpdate> {
+) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
@@ -98,7 +97,7 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
+    fun getQuickStartUpdate(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
         pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&

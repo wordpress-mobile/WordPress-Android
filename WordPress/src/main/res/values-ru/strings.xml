@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-07 05:11:44+0000
+Translation-Revision-Date: 2021-10-18 19:56:49+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Создать ссылку</string>
+    <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается, это может занять до 30 минут пока он станет доступен.</string>
+    <string name="domain_registration_result_title">Поздравляем с приобретением!</string>
+    <string name="domains_suggestions_select_domain">Выберите домен</string>
+    <string name="domains_title">Домены</string>
+    <string name="post_status_sticky">Прилеплена</string>
+    <string name="post_settings_post_sticky">Закрепить запись на главной странице</string>
+    <string name="post_settings_mark_as_sticky_options_header">Прикрепить</string>
+    <string name="reader_follow_comments_unfollow_conversation">Отписаться от беседы</string>
+    <string name="reader_follow_comments_enable_push_notifications">Включить уведомления в приложении</string>
+    <string name="reader_follow_comments_message">Вы подписались на эту беседу. Вы получите уведомление по электронной почте при появлении новых комментариев.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Управление опциями подписки на беседу, всплывающее окно</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Не удается отключить уведомления в приложении</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Не удается включить уведомления в приложении</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Уведомления в приложении отключены</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Уведомления в приложении включены</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Вы отписались от этой беседы</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Подписаны на эту беседу\nВключить уведомления в приложении?</string>
     <string name="domains_search_for_a_domain_button">Поиск домена</string>
-    <string name="domains_free_plan_get_your_domain_caption">Домены зарегистрированные на этом сайте направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_free_plan_get_your_domain_caption">Домены, купленные для этого сайта, направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
     <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
     <string name="domains_manage_domains">Управление доменами</string>
@@ -16,7 +34,6 @@ Language: ru
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Истекает %s</string>
     <string name="domains_site_domains">Домены вашего сайта</string>
-    <string name="domains_primary_site_address_blurb">Основной домен — это адрес, который будут видеть пользователи в браузере при посещении вашего сайта.</string>
     <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
     <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
     <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
@@ -53,7 +70,6 @@ Language: ru
     <string name="me_btn_share">Поделитесь WordPress с друзьями</string>
     <string name="my_site_quick_actions_title">Быстрые ссылки</string>
     <string name="my_site_btn_domains">Домены</string>
-    <string name="site_settings_site_domains_title">Домены сайта</string>
     <string name="weekly_roundup_notification_text">Ваш сайт просмотрен %1$d раз, %2$d отметок \"понравилось\" и %3$d комментариев.</string>
     <string name="weekly_roundup_notification_title">За неделю: %s</string>
     <string name="blogging_reminders_notification_time">Время уведомления</string>
@@ -216,6 +232,7 @@ Language: ru
     <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
+    <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
     <string name="gutenberg_native_none">Нет</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
@@ -1292,9 +1309,6 @@ Language: ru
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Регистрация доменного имени…</string>
     <string name="domain_registration_state_picker_dialog_title">Выберите округ/область</string>
     <string name="domain_registration_country_picker_dialog_title">Выберите страну</string>
-    <string name="domain_registration_result_continue_button">продолжить</string>
-    <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается\n   Ваш сайт замер в нетерпении!</string>
-    <string name="domain_registration_result_title">Поздравляем!</string>
     <string name="domain_contact_information_register_domain_button">Зарегистрировать домен</string>
     <string name="domain_contact_information_postal_code_hint">Почтовый индекс</string>
     <string name="domain_contact_information_state_hint">Округ/Область</string>
@@ -1312,7 +1326,6 @@ Language: ru
     <string name="domain_registration_privacy_protection_description">Владельцы доменов должны делиться контактной информацией для публичной базы данных по всем доменам. С защитой персональных данных мы публикуем нашу информацию вместо вашей и перенаправляем вам все сообщения приватным образом.</string>
     <string name="domain_registration_privacy_protection_title">Защита персональных данных</string>
     <string name="domain_registration_contact_form_input_error">Введите правильный %s</string>
-    <string name="domains_suggestions_choose_domain">Выберите домен</string>
     <string name="stats_management_new">Новый</string>
     <string name="stats_management_dismiss_insights_news_card">Закрыть</string>
     <string name="stats_management_try_it_now">Попробуйте прямо сейчас!</string>
@@ -1417,7 +1430,6 @@ Language: ru
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
     <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
-    <string name="quick_start_dialog_need_help_message">Мы проведем вас по основам создания и роста вашего сайта.</string>
     <string name="quick_start_dialog_explore_plans_title">Посмотреть тарифы</string>
     <string name="quick_start_dialog_explore_plans_message">Узнайте больше о маркетинге и SEO инструментах на наших платных тарифах.</string>
     <string name="quick_start_dialog_enable_sharing_title">Включить возможность делиться записями</string>
@@ -1600,9 +1612,6 @@ Language: ru
     <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
     <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
     <string name="quick_start_dialog_publish_post_message_short">Нажмите %1$s Создать запись %2$s для создания новой записи</string>
-    <string name="quick_start_dialog_need_help_title">Нужна помощь с тем, как начать?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Принять</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Никогда</string>
     <string name="quick_start_dialog_need_help_button_negative">Нет, спасибо</string>
     <string name="quick_start_dialog_follow_sites_title">Подписка на другие сайты</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Нажмите %1$s Поиск %2$s, чтобы найти сайты с похожими интересами</string>

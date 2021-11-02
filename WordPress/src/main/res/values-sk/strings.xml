@@ -167,11 +167,8 @@ Language: sk
     <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
-    <string name="quick_start_dialog_need_help_title">Chcete pomôcť na začiatku?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Akceptovať</string>
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>

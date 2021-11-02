@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-01 09:07:41+0000
+Translation-Revision-Date: 2021-10-26 06:20:39+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -1006,16 +1006,12 @@ Language: pl
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Rejestrowanie nazwy domeny…</string>
     <string name="domain_registration_state_picker_dialog_title">Wybierz stan</string>
     <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
-    <string name="domain_contact_information_register_domain_button">Zarejestruj domenę</string>
     <string name="domain_contact_information_postal_code_hint">Kod pocztowy</string>
     <string name="domain_contact_information_city_hint">Miasto</string>
     <string name="domain_contact_information_address_hint_two">Adres 2</string>
     <string name="domain_contact_information_address_hint">Adres</string>
     <string name="domain_contact_information_country_hint">Kraj</string>
     <string name="domain_contact_information_country_code_hint">Kod kraju</string>
-    <string name="domain_registration_result_continue_button">kontynuuj</string>
-    <string name="domain_registration_result_title">Gratulacje</string>
-    <string name="domain_registration_result_description">twoja nowa witryna &lt;b&gt;%s&lt;/b&gt; jest ustawiana. Twoja witryna \n        wykonuje salta z ekscytacji!</string>
     <string name="domain_contact_information_state_hint">Stan</string>
     <string name="domain_contact_information_phone_number_hint">Numer telefonu</string>
     <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
@@ -1026,7 +1022,6 @@ Language: pl
     <string name="domain_registration_privacy_protection_description">Właściciele domen muszą udostępnić dane kontaktowe w publicznej bazie danych wszystkich domen.\nZ funkcjonalnością Ochrony Prywatności, publikujemy nasze dane zamiast twoich i prywatnie przekazujemy wszelką komunikację skierowaną do ciebie.</string>
     <string name="domain_registration_privacy_protection_title">Zabezpieczenie prywatności</string>
     <string name="domain_registration_contact_form_input_error">Wprowadź prawidłowy %s</string>
-    <string name="domains_suggestions_choose_domain">Wybierz domenę</string>
     <string name="stats_management_dismiss_insights_news_card">Odrzuć</string>
     <string name="stats_management_try_it_now">Wypróbuj</string>
     <string name="stats_manage_your_stats">Zarządzaj statystykami</string>
@@ -1128,7 +1123,6 @@ Language: pl
     <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
-    <string name="quick_start_dialog_need_help_message">Przeprowadzimy cię przez podstawy budowy i rozwijania swojej witryny.</string>
     <string name="quick_start_dialog_check_stats_message_short">Stuknij%1$s Statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
     <string name="quick_start_dialog_explore_plans_title">Eksploruj plany subskrypcji</string>
@@ -1312,10 +1306,7 @@ Language: pl
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Stuknij %1$s Udostępnianie %2$s aby kontynuować</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
-    <string name="quick_start_dialog_need_help_title">Potrzebujesz pomocy?</string>
     <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
-    <string name="quick_start_dialog_need_help_button_positive">Akceptuję</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
@@ -1761,10 +1752,10 @@ Language: pl
     <string name="jetpack_send_email_notifications_title">Wysyłaj powiadomienia przez email</string>
     <string name="jetpack_monitor_uptime_title">Monitoruj czas aktywności twojej witryny</string>
     <string name="jetpack_security_setting_title">Bezpieczeństwo</string>
-    <string name="jetpack_site_settings_category_title">Ustawienia Jetpack</string>
     <string name="share_intent_adding_to">Dodawanie do</string>
     <string name="share_intent_pick_site">Wybierz witrynę</string>
     <string name="share_action_media">Dodaj do biblioteki mediów</string>
+    <string name="jetpack_site_settings_category_title">Ustawienia Jetpacka</string>
     <string name="share_action_post">Dodaj do nowego wpisu</string>
     <string name="share_media_permission_required">Wymagane uprawnienia do udostępnienia obrazków lub filmów</string>
     <string name="invalid_ip_or_range">Nieprawidłowy adres IP lub zakres adresów IP</string>
