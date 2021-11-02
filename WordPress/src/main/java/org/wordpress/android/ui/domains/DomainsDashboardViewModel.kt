@@ -199,7 +199,7 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
+    private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
