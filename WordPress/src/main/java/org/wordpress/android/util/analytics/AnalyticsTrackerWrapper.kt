@@ -38,8 +38,13 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, properties + feature.toParams())
     }
 
-    fun track(stat: Stat, site: SiteModel?) {
-        AnalyticsUtils.trackWithSiteDetails(stat, site)
+    @JvmOverloads
+    fun track(stat: Stat, site: SiteModel?, properties: Map<String, Any?>? = null) {
+        if (properties == null) {
+            AnalyticsUtils.trackWithSiteDetails(stat, site)
+        } else {
+            AnalyticsUtils.trackWithSiteDetails(stat, site, properties)
+        }
     }
 
     /**
@@ -51,21 +56,6 @@ class AnalyticsTrackerWrapper
      */
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
-    }
-
-    fun trackWithSiteDetails(
-        stat: Stat,
-        siteModel: SiteModel?
-    ) {
-        AnalyticsUtils.trackWithSiteDetails(stat, siteModel)
-    }
-
-    fun trackWithSiteDetails(
-        stat: Stat,
-        siteModel: SiteModel?,
-        properties: Map<String, Any>
-    ) {
-        AnalyticsUtils.trackWithSiteDetails(stat, siteModel, properties)
     }
 
     private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())
