@@ -106,15 +106,13 @@ class DomainsDashboardViewModel @Inject constructor(
         listItems += FreeDomain(UiStringText(freeDomainUrl), freeDomainIsPrimary, this::onChangeSiteClick)
 
         val customDomains = domains.filter { !it.wpcomDomain }
-
         val hasCustomDomains = customDomains.isNotEmpty()
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
         if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
-
-        customDomains.forEach {
-            listItems += SiteDomains(
+        listItems += customDomains.map {
+            SiteDomains(
                     UiStringText(it.domain.orEmpty()),
                     if (it.expirySoon) {
                         UiStringText(
