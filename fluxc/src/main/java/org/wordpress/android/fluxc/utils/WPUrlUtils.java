@@ -85,6 +85,6 @@ public class WPUrlUtils {
      * https://github.com/wordpress-mobile/WordPressKit-iOS/pull/457
      */
     public static String escapeUrlPathWithRFC3986(String urlPath) {
-        return urlPath.replaceAll("[!’()*]", "");
+        return urlPath.replaceAll("[!'()*]", "");
     }
 }
