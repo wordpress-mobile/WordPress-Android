@@ -1826,6 +1826,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 165 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_PHONE TEXT")
                 }
+                166 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderModel")
+                }
             }
         }
         db.setTransactionSuccessful()
