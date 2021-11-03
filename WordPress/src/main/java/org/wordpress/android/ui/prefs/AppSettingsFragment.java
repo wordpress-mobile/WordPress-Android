@@ -24,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
+import com.automattic.android.about.AboutAutomatticActivity;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -467,7 +469,8 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAboutPreferenceClick() {
-        startActivity(new Intent(getActivity(), AboutActivity.class));
+        startActivity(new Intent(getActivity(), AboutAutomatticActivity.class));
+//        startActivity(new Intent(getActivity(), AboutActivity.class));
         return true;
     }
 

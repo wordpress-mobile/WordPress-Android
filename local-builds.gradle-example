@@ -14,6 +14,7 @@ get better with some build improvements, but in the meantime it might be best to
 binary build if you're not working on a specific library.
 */
 ext {
+    //localAboutAutomatticPath = "../AboutAutomattic"
     //localFluxCPath = "../WordPress-FluxC-Android"
     //localWPUtilsPath = "../WordPress-Utils-Android"
     //localGutenbergMobilePath = "../gutenberg-mobile"
