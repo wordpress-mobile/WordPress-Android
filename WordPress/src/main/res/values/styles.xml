@@ -801,6 +801,13 @@
 
     <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>
 
+    <style name="MySitePostItemTimeIcon">
+        <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>

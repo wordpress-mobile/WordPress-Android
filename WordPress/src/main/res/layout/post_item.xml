@@ -22,6 +22,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/title" />
 
+    <ImageView
+        android:id="@+id/icon_time"
+        style="@style/MySitePostItemTimeIcon"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_time_white_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/excerpt"
+        app:layout_constraintEnd_toStartOf="@+id/excerpt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/excerpt"
+        tools:srcCompat="@drawable/ic_time_white_24dp"
+        tools:visibility="visible" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/excerpt"
         style="@style/MySitePostItemExcerpt"
@@ -29,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
         app:layout_constraintEnd_toStartOf="@+id/featured_image"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_time"
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
 
