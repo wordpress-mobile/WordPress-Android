@@ -40,11 +40,7 @@ class AnalyticsTrackerWrapper
 
     @JvmOverloads
     fun track(stat: Stat, site: SiteModel?, properties: Map<String, Any?>? = null) {
-        if (properties == null) {
-            AnalyticsUtils.trackWithSiteDetails(stat, site)
-        } else {
-            AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
-        }
+        AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
     }
 
     /**
