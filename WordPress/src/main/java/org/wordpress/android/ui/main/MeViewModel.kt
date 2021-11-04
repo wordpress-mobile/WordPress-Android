@@ -21,6 +21,7 @@ import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -32,13 +33,17 @@ class MeViewModel
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    val unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
 
     private val _recommendUiState = MutableLiveData<RecommendAppState>()
     val recommendUiState: LiveData<Event<RecommendAppUiState>> = _recommendUiState.map { it.toUiState() }
+
+    private val _showUnifiedAbout = MutableLiveData<Event<Boolean>>()
+    val showUnifiedAbout: LiveData<Event<Boolean>> = _showUnifiedAbout
 
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
@@ -74,6 +79,10 @@ class MeViewModel
     }
 
     fun getSite() = selectedSiteRepository.getSelectedSite()
+
+    fun showUnifiedAbout() {
+        _showUnifiedAbout.value = Event(true)
+    }
 
     fun onRecommendTheApp() {
         when (val state = _recommendUiState.value) {

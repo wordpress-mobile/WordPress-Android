@@ -50,6 +50,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.prefs.AboutActivity
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -129,8 +130,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
-        initRecommendUiState()
-
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -152,6 +151,17 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
+
+        if (viewModel.unifiedAboutFeatureConfig.isEnabled()) {
+            initUnifiedAboutUiState()
+        } else {
+            initRecommendUiState()
+        }
+
+        viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
+            startActivity(Intent(activity, AboutActivity::class.java))
+        })
+
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
             when (it) {
                 true -> showDisconnectDialog()
@@ -192,6 +202,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         } else {
             recommendTheAppContainer.visibility = View.GONE
+        }
+    }
+
+    private fun MeFragmentBinding.initUnifiedAboutUiState() {
+        setRecommendLoadingState(false)
+        meShareIcon.setImageResource(R.drawable.ic_wordpress_white_24dp)
+        meShareTextView.setText(R.string.me_btn_about)
+
+        rowRecommendTheApp.setOnClickListener {
+            viewModel.showUnifiedAbout()
         }
     }
 
