@@ -10,10 +10,6 @@ class UnifiedCommentsDetailPagerAdapter(
 ) : FragmentStateAdapter(fragmentActivity) {
     private val listFragments = mutableMapOf<Int, WeakReference<UnifiedCommentDetailsFragment>>()
 
-    fun getItemAtPosition(position: Int): UnifiedCommentDetailsFragment? {
-        return listFragments[position]?.get()
-    }
-
     override fun getItemCount(): Int = 3 // TODO return size of the actual collection of comments
 
     override fun createFragment(position: Int): Fragment {

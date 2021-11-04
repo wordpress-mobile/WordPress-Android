@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentsDetailsActivityBinding
@@ -11,8 +10,6 @@ class UnifiedCommentsDetailsActivity : LocaleAwareActivity() {
     private var binding: UnifiedCommentsDetailsActivityBinding? = null
     private lateinit var pagerAdapter: UnifiedCommentsDetailPagerAdapter
 
-
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -21,7 +18,6 @@ class UnifiedCommentsDetailsActivity : LocaleAwareActivity() {
             setContentView(root)
             setupActionBar()
             setupContent()
-            setupObservers()
         }
     }
 
@@ -39,11 +35,6 @@ class UnifiedCommentsDetailsActivity : LocaleAwareActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
-        }
-    }
-
-    private fun UnifiedCommentsDetailsActivityBinding.setupObservers() {
-        lifecycleScope.launchWhenStarted {
         }
     }
 }

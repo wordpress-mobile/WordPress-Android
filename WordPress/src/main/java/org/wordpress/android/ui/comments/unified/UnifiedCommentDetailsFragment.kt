@@ -7,7 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentDetailsFragmentBinding
 
-class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_list_fragment) {
+class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_fragment) {
     private var binding: UnifiedCommentDetailsFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
