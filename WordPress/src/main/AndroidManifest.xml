@@ -236,7 +236,6 @@
             android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
 
-
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
