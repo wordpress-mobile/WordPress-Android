@@ -865,7 +865,7 @@ public class PluginStore extends Store {
             mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive,
                     payload.isAutoUpdateEnabled);
         } else if (payload.site.isJetpackCPConnected()) {
-            mPluginJetpackTunnelRestClient.configurePlugin(payload.site, payload.slug, payload.isActive);
+            mPluginJetpackTunnelRestClient.configurePlugin(payload.site, payload.pluginName, payload.isActive);
         } else if (!payload.site.isUsingWpComRestApi()) {
             mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
         } else {
