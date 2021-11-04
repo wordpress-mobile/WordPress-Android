@@ -925,7 +925,7 @@ public class PluginStore extends Store {
        Currently this is only supported on sites connected using Jetpack plugin or Jetpack Connection Package.
      */
     private void fetchPluginForJetpackSite(FetchJetpackSitePluginPayload payload) {
-        if (payload.site.isJetpackConnected()) {
+        if (payload.site.isJetpackConnected() || payload.site.isJetpackCPConnected()) {
             mPluginJetpackTunnelRestClient.fetchPlugin(payload.site, payload.pluginName);
         } else {
             FetchPluginForJetpackSiteError error = new FetchPluginForJetpackSiteError(
