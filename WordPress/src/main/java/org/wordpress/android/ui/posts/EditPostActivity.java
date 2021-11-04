@@ -477,7 +477,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    post, site, isNewPost);
+                    post, site, isNewPost, mAnalyticsTrackerWrapper);
         }
     }
 
@@ -592,9 +592,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             // retrieve Editor session data if switched editors
-            if (isRestarting && extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) != null) {
-                mPostEditorAnalyticsSession =
-                        (PostEditorAnalyticsSession) extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
+            if (isRestarting && extras.containsKey(STATE_KEY_EDITOR_SESSION_DATA)) {
+                mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+                        .fromBundle(extras, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
             }
         } else {
             mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS));
@@ -602,8 +602,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
-            mPostEditorAnalyticsSession =
-                    (PostEditorAnalyticsSession) savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
+            mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+                    .fromBundle(extras, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {

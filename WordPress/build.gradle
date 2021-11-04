@@ -115,6 +115,7 @@ android {
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
         buildConfigField "boolean", "FOLLOW_BY_PUSH_NOTIFICATION", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
+        buildConfigField "boolean", "UNIFIED_ABOUT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

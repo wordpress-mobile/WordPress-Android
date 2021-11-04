@@ -690,10 +690,22 @@ public class ActivityLauncher {
 
     public static void viewDomainRegistrationActivityForResult(Activity activity, @NonNull SiteModel site,
                                                                @NonNull DomainRegistrationPurpose purpose) {
-        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        Intent intent = createDomainRegistrationActivityIntent(activity, site, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    public static void viewDomainRegistrationActivityForResult(Fragment fragment, @NonNull SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
+                                                                   @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = new Intent(context, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
-        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+        return intent;
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {

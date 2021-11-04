@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.domains
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes.DOMAIN_REGISTRATION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
@@ -54,12 +57,12 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
 
     private fun handleNavigationAction(action: DomainsDashboardNavigationAction) = when (action) {
         is GetDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity,
+                this,
                 action.site,
                 DOMAIN_PURCHASE
         )
         is ClaimDomain -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity,
+                this,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
@@ -67,6 +70,13 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
                 requireContext(),
                 action.url
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == DOMAIN_REGISTRATION) {
+            viewModel.onSuccessfulDomainRegistration()
+        }
     }
 
     companion object {
