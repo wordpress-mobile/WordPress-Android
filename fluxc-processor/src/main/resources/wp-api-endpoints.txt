@@ -14,3 +14,6 @@
 
 /users/
 /users/me/
+
+/plugins/
+/plugins/<name>#String
