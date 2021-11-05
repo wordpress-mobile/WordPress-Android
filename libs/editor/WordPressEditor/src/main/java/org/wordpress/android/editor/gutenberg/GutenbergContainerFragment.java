@@ -188,10 +188,6 @@ public class GutenbergContainerFragment extends Fragment {
         return mWPAndroidGlueCode.getContent(originalContent, onGetContentInterrupted);
     }
 
-    public CharSequence getTitle(OnGetContentInterrupted onGetContentInterrupted) {
-        return mWPAndroidGlueCode.getTitle(onGetContentInterrupted);
-    }
-
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
                                                                OnGetContentInterrupted onGetContentInterrupted) {
         return mWPAndroidGlueCode.getTitleAndContent(originalContent, onGetContentInterrupted);

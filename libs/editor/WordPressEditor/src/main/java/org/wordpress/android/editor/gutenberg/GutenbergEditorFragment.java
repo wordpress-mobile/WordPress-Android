@@ -1136,23 +1136,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         });
     }
 
-    /**
-     * Returns the contents of the title field from the JavaScript editor. Should be called from a background thread
-     * where possible.
-     */
-    @Override
-    public CharSequence getTitle() throws EditorFragmentNotAddedException {
-        if (!isAdded()) {
-            throw new EditorFragmentNotAddedException();
-        }
-        return getGutenbergContainerFragment().getTitle(new OnGetContentInterrupted() {
-            @Override public void onGetContentInterrupted(InterruptedException ie) {
-                AppLog.e(T.EDITOR, ie);
-                Thread.currentThread().interrupt();
-            }
-        });
-    }
-
     @NonNull
     @Override
     public String getEditorName() {
@@ -1180,7 +1163,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         });
     }
-
 
     @Override
     public void showContentInfo() throws EditorFragmentNotAddedException {
