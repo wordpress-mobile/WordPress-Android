@@ -116,23 +116,8 @@ class PluginWPAPIRestClient @Inject constructor(
         }
     }
 
-    private fun PluginResponseModel.toDomainModel(siteId: Int): SitePluginModel {
-        val plugin = SitePluginModel()
-        plugin.authorUrl = this.authorUri
-        plugin.authorName = this.author
-        plugin.description = this.description?.raw
-        plugin.displayName = this.name
-        plugin.name = this.plugin
-        plugin.setIsActive(this.status == "active")
-        plugin.localSiteId = siteId
-        plugin.pluginUrl = this.pluginUri
-        plugin.version = this.version
-        plugin.slug = this.textDomain
-        return plugin
-    }
-
     /**
-     * POST /wp/v2/plugins { slug: "akismet" } installs the plugin with the slug aksimet from the WordPress.org plugin directory. The endpoint does not support uploading a plugin zip.
+     * POST /wp/v2/plugins { slug: "akismet" } installs the plugin with the slug akismet from the WordPress.org plugin directory. The endpoint does not support uploading a plugin zip.
     PUT /wp/v2/plugins/akismet/akismet { status: "active" } activates the selected plugin. The status can be set to network-active to network activate the plugin on Multisite. To deactivate the plugin set the status to inactive. There is not a separate network-inactive status, inactive will perform a network deactivation if the plugin was network activated.
     DELETE /wp/v2/plugins/akismet/akismet uninstalls the selected plugin. The plugin must be inactive before deleting it.
      */
