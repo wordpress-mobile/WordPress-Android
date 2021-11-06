@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+//todo check whether analyticsTrackerWrapper needs to be used and how
 class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -75,6 +76,7 @@ class CategoriesListViewModel @Inject constructor(
 
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) {
+            // todo change the tag of the log
             AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
         }
 
@@ -91,6 +93,7 @@ class CategoriesListViewModel @Inject constructor(
         if (event.isError) {
             if (_uiState.value is Loading)
                 _uiState.postValue(GenericError(::fetchCategoriesFromNetwork))
+            return
         }
         launch(bgDispatcher) {
             val siteCategories = getCategoriesUseCase.getCategoriesForSite(siteModel)
