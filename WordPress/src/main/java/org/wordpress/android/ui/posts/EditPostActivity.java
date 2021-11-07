@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -1775,8 +1776,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private UpdateFromEditor updateFromEditor(String oldContent) {
         try {
-            String title = (String) mEditorFragment.getTitle();
-            String content = (String) mEditorFragment.getContent(oldContent);
+            // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
+            Pair<CharSequence, CharSequence> titleAndContent = mEditorFragment.getTitleAndContent(oldContent);
+            String title = (String) titleAndContent.first;
+            String content = (String) titleAndContent.second;
             return new PostFields(title, content);
         } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
