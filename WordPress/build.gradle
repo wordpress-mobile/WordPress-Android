@@ -481,6 +481,9 @@ dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 
     implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
+
+    // Used for bubble animation on About Screen
+    implementation 'org.jbox2d:jbox2d-library:2.1.2.2'
 }
 
 configurations.all {
