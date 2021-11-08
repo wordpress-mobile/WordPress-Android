@@ -42,6 +42,11 @@ class BubbleContainerView @JvmOverloads constructor(
          * The interval at which the bubbles are created one after the other.
          */
         private const val BUBBLE_CREATION_INTERVAL = 500L
+
+        /**
+         * The stroke width used in debug for body
+         */
+        private const val STROKE_WIDTH = 8f
     }
 
     private val world = BubbleWorld(this)
@@ -141,7 +146,7 @@ class BubbleContainerView @JvmOverloads constructor(
     private fun debugWorld(canvas: Canvas) {
         var body = world.getBodyList()
         paint.color = Color.parseColor("#ff0000")
-        paint.strokeWidth = 8f
+        paint.strokeWidth = STROKE_WIDTH
 
         while (body != null) {
             var fixture = body.fixtureList

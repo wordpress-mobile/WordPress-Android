@@ -62,7 +62,8 @@ class BubbleWorld(private val listener: Listener) {
 
     private companion object {
         /**
-         * In order to define how frequent the simulation should be, we start by defining the desired FPS or our animation.
+         * In order to define how frequent the simulation should be, we start by
+         * defining the desired FPS or our animation.
          */
         private const val TARGET_FPS = 60f
 
@@ -77,12 +78,14 @@ class BubbleWorld(private val listener: Listener) {
         private const val TIME_STEP_MS = (TIME_STEP * 1000).toLong()
 
         /**
-         * Defines how accurately the velocity should be calculated. Bigger the value means higher accuracy but slower performance.
+         * Defines how accurately the velocity should be calculated. Bigger the value means
+         * higher accuracy but slower performance.
          */
         private const val VELOCITY_ITERATIONS = 2
 
         /**
-         * Defines how accurately the positions of the bodies should be calculated. Bigger the value means higher accuracy but slower performance.
+         * Defines how accurately the positions of the bodies should be calculated. Bigger the value means
+         * higher accuracy but slower performance.
          */
         private const val POSITION_ITERATIONS = 2
 
