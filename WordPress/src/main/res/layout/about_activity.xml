@@ -4,7 +4,6 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimarySurface"
     android:fillViewport="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -12,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="?attr/colorPrimarySurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -23,7 +21,30 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/about_automattic_family"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large"
+        android:alpha="@dimen/material_emphasis_medium"
+        android:text="Automattic Family"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSurface" />
+
+    <org.wordpress.android.ui.about.BubbleContainerView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="144dp" />
+
+    </LinearLayout>
+
     <androidx.core.widget.NestedScrollView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
