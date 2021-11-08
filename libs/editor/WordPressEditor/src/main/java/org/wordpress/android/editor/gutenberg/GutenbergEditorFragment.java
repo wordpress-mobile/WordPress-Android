@@ -67,7 +67,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceive
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
@@ -1128,25 +1128,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }
-        return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentTimeout() {
-            @Override public void onGetContentTimeout(InterruptedException ie) {
-                AppLog.e(T.EDITOR, ie);
-                Thread.currentThread().interrupt();
-            }
-        });
-    }
-
-    /**
-     * Returns the contents of the title field from the JavaScript editor. Should be called from a background thread
-     * where possible.
-     */
-    @Override
-    public CharSequence getTitle() throws EditorFragmentNotAddedException {
-        if (!isAdded()) {
-            throw new EditorFragmentNotAddedException();
-        }
-        return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
-            @Override public void onGetContentTimeout(InterruptedException ie) {
+        return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentInterrupted() {
+            @Override public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
@@ -1173,14 +1156,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }
-        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
-            @Override public void onGetContentTimeout(InterruptedException ie) {
+        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentInterrupted() {
+            @Override public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
         });
     }
-
 
     @Override
     public void showContentInfo() throws EditorFragmentNotAddedException {
