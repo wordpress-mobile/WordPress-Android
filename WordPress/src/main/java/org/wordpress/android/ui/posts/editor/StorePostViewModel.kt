@@ -56,6 +56,7 @@ class StorePostViewModel
     private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
     val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
 
+    @Volatile
     var isSavingPostOnEditorExit = false
 
     private val _savingProgressDialogVisibility = MutableLiveData<DialogVisibility>().apply {
