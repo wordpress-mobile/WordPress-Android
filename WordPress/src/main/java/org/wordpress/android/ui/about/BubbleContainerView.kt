@@ -36,7 +36,7 @@ class BubbleContainerView @JvmOverloads constructor(
         /**
          * The size (width and height) of the bubble view, in pixels.
          */
-        private const val BUBBLE_SIZE = 200 // 160
+        private const val BUBBLE_SIZE = 160
 
         /**
          * The interval at which the bubbles are created one after the other.
