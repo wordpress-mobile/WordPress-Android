@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
+import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
@@ -56,7 +57,7 @@ class CategoriesListViewModel @Inject constructor(
     private fun getCategoriesFromDb() {
         _uiState.postValue(Loading)
         launch(bgDispatcher) {
-            val siteCategories = getCategoriesUseCase.getCategoriesForSite(siteModel)
+            val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             if (siteCategories.isNotEmpty())
                 _uiState.postValue(Content(siteCategories))
         }
@@ -96,7 +97,7 @@ class CategoriesListViewModel @Inject constructor(
             return
         }
         launch(bgDispatcher) {
-            val siteCategories = getCategoriesUseCase.getCategoriesForSite(siteModel)
+            val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             if (siteCategories.isEmpty()) {
                 _uiState.postValue(UiState.Error.NoCategories(::createCategory))
             } else {
@@ -106,7 +107,7 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     sealed class UiState {
-        data class Content(val list: List<TermModel>) : UiState()
+        data class Content(val list: List<CategoryNode>) : UiState()
         object Loading : UiState()
         sealed class Error : UiState() {
             abstract val image: Int

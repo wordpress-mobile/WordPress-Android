@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,8 +12,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
+import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error
@@ -85,7 +84,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     }
 
     @Suppress("unused")
-    private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<TermModel>) {
+    private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<CategoryNode>) {
         // Todo implement the logic of showing list
     }
 
