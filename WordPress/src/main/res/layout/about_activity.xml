@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large"
         android:alpha="@dimen/material_emphasis_medium"
-        android:text="Automattic Family"
+        android:text="@string/about_automattic_family"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="?attr/colorOnSurface" />
 
