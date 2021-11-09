@@ -7,8 +7,10 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardCreateFirst
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.SCHEDULED
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
@@ -31,6 +33,42 @@ class PostCardBuilderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         builder = PostCardBuilder()
+    }
+
+    /* CREATE FIRST POST CARD */
+
+    @Test
+    fun `given published post present, when post cards are built, then create first post card exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateFirstPostCard()).isNotNull
+    }
+
+    @Test
+    fun `given published post not present, when post cards are built, then create first post card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateFirstPostCard()).isNull()
+    }
+
+    @Test
+    fun `when create first post card is built, then it contains correct preset elements`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+
+        val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateFirstPostCard()
+
+        assertThat(createFirstPostCard).isEqualTo(
+                PostCardCreateFirst(
+                        postCardType = CREATE_FIRST,
+                        title = UiStringRes(R.string.my_site_create_first_post_title),
+                        excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+                        imageRes = R.drawable.create_first_temp // TODO: ashiagr replace with actual resource
+                )
+        )
     }
 
     /* DRAFT POST CARD */
@@ -153,6 +191,9 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat((postCards.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
 
+    private fun List<PostCard>.filterCreateFirstPostCard() =
+            firstOrNull { it.postCardType == CREATE_FIRST } as? PostCardCreateFirst
+
     private fun List<PostCard>.filterDraftPostCard() =
             firstOrNull { it.postCardType == DRAFT } as? PostCardDraftOrScheduled
 
@@ -162,11 +203,12 @@ class PostCardBuilderTest : BaseUnitTest() {
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(PostCardBuilderParams(mockedData))
 
     private fun getMockedPostsData(
+        hasPublishedPosts: Boolean = false,
         draftPosts: List<Post>? = null,
         scheduledPosts: List<Post>? = null
     ) = MockedPostsData(
             posts = Posts(
-                    hasPublishedPosts = true,
+                    hasPublishedPosts = hasPublishedPosts,
                     draft = draftPosts,
                     scheduled = scheduledPosts
             )
