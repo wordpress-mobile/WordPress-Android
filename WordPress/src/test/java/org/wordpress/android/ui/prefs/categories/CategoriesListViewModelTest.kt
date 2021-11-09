@@ -23,12 +23,10 @@ import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.NoConnection
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @InternalCoroutinesApi
 class CategoriesListViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
-    private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val networkUtilsWrapper: NetworkUtilsWrapper = mock()
     private val siteModel: SiteModel = mock()
 
@@ -40,7 +38,6 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = CategoriesListViewModel(
                 getCategoriesUseCase,
-                analyticsTracker,
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
