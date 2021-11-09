@@ -323,6 +323,7 @@
     <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
     <dimen name="my_site_post_item_image_size">48dp</dimen>
     <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
+    <dimen name="my_site_create_first_image_width">75dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
