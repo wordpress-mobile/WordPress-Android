@@ -77,8 +77,7 @@ class CategoriesListViewModel @Inject constructor(
 
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) {
-            // todo change the tag of the log
-            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+            AppLog.e(T.SETTINGS, "An error occurred while updating taxonomy with type: " + event.error.type)
         }
 
         if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
@@ -118,8 +117,8 @@ class CategoriesListViewModel @Inject constructor(
 
             data class NoConnection(override val action: () -> Unit) : Error() {
                 @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
-                override val title = UiStringRes(string.scan_no_network_title)
-                override val subtitle = UiStringRes(string.scan_no_network_subtitle)
+                override val title = UiStringRes(string.site_settings_categories_no_network_title)
+                override val subtitle = UiStringRes(string.site_settings_categories_no_network_subtitle)
                 override val buttonText = UiStringRes(string.retry)
             }
 
