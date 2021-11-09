@@ -13,6 +13,8 @@ public class WCWPAPIEndpoint {
 
     private static final String WC_PREFIX_V1_ADDONS = "wc-product-add-ons/v1";
 
+    private static final String WC_PREFIX_TELEMETRY = "wc-telemetry";
+
     private final String mEndpoint;
 
     public WCWPAPIEndpoint(String endpoint) {
@@ -53,5 +55,9 @@ public class WCWPAPIEndpoint {
 
     public String getPathV1Addons() {
         return "/" + WC_PREFIX_V1_ADDONS + mEndpoint;
+    }
+
+    public String getPathWcTelemetry() {
+        return "/" + WC_PREFIX_TELEMETRY + mEndpoint;
     }
 }
