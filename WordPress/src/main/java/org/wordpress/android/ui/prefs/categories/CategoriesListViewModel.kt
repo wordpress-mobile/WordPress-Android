@@ -129,11 +129,10 @@ class CategoriesListViewModel @Inject constructor(
                 override val buttonText = UiStringRes(string.site_settings_categories_empty_button)
             }
 
-            // todo add custom message for generic error
             data class GenericError(override val action: () -> Unit) : Error() {
-                @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
-                override val title = UiStringRes(string.site_settings_categories_empty_title)
-                override val subtitle = UiStringRes(string.site_settings_categories_empty_subtitle)
+                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
+                override val title = UiStringRes(string.site_settings_categories_request_failed_title)
+                override val subtitle = UiStringRes(string.site_settings_categories_request_failed_subtitle)
                 override val buttonText = UiStringRes(string.button_retry)
             }
         }

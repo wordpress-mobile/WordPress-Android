@@ -671,6 +671,8 @@
     <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
     <string name="site_settings_categories_no_network_title" translatable="false">@string/no_network_title</string>
     <string name="site_settings_categories_no_network_subtitle" translatable="false">@string/no_network_message</string>
+    <string name="site_settings_categories_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
+    <string name="site_settings_categories_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
