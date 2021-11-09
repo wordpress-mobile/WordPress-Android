@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.GenericError
@@ -30,8 +29,7 @@ class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     lateinit var siteModel: SiteModel
 
@@ -52,7 +50,7 @@ class CategoriesListViewModel @Inject constructor(
 
     private fun getCategoriesFromDb() {
         _uiState.postValue(Loading)
-        launch(bgDispatcher) {
+        launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             if (siteCategories.isNotEmpty())
                 _uiState.postValue(Content(siteCategories))
@@ -60,7 +58,7 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     private fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
-        launch(bgDispatcher) {
+        launch {
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 if (!isInvokedFromInit)
                     _uiState.postValue(Loading)
@@ -91,7 +89,7 @@ class CategoriesListViewModel @Inject constructor(
                 _uiState.postValue(GenericError(::fetchCategoriesFromNetwork))
             return
         }
-        launch(bgDispatcher) {
+        launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             if (siteCategories.isEmpty()) {
                 _uiState.postValue(UiState.Error.NoCategories(::createCategory))

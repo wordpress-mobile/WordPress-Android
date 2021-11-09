@@ -40,7 +40,6 @@ class CategoriesListViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }
