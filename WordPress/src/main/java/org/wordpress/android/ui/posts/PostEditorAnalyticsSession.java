@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
+import android.os.Bundle;
+
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -8,6 +9,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.io.Serializable;
@@ -32,9 +34,11 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
     private static final String KEY_ENDPOINT = "endpoint";
 
+    private transient AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+
     private String mSessionId = UUID.randomUUID().toString();
+    private SiteModel mSiteModel;
     private String mPostType;
-    private String mBlogType;
     private String mContentType;
     private boolean mStarted = false;
     private Editor mCurrentEditor;
@@ -59,7 +63,18 @@ public class PostEditorAnalyticsSession implements Serializable {
         PUBLISH
     }
 
-    PostEditorAnalyticsSession(Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost) {
+    public static PostEditorAnalyticsSession fromBundle(Bundle extras, String key,
+                                                        AnalyticsTrackerWrapper analyticsTrackerWrapper) {
+        PostEditorAnalyticsSession postEditorAnalyticsSession =
+                (PostEditorAnalyticsSession) extras.getSerializable(key);
+        postEditorAnalyticsSession.mAnalyticsTrackerWrapper = analyticsTrackerWrapper;
+        return postEditorAnalyticsSession;
+    }
+
+    PostEditorAnalyticsSession(Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost,
+                               AnalyticsTrackerWrapper analyticsTrackerWrapper) {
+        mAnalyticsTrackerWrapper = analyticsTrackerWrapper;
+
         // fill in which the current Editor is
         mCurrentEditor = editor;
 
@@ -70,14 +85,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             mPostType = "post";
         }
 
-        // fill in mBlogType
-        if (site.isWPCom()) {
-            mBlogType = "wpcom";
-        } else if (site.isJetpackConnected()) {
-            mBlogType = "jetpack";
-        } else {
-            mBlogType = "core";
-        }
+        mSiteModel = site;
 
         // fill in mContentType
         String postContent = post.getContent();
@@ -93,8 +101,14 @@ public class PostEditorAnalyticsSession implements Serializable {
     }
 
     public static PostEditorAnalyticsSession getNewPostEditorAnalyticsSession(
+            Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost,
+            AnalyticsTrackerWrapper analyticsTrackerWrapper) {
+        return new PostEditorAnalyticsSession(editor, post, site, isNewPost, analyticsTrackerWrapper);
+    }
+
+    public static PostEditorAnalyticsSession getNewPostEditorAnalyticsSession(
             Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost) {
-        return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
+        return getNewPostEditorAnalyticsSession(editor, post, site, isNewPost, new AnalyticsTrackerWrapper());
     }
 
     public void start(ArrayList<Object> unsupportedBlocksList, Boolean galleryWithImageBlocks) {
@@ -114,7 +128,8 @@ public class PostEditorAnalyticsSession implements Serializable {
             // difference to be significant enough, and doing that would add more complexity to how we are initializing
             // the session.
             properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
+            AnalyticsUtils.trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SESSION_START, mSiteModel,
+                    properties);
             mStarted = true;
         } else {
             AppLog.w(T.EDITOR, "An editor session cannot be attempted to be started more than once, "
@@ -133,7 +148,8 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void switchEditor(Editor editor) {
         mCurrentEditor = editor;
         Map<String, Object> properties = getCommonProperties();
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
+        AnalyticsUtils.trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SESSION_SWITCH_EDITOR, mSiteModel,
+                properties);
     }
 
     public void setOutcome(Outcome newOutcome) {
@@ -149,14 +165,16 @@ public class PostEditorAnalyticsSession implements Serializable {
         mTemplate = template;
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
+        AnalyticsUtils.trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SESSION_TEMPLATE_APPLY, mSiteModel,
+                properties);
     }
 
     public void editorSettingsFetched(Boolean fullSiteEditing, String endpoint) {
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
         properties.put(KEY_ENDPOINT, endpoint);
-        AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
+        AnalyticsUtils
+                .trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SETTINGS_FETCHED, mSiteModel, properties);
     }
 
     public void end() {
@@ -169,10 +187,21 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
+            AnalyticsUtils
+                    .trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SESSION_END, mSiteModel, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
         }
+    }
+
+    private String getBlockType() {
+        if (mSiteModel.isWPCom()) {
+            return "wpcom";
+        } else if (mSiteModel.isJetpackConnected()) {
+            return "jetpack";
+        }
+
+        return "core";
     }
 
     private Map<String, Object> getCommonProperties() {
@@ -180,7 +209,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_EDITOR, mCurrentEditor.toString().toLowerCase(Locale.ROOT));
         properties.put(KEY_CONTENT_TYPE, mContentType);
         properties.put(KEY_POST_TYPE, mPostType);
-        properties.put(KEY_BLOG_TYPE, mBlogType);
+        properties.put(KEY_BLOG_TYPE, getBlockType());
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
         properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, mHWAccOff ? "1" : "0");
