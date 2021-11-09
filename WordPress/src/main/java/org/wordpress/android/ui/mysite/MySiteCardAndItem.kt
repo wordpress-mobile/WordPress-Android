@@ -14,6 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -83,18 +84,23 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             )
         }
 
-        data class PostCard(
-            val title: UiString,
-            val postItems: List<PostItem>
+        sealed class PostCard(
+            open val postCardType: PostCardType
         ) : Card(POST_CARD) {
-            data class PostItem(
+            data class PostCardDraftOrScheduled(
+                override val postCardType: PostCardType,
                 val title: UiString,
-                val excerpt: UiString?,
-                val featuredImageUrl: String?,
-                val featuredImageCornerRadius: UiDimen = UIDimenRes(R.dimen.my_site_post_item_image_corner_radius),
-                val isFeaturedImageVisible: Boolean = featuredImageUrl != null,
-                val isTimeIconVisible: Boolean
-            )
+                val postItems: List<PostItem>
+            ) : PostCard(postCardType = postCardType) {
+                data class PostItem(
+                    val title: UiString,
+                    val excerpt: UiString?,
+                    val featuredImageUrl: String?,
+                    val featuredImageCornerRadius: UiDimen = UIDimenRes(R.dimen.my_site_post_item_image_corner_radius),
+                    val isFeaturedImageVisible: Boolean = featuredImageUrl != null,
+                    val isTimeIconVisible: Boolean
+                )
+            }
         }
     }
 

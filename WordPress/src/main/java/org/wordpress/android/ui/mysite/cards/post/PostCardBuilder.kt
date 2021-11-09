@@ -2,7 +2,8 @@ package org.wordpress.android.ui.mysite.cards.post
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -16,12 +17,14 @@ class PostCardBuilder @Inject constructor() {
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
     }
 
-    private fun List<Post>.createDraftPostsCard() = PostCard(
+    private fun List<Post>.createDraftPostsCard() = PostCardDraftOrScheduled(
+            postCardType = PostCardType.DRAFT,
             title = UiStringRes(R.string.my_site_post_card_draft_title),
             postItems = mapToDraftOrScheduledPostItems(PostCardType.DRAFT)
     )
 
-    private fun List<Post>.createScheduledPostsCard() = PostCard(
+    private fun List<Post>.createScheduledPostsCard() = PostCardDraftOrScheduled(
+            postCardType = PostCardType.SCHEDULED,
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
             postItems = mapToDraftOrScheduledPostItems(PostCardType.SCHEDULED)
     )
