@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/quick_actions_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipChildren="false"
@@ -13,14 +12,36 @@
     android:paddingTop="@dimen/my_site_card_row_padding">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/post_card_title"
+        android:id="@+id/title"
         style="@style/MySiteTitleLabel"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/featured_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/title" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/excerpt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/featured_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
+
+    <ImageView
+        android:id="@+id/featured_image"
+        android:layout_width="@dimen/my_site_post_item_image_size"
+        android:layout_height="@dimen/my_site_post_item_image_size"
+        android:contentDescription="@string/featured_image_desc"
+        android:layout_marginStart="@dimen/margin_large"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        tools:text="@string/title" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/excerpt"
+        app:layout_constraintTop_toTopOf="@id/title"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

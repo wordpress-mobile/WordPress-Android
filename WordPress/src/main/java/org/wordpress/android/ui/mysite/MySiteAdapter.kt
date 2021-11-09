@@ -62,7 +62,7 @@ class MySiteAdapter(
             )
             CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
-            POST_CARD.ordinal -> PostCardViewHolder(parent, uiHelpers)
+            POST_CARD.ordinal -> PostCardViewHolder(parent, imageManager, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
