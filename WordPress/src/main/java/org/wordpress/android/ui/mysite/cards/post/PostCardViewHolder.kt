@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mysite.cards.post
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
-import org.wordpress.android.databinding.MySitePostCardBinding
 import org.wordpress.android.databinding.MySitePostCardCreateFirstBinding
+import org.wordpress.android.databinding.MySitePostCardDraftOrScheduledBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardCreateFirst
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
@@ -38,8 +38,8 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         parent: ViewGroup,
         imageManager: ImageManager,
         private val uiHelpers: UiHelpers
-    ) : PostCardViewHolder<MySitePostCardBinding>(
-            parent.viewBinding(MySitePostCardBinding::inflate)
+    ) : PostCardViewHolder<MySitePostCardDraftOrScheduledBinding>(
+            parent.viewBinding(MySitePostCardDraftOrScheduledBinding::inflate)
     ) {
         init {
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
