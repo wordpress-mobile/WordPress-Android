@@ -18,19 +18,27 @@ class PostCardBuilder @Inject constructor() {
 
     private fun List<Post>.createDraftPostsCard() = PostCard(
             title = UiStringRes(R.string.my_site_post_card_draft_title),
-            postItems = mapToDraftOrScheduledPostItems()
+            postItems = mapToDraftOrScheduledPostItems(PostCardType.DRAFT)
     )
 
     private fun List<Post>.createScheduledPostsCard() = PostCard(
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-            postItems = mapToDraftOrScheduledPostItems()
+            postItems = mapToDraftOrScheduledPostItems(PostCardType.SCHEDULED)
     )
 
-    private fun List<Post>.mapToDraftOrScheduledPostItems() = map { post ->
+    private fun List<Post>.mapToDraftOrScheduledPostItems(postCardType: PostCardType) = map { post ->
+        val excerpt = if (postCardType == PostCardType.SCHEDULED) {
+            "Today at 1:04 PM" // TODO: ashiagr - remove hardcoded text
+        } else {
+            post.excerpt
+        }
+        val isTimeIconVisible = postCardType == PostCardType.SCHEDULED && excerpt != null
+
         PostItem(
                 title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
-                excerpt = post.excerpt?.let { UiStringText(it) },
-                featuredImageUrl = post.featuredImageUrl
+                excerpt = excerpt?.let { UiStringText(it) },
+                featuredImageUrl = post.featuredImageUrl,
+                isTimeIconVisible = isTimeIconVisible
         )
     }
 }

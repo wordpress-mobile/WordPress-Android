@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -14,6 +15,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiDimen
+import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 
 sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
@@ -87,7 +90,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             data class PostItem(
                 val title: UiString,
                 val excerpt: UiString?,
-                val featuredImageUrl: String?
+                val featuredImageUrl: String?,
+                val featuredImageCornerRadius: UiDimen = UIDimenRes(R.dimen.my_site_post_item_image_corner_radius),
+                val isFeaturedImageVisible: Boolean = featuredImageUrl != null,
+                val isTimeIconVisible: Boolean
             )
         }
     }
