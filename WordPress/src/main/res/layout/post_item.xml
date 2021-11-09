@@ -13,9 +13,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        style="@style/MySiteTitleLabel"
+        style="@style/MySitePostItemTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
         app:layout_constraintEnd_toStartOf="@+id/featured_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,8 +24,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/excerpt"
+        style="@style/MySitePostItemExcerpt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
         app:layout_constraintEnd_toStartOf="@+id/featured_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
@@ -35,12 +38,9 @@
         android:layout_width="@dimen/my_site_post_item_image_size"
         android:layout_height="@dimen/my_site_post_item_image_size"
         android:contentDescription="@string/featured_image_desc"
-        android:layout_marginStart="@dimen/margin_large"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@id/excerpt"
         app:layout_constraintTop_toTopOf="@id/title"
         tools:srcCompat="@tools:sample/avatars" />
 
