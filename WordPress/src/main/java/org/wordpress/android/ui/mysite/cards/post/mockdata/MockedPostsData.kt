@@ -17,6 +17,7 @@ data class MockedPostsData(
     data class Post(
         @SerializedName("id") val id: String? = null,
         @SerializedName("title") val title: String? = null,
+        @SerializedName("excerpt") val excerpt: String? = null,
         @SerializedName("modified") val modified: Date? = null,
         @SerializedName("featured_image_url") val featuredImageUrl: String? = null
     )
