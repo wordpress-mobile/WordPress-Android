@@ -82,8 +82,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class PostCard(
             val title: UiString,
-            val postTitle: UiString
-        ) : Card(POST_CARD)
+            val postItems: List<PostItem>
+        ) : Card(POST_CARD) {
+            data class PostItem(
+                val title: UiString,
+                val excerpt: UiString?,
+                val featuredImageUrl: String?
+            )
+        }
     }
 
     sealed class DynamicCard(

@@ -297,7 +297,7 @@ class CardsBuilderTest {
     private fun initPostCard() = listOf(
             PostCard(
                     title = UiStringText(""),
-                    postTitle = UiStringText("")
+                    postItems = emptyList()
             )
     )
 }

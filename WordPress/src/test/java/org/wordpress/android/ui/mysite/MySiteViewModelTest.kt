@@ -1435,5 +1435,5 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCard(title = UiStringRes(0), postTitle = UiStringRes(0))
+    private fun initPostCard() = PostCard(title = UiStringRes(0))
 }
