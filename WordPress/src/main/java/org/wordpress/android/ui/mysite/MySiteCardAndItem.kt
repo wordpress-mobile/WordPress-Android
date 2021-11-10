@@ -96,7 +96,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val title: UiString,
                     val excerpt: UiString?,
                     val featuredImageUrl: String?,
-                    val featuredImageCornerRadius: UiDimen = UIDimenRes(R.dimen.my_site_post_item_image_corner_radius),
                     val isFeaturedImageVisible: Boolean = featuredImageUrl != null,
                     val isTimeIconVisible: Boolean
                 )
