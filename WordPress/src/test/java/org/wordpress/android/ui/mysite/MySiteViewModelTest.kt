@@ -266,6 +266,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 scanAndBackupSource,
                 displayUtilsWrapper,
                 quickStartRepository,
+                quickStartCardSource,
                 quickStartCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
@@ -276,7 +277,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 postCardsSource,
-                quickStartCardSource,
                 selectedSiteSource,
                 siteIconProgressSource,
                 mySiteDashboardPhase2FeatureConfig

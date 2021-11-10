@@ -104,6 +104,7 @@ class MySiteViewModel @Inject constructor(
     private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
+    private val quickStartCardSource: QuickStartCardSource,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
@@ -114,7 +115,6 @@ class MySiteViewModel @Inject constructor(
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     postCardsSource: PostCardsSource,
-    private val quickStartCardSource: QuickStartCardSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
