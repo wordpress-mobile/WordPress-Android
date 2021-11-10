@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CancellationException
@@ -35,38 +36,66 @@ class DomainRegistrationSource
     private val siteUtils: SiteUtilsWrapper
 ) : MySiteSource<DomainCreditAvailable> {
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
+    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
+    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
+        val data = MediatorLiveData<DomainCreditAvailable>()
+        data.refreshData(coroutineScope, siteLocalId, false)
+        data.addSource(refresh) {
+            if (refresh.value == true) {
+                data.refreshData(coroutineScope, siteLocalId, true)
+            }
+        }
+        return data
+    }
+
+    fun refresh() {
+        refresh.postValue(true)
+    }
 
     @Suppress("ReturnCount", "SwallowedException")
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
+    private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
+        isRefresh: Boolean = false
+    ) {
         continuation?.cancel()
         continuation = null
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite == null || selectedSite.id != siteLocalId) {
-            return MutableLiveData()
-        }
-        if (shouldFetchPlans(selectedSite)) {
-            val result = MutableLiveData<DomainCreditAvailable>()
-            coroutineScope.launch(bgDispatcher) {
-                try {
-                    val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
-                        continuation = cancellableContinuation
-                        fetchPlans(selectedSite)
-                    }
-                    continuation = null
-                    if (event.isError) {
-                        val message = "An error occurred while fetching plans : " + event.error.message
-                        appLogWrapper.e(DOMAIN_REGISTRATION, message)
-                    } else if (siteLocalId == event.site.id) {
-                        result.postValue(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
-                    }
-                } catch (e: CancellationException) {
-                    result.postValue(DomainCreditAvailable(false))
-                }
-            }
-            return result
+            postValues(false, isRefresh)
         } else {
-            return MutableLiveData(DomainCreditAvailable(false))
+            if (shouldFetchPlans(selectedSite)) {
+                coroutineScope.launch(bgDispatcher) {
+                    try {
+                        val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
+                            continuation = cancellableContinuation
+                            fetchPlans(selectedSite)
+                        }
+                        continuation = null
+                        if (event.isError) {
+                            val message = "An error occurred while fetching plans : " + event.error.message
+                            appLogWrapper.e(DOMAIN_REGISTRATION, message)
+                            postValues(false, isRefresh)
+                        } else if (siteLocalId == event.site.id) {
+                            postValues(isDomainCreditAvailable(event.plans), isRefresh)
+                        }
+                    } catch (e: CancellationException) {
+                        postValues(false, isRefresh)
+                    }
+                }
+            } else {
+                postValues(false, isRefresh)
+            }
         }
+    }
+
+    private fun MediatorLiveData<DomainCreditAvailable>.postValues(
+        isDomainCreditAvailable: Boolean,
+        isRefresh: Boolean
+    ) {
+        if (isRefresh) refresh.postValue(false)
+        this@postValues.postValue(DomainCreditAvailable(isDomainCreditAvailable))
     }
 
     init {
