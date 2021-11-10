@@ -92,8 +92,6 @@ class StorePostViewModel
         }
     }
 
-    fun isAutosavePending(): Boolean = saveJob?.isActive ?: false
-
     fun savePostWithDelay() {
         saveJob?.cancel()
         saveJob = launch {
