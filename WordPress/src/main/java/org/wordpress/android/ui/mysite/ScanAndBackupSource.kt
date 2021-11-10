@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -18,24 +19,51 @@ class ScanAndBackupSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : MySiteSource<JetpackCapabilities> {
+    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
+        val result = MediatorLiveData<JetpackCapabilities>()
+        result.refreshData(coroutineScope, siteLocalId, false)
+        result.addSource(refresh) {
+            if (refresh.value == true) {
+                result.refreshData(coroutineScope, siteLocalId, true)
+            }
+        }
+        return result
+    }
+
+    fun refresh() {
+        refresh.postValue(true)
+    }
+
+    private fun MediatorLiveData<JetpackCapabilities>.refreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
+        isRefresh: Boolean
+    ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
-            val result = MutableLiveData<JetpackCapabilities>()
             coroutineScope.launch(bgDispatcher) {
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(selectedSite.siteId).collect {
-                    result.postValue(
+                    postValues(
                             JetpackCapabilities(
                                     scanAvailable = SiteUtils.isScanEnabled(it.scan, selectedSite),
                                     backupAvailable = it.backup
-                            )
+                            ), isRefresh
                     )
                 }
             }
-            return result
         } else {
-            return MutableLiveData(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
+            postValues(JetpackCapabilities(scanAvailable = false, backupAvailable = false), isRefresh)
         }
+    }
+
+    private fun MediatorLiveData<JetpackCapabilities>.postValues(
+        jetpackCapabilities: JetpackCapabilities,
+        isRefresh: Boolean
+    ) {
+        if (isRefresh) refresh.postValue(false)
+        this@postValues.postValue(jetpackCapabilities)
     }
 
     fun clear() {
