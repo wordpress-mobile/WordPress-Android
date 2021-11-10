@@ -121,7 +121,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         val postItem = buildPostCards(mockedPostsData).filterDraftPostCard()?.postItems?.first()
 
-        assertThat(postItem?.isFeaturedImageVisible).isTrue
+        assertThat(postItem?.featuredImageUrl).isNotNull
     }
 
     @Test
@@ -130,7 +130,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         val postItem = buildPostCards(mockedPostsData).filterDraftPostCard()?.postItems?.first()
 
-        assertThat(postItem?.isFeaturedImageVisible).isFalse
+        assertThat(postItem?.featuredImageUrl).isNull()
     }
 
     /* DRAFT OR SCHEDULED POST ITEM - TIME ICON */

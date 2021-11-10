@@ -32,7 +32,7 @@ class PostItemViewHolder(
                         UIDimenRes(R.dimen.my_site_post_item_image_corner_radius)
                 )
         )
-        featuredImage.setVisible(postItem.isFeaturedImageVisible)
+        featuredImage.setVisible(postItem.featuredImageUrl != null)
         iconTime.setVisible(postItem.isTimeIconVisible)
     }
 }
