@@ -11,7 +11,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class PostCardBuilder @Inject constructor() {
-    fun build(params: PostCardBuilderParams) = mutableListOf<PostCard>().apply {
+    fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
