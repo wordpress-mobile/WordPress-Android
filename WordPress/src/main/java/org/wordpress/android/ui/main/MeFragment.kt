@@ -97,10 +97,13 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = MeFragmentBinding.bind(view).apply { onBind(savedInstanceState) }
+        binding = MeFragmentBinding.bind(view).apply {
+            setupViews()
+            setupObservers(savedInstanceState)
+        }
     }
 
-    private fun MeFragmentBinding.onBind(savedInstanceState: Bundle?) {
+    private fun MeFragmentBinding.setupViews() {
         with(requireActivity() as AppCompatActivity) {
             setSupportActionBar(toolbarMain)
             supportActionBar?.apply {
@@ -141,6 +144,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 }
             }
         }
+    }
+
+    private fun MeFragmentBinding.setupObservers(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
+
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
                 viewModel.openDisconnectDialog()
@@ -150,13 +158,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
-
-        if (viewModel.unifiedAboutFeatureConfig.isEnabled()) {
-            initUnifiedAboutUiState()
-        } else {
-            initRecommendUiState()
-        }
+        if (viewModel.unifiedAboutFeatureConfig.isEnabled()) initUnifiedAboutUiState() else initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, AboutActivity::class.java))
