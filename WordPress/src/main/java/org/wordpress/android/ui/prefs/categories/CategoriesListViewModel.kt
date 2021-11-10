@@ -36,9 +36,6 @@ class CategoriesListViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _navigateToAddScreen: MutableLiveData<Boolean> = MutableLiveData()
-    val navigateToAddScreen: LiveData<Boolean> = _navigateToAddScreen
-
     fun start(siteModel: SiteModel) {
         if (isStarted) return
         isStarted = true
@@ -80,7 +77,7 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     fun createCategory() {
-        _navigateToAddScreen.postValue(true)
+        // todo implement the logic of creating category
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
