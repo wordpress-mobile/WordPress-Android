@@ -2,6 +2,8 @@
 
 /read/sites/$site#String/notification-subscriptions/$action#String
 
+/sites/$site/dashboard/cards
+
 /sites/$site/activity
 /sites/$site/activity/count/group
 /sites/$site/rewind
