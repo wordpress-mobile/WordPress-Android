@@ -1184,7 +1184,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete without refresh`() {
+    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete no refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
         verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)

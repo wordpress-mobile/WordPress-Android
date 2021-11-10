@@ -212,12 +212,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(PUBLISH_POST)
             }
 
-
-    private suspend fun initQuickStartInProgress() {
+    private fun initQuickStartInProgress() {
         initStore()
     }
 
-    private suspend fun initStore(
+    private fun initStore(
         nextUncompletedTask: QuickStartTask? = null
     ) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)

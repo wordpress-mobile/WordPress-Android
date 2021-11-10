@@ -132,7 +132,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
                 triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(Companion.ALL_TASKS_COMPLETED_MESSAGE)))
+                assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
             }
 
     @Test
@@ -143,7 +143,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
                 triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-                assertThat(snackbars).doesNotContain(SnackbarMessageHolder(UiStringText(Companion.ALL_TASKS_COMPLETED_MESSAGE)))
+                assertThat(snackbars).doesNotContain(SnackbarMessageHolder(UiStringText(ALL_TASKS_COMPLETED_MESSAGE)))
             }
 
     @Test
@@ -326,7 +326,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn(Companion.ALL_TASKS_COMPLETED_MESSAGE)
-        whenever(htmlCompat.fromHtml(Companion.ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(Companion.ALL_TASKS_COMPLETED_MESSAGE)
+        whenever(htmlCompat.fromHtml(Companion.ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
 
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
