@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.post
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -16,14 +17,42 @@ import javax.inject.Singleton
 class PostCardsSource @Inject constructor(
     private val mockedDataJsonUtils: MockedDataJsonUtils
 ) : MySiteSource<PostsUpdate> {
+    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PostsUpdate> {
-        val result = MutableLiveData<PostsUpdate>()
-        result.value = PostsUpdate(MockedPostsData())
-        coroutineScope.launch {
-            val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(R.raw.mocked_posts_data)
-            val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
-            result.postValue(PostsUpdate(mockedPostsData = mockedPostsData))
+        val result = MediatorLiveData<PostsUpdate>()
+        result.refreshData(coroutineScope, false)
+        result.addSource(refresh) {
+            if (refresh.value == true) {
+                result.refreshData(coroutineScope, true)
+            }
         }
         return result
+    }
+
+    fun refresh() {
+        refresh.postValue(true)
+    }
+
+    private fun MediatorLiveData<PostsUpdate>.refreshData(
+        coroutineScope: CoroutineScope,
+        isRefresh: Boolean
+    ) {
+        coroutineScope.launch {
+            val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(
+                    if (isRefresh) {
+                        R.raw.mocked_refresh_posts_data
+                    } else {
+                        R.raw.mocked_posts_data
+                    }
+            )
+            val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
+            postValues(mockedPostsData, isRefresh)
+        }
+    }
+
+    private fun MediatorLiveData<PostsUpdate>.postValues(mockedPostsData: MockedPostsData, isRefresh: Boolean) {
+        if (isRefresh) refresh.postValue(false)
+        this@postValues.postValue(PostsUpdate(mockedPostsData = mockedPostsData))
     }
 }
