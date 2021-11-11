@@ -8,12 +8,14 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_CREATE_FIRST
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_DRAFT_OR_SCHEDULED
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
+import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
@@ -26,7 +28,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         QUICK_START_DYNAMIC_CARD,
         CATEGORY_HEADER_ITEM,
         LIST_ITEM,
-        POST_CARD
+        POST_CARD_CREATE_FIRST,
+        POST_CARD_DRAFT_OR_SCHEDULED,
     }
 
     sealed class Card(
@@ -83,7 +86,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         sealed class PostCard(
             open val postCardType: PostCardType
-        ) : Card(POST_CARD) {
+        ) : Card(if (postCardType == CREATE_FIRST) POST_CARD_CREATE_FIRST else POST_CARD_DRAFT_OR_SCHEDULED) {
+            data class PostCardCreateFirst(
+                override val postCardType: PostCardType,
+                val title: UiString,
+                val excerpt: UiString,
+                @DrawableRes val imageRes: Int
+            ) : PostCard(postCardType = postCardType)
+
             data class PostCardDraftOrScheduled(
                 override val postCardType: PostCardType,
                 val title: UiString,

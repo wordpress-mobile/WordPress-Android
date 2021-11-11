@@ -2206,6 +2206,8 @@
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
     <string name="my_site_untitled_post">Untitled</string>
+    <string name="my_site_create_first_post_title">Create your first post</string>
+    <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
