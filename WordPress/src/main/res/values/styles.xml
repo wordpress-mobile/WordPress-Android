@@ -453,6 +453,26 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
 
+    <!--My Site Card/ Item Base Styles-->
+    <style name="MySiteCardItemTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
     <!--My Site Styles-->
     <style name="MySiteTitleLabel">
         <item name="android:ellipsize">end</item>
@@ -692,7 +712,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <!--Quick Start-->
+    <!--My Site Card - Quick Start-->
     <style name="QuickStartList">
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -774,6 +794,18 @@
     <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
+    </style>
+
+    <!--My Site Card - Post-->
+    <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
+
+    <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>
+
+    <style name="MySitePostItemTimeIcon">
+        <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--People Management Styles-->

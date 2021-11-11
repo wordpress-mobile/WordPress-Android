@@ -33,7 +33,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -86,7 +86,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -211,8 +211,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     MockedPostsData(
                             posts = Posts(
                                     hasPublishedPosts = true,
-                                    draft = listOf(Post(id = "1", title = PostCardBuilder.DRAFT_TITLE)),
-                                    scheduled = listOf(Post(id = "1", title = PostCardBuilder.SCHEDULED_TITLE))
+                                    draft = listOf(Post(id = "1", title = "")),
+                                    scheduled = listOf(Post(id = "1", title = ""))
                             )
                     )
             )
@@ -1435,5 +1435,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCard(title = UiStringRes(0), postTitle = UiStringRes(0))
+    private fun initPostCard() = PostCardDraftOrScheduled(
+            postCardType = DRAFT,
+            title = UiStringRes(0),
+            postItems = emptyList()
+    )
 }

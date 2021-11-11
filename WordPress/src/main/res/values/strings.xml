@@ -2202,6 +2202,11 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
+    <!-- My Site - Post Card -->
+    <string name="my_site_post_card_draft_title">Work on a draft post</string>
+    <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
+    <string name="my_site_untitled_post">Untitled</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
