@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_CATEGORIES
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
@@ -29,6 +30,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
     private val networkUtilsWrapper: NetworkUtilsWrapper = mock()
     private val siteModel: SiteModel = mock()
+    private val dispatcher:Dispatcher = mock()
 
     private lateinit var viewModel: CategoriesListViewModel
 
@@ -40,6 +42,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
+                dispatcher
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }

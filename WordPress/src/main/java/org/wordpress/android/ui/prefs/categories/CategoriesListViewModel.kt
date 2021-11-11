@@ -4,8 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
@@ -29,12 +32,22 @@ class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val dispatcher: Dispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     lateinit var siteModel: SiteModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(this)
+    }
 
     fun start(siteModel: SiteModel) {
         if (isStarted) return
@@ -63,6 +76,8 @@ class CategoriesListViewModel @Inject constructor(
             if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) AppLog.e(
                 T.SETTINGS,
