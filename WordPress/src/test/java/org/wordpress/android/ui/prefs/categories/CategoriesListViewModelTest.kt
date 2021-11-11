@@ -61,7 +61,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no items are present in db with no internet available, when vm starts, then no connection error is displayed`() {
+    fun `given no items in db with no internet available, when vm starts, then no connection error is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         viewModel.start(siteModel)
@@ -73,7 +73,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no items are present in db with internet available, when vm starts, then loading state is displayed until callback`() {
+    fun `given no items in db with internet available, when vm starts, then loading is displayed until callback`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
@@ -85,7 +85,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no items are present in db with internet available, when vm starts, then list of items from network is displayed`() {
+    fun `given no items in db with internet available, when vm starts, then list of items from network is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel))
                 .thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -100,7 +100,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no items are present in db and api error occurs, when vm starts, then error is displayed`() {
+    fun `given no items in db and api error occurs, when vm starts, then error is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel))
                 .thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
