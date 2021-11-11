@@ -237,8 +237,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
@@ -256,8 +257,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
@@ -277,8 +279,9 @@ class PostListItemUiStateHelperTest {
         val moreActions = (state.actions[2] as MoreItem).actions
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(3)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(4)
     }
 
     @Test
@@ -380,8 +383,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
@@ -467,8 +471,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
