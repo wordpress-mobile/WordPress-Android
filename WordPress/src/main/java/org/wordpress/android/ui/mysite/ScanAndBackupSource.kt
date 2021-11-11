@@ -45,7 +45,7 @@ class ScanAndBackupSource @Inject constructor(
 
     private fun MediatorLiveData<JetpackCapabilities>.refreshData(
         coroutineScope: CoroutineScope,
-        siteLocalId: Int,
+        siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
