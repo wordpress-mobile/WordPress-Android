@@ -72,8 +72,7 @@ class CategoriesListViewModel @Inject constructor(
             launch {
                 getCategoriesUseCase.fetchSiteCategories(siteModel)
             }
-        } else
-            if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
+        } else if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
     }
 
     @SuppressWarnings("unused")
