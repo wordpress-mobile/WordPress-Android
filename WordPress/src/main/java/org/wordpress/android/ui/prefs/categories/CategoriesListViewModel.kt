@@ -46,34 +46,30 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     private fun getCategoriesFromDb() {
-        _uiState.postValue(Loading)
+        _uiState.value = Loading
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
-            if (siteCategories.isNotEmpty())
-                _uiState.postValue(Content(siteCategories))
+            if (siteCategories.isNotEmpty()) _uiState.postValue(Content(siteCategories))
         }
     }
 
     private fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
-        launch {
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                if (!isInvokedFromInit)
-                    _uiState.postValue(Loading)
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            if (!isInvokedFromInit) _uiState.value = Loading
+            launch {
                 getCategoriesUseCase.fetchSiteCategories(siteModel)
-            } else
-                if (_uiState.value is Loading)
-                    _uiState.postValue(NoConnection(::fetchCategoriesFromNetwork))
-        }
+            }
+        } else
+            if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
     }
 
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
-        if (event.isError) {
-            AppLog.e(T.SETTINGS, "An error occurred while updating taxonomy with type: " + event.error.type)
-        }
+        if (event.isError) AppLog.e(
+                T.SETTINGS,
+                "An error occurred while updating taxonomy with type: " + event.error.type
+        )
 
-        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
-            processFetchCategoriesCallback(event)
-        }
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) processFetchCategoriesCallback(event)
     }
 
     fun createCategory() {
@@ -82,8 +78,7 @@ class CategoriesListViewModel @Inject constructor(
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
         if (event.isError) {
-            if (_uiState.value is Loading)
-                _uiState.postValue(GenericError(::fetchCategoriesFromNetwork))
+            if (_uiState.value is Loading) _uiState.value = GenericError(::fetchCategoriesFromNetwork)
             return
         }
         launch {
