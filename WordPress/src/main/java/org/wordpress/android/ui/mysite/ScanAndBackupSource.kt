@@ -23,12 +23,8 @@ class ScanAndBackupSource @Inject constructor(
 
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
         val result = MediatorLiveData<JetpackCapabilities>()
-        result.refreshData(coroutineScope, siteLocalId, false)
-        result.addSource(refresh) {
-            if (refresh.value == true) {
-                result.refreshData(coroutineScope, siteLocalId, true)
-            }
-        }
+        result.refreshData(coroutineScope, siteLocalId)
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return result
     }
 
@@ -39,31 +35,40 @@ class ScanAndBackupSource @Inject constructor(
     private fun MediatorLiveData<JetpackCapabilities>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
-        isRefresh: Boolean
+        isRefresh: Boolean? = null
+    ) {
+        when (isRefresh) {
+            null, true -> refreshData(coroutineScope, siteLocalId)
+            false -> Unit // Do nothing
+        }
+    }
+
+    private fun MediatorLiveData<JetpackCapabilities>.refreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(selectedSite.siteId).collect {
-                    postValues(
+                    postState(
                             JetpackCapabilities(
                                     scanAvailable = SiteUtils.isScanEnabled(it.scan, selectedSite),
                                     backupAvailable = it.backup
-                            ), isRefresh
+                            )
                     )
                 }
             }
         } else {
-            postValues(JetpackCapabilities(scanAvailable = false, backupAvailable = false), isRefresh)
+            postState(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
         }
     }
 
-    private fun MediatorLiveData<JetpackCapabilities>.postValues(
-        jetpackCapabilities: JetpackCapabilities,
-        isRefresh: Boolean
+    private fun MediatorLiveData<JetpackCapabilities>.postState(
+        jetpackCapabilities: JetpackCapabilities
     ) {
-        if (isRefresh) refresh.postValue(false)
-        this@postValues.postValue(jetpackCapabilities)
+        refresh.postValue(false)
+        this@postState.postValue(jetpackCapabilities)
     }
 
     fun clear() {
