@@ -27,8 +27,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 
-class DomainRegistrationSource
-@Inject constructor(
+class DomainRegistrationSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -40,12 +39,8 @@ class DomainRegistrationSource
 
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
-        data.refreshData(coroutineScope, siteLocalId, false)
-        data.addSource(refresh) {
-            if (refresh.value == true) {
-                data.refreshData(coroutineScope, siteLocalId, true)
-            }
-        }
+        data.refreshData(coroutineScope, siteLocalId)
+        data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return data
     }
 
@@ -53,49 +48,61 @@ class DomainRegistrationSource
         refresh.postValue(true)
     }
 
-    @Suppress("ReturnCount", "SwallowedException")
     private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
-        isRefresh: Boolean = false
+        isRefresh: Boolean? = null
+    ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        when (isRefresh) {
+            null, true -> refreshData(coroutineScope, siteLocalId, selectedSite)
+            false -> Unit // Do nothing
+        }
+    }
+
+    private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
+        selectedSite: SiteModel?
+    ) {
+        if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchPlans(selectedSite)) {
+            postState(DomainCreditAvailable(false))
+        } else {
+            fetchPlansAndRefreshData(coroutineScope, siteLocalId, selectedSite)
+        }
+    }
+
+    @Suppress("SwallowedException")
+    private fun MediatorLiveData<DomainCreditAvailable>.fetchPlansAndRefreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
+        selectedSite: SiteModel
     ) {
         continuation?.cancel()
         continuation = null
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite == null || selectedSite.id != siteLocalId) {
-            postValues(false, isRefresh)
-        } else {
-            if (shouldFetchPlans(selectedSite)) {
-                coroutineScope.launch(bgDispatcher) {
-                    try {
-                        val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
-                            continuation = cancellableContinuation
-                            fetchPlans(selectedSite)
-                        }
-                        continuation = null
-                        if (event.isError) {
-                            val message = "An error occurred while fetching plans : " + event.error.message
-                            appLogWrapper.e(DOMAIN_REGISTRATION, message)
-                            postValues(false, isRefresh)
-                        } else if (siteLocalId == event.site.id) {
-                            postValues(isDomainCreditAvailable(event.plans), isRefresh)
-                        }
-                    } catch (e: CancellationException) {
-                        postValues(false, isRefresh)
-                    }
+        coroutineScope.launch(bgDispatcher) {
+            try {
+                val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
+                    continuation = cancellableContinuation
+                    fetchPlans(selectedSite)
                 }
-            } else {
-                postValues(false, isRefresh)
+                continuation = null
+                if (event.isError) {
+                    val message = "An error occurred while fetching plans : " + event.error.message
+                    appLogWrapper.e(DOMAIN_REGISTRATION, message)
+                    postState(DomainCreditAvailable(false))
+                } else if (siteLocalId == event.site.id) {
+                    postState(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
+                }
+            } catch (e: CancellationException) {
+                postState(DomainCreditAvailable(false))
             }
         }
     }
 
-    private fun MediatorLiveData<DomainCreditAvailable>.postValues(
-        isDomainCreditAvailable: Boolean,
-        isRefresh: Boolean
-    ) {
-        if (isRefresh) refresh.postValue(false)
-        this@postValues.postValue(DomainCreditAvailable(isDomainCreditAvailable))
+    private fun MediatorLiveData<DomainCreditAvailable>.postState(value: DomainCreditAvailable) {
+        refresh.postValue(false)
+        this@postState.postValue(value)
     }
 
     init {
