@@ -20,6 +20,7 @@
         android:id="@+id/categories_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
