@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -156,7 +157,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
-                disableRippleEffect = postStatus == PostStatus.TRASHED
+                disableRippleEffect = postStatus == TRASHED
         )
 
         return PostListItemUiState(
@@ -380,7 +381,8 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocalDraft &&
                 !isLocallyChanged
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
+        val canShowCopyUrlButton = postStatus == PUBLISHED && !isLocalDraft
+        val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
@@ -394,14 +396,11 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowPublishButton) {
             buttonTypes.add(
-                    if (canRetryUpload) {
-                        BUTTON_RETRY
-                    } else if (!siteHasCapabilitiesToPublish) {
-                        BUTTON_SUBMIT
-                    } else if (postStatus == SCHEDULED && isLocallyChanged) {
-                        BUTTON_SYNC
-                    } else {
-                        BUTTON_PUBLISH
+                    when {
+                        canRetryUpload -> BUTTON_RETRY
+                        !siteHasCapabilitiesToPublish -> BUTTON_SUBMIT
+                        postStatus == SCHEDULED && isLocallyChanged -> BUTTON_SYNC
+                        else -> BUTTON_PUBLISH
                     }
             )
         }
@@ -425,6 +424,10 @@ class PostListItemUiStateHelper @Inject constructor(
         }
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
+
+        if (canShowCopyUrlButton) {
+            buttonTypes.add(BUTTON_COPY_URL)
+        }
 
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)

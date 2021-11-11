@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.posts
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
@@ -11,6 +15,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -33,6 +38,7 @@ sealed class PostListAction {
         val post: PostModel,
         val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
     ) : PostListAction()
+    class CopyUrl(val site: SiteModel, val post: PostModel) : PostListAction()
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -90,6 +96,18 @@ fun handlePostListAction(
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
+        }
+        is PostListAction.CopyUrl -> {
+            try {
+                val clipboard = ContextCompat.getSystemService(activity, ClipboardManager::class.java)
+                clipboard!!.setPrimaryClip(
+                        ClipData.newPlainText(activity.getString(R.string.app_name), action.post.link)
+                )
+                // TODO: show success toast
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.UTILS, e)
+                // TODO: show error toast
+            }
         }
     }
 }
