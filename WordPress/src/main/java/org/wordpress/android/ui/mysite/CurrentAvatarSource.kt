@@ -31,16 +31,17 @@ class CurrentAvatarSource @Inject constructor(
     private fun MediatorLiveData<CurrentAvatarUrl>.refreshData(
         isRefresh: Boolean? = null
     ) {
-        val url = accountStore.account?.avatarUrl.orEmpty()
         when (isRefresh) {
-            null -> this@refreshData.postValue(CurrentAvatarUrl(url))
-            true -> {
-                refresh.postValue(false)
-                if (url != avatarUrl.value?.url) {
-                    this@refreshData.postValue(CurrentAvatarUrl(url))
-                }
+            null, true -> {
+                val url = accountStore.account?.avatarUrl.orEmpty()
+                postState(CurrentAvatarUrl(url))
             }
             false -> Unit // Do nothing
         }
+    }
+
+    private fun MediatorLiveData<CurrentAvatarUrl>.postState(value: CurrentAvatarUrl) {
+        refresh.postValue(false)
+        this@postState.postValue(value)
     }
 }
