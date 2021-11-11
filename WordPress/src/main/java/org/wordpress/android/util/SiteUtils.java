@@ -50,7 +50,6 @@ public class SiteUtils {
      * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
      * -- 12.9 ON -> turn all sites ON in 13.0
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
-     *
      */
     public static void migrateAppWideMobileEditorPreferenceToRemote(final AccountStore accountStore,
                                                                     final SiteStore siteStore,
@@ -370,10 +369,6 @@ public class SiteUtils {
     public static boolean onBloggerPlan(@NonNull SiteModel site) {
         return site.getPlanId() == PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
                || site.getPlanId() == PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID;
-    }
-
-    public static boolean hasCustomDomain(@NonNull SiteModel site) {
-        return !site.getUrl().contains(".wordpress.com") && !site.getUrl().contains(".wpcomstaging.com");
     }
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {

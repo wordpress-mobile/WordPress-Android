@@ -20,6 +20,5 @@ class SiteUtilsWrapper @Inject constructor() {
 
     fun isAccessedViaWPComRest(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
     fun onFreePlan(site: SiteModel): Boolean = SiteUtils.onFreePlan(site)
-    fun hasCustomDomain(site: SiteModel): Boolean = SiteUtils.hasCustomDomain(site)
     fun getSiteNameOrHomeURL(site: SiteModel): String = SiteUtils.getSiteNameOrHomeURL(site)
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-19 13:05:50+0000
+Translation-Revision-Date: 2021-10-27 13:14:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_create_link">Crear enlace</string>
+    <string name="domains_title">Dominios</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
     <string name="storage_utils_dialog_title">Insuficiente almacenamiento en el dispositivo</string>
     <string name="gutenberg_native_type_a_url">Escribe una URL</string>

@@ -20,7 +20,7 @@
     "scheduled": [
       {
         "id": 4172,
-        "title": "French macarons",
+        "title": "Veeeerrrry Looooooooooong Title",
         "excerpt": "Senectus et netus et malesuada fames ac turpis egestas.",
         "modified": "2021-07-27T16:07:45+00:00",
         "featured_image_url": "https://images.pexels.com/photos/239581/pexels-photo-239581.jpeg?h=150"
@@ -29,12 +29,10 @@
         "id": 4173,
         "title": "Noodles with vegetables",
         "excerpt": "Egestas dui id ornare arcu. Faucibus scelerisque eleifend donec pretium vulputate sapien.",
-        "modified": "2021-07-28T16:07:45+00:00",
-        "featured_image_url": "https://images.pexels.com/photos/286283/pexels-photo-286283.jpeg?h=150"
+        "modified": "2021-07-28T16:07:45+00:00"
       },
       {
         "id": 4174,
-        "title": "Slice cake",
         "excerpt": "Lectus arcu bibendum at varius vel pharetra.",
         "modified": "2021-07-29T16:07:45+00:00",
         "featured_image_url": "https://images.pexels.com/photos/1854652/pexels-photo-1854652.jpeg?h=150"

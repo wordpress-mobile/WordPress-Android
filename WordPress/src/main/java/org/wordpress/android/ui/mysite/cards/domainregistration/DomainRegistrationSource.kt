@@ -77,7 +77,7 @@ class DomainRegistrationSource
         dispatcher.unregister(this)
     }
 
-    private fun shouldFetchPlans(site: SiteModel) = !siteUtils.onFreePlan(site) && !siteUtils.hasCustomDomain(site)
+    private fun shouldFetchPlans(site: SiteModel) = !siteUtils.onFreePlan(site)
 
     private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
 
