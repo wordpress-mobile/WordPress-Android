@@ -137,7 +137,6 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        var result: JetpackCapabilities? = null
         scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
