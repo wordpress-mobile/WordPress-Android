@@ -21,12 +21,8 @@ class PostCardsSource @Inject constructor(
 
     override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PostsUpdate> {
         val result = MediatorLiveData<PostsUpdate>()
-        result.refreshData(coroutineScope, false)
-        result.addSource(refresh) {
-            if (refresh.value == true) {
-                result.refreshData(coroutineScope, true)
-            }
-        }
+        result.refreshData(coroutineScope)
+        result.addSource(refresh) { result.refreshData(coroutineScope, refresh.value) }
         return result
     }
 
@@ -36,23 +32,35 @@ class PostCardsSource @Inject constructor(
 
     private fun MediatorLiveData<PostsUpdate>.refreshData(
         coroutineScope: CoroutineScope,
-        isRefresh: Boolean
+        isRefresh: Boolean? = null
     ) {
-        coroutineScope.launch {
-            val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(
-                    if (isRefresh) {
-                        R.raw.mocked_refresh_posts_data
-                    } else {
-                        R.raw.mocked_posts_data
-                    }
-            )
-            val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
-            postValues(mockedPostsData, isRefresh)
+        when (isRefresh) {
+            null, true -> {
+                val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(
+                        if (isRefresh == null) {
+                            R.raw.mocked_posts_data
+                        } else {
+                            R.raw.mocked_refresh_posts_data
+                        }
+                )
+                refreshData(coroutineScope, jsonString)
+            }
+            else -> Unit // Do nothing
         }
     }
 
-    private fun MediatorLiveData<PostsUpdate>.postValues(mockedPostsData: MockedPostsData, isRefresh: Boolean) {
-        if (isRefresh) refresh.postValue(false)
-        this@postValues.postValue(PostsUpdate(mockedPostsData = mockedPostsData))
+    private fun MediatorLiveData<PostsUpdate>.refreshData(
+        coroutineScope: CoroutineScope,
+        jsonString: String?
+    ) {
+        coroutineScope.launch {
+            val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
+            postState(mockedPostsData)
+        }
+    }
+
+    private fun MediatorLiveData<PostsUpdate>.postState(mockedPostsData: MockedPostsData) {
+        refresh.postValue(false)
+        this@postState.postValue(PostsUpdate(mockedPostsData = mockedPostsData))
     }
 }
