@@ -40,12 +40,31 @@ class PostCardBuilderTest : BaseUnitTest() {
     /* CREATE FIRST POST CARD */
 
     @Test
-    fun `given published post present, when post cards are built, then create first post card exists`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+    fun `given published post exists without draft + sched post, when cards are built, then create first card exists`()
+    {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = null, scheduledPosts = null)
 
         val postCards = buildPostCards(mockedPostsData)
 
         assertThat(postCards.filterCreateFirstPostCard()).isNotNull
+    }
+
+    @Test
+    fun `given published post exists with draft post, when cards are built, then create first card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = listOf(post))
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateFirstPostCard()).isNull()
+    }
+
+    @Test
+    fun `given published post exists with scheduled post, when cards are built, then create first card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, scheduledPosts = listOf(post))
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateFirstPostCard()).isNull()
     }
 
     @Test
