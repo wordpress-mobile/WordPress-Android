@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_CATEGORIES
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
@@ -29,6 +30,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     private val getCategoriesUseCase: GetCategoriesUseCase = mock()
     private val networkUtilsWrapper: NetworkUtilsWrapper = mock()
     private val siteModel: SiteModel = mock()
+    private val dispatcher: Dispatcher = mock()
 
     private lateinit var viewModel: CategoriesListViewModel
 
@@ -40,27 +42,26 @@ class CategoriesListViewModelTest : BaseUnitTest() {
                 getCategoriesUseCase,
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
+                dispatcher
         )
         viewModel.uiState.observeForever { if (it != null) uiStates += it }
     }
 
     @Test
-    fun `when vm starts, then screen displays loading screen state`() {
+    fun `when vm starts, then loading screen state is displayed`() {
         viewModel.start(siteModel)
         assertTrue(uiStates.first() is Loading)
     }
 
     @Test
-    fun `when vm starts, then screen displays list of items from db`() {
+    fun `when vm starts, then list of items from db is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(mock())
         viewModel.start(siteModel)
-        assertTrue(uiStates.first() is Loading)
         assertTrue(uiStates.last() is Content)
-        assertTrue(uiStates.count() == 2)
     }
 
     @Test
-    fun `when no items are present in db and no internet available then no connection error should be displayed`() {
+    fun `given no items in db with no internet available, when vm starts, then no connection error is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         viewModel.start(siteModel)
@@ -68,13 +69,11 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         verify(getCategoriesUseCase, never()).fetchSiteCategories(siteModel)
         verify(getCategoriesUseCase, times(1)).getSiteCategories(siteModel)
 
-        assertTrue(uiStates.first() is Loading)
         assertTrue(uiStates.last() is NoConnection)
-        assertTrue(uiStates.count() == 2)
     }
 
     @Test
-    fun `when no items are present in db and internet is available then loading state should be displayed until callback`() {
+    fun `given no items in db with internet available, when vm starts, then loading is displayed until callback`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
@@ -83,11 +82,10 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         verify(getCategoriesUseCase, times(1)).getSiteCategories(siteModel)
 
         assertTrue(uiStates.first() is Loading)
-        assertTrue(uiStates.count() == 1)
     }
 
     @Test
-    fun `when no items are present in db and internet is available should display list of items from network`() {
+    fun `given no items in db with internet available, when vm starts, then list of items from network is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel))
                 .thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -98,25 +96,21 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
         verify(getCategoriesUseCase, times(2)).getSiteCategories(siteModel)
 
-        assertTrue(uiStates.first() is Loading)
         assertTrue(uiStates.last() is Content)
-        assertTrue(uiStates.count() == 2)
     }
 
     @Test
-    fun `when no items are present in db and api error occurs, screen should show error`() {
+    fun `given no items in db and api error occurs, when vm starts, then error is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel))
                 .thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
-        assertTrue(uiStates.first() is Loading)
 
         verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
         verify(getCategoriesUseCase, times(1)).getSiteCategories(siteModel)
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
         assertTrue(uiStates.last() is GenericError)
-        assertTrue(uiStates.count() == 2)
     }
 
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {

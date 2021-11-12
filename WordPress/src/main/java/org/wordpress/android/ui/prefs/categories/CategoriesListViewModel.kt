@@ -4,8 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
@@ -29,12 +32,22 @@ class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val dispatcher: Dispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     lateinit var siteModel: SiteModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(this)
+    }
 
     fun start(siteModel: SiteModel) {
         if (isStarted) return
@@ -46,34 +59,31 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     private fun getCategoriesFromDb() {
-        _uiState.postValue(Loading)
+        _uiState.value = Loading
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
-            if (siteCategories.isNotEmpty())
-                _uiState.postValue(Content(siteCategories))
+            if (siteCategories.isNotEmpty()) _uiState.postValue(Content(siteCategories))
         }
     }
 
     private fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
-        launch {
-            if (networkUtilsWrapper.isNetworkAvailable()) {
-                if (!isInvokedFromInit)
-                    _uiState.postValue(Loading)
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            if (!isInvokedFromInit) _uiState.value = Loading
+            launch {
                 getCategoriesUseCase.fetchSiteCategories(siteModel)
-            } else
-                if (_uiState.value is Loading)
-                    _uiState.postValue(NoConnection(::fetchCategoriesFromNetwork))
-        }
+            }
+        } else if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
-        if (event.isError) {
-            AppLog.e(T.SETTINGS, "An error occurred while updating taxonomy with type: " + event.error.type)
-        }
+        if (event.isError) AppLog.e(
+                T.SETTINGS,
+                "An error occurred while updating taxonomy with type: " + event.error.type
+        )
 
-        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
-            processFetchCategoriesCallback(event)
-        }
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) processFetchCategoriesCallback(event)
     }
 
     fun createCategory() {
@@ -82,17 +92,12 @@ class CategoriesListViewModel @Inject constructor(
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
         if (event.isError) {
-            if (_uiState.value is Loading)
-                _uiState.postValue(GenericError(::fetchCategoriesFromNetwork))
+            if (_uiState.value is Loading) _uiState.value = GenericError(::fetchCategoriesFromNetwork)
             return
         }
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
-            if (siteCategories.isEmpty()) {
-                _uiState.postValue(UiState.Error.NoCategories(::createCategory))
-            } else {
-                _uiState.postValue(Content(siteCategories))
-            }
+            _uiState.postValue(Content(siteCategories))
         }
     }
 
@@ -111,13 +116,6 @@ class CategoriesListViewModel @Inject constructor(
                 override val title = UiStringRes(string.site_settings_categories_no_network_title)
                 override val subtitle = UiStringRes(string.site_settings_categories_no_network_subtitle)
                 override val buttonText = UiStringRes(string.retry)
-            }
-
-            data class NoCategories(override val action: () -> Unit) : Error() {
-                @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
-                override val title = UiStringRes(string.site_settings_categories_empty_title)
-                override val subtitle = UiStringRes(string.site_settings_categories_empty_subtitle)
-                override val buttonText = UiStringRes(string.site_settings_categories_empty_button)
             }
 
             data class GenericError(override val action: () -> Unit) : Error() {
