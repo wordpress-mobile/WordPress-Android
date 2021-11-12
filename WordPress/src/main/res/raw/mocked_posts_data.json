@@ -4,35 +4,38 @@
     "draft": [
       {
         "id": 3172,
-        "title": "A draft post 1...",
+        "title": "Vegetable salad",
+        "excerpt": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "modified": "2021-07-27T16:07:45+00:00",
-        "featured_image_url": "https://draft_1_feature_image_url"
+        "featured_image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?h=150"
       },
       {
         "id": 3173,
-        "title": "A draft post 2...",
+        "title": "Baking cheese cooking crust",
+        "excerpt": "In ante metus dictum at tempor commodo ullamcorper a lacus.",
         "modified": "2021-07-28T16:07:45+00:00",
-        "featured_image_url": "https://draft_2_feature_image_url"
+        "featured_image_url": "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?h=150"
       }
     ],
     "scheduled": [
       {
         "id": 4172,
-        "title": "A scheduled post 1...",
+        "title": "Veeeerrrry Looooooooooong Title",
+        "excerpt": "Senectus et netus et malesuada fames ac turpis egestas.",
         "modified": "2021-07-27T16:07:45+00:00",
-        "featured_image_url": "https://schedule_1_feature_image_url"
+        "featured_image_url": "https://images.pexels.com/photos/239581/pexels-photo-239581.jpeg?h=150"
       },
       {
         "id": 4173,
-        "title": "A scheduled post 2...",
-        "modified": "2021-07-28T16:07:45+00:00",
-        "featured_image_url": "https://schedule_2_feature_image_url"
+        "title": "Noodles with vegetables",
+        "excerpt": "Egestas dui id ornare arcu. Faucibus scelerisque eleifend donec pretium vulputate sapien.",
+        "modified": "2021-07-28T16:07:45+00:00"
       },
       {
         "id": 4174,
-        "title": "A scheduled post 3...",
+        "excerpt": "Lectus arcu bibendum at varius vel pharetra.",
         "modified": "2021-07-29T16:07:45+00:00",
-        "featured_image_url": "https://schedule_3_feature_image_url"
+        "featured_image_url": "https://images.pexels.com/photos/1854652/pexels-photo-1854652.jpeg?h=150"
       }
     ]
   }

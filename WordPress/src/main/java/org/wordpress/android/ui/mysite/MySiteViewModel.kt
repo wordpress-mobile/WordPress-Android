@@ -60,7 +60,6 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -114,7 +113,8 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    postCardsSource: PostCardsSource,
+    private val postCardsSource: PostCardsSource,
+    quickStartCardSource: QuickStartCardSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
@@ -734,7 +734,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringText("Pull to refresh activated"))))
+        postCardsSource.refresh()
     }
 
     data class UiModel(

@@ -93,10 +93,10 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when fetch fails, don't emit value`() = test {
+    fun `when fetch fails, emit false value`() = test {
         setupSite(site = site, error = GENERIC_ERROR)
 
-        assertThat(result.count()).isEqualTo(0)
+        assertThat(result.last().isDomainCreditAvailable).isFalse
     }
 
     private fun setupSite(

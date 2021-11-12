@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
@@ -15,9 +16,11 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initDagger()
+
         with(SiteSettingsCategoriesListFragmentBinding.bind(view)) {
-            initDagger()
-            initViewModel()
+            initViewModel(getSite(savedInstanceState))
+            setupObservers()
         }
     }
 
@@ -25,9 +28,29 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun SiteSettingsCategoriesListFragmentBinding.initViewModel() {
+    private fun initViewModel(site: SiteModel) {
         viewModel = ViewModelProvider(this@CategoriesListFragment, viewModelFactory)
                 .get(CategoriesListViewModel::class.java)
-        viewModel.start()
+
+        viewModel.start(site)
+    }
+
+    private fun getSite(savedInstanceState: Bundle?): SiteModel {
+        return if (savedInstanceState == null) {
+            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+    }
+
+    private fun SiteSettingsCategoriesListFragmentBinding.setupObservers() {
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            // todo handle the ui states
+        })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(WordPress.SITE, viewModel.siteModel)
+        super.onSaveInstanceState(outState)
     }
 }
