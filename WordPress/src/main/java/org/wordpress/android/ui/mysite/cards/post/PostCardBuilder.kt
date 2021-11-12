@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
-        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+        posts?.hasPublishedPosts/*?.takeIf { !posts.hasDraftsOrScheduledPosts() }*/
                 ?.let { if (it) add(createFirstPostCard()) else add(createNextPostCard()) }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
@@ -25,26 +25,30 @@ class PostCardBuilder @Inject constructor() {
             postCardType = PostCardType.CREATE_FIRST,
             title = UiStringRes(R.string.my_site_create_first_post_title),
             excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-            imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+            imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
     )
 
     private fun createNextPostCard() = PostCardWithoutPostItems(
             postCardType = PostCardType.CREATE_NEXT,
             title = UiStringRes(R.string.my_site_create_next_post_title),
             excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-            imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+            imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
     )
 
     private fun List<Post>.createDraftPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.DRAFT,
             title = UiStringRes(R.string.my_site_post_card_draft_title),
-            postItems = mapToDraftPostItems()
+            postItems = mapToDraftPostItems(),
+            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_go_to_drafts)
     )
 
     private fun List<Post>.createScheduledPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.SCHEDULED,
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-            postItems = mapToScheduledPostItems()
+            postItems = mapToScheduledPostItems(),
+            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts)
     )
 
     private fun Posts.hasDraftsOrScheduledPosts() =

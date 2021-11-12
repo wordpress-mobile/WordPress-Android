@@ -796,7 +796,14 @@
         <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
     </style>
 
-    <!--My Site Card - Post-->
+    <!--My Site Card-->
+    <style name="MySiteCardBottomLinkItem">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:padding">@dimen/my_site_card_bottom_link_padding</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
 
     <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>

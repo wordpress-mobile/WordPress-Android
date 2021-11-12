@@ -31,6 +31,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(title, postCard.title)
             uiHelpers.setTextOrHide(excerpt, postCard.excerpt)
             imageManager.load(image, postCard.imageRes)
+            uiHelpers.setTextOrHide(mySiteCardBottomLink.linkLabel, postCard.bottomLinkLabel)
         }
     }
 
@@ -49,6 +50,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             val postCard = card as PostCardWithPostItems
             mySiteToolbar.update(postCard.title)
             (postItems.adapter as PostItemsAdapter).update(postCard.postItems)
+            uiHelpers.setTextOrHide(mySiteCardBottomLink.linkLabel, postCard.bottomLinkLabel)
         }
 
         private fun MySiteCardToolbarBinding.update(title: UiString?) {

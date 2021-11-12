@@ -90,13 +90,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val postCardType: PostCardType,
                 val title: UiString,
                 val excerpt: UiString,
-                @DrawableRes val imageRes: Int
+                @DrawableRes val imageRes: Int,
+                val bottomLinkLabel: UiString
             ) : PostCard(POST_CARD_WITHOUT_POST_ITEMS)
 
             data class PostCardWithPostItems(
                 val postCardType: PostCardType,
                 val title: UiString,
-                val postItems: List<PostItem>
+                val postItems: List<PostItem>,
+                val bottomLinkLabel: UiString
             ) : PostCard(POST_CARD_WITH_POST_ITEMS) {
                 data class PostItem(
                     val title: UiString,
