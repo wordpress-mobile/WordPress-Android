@@ -7,8 +7,8 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardCreateFirst
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
@@ -62,7 +62,7 @@ class PostCardBuilderTest : BaseUnitTest() {
         val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateFirstPostCard()
 
         assertThat(createFirstPostCard).isEqualTo(
-                PostCardCreateFirst(
+                PostCardWithoutPostItems(
                         postCardType = CREATE_FIRST,
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
@@ -192,13 +192,13 @@ class PostCardBuilderTest : BaseUnitTest() {
     }
 
     private fun List<PostCard>.filterCreateFirstPostCard() =
-            firstOrNull { it.postCardType == CREATE_FIRST } as? PostCardCreateFirst
+            firstOrNull { it.postCardType == CREATE_FIRST } as? PostCardWithoutPostItems
 
     private fun List<PostCard>.filterDraftPostCard() =
-            firstOrNull { it.postCardType == DRAFT } as? PostCardDraftOrScheduled
+            firstOrNull { it.postCardType == DRAFT } as? PostCardWithPostItems
 
     private fun List<PostCard>.filterScheduledPostCard() =
-            firstOrNull { it.postCardType == SCHEDULED } as? PostCardDraftOrScheduled
+            firstOrNull { it.postCardType == SCHEDULED } as? PostCardWithPostItems
 
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(PostCardBuilderParams(mockedData))
 

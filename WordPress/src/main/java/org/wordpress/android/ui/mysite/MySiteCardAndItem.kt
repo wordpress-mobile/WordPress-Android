@@ -87,14 +87,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         sealed class PostCard(
             open val postCardType: PostCardType
         ) : Card(if (postCardType == CREATE_FIRST) POST_CARD_CREATE_FIRST else POST_CARD_DRAFT_OR_SCHEDULED) {
-            data class PostCardCreateFirst(
+            data class PostCardWithoutPostItems(
                 override val postCardType: PostCardType,
                 val title: UiString,
                 val excerpt: UiString,
                 @DrawableRes val imageRes: Int
             ) : PostCard(postCardType = postCardType)
 
-            data class PostCardDraftOrScheduled(
+            data class PostCardWithPostItems(
                 override val postCardType: PostCardType,
                 val title: UiString,
                 val postItems: List<PostItem>

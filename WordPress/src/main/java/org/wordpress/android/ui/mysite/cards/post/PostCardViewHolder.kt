@@ -6,8 +6,8 @@ import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySitePostCardCreateFirstBinding
 import org.wordpress.android.databinding.MySitePostCardDraftOrScheduledBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardCreateFirst
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -27,7 +27,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             parent.viewBinding(MySitePostCardCreateFirstBinding::inflate)
     ) {
         override fun bind(card: PostCard) = with(binding) {
-            val createFirstPostCard = card as PostCardCreateFirst
+            val createFirstPostCard = card as PostCardWithoutPostItems
             uiHelpers.setTextOrHide(title, createFirstPostCard.title)
             uiHelpers.setTextOrHide(excerpt, createFirstPostCard.excerpt)
             imageManager.load(image, createFirstPostCard.imageRes)
@@ -46,7 +46,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
         }
 
         override fun bind(card: PostCard) = with(binding) {
-            val draftOrScheduledPostCard = card as PostCardDraftOrScheduled
+            val draftOrScheduledPostCard = card as PostCardWithPostItems
             mySiteToolbar.update(draftOrScheduledPostCard.title)
             (postItems.adapter as PostItemsAdapter).update(draftOrScheduledPostCard.postItems)
         }

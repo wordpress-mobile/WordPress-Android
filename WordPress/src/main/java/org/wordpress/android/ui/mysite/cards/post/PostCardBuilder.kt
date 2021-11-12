@@ -2,9 +2,9 @@ package org.wordpress.android.ui.mysite.cards.post
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardCreateFirst
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -19,20 +19,20 @@ class PostCardBuilder @Inject constructor() {
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
     }
 
-    private fun createFirstPostCard() = PostCardCreateFirst(
+    private fun createFirstPostCard() = PostCardWithoutPostItems(
             postCardType = PostCardType.CREATE_FIRST,
             title = UiStringRes(R.string.my_site_create_first_post_title),
             excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
             imageRes = R.drawable.create_first_temp // TODO: ashiagr replace with actual resource
     )
 
-    private fun List<Post>.createDraftPostsCard() = PostCardDraftOrScheduled(
+    private fun List<Post>.createDraftPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.DRAFT,
             title = UiStringRes(R.string.my_site_post_card_draft_title),
             postItems = mapToDraftOrScheduledPostItems(PostCardType.DRAFT)
     )
 
-    private fun List<Post>.createScheduledPostsCard() = PostCardDraftOrScheduled(
+    private fun List<Post>.createScheduledPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.SCHEDULED,
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
             postItems = mapToDraftOrScheduledPostItems(PostCardType.SCHEDULED)
