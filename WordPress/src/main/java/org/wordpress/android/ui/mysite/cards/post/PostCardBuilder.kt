@@ -38,31 +38,32 @@ class PostCardBuilder @Inject constructor() {
     private fun List<Post>.createDraftPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.DRAFT,
             title = UiStringRes(R.string.my_site_post_card_draft_title),
-            postItems = mapToDraftOrScheduledPostItems(PostCardType.DRAFT)
+            postItems = mapToDraftPostItems()
     )
 
     private fun List<Post>.createScheduledPostsCard() = PostCardWithPostItems(
             postCardType = PostCardType.SCHEDULED,
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-            postItems = mapToDraftOrScheduledPostItems(PostCardType.SCHEDULED)
+            postItems = mapToScheduledPostItems()
     )
 
     private fun Posts.hasDraftsOrScheduledPosts() =
             this.draft?.isNotEmpty() == true || this.scheduled?.isNotEmpty() == true
 
-    private fun List<Post>.mapToDraftOrScheduledPostItems(postCardType: PostCardType) = map { post ->
-        val excerpt = if (postCardType == PostCardType.SCHEDULED) {
-            "Today at 1:04 PM" // TODO: ashiagr - remove hardcoded text
-        } else {
-            post.excerpt
-        }
-        val isTimeIconVisible = postCardType == PostCardType.SCHEDULED && excerpt != null
-
+    private fun List<Post>.mapToDraftPostItems() = map { post ->
         PostItem(
                 title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
-                excerpt = excerpt?.let { UiStringText(it) },
+                excerpt = post.excerpt?.let { UiStringText(it) },
+                featuredImageUrl = post.featuredImageUrl
+        )
+    }
+
+    private fun List<Post>.mapToScheduledPostItems() = map { post ->
+        PostItem(
+                title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
+                excerpt = UiStringText("Today at 1:04 PM"), // TODO: ashiagr - remove hardcoded text
                 featuredImageUrl = post.featuredImageUrl,
-                isTimeIconVisible = isTimeIconVisible
+                isTimeIconVisible = true
         )
     }
 }

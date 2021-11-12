@@ -102,7 +102,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val title: UiString,
                     val excerpt: UiString?,
                     val featuredImageUrl: String?,
-                    val isTimeIconVisible: Boolean
+                    val isTimeIconVisible: Boolean = false
                 )
             }
         }
