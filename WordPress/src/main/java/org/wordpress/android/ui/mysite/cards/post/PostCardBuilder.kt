@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
-        posts?.hasPublishedPosts/*?.takeIf { !posts.hasDraftsOrScheduledPosts() }*/
+        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
                 ?.let { if (it) add(createFirstPostCard()) else add(createNextPostCard()) }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }

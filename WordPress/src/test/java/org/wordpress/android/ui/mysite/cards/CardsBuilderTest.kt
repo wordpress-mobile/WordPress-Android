@@ -39,6 +39,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -300,7 +301,8 @@ class CardsBuilderTest {
             PostCardWithPostItems(
                     postCardType = PostCardType.DRAFT,
                     title = UiStringText(""),
-                    postItems = emptyList()
+                    postItems = emptyList(),
+                    bottomLinkLabel = UiStringRes(0)
             )
     )
 }

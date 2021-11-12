@@ -87,7 +87,8 @@ class PostCardBuilderTest : BaseUnitTest() {
                         postCardType = CREATE_FIRST,
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                        imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+                        imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                        bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
                 )
         )
     }
@@ -132,7 +133,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `when create next post card is built, then it contains correct preset elements`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
 
         val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateNextPostCard()
 
@@ -141,7 +142,8 @@ class PostCardBuilderTest : BaseUnitTest() {
                         postCardType = CREATE_NEXT,
                         title = UiStringRes(R.string.my_site_create_next_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                        imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+                        imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                        bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
                 )
         )
     }
@@ -166,6 +168,15 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat(postCards.filterDraftPostCard()).isNull()
     }
 
+    @Test
+    fun `when draft post card is built, then it contains go to drafts link`() {
+        val mockedPostsData = getMockedPostsData(draftPosts = listOf(post))
+
+        val draftPostCards = buildPostCards(mockedPostsData).filterDraftPostCard()
+
+        assertThat(draftPostCards?.bottomLinkLabel).isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
+    }
+
     /* SCHEDULED POST CARD */
 
     @Test
@@ -184,6 +195,16 @@ class PostCardBuilderTest : BaseUnitTest() {
         val postCards = buildPostCards(mockedPostsData)
 
         assertThat(postCards.filterScheduledPostCard()).isNull()
+    }
+
+    @Test
+    fun `when scheduled post card is built, then it contains go to scheduled posts link`() {
+        val mockedPostsData = getMockedPostsData(scheduledPosts = listOf(post))
+
+        val scheduledPostCards = buildPostCards(mockedPostsData).filterScheduledPostCard()
+
+        assertThat(scheduledPostCards?.bottomLinkLabel)
+                .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts))
     }
 
     /* DRAFT OR SCHEDULED POST ITEM - TITLE */

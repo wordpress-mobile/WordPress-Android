@@ -1438,6 +1438,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun initPostCard() = PostCardWithPostItems(
             postCardType = DRAFT,
             title = UiStringRes(0),
-            postItems = emptyList()
+            postItems = emptyList(),
+            bottomLinkLabel = UiStringRes(0)
     )
 }
