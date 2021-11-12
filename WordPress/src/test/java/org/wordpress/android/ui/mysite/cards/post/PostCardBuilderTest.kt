@@ -134,7 +134,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     fun `when create next post card is built, then it contains correct preset elements`() {
         val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
 
-        val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateFirstPostCard()
+        val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateNextPostCard()
 
         assertThat(createFirstPostCard).isEqualTo(
                 PostCardWithoutPostItems(

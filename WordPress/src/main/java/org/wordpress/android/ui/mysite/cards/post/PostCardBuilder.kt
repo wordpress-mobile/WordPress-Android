@@ -15,8 +15,8 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
-        posts?.hasPublishedPosts?.takeIf { it && !posts.hasDraftsOrScheduledPosts() }
-                ?.let { add(createFirstPostCard()) }
+        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                ?.let { if (it) add(createFirstPostCard()) else add(createNextPostCard()) }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
     }
@@ -25,6 +25,13 @@ class PostCardBuilder @Inject constructor() {
             postCardType = PostCardType.CREATE_FIRST,
             title = UiStringRes(R.string.my_site_create_first_post_title),
             excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+            imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+    )
+
+    private fun createNextPostCard() = PostCardWithoutPostItems(
+            postCardType = PostCardType.CREATE_NEXT,
+            title = UiStringRes(R.string.my_site_create_next_post_title),
+            excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
             imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
     )
 
