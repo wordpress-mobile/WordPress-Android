@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
 import org.wordpress.android.fluxc.test
 
@@ -40,6 +41,16 @@ class CardsRestClientTest {
     fun `skeleton test`() = test {
         val result = restClient.fetchCards(site)
 
-        assertThat(result).isEqualTo(FetchedCardsPayload(CardsResponse()))
+        assertThat(result).isEqualTo(
+                FetchedCardsPayload(
+                        CardsResponse(
+                                posts = PostsResponse(
+                                        hasPublished = false,
+                                        draft = listOf(),
+                                        scheduled = listOf()
+                                )
+                        )
+                )
+        )
     }
 }
