@@ -84,7 +84,9 @@ class CardsStore @Inject constructor(
     enum class CardsErrorType {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE
+        INVALID_RESPONSE,
+        API_ERROR,
+        TIMEOUT
     }
 
     class CardsError(var type: CardsErrorType, var message: String? = null) : OnChangedError
