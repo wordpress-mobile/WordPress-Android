@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-18 19:53:32+0000
+Translation-Revision-Date: 2021-11-11 16:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter %s weiterleiten</string>
     <string name="domains_search_for_a_domain_button">Domain suchen</string>
     <string name="domains_free_plan_get_your_domain_caption">Auf dieser Website erworbene Domains werden Besucher zu &lt;b&gt;%s&lt;/b&gt; weiterleiten</string>
     <string name="domains_paid_plan_claim_your_domain_caption">In deinem Tarif ist eine kostenlose Domain-Registrierung für ein Jahr enthalten</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kostenlose Domain in Anspruch nehmen</string>
     <string name="domains_manage_domains">Domains verwalten</string>
-    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter &lt;b&gt;%s&lt;/b&gt; weiterleiten. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Weitere Informationen&lt;/a&gt;</string>
     <string name="domains_add_a_domain">Domain hinzufügen</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft ab am %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Läuft ab am %s</string>
@@ -19,7 +20,7 @@ Language: de
     <string name="domains_primary_site_address_chip">Adresse der Haupt-Website</string>
     <string name="domains_primary_site_more_menu_change_site_address">Website-Adresse ändern</string>
     <string name="domains_primary_site_caption">Deine kostenlose WordPress.com-Adresse lautet</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/Jahr&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Möchtest du sie verwerfen?</string>
     <string name="comment_edit_cancel_dialog_title">Es sind nicht gespeicherte Änderungen vorhanden.</string>
@@ -156,7 +157,6 @@ Language: de
     <string name="gutenberg_native_y_axis_position">Position auf der y-Achse</string>
     <string name="gutenberg_native_x_axis_position">Position auf der x-Achse</string>
     <string name="gutenberg_native_type_a_url">URL eingeben</string>
-    <string name="gutenberg_native_tap_to_add_content">Tippen, um Inhalte hinzuzufügen</string>
     <string name="gutenberg_native_slash_inserter_results">Ergebnisse der Schrägstrich-Eingabe</string>
     <string name="gutenberg_native_s_has_url_set">Für %s wurde eine URL festgelegt</string>
     <string name="gutenberg_native_s_has_no_url_set">Für %s wurde keine URL festgelegt</string>

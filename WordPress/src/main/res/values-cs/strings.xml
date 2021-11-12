@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-23 10:55:31+0000
+Translation-Revision-Date: 2021-10-30 21:12:53+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -57,7 +57,6 @@ Language: cs_CZ
     <string name="gutenberg_native_type_a_url">Vložte URL</string>
     <string name="gutenberg_native_s_has_url_set">%s má nastavenou URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s nemá nastavenou URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Přidejte obsah kliknutím</string>
     <string name="gutenberg_native_slash_inserter_results">Výsledky lomítka</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
     <string name="gutenberg_native_s_block">%s blok</string>
@@ -1178,6 +1177,7 @@ Language: cs_CZ
     <string name="domain_contact_information_city_hint">Město</string>
     <string name="domain_contact_information_state_hint">Země</string>
     <string name="domain_contact_information_postal_code_hint">PSČ</string>
+    <string name="domain_contact_information_register_domain_button">Registrovat doménu</string>
     <string name="domain_contact_information_address_hint_two">Adresa 2</string>
     <string name="domain_contact_information_address_hint">Adresa</string>
     <string name="domain_contact_information_country_hint">Země</string>
