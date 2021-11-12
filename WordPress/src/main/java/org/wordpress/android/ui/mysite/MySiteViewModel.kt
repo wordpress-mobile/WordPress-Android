@@ -103,6 +103,7 @@ class MySiteViewModel @Inject constructor(
     private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
+    private val quickStartCardSource: QuickStartCardSource,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
@@ -113,7 +114,6 @@ class MySiteViewModel @Inject constructor(
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val postCardsSource: PostCardsSource,
-    quickStartCardSource: QuickStartCardSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
@@ -383,7 +383,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onQuickStartFullScreenDialogDismiss() {
-        quickStartRepository.refresh()
+        quickStartCardSource.refresh()
     }
 
     private fun titleClick() {
@@ -479,7 +479,7 @@ class MySiteViewModel @Inject constructor(
 
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
-        quickStartRepository.refresh()
+        quickStartCardSource.refresh()
         currentAvatarSource.refresh()
     }
 
@@ -508,7 +508,7 @@ class MySiteViewModel @Inject constructor(
     fun onSiteNameChooserDismissed() {
         // This callback is called even when the dialog interaction is positive,
         // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
-        quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE, true)
+        quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE)
         quickStartRepository.checkAndShowQuickStartNotice()
     }
 
@@ -529,12 +529,12 @@ class MySiteViewModel @Inject constructor(
             }
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON, true)
+                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                 }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_REMOVED)
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON, true)
+                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
@@ -542,7 +542,7 @@ class MySiteViewModel @Inject constructor(
             }
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON, true)
+                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                 }
             }
@@ -676,9 +676,16 @@ class MySiteViewModel @Inject constructor(
 
     fun checkAndStartQuickStart(siteLocalId: Int) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            quickStartRepository.startQuickStart(siteLocalId)
+            startQuickStart(siteLocalId)
         } else {
             showQuickStartDialog(selectedSiteRepository.getSelectedSite())
+        }
+    }
+
+    private fun startQuickStart(siteLocalId: Int) {
+        if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
+            quickStartUtilsWrapper.startQuickStart(siteLocalId)
+            quickStartCardSource.refresh()
         }
     }
 
@@ -688,14 +695,14 @@ class MySiteViewModel @Inject constructor(
                 is DynamicCardMenuInteraction.Remove -> {
                     analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
                     dynamicCardsSource.removeItem(interaction.cardType)
-                    quickStartRepository.refresh()
+                    quickStartCardSource.refresh()
                 }
                 is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
                 is Unpin -> dynamicCardsSource.unpinItem()
                 is Hide -> {
                     analyticsTrackerWrapper.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
                     dynamicCardsSource.hideItem(interaction.cardType)
-                    quickStartRepository.refresh()
+                    quickStartCardSource.refresh()
                 }
             }
         }
@@ -718,7 +725,7 @@ class MySiteViewModel @Inject constructor(
 
     fun startQuickStart() {
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-        quickStartRepository.startQuickStart(selectedSiteRepository.getSelectedSiteLocalId())
+        startQuickStart(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
     fun ignoreQuickStart() {
