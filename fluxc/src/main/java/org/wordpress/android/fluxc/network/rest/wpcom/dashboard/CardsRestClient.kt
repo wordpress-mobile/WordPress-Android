@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
@@ -11,6 +12,8 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
@@ -22,23 +25,26 @@ import javax.inject.Singleton
 
 @Singleton
 class CardsRestClient @Inject constructor(
-    @Suppress("unused") private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     dispatcher: Dispatcher,
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    @Suppress("RedundantSuspendModifier", "UNUSED_PARAMETER")
-    suspend fun fetchCards(site: SiteModel) = FetchedCardsPayload(
-            CardsResponse(
-                    posts = PostsResponse(
-                            hasPublished = false,
-                            draft = listOf(),
-                            scheduled = listOf()
-                    )
-            )
-    )
+    suspend fun fetchCards(site: SiteModel): FetchedCardsPayload<CardsResponse> {
+        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards.url
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                mapOf(),
+                CardsResponse::class.java
+        )
+        return when (response) {
+            is Success -> FetchedCardsPayload(response.data)
+            is Error -> FetchedCardsPayload(response.error.toCardsError())
+        }
+    }
 
     data class CardsResponse(
         @SerializedName("posts") val posts: PostsResponse
@@ -77,7 +83,6 @@ class CardsRestClient @Inject constructor(
     }
 }
 
-@Suppress("unused")
 fun WPComGsonNetworkError.toCardsError(): CardsError {
     val type = when (type) {
         GenericErrorType.TIMEOUT -> CardsErrorType.TIMEOUT
