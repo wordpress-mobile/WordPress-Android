@@ -2,11 +2,12 @@ package org.wordpress.android.ui.mysite.cards.post
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
-        posts?.hasPublishedPosts?.takeIf { it }?.let { add(createFirstPostCard()) }
+        posts?.hasPublishedPosts?.takeIf { it && !posts.hasDraftsOrScheduledPosts() }
+                ?.let { add(createFirstPostCard()) }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
     }
@@ -37,6 +39,9 @@ class PostCardBuilder @Inject constructor() {
             title = UiStringRes(R.string.my_site_post_card_scheduled_title),
             postItems = mapToDraftOrScheduledPostItems(PostCardType.SCHEDULED)
     )
+
+    private fun Posts.hasDraftsOrScheduledPosts() =
+            this.draft?.isNotEmpty() == true || this.scheduled?.isNotEmpty() == true
 
     private fun List<Post>.mapToDraftOrScheduledPostItems(postCardType: PostCardType) = map { post ->
         val excerpt = if (postCardType == PostCardType.SCHEDULED) {
