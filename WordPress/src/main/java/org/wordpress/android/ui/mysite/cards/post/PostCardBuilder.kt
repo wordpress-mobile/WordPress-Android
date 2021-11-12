@@ -25,7 +25,7 @@ class PostCardBuilder @Inject constructor() {
             postCardType = PostCardType.CREATE_FIRST,
             title = UiStringRes(R.string.my_site_create_first_post_title),
             excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-            imageRes = R.drawable.create_first_temp // TODO: ashiagr replace with actual resource
+            imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
     )
 
     private fun List<Post>.createDraftPostsCard() = PostCardWithPostItems(

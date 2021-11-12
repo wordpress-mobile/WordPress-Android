@@ -7,12 +7,13 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
+import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_NEXT
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.SCHEDULED
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
@@ -40,8 +41,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     /* CREATE FIRST POST CARD */
 
     @Test
-    fun `given published post exists without draft + sched post, when cards are built, then create first card exists`()
-    {
+    fun `given published post exists without draft + sched post, when cards are built, then create first card exists`() {
         val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = null, scheduledPosts = null)
 
         val postCards = buildPostCards(mockedPostsData)
@@ -87,7 +87,61 @@ class PostCardBuilderTest : BaseUnitTest() {
                         postCardType = CREATE_FIRST,
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                        imageRes = R.drawable.create_first_temp // TODO: ashiagr replace with actual resource
+                        imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
+                )
+        )
+    }
+
+    /* CREATE NEXT POST CARD */
+
+    @Test
+    fun `given no published post without draft + sched post, when cards are built, then create next card exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false, draftPosts = null, scheduledPosts = null)
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateNextPostCard()).isNotNull
+    }
+
+    @Test
+    fun `given no published post with draft post, when cards are built, then create next card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false, draftPosts = listOf(post))
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateNextPostCard()).isNull()
+    }
+
+    @Test
+    fun `given no published post with scheduled post, when cards are built, then create next card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false, scheduledPosts = listOf(post))
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateNextPostCard()).isNull()
+    }
+
+    @Test
+    fun `given published post present, when post cards are built, then create next card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+
+        val postCards = buildPostCards(mockedPostsData)
+
+        assertThat(postCards.filterCreateNextPostCard()).isNull()
+    }
+
+    @Test
+    fun `when create next post card is built, then it contains correct preset elements`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+
+        val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateFirstPostCard()
+
+        assertThat(createFirstPostCard).isEqualTo(
+                PostCardWithoutPostItems(
+                        postCardType = CREATE_NEXT,
+                        title = UiStringRes(R.string.my_site_create_next_post_title),
+                        excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
+                        imageRes = R.drawable.create_post_temp // TODO: ashiagr replace with actual resource
                 )
         )
     }
@@ -216,6 +270,11 @@ class PostCardBuilderTest : BaseUnitTest() {
     private fun List<PostCard>.filterCreateFirstPostCard() =
             (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
                     ?.firstOrNull { it.postCardType == CREATE_FIRST }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun List<PostCard>.filterCreateNextPostCard() =
+            (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
+                    ?.firstOrNull { it.postCardType == CREATE_NEXT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() =

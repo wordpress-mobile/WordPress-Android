@@ -46,7 +46,7 @@
             app:layout_constraintDimensionRatio="1:2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"
-            tools:srcCompat="@drawable/create_first_temp" />
+            tools:srcCompat="@drawable/create_post_temp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
