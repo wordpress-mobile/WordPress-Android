@@ -9,6 +9,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
@@ -191,14 +193,20 @@ class PostCardBuilderTest : BaseUnitTest() {
         assertThat((postCards.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterCreateFirstPostCard() =
-            firstOrNull { it.postCardType == CREATE_FIRST } as? PostCardWithoutPostItems
+            (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
+                    ?.firstOrNull { it.postCardType == CREATE_FIRST }
 
+    @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() =
-            firstOrNull { it.postCardType == DRAFT } as? PostCardWithPostItems
+            (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
+                    ?.firstOrNull { it.postCardType == DRAFT }
 
+    @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterScheduledPostCard() =
-            firstOrNull { it.postCardType == SCHEDULED } as? PostCardWithPostItems
+            (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
+                    ?.firstOrNull { it.postCardType == SCHEDULED }
 
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(PostCardBuilderParams(mockedData))
 

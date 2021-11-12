@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mysite.cards.post
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
-import org.wordpress.android.databinding.MySitePostCardCreateFirstBinding
-import org.wordpress.android.databinding.MySitePostCardDraftOrScheduledBinding
+import org.wordpress.android.databinding.MySitePostCardWithPostItemsBinding
+import org.wordpress.android.databinding.MySitePostCardWithoutPostItemsBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
@@ -19,36 +19,36 @@ sealed class PostCardViewHolder<T : ViewBinding>(
 ) : MySiteCardAndItemViewHolder<T>(binding) {
     abstract fun bind(card: PostCard)
 
-    class CreateFirst(
+    class PostCardWithoutPostItemsViewHolder(
         parent: ViewGroup,
         private val imageManager: ImageManager,
         private val uiHelpers: UiHelpers
-    ) : PostCardViewHolder<MySitePostCardCreateFirstBinding>(
-            parent.viewBinding(MySitePostCardCreateFirstBinding::inflate)
+    ) : PostCardViewHolder<MySitePostCardWithoutPostItemsBinding>(
+            parent.viewBinding(MySitePostCardWithoutPostItemsBinding::inflate)
     ) {
         override fun bind(card: PostCard) = with(binding) {
-            val createFirstPostCard = card as PostCardWithoutPostItems
-            uiHelpers.setTextOrHide(title, createFirstPostCard.title)
-            uiHelpers.setTextOrHide(excerpt, createFirstPostCard.excerpt)
-            imageManager.load(image, createFirstPostCard.imageRes)
+            val postCard = card as PostCardWithoutPostItems
+            uiHelpers.setTextOrHide(title, postCard.title)
+            uiHelpers.setTextOrHide(excerpt, postCard.excerpt)
+            imageManager.load(image, postCard.imageRes)
         }
     }
 
-    class DraftOrScheduled(
+    class PostCardWithPostItemsViewHolder(
         parent: ViewGroup,
         imageManager: ImageManager,
         private val uiHelpers: UiHelpers
-    ) : PostCardViewHolder<MySitePostCardDraftOrScheduledBinding>(
-            parent.viewBinding(MySitePostCardDraftOrScheduledBinding::inflate)
+    ) : PostCardViewHolder<MySitePostCardWithPostItemsBinding>(
+            parent.viewBinding(MySitePostCardWithPostItemsBinding::inflate)
     ) {
         init {
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
         }
 
         override fun bind(card: PostCard) = with(binding) {
-            val draftOrScheduledPostCard = card as PostCardWithPostItems
-            mySiteToolbar.update(draftOrScheduledPostCard.title)
-            (postItems.adapter as PostItemsAdapter).update(draftOrScheduledPostCard.postItems)
+            val postCard = card as PostCardWithPostItems
+            mySiteToolbar.update(postCard.title)
+            (postItems.adapter as PostItemsAdapter).update(postCard.postItems)
         }
 
         private fun MySiteCardToolbarBinding.update(title: UiString?) {

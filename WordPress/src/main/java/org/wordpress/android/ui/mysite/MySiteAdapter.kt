@@ -16,8 +16,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_CREATE_FIRST
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_DRAFT_OR_SCHEDULED
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
@@ -63,8 +63,10 @@ class MySiteAdapter(
             )
             CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
-            POST_CARD_CREATE_FIRST.ordinal -> PostCardViewHolder.CreateFirst(parent, imageManager, uiHelpers)
-            POST_CARD_DRAFT_OR_SCHEDULED.ordinal -> PostCardViewHolder.DraftOrScheduled(parent, imageManager, uiHelpers)
+            POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
+                PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
+            POST_CARD_WITH_POST_ITEMS.ordinal ->
+                PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
