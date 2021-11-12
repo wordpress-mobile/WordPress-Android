@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store.dashboard
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsMapper
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
@@ -17,7 +16,6 @@ import javax.inject.Singleton
 @Singleton
 class CardsStore @Inject constructor(
     private val restClient: CardsRestClient,
-    private val mapper: CardsMapper,
     private val coroutineEngine: CoroutineEngine
 ) {
     @Suppress("unused")
@@ -35,7 +33,7 @@ class CardsStore @Inject constructor(
             payload.isError -> OnCardsFetched(payload.error)
             payload.response != null -> {
                 // TODO: Store in db.
-                OnCardsFetched(mapper.map(payload.response))
+                OnCardsFetched(payload.response.toCards())
             }
             else -> OnCardsFetched(CardsError(INVALID_RESPONSE))
         }
