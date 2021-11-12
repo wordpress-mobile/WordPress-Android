@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -35,7 +34,7 @@ class CardsStore @Inject constructor(
                 // TODO: Store in db.
                 OnCardsFetched(payload.response.toCards())
             }
-            else -> OnCardsFetched(CardsError(INVALID_RESPONSE))
+            else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
         }
     }
 
