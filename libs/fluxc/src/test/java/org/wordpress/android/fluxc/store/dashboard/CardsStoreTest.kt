@@ -8,7 +8,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsMapper
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
@@ -82,7 +81,6 @@ class CardsStoreTest {
     fun setUp() {
         cardsStore = CardsStore(
                 restClient,
-                CardsMapper(),
                 initCoroutineEngine()
         )
     }
