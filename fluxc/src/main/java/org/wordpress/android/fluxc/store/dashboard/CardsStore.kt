@@ -50,7 +50,6 @@ class CardsStore @Inject constructor(
     data class FetchedCardsPayload<T>(
         val response: T? = null
     ) : Payload<CardsError>() {
-        @Suppress("unused")
         constructor(error: CardsError) : this() {
             this.error = error
         }
