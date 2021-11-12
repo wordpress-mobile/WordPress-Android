@@ -4,5 +4,5 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import javax.inject.Inject
 
 class CardsMapper @Inject constructor() {
-    fun map(response: CardsResponse): CardsModel = CardsModel(response.todo)
+    fun map(response: CardsResponse): CardsModel = response.toCards()
 }

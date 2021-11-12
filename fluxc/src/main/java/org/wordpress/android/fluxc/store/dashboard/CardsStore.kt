@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardsMapper
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType.INVALID_RESPONSE
@@ -23,7 +24,17 @@ class CardsStore @Inject constructor(
         site: SiteModel
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
         // TODO: Fetch from rest.
-        return@withDefaultContext storeCards(FetchedCardsPayload(CardsResponse()))
+        return@withDefaultContext storeCards(
+                FetchedCardsPayload(
+                        CardsResponse(
+                                posts = PostsResponse(
+                                        hasPublished = false,
+                                        draft = listOf(),
+                                        scheduled = listOf()
+                                )
+                        )
+                )
+        )
     }
 
     private fun storeCards(
