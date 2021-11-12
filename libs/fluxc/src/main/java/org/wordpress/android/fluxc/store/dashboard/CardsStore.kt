@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardsMapper
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.Store
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CardsStore @Inject constructor(
+    @Suppress("unused") private val restClient: CardsRestClient,
     private val mapper: CardsMapper,
     private val coroutineEngine: CoroutineEngine
 ) {
