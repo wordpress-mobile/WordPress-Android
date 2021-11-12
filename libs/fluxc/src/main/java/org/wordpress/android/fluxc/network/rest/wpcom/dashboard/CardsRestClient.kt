@@ -49,7 +49,7 @@ class CardsRestClient @Inject constructor(
     data class CardsResponse(
         @SerializedName("posts") val posts: PostsResponse
     ) {
-        fun toCards(): CardsModel = CardsModel(
+        fun toCards() = CardsModel(
                 posts = posts.toPosts()
         )
     }
@@ -59,7 +59,7 @@ class CardsRestClient @Inject constructor(
         @SerializedName("draft") val draft: List<PostResponse>,
         @SerializedName("scheduled") val scheduled: List<PostResponse>
     ) {
-        fun toPosts(): CardsModel.PostsModel = CardsModel.PostsModel(
+        fun toPosts() = CardsModel.PostsModel(
                 hasPublished = hasPublished,
                 draft = draft.map { it.toPost() },
                 scheduled = scheduled.map { it.toPost() }
