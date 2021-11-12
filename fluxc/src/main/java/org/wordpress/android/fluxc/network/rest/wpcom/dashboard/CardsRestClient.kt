@@ -6,9 +6,13 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardsModel
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
 import java.util.Date
 import javax.inject.Inject
@@ -69,4 +73,25 @@ class CardsRestClient @Inject constructor(
                 featuredImage = featuredImage
         )
     }
+}
+
+@Suppress("unused")
+fun WPComGsonNetworkError.toCardsError(): CardsError {
+    val type = when (type) {
+        GenericErrorType.TIMEOUT -> CardsErrorType.TIMEOUT
+        GenericErrorType.NO_CONNECTION,
+        GenericErrorType.SERVER_ERROR,
+        GenericErrorType.INVALID_SSL_CERTIFICATE,
+        GenericErrorType.NETWORK_ERROR -> CardsErrorType.API_ERROR
+        GenericErrorType.PARSE_ERROR,
+        GenericErrorType.NOT_FOUND,
+        GenericErrorType.CENSORED,
+        GenericErrorType.INVALID_RESPONSE -> CardsErrorType.INVALID_RESPONSE
+        GenericErrorType.HTTP_AUTH_ERROR,
+        GenericErrorType.AUTHORIZATION_REQUIRED,
+        GenericErrorType.NOT_AUTHENTICATED -> CardsErrorType.AUTHORIZATION_REQUIRED
+        GenericErrorType.UNKNOWN,
+        null -> CardsErrorType.GENERIC_ERROR
+    }
+    return CardsError(type, message)
 }
