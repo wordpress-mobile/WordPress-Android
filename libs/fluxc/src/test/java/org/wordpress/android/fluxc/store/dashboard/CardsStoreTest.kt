@@ -30,6 +30,14 @@ class CardsStoreTest {
     fun `skeleton test`() = test {
         val result = cardsStore.fetchCards(siteModel)
 
-        assertThat(result.model).isEqualTo(CardsModel())
+        assertThat(result.model).isEqualTo(
+                CardsModel(
+                        posts = CardsModel.PostsModel(
+                                hasPublished = false,
+                                draft = listOf(),
+                                scheduled = listOf()
+                        )
+                )
+        )
     }
 }
