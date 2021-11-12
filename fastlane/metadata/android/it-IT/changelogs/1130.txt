@@ -1,6 +1,0 @@
-18.5:
-Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
-
-Rimani sempre aggiornato sulle conversazioni che segui tramite le nuove notifiche push del Reader per le conversazioni dei commenti agli articoli seguiti.
-
-Inoltre, ora puoi personalizzare il testo e il colore di sfondo nei blocchi Citazione evidenziata e Preformattato.

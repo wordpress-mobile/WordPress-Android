@@ -1,6 +1,0 @@
-18.5:
-Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
-
-Ketahui kondisi terkini percakapan yang Anda ikuti melalui Pemberitahuan push pembaca untuk percakapan komentar pos yang diikuti.
-
-Selain itu, sekarang Anda dapat menyesuaikan teks dan warna latar belakang di blok Kutipan Besar dan blok Praformat.
