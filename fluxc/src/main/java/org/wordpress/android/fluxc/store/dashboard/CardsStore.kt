@@ -42,7 +42,7 @@ class CardsStore @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     fun getCards(
         site: SiteModel
-    ) = coroutineEngine.run(AppLog.T.API, this, "getCards") {
+    ) = coroutineEngine.run(AppLog.T.DB, this, "getCards") {
         // TODO: Get from db.
     }
 
