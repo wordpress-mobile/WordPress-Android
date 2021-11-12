@@ -9,7 +9,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error
