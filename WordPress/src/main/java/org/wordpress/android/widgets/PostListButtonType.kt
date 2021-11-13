@@ -38,8 +38,7 @@ enum class PostListButtonType constructor(
     ),
     BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0),
     BUTTON_COPY(16, R.string.button_copy, R.drawable.ic_copy_white_24dp, R.attr.colorOnSurface),
-    // TODO: add proper icon
-    BUTTON_COPY_URL(17, R.string.button_copy_link, R.drawable.ic_copy_white_24dp, R.attr.colorOnSurface);
+    BUTTON_COPY_URL(17, R.string.button_copy_link, R.drawable.ic_gridicons_link_white_24dp, R.attr.colorOnSurface);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }
