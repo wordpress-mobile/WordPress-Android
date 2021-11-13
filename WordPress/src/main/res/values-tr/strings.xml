@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-09 13:54:09+0000
+Translation-Revision-Date: 2021-11-12 13:52:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
@@ -63,6 +63,7 @@ Language: tr
     <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
     <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
     <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
@@ -1308,6 +1309,7 @@ Language: tr
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
+    <string name="domain_contact_information_register_domain_button">Alan adı kaydet</string>
     <string name="domain_contact_information_postal_code_hint">Posta kodu</string>
     <string name="domain_contact_information_state_hint">Eyalet</string>
     <string name="domain_contact_information_city_hint">Şehir</string>
@@ -2783,6 +2785,7 @@ Language: tr
     <string name="older_month">Bir aydan eski</string>
     <string name="older_last_week">1 haftadan eski</string>
     <string name="older_two_days">2 günden eski</string>
+    <string name="help_and_support">Yardım ve destek</string>
     <string name="mnu_comment_liked">Beğenildi</string>
     <string name="comment">Yorum yap</string>
     <string name="comment_trashed">Yorum iptal edildi</string>

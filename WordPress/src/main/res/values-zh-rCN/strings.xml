@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-09 10:54:08+0000
+Translation-Revision-Date: 2021-11-12 13:17:56+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
@@ -64,6 +64,7 @@ Language: zh_CN
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">获取您的域名</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">域名</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
@@ -1308,6 +1309,7 @@ Language: zh_CN
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
     <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
     <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
+    <string name="domain_contact_information_register_domain_button">注册域</string>
     <string name="domain_contact_information_postal_code_hint">邮政编码</string>
     <string name="domain_contact_information_state_hint">州/省/自治区/直辖市</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -2781,6 +2783,7 @@ Language: zh_CN
     <string name="more">更多</string>
     <string name="older_two_days">超过 2 天</string>
     <string name="older_last_week">超过 1 周</string>
+    <string name="help_and_support">帮助与支持</string>
     <string name="comment">评论</string>
     <string name="comment_trashed">评论已移到回收站</string>
     <string name="posts_empty_list">尚无文章。为何不创建一个？</string>
