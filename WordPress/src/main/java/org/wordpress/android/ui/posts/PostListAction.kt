@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.content.ClipData
 import androidx.fragment.app.FragmentActivity
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
@@ -37,7 +36,13 @@ sealed class PostListAction {
         val post: PostModel,
         val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
     ) : PostListAction()
-    class CopyUrl(val site: SiteModel, val post: PostModel) : PostListAction()
+    class CopyUrl(
+        val site: SiteModel,
+        val post: PostModel,
+        val showToast: (ToastMessageHolder) -> Unit,
+        val messageSuccess: ToastMessageHolder,
+        val messageError: ToastMessageHolder
+    ) : PostListAction()
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -101,10 +106,10 @@ fun handlePostListAction(
                 activity.clipboardManager!!.setPrimaryClip(
                         ClipData.newPlainText("${action.post.id}", action.post.link)
                 )
-                // TODO: show success toast
+                action.showToast.invoke(action.messageSuccess)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, e)
-                // TODO: show error toast
+                action.showToast.invoke(action.messageError)
             }
         }
     }

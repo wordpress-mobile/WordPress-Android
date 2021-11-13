@@ -17,7 +17,6 @@ import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostActi
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.RESTORING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST
 import org.wordpress.android.ui.posts.CriticalPostActionTracker.CriticalPostAction.TRASHING_POST_WITH_LOCAL_CHANGES
-import org.wordpress.android.ui.posts.PostListAction.CopyUrl
 import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PostListAction.RetryUpload
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
@@ -100,7 +98,7 @@ class PostActionHandler(
                             showToast = showToast,
                             messageMediaUploading = ToastMessageHolder(
                                     R.string.editor_toast_uploading_please_wait,
-                                    ToastUtils.Duration.SHORT
+                                    Duration.SHORT
                             )
                     )
             )
@@ -117,7 +115,7 @@ class PostActionHandler(
                 }
             }
             BUTTON_COPY -> copyPost(site, post, true)
-            BUTTON_COPY_URL -> triggerPostListAction.invoke(CopyUrl(site, post))
+            BUTTON_COPY_URL -> triggerPostListAction.invoke(copyUrlAction(post))
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
@@ -131,6 +129,20 @@ class PostActionHandler(
             } // do nothing - ui will show a popup window
         }
     }
+
+    private fun copyUrlAction(post: PostModel) = PostListAction.CopyUrl(
+            site = site,
+            post = post,
+            showToast = showToast,
+            messageSuccess = ToastMessageHolder(
+                    R.string.post_link_copied_to_clipboard,
+                    Duration.SHORT
+            ),
+            messageError = ToastMessageHolder(
+                    R.string.error_copy_to_clipboard,
+                    Duration.SHORT
+            )
+    )
 
     private fun cancelPendingAutoUpload(post: PostModel) {
         val msgRes = UploadUtils.cancelPendingAutoUpload(post, dispatcher)
