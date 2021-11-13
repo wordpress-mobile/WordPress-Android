@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.content.ClipData
-import android.content.ClipboardManager
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
