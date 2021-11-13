@@ -99,7 +99,7 @@ fun handlePostListAction(
         is PostListAction.CopyUrl -> {
             try {
                 activity.clipboardManager!!.setPrimaryClip(
-                        ClipData.newPlainText(activity.getString(R.string.app_name), action.post.link)
+                        ClipData.newPlainText("${action.post.id}", action.post.link)
                 )
                 // TODO: show success toast
             } catch (e: Exception) {
