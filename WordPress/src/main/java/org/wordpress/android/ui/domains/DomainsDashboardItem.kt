@@ -43,7 +43,7 @@ sealed class DomainsDashboardItem(val type: Type) {
     data class ManageDomains(val onClick: ListItemInteraction) : DomainsDashboardItem(MANAGE_DOMAINS)
 
     data class PurchaseDomain(
-        @DrawableRes val image: Int,
+        @DrawableRes val image: Int?,
         val title: UiString,
         val body: UiString,
         val onClick: ListItemInteraction

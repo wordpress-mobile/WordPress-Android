@@ -45,6 +45,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
@@ -642,6 +643,12 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
+    public static void viewUnifiedCommentsDetails(Context context, SiteModel site) {
+        Intent intent = new Intent(context, UnifiedCommentsDetailsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
         Intent intent = new Intent(context, ThemeBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -683,10 +690,22 @@ public class ActivityLauncher {
 
     public static void viewDomainRegistrationActivityForResult(Activity activity, @NonNull SiteModel site,
                                                                @NonNull DomainRegistrationPurpose purpose) {
-        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        Intent intent = createDomainRegistrationActivityIntent(activity, site, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    public static void viewDomainRegistrationActivityForResult(Fragment fragment, @NonNull SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
+                                                                   @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = new Intent(context, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
-        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+        return intent;
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {

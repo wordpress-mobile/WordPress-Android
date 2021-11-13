@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/my_site_card_row_padding"
+    android:paddingEnd="@dimen/my_site_card_row_padding"
+    android:paddingStart="@dimen/my_site_card_row_padding"
+    android:paddingTop="@dimen/my_site_card_row_padding">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        style="@style/MySitePostItemTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintEnd_toStartOf="@+id/featured_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/title" />
+
+    <ImageView
+        android:id="@+id/icon_time"
+        style="@style/MySitePostItemTimeIcon"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_time_white_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/excerpt"
+        app:layout_constraintEnd_toStartOf="@+id/excerpt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/excerpt"
+        tools:srcCompat="@drawable/ic_time_white_24dp"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/excerpt"
+        style="@style/MySitePostItemExcerpt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintEnd_toStartOf="@+id/featured_image"
+        app:layout_constraintStart_toEndOf="@+id/icon_time"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
+
+    <ImageView
+        android:id="@+id/featured_image"
+        android:layout_width="@dimen/my_site_post_item_image_size"
+        android:layout_height="@dimen/my_site_post_item_image_size"
+        android:contentDescription="@string/featured_image_desc"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title"
+        tools:srcCompat="@tools:sample/avatars" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

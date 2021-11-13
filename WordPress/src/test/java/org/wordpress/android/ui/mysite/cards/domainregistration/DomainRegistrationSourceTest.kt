@@ -54,16 +54,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
 
     @Test
     fun `when site is free, emit false and don't fetch`() = test {
-        setupSite(site = site, isFree = true, hasCustomDomain = false)
-
-        assertThat(result.last().isDomainCreditAvailable).isFalse
-
-        verify(dispatcher, never()).dispatch(any())
-    }
-
-    @Test
-    fun `when site has custom domain, emit false and don't fetch`() = test {
-        setupSite(site = site, isFree = false, hasCustomDomain = true)
+        setupSite(site = site, isFree = true)
 
         assertThat(result.last().isDomainCreditAvailable).isFalse
 
@@ -102,21 +93,19 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when fetch fails, don't emit value`() = test {
+    fun `when fetch fails, emit false value`() = test {
         setupSite(site = site, error = GENERIC_ERROR)
 
-        assertThat(result.count()).isEqualTo(0)
+        assertThat(result.last().isDomainCreditAvailable).isFalse
     }
 
     private fun setupSite(
         site: SiteModel,
         isFree: Boolean = false,
-        hasCustomDomain: Boolean = false,
         currentPlan: PlanModel? = null,
         error: PlansErrorType? = null
     ) {
         whenever(siteUtils.onFreePlan(any())).thenReturn(isFree)
-        whenever(siteUtils.hasCustomDomain(any())).thenReturn(hasCustomDomain)
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
