@@ -3,7 +3,7 @@
 18.7
 -----
 * [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
-
+* [**] Posts List: Adds copy post link functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/15570]
 
 18.6
 -----
