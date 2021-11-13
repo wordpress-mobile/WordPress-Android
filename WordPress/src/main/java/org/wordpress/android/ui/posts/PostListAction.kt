@@ -105,7 +105,7 @@ fun handlePostListAction(
                 )
                 // TODO: show success toast
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.UTILS, e)
+                AppLog.e(AppLog.T.POSTS, e)
                 // TODO: show error toast
             }
         }
