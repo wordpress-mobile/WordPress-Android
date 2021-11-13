@@ -117,7 +117,7 @@ class PostActionHandler(
                 }
             }
             BUTTON_COPY -> copyPost(site, post, true)
-            BUTTON_COPY_URL -> triggerPostListAction(CopyUrl(site, post))
+            BUTTON_COPY_URL -> triggerPostListAction.invoke(CopyUrl(site, post))
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
