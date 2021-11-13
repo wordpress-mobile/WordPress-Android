@@ -16,6 +16,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.clipboardManager
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -99,8 +100,7 @@ fun handlePostListAction(
         }
         is PostListAction.CopyUrl -> {
             try {
-                val clipboard = ContextCompat.getSystemService(activity, ClipboardManager::class.java)
-                clipboard!!.setPrimaryClip(
+                activity.clipboardManager!!.setPrimaryClip(
                         ClipData.newPlainText(activity.getString(R.string.app_name), action.post.link)
                 )
                 // TODO: show success toast
