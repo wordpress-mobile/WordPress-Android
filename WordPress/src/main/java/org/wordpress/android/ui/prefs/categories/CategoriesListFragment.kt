@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -20,6 +21,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoriesListViewModel
     @Inject lateinit var uiHelpers: UiHelpers
+    private lateinit var adapter: SiteSettingsCategoriesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -92,6 +94,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     @Suppress("unused")
     private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<CategoryNode>) {
+        adapter.update(list)
         categoriesRecyclerView.updateVisibility(true)
 
         fabButton.updateVisibility(false)
@@ -103,6 +106,15 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
         categoriesRecyclerView.setHasFixedSize(true)
         categoriesRecyclerView.layoutManager = LinearLayoutManager(activity)
+        adapter = SiteSettingsCategoriesAdapter(uiHelpers)
+        categoriesRecyclerView.adapter = adapter
+
+        categoriesRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                        categoriesRecyclerView.context,
+                        DividerItemDecoration.VERTICAL
+                )
+        )
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.initEmptyView() {
