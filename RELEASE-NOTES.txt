@@ -2,6 +2,7 @@
 
 18.7
 -----
+* [*] Editor: Removes snackbar notice when switching between HTML or Visual mode [https://github.com/wordpress-mobile/WordPress-Android/pull/15571]
 * [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
 
 
