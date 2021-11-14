@@ -1680,10 +1680,7 @@
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
