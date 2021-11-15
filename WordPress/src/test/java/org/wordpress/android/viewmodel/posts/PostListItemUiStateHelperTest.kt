@@ -243,6 +243,26 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
+    fun `verify published post actions when stats are not supported`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH),
+                statsSupported = false
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        val moreActions = (state.actions[2] as MoreItem).actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(4)
+    }
+
+    @Test
     fun `verify published post with changes actions`() {
         val state = createPostListItemUiState(
                 post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
