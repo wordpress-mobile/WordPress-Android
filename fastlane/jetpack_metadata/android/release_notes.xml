@@ -1,135 +1,118 @@
 <en-US>
-Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
-
-Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.
-
-Finally, Pullquote and Preformatted blocks now have customizable text and background color.
+- You can now use the Mark HTML tag and change the Search block button's text and background color.
+- Native editor onboarding features are available to everyone, including the new block badge.
+- The Help screen won't break out of its box when rotated between portrait and landscape.
+- We fixed more loading glitches in the Embed block.
 </en-US>
 <ar>
-18.5:
-أصبح تضمين المحتوى الخارجي أكثر سهولة باستخدام مكوِّنات تضمين فيسبوك وإنستغرام وLoom وSmartframe الجديدة.
-
-كن على اطلاع دائمًا بشأن المحادثات التي تقوم بمتابعتها من خلال التنبيهات المنبثقة للقارئ الجديد الخاصة بمحادثات تعليقات المقالة التي تتم متابعتها.
-
-بالإضافة إلى ذلك، يمكنك الآن تخصيص لون النص والخلفية في المكوِّنات المهيأة والمنسَّقة سابقًا.
+18.6:
+- يمكنك الآن استخدام وضع علامة على وسم HTML وتغيير نص زر مكوِّن البحث ولون الخلفية.
+- ميزات إعداد المحرر الأصلي متاحة للجميع، بما في ذلك شارة المكوِّن الجديد.
+- لن تخرج شاشة التعليمات من صندوقها عند تدويرها من الوضع الرأسي إلى الوضع الأفقي.
+- أصلحنا مزيدًا من المشكلات الخاصة بالتحميل الموجودة في مكوِّن التضمين.
 </ar>
 <de-DE>
-18.5:
-Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
-
-Außerdem erkennen wir jetzt einbettbare URLs, wenn sie in einen leeren Absatz eingefügt werden, und wir haben einen Fehler behoben, durch den eingebettete URLs nicht bearbeitet werden konnten.
-
-Und bei Pullquote- sowie Vorformatiert-Blöcken können jetzt Text und Hintergrundfarbe angepasst werden.
+18.6:
+- Du kannst jetzt das Tag „Mark HTML“ nutzen und den Text sowie die Hintergrundfarbe des Buttons „Block suchen“ ändern.
+- Onboarding-Funktionen des nativen Editors, darunter auch das Badge „Neuer Block“, stehen allen zur Verfügung.
+- Der Hilfe-Bildschirm bleibt in seinem Rahmen, wenn er von Hoch- zu Querformat gedreht wird.
+- Wir haben weitere Ladestörungen des Embed-Blocks behoben.
 </de-DE>
 <es-ES>
-18.5:
-La incrustación de contenido externo resulta más fácil con los nuevos bloques de incrustar para Facebook, Instagram, Loom y Smartframe.
-
-Además, ahora detectamos las URL que se puedan incrustar al pegarlas en un párrafo vacío. También hemos solucionado un error por el que no se podían editar las URL incrustadas.
-
-Para terminar, ahora se puede personalizar el texto y el color de fondo de los bloques Preformateados y Párrafo de cita.
+18.6:
+- Ahora puedes utilizar la etiqueta Mark HTML y cambiar el texto y el color de fondo del botón del bloque de búsqueda.
+- Las funciones esenciales de incorporación de editores están disponibles para todos e incluyen la nueva insignia de bloque.
+- Al girar el dispositivo, la pantalla de ayuda no se sale de su recuadro (ya sea en formato vertical u horizontal).
+- Hemos corregido más errores que se producían al subir elementos en el bloque de incrustar.
 </es-ES>
 <fr-FR>
-18.5 :
-L’intégration de contenu externe est devenue plus facile grâce aux nouveaux blocs de contenu embarqué Facebook, Instagram, Loom et Smartframe.
-
-De plus, nous détectons désormais les URL intégrables lorsqu’elles sont collées dans un paragraphe vide, et nous avons résolu un bogue qui empêchait la modification des URL intégrées.
-
-Enfin, les blocs de citation en exergue et préformatés ont désormais un texte et une couleur d’arrière-plan personnalisables.
+18.6 :
+- Vous avez désormais la possibilité d’utiliser le tag HTML de marquage, ainsi que de modifier le texte et la couleur d’arrière-plan du bouton Rechercher un bloc.
+- Les fonctionnalités d’intégration de l’éditeur natif sont accessibles à tout le monde, y compris le nouveau badge de bloc.
+- L’écran d’aide ne sort pas de son cadre lorsqu’on le fait pivoter (orientation portrait ou paysage).
+- Nous avons résolu davantage de problèmes de chargement dans le bloc de contenu embarqué.
 </fr-FR>
 <iw-IL>
-18.5:
-ההטמעה של תוכן קלה עכשיו יותר עם בלוקים להטמעת תוכן של פייסבוק, אינסטגרם, Loom ו-Smartframe.
-
-בנוסף, אנחנו כעת מזהים כתובות URL כאשר הן מודבקות בפסקה ריקה ותיקנו באג שמנע עריכה של כתובות URL מוטמעות.
-
-אחרון חביב, בלוקים של ציטוטים ו-Preformatted כוללים אפשרות התאמה לטקסט ולצבע הרקע.
+18.6:
+- כעת אפשר להשתמש בתגית 'לסמן HTML' ולשנות את הטקסט וצבע הרקע בכפתור של בלוק החיפוש.
+- אפשרויות להתחלת עבודה עם העורך המקורי זמינות לכולם, כולל תג הבלוק החדש.
+- המסך 'עזרה' לא יחרוג מהגבולות שלו בעת סיבוב התצוגה מהאורך לרוחב.
+- תיקנו בעיות טעינה נוספות בבלוק ההטמעה.
 </iw-IL>
 <id>
-18.5:
-Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
-
-Sekarang kami juga mendeteksi URL yang dapat disematkan saat ditempelkan ke paragraf kosong, serta memperbaiki bug yang mencegah URL sematan untuk disunting.
-
-Terakhir, sekarang teks dan warna latar belakang untuk blok Kutipan Besar dan blok Praformat dapat disesuaikan.
+18.6:
+- Anda sekarang dapat menggunakan tag HTML Mark untuk mengubah teks dan warna latar belakang tombol blok Pencarian.
+- Fitur orientasi editor asal tersedia untuk semua orang, termasuk lencana blok baru.
+- Layar Bantuan tidak akan keluar dari kotaknya saat layar diputar menjadi potret atau pun lanskap.
+- Kami memperbaiki lebih banyak gangguan pemuatan pada blok Sematan.
 </id>
 <it-IT>
-18.5:
-Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
-
-Inoltre, ora rileviamo gli URL incorporabili quando vengono incollati in un paragrafo vuoto e abbiamo corretto un bug che impediva la modifica degli URL incorporati.
-
-Infine, i blocchi Citazione evidenziata e Preformattato hanno ora testo e colore di sfondo personalizzabili.
+18.6:
+- Ora puoi usare il tag HTML Mark e modificare il testo del pulsante del blocco Cerca e il colore di sfondo.
+- Le funzionalità di avviamento dell'editor native sono disponibili per tutti, incluso il nuovo badge del blocco.
+- La schermata Guida non si staccherà più dalla sua casella durante la rotazione da orizzontale a verticale e viceversa.
+- Abbiamo corretto ulteriori problemi di caricamento nel blocco Incorporamenti.
 </it-IT>
 <ja-JP>
-18.5:
-Facebook、Instagram、Loom、SmartFrame の埋め込みブロックで、外部コンテンツの埋め込みが簡単になりました。
-
-さらに、空の段落にペーストする際に埋め込み可能な URL を検出できるようになり、埋め込み URL を編集できないバグが修正されました。
-
-最後に、プルクオートブロックと整形済みブロックで、テキスト色と背景色をカスタマイズできるようになりました。
+18.6:
+- Mark HTML タグを使って、「検索」ブロックボタンのテキストや背景色を変更できるようになりました。
+- ネイティブエディターのオンボーディング機能は、新しいブロックバッジを含め、だれでも利用できます。
+- ヘルプ画面を縦向きや横向きに回転させても、枠からはみ出ないようになりました。
+- 埋め込みブロックの読み込みエラーを修正しました。
 </ja-JP>
 <ko-KR>
-18.5:
-새로운 페이스북, 인스타그램, Loom 및 Smartframe 임베드 블록 덕분에 외부 콘텐츠를 임베드하는 작업이 더 쉬워졌습니다.
-
-또한, 이제는 빈 문단에 붙여넣을 때 임베드 가능한 URL이 감지되며, 임베드된 URL을 편집할 수 없었던 버그는 수정했습니다.
-
-마지막으로, 이제는 요약글 블록과 정형화된 형식 블록에 사용자 정의 가능한 텍스트와 배경 색상이 있습니다.
+18.6:
+- 이제는 HTML 표시 태그를 사용하고 검색 블록 버튼의 텍스트와 배경 색상을 변경할 수 있습니다.
+- 새 블록 배지를 포함하여 기본적으로 제공되는 편집기 온보딩 기능을 누구나 사용할 수 있습니다.
+- 세로와 가로 사이에서 회전할 때 도움말 화면이 상자를 벗어나지 않습니다.
+- 임베드 블록의 로딩 결함을 더 해결했습니다.
 </ko-KR>
 <nl-NL>
-18.5:
-Het insluiten van externe content is nu eenvoudiger met de nieuwe insluitblokken voor Facebook, Instagram, Loom en Smartframe.
-
-Daarbij detecteren we insluitbare URL's wanneer deze worden geplakt in een lege paragraaf en hebben we een probleem met het bewerken van ingesloten URL's opgelost.
-
-Ten slotte zijn Pullquote- en vooraf ingestelde blokken nu voorzien van aanpasbare tekst en een achtergrondkleur.
+18.6:
+- Je kunt nu de HTML-tag Markeer gebruiken om de tekst en achtergrondkleur van de knop van het Zoekblok te wijzigen.
+- Onboardingsfuncties van de native editor, waaronder de nieuwe blokbadge, zijn voor iedereen beschikbaar.
+- Het Help-scherm wordt staand en liggend correct weergegeven.
+- We hebben meer laadfouten verholpen in het Insluitblok.
 </nl-NL>
 <pt-BR>
-18.5:
-Incorporar conteúdo externo ficou ainda mais fácil com os novos blocos de mídia incorporada para Facebook, Instagram, Loom e SmartFrame.
-
-Além disso, corrigimos um bug que impedia a edição de URLs incorporáveis e agora as detectamos quando coladas em um parágrafo vazio.
-
-Por fim, os blocos de citação destacada e pré-formatado agora têm texto personalizado e cor de fundo.
+18.6:
+- Agora você pode usar a tag HTML mark e alterar a cor de fundo e texto do botão Pesquisar bloco.
+- As funcionalidades de integração nativas do editor, como o novo selo de bloco, estão disponíveis para todos.
+- A tela Ajuda não ficará distorcida quando você alternar entre os modos retrato e paisagem.
+- Corrigimos mais erros de carregamento no bloco de mídia incorporada.
 </pt-BR>
 <ru-RU>
-18.5:
-Встраивание внешнего содержимого стало еще проще с новыми блоками встраивания Facebook, Instagram, Loom и Smartframe.
-
-Всегда будьте в курсе бесед (и комментариев), на которые вы подписаны, с помощью новых push-уведомлений в Чтиве.
-
-Кроме того, теперь вы можете настроить цвет текста и фона в блоках выдержки и преформатированного текста.
+18.6:
+- Теперь можно использовать функцию маркировки тега HTML и менять текст и цвет фона кнопки поиска блоков.
+- Функции начала работы с встроенным редактором, а также значок блока, доступны всем пользователям.
+- Экран справки не выходит за пределы рамки при переходе от книжной ориентации на альбомную и обратно.
+- Исправлены некоторые дефекты при загрузке в блоке Вставка.
 </ru-RU>
 <sv-SE>
-18.5:
-De nya inbäddningsblocken för Facebook, Instagram, Loom och Smartframe gör att det är enklare än någonsin att bädda in externt innehåll.
-
-Vi kan nu även detektera inbäddningsbara URL:er som klistras in i ett tomt stycke och vi har åtgärdat ett fel som gjorde att det inte gick att redigera inbäddade URL:er.
-
-Slutligen har markerat citat-block och förformaterade block nu anpassningsbar text och bakgrundsfärg.
+18.6:
+- Du kan nu använda HTML-taggen Mark och ändra text- och bakgrundsfärg på knappen i sökblocket.
+- Inbyggda redigerarfunktioner är tillgängliga för alla, inklusive det nya blockmärket.
+- Hjälpskärmen lämnar inte sin ruta vid rotering mellan stående och liggande läge.
+- Vi har åtgärdat fler inläsningsproblem i inbäddningsblocket.
 </sv-SE>
 <tr-TR>
-18.5:
-Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
-
-Ayrıca artık boş bir paragrafa yapıştırıldığında gömülebilir URL'ler algılanabiliyor ve gömülü URL'lerin düzenlenmesini engelleyen bir hata düzeltildi.
-
-Son olarak, Alıntı ve Önceden Biçimlendirilmiş blokları artık özelleştirilebilir metin ve arka plan rengine sahip.
+18.6:
+- Artık HTML İşaretleme etiketini kullanabilir ve Arama bloku düğmesinin metin ve arka plan rengini değiştirebilirsiniz.
+- Yeni blok rozeti de dahil olmak üzere yerel düzenleyici destek özellikleri artık herkes tarafından kullanılabilir.
+- Dikey ve yatay görünüm arasında geçiş yapıldığında Yardım ekranı artık çerçevesinden çıkmıyor.
+- Gömülü bloktaki diğer yükleme hatalarını düzelttik.
 </tr-TR>
 <zh-CN>
-18.5：
-新的 Facebook、Instagram、Loom 和 Smartframe 嵌入区块让嵌入外部内容变得更加容易。
-
-此外，我们现在还可以在粘贴到空段落时检测可嵌入 URL，并修复了阻止对嵌入的 URL 进行编辑的错误。
-
-最后，醒目引文和预格式化区块中现在可以自定义文本和背景颜色。
+18.6：
+- 现在，您可以使用 Mark HTML 标签并更改“搜索”区块按钮的文本和背景颜色。
+- 已面向所有人开放原生编辑器登录功能，包括新的区块徽章。
+-“帮助”屏幕在竖屏和横屏之间旋转时不会再跳出框。
+- 我们还修复了嵌更多入区块中的加载故障。
 </zh-CN>
 <zh-TW>
-18.5：
-全新的 Facebook、Instagram、Loom 和 Smartframe 嵌入區塊，讓嵌入外部內容變得更簡單。
-
-另外，我們現在能偵測到貼至空白段落的可嵌入 URL，並修正了無法編輯嵌入 URL 的錯誤。
-
-最後，現在可於重要引述和預設格式區塊自訂文字和背景色彩。
+18.6：
+- 現在可以使用「標記 HTML」標籤並變更搜尋區塊按鈕的文字和背景顏色。
+- 人人都能使用原生編輯器入門功能，包括新的區塊徽章。
+- 在直向檢視和橫向檢視之間旋轉時，「說明」部分不會超出畫面範圍。
+- 我們修正了嵌入內容區塊的其他載入問題。
 </zh-TW>

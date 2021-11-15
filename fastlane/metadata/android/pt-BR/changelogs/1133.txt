@@ -1,0 +1,5 @@
+18.6:
+- Agora você pode usar a tag HTML Mark para alterar as cores do texto e de fundo do botão do bloco pesquisa.
+- Recursos do editor nativo estão disponíveis para todos, incluindo o aviso de novo bloco.
+- A tela de ajuda não quebra mais ao trocar entre o modo retrato e paisagem.
+- Corrigimos mais erros de carregamento no bloco de mídia incorporada.

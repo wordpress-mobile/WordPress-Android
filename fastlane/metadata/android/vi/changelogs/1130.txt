@@ -1,6 +1,0 @@
-18.5:
-Cho phép chèn khối mã nhúng Facebook, Instagram, Loom, và Smartframe.
-
-Luôn nhận thông báo từ những thảo luận mà bạn theo dõi trên ứng dụng.
-
-Cuối cùng, bạn đã có thể chỉnh màu chữ và màu nền của hai khối Pullquote và Preformatted.

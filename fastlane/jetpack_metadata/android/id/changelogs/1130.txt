@@ -1,6 +1,0 @@
-18.5:
-Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
-
-Sekarang kami juga mendeteksi URL yang dapat disematkan saat ditempelkan ke paragraf kosong, serta memperbaiki bug yang mencegah URL sematan untuk disunting.
-
-Terakhir, sekarang teks dan warna latar belakang untuk blok Kutipan Besar dan blok Praformat dapat disesuaikan.

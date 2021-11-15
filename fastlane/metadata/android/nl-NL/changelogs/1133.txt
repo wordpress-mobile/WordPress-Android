@@ -1,0 +1,5 @@
+18.6:
+- Je kunt nu de HTML mark tag gebruiken, en de tekst en achtergrondkleur van de zoek blok knop wijzigen.
+- Native editor onboarding functies zijn voor iedereen beschikbaar, inclusief de nieuwe blok badge.
+- Het hulpscherm loopt niet uit zijn box wanneer het wordt gedraaid tussen staand en liggend.
+- We hebben meer laadproblemen in het insluit blok opgelost.

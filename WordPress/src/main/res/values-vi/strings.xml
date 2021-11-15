@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-25 01:24:42+0000
+Translation-Revision-Date: 2021-11-03 14:25:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
     <string name="domain_registration_result_description">Đang đăng ký tên miền &lt;b&gt;%s&lt;/b&gt; mới. Quá trình này có thể mất đến 30 phút.</string>
     <string name="domain_registration_result_title">Bạn đã mua xong tên miền!</string>
@@ -14,22 +16,21 @@ Language: vi_VN
     <string name="post_status_sticky">Ghim</string>
     <string name="post_settings_post_sticky">Ghim bài viết lên trang chính</string>
     <string name="post_settings_mark_as_sticky_options_header">Ghim lên trang chính</string>
-    <string name="reader_follow_comments_unfollow_conversation">Bỏ theo dõi thảo luận</string>
+    <string name="reader_follow_comments_unfollow_conversation">Bỏ theo dõi bình luận</string>
     <string name="reader_follow_comments_enable_push_notifications">Bật thông báo trong ứng dụng</string>
-    <string name="reader_follow_comments_message">Bạn đang theo dõi cuộc thảo luận này. Sẽ nhận được thông báo qua email khi có bình luận mới.</string>
-    <string name="reader_follow_comments_bottom_sheet_description">Quản lý theo dõi thảo luận, cửa sổ pop-up</string>
+    <string name="reader_follow_comments_message">Bạn đang theo dõi bình luận của bài viết này. Chúng tôi sẽ gửi email khi có bình luận mới.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Quản lý theo dõi bình luận, cửa sổ pop-up</string>
     <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Không thể tắt thông báo trong ứng dụng</string>
     <string name="reader_follow_comments_could_not_subscribe_to_push_error">Không thể bật thông báo trong ứng dụng</string>
     <string name="reader_follow_comments_unsubscribe_from_push_success">Đã tắt thông báo trong ứng dụng</string>
     <string name="reader_follow_comments_subscribe_to_push_success">Đã bật thông báo trong ứng dụng</string>
-    <string name="reader_follow_comments_unsubscribe_from_all_success">Đã bỏ theo dõi cuộc thảo luận</string>
-    <string name="reader_follow_comments_subscribe_success_enable_push">Đang theo dõi cuộc thảo luận\nBật thông báo trong ứng dụng?</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Đã bỏ theo dõi bình luận</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Đang theo dõi bình luận\nBật thông báo trong ứng dụng?</string>
     <string name="domains_search_for_a_domain_button">Tìm tên miền</string>
     <string name="domains_free_plan_get_your_domain_caption">Tên miền đã mua trên trang này sẽ chuyển hướng tới &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Bạn được tặng kèm tên miền miễn phí một năm kèm theo gói</string>
     <string name="domains_paid_plan_claim_your_domain_title">Chọn tên miền miễn phí</string>
     <string name="domains_manage_domains">Quản lý tên miền</string>
-    <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chuyển hướng trang tới &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Tìm hiểu thêm&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Thêm một tên miền</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Hết hạn vào %s&lt;span&gt;</string>
     <string name="domains_site_domain_expires">Hết hạn vào %s</string>
@@ -37,7 +38,7 @@ Language: vi_VN
     <string name="domains_primary_site_address_chip">Địa chỉ tên miền chính</string>
     <string name="domains_primary_site_more_menu_change_site_address">Đổi tên miền chính</string>
     <string name="domains_primary_site_caption">Địa chỉ WordPress.com miễn phí của bạn là</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s cho năm đầu &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /năm&lt;span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Bạn thật sự muốn bỏ qua?</string>
     <string name="comment_edit_cancel_dialog_title">Có một số thay đổi chưa được lưu</string>
@@ -178,7 +179,6 @@ Language: vi_VN
     <string name="gutenberg_native_y_axis_position">Tọa độ Trục Tung</string>
     <string name="gutenberg_native_x_axis_position">Tọa độ Trục Hoành</string>
     <string name="gutenberg_native_type_a_url">Nhập URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Nhấn để thêm nội dung</string>
     <string name="gutenberg_native_slash_inserter_results">Kết quả nhập</string>
     <string name="gutenberg_native_s_has_url_set">%s có áp dụng URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s không áp dụng URL</string>
@@ -246,7 +246,7 @@ Language: vi_VN
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu hình chỉ dùng như trang trí.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s đã chuyển thành %2$s</string>
     <string name="like_faces_error_loading_message">Lỗi khi tải dữ liệu. %s.</string>
-    <string name="like_title_plural">%d người thích</string>
+    <string name="like_title_plural">%d người thích bài này</string>
     <string name="like_title_singular">1 người thích</string>
     <string name="suggestion">Đề xuất:</string>
     <string name="gutenberg_native_use_icon_button">Dùng nút biểu tượng</string>
@@ -569,13 +569,13 @@ Language: vi_VN
     <string name="new_site_creation_domain_header_title">Chọn tên miền</string>
     <string name="my_site_btn_jetpack_settings">Thiết lập Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_following_comments">Đang theo dõi thảo luận qua email</string>
-    <string name="reader_btn_follow_comments">Theo dõi thảo luận qua email</string>
+    <string name="reader_btn_following_comments">Đang theo dõi bình luận qua email</string>
+    <string name="reader_btn_follow_comments">Theo dõi bình luận qua email</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Không thể hủy theo dõi nhận xét của bài viết này</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Không thể theo dõi nhận xét của bài viết này</string>
     <string name="reader_follow_comments_get_status_error">Lỗi tải trạng thái đăng ký của bài viết này</string>
-    <string name="reader_follow_comments_unsubscribe_success">Hủy theo dõi nhận xét thành công</string>
-    <string name="reader_follow_comments_subscribe_success">Theo dõi nhận xét thành công</string>
+    <string name="reader_follow_comments_unsubscribe_success">Hủy theo dõi bình luận thành công</string>
+    <string name="reader_follow_comments_subscribe_success">Theo dõi bình luận thành công</string>
     <string name="reader_follow_comments_bad_format_response">Nhận phản hồi không hợp lệ</string>
     <string name="reader_follow_comments_null_response">Không nhận được phản hồi</string>
     <string name="activity_log_activity_type_filter_clear">Xóa</string>
@@ -1818,7 +1818,7 @@ Language: vi_VN
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
-    <string name="site_settings_quota_space_value">%1$s trong %2$s</string>
+    <string name="site_settings_quota_space_value">%1$s của %2$s</string>
     <string name="site_settings_quota_space_hint">Nếu bạn cần nhiều dung lượng lưu trữ hơn, hãy nâng cấp gói WordPress.</string>
     <string name="site_settings_quota_space_title">Đã dùng</string>
     <string name="site_settings_quota_header">Media</string>
@@ -2456,7 +2456,7 @@ Language: vi_VN
     <string name="me_btn_app_settings">Cài đặt ứng dụng</string>
     <string name="editor_remove_failed_uploads">Xóa những tải lên bị lỗi</string>
     <string name="site_settings_advanced_header">Nâng cao</string>
-    <string name="comments_empty_list_filtered_trashed">Không có bình luận trong thùng rác</string>
+    <string name="comments_empty_list_filtered_trashed">Thùng rác trống</string>
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận đã duyệt</string>
     <string name="xmlrpc_missing_method_error">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
@@ -2574,8 +2574,8 @@ Language: vi_VN
     <string name="site_settings_receive_pingbacks_hint">Cho phép thông báo liên kết từ các blog khác</string>
     <string name="site_settings_send_pingbacks_hint">Thông báo cho bất kỳ blog được liên kết trong bài viết</string>
     <string name="site_settings_allow_comments_hint">Cho phép độc giả gửi bình luận</string>
-    <string name="site_settings_discussion_hint">Xem và thay đổi các thiết đặt thảo luận trên trang của bạn</string>
-    <string name="site_settings_more_hint">Xem tất cả cài đặt Thảo luận có sẵn</string>
+    <string name="site_settings_discussion_hint">Xem và thay đổi các cài đặt bình luận trên trang của bạn</string>
+    <string name="site_settings_more_hint">Xem tất cả cài đặt bình luận</string>
     <string name="site_settings_related_posts_hint">Hiện hoặc ẩn bài viết liên quan cho độc giả</string>
     <string name="site_settings_image_width_hint">Giảm chiều rộng ảnh trong bài viết xuống kích cỡ này</string>
     <string name="site_settings_format_hint">Đặt định dạng bài viết mới</string>
@@ -2620,7 +2620,7 @@ Language: vi_VN
     <string name="comments">Bình luận</string>
     <string name="related_posts">Bài viết liên quan</string>
     <string name="privacy">Bảo mật</string>
-    <string name="discussion">Thảo luận</string>
+    <string name="discussion">Bình luận</string>
     <string name="media_error_no_permission_upload">Bạn không có quyền tải lên media trên trang này</string>
     <string name="unknown">Chưa rõ</string>
     <string name="never">Không bao giờ</string>
@@ -2657,7 +2657,7 @@ Language: vi_VN
     <string name="search_sites">Tìm kiếm trang</string>
     <string name="notifications_empty_view_reader">Đến Đọc</string>
     <string name="notifications_empty_action_followers_likes">Nhận thông báo: bình luận từ bài viết bạn đã đọc</string>
-    <string name="notifications_empty_action_comments">Tham gia thảo luận: bình luận bài viết từ các trang mà bạn theo dõi</string>
+    <string name="notifications_empty_action_comments">Tạo thảo luận: bình luận bài viết từ các trang mà bạn theo dõi</string>
     <string name="notifications_empty_action_unread">Khuấy động bằng cách viết một bài mới</string>
     <string name="notifications_empty_action_all">Lấy kích hoạt! Bình luận về bài viết từ các blog bạn theo dõi.</string>
     <string name="notifications_empty_comments">Chưa có bình luận</string>
@@ -2776,7 +2776,7 @@ Language: vi_VN
     <string name="reader_label_like">Thích</string>
     <string name="reader_label_view_original">Xem bài viết gốc</string>
     <string name="reader_label_comments_closed">Bình luận đã tắt</string>
-    <string name="reader_title_photo_viewer">%1$d của %2$d</string>
+    <string name="reader_title_photo_viewer">%1$d trong %2$d</string>
     <string name="error_publish_empty_post">Không thể đăng một bài viết trống</string>
     <string name="error_refresh_unauthorized_posts">Bạn không có quyền xem hoặc sửa bài viết</string>
     <string name="error_refresh_unauthorized_pages">Bạn không có quyền xem hoặc sửa trang con</string>

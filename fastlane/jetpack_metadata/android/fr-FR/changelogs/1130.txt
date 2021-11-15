@@ -1,6 +1,0 @@
-18.5 :
-L’intégration de contenu externe est devenue plus facile grâce aux nouveaux blocs de contenu embarqué Facebook, Instagram, Loom et Smartframe.
-
-De plus, nous détectons désormais les URL intégrables lorsqu’elles sont collées dans un paragraphe vide, et nous avons résolu un bogue qui empêchait la modification des URL intégrées.
-
-Enfin, les blocs de citation en exergue et préformatés ont désormais un texte et une couleur d’arrière-plan personnalisables.

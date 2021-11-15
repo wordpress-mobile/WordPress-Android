@@ -1,0 +1,5 @@
+18.6:
+- Du kan nu använda HTML-taggen Mark och ändra text- och bakgrundsfärg på knappen i sökblocket.
+- Inbyggda redigerarfunktioner är tillgängliga för alla, inklusive det nya blockmärket.
+- Hjälpskärmen lämnar inte sin ruta vid rotering mellan stående och liggande läge.
+- Vi har åtgärdat fler inläsningsproblem i inbäddningsblocket.

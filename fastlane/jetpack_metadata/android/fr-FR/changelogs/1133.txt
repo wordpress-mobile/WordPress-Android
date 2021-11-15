@@ -1,0 +1,5 @@
+18.6 :
+- Vous avez désormais la possibilité d’utiliser le tag HTML de marquage, ainsi que de modifier le texte et la couleur d’arrière-plan du bouton Rechercher un bloc.
+- Les fonctionnalités d’intégration de l’éditeur natif sont accessibles à tout le monde, y compris le nouveau badge de bloc.
+- L’écran d’aide ne sort pas de son cadre lorsqu’on le fait pivoter (orientation portrait ou paysage).
+- Nous avons résolu davantage de problèmes de chargement dans le bloc de contenu embarqué.
