@@ -103,9 +103,10 @@ fun handlePostListAction(
         }
         is PostListAction.CopyUrl -> {
             try {
-                activity.clipboardManager!!.setPrimaryClip(
+                activity.clipboardManager?.setPrimaryClip(
                         ClipData.newPlainText("${action.post.id}", action.post.link)
-                )
+                ) ?: throw NullPointerException("ClipboardManager is not supported")
+
                 action.showToast.invoke(action.messageSuccess)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, e)
