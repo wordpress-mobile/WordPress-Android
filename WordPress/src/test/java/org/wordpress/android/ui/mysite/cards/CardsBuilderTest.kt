@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -39,7 +40,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -187,7 +187,7 @@ class CardsBuilderTest {
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
                 ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock()),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
@@ -302,7 +302,7 @@ class CardsBuilderTest {
                     postCardType = PostCardType.DRAFT,
                     title = UiStringText(""),
                     postItems = emptyList(),
-                    bottomLinkLabel = UiStringRes(0)
+                    footerLink = FooterLink(UiStringText(""))
             )
     )
 }

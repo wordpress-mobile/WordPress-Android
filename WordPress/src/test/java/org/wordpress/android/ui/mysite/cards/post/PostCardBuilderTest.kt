@@ -7,6 +7,7 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
@@ -32,6 +33,8 @@ private const val FEATURED_IMAGE_URL = "/image/url"
 class PostCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: PostCardBuilder
     private val post = Post(id = POST_ID)
+
+    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = {}
 
     @Before
     fun setUp() {
@@ -88,7 +91,10 @@ class PostCardBuilderTest : BaseUnitTest() {
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
                         imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
-                        bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
+                        footerLink = FooterLink(
+                                label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                                onClick = onPostCardFooterLinkClick
+                        )
                 )
         )
     }
@@ -143,7 +149,10 @@ class PostCardBuilderTest : BaseUnitTest() {
                         title = UiStringRes(R.string.my_site_create_next_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
                         imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
-                        bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
+                        footerLink = FooterLink(
+                                label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                                onClick = onPostCardFooterLinkClick
+                        )
                 )
         )
     }
@@ -174,7 +183,8 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         val draftPostCards = buildPostCards(mockedPostsData).filterDraftPostCard()
 
-        assertThat(draftPostCards?.bottomLinkLabel).isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
+        assertThat(draftPostCards?.footerLink?.label)
+                .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_drafts))
     }
 
     /* SCHEDULED POST CARD */
@@ -203,7 +213,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         val scheduledPostCards = buildPostCards(mockedPostsData).filterScheduledPostCard()
 
-        assertThat(scheduledPostCards?.bottomLinkLabel)
+        assertThat(scheduledPostCards?.footerLink?.label)
                 .isEqualTo(UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts))
     }
 
@@ -307,7 +317,12 @@ class PostCardBuilderTest : BaseUnitTest() {
             (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
                     ?.firstOrNull { it.postCardType == SCHEDULED }
 
-    private fun buildPostCards(mockedData: MockedPostsData) = builder.build(PostCardBuilderParams(mockedData))
+    private fun buildPostCards(mockedData: MockedPostsData) = builder.build(
+            PostCardBuilderParams(
+                    mockedPostsData = mockedData,
+                    onFooterLinkClick = onPostCardFooterLinkClick
+            )
+    )
 
     private fun getMockedPostsData(
         hasPublishedPosts: Boolean = false,

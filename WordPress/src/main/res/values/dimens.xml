@@ -318,7 +318,7 @@
     <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
     <dimen name="my_site_card_row_padding">16dp</dimen>
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
-    <dimen name="my_site_card_bottom_link_padding">8dp</dimen>
+    <dimen name="my_site_card_footer_link_padding">8dp</dimen>
 
     <!-- my site post card item -->
     <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>

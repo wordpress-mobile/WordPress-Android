@@ -797,9 +797,9 @@
     </style>
 
     <!--My Site Card-->
-    <style name="MySiteCardBottomLinkItem">
+    <style name="MySiteCardFooterLinkItem">
         <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:padding">@dimen/my_site_card_bottom_link_padding</item>
+        <item name="android:padding">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 

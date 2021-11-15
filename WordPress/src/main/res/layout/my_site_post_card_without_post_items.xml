@@ -52,8 +52,8 @@
             tools:srcCompat="@drawable/create_post_temp" />
 
         <include
-            android:id="@+id/my_site_card_bottom_link"
-            layout="@layout/my_site_card_bottom_link"
+            android:id="@+id/my_site_card_footer_link"
+            layout="@layout/my_site_card_footer_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"

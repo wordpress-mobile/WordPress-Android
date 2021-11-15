@@ -37,6 +37,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -259,7 +260,10 @@ class MySiteViewModel @Inject constructor(
                     isDomainCreditAvailable = isDomainCreditAvailable,
                     domainRegistrationClick = this::domainRegistrationClick
             ),
-            PostCardBuilderParams(mockedPostsData = mockedPostsData),
+            PostCardBuilderParams(
+                    mockedPostsData = mockedPostsData,
+                    onFooterLinkClick = this::onPostCardFooterLinkClick
+            ),
             QuickActionsCardBuilderParams(
                     siteModel = site,
                     activeTask = activeTask,
@@ -727,6 +731,12 @@ class MySiteViewModel @Inject constructor(
 
     fun onPullToRefresh() {
         postCardsSource.refresh()
+    }
+
+    fun onPostCardFooterLinkClick(postCardType: PostCardType) {
+        selectedSiteRepository.getSelectedSite()?.let {
+            // TODO: ashiagr implement navigation
+        }
     }
 
     data class UiModel(

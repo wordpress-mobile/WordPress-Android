@@ -84,22 +84,23 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class PostCard(
-            override val type: Type
+            override val type: Type,
+            open val footerLink: FooterLink
         ) : Card(type) {
             data class PostCardWithoutPostItems(
                 val postCardType: PostCardType,
                 val title: UiString,
                 val excerpt: UiString,
                 @DrawableRes val imageRes: Int,
-                val bottomLinkLabel: UiString
-            ) : PostCard(POST_CARD_WITHOUT_POST_ITEMS)
+                override val footerLink: FooterLink
+            ) : PostCard(type = POST_CARD_WITHOUT_POST_ITEMS, footerLink = footerLink)
 
             data class PostCardWithPostItems(
                 val postCardType: PostCardType,
                 val title: UiString,
                 val postItems: List<PostItem>,
-                val bottomLinkLabel: UiString
-            ) : PostCard(POST_CARD_WITH_POST_ITEMS) {
+                override val footerLink: FooterLink
+            ) : PostCard(type = POST_CARD_WITH_POST_ITEMS, footerLink = footerLink) {
                 data class PostItem(
                     val title: UiString,
                     val excerpt: UiString?,
@@ -107,6 +108,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val isTimeIconVisible: Boolean = false
                 )
             }
+
+            data class FooterLink(
+                val label: UiString,
+                val onClick: ((postCardType: PostCardType) -> Unit)? = null
+            )
         }
     }
 

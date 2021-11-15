@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.post
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
@@ -16,40 +17,62 @@ class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
         posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                ?.let { if (it) add(createFirstPostCard()) else add(createNextPostCard()) }
-        posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard()) }
-        posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard()) }
+                ?.let { hasPublishedPosts ->
+                    if (hasPublishedPosts) {
+                        add(createFirstPostCard(params.onFooterLinkClick))
+                    } else {
+                        add(createNextPostCard(params.onFooterLinkClick))
+                    }
+                }
+        posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params.onFooterLinkClick)) }
+        posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params.onFooterLinkClick)) }
     }
 
-    private fun createFirstPostCard() = PostCardWithoutPostItems(
-            postCardType = PostCardType.CREATE_FIRST,
-            title = UiStringRes(R.string.my_site_create_first_post_title),
-            excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-            imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
-            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
-    )
+    private fun createFirstPostCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+            PostCardWithoutPostItems(
+                    postCardType = PostCardType.CREATE_FIRST,
+                    title = UiStringRes(R.string.my_site_create_first_post_title),
+                    excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
+                    imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                    footerLink = FooterLink(
+                            label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                            onClick = onFooterLinkClick
+                    )
+            )
 
-    private fun createNextPostCard() = PostCardWithoutPostItems(
-            postCardType = PostCardType.CREATE_NEXT,
-            title = UiStringRes(R.string.my_site_create_next_post_title),
-            excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-            imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
-            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_create_post)
-    )
+    private fun createNextPostCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+            PostCardWithoutPostItems(
+                    postCardType = PostCardType.CREATE_NEXT,
+                    title = UiStringRes(R.string.my_site_create_next_post_title),
+                    excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
+                    imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                    footerLink = FooterLink(
+                            label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                            onClick = onFooterLinkClick
+                    )
+            )
 
-    private fun List<Post>.createDraftPostsCard() = PostCardWithPostItems(
-            postCardType = PostCardType.DRAFT,
-            title = UiStringRes(R.string.my_site_post_card_draft_title),
-            postItems = mapToDraftPostItems(),
-            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_go_to_drafts)
-    )
+    private fun List<Post>.createDraftPostsCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+            PostCardWithPostItems(
+                    postCardType = PostCardType.DRAFT,
+                    title = UiStringRes(R.string.my_site_post_card_draft_title),
+                    postItems = mapToDraftPostItems(),
+                    footerLink = FooterLink(
+                            label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
+                            onClick = onFooterLinkClick
+                    )
+            )
 
-    private fun List<Post>.createScheduledPostsCard() = PostCardWithPostItems(
-            postCardType = PostCardType.SCHEDULED,
-            title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-            postItems = mapToScheduledPostItems(),
-            bottomLinkLabel = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts)
-    )
+    private fun List<Post>.createScheduledPostsCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+            PostCardWithPostItems(
+                    postCardType = PostCardType.SCHEDULED,
+                    title = UiStringRes(R.string.my_site_post_card_scheduled_title),
+                    postItems = mapToScheduledPostItems(),
+                    footerLink = FooterLink(
+                            label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
+                            onClick = onFooterLinkClick
+                    )
+            )
 
     private fun Posts.hasDraftsOrScheduledPosts() =
             this.draft?.isNotEmpty() == true || this.scheduled?.isNotEmpty() == true
