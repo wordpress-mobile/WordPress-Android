@@ -126,6 +126,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
+import org.wordpress.android.util.config.ThreadedCommentsBelowPostFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -223,6 +224,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ThreadedCommentsBelowPostFeatureConfig mThreadedCommentsBelowPostFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -2609,7 +2611,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 );
                 break;
             case COMMENTS:
-                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId, mThreadedCommentsBelowPostFeatureConfig.isEnabled());
                 break;
             case TOGGLE_SEEN_STATUS:
                 if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {

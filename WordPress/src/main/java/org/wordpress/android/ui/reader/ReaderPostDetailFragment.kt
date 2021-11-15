@@ -114,6 +114,7 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ThreadedCommentsBelowPostFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -201,6 +202,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerTracker: ReaderTracker
     @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Inject lateinit var contextProvider: ContextProvider
+    @Inject lateinit var threadedCommentsBelowPostFeatureConfig: ThreadedCommentsBelowPostFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -600,7 +602,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 )
 
             is ReaderNavigationEvents.ShowReaderComments ->
-                ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+                ReaderActivityLauncher.showReaderComments(context, blogId, postId, threadedCommentsBelowPostFeatureConfig.isEnabled())
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
@@ -1228,7 +1230,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     viewModel.post?.let {
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
-                                directOperation, commentId.toLong(), viewModel.interceptedUri
+                                directOperation, commentId.toLong(), viewModel.interceptedUri,
+                                threadedCommentsBelowPostFeatureConfig.isEnabled()
                         )
                     }
 
