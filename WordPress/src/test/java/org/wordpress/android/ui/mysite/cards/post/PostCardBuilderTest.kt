@@ -44,8 +44,8 @@ class PostCardBuilderTest : BaseUnitTest() {
     /* CREATE FIRST POST CARD */
 
     @Test
-    fun `given published post without draft + sched post, when cards are built, then create first card exists`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = null, scheduledPosts = null)
+    fun `given no published post without draft + sched post, when cards are built, then create first card exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false, draftPosts = null, scheduledPosts = null)
 
         val postCards = buildPostCards(mockedPostsData)
 
@@ -71,8 +71,8 @@ class PostCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given published post not present, when post cards are built, then create first post card not exists`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
+    fun `given published post present, when post cards are built, then create first post card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
 
         val postCards = buildPostCards(mockedPostsData)
 
@@ -81,7 +81,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `when create first post card is built, then it contains correct preset elements`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
 
         val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateFirstPostCard()
 
@@ -102,8 +102,8 @@ class PostCardBuilderTest : BaseUnitTest() {
     /* CREATE NEXT POST CARD */
 
     @Test
-    fun `given no published post without draft + sched post, when cards are built, then create next card exists`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false, draftPosts = null, scheduledPosts = null)
+    fun `given published post without draft + sched post, when cards are built, then create next card exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = null, scheduledPosts = null)
 
         val postCards = buildPostCards(mockedPostsData)
 
@@ -129,8 +129,8 @@ class PostCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given published post present, when post cards are built, then create next card not exists`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
+    fun `given published post not present, when post cards are built, then create next card not exists`() {
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
 
         val postCards = buildPostCards(mockedPostsData)
 
@@ -139,7 +139,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Test
     fun `when create next post card is built, then it contains correct preset elements`() {
-        val mockedPostsData = getMockedPostsData(hasPublishedPosts = false)
+        val mockedPostsData = getMockedPostsData(hasPublishedPosts = true)
 
         val createFirstPostCard = buildPostCards(mockedPostsData).filterCreateNextPostCard()
 
