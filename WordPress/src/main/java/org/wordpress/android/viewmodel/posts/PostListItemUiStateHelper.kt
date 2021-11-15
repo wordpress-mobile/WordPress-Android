@@ -122,7 +122,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 hasAutoSave = hasAutoSave
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
-        val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
+        val statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
                 TRASHED -> {
@@ -148,7 +148,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postInfo = postInfo,
                 statuses = statuses,
                 statusesColor = statusesColor,
-                statusesDelimiter = statusesDelimeter,
+                statusesDelimiter = statusesDelimiter,
                 progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
