@@ -508,20 +508,13 @@
         <item name="android:outlineProvider">none</item>
     </style>
 
-    <style name="MySiteQuickActionButtonLabel">
+    <style name="MySiteQuickActionButtonLabel" parent="MySiteCardItemSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:layout_centerHorizontal">true</item>
-    </style>
-
-    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
     </style>
 
@@ -770,25 +763,16 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="QuickStartTypeTitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeTitle" parent="MySiteCardItemTitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="QuickStartTypeSubtitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeSubtitle" parent="MySiteCardItemSubtitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
