@@ -140,7 +140,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject Dispatcher mDispatcher;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
-    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
