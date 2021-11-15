@@ -44,13 +44,44 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, canMultiselect);
 
         String[] acceptableMimeTypes = fileChooserParams.getAcceptTypes();
+        int acceptableMimeTypesLength = acceptableMimeTypes.length;
 
         // Uses Intent.EXTRA_MIME_TYPES to pass multiple mime types if there are multiple MIME types.
-        if (acceptableMimeTypes.length > 1) {
+        if (acceptableMimeTypesLength > 1) {
             // Sets an explicit MIME data type that states that all MIME types are supported.
             intent.setType("*/*");
             // Filter MIME types by Intent.EXTRA_MIME_TYPES with the types that are currently acceptable.
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, acceptableMimeTypes);
+            String[] resolvedMimeTypes = new String[acceptableMimeTypes.length];
+            String resolvedMimeType = null;
+
+            for (int index = 0; index < acceptableMimeTypesLength; index++) {
+                String acceptableMimeType = acceptableMimeTypes[index];
+
+                /**
+                 * The fileChooserParams.getAcceptTypes() API stats that the it returns an array of acceptable MIME
+                 * types. The returned MIME type could be partial such as audio/* . Currently, there are plugins that
+                 * return extensions when the form input type is utilized instead of
+                 *  MIME types. The logic below is accommodates this use case by utilizing the extension to resolve
+                 *  the appropriate
+                 *  Mime type.
+                 */
+                if (acceptableMimeType.contains(".")) {
+                    String extension = acceptableMimeType.replace(".", "");
+                    resolvedMimeType =
+                            MediaUtils.getMimeTypeForExtension(extension);
+                } else if (acceptableMimeType.contains("/")) {
+                    resolvedMimeType = acceptableMimeType;
+                }
+
+                if (resolvedMimeType != null) {
+                    resolvedMimeTypes[index] = resolvedMimeType;
+                } else {
+                    AppLog.w(T.EDITOR,
+                            "MediaUtils.getMimeTypeForExtension failed to resolve the ${acceptableMimeType} MIME type");
+                }
+            }
+
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, resolvedMimeTypes);
         }
 
         if (mOnShowFileChooserListener != null) {
