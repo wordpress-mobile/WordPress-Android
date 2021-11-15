@@ -3,13 +3,15 @@
 # This script aims to rename any `.apk` or `.aab` file to `[wpandroid|jpandroid]-{version}[-Signed].apk/aab`
 # depending on the APK/AAB package name, version name and package signature.
 #
-# The main use of this tool os to easily rename the signed `.apk` and/or original `.aab` downloaded from the PlayStore
-# (and re-signed by Google depending on the context), as when you download those their basename is usually just the
-# versionCode and whose name doesn't distinguish from a binary corresponding to WordPress vs Jetpack.
+# The main use of this tool is to easily rename the signed `.apk` and/or original `.aab` downloaded from the PlayStore
+# (and re-signed by Google depending on the context), as when you download those, their basename is usually just the
+# versionCode and doesn't distinguish from a binary corresponding to WordPress vs Jetpack.
 #
 # By running this script on the APK or AAB files provided – defaulting to all the APK and AAB files in `~/Downloads` if
 # no parameter provided – the files will be renamed with a basename appropriate to the ones we use when attaching
 # those files to the GitHub release.
+
+
 
 ### Input Parameters ###
 
