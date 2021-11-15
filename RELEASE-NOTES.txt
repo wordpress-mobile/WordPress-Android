@@ -1,12 +1,15 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.8
+-----
+
+
 18.7
 -----
 * [**] Posts List: Adds copy post link functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/15570]
 * [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
 * [**] Block editor: Image block: Add ability to quickly link images to Media Files and Attachment Pages [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3971]
 * [**] Block editor: Fixed a crash that could occur when copying lists from Microsoft Word. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4174]
-
 
 18.6
 -----
@@ -16,7 +19,6 @@
 * [**] Block editor: Block inserter indicates newly available block types [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4047]
 * [*] Block editor: Add support for the Mark HTML tag [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4162]
 * [*] Block editor: Fixed a crash that could occur when copying lists from Microsoft Word [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4174]
-
 
 18.5
 -----
