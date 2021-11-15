@@ -419,7 +419,9 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
-        buttonTypes.addIf(canShowCopyUrlButton, BUTTON_COPY_URL)
+        if (canShowCopyUrlButton) {
+            buttonTypes.add(BUTTON_COPY_URL)
+        }
 
         buttonTypes.addDeleteOrTrashAction(isLocalDraft, postStatus)
 
@@ -435,12 +437,6 @@ class PostListItemUiStateHelper @Inject constructor(
             isLocalDraft -> add(BUTTON_DELETE)
             postStatus == TRASHED -> add(BUTTON_DELETE_PERMANENTLY)
             postStatus != TRASHED -> add(BUTTON_TRASH)
-        }
-    }
-
-    private fun MutableList<PostListButtonType>.addIf(condition: Boolean, buttonType: PostListButtonType) {
-        if (condition) {
-            add(buttonType)
         }
     }
 
