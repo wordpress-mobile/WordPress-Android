@@ -41,7 +41,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     /* CREATE FIRST POST CARD */
 
     @Test
-    fun `given published post exists without draft + sched post, when cards are built, then create first card exists`() {
+    fun `given published post without draft + sched post, when cards are built, then create first card exists`() {
         val mockedPostsData = getMockedPostsData(hasPublishedPosts = true, draftPosts = null, scheduledPosts = null)
 
         val postCards = buildPostCards(mockedPostsData)
