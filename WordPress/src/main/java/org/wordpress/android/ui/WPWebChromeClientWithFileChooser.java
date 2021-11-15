@@ -11,7 +11,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.fluxc.utils.MediaUtils;
-import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
@@ -58,12 +57,11 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
                 String acceptableMimeType = acceptableMimeTypes[index];
 
                 /**
-                 * The fileChooserParams.getAcceptTypes() API stats that the it returns an array of acceptable MIME
+                 * The fileChooserParams.getAcceptTypes() API states that the it returns an array of acceptable MIME
                  * types. The returned MIME type could be partial such as audio/* . Currently, there are plugins that
                  * return extensions when the form input type is utilized instead of
-                 *  MIME types. The logic below is accommodates this use case by utilizing the extension to resolve
-                 *  the appropriate
-                 *  Mime type.
+                 *  MIME types. The logic below is to accommodate the use cases by utilizing the extension to resolve
+                 *  the appropriate Mime type with MediaUtils.getMimeTypeForExtension().
                  */
                 if (acceptableMimeType.contains(".")) {
                     String extension = acceptableMimeType.replace(".", "");
