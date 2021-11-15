@@ -105,10 +105,11 @@ fun handlePostListAction(
             try {
                 activity.clipboardManager?.setPrimaryClip(
                         ClipData.newPlainText("${action.post.id}", action.post.link)
-                ) ?: throw NullPointerException("ClipboardManager is not supported")
+                ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
 
                 action.showToast.invoke(action.messageSuccess)
             } catch (e: Exception) {
+                // Ignore any exceptions here as certain devices have bugs and will fail.
                 AppLog.e(AppLog.T.POSTS, e)
                 action.showToast.invoke(action.messageError)
             }
