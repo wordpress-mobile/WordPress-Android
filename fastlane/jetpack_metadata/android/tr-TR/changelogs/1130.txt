@@ -1,6 +1,0 @@
-18.5:
-Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
-
-Ayrıca artık boş bir paragrafa yapıştırıldığında gömülebilir URL'ler algılanabiliyor ve gömülü URL'lerin düzenlenmesini engelleyen bir hata düzeltildi.
-
-Son olarak, Alıntı ve Önceden Biçimlendirilmiş blokları artık özelleştirilebilir metin ve arka plan rengine sahip.

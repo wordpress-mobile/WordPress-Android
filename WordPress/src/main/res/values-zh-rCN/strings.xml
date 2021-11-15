@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-26 09:54:08+0000
+Translation-Revision-Date: 2021-11-12 13:17:56+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免费，&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">您的域将重定向至您的站点：%s。</string>
     <string name="gutenberg_native_create_link">创建链接</string>
     <string name="domain_registration_result_description">正在设置您的新域 &lt;b&gt;%s&lt;/b&gt; 。 最多可能需花费 30 分钟时间，您的域才能开始运行。</string>
     <string name="domain_registration_result_title">恭喜您购买成功！</string>
@@ -29,7 +31,6 @@ Language: zh_CN
     <string name="domains_free_plan_get_your_domain_caption">在此站点上购买的域会将访客重定向至 &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">声明您的免费域</string>
     <string name="domains_manage_domains">管理域</string>
-    <string name="domains_redirected_domains_blurb">您的域将重定向至您在 &lt;b&gt;%s&lt;/b&gt; 上的站点。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;了解更多。&lt;/a&gt;</string>
     <string name="domains_add_a_domain">添加域</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日期 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">到期日期 %s</string>
@@ -37,8 +38,8 @@ Language: zh_CN
     <string name="domains_primary_site_address_chip">主站点地址</string>
     <string name="domains_primary_site_more_menu_change_site_address">更改站点地址</string>
     <string name="domains_primary_site_caption">您的免费 WordPress.com 地址是</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;第一年免费 &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /年&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">第一年 &lt;span style=\"color:#B26200;\"&gt;%1$s，&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">是否要放弃？</string>
     <string name="comment_edit_cancel_dialog_title">存在未保存的更改</string>
     <string name="comment_edit_comment_error">评论不能为空</string>
@@ -63,6 +64,7 @@ Language: zh_CN
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">获取您的域名</string>
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">域名</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
@@ -179,7 +181,6 @@ Language: zh_CN
     <string name="gutenberg_native_s_has_no_url_set">%s没有URL集</string>
     <string name="gutenberg_native_s_has_url_set">%s已设置URL</string>
     <string name="gutenberg_native_slash_inserter_results">斜杠插入器结果</string>
-    <string name="gutenberg_native_tap_to_add_content">点击以添加内容</string>
     <string name="gutenberg_native_type_a_url">键入URL</string>
     <string name="gutenberg_native_s_block">%s区块</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已转换为常规区块</string>
@@ -1308,6 +1309,7 @@ Language: zh_CN
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
     <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
     <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
+    <string name="domain_contact_information_register_domain_button">注册域</string>
     <string name="domain_contact_information_postal_code_hint">邮政编码</string>
     <string name="domain_contact_information_state_hint">州/省/自治区/直辖市</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -2781,6 +2783,7 @@ Language: zh_CN
     <string name="more">更多</string>
     <string name="older_two_days">超过 2 天</string>
     <string name="older_last_week">超过 1 周</string>
+    <string name="help_and_support">帮助与支持</string>
     <string name="comment">评论</string>
     <string name="comment_trashed">评论已移到回收站</string>
     <string name="posts_empty_list">尚无文章。为何不创建一个？</string>

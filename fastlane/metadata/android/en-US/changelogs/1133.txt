@@ -1,0 +1,5 @@
+18.6:
+- You can now use the Mark HTML tag and change the Search block button's text and background color.
+- Native editor onboarding features are available to everyone, including the new block badge.
+- The Help screen won't break out of its box when rotated between portrait and landscape.
+- We fixed more loading glitches in the Embed block.

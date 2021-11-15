@@ -1,0 +1,5 @@
+18.6 :
+- Vous pouvez désormais utiliser la balise HTML Mark et modifier le texte et la couleur d‘arrière-plan du bouton de bloc Recherche.
+- Les fonctionnalités d‘accueil de l‘éditeur natif sont disponibles pour tous, y compris le nouveau badge de bloc.
+- L‘écran d‘aide ne sort plus de sa position lorsqu‘il passe du mode Portrait à Paysage.
+- Nous avons corrigé d‘autres problèmes de chargement dans le bloc Embarquer.

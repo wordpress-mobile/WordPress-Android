@@ -1,0 +1,5 @@
+18.6:
+- Ahora puedes utilizar la etiqueta Mark HTML y cambiar el texto y el color de fondo del botón del bloque de búsqueda.
+- Las funciones esenciales de incorporación de editores están disponibles para todos e incluyen la nueva insignia de bloque.
+- Al girar el dispositivo, la pantalla de ayuda no se sale de su recuadro (ya sea en formato vertical u horizontal).
+- Hemos corregido más errores que se producían al subir elementos en el bloque de incrustar.

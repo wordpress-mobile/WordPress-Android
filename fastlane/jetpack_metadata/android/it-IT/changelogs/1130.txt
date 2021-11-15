@@ -1,6 +1,0 @@
-18.5:
-Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
-
-Inoltre, ora rileviamo gli URL incorporabili quando vengono incollati in un paragrafo vuoto e abbiamo corretto un bug che impediva la modifica degli URL incorporati.
-
-Infine, i blocchi Citazione evidenziata e Preformattato hanno ora testo e colore di sfondo personalizzabili.

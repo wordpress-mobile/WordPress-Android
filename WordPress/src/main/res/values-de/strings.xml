@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-18 19:53:32+0000
+Translation-Revision-Date: 2021-11-12 18:27:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter %s weiterleiten</string>
+    <string name="gutenberg_native_create_link">Link erstellen</string>
+    <string name="domain_registration_result_description">Deine neue Domain &lt;b&gt;%s&lt;/b&gt; wird gerade eingerichtet. Es kann bis zu 30 Minuten dauern, bis deine Domain funktioniert.</string>
+    <string name="domain_registration_result_title">Glückwunsch zu deinem Kauf!</string>
+    <string name="domains_suggestions_select_domain">Domain auswählen</string>
+    <string name="domains_title">Domains</string>
+    <string name="post_status_sticky">Oben gehalten</string>
+    <string name="post_settings_post_sticky">Beitrag auf der Startseite halten</string>
+    <string name="post_settings_mark_as_sticky_options_header">Als oben gehalten markieren</string>
+    <string name="reader_follow_comments_unfollow_conversation">Unterhaltung nicht mehr folgen</string>
+    <string name="reader_follow_comments_enable_push_notifications">In-App-Benachrichtigungen aktivieren</string>
+    <string name="reader_follow_comments_message">Du folgst dieser Unterhaltung. Du wirst per E-Mail benachrichtigt, wenn neue Kommentare veröffentlicht werden.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Optionen zum Verfolgen von Unterhaltungen verwalten, Pop-up-Fenster</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">In-App-Benachrichtigungen konnten nicht deaktiviert werden</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">In-App-Benachrichtigungen konnten nicht aktiviert werden</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">In-App-Benachrichtigungen deaktiviert</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">In-App-Benachrichtigungen aktiviert</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Von dieser Unterhaltung abgemeldet</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Dieser Unterhaltung wird gefolgt\nIn-App-Benachrichtigungen aktivieren?</string>
     <string name="domains_search_for_a_domain_button">Domain suchen</string>
     <string name="domains_free_plan_get_your_domain_caption">Auf dieser Website erworbene Domains werden Besucher zu &lt;b&gt;%s&lt;/b&gt; weiterleiten</string>
     <string name="domains_paid_plan_claim_your_domain_caption">In deinem Tarif ist eine kostenlose Domain-Registrierung für ein Jahr enthalten</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kostenlose Domain in Anspruch nehmen</string>
     <string name="domains_manage_domains">Domains verwalten</string>
-    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter &lt;b&gt;%s&lt;/b&gt; weiterleiten. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Weitere Informationen&lt;/a&gt;</string>
     <string name="domains_add_a_domain">Domain hinzufügen</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft ab am %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Läuft ab am %s</string>
@@ -19,7 +38,7 @@ Language: de
     <string name="domains_primary_site_address_chip">Adresse der Haupt-Website</string>
     <string name="domains_primary_site_more_menu_change_site_address">Website-Adresse ändern</string>
     <string name="domains_primary_site_caption">Deine kostenlose WordPress.com-Adresse lautet</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/Jahr&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Möchtest du sie verwerfen?</string>
     <string name="comment_edit_cancel_dialog_title">Es sind nicht gespeicherte Änderungen vorhanden.</string>
@@ -32,7 +51,11 @@ Language: de
     <string name="comment_edit_comment">Kommentar</string>
     <string name="comment_edit_user_name">Name</string>
     <string name="comment_edit_menu_done">Fertig</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Vorschauen für Einbettungen-Blöcke sind demnächst verfügbar</string>
     <string name="weekly_roundup">Wöchentliche Zusammenfassung</string>
+    <string name="gutenberg_native_embed_options">Einbettungsoptionen</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Zum Anzeigen der Einbettungsoptionen zweimal tippen</string>
+    <string name="quick_start_list_create_site_message">Website erstellt! Schließe eine weitere Aufgabe ab.</string>
     <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s Blogger&lt;/a&gt; gefällt das.</string>
     <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 Blogger&lt;/a&gt; gefällt das.</string>
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Dir und %1$s Blogger&lt;/a&gt; gefällt das.</string>
@@ -156,7 +179,6 @@ Language: de
     <string name="gutenberg_native_y_axis_position">Position auf der y-Achse</string>
     <string name="gutenberg_native_x_axis_position">Position auf der x-Achse</string>
     <string name="gutenberg_native_type_a_url">URL eingeben</string>
-    <string name="gutenberg_native_tap_to_add_content">Tippen, um Inhalte hinzuzufügen</string>
     <string name="gutenberg_native_slash_inserter_results">Ergebnisse der Schrägstrich-Eingabe</string>
     <string name="gutenberg_native_s_has_url_set">Für %s wurde eine URL festgelegt</string>
     <string name="gutenberg_native_s_has_no_url_set">Für %s wurde keine URL festgelegt</string>
@@ -210,6 +232,7 @@ Language: de
     <string name="gutenberg_native_featured">Beitragsbild</string>
     <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
+    <string name="gutenberg_native_create_embed">Einbettung erstellen</string>
     <string name="gutenberg_native_column_d">Spalte %d</string>
     <string name="gutenberg_native_none">Keine</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Gib eine kurze Beschreibung des Links für Benutzer von Screenreadern an</string>
@@ -326,8 +349,8 @@ Language: de
     <string name="gutenberg_native_no_application_can_handle_this_request">Diese Anfrage kann von keiner Anwendung verarbeitet werden.</string>
     <string name="gutenberg_native_lock_icon">Schloss-Icon</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Audiodatei kann nicht eingefügt werden. Für Optionen hier tippen.</string>
-    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Doppeltippen, um eine Audiodatei auszuwählen</string>
-    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Doppeltippen, um die Audiodatei anzuhören</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Zum Auswählen einer Audiodatei zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Zum Anzuhören der Audiodatei zweimal tippen</string>
     <string name="gutenberg_native_choose_audio">Audio-Datei wählen</string>
     <string name="gutenberg_native_audio_player">Audio-Player</string>
     <string name="gutenberg_native_audio_file">Audiodatei</string>
@@ -639,7 +662,7 @@ Language: de
     <string name="stories_intro_main_title">Neu: Story-Beiträge</string>
     <string name="mlp_notice_blank_page_created">Leere Seite erstellt</string>
     <string name="mlp_notice_page_created">Seite erstellt</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s wurde der Zugriff auf deine Fotos verweigert. Um das zu korrigieren, bearbeite deine Rechte und aktiviere %2$s und %3$s.</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s wurde der Zugriff auf deine Fotos verweigert. Um das zu beheben, bearbeite deine Berechtigungen und aktiviere %2$s und %3$s.</string>
     <string name="media_insert_failed">Fehler beim Einfügen von Medien.</string>
     <string name="media_insert_failed_with_reason">Fehler beim Einfügen von Medien: %s</string>
     <string name="photo_picker_wordpress_media_library">Wähle aus der WordPress-Mediathek</string>
@@ -850,8 +873,8 @@ Language: de
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_move_to_top">Nach oben verschieben</string>
     <string name="gutenberg_native_insert_mention">Erwähnung einfügen</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tippe zweimal, um das Action Sheet mit den verfügbaren Optionen zu öffnen</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Zum Öffnen des Bottom Sheets mit den verfügbaren Optionen zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Zum Öffnen des Action Sheets mit den verfügbaren Optionen zweimal tippen</string>
     <string name="pages_cannot_be_started">Wir können die Seiten momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="pages_set_as_posts_page">Als Beitragsseite festlegen</string>
     <string name="pages_set_as_homepage">Als Homepage festlegen</string>
@@ -1825,7 +1848,7 @@ Language: de
     <string name="license_screen_title">Lizenz</string>
     <string name="release_notes_screen_title">Versionshinweise</string>
     <string name="signup_epilogue_error_avatar_view">Dein Avatar wurde hochgeladen und ist in Kürze verfügbar.</string>
-    <string name="permissions_denied_message">Scheinbar hast du die Rechte, die für diese Funktion erforderlich sind, deaktiviert.&lt;br/&gt;&lt;br/&gt;Bearbeite deine Rechte, um dies zu ändern, und stelle sicher, dass &lt;strong&gt;%s&lt;/strong&gt; aktiviert ist.</string>
+    <string name="permissions_denied_message">Es sieht so aus, als hättest du die für diese Funktion erforderlichen Berechtigungen deaktiviert.&lt;br/&gt;&lt;br/&gt;Um dies zu ändern, bearbeite deine Berechtigungen und stelle sicher, dass &lt;strong&gt;%s&lt;/strong&gt; aktiviert ist.</string>
     <string name="permissions_denied_title">Berechtigungen</string>
     <string name="plugin_caption_featured">Vorgestellt</string>
     <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen zugreifen, da dein Sharing Jetpack-Modul deaktiviert ist.</string>
@@ -2172,7 +2195,7 @@ Language: de
     <string name="media_documents">Dokumente</string>
     <string name="media_images">Bilder</string>
     <string name="media_all">Alle</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s wurde der Zugriff auf deine Fotos verweigert. Um das zu korrigieren, bearbeite deine Rechte und aktiviere %2$s.</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s wurde der Zugriff auf deine Fotos verweigert. Um das zu korrigieren, bearbeite deine Berechtigungen und aktiviere %2$s.</string>
     <string name="reader_view_comments">Kommentare anzeigen</string>
     <string name="site_settings_video_quality_hint">Qualität der Videos. Höhere Werte bedeuten qualitativ hochwertigere Videos.</string>
     <string name="site_settings_video_width_hint">Ändert die Größe von Videos in Beiträgen in diese Größe</string>
@@ -2183,9 +2206,9 @@ Language: de
     <string name="video_quality">Videoqualität</string>
     <string name="permission_camera">Kamera</string>
     <string name="permission_storage">Speicherplatz</string>
-    <string name="button_edit_permissions">Rechte bearbeiten</string>
+    <string name="button_edit_permissions">Berechtigungen bearbeiten</string>
     <string name="photo_picker_soft_ask_allow">Gewähren</string>
-    <string name="photo_picker_soft_ask_label">%s benötigt Rechte, um auf deine Fotos zuzugreifen</string>
+    <string name="photo_picker_soft_ask_label">%s benötigt Berechtigungen, um auf deine Fotos zuzugreifen</string>
     <string name="sharing_twitter_message">Dies wird in Tweets eingefügt, wenn Leute per Twitter-Button teilen</string>
     <string name="sharing_label_message">Ändere die Beschriftung der Teilen-Buttons. Dieser Text wird erst angezeigt, wenn du mindestens einen Teilen-Button hinzufügst.</string>
     <string name="connecting_account">Konto verbinden</string>

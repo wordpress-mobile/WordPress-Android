@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-27 13:54:09+0000
+Translation-Revision-Date: 2021-11-12 13:52:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
     <string name="domain_registration_result_description">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; oluşturuluyor. Alan adınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
     <string name="domain_registration_result_title">Satın aldığınız için tebrikler!</string>
@@ -29,7 +31,6 @@ Language: tr
     <string name="domains_paid_plan_claim_your_domain_caption">Paketiniz ücretsiz bir yıllık alan adı kaydını içerir</string>
     <string name="domains_paid_plan_claim_your_domain_title">Ücretsiz alan adınızı isteyin</string>
     <string name="domains_manage_domains">Alan Adlarını Yönet</string>
-    <string name="domains_redirected_domains_blurb">Etki alanlarınız &lt;b&gt;%s&lt;/b&gt; adresindeki sitenize yönlendirilecektir. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Daha fazla bilgi&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Alan adı ekle</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Sona erme tarihi: %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Sona erme tarihi: %s</string>
@@ -37,7 +38,7 @@ Language: tr
     <string name="domains_primary_site_address_chip">Birincil site adresi</string>
     <string name="domains_primary_site_more_menu_change_site_address">Site adresini değiştir</string>
     <string name="domains_primary_site_caption">Ücretsiz WordPress.com adresiniz</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">İlk yıl için &lt;span style=\"color:#B26200;\"&gt;%1$s &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/yıl&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Bunları iptal etmek istiyor musunuz?</string>
     <string name="comment_edit_cancel_dialog_title">Kaydedilmemiş değişiklikler var</string>
@@ -62,6 +63,7 @@ Language: tr
     <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
     <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
     <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
@@ -177,7 +179,6 @@ Language: tr
     <string name="gutenberg_native_y_axis_position">Y Ekseni Konumu</string>
     <string name="gutenberg_native_x_axis_position">X Ekseni Konumu</string>
     <string name="gutenberg_native_type_a_url">Bir URL yazın</string>
-    <string name="gutenberg_native_tap_to_add_content">İçerik eklemek için dokunun</string>
     <string name="gutenberg_native_slash_inserter_results">Eğik çizgi yerleştirici sonuçları</string>
     <string name="gutenberg_native_s_has_url_set">%s için URL ayarlanmış</string>
     <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
@@ -1308,6 +1309,7 @@ Language: tr
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
+    <string name="domain_contact_information_register_domain_button">Alan adı kaydet</string>
     <string name="domain_contact_information_postal_code_hint">Posta kodu</string>
     <string name="domain_contact_information_state_hint">Eyalet</string>
     <string name="domain_contact_information_city_hint">Şehir</string>
@@ -2783,6 +2785,7 @@ Language: tr
     <string name="older_month">Bir aydan eski</string>
     <string name="older_last_week">1 haftadan eski</string>
     <string name="older_two_days">2 günden eski</string>
+    <string name="help_and_support">Yardım ve destek</string>
     <string name="mnu_comment_liked">Beğenildi</string>
     <string name="comment">Yorum yap</string>
     <string name="comment_trashed">Yorum iptal edildi</string>

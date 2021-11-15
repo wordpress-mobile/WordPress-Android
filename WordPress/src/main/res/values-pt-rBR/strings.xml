@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-13 15:54:50+0000
+Translation-Revision-Date: 2021-11-09 14:36:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuito no primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /ano&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Seus domínios redirecionarão para o site em %s</string>
+    <string name="gutenberg_native_create_link">Criar link</string>
+    <string name="domain_registration_result_description">Seu novo domínio &lt;b&gt;%s&lt;/b&gt; está sendo configurado. O domínio pode levar até 30 minutos para começar a funcionar.</string>
+    <string name="domain_registration_result_title">Parabéns por sua compra!</string>
+    <string name="domains_suggestions_select_domain">Selecionar domínio</string>
+    <string name="domains_title">Domínios</string>
+    <string name="post_status_sticky">Fixo</string>
+    <string name="post_settings_post_sticky">Fixar post na página inicial</string>
+    <string name="post_settings_mark_as_sticky_options_header">Marcar como fixo</string>
+    <string name="reader_follow_comments_unfollow_conversation">Deixar de seguir conversa</string>
+    <string name="reader_follow_comments_enable_push_notifications">Ativar notificações no aplicativo</string>
+    <string name="reader_follow_comments_message">Você está seguindo esta conversa. Você receberá notificações por e-mail quando novos comentários forem publicados.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Gerenciar opções de seguir conversa, janela de pop-up</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Não foi possível desativar as notificações no aplicativo</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Não foi possível ativar as notificações no aplicativo</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Notificações no aplicativo desativadas</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Notificações no aplicativo ativadas</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">A inscrição para esta conversa foi cancelada</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Seguindo esta conversa\nAtivar as notificações no aplicativo?</string>
     <string name="domains_search_for_a_domain_button">Pesquisar por um domínio</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domínios comprados neste site redirecionarão visitantes para &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Você tem um registro de domínio gratuito por um ano incluso em seu plano.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Resgatar seu domínio gratuito</string>
     <string name="domains_manage_domains">Gerenciar domínios</string>
-    <string name="domains_redirected_domains_blurb">Seus domínios redirecionarão para seu site em &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Saiba mais&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Adicionar um domínio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expira em %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expira em %s</string>
     <string name="domains_site_domains">Domínios do seu site</string>
     <string name="domains_primary_site_address_chip">Endereço principal do site</string>
     <string name="domains_primary_site_more_menu_change_site_address">Alterar o endereço do site</string>
     <string name="domains_primary_site_caption">Seu endereço gratuito WordPress.com é</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s no primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /ano&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /ano&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Você deseja descartá-las?</string>
     <string name="comment_edit_cancel_dialog_title">Há alterações não salvas</string>
     <string name="comment_edit_comment_error">Comentário não pode estar vazio</string>
@@ -156,7 +179,6 @@ Language: pt_BR
     <string name="gutenberg_native_y_axis_position">Posição eixo Y</string>
     <string name="gutenberg_native_x_axis_position">Posição eixo X</string>
     <string name="gutenberg_native_type_a_url">Informe um URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Toque para adicionar conteúdo</string>
     <string name="gutenberg_native_slash_inserter_results">Resultados do adicionador com barra</string>
     <string name="gutenberg_native_s_has_url_set">URL já definido para %s</string>
     <string name="gutenberg_native_s_has_no_url_set">URL não definido para %s</string>
@@ -210,6 +232,7 @@ Language: pt_BR
     <string name="gutenberg_native_featured">Em destaque</string>
     <string name="gutenberg_native_embed_link">Link da mídia incorporada</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
+    <string name="gutenberg_native_create_embed">Criar mídia incorporada</string>
     <string name="gutenberg_native_column_d">Coluna %d</string>
     <string name="gutenberg_native_none">Nenhum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
@@ -1286,6 +1309,7 @@ Language: pt_BR
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando o domínio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecionar o estado</string>
     <string name="domain_registration_country_picker_dialog_title">Selecionar país</string>
+    <string name="domain_contact_information_register_domain_button">Registrar domínio</string>
     <string name="domain_contact_information_postal_code_hint">CEP</string>
     <string name="domain_contact_information_state_hint">Estado</string>
     <string name="domain_contact_information_city_hint">Cidade</string>
