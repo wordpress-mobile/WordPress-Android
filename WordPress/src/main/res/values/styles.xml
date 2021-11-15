@@ -798,8 +798,11 @@
 
     <!--My Site Card-->
     <style name="MySiteCardFooterLinkItem">
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:padding">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="android:paddingBottom">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 

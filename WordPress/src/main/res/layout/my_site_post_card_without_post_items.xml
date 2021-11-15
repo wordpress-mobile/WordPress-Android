@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/my_site_card_row_padding">
+        android:clipToPadding="false">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
@@ -21,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/my_site_card_row_padding"
             app:layout_constraintEnd_toStartOf="@+id/image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -46,9 +46,9 @@
             android:importantForAccessibility="no"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="1:2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/create_post_temp" />
 
         <include
@@ -56,9 +56,6 @@
             layout="@layout/my_site_card_footer_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/excerpt" />
 
