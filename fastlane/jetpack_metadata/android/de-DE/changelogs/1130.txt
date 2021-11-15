@@ -1,6 +1,0 @@
-18.5:
-Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
-
-Außerdem erkennen wir jetzt einbettbare URLs, wenn sie in einen leeren Absatz eingefügt werden, und wir haben einen Fehler behoben, durch den eingebettete URLs nicht bearbeitet werden konnten.
-
-Und bei Pullquote- sowie Vorformatiert-Blöcken können jetzt Text und Hintergrundfarbe angepasst werden.

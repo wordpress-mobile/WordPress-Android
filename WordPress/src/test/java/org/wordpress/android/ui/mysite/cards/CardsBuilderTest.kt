@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -24,6 +23,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -38,11 +42,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-
-private const val SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION = 6
-private const val SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION = 7
-private const val QUICK_ACTION_SHOW_PAGES_FOCUS_POINT_PARAM_POSITION = 5
-private const val QUICK_ACTION_SHOW_STATS_FOCUS_POINT_PARAM_POSITION = 6
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
@@ -99,7 +98,6 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
-
     @Test
     fun `when domain credit is available, then correct event is tracked`() {
         buildCards(isDomainCreditAvailable = true)
@@ -182,59 +180,52 @@ class CardsBuilderTest {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         return cardsBuilder.build(
-                site = site,
-                showSiteIconProgressBar = false,
-                activeTask = activeTask,
-                isDomainCreditAvailable = isDomainCreditAvailable,
-                quickStartCategories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
-                titleClick = mock(),
-                iconClick = mock(),
-                urlClick = mock(),
-                switchSiteClick = mock(),
-                quickActionStatsClick = mock(),
-                quickActionPagesClick = mock(),
-                quickActionPostsClick = mock(),
-                quickActionMediaClick = mock(),
-                domainRegistrationClick = mock(),
-                onQuickStartBlockRemoveMenuItemClick = mock(),
-                onQuickStartTaskTypeItemClick = mock(),
-                mockedPostsData = mockedPostsData
+                domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = mock()
+                ),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData),
+                quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
+                        siteModel = site,
+                        activeTask = activeTask,
+                        onQuickActionMediaClick = mock(),
+                        onQuickActionPagesClick = mock(),
+                        onQuickActionPostsClick = mock(),
+                        onQuickActionStatsClick = mock()
+                ),
+                quickStartCardBuilderParams = QuickStartCardBuilderParams(
+                        if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
+                        mock(),
+                        mock()
+                ),
+                siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
+                        site,
+                        showSiteIconProgressBar = false,
+                        mock(),
+                        mock(),
+                        mock(),
+                        mock(),
+                        activeTask
+                )
         )
     }
 
     private fun setUpSiteInfoCardBuilder() {
         doAnswer {
             initSiteInfoCard(it)
-        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(
-                site = eq(site),
-                showSiteIconProgressBar = any(),
-                titleClick = any(),
-                iconClick = any(),
-                urlClick = any(),
-                switchSiteClick = any(),
-                showUpdateSiteTitleFocusPoint = any(),
-                showUploadSiteIconFocusPoint = any()
-        )
+        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(any())
     }
 
     private fun setUpQuickActionsBuilder() {
         doAnswer {
             initQuickActionsCard(it)
-        }.whenever(quickActionsCardBuilder).build(
-                onQuickActionStatsClick = any(),
-                onQuickActionPagesClick = any(),
-                onQuickActionPostsClick = any(),
-                onQuickActionMediaClick = any(),
-                showPages = any(),
-                showStatsFocusPoint = any(),
-                showPagesFocusPoint = any()
-        )
+        }.whenever(quickActionsCardBuilder).build(any())
     }
 
     private fun setUpQuickStartCardBuilder() {
         doAnswer {
             initQuickStartCard()
-        }.whenever(quickStartCardBuilder).build(any(), any(), any())
+        }.whenever(quickStartCardBuilder).build(any())
     }
 
     private fun setUpPostCardBuilder() {
@@ -256,30 +247,35 @@ class CardsBuilderTest {
         )
     }
 
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock) = SiteInfoCard(
-            title = "",
-            url = "",
-            iconState = IconState.Visible(""),
-            showTitleFocusPoint = mockInvocation
-                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_TITLE_FOCUS_POINT_PARAM_POSITION),
-            showIconFocusPoint = mockInvocation
-                    .getArgument(SITE_INFO_SHOW_UPDATE_SITE_ICON_FOCUS_POINT_PARAM_POSITION),
-            onTitleClick = mock(),
-            onIconClick = mock(),
-            onUrlClick = mock(),
-            onSwitchSiteClick = mock()
-    )
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
+        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
+        return SiteInfoCard(
+                title = "",
+                url = "",
+                iconState = IconState.Visible(""),
+                showTitleFocusPoint = params.activeTask == QuickStartTask.UPDATE_SITE_TITLE,
+                showIconFocusPoint = params.activeTask == QuickStartTask.UPLOAD_SITE_ICON,
+                onTitleClick = mock(),
+                onIconClick = mock(),
+                onUrlClick = mock(),
+                onSwitchSiteClick = mock()
+        )
+    }
 
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock) = QuickActionsCard(
-            title = UiStringText(""),
-            onStatsClick = mock(),
-            onPagesClick = mock(),
-            onPostsClick = mock(),
-            onMediaClick = mock(),
-            showPages = false,
-            showPagesFocusPoint = mockInvocation.getArgument(QUICK_ACTION_SHOW_PAGES_FOCUS_POINT_PARAM_POSITION),
-            showStatsFocusPoint = mockInvocation.getArgument(QUICK_ACTION_SHOW_STATS_FOCUS_POINT_PARAM_POSITION)
-    )
+    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
+        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
+        return QuickActionsCard(
+                title = UiStringText(""),
+                onStatsClick = mock(),
+                onPagesClick = mock(),
+                onPostsClick = mock(),
+                onMediaClick = mock(),
+                showPages = false,
+                showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS,
+                showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                        params.activeTask == QuickStartTask.REVIEW_PAGES
+        )
+    }
 
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),

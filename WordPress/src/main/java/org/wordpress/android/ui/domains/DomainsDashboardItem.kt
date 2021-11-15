@@ -24,7 +24,7 @@ sealed class DomainsDashboardItem(val type: Type) {
         DOMAIN_BLURB
     }
 
-    data class PrimaryDomain(
+    data class FreeDomain(
         val domain: UiString,
         val isPrimary: Boolean,
         val onPopupMenuClick: (Action) -> Boolean

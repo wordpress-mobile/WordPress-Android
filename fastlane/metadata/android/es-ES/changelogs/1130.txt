@@ -1,6 +1,0 @@
-18.5:
-La incrustación de contenido externo ahora es más fácil con los nuevos bloques de incrustación de Facebook, Instagram, Loom y Smartframe.
-
-Mantente siempre al día de las conversaciones que sigues a través de los nuevos avisos instantáneos del lector para los comentarios publicados en las conversaciones seguidas.
-
-Además, ahora puedes personalizar el texto y el color de fondo en los bloques de párrafo de cita y preformateado.

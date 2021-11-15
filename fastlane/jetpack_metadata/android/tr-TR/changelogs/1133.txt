@@ -1,0 +1,5 @@
+18.6:
+- Artık HTML İşaretleme etiketini kullanabilir ve Arama bloku düğmesinin metin ve arka plan rengini değiştirebilirsiniz.
+- Yeni blok rozeti de dahil olmak üzere yerel düzenleyici destek özellikleri artık herkes tarafından kullanılabilir.
+- Dikey ve yatay görünüm arasında geçiş yapıldığında Yardım ekranı artık çerçevesinden çıkmıyor.
+- Gömülü bloktaki diğer yükleme hatalarını düzelttik.

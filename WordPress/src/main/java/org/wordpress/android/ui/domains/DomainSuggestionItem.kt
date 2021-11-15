@@ -3,6 +3,8 @@ package org.wordpress.android.ui.domains
 data class DomainSuggestionItem(
     val domainName: String,
     val cost: String,
+    val isOnSale: Boolean,
+    val saleCost: String,
     val isFree: Boolean,
     val supportsPrivacy: Boolean,
     val productId: Int,

@@ -253,9 +253,6 @@ public class AppPrefs {
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
 
-        // Used to determine if editor onboarding features should be displayed
-        HAS_LAUNCHED_GUTENBERG_EDITOR,
-
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
 
@@ -1210,14 +1207,6 @@ public class AppPrefs {
 
     public static boolean shouldShowStoriesIntro() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
-    }
-
-    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
-        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
-    }
-
-    public static boolean hasLaunchedGutenbergEditor() {
-        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {

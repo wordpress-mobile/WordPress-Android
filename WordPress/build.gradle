@@ -17,6 +17,7 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"

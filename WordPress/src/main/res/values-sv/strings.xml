@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-19 09:52:30+0000
+Translation-Revision-Date: 2021-11-02 06:49:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/år&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Din domän kommer omdirigeras till din webbplats på %s</string>
     <string name="gutenberg_native_create_link">Skapa länk</string>
     <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Det kan dröja upp till 30 minuter innan din domän börjar fungera.</string>
     <string name="domain_registration_result_title">Grattis till ditt köp!</string>
@@ -29,7 +31,6 @@ Language: sv_SE
     <string name="domains_paid_plan_claim_your_domain_caption">Ditt paket inkluderar en gratis domännamnsregistrering i ett år</string>
     <string name="domains_paid_plan_claim_your_domain_title">Gör anspråk på din gratisdomän</string>
     <string name="domains_manage_domains">Hantera domäner</string>
-    <string name="domains_redirected_domains_blurb">Dina domäner kommer att omdirigeras till din webbplats på &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Läs mer&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Lägg till en domän</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Upphör att gälla %s</string>
@@ -37,7 +38,7 @@ Language: sv_SE
     <string name="domains_primary_site_address_chip">Primär webbplatsadress</string>
     <string name="domains_primary_site_more_menu_change_site_address">Ändra webbplatsens adress</string>
     <string name="domains_primary_site_caption">Din gratisadress hos WordPress.com är</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis första året &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /år&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /år&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /år&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vill du kasta dem?</string>
     <string name="comment_edit_cancel_dialog_title">Det finns osparade ändringar</string>
@@ -178,7 +179,6 @@ Language: sv_SE
     <string name="gutenberg_native_y_axis_position">Läge på Y-axeln</string>
     <string name="gutenberg_native_x_axis_position">Läge på X-axeln</string>
     <string name="gutenberg_native_type_a_url">Skriv en URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tryck för att lägga till innehåll</string>
     <string name="gutenberg_native_slash_inserter_results">Resultat från ”snedstrecksinfogaren”</string>
     <string name="gutenberg_native_s_has_url_set">URL angiven för %s</string>
     <string name="gutenberg_native_s_has_no_url_set">Ingen URL angiven för %s</string>

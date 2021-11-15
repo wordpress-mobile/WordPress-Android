@@ -110,7 +110,7 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-wpmreleasetoolkit (2.0.0)
+    fastlane-plugin-wpmreleasetoolkit (2.1.0)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)

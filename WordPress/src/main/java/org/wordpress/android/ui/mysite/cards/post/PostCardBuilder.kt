@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.mysite.cards.post
 
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class PostCardBuilder @Inject constructor() {
-    fun build(mockedPostsData: MockedPostsData): List<PostCard> {
+    fun build(params: PostCardBuilderParams): List<PostCard> {
         val cards = mutableListOf<PostCard>()
-        mockedPostsData.posts?.draft?.map {
+        params.mockedPostsData?.posts?.draft?.map {
             cards.add(
                     PostCard(
                             title = UiStringText(DRAFT_TITLE),
@@ -16,7 +16,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
         }
-        mockedPostsData.posts?.scheduled?.map {
+        params.mockedPostsData?.posts?.scheduled?.map {
             cards.add(
                     PostCard(
                             title = UiStringText(SCHEDULED_TITLE),

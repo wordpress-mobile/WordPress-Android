@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-26 09:54:08+0000
+Translation-Revision-Date: 2021-11-09 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免費，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">你的網域會重新導向你的網站 %s</string>
     <string name="gutenberg_native_create_link">建立連結</string>
     <string name="domain_registration_result_description">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。 網域可能需要 30 分鐘才能開始運作。</string>
     <string name="domain_registration_result_title">謝謝你的選購！</string>
@@ -29,7 +31,6 @@ Language: zh_TW
     <string name="domains_free_plan_get_your_domain_caption">此網站購買的網域會將訪客重新導向至 &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">索取你的免費網域</string>
     <string name="domains_manage_domains">管理網域</string>
-    <string name="domains_redirected_domains_blurb">你的網域將重新導向你的網站：&lt;b&gt;%s&lt;/b&gt;。 &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;深入瞭解&lt;/a&gt;。</string>
     <string name="domains_add_a_domain">新增網域</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日： %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">到期日： %s</string>
@@ -37,8 +38,8 @@ Language: zh_TW
     <string name="domains_primary_site_address_chip">網站主要網址</string>
     <string name="domains_primary_site_more_menu_change_site_address">變更網址</string>
     <string name="domains_primary_site_caption">你的 WordPress.com 免費位址是</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;第一年免費，以後每年 &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/年&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">第一年 &lt;span style=\"color:#B26200;\"&gt;%1$s，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">你要捨棄這些變更嗎？</string>
     <string name="comment_edit_cancel_dialog_title">有未儲存的變更</string>
     <string name="comment_edit_comment_error">留言不可空白</string>
@@ -176,7 +177,6 @@ Language: zh_TW
     <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
     <string name="gutenberg_native_x_axis_position">X 軸位置</string>
     <string name="gutenberg_native_type_a_url">輸入 URL</string>
-    <string name="gutenberg_native_tap_to_add_content">點選以新增內容</string>
     <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
     <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
     <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>

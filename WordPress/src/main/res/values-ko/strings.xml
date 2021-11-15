@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-27 13:54:08+0000
+Translation-Revision-Date: 2021-11-09 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">도메인이 %s의 사이트로 리디렉팅됩니다.</string>
     <string name="gutenberg_native_create_link">링크 생성</string>
     <string name="domain_registration_result_description">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 생성하는 중입니다. 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
     <string name="domain_registration_result_title">업그레이드를 축하합니다!</string>
@@ -29,7 +31,6 @@ Language: ko_KR
     <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 방문자가 &lt;b&gt;%s&lt;/b&gt;(으)로 리디렉팅됩니다.</string>
     <string name="domains_paid_plan_claim_your_domain_title">무료 도메인 신청</string>
     <string name="domains_manage_domains">도메인 관리</string>
-    <string name="domains_redirected_domains_blurb">도메인이 &lt;b&gt;%s&lt;/b&gt;의 사이트로 리디렉팅됩니다. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;자세히 알아보세요&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">도메인 추가</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;만료 날짜 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">만료 날짜 %s</string>
@@ -37,8 +38,8 @@ Language: ko_KR
     <string name="domains_primary_site_address_chip">기본 사이트 주소</string>
     <string name="domains_primary_site_more_menu_change_site_address">사이트 주소 변경</string>
     <string name="domains_primary_site_caption">무료 워드프레스닷컴 주소:</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/년&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/년 &lt;span style=\"color:#B26200;\"&gt;%1$s&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">취소하시겠어요?</string>
     <string name="comment_edit_cancel_dialog_title">저장되지 않은 변경 사항이 있음</string>
     <string name="comment_edit_comment_error">댓글은 비워 둘 수 없음</string>
@@ -175,7 +176,6 @@ Language: ko_KR
     <string name="gutenberg_native_y_axis_position">Y–축 위치</string>
     <string name="gutenberg_native_x_axis_position">X–축 위치</string>
     <string name="gutenberg_native_type_a_url">URL 입력</string>
-    <string name="gutenberg_native_tap_to_add_content">콘텐츠를 눌러서 추가</string>
     <string name="gutenberg_native_slash_inserter_results">슬래시 삽입기 결과</string>
     <string name="gutenberg_native_s_has_url_set">%s에 설정된 URL 있음</string>
     <string name="gutenberg_native_s_has_no_url_set">%s에 설정된 URL 없음</string>

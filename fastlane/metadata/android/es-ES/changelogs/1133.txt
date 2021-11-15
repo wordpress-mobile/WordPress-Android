@@ -1,0 +1,5 @@
+18.6:
+- Ahora puedes usar la etiqueta HTML Mark y cambiar el texto y el color de fondo del botón del bloque de búsqueda.
+- Las características nativas incorporadas del editor están disponibles para todos, incluyendo la nueva insignia de bloque.
+- La pantalla de ayuda no se sale de su caja cuando se rota entre retrato y panorámica.
+- Hemos corregido más fallos de carga en el bloque de incrustación.

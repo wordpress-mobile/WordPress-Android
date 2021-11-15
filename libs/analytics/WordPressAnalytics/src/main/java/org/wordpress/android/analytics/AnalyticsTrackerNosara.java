@@ -1855,6 +1855,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_suggestion_queried";
             case DOMAIN_CREDIT_NAME_SELECTED:
                 return "domain_credit_name_selected";
+            case DOMAINS_DASHBOARD_VIEWED:
+                return "domains_dashboard_viewed";
+            case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
+                return "domains_dashboard_get_domain_tapped";
+            case DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED:
+                return "domains_dashboard_add_domain_tapped";
+            case DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED:
+                return "domains_dashboard_select_domain_tapped";
+            case DOMAINS_REGISTRATION_FORM_VIEWED:
+                return "domains_registration_form_viewed";
+            case DOMAINS_REGISTRATION_FORM_SUBMITTED:
+                return "domains_registration_form_submitted";
+            case DOMAINS_PURCHASE_WEBVIEW_VIEWED:
+                return "domains_purchase_webview_viewed";
+            case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
+                return "domains_purchase_domain_success";
             case QUICK_ACTION_STATS_TAPPED:
             case QUICK_ACTION_PAGES_TAPPED:
             case QUICK_ACTION_POSTS_TAPPED:
@@ -2104,6 +2120,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_engaged";
             case RECOMMEND_APP_CONTENT_FETCH_FAILED:
                 return "recommend_app_content_fetch_failed";
+            case EDITOR_BLOCK_INSERTED:
+                return "editor_block_inserted";
         }
         return null;
     }

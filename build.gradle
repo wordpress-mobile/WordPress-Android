@@ -8,7 +8,7 @@ buildscript {
     ext.wordPressUtilsVersion = 'develop-eebc5d8e91a1d90190919f900f924b39c861a528'
     ext.wordPressLoginVersion = '0.0.8'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'v1.64.1'
+    ext.gutenbergMobileVersion = 'v1.65.1'
     ext.storiesVersion = '1.1.0'
 
     repositories {
@@ -132,7 +132,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.28.0'
+    fluxCVersion = '1.29.0'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
