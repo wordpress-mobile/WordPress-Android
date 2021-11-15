@@ -10,6 +10,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import static android.app.Activity.RESULT_OK;
@@ -57,22 +61,23 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
     }
 
     void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Uri[] selectedUris = null;
-        if (resultCode == RESULT_OK && intent != null) {
+        if (intent != null && resultCode == RESULT_OK && requestCode == WEB_CHROME_CLIENT_FILE_PICKER) {
+            Uri[] selectedUris = null;
+
             // if ClipData is not empty that means there are multiple files.
             if (intent.getClipData() != null) {
                 // process multiple files
                 int clipDataItemCount = intent.getClipData().getItemCount();
                 selectedUris = new Uri[clipDataItemCount];
-                for (int i = 0; i < clipDataItemCount; i++) {
-                    selectedUris[i] = intent.getClipData().getItemAt(i).getUri();
+                for (int index = 0; index < clipDataItemCount; index++) {
+                    selectedUris[index] = intent.getClipData().getItemAt(index).getUri();
                 }
             } else if (intent.getData() != null) {
                 // process the single file single-selected file
                 selectedUris = WebChromeClient.FileChooserParams.parseResult(resultCode, intent);
             }
+            mFilePathCallback.onReceiveValue(selectedUris);
         }
-        mFilePathCallback.onReceiveValue(selectedUris);
     }
 
     interface OnShowFileChooserListener {
