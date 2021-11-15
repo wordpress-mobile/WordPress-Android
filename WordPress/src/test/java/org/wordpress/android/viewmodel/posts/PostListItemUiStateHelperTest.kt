@@ -883,6 +883,7 @@ class PostListItemUiStateHelperTest {
                 .isEqualTo(R.string.post_waiting_for_connection_draft)
     }
 
+    @Test
     fun `date and author label contains both date and authorDisplayName`() {
         // Arrange
         val authorDisplayName = "John Novak"
