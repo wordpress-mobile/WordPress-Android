@@ -94,13 +94,12 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     @Suppress("unused")
     private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<CategoryNode>) {
-        adapter.update(list)
+        adapter.submitList(list)
         categoriesRecyclerView.updateVisibility(true)
 
         fabButton.updateVisibility(false)
         progressBar.updateVisibility(false)
         uiHelpers.updateVisibility(actionableEmptyView,false)
-        // Todo: AjeshRPai implement the logic of showing list
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {

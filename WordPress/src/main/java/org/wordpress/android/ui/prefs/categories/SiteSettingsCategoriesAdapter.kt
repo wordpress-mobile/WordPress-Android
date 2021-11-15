@@ -1,18 +1,15 @@
 package org.wordpress.android.ui.prefs.categories
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.MainThread
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.databinding.SiteSettingsCategoriesRowBinding
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.utils.UiHelpers
 
 class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers) :
-        RecyclerView.Adapter<SiteSettingsCategoriesViewHolder>() {
-    private val items = mutableListOf<CategoryNode>()
-
+        ListAdapter<CategoryNode, SiteSettingsCategoriesViewHolder>(SiteSettingsCategoriesDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -22,43 +19,20 @@ class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers) :
         return SiteSettingsCategoriesViewHolder(binding, uiHelpers)
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
     override fun onBindViewHolder(holder: SiteSettingsCategoriesViewHolder, position: Int) {
-        holder.onBind(items[position])
+        holder.onBind(getItem(position))
     }
 
-    @MainThread
-    fun update(newItems: List<CategoryNode>) {
-        val diffResult = DiffUtil.calculateDiff(
-                SiteSettingCategoriesDiffUtils(
-                        items.toList(),
-                        newItems
-                )
-        )
-        items.clear()
-        items.addAll(newItems)
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    private class SiteSettingCategoriesDiffUtils(
-        val oldItems: List<CategoryNode>,
-        val newItems: List<CategoryNode>
-    ) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition].categoryId == newItems[newItemPosition].categoryId
-        }
-
-        override fun getOldListSize(): Int = oldItems.size
-
-        override fun getNewListSize(): Int = newItems.size
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition] == newItems[newItemPosition]
+    override fun onBindViewHolder(holder: SiteSettingsCategoriesViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty() && (payloads[0] as? Bundle)?.size() ?: 0 > 0) {
+            val bundle = payloads[0] as Bundle
+            holder.updateChanges(bundle)
+        } else {
+            onBindViewHolder(holder, position)
         }
     }
 }

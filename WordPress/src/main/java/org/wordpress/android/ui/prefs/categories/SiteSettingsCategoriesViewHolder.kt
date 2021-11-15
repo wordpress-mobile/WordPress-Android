@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.categories
 
+import android.os.Bundle
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.text.StringEscapeUtils
@@ -13,26 +14,42 @@ class SiteSettingsCategoriesViewHolder(
     private val categoryBinding: SiteSettingsCategoriesRowBinding,
     val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(categoryBinding.root) {
+    private val verticalPadding: Int = uiHelpers.getPxOfUiDimen(
+            categoryBinding.siteSettingsCategoryText.context,
+            UIDimenRes(R.dimen.margin_large)
+    )
+    private val horizontalPadding: Int = uiHelpers.getPxOfUiDimen(
+            categoryBinding.siteSettingsCategoryText.context,
+            UIDimenRes(R.dimen.margin_extra_large)
+    )
+
     fun onBind(categoryNode: CategoryNode) = with(categoryBinding) {
         siteSettingsCategoryRowLayout.setOnClickListener {
             // todo : ajeshr
         }
+        setPaddingForCategoryName(categoryNode.level)
         siteSettingsCategoryText.text = StringEscapeUtils.unescapeHtml4(categoryNode.name)
-        val verticalPadding: Int = uiHelpers.getPxOfUiDimen(
-                siteSettingsCategoryText.context,
-                UIDimenRes(R.dimen.margin_large)
-        )
-        val horizontalPadding: Int = uiHelpers.getPxOfUiDimen(
-                siteSettingsCategoryText.context,
-                UIDimenRes(R.dimen.margin_extra_large)
-        )
+    }
+
+    private fun setPaddingForCategoryName(categoryLevel: Int) {
         ViewCompat.setPaddingRelative(
-                siteSettingsCategoryText,
-                horizontalPadding * categoryNode.level,
+                categoryBinding.siteSettingsCategoryText,
+                horizontalPadding * categoryLevel,
                 verticalPadding,
                 horizontalPadding,
                 verticalPadding
         )
+    }
+
+    fun updateChanges(bundle: Bundle) {
+        if (bundle.containsKey(SiteSettingsCategoriesDiffCallback.NAME_CHANGED_KEY)) {
+            val categoryName = bundle.getString(SiteSettingsCategoriesDiffCallback.NAME_CHANGED_KEY)
+            categoryBinding.siteSettingsCategoryText.text = StringEscapeUtils.unescapeHtml4(categoryName)
+        }
+        if (bundle.containsKey(SiteSettingsCategoriesDiffCallback.LEVEL_CHANGED_KEY)) {
+            val newLevel = bundle.getInt(SiteSettingsCategoriesDiffCallback.LEVEL_CHANGED_KEY)
+            setPaddingForCategoryName(newLevel)
+        }
     }
 }
 
