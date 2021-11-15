@@ -3405,6 +3405,7 @@
     <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Current unit is %s</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">Custom URL</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Customize blocks</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
@@ -3491,7 +3492,6 @@
     <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">How to edit your post</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
     <string name="gutenberg_native_image_settings" tools:ignore="UnusedResources">Image settings</string>
     <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Insert crosspost</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
@@ -3566,6 +3566,7 @@
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Remove as Featured Image </string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
