@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -46,7 +46,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
-import org.wordpress.android.ui.photopicker.MediaPickerConstants;
+import org.wordpress.android.ui.WPWebChromeClientWithFileChooser.OnShowFileChooserListener;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -60,7 +60,6 @@ import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
-import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
@@ -113,7 +112,7 @@ import kotlin.Unit;
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
 public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener, OnShowFileChooserListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -157,6 +156,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private View mPreviewModeButton;
     private TextView mDesktopPreviewHint;
     private boolean mPreviewModeChangeAllowed = false;
+    private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -651,12 +651,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WebViewClient webViewClient = createWebViewClient(allowedURL);
 
         mWebView.setWebViewClient(webViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(
+        mWPWebChromeClientWithFileChooser = new WPWebChromeClientWithFileChooser(
                 this,
                 mWebView,
                 R.drawable.media_movieclip,
-                (ProgressBar) findViewById(R.id.progress_bar)
-        ));
+                (ProgressBar) findViewById(R.id.progress_bar),
+                this
+        );
+        mWebView.setWebChromeClient(mWPWebChromeClientWithFileChooser);
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
@@ -964,25 +966,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RequestCodes.FILE_LIBRARY) {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                        Uri[] uris = convertStringArrayIntoUrisArray(
-                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
-
-
-                    }
-                }
+        if (mWPWebChromeClientWithFileChooser != null) {
+            mWPWebChromeClientWithFileChooser.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private Uri[] convertStringArrayIntoUrisArray(String[] stringArray) {
-        int stringArrayLength = stringArray.length;
-        Uri[] uris = new Uri[stringArrayLength];
-        for (int index = 0; index < stringArrayLength; index++) {
-            uris[index] = Uri.parse(stringArray[index]);
-        }
-        return uris;
+    @Override public void startActivityForFileChooserResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
     }
 }
