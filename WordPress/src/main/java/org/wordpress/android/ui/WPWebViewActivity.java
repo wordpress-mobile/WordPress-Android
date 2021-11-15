@@ -46,6 +46,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -139,6 +141,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject Dispatcher mDispatcher;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
@@ -956,5 +959,30 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WPSnackbar.make(findViewById(R.id.webview_wrapper), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                   .show();
         loadWebContent();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.FILE_LIBRARY) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                        Uri[] uris = convertStringArrayIntoUrisArray(
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+
+
+                    }
+                }
+        }
+    }
+
+    private Uri[] convertStringArrayIntoUrisArray(String[] stringArray) {
+        int stringArrayLength = stringArray.length;
+        Uri[] uris = new Uri[stringArrayLength];
+        for (int index = 0; index < stringArrayLength; index++) {
+            uris[index] = Uri.parse(stringArray[index]);
+        }
+        return uris;
     }
 }
