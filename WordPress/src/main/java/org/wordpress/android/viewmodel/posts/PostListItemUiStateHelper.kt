@@ -406,13 +406,7 @@ class PostListItemUiStateHelper @Inject constructor(
         }
 
         if (canShowViewButton) {
-            buttonTypes.add(
-                    if (isLocalDraft || isLocallyChanged) {
-                        BUTTON_PREVIEW
-                    } else {
-                        BUTTON_VIEW
-                    }
-            )
+            buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
         }
 
         if (canShowStats) {
@@ -430,6 +424,10 @@ class PostListItemUiStateHelper @Inject constructor(
         buttonTypes.addDeleteOrTrashAction(isLocalDraft, postStatus)
 
         return buttonTypes
+    }
+
+    private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
+        add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
     }
 
     private fun MutableList<PostListButtonType>.addDeleteOrTrashAction(isLocalDraft: Boolean, postStatus: PostStatus) {
