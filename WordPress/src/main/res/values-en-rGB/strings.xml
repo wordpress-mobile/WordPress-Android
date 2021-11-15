@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-18 19:06:14+0000
+Translation-Revision-Date: 2021-11-02 08:38:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Free for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="gutenberg_native_create_link">Create link</string>
     <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. It may take up to 30 minutes for your domain to start working.</string>
     <string name="domain_registration_result_title">Congratulations on your purchase!</string>
@@ -29,7 +31,6 @@ Language: en_GB
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_manage_domains">Manage domains</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="domains_add_a_domain">Add a domain</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
@@ -37,7 +38,7 @@ Language: en_GB
     <string name="domains_primary_site_address_chip">Primary site address</string>
     <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Free for the first year &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /year&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Do you want to discard them?</string>
     <string name="comment_edit_cancel_dialog_title">There are unsaved changes</string>
@@ -178,7 +179,6 @@ Language: en_GB
     <string name="gutenberg_native_y_axis_position">Y–axis position</string>
     <string name="gutenberg_native_x_axis_position">X–axis position</string>
     <string name="gutenberg_native_type_a_url">Type a URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tap to add content</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter results</string>
     <string name="gutenberg_native_s_has_url_set">%s has URL set</string>
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>

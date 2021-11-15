@@ -1,6 +1,0 @@
-18.5 :
-L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
-
-Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
-
-De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
