@@ -369,9 +369,9 @@ class PostListItemUiStateHelper @Inject constructor(
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean
     ): List<PostListButtonType> {
-        val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
+        val canRetryUpload = uploadUiState is UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
+                (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
@@ -423,7 +423,7 @@ class PostListItemUiStateHelper @Inject constructor(
             buttonTypes.add(BUTTON_COPY_URL)
         }
 
-        buttonTypes.addDeleteOrTrashAction(isLocalDraft, postStatus)
+        buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 
         return buttonTypes
     }
@@ -432,7 +432,10 @@ class PostListItemUiStateHelper @Inject constructor(
         add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
     }
 
-    private fun MutableList<PostListButtonType>.addDeleteOrTrashAction(isLocalDraft: Boolean, postStatus: PostStatus) {
+    private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(
+        isLocalDraft: Boolean,
+        postStatus: PostStatus
+    ) {
         when {
             isLocalDraft -> add(BUTTON_DELETE)
             postStatus == TRASHED -> add(BUTTON_DELETE_PERMANENTLY)
