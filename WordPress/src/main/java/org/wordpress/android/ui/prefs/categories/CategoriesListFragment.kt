@@ -80,7 +80,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         categoriesRecyclerView.updateVisibility(false)
     }
 
-    private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error:Error) {
+    private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: Error) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, error.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, error.subtitle)
         actionableEmptyView.image.setImageResource(error.image)
@@ -99,13 +99,13 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
         fabButton.updateVisibility(false)
         progressBar.updateVisibility(false)
-        uiHelpers.updateVisibility(actionableEmptyView,false)
+        uiHelpers.updateVisibility(actionableEmptyView, false)
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
         categoriesRecyclerView.setHasFixedSize(true)
         categoriesRecyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = SiteSettingsCategoriesAdapter(uiHelpers,::onCategoryRowClicked)
+        adapter = SiteSettingsCategoriesAdapter(uiHelpers, ::onCategoryRowClicked)
         categoriesRecyclerView.adapter = adapter
 
         categoriesRecyclerView.addItemDecoration(
@@ -125,8 +125,8 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         viewModel.onCategoryClicked(categoryNode)
     }
 
-    fun View.updateVisibility(visible:Boolean) {
-        uiHelpers.updateVisibility(this,visible)
+    fun View.updateVisibility(visible: Boolean) {
+        uiHelpers.updateVisibility(this, visible)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

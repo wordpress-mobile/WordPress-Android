@@ -25,9 +25,7 @@ class SiteSettingsCategoriesViewHolder(
     )
 
     fun onBind(categoryNode: CategoryNode) = with(categoryBinding) {
-        siteSettingsCategoryRowLayout.setOnClickListener {
-            onClickListener.invoke(categoryNode)
-        }
+        siteSettingsCategoryRowLayout.setOnClickListener { onClickListener.invoke(categoryNode) }
         setPaddingForCategoryName(categoryNode.level)
         siteSettingsCategoryText.text = StringEscapeUtils.unescapeHtml4(categoryNode.name)
     }
@@ -53,4 +51,3 @@ class SiteSettingsCategoriesViewHolder(
         }
     }
 }
-

@@ -31,4 +31,3 @@ object SiteSettingsCategoriesDiffCallback : DiffUtil.ItemCallback<CategoryNode>(
         return super.getChangePayload(oldItem, newItem)
     }
 }
-
