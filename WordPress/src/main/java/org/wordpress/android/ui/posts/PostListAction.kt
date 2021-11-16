@@ -109,7 +109,10 @@ fun handlePostListAction(
 
                 action.showToast.invoke(action.messageSuccess)
             } catch (e: Exception) {
-                // Ignore any exceptions here as certain devices have bugs and will fail.
+                 /**
+                  * Ignore any exceptions here as certain devices have bugs and will fail.
+                  * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
+                  */
                 AppLog.e(AppLog.T.POSTS, e)
                 action.showToast.invoke(action.messageError)
             }
