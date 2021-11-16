@@ -45,7 +45,7 @@ class SelectedSiteSource @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    @SuppressWarnings("unused")
+    @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
