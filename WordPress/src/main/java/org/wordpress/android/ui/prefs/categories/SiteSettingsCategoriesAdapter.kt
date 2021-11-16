@@ -8,7 +8,7 @@ import org.wordpress.android.databinding.SiteSettingsCategoriesRowBinding
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.utils.UiHelpers
 
-class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers) :
+class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers, private val onClickListener: (CategoryNode) -> Unit) :
         ListAdapter<CategoryNode, SiteSettingsCategoriesViewHolder>(SiteSettingsCategoriesDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -16,7 +16,7 @@ class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers) :
     ): SiteSettingsCategoriesViewHolder {
         val binding = SiteSettingsCategoriesRowBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-        return SiteSettingsCategoriesViewHolder(binding, uiHelpers)
+        return SiteSettingsCategoriesViewHolder(binding, uiHelpers, onClickListener)
     }
 
     override fun onBindViewHolder(holder: SiteSettingsCategoriesViewHolder, position: Int) {

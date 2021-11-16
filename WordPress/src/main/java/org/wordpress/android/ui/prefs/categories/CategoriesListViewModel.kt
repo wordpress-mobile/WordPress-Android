@@ -90,6 +90,11 @@ class CategoriesListViewModel @Inject constructor(
         // todo implement the logic of creating category
     }
 
+    @SuppressWarnings("unused")
+    fun onCategoryClicked(categoryNode: CategoryNode) {
+        // todo implement the logic of showing detail page
+    }
+
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
         if (event.isError) {
             if (_uiState.value is Loading) _uiState.value = GenericError(::fetchCategoriesFromNetwork)

@@ -105,7 +105,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
         categoriesRecyclerView.setHasFixedSize(true)
         categoriesRecyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = SiteSettingsCategoriesAdapter(uiHelpers)
+        adapter = SiteSettingsCategoriesAdapter(uiHelpers,::onCategoryRowClicked)
         categoriesRecyclerView.adapter = adapter
 
         categoriesRecyclerView.addItemDecoration(
@@ -119,6 +119,10 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     private fun SiteSettingsCategoriesListFragmentBinding.initEmptyView() {
         categoriesRecyclerView.setEmptyView(actionableEmptyView)
         actionableEmptyView.updateVisibility(false)
+    }
+
+    private fun onCategoryRowClicked(categoryNode: CategoryNode) {
+        viewModel.onCategoryClicked(categoryNode)
     }
 
     fun View.updateVisibility(visible:Boolean) {

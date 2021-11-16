@@ -12,7 +12,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 
 class SiteSettingsCategoriesViewHolder(
     private val categoryBinding: SiteSettingsCategoriesRowBinding,
-    val uiHelpers: UiHelpers
+    val uiHelpers: UiHelpers,
+    private val onClickListener: (CategoryNode) -> Unit
 ) : RecyclerView.ViewHolder(categoryBinding.root) {
     private val verticalPadding: Int = uiHelpers.getPxOfUiDimen(
             categoryBinding.siteSettingsCategoryText.context,
@@ -25,7 +26,7 @@ class SiteSettingsCategoriesViewHolder(
 
     fun onBind(categoryNode: CategoryNode) = with(categoryBinding) {
         siteSettingsCategoryRowLayout.setOnClickListener {
-            // todo : ajeshr
+            onClickListener.invoke(categoryNode)
         }
         setPaddingForCategoryName(categoryNode.level)
         siteSettingsCategoryText.text = StringEscapeUtils.unescapeHtml4(categoryNode.name)
