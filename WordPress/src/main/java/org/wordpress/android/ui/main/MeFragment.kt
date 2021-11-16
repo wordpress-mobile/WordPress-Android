@@ -64,6 +64,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -85,6 +86,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
+    @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,7 +160,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (viewModel.unifiedAboutFeatureConfig.isEnabled()) initUnifiedAboutUiState() else initRecommendUiState()
+        if (unifiedAboutFeatureConfig.isEnabled()) initUnifiedAboutUiState() else initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, AboutActivity::class.java))
