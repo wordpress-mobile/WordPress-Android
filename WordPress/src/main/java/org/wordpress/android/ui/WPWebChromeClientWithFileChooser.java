@@ -90,9 +90,9 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
     }
 
     void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (intent != null && resultCode == RESULT_OK && requestCode == WEB_CHROME_CLIENT_FILE_PICKER) {
-            Uri[] selectedUris = null;
+        Uri[] selectedUris = null;
 
+        if (intent != null && resultCode == RESULT_OK && requestCode == WEB_CHROME_CLIENT_FILE_PICKER) {
             // if ClipData is not empty that means there are multiple files.
             if (intent.getClipData() != null) {
                 // process multiple files
@@ -105,8 +105,8 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
                 // process the single file single-selected file
                 selectedUris = WebChromeClient.FileChooserParams.parseResult(resultCode, intent);
             }
-            mFilePathCallback.onReceiveValue(selectedUris);
         }
+        mFilePathCallback.onReceiveValue(selectedUris);
     }
 
     interface OnShowFileChooserListener {
