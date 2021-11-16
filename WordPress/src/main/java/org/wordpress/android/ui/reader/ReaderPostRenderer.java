@@ -281,10 +281,21 @@ public class ReaderPostRenderer {
         return content;
     }
 
+    /*
+     * Strips inline styles from post content
+     */
     private String removeInlineStyles(String content) {
-        Document doc = Jsoup.parse(content);
-        doc.getAllElements().removeAttr("style");
-        return doc.select("body").toString();
+        if (content.length() == 0) {
+            return content;
+        }
+
+        try {
+            Document doc = Jsoup.parse(content);
+            doc.getAllElements().removeAttr("style");
+            return doc.select("body").toString();
+        } catch (Exception e) {
+            return content;
+        }
     }
 
     /*
