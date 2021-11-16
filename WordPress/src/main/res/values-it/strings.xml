@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-26 09:54:08+0000
+Translation-Revision-Date: 2021-11-11 21:03:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su %s</string>
     <string name="gutenberg_native_create_link">Crea link</string>
     <string name="domain_registration_result_description">Il nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Potrebbero essere necessari fino a 30 minuti prima che il tuo dominio inizi a funzionare.</string>
     <string name="domain_registration_result_title">Complimenti per l\'acquisto.</string>
@@ -29,7 +31,6 @@ Language: it
     <string name="domains_free_plan_get_your_domain_caption">I domini acquistati su questo sito reindirizzeranno i visitatori a &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
     <string name="domains_manage_domains">Gestisci domini</string>
-    <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Scopri di più&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Aggiungi un dominio</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Scade il giorno %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Scade il giorno %s</string>
@@ -37,8 +38,8 @@ Language: it
     <string name="domains_primary_site_address_chip">Indirizzo principale del sito</string>
     <string name="domains_primary_site_more_menu_change_site_address">Modifica l\'indirizzo del sito</string>
     <string name="domains_primary_site_caption">Il tuo indirizzo WordPress.com gratuito è</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/anno&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Desideri eliminare?</string>
     <string name="comment_edit_cancel_dialog_title">Sono presenti modifiche non salvate</string>
     <string name="comment_edit_comment_error">Il campo Commento non può essere vuoto</string>
@@ -50,6 +51,7 @@ Language: it
     <string name="comment_edit_comment">Commento</string>
     <string name="comment_edit_user_name">Nome</string>
     <string name="comment_edit_menu_done">Fatto</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Le anteprime dei blocchi incorporati sono in arrivo</string>
     <string name="weekly_roundup">Resoconto settimanale</string>
     <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
@@ -62,6 +64,7 @@ Language: it
     <string name="gutenberg_native_line_height">Altezza linea</string>
     <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
     <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
     <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
     <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
@@ -176,7 +179,6 @@ Language: it
     <string name="gutenberg_native_y_axis_position">Posizione asse Y</string>
     <string name="gutenberg_native_x_axis_position">Posizione asse X</string>
     <string name="gutenberg_native_type_a_url">Digita un URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tocca per aggiungere il contenuto</string>
     <string name="gutenberg_native_slash_inserter_results">Risultati dello strumento per l\'inserimento della barra</string>
     <string name="gutenberg_native_s_has_url_set">%s ha un URL impostato</string>
     <string name="gutenberg_native_s_has_no_url_set">%s non ha un URL impostato</string>
@@ -1389,6 +1391,7 @@ Language: it
     <string name="stats_detail_months_and_years">Mesi e anni</string>
     <string name="stats_insights_load_more">Carica di più</string>
     <string name="stats_detail_average_views_per_day">Media visualizzazioni al giorno</string>
+    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto del tuo sito in un secondo momento</string>
     <string name="stats_insights_today_stats">Oggi</string>
     <string name="stats_insights_best_hour">Orario migliore</string>
     <string name="stats_insights_best_day">Giorno migliore</string>
@@ -1959,6 +1962,7 @@ Language: it
     <string name="dlg_saving_tag">Salvataggio</string>
     <string name="dlg_deleting_tag">Cancellazione</string>
     <string name="dlg_confirm_delete_tag">Eliminare definitivamente il tag \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Pagine</string>
     <string name="error_tag_exists">Esiste già un tag con questo nome</string>
     <string name="tag_description_hint">Descrizione</string>
     <string name="tag_name_hint">Tag</string>
@@ -2717,6 +2721,7 @@ Language: it
     <string name="my_site_header_look_and_feel">Aspetto</string>
     <string name="my_site_header_publish">Pubblica</string>
     <string name="my_site_btn_site_settings">Impostazioni sito</string>
+    <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="my_site_header_configuration">Configurazione</string>
     <string name="reader_label_new_posts_subtitle">Tocca per visualizzarli</string>
     <string name="deselect_all">Deseleziona tutto</string>

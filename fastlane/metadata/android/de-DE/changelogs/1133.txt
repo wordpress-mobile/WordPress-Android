@@ -1,0 +1,5 @@
+18.6:
+- Du kannst jetzt das Tag „Mark HTML“ nutzen, um den Text und die Hintergrundfarbe des Buttons „Block suchen“.
+- Onboarding-Funktionen des nativen Editors, darunter auch das Badge „Neuer Block“, stehen allen zur Verfügung.
+- Der Hilfe-Bildschirm bleibt in seinem Rahmen, wenn er von Hoch- zu Querformat gedreht wird.
+- Wir haben weitere Ladestörungen des Embed-Blocks behoben.

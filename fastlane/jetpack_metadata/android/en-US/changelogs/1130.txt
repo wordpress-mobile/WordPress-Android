@@ -1,5 +1,0 @@
-Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
-
-Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.
-
-Finally, Pullquote and Preformatted blocks now have customizable text and background color.

@@ -1,4 +1,3 @@
-- You can now use the Mark HTML tag and change the Search block button's text and background color.
-- Native editor onboarding features are available to everyone, including the new block badge.
-- The Help screen won't break out of its box when rotated between portrait and landscape.
-- We fixed more loading glitches in the Embed block.
+* [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
+* [**] Block editor: Image block: Add ability to quickly link images to Media Files and Attachment Pages [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3971]
+* [**] Block editor: Fixed a crash that could occur when copying lists from Microsoft Word. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4174]

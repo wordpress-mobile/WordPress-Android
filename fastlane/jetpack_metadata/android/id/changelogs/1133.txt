@@ -1,0 +1,5 @@
+18.6:
+- Anda sekarang dapat menggunakan tag HTML Mark untuk mengubah teks dan warna latar belakang tombol blok Pencarian.
+- Fitur orientasi editor asal tersedia untuk semua orang, termasuk lencana blok baru.
+- Layar Bantuan tidak akan keluar dari kotaknya saat layar diputar menjadi potret atau pun lanskap.
+- Kami memperbaiki lebih banyak gangguan pemuatan pada blok Sematan.

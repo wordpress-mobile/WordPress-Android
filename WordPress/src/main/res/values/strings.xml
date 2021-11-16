@@ -666,9 +666,10 @@
 
     <!-- Categories -->
     <string name="site_settings_categories_title">Categories</string>
-    <string name="site_settings_categories_empty_button">Create a category</string>
-    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
-    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
+    <string name="site_settings_categories_no_network_title" translatable="false">@string/no_network_title</string>
+    <string name="site_settings_categories_no_network_subtitle" translatable="false">@string/no_network_message</string>
+    <string name="site_settings_categories_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
+    <string name="site_settings_categories_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -3404,6 +3405,7 @@
     <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Current unit is %s</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">Custom URL</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Customize blocks</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
@@ -3490,7 +3492,6 @@
     <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">How to edit your post</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
     <string name="gutenberg_native_image_settings" tools:ignore="UnusedResources">Image settings</string>
     <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Insert crosspost</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
@@ -3565,6 +3566,7 @@
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Remove as Featured Image </string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>

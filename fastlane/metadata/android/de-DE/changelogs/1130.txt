@@ -1,6 +1,0 @@
-18.5:
-Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
-
-Mit den neuen Reader-Push-Benachrichtigungen für Unterhaltungen zu Beitragskommentaren, denen du folgst, bist du immer auf dem Laufenden über die Unterhaltungen, denen du folgst.
-
-Außerdem kannst du jetzt in den Pullquote- und Vorformatiert-Blöcken den Text und die Hintergrundfarbe anpassen.
