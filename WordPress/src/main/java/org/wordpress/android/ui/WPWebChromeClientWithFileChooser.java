@@ -105,6 +105,9 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
             }
         }
 
+        // Once onShowFileChooser has been triggered and mFilePathCallback is set, the onReceiveValue function has to
+        // be called with a value (null when no file is selected) because other form input controls will not function.
+        // They will not trigger the File Picker since it is waiting on the result of the previous file request.
         if (mFilePathCallback != null) {
             mFilePathCallback.onReceiveValue(selectedUris);
         }
