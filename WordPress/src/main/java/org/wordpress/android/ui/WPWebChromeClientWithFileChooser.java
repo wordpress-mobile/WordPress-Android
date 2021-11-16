@@ -45,42 +45,40 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         String[] acceptableMimeTypes = fileChooserParams.getAcceptTypes();
         int acceptableMimeTypesLength = acceptableMimeTypes.length;
 
-        // Uses Intent.EXTRA_MIME_TYPES to pass multiple mime types if there are multiple MIME types.
-        if (acceptableMimeTypesLength > 1) {
-            // Sets an explicit MIME data type that states that all MIME types are supported.
-            intent.setType("*/*");
-            // Filter MIME types by Intent.EXTRA_MIME_TYPES with the types that are currently acceptable.
-            String[] resolvedMimeTypes = new String[acceptableMimeTypes.length];
-            String resolvedMimeType = null;
+        // Sets an explicit MIME data type that states that all MIME types are supported.
+        intent.setType("*/*");
+        // Creates values for Intent.EXTRA_MIME_TYPES with the MIME types that are currently acceptable.
+        String[] resolvedMimeTypes = new String[acceptableMimeTypes.length];
+        String resolvedMimeType = null;
 
-            for (int index = 0; index < acceptableMimeTypesLength; index++) {
-                String acceptableMimeType = acceptableMimeTypes[index];
+        for (int index = 0; index < acceptableMimeTypesLength; index++) {
+            String acceptableMimeType = acceptableMimeTypes[index];
 
-                /**
-                 * The fileChooserParams.getAcceptTypes() API states that the it returns an array of acceptable MIME
-                 * types. The returned MIME type could be partial such as audio/* . Currently, there are plugins that
-                 * return extensions when the form input type is utilized instead of
-                 *  MIME types. The logic below is to accommodate the use cases by utilizing the extension to resolve
-                 *  the appropriate Mime type with MediaUtils.getMimeTypeForExtension().
-                 */
-                if (acceptableMimeType.contains(".")) {
-                    String extension = acceptableMimeType.replace(".", "");
-                    resolvedMimeType =
-                            MediaUtils.getMimeTypeForExtension(extension);
-                } else if (acceptableMimeType.contains("/")) {
-                    resolvedMimeType = acceptableMimeType;
-                }
-
-                if (resolvedMimeType != null) {
-                    resolvedMimeTypes[index] = resolvedMimeType;
-                } else {
-                    AppLog.w(T.EDITOR,
-                            "MediaUtils.getMimeTypeForExtension failed to resolve the ${acceptableMimeType} MIME type");
-                }
+            /**
+             * The fileChooserParams.getAcceptTypes() API states that the it returns an array of acceptable MIME
+             * types. The returned MIME type could be partial such as audio/* . Currently, there are plugins that
+             * return extensions when the form input type is utilized instead of
+             *  MIME types. The logic below is to accommodate the use cases by utilizing the extension to resolve
+             *  the appropriate Mime type with MediaUtils.getMimeTypeForExtension().
+             */
+            if (acceptableMimeType.contains(".")) {
+                String extension = acceptableMimeType.replace(".", "");
+                resolvedMimeType =
+                        MediaUtils.getMimeTypeForExtension(extension);
+            } else if (acceptableMimeType.contains("/")) {
+                resolvedMimeType = acceptableMimeType;
             }
 
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, resolvedMimeTypes);
+            if (resolvedMimeType != null) {
+                resolvedMimeTypes[index] = resolvedMimeType;
+            } else {
+                AppLog.w(T.EDITOR,
+                        "MediaUtils.getMimeTypeForExtension failed to resolve the ${acceptableMimeType} MIME type");
+            }
         }
+
+        // Uses Intent.EXTRA_MIME_TYPES to the MIME types that should be acceptable.
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, resolvedMimeTypes);
 
         if (mOnShowFileChooserListener != null) {
             mOnShowFileChooserListener.startActivityForFileChooserResult(intent, WEB_CHROME_CLIENT_FILE_PICKER);
