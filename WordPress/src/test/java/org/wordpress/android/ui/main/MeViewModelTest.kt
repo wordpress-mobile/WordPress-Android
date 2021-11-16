@@ -23,7 +23,6 @@ import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
@@ -32,7 +31,6 @@ class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
 
     private lateinit var viewModel: MeViewModel
 
