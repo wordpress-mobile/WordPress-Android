@@ -18,10 +18,10 @@ class PostCardBuilder @Inject constructor() {
         val posts = params.mockedPostsData?.posts
         posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
                 ?.let { hasPublishedPosts ->
-                    if (!hasPublishedPosts) {
-                        add(createFirstPostCard(params.onFooterLinkClick))
-                    } else {
+                    if (hasPublishedPosts) {
                         add(createNextPostCard(params.onFooterLinkClick))
+                    } else {
+                        add(createFirstPostCard(params.onFooterLinkClick))
                     }
                 }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params.onFooterLinkClick)) }
