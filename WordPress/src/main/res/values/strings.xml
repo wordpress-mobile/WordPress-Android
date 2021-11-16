@@ -1557,8 +1557,6 @@
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
     <string name="reader_follow_comments_subscribe_success_enable_push">Following this conversation\nEnable in-app notifications?</string>
     <string name="reader_follow_comments_unsubscribe_from_all_success">Unsubscribed from this conversation</string>
     <string name="reader_follow_comments_subscribe_to_push_success">In-app notifications enabled</string>
