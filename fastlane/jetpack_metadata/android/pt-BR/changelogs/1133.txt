@@ -1,0 +1,5 @@
+18.6:
+- Agora você pode usar a tag HTML mark e alterar a cor de fundo e texto do botão Pesquisar bloco.
+- As funcionalidades de integração nativas do editor, como o novo selo de bloco, estão disponíveis para todos.
+- A tela Ajuda não ficará distorcida quando você alternar entre os modos retrato e paisagem.
+- Corrigimos mais erros de carregamento no bloco de mídia incorporada.

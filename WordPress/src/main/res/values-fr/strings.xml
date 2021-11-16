@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-23 20:58:58+0000
+Translation-Revision-Date: 2021-11-08 09:04:23+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit la 1ère année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Vos domaines renverront vers votre site à %s</string>
     <string name="gutenberg_native_create_link">Créer un lien</string>
     <string name="domain_registration_result_title">Félicitations pour votre achat !</string>
     <string name="domain_registration_result_description">Le nouveau domaine &lt;b&gt;%s&lt;/b&gt; a bien été configuré. Il peut se passer jusqu’à 30 minutes avant qu’il ne fonctionne complètement.</string>
@@ -29,7 +31,6 @@ Language: fr
     <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Demander votre domaine gratuit</string>
     <string name="domains_manage_domains">Gérer les domaines</string>
-    <string name="domains_redirected_domains_blurb">Vos domaines redirigeront les visiteurs vers votre site à l’adresse &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;En savoir plus&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Ajouter un domaine</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expire le %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expire le %s</string>
@@ -37,8 +38,8 @@ Language: fr
     <string name="domains_primary_site_address_chip">Adresse principale du site</string>
     <string name="domains_primary_site_more_menu_change_site_address">Modifier l’adresse du site</string>
     <string name="domains_primary_site_caption">Votre adresse WordPress.com gratuite est</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit la première année &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s la première année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Voulez-vous les annuler ?</string>
     <string name="comment_edit_cancel_dialog_title">Certaines modifications ne sont pas enregistrées.</string>
     <string name="comment_edit_comment_error">Le champ Commentaire ne peut pas être vide.</string>
@@ -178,7 +179,6 @@ Language: fr
     <string name="gutenberg_native_y_axis_position">Position de l’axe Y</string>
     <string name="gutenberg_native_x_axis_position">Position de l’axe X</string>
     <string name="gutenberg_native_type_a_url">Saisir une URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Appuyer pour ajouter du contenu</string>
     <string name="gutenberg_native_slash_inserter_results">Résultats de l’outil d’insertion de barre oblique</string>
     <string name="gutenberg_native_s_has_url_set">%s a une URL définie</string>
     <string name="gutenberg_native_s_has_no_url_set">%s n’a pas d’URL définie</string>

@@ -267,6 +267,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 scanAndBackupSource,
                 displayUtilsWrapper,
                 quickStartRepository,
+                quickStartCardSource,
                 quickStartCardBuilder,
                 currentAvatarSource,
                 dynamicCardsSource,
@@ -277,7 +278,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 postCardsSource,
-                quickStartCardSource,
                 selectedSiteSource,
                 siteIconProgressSource,
                 mySiteDashboardPhase2FeatureConfig
@@ -433,7 +433,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when refresh is triggered, then refresh quick start`() {
         viewModel.refresh()
 
-        verify(quickStartRepository).refresh()
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -839,7 +839,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
 
-        verify(quickStartRepository).refresh()
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -857,7 +857,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onQuickStartFullScreenDialogDismiss()
 
-        verify(quickStartRepository).refresh()
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -871,13 +871,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* START/IGNORE QUICK START + QUICK START DIALOG */
+    // todo: annmarie
     @Test
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId)
 
-        verify(quickStartRepository).startQuickStart(siteLocalId)
+        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId)
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -926,13 +928,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
+    // todo: annmarie
     @Test
     fun `when start QS is triggered, then QS starts`() {
         whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
 
         viewModel.startQuickStart()
 
-        verify(quickStartRepository).startQuickStart(site.id)
+        verify(quickStartUtilsWrapper).startQuickStart(site.id)
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -959,7 +963,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
         verify(dynamicCardsSource).hideItem(id)
-        verify(quickStartRepository).refresh()
+        verify(quickStartCardSource).refresh()
     }
 
     @Test
@@ -969,7 +973,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(dynamicCardsSource).removeItem(id)
-        verify(quickStartRepository).refresh()
+        verify(quickStartCardSource).refresh()
     }
 
     /* ITEM CLICK */
@@ -1160,35 +1164,40 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = false)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartCardSource, never()).refresh()
     }
 
     @Test
     fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = false)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartCardSource, never()).refresh()
     }
 
     @Test
-    fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+    fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartCardSource, never()).refresh()
     }
 
     @Test
-    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete with refresh`() {
+    fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete no refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartCardSource, never()).refresh()
     }
 
     @Test
-    fun `when site icon dialog is dismissed, then upload site icon task is marked complete with refresh`() {
+    fun `when site icon dialog is dismissed, then upload site icon task is marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON, refreshImmediately = true)
+        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartCardSource, never()).refresh()
     }
 
     @Test

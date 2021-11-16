@@ -1,6 +1,0 @@
-18.5:
-De nya inbäddningsblocken för Facebook, Instagram, Loom och Smartframe gör att det är enklare än någonsin att bädda in externt innehåll.
-
-Vi kan nu även detektera inbäddningsbara URL:er som klistras in i ett tomt stycke och vi har åtgärdat ett fel som gjorde att det inte gick att redigera inbäddade URL:er.
-
-Slutligen har markerat citat-block och förformaterade block nu anpassningsbar text och bakgrundsfärg.

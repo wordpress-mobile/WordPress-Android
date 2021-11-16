@@ -1,6 +1,0 @@
-18.5:
-La incrustación de contenido externo resulta más fácil con los nuevos bloques de incrustar para Facebook, Instagram, Loom y Smartframe.
-
-Además, ahora detectamos las URL que se puedan incrustar al pegarlas en un párrafo vacío. También hemos solucionado un error por el que no se podían editar las URL incrustadas.
-
-Para terminar, ahora se puede personalizar el texto y el color de fondo de los bloques Preformateados y Párrafo de cita.

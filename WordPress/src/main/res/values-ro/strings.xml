@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-24 04:48:13+0000
+Translation-Revision-Date: 2021-11-12 09:57:30+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate către site-ul tău \n %s</string>
     <string name="gutenberg_native_create_link">Creează o legătură</string>
     <string name="domain_registration_result_description">Acum îți inițializăm noul tău domeniu &lt;b&gt;%s&lt;/b&gt;. Poate dura până la 30 de minute până când domeniul tău începe să funcționeze.</string>
     <string name="domain_registration_result_title">Felicitări, ai cumpărat!</string>
@@ -29,7 +31,6 @@ Language: ro
     <string name="domains_free_plan_get_your_domain_caption">Domeniile cumpărate pentru acest site vor redirecționa vizitatorii la &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">Revendică-ți domeniul gratuit</string>
     <string name="domains_manage_domains">Administrează domeniile</string>
-    <string name="domains_redirected_domains_blurb">Domeniile tale vor redirecționa la site-ul tău, la &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Află mai multe&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Adaugă un domeniu</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expiră pe %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expiră pe %s</string>
@@ -38,7 +39,7 @@ Language: ro
     <string name="domains_primary_site_address_chip">Adresă principală site</string>
     <string name="domains_primary_site_caption">Adresa ta gratuită pentru WordPress.com este</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vrei să le elimini?</string>
     <string name="comment_edit_cancel_dialog_title">Ai modificări nesalvate</string>
     <string name="comment_edit_comment_error">Comentariul trebuie să conțină un text</string>
@@ -177,7 +178,6 @@ Language: ro
     <string name="storage_utils_dialog_title">Spațiu de stocare insuficient pe dispozitiv</string>
     <string name="gutenberg_native_y_axis_position">Poziția axei Y</string>
     <string name="gutenberg_native_x_axis_position">Poziția axei X</string>
-    <string name="gutenberg_native_tap_to_add_content">Atinge pentru a adăuga conținut</string>
     <string name="gutenberg_native_type_a_url">Introdu un URL</string>
     <string name="gutenberg_native_s_has_url_set">%s are setat un URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s nu are setat un URL</string>
@@ -351,7 +351,6 @@ Language: ro
     <string name="gutenberg_native_lock_icon">Icon blocare</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Inserarea fișierului audio a eșuat. Te rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Atinge de două ori pentru a asculta fișierul audio</string>
-    <string name="gutenberg_native_choose_audio">Alege un fișier audio</string>
     <string name="gutenberg_native_audio_player">Player audio</string>
     <string name="gutenberg_native_audio_caption_s">Text asociat audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Text asociat audio. Gol</string>
@@ -361,6 +360,7 @@ Language: ro
     <string name="photo_picker_choose_audio">Alege un fișier audio de pe dispozitiv</string>
     <string name="people_optional_custom_message_helper_text">Opțional: introdu un mesaj personalizat care să fie trimis împreună cu invitația.</string>
     <string name="gutenberg_native_audio_file">fișier audio</string>
+    <string name="gutenberg_native_choose_audio">Alege fișierul audio</string>
     <string name="people_learn_more_about_roles">Află mai multe despre roluri</string>
     <string name="threat_status_fixed">Înlăturate</string>
     <string name="threat_found_header">Găsite</string>
@@ -378,9 +378,9 @@ Language: ro
     <string name="activity_log_currently_backing_up_message_no_dates">Creez o copie de siguranță a site-ului</string>
     <string name="activity_log_currently_backing_up_message">Creez o copie de siguranță a site-ului din %1$s %2$s</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">A fost creată cu succes o copie de siguranță a site-ului</string>
-    <string name="pick_audio">Selectează audio</string>
     <string name="activity_log_backup_finished_snackbar_message">A fost creată cu succes o copie de siguranță a site-ului\nCopie de siguranță creată din %1$s %2$s</string>
     <string name="activity_log_backup_started_snackbar_message">Site-ul tău are o copie de siguranță\nCopie de siguranță creată din %1$s %2$s</string>
+    <string name="pick_audio">Selectează fișierul audio</string>
     <string name="restore_another_process_running">Există o altă restaurare care rulează.</string>
     <string name="restore_complete_failed_icon_content_description">Icon eroare</string>
     <string name="restore_complete_failed_action_button_content_description">Buton Gata</string>
@@ -785,7 +785,6 @@ Language: ro
     <string name="pick_file">Adaugă fișier</string>
     <string name="gutenberg_native_replace_video">Înlocuiește videoul</string>
     <string name="gutenberg_native_replace_image_or_video">Înlocuiește imaginea sau videoul</string>
-    <string name="gutenberg_native_choose_video">Alege un video</string>
     <string name="gutenberg_native_choose_image_or_video">Alege o imagine sau un video</string>
     <string name="gutenberg_native_choose_image">Alege o imagine</string>
     <string name="gutenberg_native_block_removed">Bloc înlăturat</string>
@@ -793,6 +792,7 @@ Language: ro
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
     <string name="enter_your_site_address">Introdu adresa site-ului tău de acum</string>
     <string name="gutenberg_native_convert_to_link">Convertește în legătură</string>
+    <string name="gutenberg_native_choose_video">Alege videoul</string>
     <string name="continue_terms_of_service_text">Dacă continui, ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
     <string name="signup_confirmation_message">Vom folosi această adresă de email pentru a-ți crea noul cont WordPress.com.</string>
     <string name="signup_magic_link_message">Ți-am trimis prin email o legătură de înregistrare pentru a-ți crea noul cont WordPress.com. Verifică emailurile primite pe acest dispozitiv și atinge legătura din emailul primit de la WordPress.com.</string>
@@ -909,9 +909,9 @@ Language: ro
     <string name="photo_picker_use_media">Folosește acest element media</string>
     <string name="photo_picker_use_video">Folosește acest video</string>
     <string name="photo_picker_photo_or_video_title">Alege un element media</string>
-    <string name="photo_picker_video_title">Alege un video</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în WordPress</string>
     <string name="site_picker_ask_site_select">Nu am putut selecta site-ul. Te rog reîncearcă.</string>
+    <string name="photo_picker_video_title">Alege videoul</string>
     <string name="sitepicker_continue_flow">Continuă</string>
     <string name="reader_reblog_error">Republicarea a eșuat</string>
     <string name="whats_new_in_version_title">Ce este nou</string>
@@ -1736,7 +1736,7 @@ Language: ro
     <string name="privacy_policy_learn_more_caption">Aceste informații ne ajută să ne îmbunătățim produsele, să facem un marketing mai relevant pentru tine, să-ți personalizăm experiența WordPress.com și altele, așa cum am detaliat în politica noastră de confidențialitate.</string>
     <string name="reader_btn_notifications_on">Activează notificările pe site</string>
     <string name="reader_btn_notifications_off">Dezactivează notificările pe site</string>
-    <string name="post_submitted">Articol trimis</string>
+    <string name="post_submitted">Am trimis articolul</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funcționalitatea modulului necesită ca abonamentul domeniul principal să fie asociat acestui utilizator.</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca site-ul să fie în stare bună.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Funcționalitatea modulului necesită privilegii de administrator.</string>
@@ -1821,20 +1821,20 @@ Language: ro
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
     <string name="site_settings_quota_space_title">Spațiu folosit</string>
-    <string name="comment_spam_talkback">Comentariu marcat ca spam</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
     <string name="comment_delete_talkback">Comentariu șters</string>
     <string name="comment_untrash_talkback">Comentariu restaurat</string>
     <string name="comment_trash_talkback">Comentariu trimis la gunoi</string>
     <string name="comment_liked_talkback">Comentariu apreciat</string>
-    <string name="comment_unapproved_talkback">Comentariu neaprobat</string>
-    <string name="comment_approved_talkback">Comentariu aprobat</string>
     <string name="comment_unliked_talkback">Comentariu neapreciat</string>
     <string name="notif_detail_screen_title">Detalii notificare %s</string>
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
     <string name="share_intent_screen_title">Alege site-ul</string>
     <string name="site_settings_quota_header">Media</string>
+    <string name="comment_spam_talkback">Comentariul a fost marcat ca spam</string>
+    <string name="comment_approved_talkback">Comentariul a fost aprobat</string>
+    <string name="comment_unapproved_talkback">Comentariul nu a fost aprobat</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -1995,7 +1995,7 @@ Language: ro
     <string name="plugin_removed_successfully">%s înlăturat cu succes</string>
     <string name="plugin_updated_failed_detailed">Eroare la actualizarea %1$s: %2$s</string>
     <string name="plugin_updated_failed">Eroare la actualizarea %s.</string>
-    <string name="plugin_updated_successfully">%s actualizat cu succes</string>
+    <string name="plugin_updated_successfully">Am actualizat cu succes %s</string>
     <string name="plugin_available_version">Este disponibilă versiunea %s</string>
     <string name="plugin_detail_label_state_autoupdates">Actualizări automate</string>
     <string name="plugin_detail_label_state_active">Activ</string>
@@ -2647,10 +2647,10 @@ Language: ro
     <string name="details">Detalii</string>
     <string name="support">Suport</string>
     <string name="active">Activă</string>
-    <string name="post_published">Articol publicat</string>
-    <string name="page_published">Pagină publicată</string>
     <string name="post_updated">Articolul a fost actualizat</string>
     <string name="page_updated">Pagina a fost actualizată</string>
+    <string name="post_published">Articolul a fost publicat</string>
+    <string name="page_published">Pagina a fost publicată</string>
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu se potrivește cu „%s”</string>
@@ -2893,13 +2893,13 @@ Language: ro
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
     <string name="reader_label_reply">Răspunde</string>
-    <string name="comment_spammed">Comentariu marcat ca spam</string>
     <string name="reader_likes_you_and_multi">Tu și alții %,d apreciați asta</string>
     <string name="reader_likes_multi">%,d persoane apreciază asta</string>
+    <string name="comment_spammed">Comentariul a fost marcat ca spam</string>
     <string name="reader_likes_you_and_one">Tu și încă unul apreciați asta</string>
     <string name="pick_photo">Selectare fotografie</string>
-    <string name="pick_video">Selectare video</string>
     <string name="reader_toast_err_get_post">Nu pot aduce acest articol</string>
+    <string name="pick_video">Selectează videoul</string>
     <string name="reader_untitled_post">(Fără titlu)</string>
     <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_unfollow">Urmăresc</string>
