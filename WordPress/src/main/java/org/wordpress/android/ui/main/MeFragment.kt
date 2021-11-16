@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -160,7 +161,16 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (unifiedAboutFeatureConfig.isEnabled()) initUnifiedAboutUiState() else initRecommendUiState()
+        if (unifiedAboutFeatureConfig.isEnabled()) {
+            recommendTheAppContainer.isVisible = false
+            aboutTheAppContainer.isVisible = true
+
+            rowAboutTheApp.setOnClickListener {
+                viewModel.showUnifiedAbout()
+            }
+        } else {
+            initRecommendUiState()
+        }
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, AboutActivity::class.java))
@@ -206,16 +216,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         } else {
             recommendTheAppContainer.visibility = View.GONE
-        }
-    }
-
-    private fun MeFragmentBinding.initUnifiedAboutUiState() {
-        setRecommendLoadingState(false)
-        meShareIcon.setImageResource(R.drawable.ic_wordpress_white_24dp)
-        meShareTextView.setText(R.string.me_btn_about)
-
-        rowRecommendTheApp.setOnClickListener {
-            viewModel.showUnifiedAbout()
         }
     }
 
