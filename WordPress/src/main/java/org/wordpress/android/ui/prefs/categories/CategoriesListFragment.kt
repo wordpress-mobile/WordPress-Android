@@ -91,7 +91,6 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         }
     }
 
-    @Suppress("unused")
     private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<CategoryNode>) {
         adapter.submitList(list)
         categoriesRecyclerView.updateVisibility(true)
