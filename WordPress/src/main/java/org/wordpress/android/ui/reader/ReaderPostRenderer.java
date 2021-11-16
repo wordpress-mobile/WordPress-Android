@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -292,7 +293,7 @@ public class ReaderPostRenderer {
         try {
             Document doc = Jsoup.parse(content);
             doc.getAllElements().removeAttr("style");
-            return doc.select("body").toString();
+            return doc.select("body").first().children().toString();
         } catch (Exception e) {
             return content;
         }
