@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
@@ -104,7 +103,6 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
         categoriesRecyclerView.setHasFixedSize(true)
-        categoriesRecyclerView.layoutManager = LinearLayoutManager(activity)
         adapter = SiteSettingsCategoriesAdapter(uiHelpers, ::onCategoryRowClicked)
         categoriesRecyclerView.adapter = adapter
 
