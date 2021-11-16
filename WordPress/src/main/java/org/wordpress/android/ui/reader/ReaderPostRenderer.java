@@ -291,9 +291,9 @@ public class ReaderPostRenderer {
         }
 
         try {
-            Document doc = Jsoup.parse(content);
-            doc.getAllElements().removeAttr("style");
-            return doc.select("body").first().children().toString();
+            return Jsoup.parse(content)
+                   .getAllElements().removeAttr("style")
+                   .select("body").first().children().toString();
         } catch (Exception e) {
             return content;
         }
