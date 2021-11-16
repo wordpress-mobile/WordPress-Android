@@ -19,10 +19,6 @@ class SiteSettingsCategoriesAdapter(private val uiHelpers: UiHelpers) :
         return SiteSettingsCategoriesViewHolder(binding, uiHelpers)
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
     override fun onBindViewHolder(holder: SiteSettingsCategoriesViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }

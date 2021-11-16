@@ -13,8 +13,8 @@ object SiteSettingsCategoriesDiffCallback : DiffUtil.ItemCallback<CategoryNode>(
     }
 
     override fun areContentsTheSame(oldItem: CategoryNode, newItem: CategoryNode): Boolean {
-        return oldItem.level != newItem.level &&
-                oldItem.name != newItem.name
+        return oldItem.level == newItem.level &&
+                oldItem.name == newItem.name
     }
 
     override fun getChangePayload(oldItem: CategoryNode, newItem: CategoryNode): Any? {
