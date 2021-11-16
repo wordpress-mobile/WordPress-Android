@@ -149,7 +149,7 @@ class ReaderCommentsFollowUseCaseTest {
                         true,
                         false,
                         false,
-                        UiStringRes(R.string.reader_follow_comments_subscribe_success),
+                        UiStringRes(R.string.reader_follow_comments_subscribe_success_enable_push),
                         false
                 )
         ))

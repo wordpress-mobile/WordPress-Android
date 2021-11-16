@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader
 
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -106,7 +108,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         doAnswer {
             stateChanged = FollowStateChanged(blogId, postId, false, false)
             followStatusUpdate.postValue(stateChanged)
-        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, false, null)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(eq(blogId), eq(postId), eq(false), anyOrNull())
 
         setupObserversAndStart()
 
