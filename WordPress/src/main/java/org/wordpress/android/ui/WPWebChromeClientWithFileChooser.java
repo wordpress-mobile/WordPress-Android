@@ -100,11 +100,14 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
                     selectedUris[index] = intent.getClipData().getItemAt(index).getUri();
                 }
             } else if (intent.getData() != null) {
-                // process the single file single-selected file
+                // process the single file
                 selectedUris = WebChromeClient.FileChooserParams.parseResult(resultCode, intent);
             }
         }
-        mFilePathCallback.onReceiveValue(selectedUris);
+
+        if (mFilePathCallback != null) {
+            mFilePathCallback.onReceiveValue(selectedUris);
+        }
     }
 
     interface OnShowFileChooserListener {
