@@ -134,7 +134,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         doAnswer {
             stateChanged = FollowStateChanged(blogId, postId, true, false)
             followStatusUpdate.postValue(stateChanged)
-        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, true, null)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(eq(blogId), eq(postId), eq(true), anyOrNull())
 
         setupObserversAndStart()
 
