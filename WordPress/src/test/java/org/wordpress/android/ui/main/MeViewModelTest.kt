@@ -45,8 +45,7 @@ class MeViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 selectedSiteRepository,
                 recommendApiCallsProvider,
-                analyticsUtilsWrapper,
-                unifiedAboutFeatureConfig
+                analyticsUtilsWrapper
         )
 
         setupObservers()
