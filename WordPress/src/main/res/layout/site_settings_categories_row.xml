@@ -3,18 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/site_settings_category_row_layout"
-    style="@style/MainBottomSheetRowLayout"
+    style="@style/SiteCategoryRowLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_settings_category_text"
-        style="@style/MainBottomSheetRowTextView"
+        style="@style/SiteCategoryRowTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="start"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:textAlignment="viewStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
