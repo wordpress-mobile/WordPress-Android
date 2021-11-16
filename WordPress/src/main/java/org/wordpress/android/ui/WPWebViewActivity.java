@@ -962,7 +962,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (mWPWebChromeClientWithFileChooser != null) {
             mWPWebChromeClientWithFileChooser.onActivityResult(requestCode, resultCode, data);
