@@ -289,9 +289,11 @@ public class ReaderPostRenderer {
         }
 
         try {
-            return Jsoup.parse(content)
-                   .getAllElements().removeAttr("style")
-                   .select("body").first().children().toString();
+            return Jsoup.parseBodyFragment(content)
+                   .getAllElements()
+                   .removeAttr("style")
+                   .select("body")
+                   .html();
         } catch (Exception e) {
             return content;
         }
