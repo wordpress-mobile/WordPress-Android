@@ -13,11 +13,9 @@ class ThreadedCommentsActivity : LocaleAwareActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //(application as WordPress).component().inject(this)
 
         binding = ThreadedCommentsActivityBinding.inflate(layoutInflater).apply {
             setContentView(root)
-            setupActionBar()
         }
 
         val fm = supportFragmentManager
@@ -35,14 +33,6 @@ class ThreadedCommentsActivity : LocaleAwareActivity() {
             fm.beginTransaction()
                     .add(R.id.fragment_container, threadedCommentsFragment, TAG_THREADED_COMMENTS_FRAGMENT)
                     .commit()
-        }
-    }
-
-    private fun ThreadedCommentsActivityBinding.setupActionBar() {
-        setSupportActionBar(toolbarMain)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
         }
     }
 
