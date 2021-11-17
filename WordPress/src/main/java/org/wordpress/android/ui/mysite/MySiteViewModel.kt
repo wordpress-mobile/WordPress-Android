@@ -162,10 +162,10 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
         val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteLocalId != null) {
-            mySiteSources.map { source -> source.buildSource(viewModelScope, siteLocalId).distinctUntilChanged() }
+            mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.buildSource(viewModelScope).distinctUntilChanged() }
+                    .map { source -> source.build(viewModelScope).distinctUntilChanged() }
         }
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->

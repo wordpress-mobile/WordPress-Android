@@ -25,7 +25,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     @Test
     fun `current avatar is empty on start`() = test {
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.buildSource(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
 
         assertThat(result!!.url).isEqualTo("")
     }
@@ -37,7 +37,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.buildSource(testScope()).observeForever { it?.let { result = it } }
+        currentAvatarSource.build(testScope()).observeForever { it?.let { result = it } }
 
         currentAvatarSource.refresh()
 

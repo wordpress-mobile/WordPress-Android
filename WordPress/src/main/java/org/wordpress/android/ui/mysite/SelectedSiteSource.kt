@@ -20,7 +20,7 @@ class SelectedSiteSource @Inject constructor(
 ) : MySiteSource<SelectedSite> {
     val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(
+    override fun build(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) = selectedSiteRepository.selectedSiteChange

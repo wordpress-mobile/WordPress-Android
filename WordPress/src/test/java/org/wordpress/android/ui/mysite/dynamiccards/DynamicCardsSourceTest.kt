@@ -42,7 +42,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
                 )
         )
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)

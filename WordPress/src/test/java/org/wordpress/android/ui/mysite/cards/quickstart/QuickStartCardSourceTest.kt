@@ -111,7 +111,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         result = mutableListOf()
         isRefreshing = mutableListOf()
-        quickStartCardSource.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        quickStartCardSource.build(testScope(), siteLocalId).observeForever { result.add(it) }
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
     }
 
@@ -197,7 +197,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         assertModel()
@@ -292,7 +292,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
@@ -305,7 +305,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)

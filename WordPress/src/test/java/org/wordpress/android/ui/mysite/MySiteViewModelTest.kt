@@ -237,17 +237,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(domainRegistrationSource.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
-        whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
-        whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
-        whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
-        whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
+        whenever(domainRegistrationSource.build(any(), any())).thenReturn(isDomainCreditAvailable)
+        whenever(scanAndBackupSource.build(any(), any())).thenReturn(jetpackCapabilities)
+        whenever(currentAvatarSource.build(any())).thenReturn(currentAvatar)
+        whenever(currentAvatarSource.build(any(), any())).thenReturn(currentAvatar)
+        whenever(dynamicCardsSource.build(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
-        whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
-        whenever(siteIconProgressSource.buildSource(any(), any())).thenReturn(showSiteIconProgressBar)
-        whenever(selectedSiteSource.buildSource(any(), any())).thenReturn(selectedSite)
+        whenever(postCardsSource.build(any(), any())).thenReturn(postsUpdate)
+        whenever(quickStartCardSource.build(any(), any())).thenReturn(quickStartUpdate)
+        whenever(siteIconProgressSource.build(any(), any())).thenReturn(showSiteIconProgressBar)
+        whenever(selectedSiteSource.build(any(), any())).thenReturn(selectedSite)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,

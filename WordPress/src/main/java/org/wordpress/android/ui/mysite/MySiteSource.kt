@@ -5,12 +5,12 @@ import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 
 interface MySiteSource<T : PartialState> {
-    fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<T>
+    fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<T>
     interface SiteIndependentSource<T : PartialState> : MySiteSource<T> {
-        fun buildSource(coroutineScope: CoroutineScope): LiveData<T>
-        override fun buildSource(
+        fun build(coroutineScope: CoroutineScope): LiveData<T>
+        override fun build(
             coroutineScope: CoroutineScope,
             siteLocalId: Int
-        ): LiveData<T> = buildSource(coroutineScope)
+        ): LiveData<T> = build(coroutineScope)
     }
 }

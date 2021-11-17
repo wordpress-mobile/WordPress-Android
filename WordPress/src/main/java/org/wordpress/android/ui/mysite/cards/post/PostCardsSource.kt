@@ -19,7 +19,7 @@ class PostCardsSource @Inject constructor(
 ) : MySiteSource<PostsUpdate> {
     val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PostsUpdate> {
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PostsUpdate> {
         val result = MediatorLiveData<PostsUpdate>()
         result.refreshData(coroutineScope)
         result.addSource(refresh) { result.refreshData(coroutineScope, refresh.value) }

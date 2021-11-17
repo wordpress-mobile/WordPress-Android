@@ -17,7 +17,7 @@ class CurrentAvatarSource @Inject constructor(
     private val avatarUrl = MutableLiveData<CurrentAvatarUrl>()
     val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
+    override fun build(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
         val result = MediatorLiveData<CurrentAvatarUrl>()
         result.refreshData()
         result.addSource(refresh) { result.refreshData(refresh.value) }

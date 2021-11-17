@@ -37,7 +37,7 @@ class DomainRegistrationSource @Inject constructor(
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
     val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
         data.refreshData(coroutineScope, siteLocalId)
         data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }

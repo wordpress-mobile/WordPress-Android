@@ -31,7 +31,7 @@ class PostCardsSourceTest : BaseUnitTest() {
     @Test
     fun `when source is requested upon start, then mocked data is loaded`() = test {
         var result: PostsUpdate? = null
-        postCardSource.buildSource(testScope(), 1).observeForever {
+        postCardSource.build(testScope(), 1).observeForever {
             it?.let {
                 result = it
             }
@@ -42,7 +42,7 @@ class PostCardsSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then data is refreshed`() = test {
         val result: MutableList<PostsUpdate?> = mutableListOf()
-        postCardSource.buildSource(testScope(), 1).observeForever { it?.let { result.add(it) } }
+        postCardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
         postCardSource.refresh.observeForever { isRefreshing.add(it) }
 
         postCardSource.refresh()

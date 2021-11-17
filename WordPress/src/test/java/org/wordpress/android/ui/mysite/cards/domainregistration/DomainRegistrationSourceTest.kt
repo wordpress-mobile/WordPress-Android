@@ -109,7 +109,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
-        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(
