@@ -97,7 +97,12 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 import kotlin.Unit;
 
-// TODOD: declare this and relevant other classes as deprecated
+/**
+ * @deprecated
+ * Threaded Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this or related classes, please ping klymyam or develric
+ */
+@Deprecated
 public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
@@ -942,7 +947,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    // TODOD
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
