@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.post
 
+import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -32,7 +33,7 @@ class PostItemViewHolder(
                         UIDimenRes(R.dimen.my_site_post_item_image_corner_radius)
                 )
         )
-        featuredImage.setVisible(postItem.featuredImageUrl != null)
+        featuredImage.visibility = if (postItem.featuredImageUrl == null) View.INVISIBLE else View.VISIBLE
         iconTime.setVisible(postItem.isTimeIconVisible)
     }
 }
