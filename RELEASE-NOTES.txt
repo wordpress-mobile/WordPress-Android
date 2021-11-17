@@ -1,5 +1,10 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+18.8
+-----
+* [*] Users can now upload files to forms when using the Preview within the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/15572]
+
+
 18.7
 -----
 * [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
