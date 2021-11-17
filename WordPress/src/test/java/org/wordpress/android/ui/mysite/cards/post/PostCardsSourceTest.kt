@@ -52,7 +52,6 @@ class PostCardsSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(2)
     }
 
-
     @Test
     fun `when source is invoked, then refresh is false`() = test {
         postCardSource.refresh.observeForever { isRefreshing.add(it) }

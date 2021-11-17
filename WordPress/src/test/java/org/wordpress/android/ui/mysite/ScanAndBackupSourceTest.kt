@@ -137,11 +137,45 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
         scanAndBackupSource.refresh()
 
         verify(jetpackCapabilitiesUseCase, times(2)).getJetpackPurchasedProducts(any())
+    }
+
+    @Test
+    fun `when source is invoked, then refresh is false`() = test {
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.build(testScope(), siteLocalId)
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
+        )
+
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
     }
 }
