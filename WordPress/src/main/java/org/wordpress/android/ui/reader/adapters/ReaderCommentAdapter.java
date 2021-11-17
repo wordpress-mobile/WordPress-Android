@@ -67,8 +67,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final boolean mIsPrivatePost;
     private boolean mIsHeaderClickEnabled;
 
-    private final int mColorAuthor;
-    private final int mColorNotAuthor;
     private final int mColorHighlight;
 
     private static final int VIEW_TYPE_HEADER = 1;
@@ -101,7 +99,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private final ImageView mImgAvatar;
         private final View mSpacerIndent;
+        private final View mTopCommentDivider;
         private final View mAuthorContainer;
+        private final View mAuthorBadge;
         private final ProgressBar mProgress;
 
         private final ViewGroup mReplyView;
@@ -120,7 +120,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mSpacerIndent = view.findViewById(R.id.spacer_comment_indent);
             mProgress = view.findViewById(R.id.progress_comment);
 
+            mTopCommentDivider = view.findViewById(R.id.divider);
             mAuthorContainer = view.findViewById(R.id.layout_author);
+            mAuthorBadge = view.findViewById(R.id.author_badge);
 
             mReplyView = view.findViewById(R.id.reply_container);
             mCountLikes = view.findViewById(R.id.count_likes);
@@ -154,8 +156,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary);
-        mColorNotAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
         mColorHighlight = ColorUtils
                 .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
                         context.getResources().getInteger(R.integer.selected_list_item_opacity));
@@ -272,10 +272,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         // author name uses different color for comments from the post's author
-        if (comment.authorId == mPost.authorId) {
-            commentHolder.mTxtAuthor.setTextColor(mColorAuthor);
+        if (comment.getAuthorName().equals(mPost.getAuthorName())
+            && comment.getAuthorUrl().equals(mPost.getAuthorBlogUrl())) {
+            commentHolder.mAuthorBadge.setVisibility(View.VISIBLE);
         } else {
-            commentHolder.mTxtAuthor.setTextColor(mColorNotAuthor);
+            commentHolder.mAuthorBadge.setVisibility(View.GONE);
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -286,9 +287,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     (RelativeLayout.LayoutParams) commentHolder.mSpacerIndent.getLayoutParams();
             params.width = indentWidth;
             commentHolder.mSpacerIndent.setVisibility(View.VISIBLE);
+            commentHolder.mTopCommentDivider.setVisibility(View.GONE);
         } else {
             indentWidth = 0;
             commentHolder.mSpacerIndent.setVisibility(View.GONE);
+            commentHolder.mTopCommentDivider.setVisibility(View.VISIBLE);
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
