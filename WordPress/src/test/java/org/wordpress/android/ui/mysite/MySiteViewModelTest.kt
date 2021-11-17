@@ -33,7 +33,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -1444,9 +1445,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCardDraftOrScheduled(
+    private fun initPostCard() = PostCardWithPostItems(
             postCardType = DRAFT,
             title = UiStringRes(0),
-            postItems = emptyList()
+            postItems = emptyList(),
+            footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
     )
 }
