@@ -1580,8 +1580,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void showEditorModeSwitchedNotice() {
         String message = getString(mHtmlModeMenuStateOn
-                ? R.string.menu_html_mode_done_snackbar
-                : R.string.menu_visual_mode_done_snackbar
+                ? R.string.menu_html_mode_switched_notice
+                : R.string.menu_visual_mode_switched_notice
         );
         mEditorFragment.showNotice(message);
     }
