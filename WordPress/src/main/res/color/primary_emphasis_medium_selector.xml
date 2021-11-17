@@ -3,4 +3,3 @@
     <item android:alpha="@dimen/material_emphasis_disabled" android:color="@color/colorPrimary" android:state_pressed="true" />
     <item android:color="@color/colorPrimary" />
 </selector>
-
