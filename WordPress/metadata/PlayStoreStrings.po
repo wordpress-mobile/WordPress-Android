@@ -15,7 +15,6 @@ msgctxt "release_note_187"
 msgid ""
 "18.7:\n"
 "- We added Media File and Attachment Page options to the image block's Link To menu so you can set commonly used URLs.\n"
-"- We fixed an issue that made the interface crash when users copied and pasted lists from Microsoft Word.\n"
 "- We solved a problem with content autosaves so they now run more smoothly.\n"
 msgstr ""
 
