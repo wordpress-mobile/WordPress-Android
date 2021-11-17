@@ -90,7 +90,7 @@ class PostCardBuilderTest : BaseUnitTest() {
                         postCardType = CREATE_FIRST,
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                        imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                        imageRes = R.drawable.img_write_72dp,
                         footerLink = FooterLink(
                                 label = UiStringRes(R.string.my_site_post_card_link_create_post),
                                 onClick = onPostCardFooterLinkClick
@@ -148,7 +148,7 @@ class PostCardBuilderTest : BaseUnitTest() {
                         postCardType = CREATE_NEXT,
                         title = UiStringRes(R.string.my_site_create_next_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                        imageRes = R.drawable.create_post_temp, // TODO: ashiagr replace with actual resource
+                        imageRes = R.drawable.img_write_72dp,
                         footerLink = FooterLink(
                                 label = UiStringRes(R.string.my_site_post_card_link_create_post),
                                 onClick = onPostCardFooterLinkClick
