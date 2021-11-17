@@ -2,6 +2,7 @@
 
 18.8
 -----
+* [*] Editor: Replace snackbar with compact notice when switching between HTML or Visual mode [https://github.com/wordpress-mobile/WordPress-Android/pull/15583]
 
 
 18.7
