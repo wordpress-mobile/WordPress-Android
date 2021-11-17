@@ -302,7 +302,7 @@ class CardsBuilderTest {
                     postCardType = PostCardType.DRAFT,
                     title = UiStringText(""),
                     postItems = emptyList(),
-                    footerLink = FooterLink(UiStringText(""))
+                    footerLink = FooterLink(UiStringText(""), onClick = mock())
             )
     )
 }
