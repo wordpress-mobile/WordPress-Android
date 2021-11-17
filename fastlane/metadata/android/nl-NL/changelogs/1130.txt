@@ -1,7 +1,0 @@
-18.5:
-
-Het insluiten van externe inhoud is net eenvoudiger geworden met de nieuwe insluit blokken voor Facebook, Instagram, Loom en Smartframe.
-
-Blijf altijd op de hoogte van de gesprekken die je volgt via de nieuwe Reader push kennisgevingen voor gevolgde gesprekken over reacties op berichten.
-
-Bovendien kun je nu tekst en achtergrondkleur aanpassen in de blokken Pullquote en Preformatted.

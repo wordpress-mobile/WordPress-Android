@@ -1,6 +1,0 @@
-18.5:
-Het insluiten van externe content is nu eenvoudiger met de nieuwe insluitblokken voor Facebook, Instagram, Loom en Smartframe.
-
-Daarbij detecteren we insluitbare URL's wanneer deze worden geplakt in een lege paragraaf en hebben we een probleem met het bewerken van ingesloten URL's opgelost.
-
-Ten slotte zijn Pullquote- en vooraf ingestelde blokken nu voorzien van aanpasbare tekst en een achtergrondkleur.

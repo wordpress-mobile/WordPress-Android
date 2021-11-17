@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-18 19:56:31+0000
+Translation-Revision-Date: 2021-11-04 09:28:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op %s</string>
     <string name="gutenberg_native_create_link">Maak link</string>
     <string name="domain_registration_result_description">Je nieuwe domein &lt;b&gt;%s&lt;/b&gt; wordt ingesteld. Het kan tot 30 minuten duren voordat je domein begint te werken.</string>
     <string name="domain_registration_result_title">Gefeliciteerd met je aankoop!</string>
@@ -15,21 +17,20 @@ Language: nl
     <string name="post_settings_post_sticky">Bericht vastmaken op voorpagina</string>
     <string name="post_settings_mark_as_sticky_options_header">Markeer als sticky</string>
     <string name="reader_follow_comments_unfollow_conversation">Ontvolg conversatie</string>
-    <string name="reader_follow_comments_enable_push_notifications">Schakel in-app kennisgevingen in</string>
-    <string name="reader_follow_comments_message">Je volgt deze conversatie. Je zult kennisgevingen ontvangen via e-mail, als nieuwe reacties gepubliceerd worden.</string>
+    <string name="reader_follow_comments_enable_push_notifications">Schakel in-app meldingen in</string>
+    <string name="reader_follow_comments_message">Je volgt deze conversatie. Je zult meldingen ontvangen via e-mail, als nieuwe reacties gepubliceerd worden.</string>
     <string name="reader_follow_comments_bottom_sheet_description">Beheer conversatie volgen opties, pop-up venster</string>
-    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Kon in-app kennisgevingen niet uitschakelen</string>
-    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Kon in-app kennisgevingen niet inschakelen</string>
-    <string name="reader_follow_comments_unsubscribe_from_push_success">In-app kennisgevingen uitgeschakeld</string>
-    <string name="reader_follow_comments_subscribe_to_push_success">In-app kennisgevingen ingeschakeld</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Kon in-app meldingen niet uitschakelen</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Kon in-app meldingen niet inschakelen</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">In-app meldingen uitgeschakeld</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">In-app meldingen ingeschakeld</string>
     <string name="reader_follow_comments_unsubscribe_from_all_success">Uitgeschreven van deze conversatie</string>
-    <string name="reader_follow_comments_subscribe_success_enable_push">Volgt deze conversatie\nIn-app kennisgevingen inschakelen?</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Volgt deze conversatie\nIn-app meldingen inschakelen?</string>
     <string name="domains_search_for_a_domain_button">Zoek naar een domein</string>
     <string name="domains_free_plan_get_your_domain_caption">Domeinen aangeschaft op deze site, zullen bezoekers omleiden naar &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Je hebt een gratis één-jaar domein registratie met je abonnement</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim je gratis domein</string>
     <string name="domains_manage_domains">Beheer domeinen</string>
-    <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Meer weten&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Voeg een domein toe</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Verloopt op %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Verloopt op %s</string>
@@ -37,7 +38,7 @@ Language: nl
     <string name="domains_primary_site_address_chip">Primair site adres</string>
     <string name="domains_primary_site_more_menu_change_site_address">Site adres wijzigen</string>
     <string name="domains_primary_site_caption">Je gratis WordPress.com adres is</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /jaar&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /jaar&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Wil je ze negeren?</string>
     <string name="comment_edit_cancel_dialog_title">Er zijn niet opgeslagen wijzigingen</string>
@@ -72,7 +73,7 @@ Language: nl
     <string name="my_site_btn_domains">Domeinen</string>
     <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d likes, %3$d reacties gekregen.</string>
     <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
-    <string name="blogging_reminders_notification_time">Kennisgeving tijd</string>
+    <string name="blogging_reminders_notification_time">Meldingtijd</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s per week op %2$s</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">De tekstopmaak besturingen bevinden zich in de werkbalk boven het toetsenbord tijdens het bewerken van een tekstblok</string>
@@ -178,7 +179,6 @@ Language: nl
     <string name="gutenberg_native_y_axis_position">Y-as positie</string>
     <string name="gutenberg_native_x_axis_position">X-as positie</string>
     <string name="gutenberg_native_type_a_url">Typ een URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tik om inhoud toe te voegen</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter resultaten</string>
     <string name="gutenberg_native_s_has_url_set">%s heeft URL ingesteld</string>
     <string name="gutenberg_native_s_has_no_url_set">%s heeft geen URL ingesteld</string>
@@ -370,7 +370,7 @@ Language: nl
     <string name="scan_provisioning_description">Welkom bij Jetpack Scan! We verkennen je site en maken een volledige scan. We laten het je weten als we problemen ontdekken die van invloed kunnen zijn op een scan, waarna je eerste volledige scan start.</string>
     <string name="scan_scanning_is_initial_description">Welkom bij Jetpack Scan, we nemen nu een voor het eerst een kijkje op je site, de resultaten zijn er zo.</string>
     <string name="scan_fixing_threats_description_singular">We zijn hard aan het werk om deze bedreiging op de achtergrond te verhelpen. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
-    <string name="scan_scanning_description">We sturen je een kennisgeving als er een bedreiging is gevonden. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
+    <string name="scan_scanning_description">We sturen je een melding als er een bedreiging is gevonden. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
     <string name="scan_fixing_threats_title_plural">Bezig met bedreigingen oplossen</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan kon geen scan van je site afronden. Controleer of je site bereikbaar is - probeer het opnieuw als dat niet het geval is. Als dit het geval is, of als Jetpack Scan nog steeds problemen heeft, neem dan contact op met ons ondersteuningsteam.</string>
     <string name="scan_request_failed_title">Er is iets fout gegaan</string>
@@ -1721,8 +1721,8 @@ Language: nl
     <string name="reader_followed_blog_notifications_this">deze site</string>
     <string name="reader_followed_blog_notifications_action">Inschakelen</string>
     <string name="reader_followed_blog_notifications">Meldingen voor %1$s%2$s%3$s inschakelen?</string>
-    <string name="reader_btn_notifications_on">Site kennisgevingen inschakelen</string>
-    <string name="reader_btn_notifications_off">Site kennisgevingen uitschakelen</string>
+    <string name="reader_btn_notifications_on">Site meldingen inschakelen</string>
+    <string name="reader_btn_notifications_off">Site meldingen uitschakelen</string>
     <string name="activity_log_jetpack_icon">Jetpack pictogram</string>
     <string name="activity_log_event">Gebeurtenis</string>
     <string name="activity_log_icon">Activiteitenpictogram</string>
@@ -1761,7 +1761,7 @@ Language: nl
     <string name="notification_settings_followed_dialog_email_posts_switch">Stuur me nieuwe berichten via e-mail</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Al mijn gevolgde sites</string>
     <string name="notification_settings_category_followed_sites">Gevolgde sites</string>
-    <string name="content_description_person_reading_device_notification">Persoon die naar een apparaat met meldingen kijkt</string>
+    <string name="content_description_person_reading_device_notification">Persoon leesapparaat met meldingen</string>
     <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
     <string name="comment_title">%s op %s</string>
     <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
@@ -1779,7 +1779,7 @@ Language: nl
     <string name="add_count">%d toevoegen</string>
     <string name="fab_add_tag_desc">Tag aanmaken</string>
     <string name="navigate_up_desc">omhoog navigeren</string>
-    <string name="notification_settings_switch_desc">Kennisgevingen</string>
+    <string name="notification_settings_switch_desc">Meldingen</string>
     <string name="open_external_link_desc">Externe link openen</string>
     <string name="show_more_desc">meer tonen</string>
     <string name="reader_photo_view_desc">foto</string>
@@ -1831,7 +1831,7 @@ Language: nl
     <string name="comment_liked_talkback">Reactie geliket</string>
     <string name="comment_unapproved_talkback">Reactie niet goedgekeurd</string>
     <string name="comment_approved_talkback">Reactie goedgekeurd</string>
-    <string name="notif_detail_screen_title">Kennisgeving detail %s</string>
+    <string name="notif_detail_screen_title">Melding detail %s</string>
     <string name="edit_photo_screen_title">Foto bewerken</string>
     <string name="share_intent_screen_title">Site kiezen</string>
     <string name="signup_epilogue_screen_title">Nieuw account</string>
@@ -1843,7 +1843,7 @@ Language: nl
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">Ik</string>
     <string name="my_site_section_screen_title">Mijn site</string>
-    <string name="notif_settings_screen_title">Kennisgeving instellingen</string>
+    <string name="notif_settings_screen_title">Melding instellingen</string>
     <string name="help_screen_title">Hulp en ondersteuning</string>
     <string name="license_screen_title">Licentie</string>
     <string name="release_notes_screen_title">Release notes</string>
@@ -1930,7 +1930,7 @@ Language: nl
     <string name="site_settings_like_header">Leuk vinden</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor je bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
-    <string name="notifications_jetpack_connection_setup_info">Om nuttige kennisgevingen van je WordPress site op je apparaat te krijgen, moet je de Jetpack plugin installeren. Wil je Jetpack installeren? </string>
+    <string name="notifications_jetpack_connection_setup_info">Om nuttige meldingen van je WordPress site op je apparaat te krijgen, moet je de Jetpack plugin installeren. Wil je Jetpack installeren?</string>
     <string name="site_settings_lazy_load_images">Lazy-load afbeeldingen</string>
     <string name="stats_jetpack_connection_setup">Jetpack installeren</string>
     <string name="plugin_chevron_icon_content_description">Tekst in-/uitschakelen</string>
@@ -2092,7 +2092,7 @@ Language: nl
     <string name="notification_settings_category_other">Andere</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Al mijn sites</string>
     <string name="notification_settings_category_your_sites">Je sites</string>
-    <string name="notification_settings_main_off_message">Als je Meldingsinstellingen uitschakelt, worden alle meldingen van deze app uitgeschakeld, ongeacht het type. Je kunt afstemmen welk soort melding je ontvangt nadat je Meldingsinstellingen hebt ingeschakeld.</string>
+    <string name="notification_settings_main_off_message">Als je Melding instellingen uitschakelt, worden alle meldingen van deze app uitgeschakeld, ongeacht het type. Je kunt afstemmen welk soort melding je ontvangt nadat je Melding instellingen hebt ingeschakeld.</string>
     <string name="notification_settings_main_off_title">Om meldingen op dit apparaat te ontvangen, schakel de melding instelling in.</string>
     <string name="notification_settings_main_hint_off">Meldingen inschakelen</string>
     <string name="notification_settings_main_hint_on">Meldingen uitschakelen</string>
@@ -2246,7 +2246,7 @@ Language: nl
     <string name="connections_description">Koppel je favoriete social media-services om nieuwe berichten automatisch met vrienden te delen.</string>
     <string name="connections_label">Verbindingen</string>
     <string name="sharing">Delen</string>
-    <string name="tabbar_accessibility_label_notifications">Kennisgevingen. Beheer je kennisgevingen</string>
+    <string name="tabbar_accessibility_label_notifications">Meldingen. Beheer je meldingen.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Inhoud van andere sites volgen.</string>
     <string name="tabbar_accessibility_label_my_site">Mijn site. Je site bekijken en beheren, inclusief statistieken.</string>
     <string name="my_site_btn_sharing">Delen</string>
@@ -2571,7 +2571,7 @@ Language: nl
     <string name="site_settings_threading_hint">Geneste reacties toestaan tot een bepaalde diepte</string>
     <string name="site_settings_sort_by_hint">Bepaalt de volgorde waarin reacties worden weergegeven</string>
     <string name="site_settings_close_after_hint">Reacties niet meer toestaan na bepaalde tijd</string>
-    <string name="site_settings_receive_pingbacks_hint">Link kennisgevingen van andere blogs toestaan</string>
+    <string name="site_settings_receive_pingbacks_hint">Link meldingen van andere blogs toestaan</string>
     <string name="site_settings_send_pingbacks_hint">Probeer een melding te maken op alle blogs waaraan het artikel is gekoppeld</string>
     <string name="site_settings_allow_comments_hint">Toestaan dat lezers reacties plaatsen</string>
     <string name="site_settings_discussion_hint">Geef discussie-instellingen van je site weer en wijzig ze</string>
@@ -2677,14 +2677,14 @@ Language: nl
     <string name="reader_title_post_detail">Reader-bericht</string>
     <string name="notifications_push_summary">Instellingen voor meldingen die op je apparaat verschijnen.</string>
     <string name="notifications_email_summary">Instellingen voor meldingen die worden verstuurd naar het e-mailadres dat bij je account hoort.</string>
-    <string name="notifications_tab_summary">Instellingen voor kennisgevingen die verschijnen in de tab Kennisgevingen.</string>
-    <string name="notifications_disabled">App kennisgevingen zijn uitgeschakeld. Tik hier om ze in te schakelen in Instellingen.</string>
-    <string name="notification_types">Soorten meldingen</string>
+    <string name="notifications_tab_summary">Instellingen voor meldingen die verschijnen in de tab Meldingen.</string>
+    <string name="notifications_disabled">App meldingen zijn uitgeschakeld. Tik hier om ze in te schakelen in Instellingen.</string>
+    <string name="notification_types">Melding typen</string>
     <string name="error_loading_notifications">Kan meldingsinstellingen niet laden</string>
     <string name="comment_likes">Likes voor reactie</string>
-    <string name="app_notifications">App kennisgevingen</string>
+    <string name="app_notifications">App meldingen</string>
     <string name="email">E-mail</string>
-    <string name="notifications_tab">Kennisgevingen tab</string>
+    <string name="notifications_tab">Meldingen tab</string>
     <string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
     <string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
     <string name="connectionbar_no_connection">Geen verbinding</string>
@@ -2734,7 +2734,7 @@ Language: nl
     <string name="language">Taal</string>
     <string name="reader_empty_posts_request_failed">Niet in staat om berichten op te halen</string>
     <string name="publisher">Uitgever:</string>
-    <string name="error_notification_open">Kan kennisgeving niet openen</string>
+    <string name="error_notification_open">Kan melding niet openen</string>
     <string name="stats_search_terms_unknown_search_terms">Onbekende zoektermen</string>
     <string name="stats_view_search_terms">Zoektermen</string>
     <string name="stats_view_authors">Auteurs</string>
@@ -2823,7 +2823,7 @@ Language: nl
     <string name="error_refresh_pages">Pagina\'s kunnen momenteel niet worden ververst</string>
     <string name="error_refresh_posts">Berichten kunnen momenteel niet worden ververst</string>
     <string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
-    <string name="notifications_empty_list">Geen kennisgevingen</string>
+    <string name="notifications_empty_list">Geen meldingen</string>
     <string name="sdcard_message">Er moet een SD-kaart zijn gekoppeld om media te uploaden</string>
     <string name="cat_name_required">Het veld categorienaam is verplicht</string>
     <string name="adding_cat_success">Categorie toegevoegd</string>
@@ -2942,7 +2942,7 @@ Language: nl
     <string name="discard">Negeer</string>
     <string name="manage">Beheer</string>
     <string name="more_notifications">en nog %d meer.</string>
-    <string name="new_notifications">%d nieuwe kennisgevingen</string>
+    <string name="new_notifications">%d nieuwe meldingen</string>
     <string name="follows">Volgt</string>
     <string name="note_reply_successful">Reactie gepubliceerd</string>
     <string name="sign_in">Inloggen</string>
@@ -2991,7 +2991,7 @@ Language: nl
     <string name="error">Fout</string>
     <string name="no">Nee</string>
     <string name="yes">Ja</string>
-    <string name="notification_settings">Kennisgeving instellingen</string>
+    <string name="notification_settings">Melding instellingen</string>
     <string name="add">Toevoegen</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>

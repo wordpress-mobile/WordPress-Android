@@ -1,0 +1,5 @@
+18.6:
+- Ora puoi usare il tag HTML Mark e modificare il testo del pulsante del blocco Cerca e il colore di sfondo.
+- Le funzionalità di avviamento dell'editor native sono disponibili per tutti, incluso il nuovo badge del blocco.
+- La schermata Guida non si staccherà più dalla sua casella durante la rotazione da orizzontale a verticale e viceversa.
+- Abbiamo corretto ulteriori problemi di caricamento nel blocco Incorporamenti.

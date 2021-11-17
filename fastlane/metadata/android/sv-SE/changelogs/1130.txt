@@ -1,6 +1,0 @@
-18.5:
-Nu har det blivit enklare att lägga in externt innehåll med inbäddningsblock för Facebook, Instagram, Loom och Smartframe.
-
-Håll koll på de konversationer du följer med hjälp av de nya push-meddelandena i läsaren.
-
-Dessutom kan du nu välja färg på text och bakgrund i blocken för framhävt citat och förformatterad text.
