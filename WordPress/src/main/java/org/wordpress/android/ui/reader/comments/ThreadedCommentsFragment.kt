@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.reader.comments
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
@@ -50,24 +53,22 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListe
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.CommentFullScreenDialogFragment
 import org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion.newBundle
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsStarted
-import org.wordpress.android.ui.reader.ReaderInterfaces
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_LIKE
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_REPLY
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.POST_LIKE
 import org.wordpress.android.ui.reader.actions.ReaderActions.CommentActionListener
-import org.wordpress.android.ui.reader.actions.ReaderActions.DataRequestedListener
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter
-import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter.RequestReplyListener
 import org.wordpress.android.ui.reader.services.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion.Companion.fromUserSuggestions
@@ -91,42 +92,37 @@ import javax.inject.Inject
 class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener  {
     private var binding: ThreadedCommentsFragmentBinding? = null
 
-    // TODOD: make it function local where possible
     private var mBlogId: Long = 0
     private var mPostId: Long = 0
-    private var mDirectOperation: DirectOperation? = null
-    private var mCommentId: Long = 0
-    private var mInterceptedUri: String? = null
-
-    private var mHasUpdatedComments: Boolean = false
-    private var mRestorePosition: Int = 0
-
-    private var mIsUpdatingComments = false
-
-    private var mCommentAdapter: ReaderCommentAdapter? = null
     private var mPost: ReaderPost? = null
+    private var mCommentAdapter: ReaderCommentAdapter? = null
+    private var mSuggestionAdapter: SuggestionAdapter? = null
+    private var mSuggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
 
-    private var mReplyToCommentId: Long = 0
+
+    private var mIsUpdatingComments = false
+    private var mHasUpdatedComments: Boolean = false
 
     private var mIsSubmittingComment = false
 
     private var mUpdateOnResume = false
 
-    private var mSuggestionAdapter: SuggestionAdapter? = null
-
-    private var mSuggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
-
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var mUiHelpers: UiHelpers
-    @Inject lateinit var mFollowByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
+    private var mDirectOperation: DirectOperation? = null
+    private var mReplyToCommentId: Long = 0
+    private var mCommentId: Long = 0
+    private var mRestorePosition: Int = 0
+    private var mInterceptedUri: String? = null
     @Inject lateinit var mAccountStore: AccountStore
+    @Inject lateinit var mUiHelpers: UiHelpers
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var mReaderTracker: ReaderTracker
+    @Inject lateinit var mFollowByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var mViewModel: ReaderCommentListViewModel
 
     @Parcelize
-    //@SuppressLint("ParcelCreator")
+    @SuppressLint("ParcelCreator")
     data class ThreadedCommentsFragmentArgs(
         val blogId: Long,
         val postId: Long,
@@ -142,74 +138,16 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
 
-    private fun ThreadedCommentsFragmentBinding.initObservers() {
-        mViewModel.scrollTo.observeEvent(viewLifecycleOwner, { scrollPosition ->
-            if (!isAdded) return@observeEvent
-
-            //val content = scrollPositionEvent.getContentIfNotHandled()
-            val layoutManager = recyclerView.layoutManager
-            if (scrollPosition != null && layoutManager != null) {
-                if (scrollPosition.isSmooth) {
-                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(requireActivity()) {
-                        override fun getVerticalSnapPreference(): Int {
-                            return SNAP_TO_START
-                        }
-                    }
-                    smoothScrollerToTop.targetPosition = scrollPosition.position
-                    layoutManager.startSmoothScroll(smoothScrollerToTop)
-                } else {
-                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollPosition.position, 0)
-                }
-                // TODOD: get this to work
-                //appbarMain.post(Runnable { appBarLayout.requestLayout() })
-            }
-        })
-
-        mViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
-            if (!isAdded) return@observe
-
-            val fm: FragmentManager = childFragmentManager
-            val bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
-            if (bottomSheet != null) return@observe
-            event.applyIfNotHandled {
-                make(coordinator, mUiHelpers.getTextOfUiString(requireActivity(), this.message), Snackbar.LENGTH_LONG)
-                        .setAction(this.buttonTitle?.let {
-                            mUiHelpers.getTextOfUiString(requireActivity(), this.buttonTitle)
-                        }) { this.buttonAction.invoke() }
-                        .show()
-            }
-        })
-
-        if (!mFollowByPushNotificationFeatureConfig.isEnabled()) {
-            mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
-                mCommentAdapter?.updateFollowingState(uiState)
-            }
-            )
-        } else {
-            mViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
-                val fm: FragmentManager = childFragmentManager
-                var bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
-                if (showBottomSheetData.show && bottomSheet == null) {
-                    bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                            showBottomSheetData.isReceivingNotifications
-                    )
-                    bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
-                } else if (!showBottomSheetData.show && bottomSheet != null) {
-                    bottomSheet.dismiss()
-                }
-            })
-        }
-
-        mViewModel.start(mBlogId, mPostId)
-    }
 
     private fun ThreadedCommentsFragmentBinding.setupToolbar() {
         setHasOptionsMenu(true)
 
         val activity = requireActivity() as AppCompatActivity
-        //activity.supportActionBar?.let {
-        //
-        //}
+        activity.setSupportActionBar(toolbarMain)
+        activity.supportActionBar?.let {
+            it.setHomeButtonEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
+        }
         activity.onBackPressedDispatcher.addCallback(
                 viewLifecycleOwner,
                 object : OnBackPressedCallback(
@@ -258,20 +196,20 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             })
 
             btnSubmitReply.setEnabled(false)
-            btnSubmitReply.setOnLongClickListener(View.OnLongClickListener { view: View ->
+            btnSubmitReply.setOnLongClickListener { view: View ->
                 if (view.isHapticFeedbackEnabled) {
                     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 }
                 Toast.makeText(view.context, string.send, Toast.LENGTH_SHORT).show()
                 true
-            })
+            }
             btnSubmitReply.redirectContextClickToLongPressListener()
 
         }
 
         if (!loadPost()) {
             ToastUtils.showToast(requireActivity(), string.reader_toast_err_get_post)
-            if (isAdded) requireActivity().finish()
+            requireActivity().finish()
             return
         }
 
@@ -283,11 +221,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     false
             )
         }
-
-
-//////
-
-
 
         mSuggestionServiceConnectionManager = SuggestionServiceConnectionManager(requireActivity(), mBlogId).also {
             mSuggestionAdapter = setupUserSuggestions(
@@ -305,7 +238,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
             mReaderTracker.trackPost(READER_ARTICLE_COMMENTS_OPENED, mPost)
 
-            //val buttonExpand: ImageView = findViewById<ImageView>(R.id.button_expand)
             buttonExpand.setOnClickListener { v: View? ->
                 val bundle = newBundle(
                         editComment.getText().toString(),
@@ -347,7 +279,67 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 fragment.setOnConfirmListener(this@ThreadedCommentsFragment)
             }
         }
-//////
+    }
+
+    private fun ThreadedCommentsFragmentBinding.initObservers() {
+        mViewModel.scrollTo.observeEvent(viewLifecycleOwner, { scrollPosition ->
+            if (!isAdded) return@observeEvent
+
+            val layoutManager = recyclerView.layoutManager
+            if (scrollPosition != null && layoutManager != null) {
+                if (scrollPosition.isSmooth) {
+                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(requireActivity()) {
+                        override fun getVerticalSnapPreference(): Int {
+                            return SNAP_TO_START
+                        }
+                    }
+                    smoothScrollerToTop.targetPosition = scrollPosition.position
+                    layoutManager.startSmoothScroll(smoothScrollerToTop)
+                } else {
+                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollPosition.position, 0)
+                }
+                appbarMain.post { appbarMain.requestLayout() }
+            }
+        })
+
+        mViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
+            if (!isAdded) return@observe
+
+            val fm: FragmentManager = childFragmentManager
+            val bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+            if (bottomSheet != null) return@observe
+            event.applyIfNotHandled {
+                make(coordinator, mUiHelpers.getTextOfUiString(requireActivity(), this.message), Snackbar.LENGTH_LONG)
+                        .setAction(this.buttonTitle?.let {
+                            mUiHelpers.getTextOfUiString(requireActivity(), this.buttonTitle)
+                        }) { this.buttonAction.invoke() }
+                        .show()
+            }
+        })
+
+        if (!mFollowByPushNotificationFeatureConfig.isEnabled()) {
+            mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+                mCommentAdapter?.updateFollowingState(uiState)
+            }
+            )
+        } else {
+            mViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+                if (!isAdded) return@observeEvent
+
+                val fm: FragmentManager = childFragmentManager
+                var bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                if (showBottomSheetData.show && bottomSheet == null) {
+                    bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                            showBottomSheetData.isReceivingNotifications
+                    )
+                    bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
+                } else if (!showBottomSheetData.show && bottomSheet != null) {
+                    bottomSheet.dismiss()
+                }
+            })
+        }
+
+        mViewModel.start(mBlogId, mPostId)
     }
 
     override fun onCollapse(result: Bundle?) {
@@ -378,7 +370,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             return@OnClickListener
         }
         mReaderTracker.trackUri(READER_SIGN_IN_INITIATED, mInterceptedUri!!)
-        ActivityLauncher.loginWithoutMagicLink(requireActivity())
+        ActivityLauncher.loginWithoutMagicLink(this@ThreadedCommentsFragment)
     }
 
     // to do a complete refresh we need to get updated post and new comments
@@ -397,7 +389,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         }
 
         // load the first page of comments
-        updateComments(true, false)
+        updateComments(showProgress = true, requestNextPage = false)
     }
 
 
@@ -455,56 +447,51 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         if (mFollowByPushNotificationFeatureConfig.isEnabled()) {
-            //val inflater: MenuInflater = getMenuInflater()
             inflater.inflate(R.menu.threaded_comments_menu, menu)
             mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
-                        //if (menu != null) {
-                            val bellItem = menu.findItem(R.id.manage_notifications_item)
-                            val followItem = menu.findItem(R.id.follow_item)
+                        val bellItem = menu.findItem(R.id.manage_notifications_item)
+                        val followItem = menu.findItem(R.id.follow_item)
 
-                            if (bellItem != null && followItem != null) {
-                                val shimmerView: ShimmerFrameLayout = followItem.actionView
-                                        .findViewById(R.id.shimmer_view_container)
-                                val followText = followItem.actionView
-                                        .findViewById<TextView>(R.id.follow_button)
-                                followItem.actionView.setOnClickListener(
-                                        if (uiState.onFollowTapped != null) View.OnClickListener { uiState.onFollowTapped.invoke() } else null
-                                )
-                                bellItem.setOnMenuItemClickListener {
-                                    uiState.onManageNotificationsTapped.invoke()
-                                    true
-                                }
-                                followItem.actionView.isEnabled = uiState.isMenuEnabled
-                                followText.isEnabled = uiState.isMenuEnabled
-                                bellItem.isEnabled = uiState.isMenuEnabled
-                                if (uiState.showMenuShimmer) {
-                                    if (!shimmerView.isShimmerVisible) {
-                                        shimmerView.showShimmer(true)
-                                    } else if (!shimmerView.isShimmerStarted) {
-                                        shimmerView.startShimmer()
-                                    }
-                                } else {
-                                    shimmerView.hideShimmer()
-                                }
-                                followItem.isVisible = uiState.isFollowMenuVisible
-                                bellItem.isVisible = uiState.isBellMenuVisible
+                        if (bellItem != null && followItem != null) {
+                            val shimmerView: ShimmerFrameLayout = followItem.actionView
+                                    .findViewById(R.id.shimmer_view_container)
+                            val followText = followItem.actionView
+                                    .findViewById<TextView>(R.id.follow_button)
+                            followItem.actionView.setOnClickListener(
+                                    if (uiState.onFollowTapped != null) View.OnClickListener { uiState.onFollowTapped.invoke() } else null
+                            )
+                            bellItem.setOnMenuItemClickListener {
+                                uiState.onManageNotificationsTapped.invoke()
+                                true
                             }
-                        //}
+                            followItem.actionView.isEnabled = uiState.isMenuEnabled
+                            followText.isEnabled = uiState.isMenuEnabled
+                            bellItem.isEnabled = uiState.isMenuEnabled
+                            if (uiState.showMenuShimmer) {
+                                if (!shimmerView.isShimmerVisible) {
+                                    shimmerView.showShimmer(true)
+                                } else if (!shimmerView.isShimmerStarted) {
+                                    shimmerView.startShimmer()
+                                }
+                            } else {
+                                shimmerView.hideShimmer()
+                            }
+                            followItem.isVisible = uiState.isFollowMenuVisible
+                            bellItem.isVisible = uiState.isBellMenuVisible
+                        }
                     }
             )
         }
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                if (isAdded) {
-                    requireActivity().finish()
-                }
+        if (item.itemId == android.R.id.home) {
+            if (isAdded) {
+                requireActivity().finish()
             }
+            return true
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPause() {
@@ -512,54 +499,47 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         EventBus.getDefault().unregister(this)
     }
 
-    private fun setReplyToCommentId(commentId: Long, doFocus: Boolean) { // TODOD: change this
+    private fun setReplyToCommentId(commentId: Long, doFocus: Boolean) {
         mReplyToCommentId = commentId
-        with(binding) {
-            this?.layoutCommentBox?.let {
-                it.editComment.setHint(
-                        if (mReplyToCommentId == 0L) string.reader_hint_comment_on_post else string.reader_hint_comment_on_comment
-                )
-                if (doFocus) {
-                    it.editComment.postDelayed(Runnable {
-                        val isFocusableInTouchMode: Boolean = it.editComment.isFocusableInTouchMode()
-                        it.editComment.isFocusableInTouchMode = true
-                        EditTextUtils.showSoftInput(it.editComment)
-                        it.editComment.isFocusableInTouchMode = isFocusableInTouchMode
-                        setupReplyToComment()
-                    }, 200)
-                } else {
+        binding?.layoutCommentBox?.run {
+            editComment.setHint(
+                    if (mReplyToCommentId == 0L) string.reader_hint_comment_on_post else string.reader_hint_comment_on_comment
+            )
+            if (doFocus) {
+                editComment.postDelayed({
+                    val isFocusableInTouchMode: Boolean = editComment.isFocusableInTouchMode()
+                    editComment.isFocusableInTouchMode = true
+                    EditTextUtils.showSoftInput(editComment)
+                    editComment.isFocusableInTouchMode = isFocusableInTouchMode
                     setupReplyToComment()
-                }
+                }, 200)
+            } else {
+                setupReplyToComment()
             }
         }
     }
-
 
     private fun setupReplyToComment() {
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
-        with(binding) {
-            this?.layoutCommentBox?.let {
-                if (mReplyToCommentId != 0L) {
-                    getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false)
-                    getCommentAdapter().notifyDataSetChanged()
-                    scrollToCommentId(mReplyToCommentId)
+        binding?.layoutCommentBox?.run {
+            if (mReplyToCommentId != 0L) {
+                getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false)
+                getCommentAdapter().notifyDataSetChanged()
+                scrollToCommentId(mReplyToCommentId)
 
-                    // reset to replying to the post when user hasn't entered any text and hits
-                    // the back button in the editText to hide the soft keyboard
-                    it.editComment.setOnBackListener {
-                        if (EditTextUtils.isEmpty(it.editComment)) {
-                            setReplyToCommentId(0, false)
-                        }
+                // reset to replying to the post when user hasn't entered any text and hits
+                // the back button in the editText to hide the soft keyboard
+                editComment.setOnBackListener {
+                    if (EditTextUtils.isEmpty(editComment)) {
+                        setReplyToCommentId(0, false)
                     }
-                } else {
-                    it.editComment.setOnBackListener(null)
                 }
+            } else {
+                editComment.setOnBackListener(null)
             }
         }
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -573,9 +553,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
     private fun showCommentsClosedMessage(show: Boolean) {
-        binding?.let {
-            if (it.textCommentsClosed != null) { // TODOD: check all warnings on this file!
-                it.textCommentsClosed.visibility = if (show) View.VISIBLE else View.GONE
+        binding?.run {
+            if (textCommentsClosed != null) {
+                textCommentsClosed.visibility = if (show) View.VISIBLE else View.GONE
             }
         }
     }
@@ -591,13 +571,13 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         } else if (mPost!!.isCommentsOpen) {
             layoutCommentBox.root.visibility = View.VISIBLE
             showCommentsClosedMessage(false)
-            layoutCommentBox.editComment.setOnEditorActionListener(TextView.OnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
+            layoutCommentBox.editComment.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment()
                 }
                 false
-            })
-            layoutCommentBox.btnSubmitReply.setOnClickListener(View.OnClickListener { v: View? -> submitComment() })
+            }
+            layoutCommentBox.btnSubmitReply.setOnClickListener { v: View? -> submitComment() }
         } else {
             layoutCommentBox.root.visibility = View.GONE
             layoutCommentBox.editComment.setEnabled(false)
@@ -606,21 +586,26 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         return true
     }
 
+    override fun onDestroyView() {
+        mSuggestionServiceConnectionManager?.unbindFromService()
+
+        super.onDestroyView()
+        binding = null
+    }
 
     private fun hasCommentAdapter(): Boolean {
         return mCommentAdapter != null
     }
 
-
     private fun getCommentAdapter(): ReaderCommentAdapter {
         return mCommentAdapter ?: ReaderCommentAdapter(WPActivityUtils.getThemedContext(requireActivity()), mPost).apply {
             // adapter calls this when user taps reply icon
-            setReplyListener(RequestReplyListener { commentId: Long ->
+            setReplyListener { commentId: Long ->
                 setReplyToCommentId(
                         commentId,
                         true
                 )
-            })
+            }
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {
@@ -628,7 +613,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
 
             // adapter calls this when data has been loaded & displayed
-            setDataLoadedListener(ReaderInterfaces.DataLoadedListener { isEmpty: Boolean ->
+            setDataLoadedListener { isEmpty: Boolean ->
                 if (isAdded) {
                     if (isEmpty || !mHasUpdatedComments) {
                         updateComments(isEmpty, false)
@@ -644,20 +629,19 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     mRestorePosition = 0
                     checkEmptyView()
                 }
-            })
+            }
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
-            setDataRequestedListener(DataRequestedListener {
+            setDataRequestedListener {
                 if (!mIsUpdatingComments) {
                     AppLog.i(
                             READER,
                             "reader comments > requesting next page of comments"
                     )
-                    updateComments(true, true)
+                    updateComments(showProgress = true, requestNextPage = true)
                 }
-            })
-
+            }
 
         }.also {
             mCommentAdapter = it
@@ -776,15 +760,17 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
     /*
-         * request comments for this post
-         */
+     * request comments for this post
+     */
     private fun updateComments(showProgress: Boolean, requestNextPage: Boolean) {
+        if (!isAdded) return
+
         if (mIsUpdatingComments) {
             AppLog.w(READER, "reader comments > already updating comments")
             setRefreshing(false)
             return
         }
-        if (!NetworkUtils.isNetworkAvailable(requireActivity())) { // TODOD: check all the requireActivity to ensure we do not need extra isAdded
+        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
             AppLog.w(READER, "reader comments > no connection, update canceled")
             setRefreshing(false)
             return
@@ -795,13 +781,12 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         ReaderCommentService.startService(requireActivity(), mPost!!.blogId, mPost!!.postId, requestNextPage)
     }
 
-
     private fun checkEmptyView() {
         binding?.let {
             val isEmpty = (hasCommentAdapter()
                     && getCommentAdapter().isEmpty
                     && !mIsSubmittingComment)
-            if (isEmpty && !NetworkUtils.isNetworkAvailable(requireContext())) { // TODOD: use context provider here and where possible
+            if (isEmpty && !NetworkUtils.isNetworkAvailable(requireContext())) {
                 it.textEmpty.setText(string.no_network_message)
                 it.textEmpty.visibility = View.VISIBLE
             } else if (isEmpty && mHasUpdatedComments) {
@@ -830,8 +815,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             mViewModel.scrollToPosition(position, false)
         }
     }
-
-
 
     /*
      * Smoothly scrolls the passed comment to the top of the listView
@@ -917,27 +900,26 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
     private fun getCurrentPosition(): Int {
-        return binding?.let {
-            return if (it.recyclerView != null && hasCommentAdapter()) {
-                (it.recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        return binding?.run {
+            return if (recyclerView != null && hasCommentAdapter()) {
+                (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             } else {
                 0
             }
         } ?: 0
     }
 
-
-
     private fun setRefreshing(refreshing: Boolean) {
         mSwipeToRefreshHelper?.isRefreshing = refreshing
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        // if user is returning from login, make sure to update the post and its comments
+        if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
+            mUpdateOnResume = true
+        }
     }
 
     companion object {
