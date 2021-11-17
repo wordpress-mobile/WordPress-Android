@@ -28,7 +28,7 @@ class PostCardBuilder @Inject constructor() {
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params.onFooterLinkClick)) }
     }
 
-    private fun createFirstPostCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+    private fun createFirstPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithoutPostItems(
                     postCardType = PostCardType.CREATE_FIRST,
                     title = UiStringRes(R.string.my_site_create_first_post_title),
@@ -40,7 +40,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun createNextPostCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+    private fun createNextPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithoutPostItems(
                     postCardType = PostCardType.CREATE_NEXT,
                     title = UiStringRes(R.string.my_site_create_next_post_title),
@@ -52,7 +52,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun List<Post>.createDraftPostsCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+    private fun List<Post>.createDraftPostsCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithPostItems(
                     postCardType = PostCardType.DRAFT,
                     title = UiStringRes(R.string.my_site_post_card_draft_title),
@@ -63,7 +63,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun List<Post>.createScheduledPostsCard(onFooterLinkClick: ((postCardType: PostCardType) -> Unit)?) =
+    private fun List<Post>.createScheduledPostsCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithPostItems(
                     postCardType = PostCardType.SCHEDULED,
                     title = UiStringRes(R.string.my_site_post_card_scheduled_title),

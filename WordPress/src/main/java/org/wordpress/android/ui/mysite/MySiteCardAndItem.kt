@@ -111,7 +111,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
             data class FooterLink(
                 val label: UiString,
-                val onClick: ((postCardType: PostCardType) -> Unit)? = null
+                val onClick: (postCardType: PostCardType) -> Unit
             )
         }
     }

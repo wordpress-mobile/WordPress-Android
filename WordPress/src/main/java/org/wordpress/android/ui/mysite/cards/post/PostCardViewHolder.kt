@@ -33,7 +33,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             imageManager.load(image, postCard.imageRes)
             uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel, postCard.footerLink.label)
             mySiteCardFooterLink.linkLabel.setOnClickListener {
-                postCard.footerLink.onClick?.invoke(card.postCardType)
+                postCard.footerLink.onClick.invoke(card.postCardType)
             }
         }
     }
@@ -55,7 +55,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             (postItems.adapter as PostItemsAdapter).update(postCard.postItems)
             uiHelpers.setTextOrHide(mySiteCardFooterLink.linkLabel, postCard.footerLink.label)
             mySiteCardFooterLink.linkLabel.setOnClickListener {
-                postCard.footerLink.onClick?.invoke(card.postCardType)
+                postCard.footerLink.onClick.invoke(card.postCardType)
             }
         }
 

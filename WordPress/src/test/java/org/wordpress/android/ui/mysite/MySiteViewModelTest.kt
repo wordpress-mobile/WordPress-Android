@@ -1449,6 +1449,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             postCardType = DRAFT,
             title = UiStringRes(0),
             postItems = emptyList(),
-            footerLink = FooterLink(label = UiStringRes(0))
+            footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
     )
 }
