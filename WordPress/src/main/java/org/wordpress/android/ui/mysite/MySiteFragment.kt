@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -517,6 +518,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
+        if(actionableEmptyView.isVisible) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
+        }
+
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         swipeToRefreshHelper.isRefreshing = false
@@ -524,6 +529,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+        if(!actionableEmptyView.isVisible) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
+        }
+
         recyclerView.setVisible(false)
         actionableEmptyView.setVisible(true)
         swipeToRefreshHelper.isRefreshing = false

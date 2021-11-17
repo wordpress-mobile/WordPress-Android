@@ -661,6 +661,7 @@ class MySiteViewModel @Inject constructor(
 
     fun onAddSitePressed() {
         _onNavigation.value = Event(SiteNavigationAction.AddNewSite(accountStore.hasAccessToken()))
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
 
     override fun onCleared() {
