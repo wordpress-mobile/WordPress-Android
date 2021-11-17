@@ -456,7 +456,8 @@
     <!--My Site Card/ Item Base Styles-->
     <style name="MySiteCardItemTitle">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
@@ -466,7 +467,7 @@
 
     <style name="MySiteCardItemSubtitle">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
