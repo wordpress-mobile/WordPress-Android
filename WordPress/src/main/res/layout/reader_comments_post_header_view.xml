@@ -72,43 +72,5 @@
             android:textAppearance="?attr/textAppearanceCaption"
             tools:text="text_post_date" />
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_container"
-            app:shimmer_auto_start="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <org.wordpress.android.ui.reader.views.ReaderFollowButton
-                android:id="@+id/button_follow_comments"
-                style="@style/Reader.Follow.Button.Comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <LinearLayout
-                android:id="@+id/button_skeleton"
-                android:layout_width="@dimen/reader_follow_button_skeleton_width"
-                android:layout_height="@dimen/reader_follow_button_min_height"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                tools:visibility="visible" >
-
-                <View
-                    android:layout_width="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:layout_height="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:background="@color/gray_30" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:layout_marginStart="@dimen/reader_follow_button_skeleton_icon_text_margin"
-                    android:background="@color/gray_30" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
     </LinearLayout>
 </FrameLayout>
