@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_medium_large"
     android:paddingStart="@dimen/content_margin_site_row_start"
-    android:paddingTop="@dimen/margin_extra_medium_large"
+    android:paddingTop="@dimen/margin_extra_large"
     tools:ignore="RtlSymmetry">
 
     <com.google.android.material.card.MaterialCardView
