@@ -52,6 +52,36 @@ class PostCardsSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(2)
     }
 
+
+    @Test
+    fun `when source is invoked, then refresh is false`() = test {
+        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+
+        postCardSource.build(testScope(), 1)
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+
+        postCardSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        val result: MutableList<PostsUpdate?> = mutableListOf()
+        postCardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
+        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+
+        postCardSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
     private val mockedPostsData: MockedPostsData
         get() = MockedPostsData(
                 posts = Posts(
