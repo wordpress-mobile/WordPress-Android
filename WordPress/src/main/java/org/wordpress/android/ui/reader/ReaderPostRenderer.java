@@ -3,10 +3,8 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
