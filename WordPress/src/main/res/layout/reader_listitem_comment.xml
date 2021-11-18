@@ -38,88 +38,96 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_author"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/divider">
 
-            <ImageView
-                android:id="@+id/image_comment_avatar"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/description_user"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/text_comment_author"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_author"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:alpha="@dimen/material_emphasis_high_type"
-                android:maxLines="1"
-                android:textAppearance="?textAppearanceSubtitle2"
-                app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
-                app:layout_constraintTop_toTopOf="@+id/image_comment_avatar"
-                tools:text="Wapu Puu" />
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@+id/share_button_container"
+                app:layout_constraintStart_toStartOf="parent">
 
-            <FrameLayout
-                android:id="@+id/author_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/text_comment_author"
-                app:layout_constraintStart_toEndOf="@+id/text_comment_author"
-                app:layout_constraintTop_toTopOf="@+id/text_comment_author"
-                tools:visibility="visible">
+                <ImageView
+                    android:id="@+id/image_comment_avatar"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="@string/description_user"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_comment_author"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:alpha="@dimen/material_emphasis_high_type"
+                    android:maxLines="1"
+                    android:textAppearance="?textAppearanceSubtitle2"
+                    app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/image_comment_avatar"
+                    tools:text="Wapu Puu" />
+
+                <FrameLayout
+                    android:id="@+id/author_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/bg_rectangle_rounded_primary_dark"
-                    android:paddingStart="4dp"
-                    android:paddingTop="@dimen/margin_extra_extra_small"
-                    android:paddingEnd="4dp"
-                    android:paddingBottom="@dimen/margin_extra_extra_small"
-                    android:text="@string/comment_author_badge"
-                    android:textAppearance="?attr/textAppearanceOverline"
-                    android:textColor="?attr/colorOnPrimary" />
-            </FrameLayout>
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_comment_author"
+                    app:layout_constraintStart_toEndOf="@+id/text_comment_author"
+                    app:layout_constraintTop_toTopOf="@+id/text_comment_author"
+                    tools:visibility="visible">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/text_comment_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:maxLines="1"
-                android:textAppearance="?textAppearanceSubtitle2"
-                android:textColor="?attr/wpColorOnSurfaceMedium"
-                app:layout_constraintBottom_toBottomOf="@+id/image_comment_avatar"
-                app:layout_constraintEnd_toStartOf="@+id/share_button_container"
-                app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/text_comment_author"
-                tools:text="Apr 30 2021" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/bg_rectangle_rounded_primary_dark"
+                        android:paddingStart="4dp"
+                        android:paddingTop="@dimen/margin_extra_extra_small"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="@dimen/margin_extra_extra_small"
+                        android:text="@string/comment_author_badge"
+                        android:textAppearance="?attr/textAppearanceOverline"
+                        android:textColor="?attr/colorOnPrimary" />
+                </FrameLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_comment_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:maxLines="1"
+                    android:textAppearance="?textAppearanceSubtitle2"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_comment_avatar"
+                    app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/text_comment_author"
+                    tools:text="Apr 30 2021" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
                 android:id="@+id/share_button_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                app:layout_constraintBottom_toBottomOf="@+id/image_comment_avatar"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/layout_author"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/image_comment_avatar">
+                app:layout_constraintTop_toTopOf="@+id/layout_author">
 
                 <ImageView
                     android:id="@+id/share_comment_button"
                     android:layout_width="@dimen/stats_block_icon_size"
                     android:layout_height="@dimen/stats_block_icon_size"
-                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
                     android:contentDescription="@string/share_desc"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_share_white_24dp"
@@ -127,7 +135,6 @@
                     android:tintMode="src_in" />
 
             </RelativeLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <org.wordpress.android.widgets.WPTextView

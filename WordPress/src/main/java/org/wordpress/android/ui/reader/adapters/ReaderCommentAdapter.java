@@ -85,8 +85,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         void onRequestReply(long commentId);
     }
 
+    public interface ShareCommentListener {
+        void onShareButtonTapped(String commentUrl);
+    }
+
     private ReaderCommentList mComments = new ReaderCommentList();
     private RequestReplyListener mReplyListener;
+    private ShareCommentListener mShareCommentListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private PostHeaderHolder mHeaderHolder;
@@ -102,6 +107,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final View mTopCommentDivider;
         private final View mAuthorContainer;
         private final View mAuthorBadge;
+        private final View mShareButton;
         private final ProgressBar mProgress;
 
         private final ViewGroup mReplyView;
@@ -123,6 +129,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mTopCommentDivider = view.findViewById(R.id.divider);
             mAuthorContainer = view.findViewById(R.id.layout_author);
             mAuthorBadge = view.findViewById(R.id.author_badge);
+
+            mShareButton = view.findViewById(R.id.share_button_container);
 
             mReplyView = view.findViewById(R.id.reply_container);
             mCountLikes = view.findViewById(R.id.count_likes);
@@ -165,6 +173,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setReplyListener(RequestReplyListener replyListener) {
         mReplyListener = replyListener;
+    }
+
+    public void setCommentShareListener(ShareCommentListener shareCommentListener) {
+        mShareCommentListener = shareCommentListener;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener dataLoadedListener) {
@@ -306,6 +318,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
         }
+
+        commentHolder.mShareButton.setOnClickListener(
+                v -> mShareCommentListener.onShareButtonTapped(comment.getShortUrl()));
 
         if (!mAccountStore.hasAccessToken()) {
             commentHolder.mReplyView.setVisibility(View.GONE);

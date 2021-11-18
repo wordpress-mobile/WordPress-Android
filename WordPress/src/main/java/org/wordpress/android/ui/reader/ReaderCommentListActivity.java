@@ -509,6 +509,14 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         EventBus.getDefault().unregister(this);
     }
 
+    private void shareComment(String commentUrl) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl);
+
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)));
+    }
+
     private void setReplyToCommentId(long commentId, boolean doFocus) {
         mReplyToCommentId = commentId;
         mEditComment.setHint(mReplyToCommentId == 0
@@ -620,6 +628,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
+            // adapter calls this when user taps share icon
+            mCommentAdapter.setCommentShareListener(this::shareComment);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {
