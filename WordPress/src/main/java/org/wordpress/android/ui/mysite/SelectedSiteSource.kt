@@ -31,7 +31,7 @@ class SelectedSiteSource @Inject constructor(
     override fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
-            refresh.postValue(true)
+            super.refresh()
             dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
         }
     }
@@ -48,6 +48,6 @@ class SelectedSiteSource @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
-        refresh.value = false
+        onRefreshed()
     }
 }
