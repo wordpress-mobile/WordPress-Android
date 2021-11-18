@@ -518,23 +518,20 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
-        if(actionableEmptyView.isVisible) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
-        }
-
         recyclerView.setVisible(true)
-        actionableEmptyView.setVisible(false)
+        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(false)
+        }
         swipeToRefreshHelper.isRefreshing = false
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
-        if(!actionableEmptyView.isVisible) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
-        }
-
         recyclerView.setVisible(false)
-        actionableEmptyView.setVisible(true)
+        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(true)
+            actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+        }
         swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
