@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -23,6 +26,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     private lateinit var scanAndBackupSource: ScanAndBackupSource
     private val siteLocalId = 1
     private val siteRemoteId = 2L
+    private lateinit var isRefreshing: MutableList<Boolean>
 
     @InternalCoroutinesApi
     @Before
@@ -35,6 +39,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.id).thenReturn(siteLocalId)
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
+        isRefreshing = mutableListOf()
     }
 
     @Test
@@ -122,5 +127,21 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isTrue
+    }
+
+    @Test
+    fun `when refresh is invoked, then data is refreshed`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
+        )
+
+        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { it }
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        verify(jetpackCapabilitiesUseCase, times(2)).getJetpackPurchasedProducts(any())
     }
 }

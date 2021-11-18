@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-26 06:20:39+0000
+Translation-Revision-Date: 2021-11-12 09:45:42+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -44,7 +44,6 @@ Language: pl
     <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
     <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
     <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Stuknij aby dodać treści</string>
     <string name="gutenberg_native_s_block">blok %s</string>
     <string name="gutenberg_native_minimum_height">Minimalna wysokość</string>
     <string name="gutenberg_native_media_options">Opcje mediów</string>
@@ -639,7 +638,6 @@ Language: pl
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
     <string name="weekday_saturday">Sobota</string>
-    <string name="weekday_friday">Piątek</string>
     <string name="weekday_wednesday">Środa</string>
     <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
@@ -647,6 +645,7 @@ Language: pl
     <string name="weekday_monday">poniedziałek</string>
     <string name="weekday_tuesday">wtorek</string>
     <string name="weekday_thursday">czwartek</string>
+    <string name="weekday_friday">piątek</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
@@ -878,9 +877,9 @@ Language: pl
     <string name="dialog_confirm_autosave_restore_button">Wersja z innego urządzenia</string>
     <string name="dialog_confirm_autosave_body_first_part">Dokonałeś ostatnio zmian w tym wpisie, ale nie zostały zapisane. Wybierz wersję, którą chcesz wczytać:\n\n</string>
     <string name="dialog_confirm_autosave_title">Którą wersję chciał(a)byś edytować?</string>
-    <string name="button_delete_permanently">Usuń trwale</string>
     <string name="post_waiting_for_connection_draft_cancel">Nie zapiszemy ostatnich zmian do twojego szkica.</string>
     <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisany %s\n\nZ innego urządzenia\nZapisany %s\n</string>
+    <string name="button_delete_permanently">Usuń na zawsze</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Nie zaplanujemy daty opublikowania tych zmian.</string>
     <string name="post_waiting_for_connection_pending_cancel">Nie prześlemy tych zmian do przeglądu.</string>
     <string name="post_waiting_for_connection_publish_cancel">Nie opublikujemy tych zmian.</string>
@@ -2169,9 +2168,9 @@ Language: pl
     <string name="notif_surveys">Możliwość uczestnictwa w badaniach i ankietach WordPress.com</string>
     <string name="notif_tips">Wskazówki jak używać WordPress.com</string>
     <string name="notif_community">Społeczność</string>
-    <string name="notif_suggestions">Propozycje</string>
     <string name="notif_research">Badania</string>
     <string name="replies_to_my_comments">Odpowiedzi na moje komentarze</string>
+    <string name="notif_suggestions">Sugestie</string>
     <string name="site_achievements">Osiągnięcia witryny</string>
     <string name="username_mentions">Wspomniana nazwa użytkow.</string>
     <string name="likes_on_my_posts">Polubienia moich wpisów</string>
@@ -2306,7 +2305,7 @@ Language: pl
     <string name="site_settings_tagline_title">Slogan</string>
     <string name="site_settings_discussion_new_posts_header">Ustawienia domyślne dla nowych wpisów</string>
     <string name="site_settings_account_header">Konto</string>
-    <string name="site_settings_writing_header">Redagowanie wpisów</string>
+    <string name="site_settings_writing_header">Pisanie</string>
     <string name="newest_first">Od najnowszych</string>
     <string name="site_settings_general_header">Ogólne</string>
     <string name="discussion">Dyskusja</string>

@@ -1,0 +1,5 @@
+18.6:
+- Je kunt nu de HTML-tag Markeer gebruiken om de tekst en achtergrondkleur van de knop van het Zoekblok te wijzigen.
+- Onboardingsfuncties van de native editor, waaronder de nieuwe blokbadge, zijn voor iedereen beschikbaar.
+- Het Help-scherm wordt staand en liggend correct weergegeven.
+- We hebben meer laadfouten verholpen in het Insluitblok.

@@ -8,6 +8,7 @@ import android.view.DragEvent;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
@@ -30,9 +31,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract void showNotice(String message);
-    public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract void showContentInfo() throws EditorFragmentNotAddedException;
+    public abstract Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);

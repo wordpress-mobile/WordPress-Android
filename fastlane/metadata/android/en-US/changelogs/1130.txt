@@ -1,6 +1,0 @@
-18.5:
-Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
-
-Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
-
-Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.
