@@ -747,6 +747,16 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
+        if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
+        setGone()
+    }
+
+    fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
+        if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
+        setVisible()
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
