@@ -44,13 +44,6 @@ class DynamicCardsSource
     private fun MediatorLiveData<DynamicCardsUpdate>.refreshData(coroutineScope: CoroutineScope, siteId: Int) {
         coroutineScope.launch {
             val cards = dynamicCardStore.getCards(siteId)
-//            refresh.postValue(false)
-//            this@refreshData.postValue(
-//                    DynamicCardsUpdate(
-//                            pinnedDynamicCard = cards.pinnedItem,
-//                            cards = cards.dynamicCardTypes
-//                    )
-//            )
             postState(DynamicCardsUpdate(pinnedDynamicCard = cards.pinnedItem, cards = cards.dynamicCardTypes))
         }
     }
