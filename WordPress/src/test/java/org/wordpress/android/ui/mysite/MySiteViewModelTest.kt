@@ -47,6 +47,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -218,6 +219,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private lateinit var allRefreshedMySiteSources: List<MySiteSource<*>>
+    private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
 
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
@@ -232,6 +235,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @InternalCoroutinesApi
+    @Suppress("LongMethod")
     fun init(enableMySiteDashboardConfig: Boolean = false) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
@@ -335,6 +339,20 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        allRefreshedMySiteSources = listOf(
+            selectedSiteSource,
+            siteIconProgressSource,
+            quickStartCardSource,
+            currentAvatarSource,
+            domainRegistrationSource,
+            scanAndBackupSource,
+            dynamicCardsSource,
+            postCardsSource)
+
+        selectRefreshedMySiteSources = listOf(
+                quickStartCardSource,
+                currentAvatarSource)
     }
 
     /* SITE STATE */
@@ -441,6 +459,24 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.refresh()
 
         verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when refresh triggers, then all sources are refreshed`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.refresh()
+
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when refresh triggers, then select sources refresh`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.refresh()
+
+        selectRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
     }
 
     @Test
@@ -871,7 +907,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* START/IGNORE QUICK START + QUICK START DIALOG */
-    // todo: annmarie
     @Test
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
@@ -928,7 +963,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
-    // todo: annmarie
     @Test
     fun `when start QS is triggered, then QS starts`() {
         whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
