@@ -603,7 +603,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
             mPostEditorAnalyticsSession = PostEditorAnalyticsSession
-                    .fromBundle(extras, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
+                    .fromBundle(savedInstanceState, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {

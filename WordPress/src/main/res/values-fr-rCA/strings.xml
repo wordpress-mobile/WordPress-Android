@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-08 09:04:23+0000
+Translation-Revision-Date: 2021-11-16 09:04:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
@@ -165,9 +165,6 @@ Language: fr
     <string name="fab_add_category_desc">Créer une catégorie</string>
     <string name="support_ticket_subject">Support de WordPress pour Android</string>
     <string name="site_settings_categories_hint">Gérer les catégories de votre site</string>
-    <string name="site_settings_categories_empty_title">Vous n’avez aucune catégorie</string>
-    <string name="site_settings_categories_empty_subtitle">Ajoutez ici les catégories que vous utilisez le plus souvent afin de pouvoir les sélectionner rapidement lors de la catégorisation de vos articles</string>
-    <string name="site_settings_categories_empty_button">Créer une catégorie</string>
     <string name="site_settings_categories_title">Catégories</string>
     <string name="page_is_posts_page_warning">Le contenu de la page de vos derniers articles est automatiquement généré et n’est pas modifiable.</string>
     <string name="site_settings_blogging_reminders_title">Rappels de blog</string>
@@ -233,6 +230,7 @@ Language: fr
     <string name="gutenberg_native_embed_link">Lien intégré</string>
     <string name="gutenberg_native_display_post_date">Affiche la date du contenu</string>
     <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
+    <string name="gutenberg_native_custom_url">URL personnalisée</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
     <string name="gutenberg_native_none">Aucun</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
@@ -476,7 +474,6 @@ Language: fr
     <string name="backup_download_generic_failure">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
     <string name="backup_download_details_action_button_content_description">Créer un bouton de sauvegarde téléchargeable</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s est le point sélectionné pour créer une sauvegarde téléchargeable.</string>
-    <string name="gutenberg_native_image_link_url">URL du lien de l’image</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -824,6 +821,7 @@ Language: fr
     <string name="gutenberg_native_duplicate_block">Dupliquer le bloc</string>
     <string name="gutenberg_native_copy_block">Copier le bloc</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Le titre du site peut seulement être changé par une personne avec un rôle d’administrateur.</string>
+    <string name="gutenberg_native_remove_block">Retirer le bloc</string>
     <string name="reader_title_tag_preview">Sujet</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifications non enregistrées</string>
     <string name="my_site_title_changer_dialog_hint">Le titre du site est affiché dans la barre de titre du navigateur et est affiché dans l’en-tête de la plupart des thèmes.</string>
