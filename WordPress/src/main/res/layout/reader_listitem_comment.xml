@@ -154,7 +154,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_comments_action_bar_height"
+            android:layout_height="@dimen/reader_comments_actions_height"
             android:orientation="horizontal">
 
             <LinearLayout
