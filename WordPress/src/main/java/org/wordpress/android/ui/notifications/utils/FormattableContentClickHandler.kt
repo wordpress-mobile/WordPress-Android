@@ -31,7 +31,7 @@ import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.config.ThreadedCommentsBelowPostFeatureConfig
+import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import javax.inject.Inject
 
 private const val DOMAIN_WP_COM = "wordpress.com"
@@ -39,7 +39,7 @@ private const val DOMAIN_WP_COM = "wordpress.com"
 class FormattableContentClickHandler @Inject constructor(
     val siteStore: SiteStore,
     val readerTracker: ReaderTracker,
-    val threadedCommentsBelowPostFeatureConfig: ThreadedCommentsBelowPostFeatureConfig
+    val unifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
 ) {
     fun onClick(
         activity: FragmentActivity,
@@ -156,7 +156,7 @@ class FormattableContentClickHandler @Inject constructor(
                 siteId,
                 postId,
                 commentId,
-                threadedCommentsBelowPostFeatureConfig.isEnabled()
+                unifiedThreadedCommentsFeatureConfig.isEnabled()
         )
     }
 

@@ -16,7 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CommentNotificationsBottomSheetBinding
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.config.ThreadedCommentsBelowPostFeatureConfig
+import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -26,7 +26,7 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var contextProvider: ContextProvider
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var threadedCommentsBelowPostFeatureConfig: ThreadedCommentsBelowPostFeatureConfig
+    @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
     private lateinit var viewModel: ReaderCommentListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,7 +64,7 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(
-                if (threadedCommentsBelowPostFeatureConfig.isEnabled()) {
+                if (mUnifiedThreadedCommentsFeatureConfig.isEnabled()) {
                     parentFragment as ViewModelStoreOwner
                 } else {
                     requireActivity()
