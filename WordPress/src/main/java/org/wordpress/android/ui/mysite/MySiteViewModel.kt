@@ -116,7 +116,7 @@ class MySiteViewModel @Inject constructor(
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val postCardsSource: PostCardsSource,
-    selectedSiteSource: SelectedSiteSource,
+    private val selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
@@ -674,6 +674,7 @@ class MySiteViewModel @Inject constructor(
         domainRegistrationSource.clear()
         quickStartRepository.clear()
         scanAndBackupSource.clear()
+        selectedSiteSource.clear()
         super.onCleared()
     }
 
