@@ -27,6 +27,10 @@ interface MySiteSource<T : PartialState> {
             refresh.postValue(false)
             this@postState.postValue(value)
         }
+
+        fun onRefreshed() {
+            refresh.value = false
+        }
     }
 
     interface SiteIndependentSource<T : PartialState> : MySiteRefreshSource<T> {
