@@ -24,8 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
-import com.automattic.android.about.AboutAutomatticActivity;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -44,6 +42,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.ui.about.AboutWordPressActivity;
+import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -57,7 +57,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -92,6 +92,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -469,8 +470,11 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAboutPreferenceClick() {
-        startActivity(new Intent(getActivity(), AboutAutomatticActivity.class));
-//        startActivity(new Intent(getActivity(), AboutActivity.class));
+        if (mUnifiedAboutFeatureConfig.isEnabled()) {
+            startActivity(new Intent(getActivity(), AboutWordPressActivity.class));
+        } else {
+            startActivity(new Intent(getActivity(), AboutActivity.class));
+        }
         return true;
     }
 
