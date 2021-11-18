@@ -44,6 +44,24 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         viewModel.start(site)
     }
 
+    private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
+        categoriesRecyclerView.setHasFixedSize(true)
+        adapter = SiteSettingsCategoriesAdapter(uiHelpers, ::onCategoryRowClicked)
+        categoriesRecyclerView.adapter = adapter
+
+        categoriesRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                        categoriesRecyclerView.context,
+                        DividerItemDecoration.VERTICAL
+                )
+        )
+    }
+
+    private fun SiteSettingsCategoriesListFragmentBinding.initEmptyView() {
+        categoriesRecyclerView.setEmptyView(actionableEmptyView)
+        actionableEmptyView.updateVisibility(false)
+    }
+
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
         return if (savedInstanceState == null) {
             requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -98,24 +116,6 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         fabButton.updateVisibility(false)
         progressBar.updateVisibility(false)
         uiHelpers.updateVisibility(actionableEmptyView, false)
-    }
-
-    private fun SiteSettingsCategoriesListFragmentBinding.initRecyclerView() {
-        categoriesRecyclerView.setHasFixedSize(true)
-        adapter = SiteSettingsCategoriesAdapter(uiHelpers, ::onCategoryRowClicked)
-        categoriesRecyclerView.adapter = adapter
-
-        categoriesRecyclerView.addItemDecoration(
-                DividerItemDecoration(
-                        categoriesRecyclerView.context,
-                        DividerItemDecoration.VERTICAL
-                )
-        )
-    }
-
-    private fun SiteSettingsCategoriesListFragmentBinding.initEmptyView() {
-        categoriesRecyclerView.setEmptyView(actionableEmptyView)
-        actionableEmptyView.updateVisibility(false)
     }
 
     private fun onCategoryRowClicked(categoryNode: CategoryNode) {
