@@ -15,14 +15,8 @@ class SiteSettingsCategoriesViewHolder(
     val uiHelpers: UiHelpers,
     private val onClickListener: (CategoryNode) -> Unit
 ) : RecyclerView.ViewHolder(categoryBinding.root) {
-    private val verticalPadding: Int = uiHelpers.getPxOfUiDimen(
-            categoryBinding.siteSettingsCategoryText.context,
-            UIDimenRes(R.dimen.margin_large)
-    )
-    private val horizontalPadding: Int = uiHelpers.getPxOfUiDimen(
-            categoryBinding.siteSettingsCategoryText.context,
-            UIDimenRes(R.dimen.margin_extra_large)
-    )
+    private val verticalPadding = uiHelpers.getPxOfUiDimen(itemView.context, UIDimenRes(R.dimen.margin_large))
+    private val horizontalPadding = uiHelpers.getPxOfUiDimen(itemView.context, UIDimenRes(R.dimen.margin_extra_large))
 
     fun onBind(categoryNode: CategoryNode) = with(categoryBinding) {
         siteSettingsCategoryRowLayout.setOnClickListener { onClickListener.invoke(categoryNode) }
