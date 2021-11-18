@@ -16,6 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Category Name" />
+        tools:text="@string/category_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
