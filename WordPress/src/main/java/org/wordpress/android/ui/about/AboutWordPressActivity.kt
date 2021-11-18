@@ -21,4 +21,3 @@ class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
         setContentView(R.layout.about_word_press_activity)
     }
 }
-
