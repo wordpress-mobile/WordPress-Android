@@ -42,7 +42,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     fun `when a new site is selected, then source data is not null`() = test {
         onSiteChange.value = site
 
-        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
         assertThat(result.last().site).isNotNull
     }
@@ -69,7 +69,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     fun `when buildSource is invoked, then refresh is false`() = test {
         source.refresh.observeForever { isRefreshing.add(it) }
 
-        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
         assertThat(isRefreshing.last()).isFalse
     }

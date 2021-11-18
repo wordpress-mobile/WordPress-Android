@@ -14,18 +14,13 @@ import javax.inject.Singleton
 class CurrentAvatarSource @Inject constructor(
     private val accountStore: AccountStore
 ) : SiteIndependentSource<CurrentAvatarUrl> {
-    private val avatarUrl = MutableLiveData<CurrentAvatarUrl>()
-    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
+    override fun build(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
         val result = MediatorLiveData<CurrentAvatarUrl>()
         result.refreshData()
         result.addSource(refresh) { result.refreshData(refresh.value) }
         return result
-    }
-
-    fun refresh() {
-        refresh.postValue(true)
     }
 
     private fun MediatorLiveData<CurrentAvatarUrl>.refreshData(
@@ -38,10 +33,5 @@ class CurrentAvatarSource @Inject constructor(
             }
             false -> Unit // Do nothing
         }
-    }
-
-    private fun MediatorLiveData<CurrentAvatarUrl>.postState(value: CurrentAvatarUrl) {
-        refresh.postValue(false)
-        this@postState.postValue(value)
     }
 }
