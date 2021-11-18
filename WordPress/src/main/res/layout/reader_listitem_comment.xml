@@ -45,17 +45,17 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_author"
-                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_large"
                 app:layout_constraintEnd_toStartOf="@+id/share_button_container"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:id="@+id/image_comment_avatar"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_width="@dimen/avatar_sz_medium"
+                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"
                     android:contentDescription="@string/description_user"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -65,13 +65,15 @@
                     android:id="@+id/text_comment_author"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:alpha="@dimen/material_emphasis_high_type"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:ellipsize="end"
                     android:maxLines="1"
                     android:textAppearance="?textAppearanceSubtitle2"
+                    android:textColor="?attr/wpColorOnSurfaceHigh"
+                    app:layout_constraintEnd_toStartOf="@+id/author_badge"
                     app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
                     app:layout_constraintTop_toTopOf="@+id/image_comment_avatar"
-                    tools:text="Wapu Puu" />
+                    tools:text="John Wapuu" />
 
                 <FrameLayout
                     android:id="@+id/author_badge"
@@ -80,6 +82,7 @@
                     android:layout_marginStart="@dimen/margin_medium"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/text_comment_author"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_comment_author"
                     app:layout_constraintTop_toTopOf="@+id/text_comment_author"
                     tools:visibility="visible">
@@ -89,9 +92,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_rectangle_rounded_primary_dark"
-                        android:paddingStart="4dp"
+                        android:paddingStart="@dimen/margin_small"
                         android:paddingTop="@dimen/margin_extra_extra_small"
-                        android:paddingEnd="4dp"
+                        android:paddingEnd="@dimen/margin_small"
                         android:paddingBottom="@dimen/margin_extra_extra_small"
                         android:text="@string/comment_author_badge"
                         android:textAppearance="?attr/textAppearanceOverline"
@@ -102,7 +105,7 @@
                     android:id="@+id/text_comment_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:maxLines="1"
                     android:textAppearance="?textAppearanceSubtitle2"
                     android:textColor="?attr/wpColorOnSurfaceMedium"
@@ -143,15 +146,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:alpha="@dimen/material_emphasis_high_type"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/wpColorOnSurfaceHigh"
             tools:text="text_comment_text" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="@dimen/reader_comments_action_bar_height"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -167,12 +170,14 @@
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_reply_material_white_24dp"
-                    android:tint="?attr/wpColorOnSurfaceMedium" />
+                    android:tint="?attr/wpColorOnSurfaceMedium"
+                    android:tintMode="src_in" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="@dimen/margin_extra_small"
+                    android:gravity="center_vertical"
                     android:text="@string/reply"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/wpColorOnSurfaceMedium" />
