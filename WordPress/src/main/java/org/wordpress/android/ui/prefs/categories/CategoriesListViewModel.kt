@@ -106,10 +106,14 @@ class CategoriesListViewModel @Inject constructor(
         }
     }
 
-    sealed class UiState {
-        data class Content(val list: List<CategoryNode>) : UiState()
-        object Loading : UiState()
-        sealed class Error : UiState() {
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val contentVisible: Boolean = false,
+        val errorVisible: Boolean = false
+    ) {
+        data class Content(val list: List<CategoryNode>) : UiState(contentVisible = true)
+        object Loading : UiState(loadingVisible = true)
+        sealed class Error : UiState(errorVisible = true) {
             abstract val image: Int
             abstract val title: UiString
             abstract val subtitle: UiString

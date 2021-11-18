@@ -72,29 +72,16 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     private fun SiteSettingsCategoriesListFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, {
+            progressBar.updateVisibility(it.loadingVisible)
+            categoriesRecyclerView.updateVisibility(it.contentVisible)
+            actionableEmptyView.updateVisibility(it.errorVisible)
             when (it) {
-                is Content -> showList(it.list)
-                is Error -> showError(it)
-                is Loading -> showLoading()
+                is Content -> updateContentLayout(it.list)
+                is Error -> updateErrorContent(it)
+                is Loading -> {
+                }
             }
         })
-    }
-
-    private fun SiteSettingsCategoriesListFragmentBinding.showLoading() {
-        progressBar.updateVisibility(true)
-
-        fabButton.updateVisibility(false)
-        categoriesRecyclerView.updateVisibility(false)
-        actionableEmptyView.updateVisibility(false)
-    }
-
-    private fun SiteSettingsCategoriesListFragmentBinding.showError(error: Error) {
-        updateErrorContent(error)
-        actionableEmptyView.updateVisibility(true)
-
-        fabButton.updateVisibility(false)
-        progressBar.updateVisibility(false)
-        categoriesRecyclerView.updateVisibility(false)
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: Error) {
@@ -109,13 +96,8 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         }
     }
 
-    private fun SiteSettingsCategoriesListFragmentBinding.showList(list: List<CategoryNode>) {
+    private fun updateContentLayout(list: List<CategoryNode>) {
         adapter.submitList(list)
-        categoriesRecyclerView.updateVisibility(true)
-
-        fabButton.updateVisibility(false)
-        progressBar.updateVisibility(false)
-        uiHelpers.updateVisibility(actionableEmptyView, false)
     }
 
     private fun onCategoryRowClicked(categoryNode: CategoryNode) {
