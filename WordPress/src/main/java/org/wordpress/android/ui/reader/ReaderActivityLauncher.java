@@ -200,8 +200,22 @@ public class ReaderActivityLauncher {
     /*
      * show specific comment for the passed Ids
      */
-    public static void showReaderComments(Context context, long blogId, long postId, long commentId, boolean isNewThreadedComment) {
-        showReaderComments(context, blogId, postId, DirectOperation.COMMENT_JUMP, commentId, null, isNewThreadedComment);
+    public static void showReaderComments(
+        Context context,
+        long blogId,
+        long postId,
+        long commentId,
+        boolean isNewThreadedComment
+    ) {
+        showReaderComments(
+                context,
+                blogId,
+                postId,
+                DirectOperation.COMMENT_JUMP,
+                commentId,
+                null,
+                isNewThreadedComment
+        );
     }
 
     /**

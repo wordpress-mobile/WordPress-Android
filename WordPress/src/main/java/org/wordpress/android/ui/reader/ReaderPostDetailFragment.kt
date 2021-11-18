@@ -602,7 +602,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 )
 
             is ReaderNavigationEvents.ShowReaderComments ->
-                ReaderActivityLauncher.showReaderComments(context, blogId, postId, threadedCommentsBelowPostFeatureConfig.isEnabled())
+                ReaderActivityLauncher.showReaderComments(
+                        context,
+                        blogId,
+                        postId,
+                        threadedCommentsBelowPostFeatureConfig.isEnabled()
+                )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 

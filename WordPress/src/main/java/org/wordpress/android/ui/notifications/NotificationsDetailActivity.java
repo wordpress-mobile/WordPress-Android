@@ -528,7 +528,13 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             return;
         }
 
-        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId, mThreadedCommentsBelowPostFeatureConfig.isEnabled());
+        ReaderActivityLauncher.showReaderComments(
+                this,
+                siteId,
+                postId,
+                commentId,
+                mThreadedCommentsBelowPostFeatureConfig.isEnabled()
+        );
     }
 
     private void setProgressVisible(boolean visible) {

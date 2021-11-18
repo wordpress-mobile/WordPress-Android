@@ -151,7 +151,13 @@ class FormattableContentClickHandler @Inject constructor(
     }
 
     private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
-        ReaderActivityLauncher.showReaderComments(activity, siteId, postId, commentId, threadedCommentsBelowPostFeatureConfig.isEnabled())
+        ReaderActivityLauncher.showReaderComments(
+                activity,
+                siteId,
+                postId,
+                commentId,
+                threadedCommentsBelowPostFeatureConfig.isEnabled()
+        )
     }
 
     private fun showBackup(activity: FragmentActivity, siteId: Long) {

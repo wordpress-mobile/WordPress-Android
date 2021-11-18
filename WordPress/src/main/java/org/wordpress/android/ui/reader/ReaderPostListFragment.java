@@ -2611,7 +2611,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 );
                 break;
             case COMMENTS:
-                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId, mThreadedCommentsBelowPostFeatureConfig.isEnabled());
+                ReaderActivityLauncher.showReaderComments(
+                        requireContext(),
+                        post.blogId,
+                        post.postId,
+                        mThreadedCommentsBelowPostFeatureConfig.isEnabled()
+                );
                 break;
             case TOGGLE_SEEN_STATUS:
                 if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {

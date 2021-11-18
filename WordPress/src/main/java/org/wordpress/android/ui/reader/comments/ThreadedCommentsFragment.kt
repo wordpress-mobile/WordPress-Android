@@ -77,19 +77,26 @@ import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNa
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils.setupUserSuggestions
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.*
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.EditTextUtils
+import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.WPActivityUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.Locale
 import javax.inject.Inject
 
-class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener  {
+class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener {
     private var binding: ThreadedCommentsFragmentBinding? = null
 
     private var mBlogId: Long = 0
@@ -99,15 +106,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     private var mSuggestionAdapter: SuggestionAdapter? = null
     private var mSuggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
-
-
     private var mIsUpdatingComments = false
     private var mHasUpdatedComments: Boolean = false
-
     private var mIsSubmittingComment = false
-
     private var mUpdateOnResume = false
-
     private var mDirectOperation: DirectOperation? = null
     private var mReplyToCommentId: Long = 0
     private var mCommentId: Long = 0
@@ -137,8 +139,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         mViewModel = ViewModelProvider(this, viewModelFactory).get(ReaderCommentListViewModel::class.java)
     }
 
-
-
     private fun ThreadedCommentsFragmentBinding.setupToolbar() {
         setHasOptionsMenu(true)
 
@@ -154,7 +154,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                         true
                 ) {
                     override fun handleOnBackPressed() {
-                        val fragment = parentFragmentManager.findFragmentByTag(CollapseFullScreenDialogFragment.TAG) as? CollapseFullScreenDialogFragment
+                        val fragment = parentFragmentManager.findFragmentByTag(
+                                CollapseFullScreenDialogFragment.TAG
+                        ) as? CollapseFullScreenDialogFragment
 
                         if (fragment != null && fragment.isAdded) {
                             fragment.onBackPressed()
@@ -183,7 +185,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         layoutCommentBox.run {
             editComment.initializeWithPrefix('@')
             editComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId))
-            editComment.addTextChangedListener(object: TextWatcher {
+            editComment.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
 
@@ -204,7 +206,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 true
             }
             btnSubmitReply.redirectContextClickToLongPressListener()
-
         }
 
         if (!loadPost()) {
@@ -306,7 +307,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             if (!isAdded) return@observe
 
             val fm: FragmentManager = childFragmentManager
-            val bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+            val bottomSheet =
+                    fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
             if (bottomSheet != null) return@observe
             event.applyIfNotHandled {
                 make(coordinator, mUiHelpers.getTextOfUiString(requireActivity(), this.message), Snackbar.LENGTH_LONG)
@@ -327,7 +329,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 if (!isAdded) return@observeEvent
 
                 val fm: FragmentManager = childFragmentManager
-                var bottomSheet = fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                var bottomSheet =
+                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
                 if (showBottomSheetData.show && bottomSheet == null) {
                     bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
                             showBottomSheetData.isReceivingNotifications
@@ -364,7 +367,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         }
     }
 
-
     private val mSignInClickListener = View.OnClickListener {
         if (!isAdded) {
             return@OnClickListener
@@ -392,7 +394,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         updateComments(showProgress = true, requestNextPage = false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -406,7 +407,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
         } else {
-            val args = requireArguments().getParcelable<ThreadedCommentsFragmentArgs>(KEY_THREADED_COMMENTS_FRAGMENT_ARGS)!!
+            val args = requireArguments().getParcelable<ThreadedCommentsFragmentArgs>(
+                    KEY_THREADED_COMMENTS_FRAGMENT_ARGS
+            )!!
             mBlogId = args.blogId
             mPostId = args.postId
             mDirectOperation = args.directOperation
@@ -458,7 +461,11 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                             val followText = followItem.actionView
                                     .findViewById<TextView>(R.id.follow_button)
                             followItem.actionView.setOnClickListener(
-                                    if (uiState.onFollowTapped != null) View.OnClickListener { uiState.onFollowTapped.invoke() } else null
+                                    if (uiState.onFollowTapped != null) {
+                                        View.OnClickListener { uiState.onFollowTapped.invoke() }
+                                    } else {
+                                        null
+                                    }
                             )
                             bellItem.setOnMenuItemClickListener {
                                 uiState.onManageNotificationsTapped.invoke()
@@ -503,7 +510,11 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         mReplyToCommentId = commentId
         binding?.layoutCommentBox?.run {
             editComment.setHint(
-                    if (mReplyToCommentId == 0L) string.reader_hint_comment_on_post else string.reader_hint_comment_on_comment
+                    if (mReplyToCommentId == 0L) {
+                        string.reader_hint_comment_on_post
+                    } else {
+                        string.reader_hint_comment_on_comment
+                    }
             )
             if (doFocus) {
                 editComment.postDelayed({
@@ -598,7 +609,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
     private fun getCommentAdapter(): ReaderCommentAdapter {
-        return mCommentAdapter ?: ReaderCommentAdapter(WPActivityUtils.getThemedContext(requireActivity()), mPost).apply {
+        return mCommentAdapter ?: ReaderCommentAdapter(
+                WPActivityUtils.getThemedContext(requireActivity()),
+                mPost
+        ).apply {
             // adapter calls this when user taps reply icon
             setReplyListener { commentId: Long ->
                 setReplyToCommentId(
@@ -642,7 +656,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     updateComments(showProgress = true, requestNextPage = true)
                 }
             }
-
         }.also {
             mCommentAdapter = it
         }
@@ -691,8 +704,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                             )
                         } else {
                             val wpComUserId: Long = mAccountStore.getAccount().getUserId()
-                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
-                                    && getCommentAdapter().refreshComment(mCommentId)) {
+                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId) &&
+                                    getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId)
                                 mReaderTracker.trackPost(
                                         AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
@@ -783,9 +796,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
     private fun checkEmptyView() {
         binding?.let {
-            val isEmpty = (hasCommentAdapter()
-                    && getCommentAdapter().isEmpty
-                    && !mIsSubmittingComment)
+            val isEmpty = (hasCommentAdapter() && getCommentAdapter().isEmpty && !mIsSubmittingComment)
             if (isEmpty && !NetworkUtils.isNetworkAvailable(requireContext())) {
                 it.textEmpty.setText(string.no_network_message)
                 it.textEmpty.visibility = View.VISIBLE
