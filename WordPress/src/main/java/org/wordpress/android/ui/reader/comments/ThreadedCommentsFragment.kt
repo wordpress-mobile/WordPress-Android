@@ -96,6 +96,18 @@ import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.Locale
 import javax.inject.Inject
 
+// TODO: as part of a refactor, this class was converted from the ReaderCommentListActivity.java to a kotlin
+// ThreadedCommentsActivity/ThreadedCommentsFragment pair. Remove SuppressWarnings exceptions below when
+// extracting logic from this fragment into the VM. Smaller warnings were fixed.
+@SuppressWarnings(
+        "EmptyFunctionBlock",
+        "LongMethod",
+        "LargeClass",
+        "NestedBlockDepth",
+        "ReturnCount",
+        "LongMethod",
+        "TooManyFunctions"
+)
 class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener {
     private var binding: ThreadedCommentsFragmentBinding? = null
 
@@ -523,7 +535,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     EditTextUtils.showSoftInput(editComment)
                     editComment.isFocusableInTouchMode = isFocusableInTouchMode
                     setupReplyToComment()
-                }, 200)
+                }, SHOW_SOFT_KEYBOARD_DELAY)
             } else {
                 setupReplyToComment()
             }
@@ -938,6 +950,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
         private const val KEY_THREADED_COMMENTS_FRAGMENT_ARGS = "threaded_comments_fragment_args"
+
+        private const val SHOW_SOFT_KEYBOARD_DELAY = 200L
 
         fun newInstance(args: ThreadedCommentsFragmentArgs): ThreadedCommentsFragment {
             return ThreadedCommentsFragment().apply {

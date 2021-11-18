@@ -595,19 +595,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
 
             is ReaderNavigationEvents.ShowReportPost ->
-                ReaderActivityLauncher.openUrl(
-                        context,
-                        readerUtilsWrapper.getReportPostUrl(url),
-                        OpenUrlType.INTERNAL
-                )
+                ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
-            is ReaderNavigationEvents.ShowReaderComments ->
-                ReaderActivityLauncher.showReaderComments(
-                        context,
-                        blogId,
-                        postId,
-                        threadedCommentsBelowPostFeatureConfig.isEnabled()
-                )
+            is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
+                    context,
+                    blogId,
+                    postId,
+                    threadedCommentsBelowPostFeatureConfig.isEnabled()
+            )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
