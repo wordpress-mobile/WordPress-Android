@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
@@ -117,7 +118,7 @@ class MySiteViewModel @Inject constructor(
     private val postCardsSource: PostCardsSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
-    mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -482,9 +483,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        quickStartCardSource.refresh()
-        currentAvatarSource.refresh()
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+        } else {
+            selectedSiteRepository.updateSiteSettingsIfNecessary()
+            quickStartCardSource.refresh()
+            currentAvatarSource.refresh()
+        }
     }
 
     fun clearActiveQuickStartTask() {
