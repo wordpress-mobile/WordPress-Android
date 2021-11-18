@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-02 06:49:48+0000
+Translation-Revision-Date: 2021-11-15 20:07:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Genom att lägga till ett anpassat domännamn underlättar du för besökare att hitta din webbplats</string>
+    <string name="domains_paid_plan_add_your_domain_title">Lägg till en egen domän</string>
+    <string name="my_site_create_first_post_excerpt">Inlägg visas i omvänd kronologisk ordning på din bloggsida. Dags att berätta om dina tankar för världen!</string>
+    <string name="my_site_create_first_post_title">Skapa ditt första inlägg</string>
+    <string name="my_site_untitled_post">Utan namn</string>
+    <string name="my_site_post_card_scheduled_title">Kommande schemalagda inlägg</string>
+    <string name="my_site_post_card_draft_title">Arbeta med ett inläggsutkast</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/år&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Din domän kommer omdirigeras till din webbplats på %s</string>
     <string name="gutenberg_native_create_link">Skapa länk</string>
@@ -165,9 +172,6 @@ Language: sv_SE
     <string name="fab_add_category_desc">Skapa kategori</string>
     <string name="support_ticket_subject">Support för WordPress för Android</string>
     <string name="site_settings_categories_hint">Hantera kategorierna för din webbplats</string>
-    <string name="site_settings_categories_empty_title">Du har inte några kategorier</string>
-    <string name="site_settings_categories_empty_subtitle">Lägg till dina vanligaste kategorier här, så att du snabbt kan välja dem för att kategorisera dina inlägg</string>
-    <string name="site_settings_categories_empty_button">Skapa en kategori</string>
     <string name="site_settings_categories_title">Kategorier</string>
     <string name="site_settings_blogging_reminders_title">Bloggningspåminnelser</string>
     <string name="page_is_posts_page_warning">Innehållet på sidan med dina senaste inlägg genereras automatiskt och kan inte redigeras.</string>
@@ -232,6 +236,7 @@ Language: sv_SE
     <string name="gutenberg_native_featured">Utvalda</string>
     <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
+    <string name="gutenberg_native_custom_url">Anpassad URL</string>
     <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>
     <string name="gutenberg_native_none">Ingen</string>
@@ -476,7 +481,6 @@ Language: sv_SE
     <string name="backup_download_generic_failure">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="backup_download_details_action_button_content_description">Skapa knapp för nedladdningsbar säkerhetskopia</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s är den valda punkten för att skapa en nedladdningsbar säkerhetskopia.</string>
-    <string name="gutenberg_native_image_link_url">URL-länk till bild</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s –</string>
     <string name="pages_item_date_author">%1$s – %2$s</string>
     <string name="pages_item_date_subtitle">%1$s –</string>
@@ -816,6 +820,7 @@ Language: sv_SE
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att ange en ny rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
     <string name="gutenberg_native_s_block_options">Inställningar för blocket %s</string>
+    <string name="gutenberg_native_remove_block">Ta bort blocket</string>
     <string name="gutenberg_native_duplicate_block">Duplicera block</string>
     <string name="gutenberg_native_copy_block">Kopiera block</string>
     <string name="gutenberg_native_copied_block">Blocket kopierat</string>

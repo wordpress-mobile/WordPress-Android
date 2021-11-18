@@ -162,9 +162,6 @@ Language: he_IL
     <string name="fab_add_category_desc">ליצור קטגוריה</string>
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
-    <string name="site_settings_categories_empty_title">אין לך קטגוריות</string>
-    <string name="site_settings_categories_empty_subtitle">אפשר להוסיף את הקטגוריות שנפוצות אצלך כאן כדי לבחור בהן במהירות בעת הקצאת קטגוריות לפוסטים שלך</string>
-    <string name="site_settings_categories_empty_button">ליצור קטגוריה</string>
     <string name="site_settings_categories_title">קטגוריות</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="site_settings_blogging_reminders_title">תזכורת לכתיבת בלוג</string>
@@ -473,7 +470,6 @@ Language: he_IL
     <string name="backup_download_generic_failure">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="backup_download_details_action_button_content_description">כפתור \'ליצור גיבוי להורדה\'</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s ⁦%2$s⁩ הוא המועד שנבחר ליצירת הגיבוי להורדה.</string>
-    <string name="gutenberg_native_image_link_url">כתובת URL לקישור התמונה</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
