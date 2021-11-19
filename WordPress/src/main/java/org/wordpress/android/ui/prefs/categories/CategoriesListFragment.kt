@@ -16,6 +16,7 @@ import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoriesListViewModel
