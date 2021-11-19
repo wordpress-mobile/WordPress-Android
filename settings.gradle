@@ -109,7 +109,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localAboutAutomatticPath) {
             dependencySubstitution {
                 println "Substituting about-automattic with the local build"
-                substitute module("$gradle.ext.aboutAutomatticBinaryPath") with project(':AboutAutomattic')
+                substitute module("$gradle.ext.aboutAutomatticBinaryPath") using project(':library')
             }
         }
     }
