@@ -63,32 +63,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
@@ -109,7 +83,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -378,7 +351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `avatar press opens me screen`() {
         viewModel.onAvatarPressed()
 
-        assertThat(navigationActions).containsOnly(OpenMeScreen)
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMeScreen)
     }
 
     /* LOGIN - NAVIGATION TO STATS */
@@ -389,7 +362,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.handleSuccessfulLoginResult()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     /* EMPTY VIEW */
@@ -424,7 +397,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onAddSitePressed()
 
-        assertThat(navigationActions).containsOnly(AddNewSite(true))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.AddNewSite(true))
     }
 
     /* REFRESH */
@@ -619,14 +592,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `site info card url click opens site`() = test {
         invokeSiteInfoCardAction(SiteInfoCardAction.URL_CLICK)
 
-        assertThat(navigationActions).containsOnly(OpenSite(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
         invokeSiteInfoCardAction(SiteInfoCardAction.SWITCH_SITE_CLICK)
 
-        assertThat(navigationActions).containsOnly(OpenSitePicker(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSitePicker(site))
     }
 
     /* QUICK ACTIONS CARD */
@@ -653,7 +626,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -667,7 +640,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -681,7 +654,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
@@ -695,7 +668,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
 
     @Test
@@ -709,7 +682,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
@@ -728,7 +701,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
-        assertThat(navigationActions).containsOnly(OpenPages(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
@@ -738,7 +711,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsOnly(OpenPages(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
@@ -747,7 +720,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPostsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenPosts(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
     }
 
     @Test
@@ -756,7 +729,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsMediaClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenMedia(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -769,7 +742,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
 
-        assertThat(navigationActions).containsOnly(OpenDomainRegistration(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDomainRegistration(site))
     }
 
     @Test
@@ -801,7 +774,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
+        assertThat(navigationActions.last())
+                .isInstanceOf(SiteNavigationAction.OpenQuickStartFullScreenDialog::class.java)
     }
 
     @Test
@@ -919,7 +893,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).containsExactly(
-                ShowQuickStartDialog(
+                SiteNavigationAction.ShowQuickStartDialog(
                         R.string.quick_start_dialog_need_help_manage_site_title,
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
@@ -992,7 +966,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_FIRST)
 
-                assertThat(navigationActions).containsOnly(OpenEditorToCreateNewPost(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
             }
 
     @Test
@@ -1002,7 +976,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_NEXT)
 
-                assertThat(navigationActions).containsOnly(OpenEditorToCreateNewPost(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
             }
 
     @Test
@@ -1011,7 +985,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
 
-        assertThat(navigationActions).containsOnly(OpenDrafts(site, PostListType.DRAFTS))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDrafts(site, PostListType.DRAFTS))
     }
 
     @Test
@@ -1021,7 +995,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
-                assertThat(navigationActions).containsOnly(OpenScheduledPosts(site, SCHEDULED))
+                assertThat(navigationActions)
+                        .containsOnly(SiteNavigationAction.OpenScheduledPosts(site, PostListType.SCHEDULED))
             }
 
     /* ITEM CLICK */
@@ -1030,14 +1005,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `activity item click emits OpenActivity navigation event`() {
         invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
 
-        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenActivityLog(site))
     }
 
     @Test
     fun `scan item click emits OpenScan navigation event`() {
         invokeItemClickAction(ListItemAction.SCAN)
 
-        assertThat(navigationActions).containsExactly(OpenScan(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenScan(site))
     }
 
     @Test
@@ -1045,14 +1020,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.PLAN)
 
         verify(quickStartRepository).completeTask(QuickStartTask.EXPLORE_PLANS)
-        assertThat(navigationActions).containsExactly(OpenPlan(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
     @Test
     fun `posts item click emits OpenPosts navigation event`() {
         invokeItemClickAction(ListItemAction.POSTS)
 
-        assertThat(navigationActions).containsExactly(OpenPosts(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPosts(site))
     }
 
     @Test
@@ -1060,63 +1035,63 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.PAGES)
 
         verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsExactly(OpenPages(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
     fun `admin item click emits OpenAdmin navigation event`() {
         invokeItemClickAction(ListItemAction.ADMIN)
 
-        assertThat(navigationActions).containsExactly(OpenAdmin(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenAdmin(site))
     }
 
     @Test
     fun `sharing item click emits OpenSharing navigation event`() {
         invokeItemClickAction(ListItemAction.SHARING)
 
-        assertThat(navigationActions).containsExactly(OpenSharing(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSharing(site))
     }
 
     @Test
     fun `site settings item click emits OpenSiteSettings navigation event`() {
         invokeItemClickAction(ListItemAction.SITE_SETTINGS)
 
-        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSiteSettings(site))
     }
 
     @Test
     fun `themes item click emits OpenThemes navigation event`() {
         invokeItemClickAction(ListItemAction.THEMES)
 
-        assertThat(navigationActions).containsExactly(OpenThemes(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenThemes(site))
     }
 
     @Test
     fun `plugins item click emits OpenPlugins navigation event`() {
         invokeItemClickAction(ListItemAction.PLUGINS)
 
-        assertThat(navigationActions).containsExactly(OpenPlugins(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlugins(site))
     }
 
     @Test
     fun `media item click emits OpenMedia navigation event`() {
         invokeItemClickAction(ListItemAction.MEDIA)
 
-        assertThat(navigationActions).containsExactly(OpenMedia(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMedia(site))
     }
 
     @Test
     fun `comments item click emits OpenMedia navigation event`() {
         invokeItemClickAction(ListItemAction.COMMENTS)
 
-        assertThat(navigationActions).containsExactly(OpenComments(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenComments(site))
     }
 
     @Test
     fun `view site item click emits OpenSite navigation event`() {
         invokeItemClickAction(ListItemAction.VIEW_SITE)
 
-        assertThat(navigationActions).containsExactly(OpenSite(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSite(site))
     }
 
     @Test
@@ -1126,7 +1101,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(OpenStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -1137,7 +1112,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(OpenStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -1154,7 +1129,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
 
     @Test
@@ -1165,7 +1140,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     /* ITEM VISIBILITY */
@@ -1254,7 +1229,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMediaPicker(site))
     }
 
     @Test
@@ -1263,7 +1238,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMediaPicker(site))
     }
 
     @Test

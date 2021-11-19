@@ -35,10 +35,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.EditPost
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
@@ -748,16 +744,17 @@ class MySiteViewModel @Inject constructor(
 
     fun onPostItemClick(postId: Int) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            _onNavigation.value = Event(EditPost(site, postId))
+            _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
         }
     }
 
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = when (postCardType) {
-                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> Event(OpenEditorToCreateNewPost(site))
-                PostCardType.DRAFT -> Event(OpenDrafts(site, PostListType.DRAFTS))
-                PostCardType.SCHEDULED -> Event(OpenScheduledPosts(site, PostListType.SCHEDULED))
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
+                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDrafts(site, PostListType.DRAFTS))
+                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site, PostListType.SCHEDULED))
             }
         }
     }

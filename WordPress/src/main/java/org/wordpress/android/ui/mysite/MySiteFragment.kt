@@ -37,43 +37,6 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.EditPost
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -275,66 +238,71 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Suppress("ComplexMethod")
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
-        is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
-        is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-        is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
-        is OpenCropActivity -> startCropActivity(action.imageUri)
-        is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-        is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
-        is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
-        is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
-        is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
-        is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-        is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
-        is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
-        is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-        is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
-        is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-        is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
-        is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
-        is OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
-        is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
-        is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-        is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
-        is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is AddNewStory -> ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
+        is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+        is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+        is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+        is SiteNavigationAction.OpenMediaPicker ->
+            mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
+        is SiteNavigationAction.OpenCropActivity -> startCropActivity(action.imageUri)
+        is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+        is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
+        is SiteNavigationAction.OpenScan -> ActivityLauncher.viewScan(activity, action.site)
+        is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
+        is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+        is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+        is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
+        is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
+        is SiteNavigationAction.OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
+        is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
+        is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
+        is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
+        is SiteNavigationAction.OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
+        is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
+        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is SiteNavigationAction.ConnectJetpackForStats ->
+            ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+        is SiteNavigationAction.StartWPComLoginForJetpackStats ->
+            ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
+        is SiteNavigationAction.OpenJetpackSettings ->
+            ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
+        is SiteNavigationAction.AddNewStory ->
+            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
+        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
                 activity,
                 action.site,
                 action.source,
                 action.mediaIds.toLongArray()
         )
-        is AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
+        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
                 activity,
                 action.site,
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
+        is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
                 action.site
         )
-        is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+        is SiteNavigationAction.OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-        is ShowQuickStartDialog -> showQuickStartDialog(
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
                 action.title,
                 action.message,
                 action.positiveButtonLabel,
                 action.negativeButtonLabel
         )
-        is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
-        is OpenDrafts ->
+        is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+        is SiteNavigationAction.OpenDrafts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
-        is OpenScheduledPosts ->
+        is SiteNavigationAction.OpenScheduledPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is OpenEditorToCreateNewPost ->
+        is SiteNavigationAction.OpenEditorToCreateNewPost ->
             ActivityLauncher.addNewPostForResult(
                     requireActivity(),
                     action.site,
@@ -342,10 +310,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     PagePostCreationSourcesDetail.POST_FROM_MY_SITE
             )
         // TODO: ashiagr this is unhandled right now as mocked post is being used which cannot be opened in the editor
-        is EditPost -> Unit
+        is SiteNavigationAction.EditPost -> Unit
     }
 
-    private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
+    private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
                 .setTitle(action.title)
