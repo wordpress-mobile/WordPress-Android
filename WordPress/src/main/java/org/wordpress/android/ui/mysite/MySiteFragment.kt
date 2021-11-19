@@ -27,10 +27,11 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -48,6 +49,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -59,6 +62,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
@@ -77,6 +81,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -324,6 +329,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.negativeButtonLabel
         )
         is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+        is OpenDrafts ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+        is OpenScheduledPosts ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
+        is OpenEditorToCreateNewPost ->
+            ActivityLauncher.addNewPostForResult(
+                    requireActivity(),
+                    action.site,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE
+            )
     }
 
     private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {

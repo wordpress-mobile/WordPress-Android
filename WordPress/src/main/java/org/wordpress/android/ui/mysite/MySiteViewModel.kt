@@ -35,6 +35,9 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
@@ -60,6 +63,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -741,8 +745,12 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-        selectedSiteRepository.getSelectedSite()?.let {
-            // TODO: ashiagr implement navigation
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            _onNavigation.value = when (postCardType) {
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> Event(OpenEditorToCreateNewPost(site))
+                PostCardType.DRAFT -> Event(OpenDrafts(site, PostListType.DRAFTS))
+                PostCardType.SCHEDULED -> Event(OpenScheduledPosts(site, PostListType.SCHEDULED))
+            }
         }
     }
 
