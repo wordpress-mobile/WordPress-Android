@@ -42,6 +42,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.EditPost
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
@@ -340,6 +341,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     false,
                     PagePostCreationSourcesDetail.POST_FROM_MY_SITE
             )
+        // TODO: ashiagr this is unhandled right now as mocked post is being used which cannot be opened in the editor
+        is EditPost -> Unit
     }
 
     private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {

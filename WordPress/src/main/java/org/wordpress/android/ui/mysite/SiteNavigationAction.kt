@@ -67,4 +67,5 @@ sealed class SiteNavigationAction {
     data class OpenDrafts(val site: SiteModel, val postListType: PostListType) : SiteNavigationAction()
     data class OpenScheduledPosts(val site: SiteModel, val postListType: PostListType) : SiteNavigationAction()
     data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
+    data class EditPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
 }

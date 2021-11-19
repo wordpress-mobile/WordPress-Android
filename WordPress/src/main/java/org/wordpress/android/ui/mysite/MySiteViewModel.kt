@@ -35,6 +35,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.EditPost
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
@@ -266,6 +267,7 @@ class MySiteViewModel @Inject constructor(
             ),
             PostCardBuilderParams(
                     mockedPostsData = mockedPostsData,
+                    onPostItemClick = this::onPostItemClick,
                     onFooterLinkClick = this::onPostCardFooterLinkClick
             ),
             QuickActionsCardBuilderParams(
@@ -742,6 +744,12 @@ class MySiteViewModel @Inject constructor(
 
     fun onPullToRefresh() {
         postCardsSource.refresh()
+    }
+
+    fun onPostItemClick(postId: Int) {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            _onNavigation.value = Event(EditPost(site, postId))
+        }
     }
 
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
