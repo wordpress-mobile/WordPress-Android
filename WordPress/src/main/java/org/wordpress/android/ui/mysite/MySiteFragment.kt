@@ -519,7 +519,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
-        swipeToRefreshHelper.isRefreshing = false
+        hideRefreshIndicatorIfNeeded()
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
@@ -554,6 +554,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
         swipeToRefreshHelper.setEnabled(isEnabled)
+    }
+
+    private fun hideRefreshIndicatorIfNeeded() {
+        if (swipeToRefreshHelper.isRefreshing) {
+            swipeToRefreshHelper.isRefreshing = !viewModel.shouldHideRefreshIndicator()
+        }
     }
 
     companion object {
