@@ -70,8 +70,8 @@ class CardsBuilderTest {
         get() = MockedPostsData(
                 posts = Posts(
                         hasPublishedPosts = true,
-                        draft = listOf(Post(id = "1", title = "draft")),
-                        scheduled = listOf(Post(id = "1", title = "scheduled"))
+                        draft = listOf(Post(id = 1, title = "draft")),
+                        scheduled = listOf(Post(id = 1, title = "scheduled"))
                 )
         )
 
@@ -187,7 +187,7 @@ class CardsBuilderTest {
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
                 ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock()),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock(), mock()),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,

@@ -56,8 +56,8 @@ class PostCardsSourceTest : BaseUnitTest() {
         get() = MockedPostsData(
                 posts = Posts(
                         hasPublishedPosts = true,
-                        draft = listOf(Post(id = "1", title = "draft")),
-                        scheduled = listOf(Post(id = "1", title = "scheduled"))
+                        draft = listOf(Post(id = 1, title = "draft")),
+                        scheduled = listOf(Post(id = 1, title = "scheduled"))
                 )
         )
 }

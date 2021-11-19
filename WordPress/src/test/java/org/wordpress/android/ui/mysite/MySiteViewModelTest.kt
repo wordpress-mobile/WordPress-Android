@@ -35,6 +35,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -150,6 +151,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
+    private val postId = 100
     private lateinit var site: SiteModel
     private lateinit var siteInfoCard: SiteInfoCard
     private val onSiteChange = MutableLiveData<SiteModel>()
@@ -180,6 +182,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
+    private var onPostItemClick: ((postId: Int) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -192,8 +195,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     MockedPostsData(
                             posts = Posts(
                                     hasPublishedPosts = true,
-                                    draft = listOf(Post(id = "1", title = "")),
-                                    scheduled = listOf(Post(id = "1", title = ""))
+                                    draft = listOf(Post(id = 1, title = "")),
+                                    scheduled = listOf(Post(id = 1, title = ""))
                             )
                     )
             )
@@ -999,6 +1002,18 @@ class MySiteViewModelTest : BaseUnitTest() {
                         .containsOnly(SiteNavigationAction.OpenScheduledPosts(site, PostListType.SCHEDULED))
             }
 
+    /* POST CARD - POST ITEM */
+
+    @Test
+    fun `when post item is clicked, then post is opened for edit`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(postId)
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditPost(site, postId))
+            }
+
     /* ITEM CLICK */
 
     @Test
@@ -1470,11 +1485,19 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
         val params = (mockInvocation.arguments.filterIsInstance<PostCardBuilderParams>()).first()
+        onPostItemClick = params.onPostItemClick
         onPostCardFooterLinkClick = params.onFooterLinkClick
         return PostCardWithPostItems(
                 postCardType = PostCardType.DRAFT,
                 title = UiStringRes(0),
-                postItems = emptyList(),
+                postItems = listOf(
+                        PostItem(
+                                title = UiStringRes(0),
+                                excerpt = UiStringRes(0),
+                                featuredImageUrl = "",
+                                onClick = { (onPostItemClick as (Int) -> Unit).invoke(postId) }
+                        )
+                ),
                 footerLink = FooterLink(
                         label = UiStringRes(0),
                         onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)

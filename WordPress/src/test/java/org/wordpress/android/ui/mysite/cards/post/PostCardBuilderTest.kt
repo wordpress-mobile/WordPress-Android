@@ -23,7 +23,7 @@ import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-private const val POST_ID = "1"
+private const val POST_ID = 1
 private const val POST_TITLE = "title"
 private const val POST_EXCERPT = "excerpt"
 private const val FEATURED_IMAGE_URL = "/image/url"
@@ -35,6 +35,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     private val post = Post(id = POST_ID)
 
     private val onPostCardFooterLinkClick: (PostCardType) -> Unit = {}
+    private val onPostItemClick: (Int) -> Unit = {}
 
     @Before
     fun setUp() {
@@ -320,6 +321,7 @@ class PostCardBuilderTest : BaseUnitTest() {
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(
             PostCardBuilderParams(
                     mockedPostsData = mockedData,
+                    onPostItemClick = onPostItemClick,
                     onFooterLinkClick = onPostCardFooterLinkClick
             )
     )
