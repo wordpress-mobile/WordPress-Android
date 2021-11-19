@@ -43,6 +43,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -68,6 +69,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDrafts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenEditorToCreateNewPost
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
@@ -77,6 +80,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScheduledPosts
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
@@ -87,7 +91,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -104,6 +108,8 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
+import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -200,6 +206,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
+    private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -976,6 +983,47 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartCardSource).refresh()
     }
 
+    /* POST CARDS */
+
+    @Test
+    fun `given create first card, when footer link is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_FIRST)
+
+                assertThat(navigationActions).containsOnly(OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `given create next card, when footer link is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_NEXT)
+
+                assertThat(navigationActions).containsOnly(OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
+
+        assertThat(navigationActions).containsOnly(OpenDrafts(site, PostListType.DRAFTS))
+    }
+
+    @Test
+    fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
+
+                assertThat(navigationActions).containsOnly(OpenScheduledPosts(site, SCHEDULED))
+            }
+
     /* ITEM CLICK */
 
     @Test
@@ -1337,7 +1385,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
-            val postCard = initPostCard()
+            val postCard = initPostCard(it)
             listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
         }.whenever(cardsBuilder).build(
                 domainRegistrationCardBuilderParams = any(),
@@ -1445,10 +1493,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCardWithPostItems(
-            postCardType = DRAFT,
-            title = UiStringRes(0),
-            postItems = emptyList(),
-            footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
-    )
+    private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
+        val params = (mockInvocation.arguments.filterIsInstance<PostCardBuilderParams>()).first()
+        onPostCardFooterLinkClick = params.onFooterLinkClick
+        return PostCardWithPostItems(
+                postCardType = PostCardType.DRAFT,
+                title = UiStringRes(0),
+                postItems = emptyList(),
+                footerLink = FooterLink(
+                        label = UiStringRes(0),
+                        onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
+                )
+        )
+    }
 }
