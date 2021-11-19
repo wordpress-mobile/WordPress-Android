@@ -744,7 +744,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        postCardsSource.refresh()
+        refresh()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
