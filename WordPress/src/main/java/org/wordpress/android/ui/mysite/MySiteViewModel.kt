@@ -86,7 +86,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LongMethod", "LongParameterList", "TooManyFunctions")
+@Suppress("LongMethod", "LongParameterList", "TooManyFunctions", "LargeClass")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -747,6 +747,7 @@ class MySiteViewModel @Inject constructor(
         postCardsSource.refresh()
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let {
             // TODO: ashiagr implement navigation
