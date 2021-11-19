@@ -160,25 +160,26 @@ class MySiteViewModel @Inject constructor(
             postCardsSource
     )
 
-    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
-        val result = MediatorLiveData<SiteIdToState>()
-        val currentSources = if (siteLocalId != null) {
-            mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
-        } else {
-            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.build(viewModelScope).distinctUntilChanged() }
-        }
-        for (newSource in currentSources) {
-            result.addSource(newSource) { partialState ->
-                if (partialState != null) {
-                    result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+    val state: LiveData<MySiteUiState> =
+        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+            val result = MediatorLiveData<SiteIdToState>()
+            val currentSources = if (siteLocalId != null) {
+                mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
+            } else {
+                mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+                        .map { source -> source.build(viewModelScope).distinctUntilChanged() }
+            }
+            for (newSource in currentSources) {
+                result.addSource(newSource) { partialState ->
+                    if (partialState != null) {
+                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+                    }
                 }
             }
-        }
-        // We want to filter out the empty state where we have a site ID but site object is missing.
-        // Without this check there is an emission of a NoSites state even if we have the site
-        result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-    }.distinctUntilChanged()
+            // We want to filter out the empty state where we have a site ID but site object is missing.
+            // Without this check there is an emission of a NoSites state even if we have the site
+            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+        }.distinctUntilChanged()
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
@@ -750,6 +751,19 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             // TODO: ashiagr implement navigation
         }
+    }
+
+    fun shouldHideRefreshIndicator() = haveAllSourcesFinishedRefreshing()
+
+    private fun haveAllSourcesFinishedRefreshing(): Boolean {
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+                if (it.isRefreshing() == true) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     data class UiModel(
