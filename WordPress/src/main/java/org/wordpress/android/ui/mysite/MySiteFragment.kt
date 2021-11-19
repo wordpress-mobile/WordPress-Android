@@ -125,6 +125,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
 
+    // Capture and track the first `onResume` event so we can circumvent refreshing sources on initial onResume
+    private var isFirstResume = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // The following prevents the soft keyboard from leaving a white space when dismissed.
@@ -378,8 +381,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
-        viewModel.checkAndShowQuickStartNotice()
+        if (isFirstResume) {
+            isFirstResume = false
+        } else {
+            viewModel.refresh()
+            viewModel.checkAndShowQuickStartNotice()
+        }
     }
 
     override fun onPause() {
