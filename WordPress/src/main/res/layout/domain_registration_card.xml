@@ -2,9 +2,13 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_site_register_domain_cta"
+    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_large">
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_medium">
 
     <!--Register Domain-->
     <LinearLayout
