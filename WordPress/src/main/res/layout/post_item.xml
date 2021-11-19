@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:foreground="?attr/selectableItemBackground"
     android:paddingBottom="@dimen/my_site_card_row_padding"
     android:paddingEnd="@dimen/my_site_card_row_padding"
     android:paddingStart="@dimen/my_site_card_row_padding"
