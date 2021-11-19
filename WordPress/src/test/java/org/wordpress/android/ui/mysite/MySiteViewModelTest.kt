@@ -341,18 +341,20 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         allRefreshedMySiteSources = listOf(
-            selectedSiteSource,
-            siteIconProgressSource,
-            quickStartCardSource,
-            currentAvatarSource,
-            domainRegistrationSource,
-            scanAndBackupSource,
-            dynamicCardsSource,
-            postCardsSource)
+                selectedSiteSource,
+                siteIconProgressSource,
+                quickStartCardSource,
+                currentAvatarSource,
+                domainRegistrationSource,
+                scanAndBackupSource,
+                dynamicCardsSource,
+                postCardsSource
+        )
 
         selectRefreshedMySiteSources = listOf(
                 quickStartCardSource,
-                currentAvatarSource)
+                currentAvatarSource
+        )
     }
 
     /* SITE STATE */
@@ -477,6 +479,24 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.refresh()
 
         selectRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when refreshing, then refresh indicator should show`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            whenever(it.isRefreshing()).thenReturn(true)
+        }
+
+        assertThat(viewModel.shouldHideRefreshIndicator()).isFalse
+    }
+
+    @Test
+    fun `when mySiteDashboardPhase2FeatureConfig is disabled, then refresh indicator should hide`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        assertThat(viewModel.shouldHideRefreshIndicator()).isTrue
     }
 
     @Test
