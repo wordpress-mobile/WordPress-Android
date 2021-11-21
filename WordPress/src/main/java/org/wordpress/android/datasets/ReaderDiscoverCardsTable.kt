@@ -48,7 +48,7 @@ object ReaderDiscoverCardsTable {
         try {
             if (c.moveToFirst()) {
                 do {
-                    val cardJson = c.getString(c.getColumnIndex(CARDS_JSON_COLUMN))
+                    val cardJson = c.getString(c.getColumnIndexOrThrow(CARDS_JSON_COLUMN))
                     cardJsonList.add(cardJson)
                 } while (c.moveToNext())
             }
