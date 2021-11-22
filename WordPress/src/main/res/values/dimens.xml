@@ -82,7 +82,7 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
     <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
+    <dimen name="content_margin_site_row_start">@dimen/margin_extra_large</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>

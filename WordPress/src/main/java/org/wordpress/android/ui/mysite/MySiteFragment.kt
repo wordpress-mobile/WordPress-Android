@@ -157,7 +157,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(
-                MySiteCardItemDecoration(
+                MySiteCardAndItemDecoration(
                         horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
                         verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
                 )
