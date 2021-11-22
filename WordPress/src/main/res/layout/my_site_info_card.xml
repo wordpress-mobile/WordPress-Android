@@ -56,22 +56,22 @@
         android:id="@+id/quick_start_icon_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:size="small"
-        android:translationX="@dimen/quick_start_focus_point_small_offset_negative"
-        android:translationY="@dimen/quick_start_focus_point_small_offset_negative"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
         android:layout_gravity="center_vertical|center"
         android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        android:translationX="@dimen/quick_start_focus_point_small_offset_negative"
+        android:translationY="@dimen/quick_start_focus_point_small_offset_negative"
         app:layout_constraintStart_toStartOf="@id/blavatar_container"
         app:layout_constraintTop_toTopOf="@id/blavatar_container"
-        tools:ignore="RtlSymmetry"/>
+        app:size="small"
+        tools:ignore="RtlSymmetry" />
 
     <org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
         android:id="@+id/site_info_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/my_site_blavatar_sz"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:minHeight="@dimen/my_site_blavatar_sz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/switch_site"
         app:layout_constraintStart_toEndOf="@id/blavatar_container"
@@ -81,12 +81,12 @@
         android:id="@+id/quick_start_title_focus_point"
         android:layout_width="@dimen/quick_start_focus_point_size"
         android:layout_height="@dimen/quick_start_focus_point_size"
-        android:elevation="@dimen/quick_start_focus_point_elevation"
         android:layout_gravity="center_vertical|center"
         android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
         app:layout_constraintEnd_toEndOf="@id/site_info_container"
         app:layout_constraintTop_toTopOf="@id/site_info_container"
-        tools:ignore="RtlSymmetry"/>
+        tools:ignore="RtlSymmetry" />
 
     <ImageButton
         android:id="@+id/switch_site"
