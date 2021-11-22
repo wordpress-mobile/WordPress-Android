@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -527,12 +528,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         hideRefreshIndicatorIfNeeded()
+        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(false)
+        }
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
-        actionableEmptyView.setVisible(true)
+        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(true)
+            actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+        }
         swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }

@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
@@ -27,6 +28,8 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val RETRY_DELAY = 300L
 
 class CategoriesListViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
@@ -55,7 +58,9 @@ class CategoriesListViewModel @Inject constructor(
 
         this.siteModel = siteModel
         getCategoriesFromDb()
-        fetchCategoriesFromNetwork(isInvokedFromInit = true)
+        launch {
+            fetchCategoriesFromNetwork(isInvokedFromInit = true)
+        }
     }
 
     private fun getCategoriesFromDb() {
@@ -66,13 +71,18 @@ class CategoriesListViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
+    private fun onRetryClicked() {
+        launch { fetchCategoriesFromNetwork() }
+    }
+
+    private suspend fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
+        if (!isInvokedFromInit) {
+            _uiState.postValue(Loading)
+            delay(RETRY_DELAY)
+        }
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            if (!isInvokedFromInit) _uiState.value = Loading
-            launch {
-                getCategoriesUseCase.fetchSiteCategories(siteModel)
-            }
-        } else if (_uiState.value is Loading) _uiState.value = NoConnection(::fetchCategoriesFromNetwork)
+            getCategoriesUseCase.fetchSiteCategories(siteModel)
+        } else if (_uiState.value is Loading) _uiState.postValue(NoConnection(::onRetryClicked))
     }
 
     @SuppressWarnings("unused")
@@ -92,7 +102,7 @@ class CategoriesListViewModel @Inject constructor(
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
         if (event.isError) {
-            if (_uiState.value is Loading) _uiState.value = GenericError(::fetchCategoriesFromNetwork)
+            if (_uiState.value is Loading) _uiState.value = GenericError(::onRetryClicked)
             return
         }
         launch {

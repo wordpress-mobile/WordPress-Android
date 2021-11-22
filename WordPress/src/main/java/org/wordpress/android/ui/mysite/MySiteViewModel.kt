@@ -86,7 +86,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LongMethod", "LongParameterList", "TooManyFunctions", "LargeClass")
+@Suppress("LargeClass", "LongMethod", "LongParameterList", "TooManyFunctions")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -115,7 +115,7 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val postCardsSource: PostCardsSource,
+    postCardsSource: PostCardsSource,
     private val selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
@@ -667,6 +667,7 @@ class MySiteViewModel @Inject constructor(
 
     fun onAddSitePressed() {
         _onNavigation.value = Event(SiteNavigationAction.AddNewSite(accountStore.hasAccessToken()))
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
 
     override fun onCleared() {
@@ -765,6 +766,16 @@ class MySiteViewModel @Inject constructor(
             }
         }
         return true
+    }
+
+    fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
+        if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
+        setGone()
+    }
+
+    fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
+        if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
+        setVisible()
     }
 
     data class UiModel(
