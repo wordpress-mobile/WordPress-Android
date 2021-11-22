@@ -383,11 +383,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        if (isFirstResume) {
-            isFirstResume = false
-        } else {
-            viewModel.refresh()
-        }
+        viewModel.onResume(isFirstResume)
+        isFirstResume = false
     }
 
     override fun onPause() {
