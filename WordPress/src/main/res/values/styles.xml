@@ -587,10 +587,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
@@ -1229,8 +1229,8 @@
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
@@ -1249,7 +1249,7 @@
     <!-- Reader styles -->
     <style name="SubfilterSectionItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="SubfilterSectionTitle">

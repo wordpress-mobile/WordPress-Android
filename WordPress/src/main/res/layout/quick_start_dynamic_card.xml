@@ -23,7 +23,7 @@
             android:layout_width="@dimen/quick_start_card_progress_indicator_size"
             android:layout_height="@dimen/quick_start_card_progress_indicator_size"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/content_margin_site_row_start"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:indeterminate="false"
             android:progressDrawable="@drawable/quick_start_card_progress_drawable"
             tools:progress="75"

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/content_margin_site_row_start"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
         app:cardElevation="0dp"
