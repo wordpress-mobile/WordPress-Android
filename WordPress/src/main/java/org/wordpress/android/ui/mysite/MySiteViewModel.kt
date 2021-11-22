@@ -484,13 +484,18 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh() {
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
-        } else {
+        mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+    }
+
+    fun onResume(isFirstResume: Boolean = false) {
+        if (isFirstResume || (!isFirstResume && !mySiteDashboardPhase2FeatureConfig.isEnabled())) {
             selectedSiteRepository.updateSiteSettingsIfNecessary()
             quickStartCardSource.refresh()
             currentAvatarSource.refresh()
+        } else {
+            refresh()
         }
+        checkAndShowQuickStartNotice()
     }
 
     fun clearActiveQuickStartTask() {
