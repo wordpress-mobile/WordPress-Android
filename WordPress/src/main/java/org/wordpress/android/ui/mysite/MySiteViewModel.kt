@@ -744,10 +744,6 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    fun onPullToRefresh() {
-        refresh()
-    }
-
     @Suppress("unused", "UNUSED_PARAMETER")
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let {
@@ -755,17 +751,17 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun shouldHideRefreshIndicator() = haveAllSourcesFinishedRefreshing()
+    fun isRefreshing() = areSourcesRefreshing()
 
-    private fun haveAllSourcesFinishedRefreshing(): Boolean {
+    private fun areSourcesRefreshing(): Boolean {
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
-                    return false
+                    return true
                 }
             }
         }
-        return true
+        return false
     }
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
