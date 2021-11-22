@@ -2,6 +2,9 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
@@ -1326,6 +1329,29 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
 
+    /* CLEARED */
+    @Test
+    fun `when cleared() is invoked, then domainRegistrationSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(domainRegistrationSource).clear()
+    }
+
+    @Test
+    fun `when cleared() is invoked, then scanAndBackupSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(scanAndBackupSource).clear()
+    }
+
+    @Test
+    fun `when cleared() is invoked, then selectedSiteSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(selectedSiteSource).clear()
+    }
+
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -1505,4 +1531,14 @@ class MySiteViewModelTest : BaseUnitTest() {
             postItems = emptyList(),
             footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
     )
+
+    fun ViewModel.invokeOnCleared() {
+        val viewModelStore = ViewModelStore()
+        val viewModelProvider = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T = this@invokeOnCleared as T
+        })
+        viewModelProvider.get(this@invokeOnCleared::class.java)
+        viewModelStore.clear()
+    }
 }
