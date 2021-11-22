@@ -59,8 +59,9 @@ data class MediaWPRESTResponse(
     )
 }
 
-fun MediaWPRESTResponse.toMediaModel(): MediaModel {
+fun MediaWPRESTResponse.toMediaModel(localSiteId: Int): MediaModel {
     val mediaModel = MediaModel()
+    mediaModel.localSiteId = localSiteId
     mediaModel.mediaId = id
     val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).parse(dateGmt)
     mediaModel.uploadDate = DateTimeUtils.iso8601FromDate(date)
