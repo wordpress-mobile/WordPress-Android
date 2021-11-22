@@ -12,9 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
