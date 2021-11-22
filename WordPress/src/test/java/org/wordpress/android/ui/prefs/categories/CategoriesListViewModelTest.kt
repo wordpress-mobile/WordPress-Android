@@ -150,6 +150,20 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         assertTrue(uiStates.last() is NoConnection)
     }
 
+    @Test
+    fun `given network available, when retry is invoked, then no connection error is displayed`() {
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
+                .thenReturn(arrayListOf(), mock())
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false).thenReturn(true)
+        viewModel.start(siteModel)
+
+        (uiStates.last() as NoConnection).action.invoke()
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+        viewModel.onTaxonomyChanged(getTaxonomyChangedCallback())
+        assertTrue(uiStates.last() is Content)
+    }
+
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {
         val taxonomyChanged = OnTaxonomyChanged(0)
         taxonomyChanged.causeOfChange = FETCH_CATEGORIES
