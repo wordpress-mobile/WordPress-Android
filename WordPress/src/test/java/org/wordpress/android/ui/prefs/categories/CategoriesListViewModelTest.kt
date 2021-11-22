@@ -151,7 +151,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given network available, when retry is invoked, then no connection error is displayed`() {
+    fun `given network available, when retry is invoked, then list of items from network is displayed`() {
         whenever(getCategoriesUseCase.getSiteCategories(siteModel))
                 .thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false).thenReturn(true)
