@@ -1452,7 +1452,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(selectedSiteSource).clear()
     }
 
-
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
