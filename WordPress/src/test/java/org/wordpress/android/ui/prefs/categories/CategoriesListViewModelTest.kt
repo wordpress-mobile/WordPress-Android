@@ -113,6 +113,43 @@ class CategoriesListViewModelTest : BaseUnitTest() {
         assertTrue(uiStates.last() is GenericError)
     }
 
+    @Test
+    fun `given error occurs, when retry is invoked, then loading is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable())
+                .thenReturn(true)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(getGenericTaxonomyError())
+        (uiStates.last() as GenericError).action.invoke()
+
+        verify(getCategoriesUseCase, times(2)).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is Loading)
+    }
+
+    @Test
+    fun `given api error occurs, when retry is invoked on no network, then no network is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable())
+                .thenReturn(true).thenReturn(false)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(getGenericTaxonomyError())
+        (uiStates.last() as GenericError).action.invoke()
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is NoConnection)
+    }
+
+    @Test
+    fun `given no network, when retry is invoked, then no connection error is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel.start(siteModel)
+
+        (uiStates.last() as NoConnection).action.invoke()
+
+        verify(getCategoriesUseCase, never()).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is NoConnection)
+    }
+
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {
         val taxonomyChanged = OnTaxonomyChanged(0)
         taxonomyChanged.causeOfChange = FETCH_CATEGORIES
