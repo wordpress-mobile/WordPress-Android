@@ -284,8 +284,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         // author name uses different color for comments from the post's author
-        if (comment.getAuthorName().equals(mPost.getAuthorName())
-            && comment.getAuthorUrl().equals(mPost.getAuthorBlogUrl())) {
+        if (comment.authorId == mPost.authorId) {
             commentHolder.mAuthorBadge.setVisibility(View.VISIBLE);
         } else {
             commentHolder.mAuthorBadge.setVisibility(View.GONE);
