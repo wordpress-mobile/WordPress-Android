@@ -86,8 +86,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no items in db with internet available, when vm starts, then list of items from network is displayed`() {
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
-                .thenReturn(arrayListOf(), mock())
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.start(siteModel)
@@ -101,8 +100,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no items in db and api error occurs, when vm starts, then error is displayed`() {
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
-                .thenReturn(arrayListOf())
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
 
@@ -115,8 +113,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given error occurs, when retry is invoked, then loading is displayed`() {
-        whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
@@ -128,8 +125,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given api error occurs, when retry is invoked on no network, then no network is displayed`() {
-        whenever(networkUtilsWrapper.isNetworkAvailable())
-                .thenReturn(true).thenReturn(false)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true).thenReturn(false)
         viewModel.start(siteModel)
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
@@ -152,8 +148,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given network available, when retry is invoked, then list of items from network is displayed`() {
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
-                .thenReturn(arrayListOf(), mock())
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false).thenReturn(true)
         viewModel.start(siteModel)
 
