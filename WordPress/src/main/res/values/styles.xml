@@ -582,17 +582,6 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="MySiteListRowDescription">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
-    </style>
-
     <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:gravity">end|center_vertical</item>
