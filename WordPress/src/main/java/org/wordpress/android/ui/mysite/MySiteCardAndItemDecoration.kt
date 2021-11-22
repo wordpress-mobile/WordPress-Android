@@ -22,7 +22,8 @@ class MySiteCardAndItemDecoration(
                 outRect.left = horizontalMargin
                 outRect.right = horizontalMargin
             }
-            MySiteCardAndItem.Type.SITE_INFO_CARD.ordinal -> Unit
+            MySiteCardAndItem.Type.SITE_INFO_CARD.ordinal,
+            MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD.ordinal-> Unit
             else -> {
                 outRect.bottom = verticalMargin
                 outRect.top = verticalMargin
