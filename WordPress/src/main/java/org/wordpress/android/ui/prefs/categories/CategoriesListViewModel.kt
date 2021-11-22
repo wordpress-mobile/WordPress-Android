@@ -72,7 +72,7 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     private fun onRetryClicked() {
-        launch { fetchCategoriesFromNetwork(false) }
+        launch { fetchCategoriesFromNetwork() }
     }
 
     private suspend fun fetchCategoriesFromNetwork(isInvokedFromInit: Boolean = false) {
