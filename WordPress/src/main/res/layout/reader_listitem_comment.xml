@@ -150,6 +150,7 @@
             android:focusableInTouchMode="false"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/wpColorOnSurfaceHigh"
+            app:lineHeight="@dimen/reader_comments_content_line_height"
             tools:text="text_comment_text" />
 
         <RelativeLayout
