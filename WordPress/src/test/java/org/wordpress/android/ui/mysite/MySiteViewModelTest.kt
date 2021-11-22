@@ -482,21 +482,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when refreshing, then refresh indicator should show`() {
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when sources are refreshing, then refresh indicator should show`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
             whenever(it.isRefreshing()).thenReturn(true)
         }
 
-        assertThat(viewModel.shouldHideRefreshIndicator()).isFalse
+        assertThat(viewModel.isRefreshing()).isTrue
     }
 
     @Test
     fun `when mySiteDashboardPhase2FeatureConfig is disabled, then refresh indicator should hide`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
 
-        assertThat(viewModel.shouldHideRefreshIndicator()).isTrue
+        assertThat(viewModel.isRefreshing()).isFalse
     }
 
     @Test
