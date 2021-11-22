@@ -89,6 +89,13 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
+    fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
+        coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
+            val payload = syncFetchMediaList(site, number, offset, mimeType)
+            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
+        }
+    }
+
     private fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
         fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
             media.setUploadState(FAILED)
@@ -165,6 +172,46 @@ class WPV2MediaRestClient @Inject constructor(
 
             awaitClose {
                 call.cancel()
+            }
+        }
+    }
+
+    private suspend fun syncFetchMediaList(
+        site: SiteModel,
+        perPage: Int,
+        offset: Int,
+        mimeType: MimeType.Type?
+    ): FetchMediaListResponsePayload {
+        val url = WPAPI.media.getWPComUrl(site.siteId)
+        val params = mutableMapOf(
+                "per_page" to perPage.toString(),
+        )
+        if (offset > 0) {
+            params["offset"] = offset.toString()
+        }
+        if (mimeType != null) {
+            params["mime_type"] = mimeType.value
+        }
+        val response = WPComGsonRequestBuilder().syncGetRequest(
+                this,
+                url,
+                params,
+                Array<MediaWPRESTResponse>::class.java
+        )
+
+        return when (response) {
+            is Error -> {
+                val errorMessage = "could not parse Fetch all media response: $response"
+                AppLog.w(MEDIA, errorMessage)
+                val error = MediaError(PARSE_ERROR)
+                error.logMessage = errorMessage
+                FetchMediaListResponsePayload(site, error, mimeType)
+            }
+            is Success -> {
+                val mediaList = response.data.map { it.toMediaModel() }
+                AppLog.v(MEDIA, "Fetched media list for site with size: " + mediaList.size)
+                val canLoadMore = mediaList.size == perPage
+                FetchMediaListResponsePayload(site, mediaList, offset > 0, canLoadMore, mimeType)
             }
         }
     }
