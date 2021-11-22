@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -443,28 +444,119 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
-    /* REFRESH */
+    /* ON RESUME */
 
     @Test
-    fun `when refresh is triggered, then update site settings if necessary`() {
-        viewModel.refresh()
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when post first onResume is triggered, then update site settings if necessary`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume()
 
         verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
     }
 
     @Test
-    fun `when refresh is triggered, then refresh quick start`() {
-        viewModel.refresh()
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when post first onResume is triggered, then refresh quick start`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume()
 
         verify(quickStartCardSource).refresh()
     }
 
     @Test
-    fun `when refresh is triggered, then refresh current avatar`() {
-        viewModel.refresh()
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when post first onResume is triggered, then refresh current avatar`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume()
 
         verify(currentAvatarSource).refresh()
     }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when first onResume is triggered, then update site settings if necessary`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when first onResume is triggered, then refresh quick start`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(quickStartCardSource).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when first onResume is triggered, then refresh current avatar`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when first onResume is triggered, then update site settings if necessary`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when first onResume is triggered, then refresh quick start`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(quickStartCardSource).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when first onResume is triggered, then refresh current avatar`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(true)
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is enabled, when post first onResume is triggered, then refresh is invoked`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        val vm = spy(viewModel)
+
+        vm.onResume()
+
+        verify(vm).refresh()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when post first onResume is triggered, then refresh is not invoked`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        val vm = spy(viewModel)
+
+        vm.onResume()
+
+        verify(vm, never()).refresh()
+    }
+
+    @Test
+    fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
+        val vm = spy(viewModel)
+
+        vm.onResume()
+
+        verify(vm).checkAndShowQuickStartNotice()
+    }
+
+    /* REFRESH */
 
     @Test
     fun `given mySiteDashboardPhase2FeatureConfig is enabled, when refresh triggers, then all sources are refreshed`() {
