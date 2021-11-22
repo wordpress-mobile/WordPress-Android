@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_medium_large"
-    android:paddingStart="@dimen/content_margin_site_row_start"
-    android:paddingTop="@dimen/margin_extra_large"
     tools:ignore="RtlSymmetry">
 
     <com.google.android.material.card.MaterialCardView
@@ -15,6 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/content_margin_site_row_start"
+        android:layout_marginTop="@dimen/margin_extra_large"
         app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,6 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@drawable/ripple_oval"
         android:contentDescription="@string/my_site_btn_switch_site"
         android:padding="@dimen/margin_large"
