@@ -156,6 +156,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(
+                MySiteCardItemDecoration(
+                        horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
+                        verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
+                )
+        )
 
         val adapter = MySiteAdapter(imageManager, uiHelpers)
 
