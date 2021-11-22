@@ -184,7 +184,7 @@ class WPV2MediaRestClient @Inject constructor(
     ): FetchMediaListResponsePayload {
         val url = WPAPI.media.getWPComUrl(site.siteId)
         val params = mutableMapOf(
-                "per_page" to perPage.toString(),
+                "per_page" to perPage.toString()
         )
         if (offset > 0) {
             params["offset"] = offset.toString()
