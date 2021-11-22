@@ -20,6 +20,7 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroup "org.wordpress.mediapicker"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
         }
@@ -421,6 +422,9 @@ dependencies {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }
+
+    implementation "org.wordpress:mediapicker:$mediapickerVersion"
+    implementation "org.wordpress.mediapicker:source-device:$mediapickerVersion"
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 

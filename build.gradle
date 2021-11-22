@@ -134,6 +134,8 @@ ext {
     daggerVersion = '2.29.1'
     fluxCVersion = '1.30.0'
 
+    mediapickerVersion = 'trunk-4da42c711820c4b2e83b7735fbb39dbcf8c9176c'
+
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
     lifecycleVersion = '2.2.0'
