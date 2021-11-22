@@ -744,7 +744,7 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER")
     fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let {
             // TODO: ashiagr implement navigation
