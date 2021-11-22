@@ -485,6 +485,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given mySiteDashboardPhase2FeatureConfig is disabled, when refresh triggers, then updateSiteSettings is invoked`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.refresh()
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
     fun `given mySiteDashboardPhase2FeatureConfig is enabled, when sources are refreshing, then refresh indicator should show`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
