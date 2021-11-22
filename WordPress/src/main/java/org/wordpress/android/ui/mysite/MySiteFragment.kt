@@ -202,7 +202,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (NetworkUtils.checkConnection(requireActivity())) {
-                viewModel.onPullToRefresh()
+                viewModel.refresh()
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
@@ -213,6 +213,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
+            hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state.cardAndItems)
                 is State.NoSites -> loadEmptyView(state.shouldShowImage)
@@ -386,7 +387,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             isFirstResume = false
         } else {
             viewModel.refresh()
-            viewModel.checkAndShowQuickStartNotice()
         }
     }
 
@@ -527,7 +527,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
-        hideRefreshIndicatorIfNeeded()
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
@@ -540,7 +539,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
         }
-        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
@@ -572,7 +570,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun hideRefreshIndicatorIfNeeded() {
         if (swipeToRefreshHelper.isRefreshing) {
-            swipeToRefreshHelper.isRefreshing = !viewModel.shouldHideRefreshIndicator()
+            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
         }
     }
 
