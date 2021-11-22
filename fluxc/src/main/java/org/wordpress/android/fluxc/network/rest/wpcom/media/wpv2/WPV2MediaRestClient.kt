@@ -32,13 +32,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.PARSE_ERROR
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.REQUEST_TOO_LARGE
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import java.io.IOException
@@ -85,6 +90,17 @@ class WPV2MediaRestClient @Inject constructor(
     }
 
     private fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
+        fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
+            media.setUploadState(FAILED)
+            val payload = ProgressPayload(media, 1f, false, error)
+            try {
+                sendBlocking(payload)
+                close()
+            } catch (e: CancellationException) {
+                // the flow has been cancelled
+            }
+        }
+
         return callbackFlow {
             val url = WPAPI.media.getWPComUrl(site.siteId)
             val body = WPRestUploadRequestBody(media) { media, progress ->
@@ -141,7 +157,7 @@ class WPV2MediaRestClient @Inject constructor(
                             handleFailure(media, error)
                         }
                     } else {
-                        val error = response.parseError()
+                        val error = response.parseUploadError()
                         handleFailure(media, error)
                     }
                 }
@@ -153,18 +169,7 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
-    private fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
-        media.setUploadState(FAILED)
-        val payload = ProgressPayload(media, 1f, false, error)
-        try {
-            sendBlocking(payload)
-            close()
-        } catch (e: CancellationException) {
-            // the flow has been cancelled
-        }
-    }
-
-    private fun Response.parseError(): MediaError {
+    private fun Response.parseUploadError(): MediaError {
         val mediaError = MediaError(MediaErrorType.fromHttpStatusCode(code))
         mediaError.statusCode = code
         mediaError.logMessage = message
