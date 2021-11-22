@@ -22,7 +22,6 @@ repositories {
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
-            includeGroup "com.automattic.about"
         }
     }
     maven {
