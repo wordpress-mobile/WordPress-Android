@@ -146,7 +146,7 @@ class WPV2MediaRestClient @Inject constructor(
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
-                            val uploadedMedia = res.toMediaModel()
+                            val uploadedMedia = res.toMediaModel(site.id)
                             val payload = ProgressPayload(uploadedMedia, 1f, true, false)
                             try {
                                 sendBlocking(payload)
@@ -208,7 +208,7 @@ class WPV2MediaRestClient @Inject constructor(
                 FetchMediaListResponsePayload(site, error, mimeType)
             }
             is Success -> {
-                val mediaList = response.data.map { it.toMediaModel() }
+                val mediaList = response.data.map { it.toMediaModel(site.id) }
                 AppLog.v(MEDIA, "Fetched media list for site with size: " + mediaList.size)
                 val canLoadMore = mediaList.size == perPage
                 FetchMediaListResponsePayload(site, mediaList, offset > 0, canLoadMore, mimeType)
