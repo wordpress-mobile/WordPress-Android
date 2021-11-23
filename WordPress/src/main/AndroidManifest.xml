@@ -549,6 +549,11 @@
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".ui.reader.comments.ThreadedCommentsActivity"
+            android:label="@string/reader_title_comments"
+            android:theme="@style/WordPress.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
