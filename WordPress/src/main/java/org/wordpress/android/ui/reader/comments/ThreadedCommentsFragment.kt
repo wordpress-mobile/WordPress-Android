@@ -87,7 +87,6 @@ import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.observeEvent
@@ -132,7 +131,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var readerTracker: ReaderTracker
-    @Inject lateinit var followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var mViewModel: ReaderCommentListViewModel
 
@@ -332,28 +330,21 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
         })
 
-        if (!followByPushNotificationFeatureConfig.isEnabled()) {
-            mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
-                commentAdapter?.updateFollowingState(uiState)
-            }
-            )
-        } else {
-            mViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
-                if (!isAdded) return@observeEvent
+        mViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+            if (!isAdded) return@observeEvent
 
-                val fm: FragmentManager = childFragmentManager
-                var bottomSheet =
-                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
-                if (showBottomSheetData.show && bottomSheet == null) {
-                    bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                            showBottomSheetData.isReceivingNotifications
-                    )
-                    bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
-                } else if (!showBottomSheetData.show && bottomSheet != null) {
-                    bottomSheet.dismiss()
-                }
-            })
-        }
+            val fm: FragmentManager = childFragmentManager
+            var bottomSheet =
+                    fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+            if (showBottomSheetData.show && bottomSheet == null) {
+                bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                        showBottomSheetData.isReceivingNotifications
+                )
+                bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
+            } else if (!showBottomSheetData.show && bottomSheet != null) {
+                bottomSheet.dismiss()
+            }
+        })
 
         mViewModel.start(blogId, postId)
     }
@@ -465,46 +456,44 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (followByPushNotificationFeatureConfig.isEnabled()) {
-            inflater.inflate(R.menu.threaded_comments_menu, menu)
-            mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
-                        val bellItem = menu.findItem(R.id.manage_notifications_item)
-                        val followItem = menu.findItem(R.id.follow_item)
+        inflater.inflate(R.menu.threaded_comments_menu, menu)
+        mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+            val bellItem = menu.findItem(R.id.manage_notifications_item)
+            val followItem = menu.findItem(R.id.follow_item)
 
-                        if (bellItem != null && followItem != null) {
-                            val shimmerView: ShimmerFrameLayout = followItem.actionView
-                                    .findViewById(R.id.shimmer_view_container)
-                            val followText = followItem.actionView
-                                    .findViewById<TextView>(R.id.follow_button)
-                            followItem.actionView.setOnClickListener(
-                                    if (uiState.onFollowTapped != null) {
-                                        View.OnClickListener { uiState.onFollowTapped.invoke() }
-                                    } else {
-                                        null
-                                    }
-                            )
-                            bellItem.setOnMenuItemClickListener {
-                                uiState.onManageNotificationsTapped.invoke()
-                                true
-                            }
-                            followItem.actionView.isEnabled = uiState.isMenuEnabled
-                            followText.isEnabled = uiState.isMenuEnabled
-                            bellItem.isEnabled = uiState.isMenuEnabled
-                            if (uiState.showMenuShimmer) {
-                                if (!shimmerView.isShimmerVisible) {
-                                    shimmerView.showShimmer(true)
-                                } else if (!shimmerView.isShimmerStarted) {
-                                    shimmerView.startShimmer()
-                                }
-                            } else {
-                                shimmerView.hideShimmer()
-                            }
-                            followItem.isVisible = uiState.isFollowMenuVisible
-                            bellItem.isVisible = uiState.isBellMenuVisible
+            if (bellItem != null && followItem != null) {
+                val shimmerView: ShimmerFrameLayout = followItem.actionView
+                        .findViewById(R.id.shimmer_view_container)
+                val followText = followItem.actionView
+                        .findViewById<TextView>(R.id.follow_button)
+                followItem.actionView.setOnClickListener(
+                        if (uiState.onFollowTapped != null) {
+                            View.OnClickListener { uiState.onFollowTapped.invoke() }
+                        } else {
+                            null
                         }
+                )
+                bellItem.setOnMenuItemClickListener {
+                    uiState.onManageNotificationsTapped.invoke()
+                    true
+                }
+                followItem.actionView.isEnabled = uiState.isMenuEnabled
+                followText.isEnabled = uiState.isMenuEnabled
+                bellItem.isEnabled = uiState.isMenuEnabled
+                if (uiState.showMenuShimmer) {
+                    if (!shimmerView.isShimmerVisible) {
+                        shimmerView.showShimmer(true)
+                    } else if (!shimmerView.isShimmerStarted) {
+                        shimmerView.startShimmer()
                     }
-            )
+                } else {
+                    shimmerView.hideShimmer()
+                }
+                followItem.isVisible = uiState.isFollowMenuVisible
+                bellItem.isVisible = uiState.isBellMenuVisible
+            }
         }
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
