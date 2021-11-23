@@ -523,19 +523,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
     }
 
-    @Test // TODO: Actually refresh is invoked here, and should be tested for that, but for the old refresh, right?
-    fun `given not first resume and phase 2 disabled, when on resume, then refresh is not invoked`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.onResume(false)
-
-        // TODO: I added all those here together but should be split into 3 tests, just like you did with the above
-        //  suchlike tests.
-        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
-        verify(quickStartCardSource).refresh()
-        verify(currentAvatarSource).refresh()
-    }
-
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
         viewModel.onResume(false)
