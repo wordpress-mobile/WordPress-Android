@@ -56,6 +56,14 @@ class MySiteSourceManager @Inject constructor(
         return true
     }
 
+    fun refresh() {
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            refreshAllSources()
+        } else {
+            refreshSelectSources()
+        }
+    }
+
     private fun refreshAllSources() {
         mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }

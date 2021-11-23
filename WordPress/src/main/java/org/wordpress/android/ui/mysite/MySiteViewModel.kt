@@ -477,13 +477,7 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
-    fun refresh() {
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            refreshNew()
-        } else {
-            refreshOld()
-        }
-    }
+    fun refresh() = mySiteSourceManager.refresh()
 
     private fun refreshNew() {
         mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
