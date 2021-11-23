@@ -28,7 +28,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
-import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -479,25 +478,8 @@ class MySiteViewModel @Inject constructor(
 
     fun refresh() = mySiteSourceManager.refresh()
 
-    private fun refreshNew() {
-        mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
-    }
-
-    private fun refreshOld() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        quickStartCardSource.refresh()
-        currentAvatarSource.refresh()
-    }
-
     fun onResume(isFirstResume: Boolean) {
-        when (isFirstResume) {
-            true -> refreshOld()
-            false -> if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-                refreshNew()
-            } else {
-                refreshOld()
-            }
-        }
+        mySiteSourceManager.onResume(isFirstResume)
         checkAndShowQuickStartNotice()
         _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }

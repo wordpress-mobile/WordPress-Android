@@ -64,6 +64,17 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 
+    fun onResume(isFirstResume: Boolean) {
+        when (isFirstResume) {
+            true -> refreshSelectSources()
+            false -> if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                refreshAllSources()
+            } else {
+                refreshSelectSources()
+            }
+        }
+    }
+
     private fun refreshAllSources() {
         mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }
