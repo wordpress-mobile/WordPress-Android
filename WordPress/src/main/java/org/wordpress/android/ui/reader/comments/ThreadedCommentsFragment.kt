@@ -125,6 +125,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     private var mDirectOperation: DirectOperation? = null
     private var mReplyToCommentId: Long = 0
     private var mCommentId: Long = 0
+    private var mHighlightedCommentId: Long = 0
     private var mRestorePosition: Int = 0
     private var mInterceptedUri: String? = null
     @Inject lateinit var mAccountStore: AccountStore
@@ -412,12 +413,15 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         // update the post and its comments upon creation
         mUpdateOnResume = savedInstanceState == null
 
+        binding = ThreadedCommentsFragmentBinding.bind(view)
+
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID)
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID)
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION)
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS)
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+            mHighlightedCommentId = savedInstanceState.getLong(KEY_HIGHLITHED_COMMENT_ID)
         } else {
             val args = requireArguments().getParcelable<ThreadedCommentsFragmentArgs>(
                     KEY_THREADED_COMMENTS_FRAGMENT_ARGS
@@ -429,7 +433,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             mInterceptedUri = args.interceptedUri
         }
 
-        binding = ThreadedCommentsFragmentBinding.bind(view).apply {
+        binding?.run {
             initObservers()
             setupToolbar()
             setupViewContent(savedInstanceState)
@@ -572,6 +576,12 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId)
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments)
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri)
+
+        binding?.run {
+            (recyclerView.adapter as? ReaderCommentAdapter)?.let {
+                outState.putLong(KEY_HIGHLITHED_COMMENT_ID, it.highlightCommentId)
+            }
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -625,6 +635,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 WPActivityUtils.getThemedContext(requireActivity()),
                 mPost
         ).apply {
+            if (mHighlightedCommentId > 0) {
+                setHighlightCommentId(mHighlightedCommentId, false)
+            }
+
             // adapter calls this when user taps reply icon
             setReplyListener { commentId: Long ->
                 setReplyToCommentId(
@@ -948,8 +962,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     companion object {
         private const val KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id"
         private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
-        private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
         private const val KEY_THREADED_COMMENTS_FRAGMENT_ARGS = "threaded_comments_fragment_args"
+        private const val KEY_HIGHLITHED_COMMENT_ID = "highlighted_comment_id"
+        private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
 
         private const val SHOW_SOFT_KEYBOARD_DELAY = 200L
 
