@@ -29,7 +29,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStart
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
-import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -767,18 +766,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun isRefreshing() = areSourcesRefreshing()
-
-    private fun areSourcesRefreshing(): Boolean {
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
-                if (it.isRefreshing() == true) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
+    fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
         if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
