@@ -127,7 +127,7 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
-    private val _onShowSwipeRefreshLayout = MutableLiveData((Event(mySiteDashboardPhase2FeatureConfig.isEnabled())))
+    private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -511,6 +511,7 @@ class MySiteViewModel @Inject constructor(
             }
         }
         checkAndShowQuickStartNotice()
+        _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }
 
     fun clearActiveQuickStartTask() {
