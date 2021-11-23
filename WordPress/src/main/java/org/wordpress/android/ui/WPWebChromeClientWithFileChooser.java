@@ -61,8 +61,11 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
              * return extensions when the form input type is utilized instead of
              *  MIME types. The logic below is to accommodate the use cases by utilizing the extension to resolve
              *  the appropriate Mime type with MediaUtils.getMimeTypeForExtension().
+             *
+             *  N.B The condition below ensures that mime-types that have dots in them (eg. application/vnd.ms-excel)
+             *  are not accepted.
              */
-            if (acceptableMimeType.contains(".")) {
+            if (acceptableMimeType.contains(".") && !acceptableMimeType.contains("/")) {
                 String extension = acceptableMimeType.replace(".", "");
                 resolvedMimeType =
                         MediaUtils.getMimeTypeForExtension(extension);
