@@ -55,4 +55,14 @@ class MySiteSourceManager @Inject constructor(
         }
         return true
     }
+
+    private fun refreshAllSources() {
+        mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+    }
+
+    private fun refreshSelectSources() {
+        selectedSiteSource.updateSiteSettingsIfNecessary()
+        currentAvatarSource.refresh()
+        quickStartCardSource.refresh()
+    }
 }
