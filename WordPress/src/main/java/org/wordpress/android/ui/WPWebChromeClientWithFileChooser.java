@@ -49,7 +49,7 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         // Sets an explicit MIME data type that states that all MIME types are supported.
         intent.setType("*/*");
         // Creates values for Intent.EXTRA_MIME_TYPES with the MIME types that are currently acceptable.
-        String[] resolvedMimeTypes = new String[acceptableMimeTypes.length];
+        String[] resolvedMimeTypes = new String[acceptableMimeTypesLength];
         String resolvedMimeType = null;
 
         for (int index = 0; index < acceptableMimeTypesLength; index++) {
