@@ -38,7 +38,6 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
@@ -95,7 +94,6 @@ class MySiteViewModel @Inject constructor(
     private val siteStoriesHandler: SiteStoriesHandler,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
-    private val quickStartCardSource: QuickStartCardSource,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
@@ -662,7 +660,7 @@ class MySiteViewModel @Inject constructor(
     private fun startQuickStart(siteLocalId: Int) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper.startQuickStart(siteLocalId)
-            quickStartCardSource.refresh()
+            mySiteSourceManager.refreshQuickStart()
         }
     }
 
