@@ -33,7 +33,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -236,17 +237,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(domainRegistrationSource.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
-        whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
-        whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
-        whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
-        whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
+        whenever(domainRegistrationSource.build(any(), any())).thenReturn(isDomainCreditAvailable)
+        whenever(scanAndBackupSource.build(any(), any())).thenReturn(jetpackCapabilities)
+        whenever(currentAvatarSource.build(any())).thenReturn(currentAvatar)
+        whenever(currentAvatarSource.build(any(), any())).thenReturn(currentAvatar)
+        whenever(dynamicCardsSource.build(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(postCardsSource.buildSource(any(), any())).thenReturn(postsUpdate)
-        whenever(quickStartCardSource.buildSource(any(), any())).thenReturn(quickStartUpdate)
-        whenever(siteIconProgressSource.buildSource(any(), any())).thenReturn(showSiteIconProgressBar)
-        whenever(selectedSiteSource.buildSource(any(), any())).thenReturn(selectedSite)
+        whenever(postCardsSource.build(any(), any())).thenReturn(postsUpdate)
+        whenever(quickStartCardSource.build(any(), any())).thenReturn(quickStartUpdate)
+        whenever(siteIconProgressSource.build(any(), any())).thenReturn(showSiteIconProgressBar)
+        whenever(selectedSiteSource.build(any(), any())).thenReturn(selectedSite)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -1444,9 +1445,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCardDraftOrScheduled(
+    private fun initPostCard() = PostCardWithPostItems(
             postCardType = DRAFT,
             title = UiStringRes(0),
-            postItems = emptyList()
+            postItems = emptyList(),
+            footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
     )
 }

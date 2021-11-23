@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader
 
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -18,13 +20,11 @@ import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_ST
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
-    @Mock lateinit var followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var viewModel: ReaderCommentListViewModel
     private val blogId = 100L
@@ -37,13 +37,11 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(followCommentsHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(followCommentsHandler.followStatusUpdate).thenReturn(followStatusUpdate)
-        whenever(followByPushNotificationFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel = ReaderCommentListViewModel(
                 followCommentsHandler,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER,
-                followByPushNotificationFeatureConfig
+                TEST_DISPATCHER
         )
     }
 
@@ -110,7 +108,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         doAnswer {
             stateChanged = FollowStateChanged(blogId, postId, false, false)
             followStatusUpdate.postValue(stateChanged)
-        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, false, null)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(eq(blogId), eq(postId), eq(false), anyOrNull())
 
         setupObserversAndStart()
 
@@ -136,7 +134,7 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
         doAnswer {
             stateChanged = FollowStateChanged(blogId, postId, true, false)
             followStatusUpdate.postValue(stateChanged)
-        }.whenever(followCommentsHandler).handleFollowCommentsClicked(blogId, postId, true, null)
+        }.whenever(followCommentsHandler).handleFollowCommentsClicked(eq(blogId), eq(postId), eq(true), anyOrNull())
 
         setupObserversAndStart()
 

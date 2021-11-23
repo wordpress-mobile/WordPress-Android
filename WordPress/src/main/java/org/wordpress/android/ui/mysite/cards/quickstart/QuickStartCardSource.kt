@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.ui.mysite.MySiteSource
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -22,10 +22,10 @@ class QuickStartCardSource @Inject constructor(
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
-) : MySiteSource<QuickStartUpdate> {
-    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+) : MySiteRefreshSource<QuickStartUpdate> {
+    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         quickStartRepository.resetTask()
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
@@ -45,12 +45,7 @@ class QuickStartCardSource @Inject constructor(
             } else {
                 listOf()
             }
-            if (refresh.value == true) refresh.value = false
-            QuickStartUpdate(activeTask, categories)
+            getState(QuickStartUpdate(activeTask, categories))
         }
-    }
-
-    fun refresh() {
-        refresh.postValue(true)
     }
 }

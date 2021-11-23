@@ -37,6 +37,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -84,7 +85,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LongMethod", "LongParameterList", "TooManyFunctions")
+@Suppress("LargeClass", "LongMethod", "LongParameterList", "TooManyFunctions")
 class MySiteViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -161,10 +162,10 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
         val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteLocalId != null) {
-            mySiteSources.map { source -> source.buildSource(viewModelScope, siteLocalId).distinctUntilChanged() }
+            mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.buildSource(viewModelScope).distinctUntilChanged() }
+                    .map { source -> source.build(viewModelScope).distinctUntilChanged() }
         }
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
@@ -259,7 +260,10 @@ class MySiteViewModel @Inject constructor(
                     isDomainCreditAvailable = isDomainCreditAvailable,
                     domainRegistrationClick = this::domainRegistrationClick
             ),
-            PostCardBuilderParams(mockedPostsData = mockedPostsData),
+            PostCardBuilderParams(
+                    mockedPostsData = mockedPostsData,
+                    onFooterLinkClick = this::onPostCardFooterLinkClick
+            ),
             QuickActionsCardBuilderParams(
                     siteModel = site,
                     activeTask = activeTask,
@@ -657,6 +661,7 @@ class MySiteViewModel @Inject constructor(
 
     fun onAddSitePressed() {
         _onNavigation.value = Event(SiteNavigationAction.AddNewSite(accountStore.hasAccessToken()))
+        analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
 
     override fun onCleared() {
@@ -734,6 +739,22 @@ class MySiteViewModel @Inject constructor(
 
     fun onPullToRefresh() {
         postCardsSource.refresh()
+    }
+
+    fun onPostCardFooterLinkClick(postCardType: PostCardType) {
+        selectedSiteRepository.getSelectedSite()?.let {
+            // TODO: ashiagr implement navigation
+        }
+    }
+
+    fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
+        if (isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_HIDDEN)
+        setGone()
+    }
+
+    fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
+        if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
+        setVisible()
     }
 
     data class UiModel(

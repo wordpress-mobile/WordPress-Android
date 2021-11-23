@@ -118,13 +118,6 @@ class UploadUtilsWrapper @Inject constructor(
         messageText: String
     ) = UploadUtils.showSnackbar(view, messageText, sequencer)
 
-    fun showSnackbarSuccessActionOrange(
-        view: View?,
-        messageRes: Int,
-        buttonTitleRes: Int,
-        onClickListener: OnClickListener?
-    ) = UploadUtils.showSnackbarSuccessActionOrange(view, messageRes, buttonTitleRes, onClickListener, sequencer)
-
     fun getErrorMessageResIdFromPostError(
         postStatus: PostStatus,
         isPage: Boolean,

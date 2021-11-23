@@ -22,7 +22,6 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import javax.inject.Inject
 
 class ReaderCommentsFollowUseCase @Inject constructor(
@@ -30,8 +29,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
     private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider,
     private val accountStore: AccountStore,
     private val readerTracker: ReaderTracker,
-    private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
+    private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
     suspend fun getMySubscriptionToPost(blogId: Long, postId: Long, isInit: Boolean) = flow {
         if (!accountStore.hasAccessToken()) {
@@ -102,18 +100,11 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                                     false,
                                     userMessage = UiStringRes(
                                             if (status.isFollowing) {
-                                                if (followByPushNotificationFeatureConfig.isEnabled()) {
-                                                    R.string.reader_follow_comments_subscribe_success_enable_push
-                                                } else {
-                                                    R.string.reader_follow_comments_subscribe_success
-                                                }
+                                                R.string.reader_follow_comments_subscribe_success_enable_push
                                             } else {
-                                                if (followByPushNotificationFeatureConfig.isEnabled()) {
-                                                    R.string.reader_follow_comments_unsubscribe_from_all_success
-                                                } else {
-                                                    R.string.reader_follow_comments_unsubscribe_success
-                                                }
-                                            })
+                                                R.string.reader_follow_comments_unsubscribe_from_all_success
+                                            }
+                                    )
                             )
                     )
                     properties.addFollowActionResult(SUCCEEDED)

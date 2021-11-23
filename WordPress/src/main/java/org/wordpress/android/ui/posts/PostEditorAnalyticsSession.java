@@ -63,10 +63,10 @@ public class PostEditorAnalyticsSession implements Serializable {
         PUBLISH
     }
 
-    public static PostEditorAnalyticsSession fromBundle(Bundle extras, String key,
+    public static PostEditorAnalyticsSession fromBundle(Bundle bundle, String key,
                                                         AnalyticsTrackerWrapper analyticsTrackerWrapper) {
         PostEditorAnalyticsSession postEditorAnalyticsSession =
-                (PostEditorAnalyticsSession) extras.getSerializable(key);
+                (PostEditorAnalyticsSession) bundle.getSerializable(key);
         postEditorAnalyticsSession.mAnalyticsTrackerWrapper = analyticsTrackerWrapper;
         return postEditorAnalyticsSession;
     }
