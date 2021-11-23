@@ -98,8 +98,6 @@ class MySiteViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
-    private val domainRegistrationSource: DomainRegistrationSource,
-    private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardSource: QuickStartCardSource,
@@ -111,7 +109,6 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val selectedSiteSource: SelectedSiteSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager
 ) : ScopedViewModel(mainDispatcher) {
@@ -649,10 +646,8 @@ class MySiteViewModel @Inject constructor(
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
-        domainRegistrationSource.clear()
         quickStartRepository.clear()
-        scanAndBackupSource.clear()
-        selectedSiteSource.clear()
+        mySiteSourceManager.clear()
         super.onCleared()
     }
 

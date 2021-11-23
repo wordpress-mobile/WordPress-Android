@@ -75,6 +75,12 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 
+    fun clear() {
+        domainRegistrationSource.clear()
+        scanAndBackupSource.clear()
+        selectedSiteSource.clear()
+    }
+
     private fun refreshAllSources() {
         mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }
