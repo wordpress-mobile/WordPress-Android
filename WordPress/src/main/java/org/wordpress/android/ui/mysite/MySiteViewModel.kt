@@ -37,7 +37,6 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
@@ -105,7 +104,6 @@ class MySiteViewModel @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardSource: QuickStartCardSource,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
@@ -113,9 +111,7 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    postCardsSource: PostCardsSource,
     private val selectedSiteSource: SelectedSiteSource,
-    siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager
 ) : ScopedViewModel(mainDispatcher) {
@@ -147,17 +143,6 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
-
-    private val mySiteSources: List<MySiteSource<*>> = listOf(
-            selectedSiteSource,
-            siteIconProgressSource,
-            quickStartCardSource,
-            currentAvatarSource,
-            domainRegistrationSource,
-            scanAndBackupSource,
-            dynamicCardsSource,
-            postCardsSource
-    )
 
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
