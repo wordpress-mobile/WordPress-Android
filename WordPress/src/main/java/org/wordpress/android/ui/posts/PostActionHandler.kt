@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Intent
+import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -133,14 +134,16 @@ class PostActionHandler(
     private fun copyUrlAction(post: PostModel) = PostListAction.CopyUrl(
             site = site,
             post = post,
-            showToast = showToast,
-            messageSuccess = ToastMessageHolder(
-                    R.string.post_link_copied_to_clipboard,
-                    Duration.SHORT
+            showSnackbar = showSnackbar,
+            messageSuccess = SnackbarMessageHolder(
+                    UiStringRes(R.string.post_link_copied_to_clipboard),
+                    duration = Snackbar.LENGTH_SHORT,
+                    isImportant = false
             ),
-            messageError = ToastMessageHolder(
-                    R.string.error_copy_to_clipboard,
-                    Duration.SHORT
+            messageError = SnackbarMessageHolder(
+                    UiStringRes(R.string.error_copy_to_clipboard),
+                    duration = Snackbar.LENGTH_SHORT,
+                    isImportant = false
             )
     )
 
