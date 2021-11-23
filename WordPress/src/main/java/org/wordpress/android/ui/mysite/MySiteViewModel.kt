@@ -118,7 +118,8 @@ class MySiteViewModel @Inject constructor(
     postCardsSource: PostCardsSource,
     private val selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
+    private val mySiteSourceManager: MySiteSourceManager
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -163,13 +164,7 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
             val result = MediatorLiveData<SiteIdToState>()
-            val currentSources = if (siteLocalId != null) {
-                mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
-            } else {
-                mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                        .map { source -> source.build(viewModelScope).distinctUntilChanged() }
-            }
-            for (newSource in currentSources) {
+            for (newSource in mySiteSourceManager.build(siteLocalId, viewModelScope)) {
                 result.addSource(newSource) { partialState ->
                     if (partialState != null) {
                         result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
