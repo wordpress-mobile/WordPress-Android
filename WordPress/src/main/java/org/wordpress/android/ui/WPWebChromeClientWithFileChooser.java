@@ -29,7 +29,8 @@ public class WPWebChromeClientWithFileChooser extends WPWebChromeClient {
         this.mOnShowFileChooserListener = onShowFileChooserListener;
     }
 
-    @Override public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
+    @Override
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
                                                FileChooserParams fileChooserParams) {
         this.mFilePathCallback = filePathCallback;
 

@@ -969,7 +969,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
     }
 
-    @Override public void startActivityForFileChooserResult(Intent intent, int requestCode) {
+    @Override
+    public void startActivityForFileChooserResult(Intent intent, int requestCode) {
         startActivityForResult(intent, requestCode);
     }
 }
