@@ -381,7 +381,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocalDraft &&
                 !isLocallyChanged
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowCopyUrlButton = postStatus == PUBLISHED && !isLocalDraft
+        val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
         val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
