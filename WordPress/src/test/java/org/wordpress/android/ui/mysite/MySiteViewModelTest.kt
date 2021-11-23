@@ -1405,16 +1405,40 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* SWIPE REFRESH */
     @InternalCoroutinesApi
     @Test
-    fun `when my site feature flag is enabled, then swipe refresh layout is enabled`() = test {
+    fun `given not first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
         init(enableMySiteDashboardConfig = true)
+
+        viewModel.onResume(false)
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
     }
 
     @InternalCoroutinesApi
     @Test
-    fun `when my site feature flag is disabled, then swipe refresh layout is disabled`() {
+    fun `given not first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
         init(enableMySiteDashboardConfig = false)
+
+        viewModel.onResume(false)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
+        init(enableMySiteDashboardConfig = true)
+
+        viewModel.onResume(true)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
+        init(enableMySiteDashboardConfig = false)
+
+        viewModel.onResume(true)
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
