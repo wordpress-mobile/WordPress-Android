@@ -3,18 +3,25 @@ package org.wordpress.android.ui.mysite
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 @Suppress("LongParameterList")
 class MySiteSourceManager @Inject constructor(
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val currentAvatarSource: CurrentAvatarSource,
     private val domainRegistrationSource: DomainRegistrationSource,
     private val dynamicCardsSource: DynamicCardsSource,
@@ -89,5 +96,28 @@ class MySiteSourceManager @Inject constructor(
         selectedSiteSource.updateSiteSettingsIfNecessary()
         currentAvatarSource.refresh()
         quickStartCardSource.refresh()
+    }
+
+    /* QUICK START */
+
+    fun refreshQuickStart() {
+        quickStartCardSource.refresh()
+    }
+
+    suspend fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
+        when (interaction) {
+            is DynamicCardMenuInteraction.Remove -> {
+                analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+                dynamicCardsSource.removeItem(interaction.cardType)
+                quickStartCardSource.refresh()
+            }
+            is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
+            is Unpin -> dynamicCardsSource.unpinItem()
+            is Hide -> {
+                analyticsTrackerWrapper.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+                dynamicCardsSource.hideItem(interaction.cardType)
+                quickStartCardSource.refresh()
+            }
+        }
     }
 }

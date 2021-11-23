@@ -35,7 +35,6 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -43,10 +42,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
@@ -102,7 +97,6 @@ class MySiteViewModel @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardSource: QuickStartCardSource,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val dynamicCardsSource: DynamicCardsSource,
     private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
@@ -364,7 +358,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onQuickStartFullScreenDialogDismiss() {
-        quickStartCardSource.refresh()
+        mySiteSourceManager.refreshQuickStart()
     }
 
     private fun titleClick() {
@@ -669,25 +663,6 @@ class MySiteViewModel @Inject constructor(
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper.startQuickStart(siteLocalId)
             quickStartCardSource.refresh()
-        }
-    }
-
-    fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        launch {
-            when (interaction) {
-                is DynamicCardMenuInteraction.Remove -> {
-                    analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
-                    dynamicCardsSource.removeItem(interaction.cardType)
-                    quickStartCardSource.refresh()
-                }
-                is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
-                is Unpin -> dynamicCardsSource.unpinItem()
-                is Hide -> {
-                    analyticsTrackerWrapper.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
-                    dynamicCardsSource.hideItem(interaction.cardType)
-                    quickStartCardSource.refresh()
-                }
-            }
         }
     }
 
