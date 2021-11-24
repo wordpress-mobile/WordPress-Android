@@ -18,7 +18,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardDraftOrScheduled
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -186,7 +187,7 @@ class CardsBuilderTest {
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
                 ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock()),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
@@ -297,10 +298,11 @@ class CardsBuilderTest {
     )
 
     private fun initPostCard() = listOf(
-            PostCardDraftOrScheduled(
+            PostCardWithPostItems(
                     postCardType = PostCardType.DRAFT,
                     title = UiStringText(""),
-                    postItems = emptyList()
+                    postItems = emptyList(),
+                    footerLink = FooterLink(UiStringText(""), onClick = mock())
             )
     )
 }

@@ -1,3 +1,2 @@
-* [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
-* [**] Block editor: Image block: Add ability to quickly link images to Media Files and Attachment Pages [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3971]
-* [**] Block editor: Fixed a crash that could occur when copying lists from Microsoft Word. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4174]
+- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
+- We solved a problem with content autosaves so they now run more smoothly.

@@ -40,11 +40,8 @@ Language: cs_CZ
     <string name="fab_add_category_desc">Vytvořit rubriku</string>
     <string name="gutenberg_native_remove_as_featured_image">Odstranit náhledový obrázek</string>
     <string name="gutenberg_native_set_as_featured_image">Použít jako náhledový obrázek</string>
-    <string name="site_settings_categories_empty_title">Nemáte žádné rubriky</string>
     <string name="site_settings_categories_hint">Spravujte rubriky svého webu</string>
-    <string name="site_settings_categories_empty_subtitle">Přidejte sem často používané rubriky, aby je bylo možné rychle vybrat při kategorizaci vašich příspěvků</string>
     <string name="site_settings_categories_title">Rubriky</string>
-    <string name="site_settings_categories_empty_button">Vytvořit rubriku</string>
     <string name="page_is_posts_page_warning">Obsah stránky s nejnovějšími příspěvky je generován automaticky a nelze jej upravovat.</string>
     <string name="site_settings_blogging_reminders_title">Připomenutí blogů</string>
     <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
@@ -345,7 +342,6 @@ Language: cs_CZ
     <string name="backup_download_another_download_running">Probíhá další stahování.</string>
     <string name="backup_download_progress_page_title">Stáhnout zálohu</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">URL odkaz na obrázek</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan odstraní ovlivněný soubor nebo adresář.</string>
@@ -361,8 +357,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>

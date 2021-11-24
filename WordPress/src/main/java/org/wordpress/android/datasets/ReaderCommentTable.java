@@ -318,26 +318,26 @@ public class ReaderCommentTable {
 
         ReaderComment comment = new ReaderComment();
 
-        comment.commentId = c.getLong(c.getColumnIndex("comment_id"));
-        comment.blogId = c.getLong(c.getColumnIndex("blog_id"));
-        comment.postId = c.getLong(c.getColumnIndex("post_id"));
-        comment.parentId = c.getLong(c.getColumnIndex("parent_id"));
+        comment.commentId = c.getLong(c.getColumnIndexOrThrow("comment_id"));
+        comment.blogId = c.getLong(c.getColumnIndexOrThrow("blog_id"));
+        comment.postId = c.getLong(c.getColumnIndexOrThrow("post_id"));
+        comment.parentId = c.getLong(c.getColumnIndexOrThrow("parent_id"));
 
-        comment.setPublished(c.getString(c.getColumnIndex("published")));
-        comment.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        comment.setPublished(c.getString(c.getColumnIndexOrThrow("published")));
+        comment.timestamp = c.getLong(c.getColumnIndexOrThrow("timestamp"));
 
-        comment.setAuthorAvatar(c.getString(c.getColumnIndex("author_avatar")));
-        comment.setAuthorName(c.getString(c.getColumnIndex("author_name")));
-        comment.setAuthorUrl(c.getString(c.getColumnIndex("author_url")));
-        comment.authorId = c.getLong(c.getColumnIndex("author_id"));
-        comment.authorBlogId = c.getLong(c.getColumnIndex("author_blog_id"));
+        comment.setAuthorAvatar(c.getString(c.getColumnIndexOrThrow("author_avatar")));
+        comment.setAuthorName(c.getString(c.getColumnIndexOrThrow("author_name")));
+        comment.setAuthorUrl(c.getString(c.getColumnIndexOrThrow("author_url")));
+        comment.authorId = c.getLong(c.getColumnIndexOrThrow("author_id"));
+        comment.authorBlogId = c.getLong(c.getColumnIndexOrThrow("author_blog_id"));
 
-        comment.setStatus(c.getString(c.getColumnIndex("status")));
-        comment.setText(c.getString(c.getColumnIndex("text")));
+        comment.setStatus(c.getString(c.getColumnIndexOrThrow("status")));
+        comment.setText(c.getString(c.getColumnIndexOrThrow("text")));
 
-        comment.numLikes = c.getInt(c.getColumnIndex("num_likes"));
-        comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
-        comment.pageNumber = c.getInt(c.getColumnIndex("page_number"));
+        comment.numLikes = c.getInt(c.getColumnIndexOrThrow("num_likes"));
+        comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_liked")));
+        comment.pageNumber = c.getInt(c.getColumnIndexOrThrow("page_number"));
 
         comment.setShortUrl(c.getString(c.getColumnIndex("short_url")));
 

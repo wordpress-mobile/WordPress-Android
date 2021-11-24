@@ -6,13 +6,11 @@
         "id": 3172,
         "title": "Vegetable salad",
         "excerpt": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "modified": "2021-07-27T16:07:45+00:00",
-        "featured_image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?h=150"
+        "modified": "2021-07-27T16:07:45+00:00"
       },
       {
         "id": 3173,
         "title": "Baking cheese cooking crust",
-        "excerpt": "In ante metus dictum at tempor commodo ullamcorper a lacus.",
         "modified": "2021-07-28T16:07:45+00:00",
         "featured_image_url": "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?h=150"
       }

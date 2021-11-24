@@ -26,7 +26,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/quick_actions_stats_label"
-        style="@style/ImprovedMySiteQuickActionButtonLabel"
+        style="@style/MySiteQuickActionButtonLabel"
         android:layout_below="@+id/quick_action_stats_button"
         android:text="@string/stats"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +62,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/quick_action_posts_label"
-        style="@style/ImprovedMySiteQuickActionButtonLabel"
+        style="@style/MySiteQuickActionButtonLabel"
         android:layout_below="@+id/quick_action_posts_button"
         android:ellipsize="end"
         android:text="@string/posts"
@@ -84,7 +84,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/quick_action_media_label"
-        style="@style/ImprovedMySiteQuickActionButtonLabel"
+        style="@style/MySiteQuickActionButtonLabel"
         android:layout_below="@+id/quick_action_media_button"
         android:text="@string/media"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -105,7 +105,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/quick_action_pages_label"
-        style="@style/ImprovedMySiteQuickActionButtonLabel"
+        style="@style/MySiteQuickActionButtonLabel"
         android:layout_below="@+id/quick_action_pages_button"
         android:text="@string/pages"
         app:layout_constraintBottom_toBottomOf="parent"

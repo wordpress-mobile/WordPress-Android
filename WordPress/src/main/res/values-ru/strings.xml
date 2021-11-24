@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-02 06:08:44+0000
+Translation-Revision-Date: 2021-11-15 20:33:39+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Добавление пользовательского домена сделает доступ к вашему сайту проще</string>
+    <string name="domains_paid_plan_add_your_domain_title">Добавление домена</string>
+    <string name="my_site_create_first_post_excerpt">Записи появляются на странице в вашего блога в обратном хронологическом порядке. Самое время поделиться вашими мыслями с миром!</string>
+    <string name="my_site_create_first_post_title">Создайте свою первую запись</string>
+    <string name="my_site_untitled_post">Без названия</string>
+    <string name="my_site_post_card_scheduled_title">Запланированные к публикации записи</string>
+    <string name="my_site_post_card_draft_title">Работа над черновой записью</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
     <string name="gutenberg_native_create_link">Создать ссылку</string>
@@ -165,9 +172,6 @@ Language: ru
     <string name="fab_add_category_desc">Создать рубрику</string>
     <string name="support_ticket_subject">Поддержка WordPress для Android</string>
     <string name="site_settings_categories_hint">Управлять рубриками сайта</string>
-    <string name="site_settings_categories_empty_title">Нет рубрик</string>
-    <string name="site_settings_categories_empty_subtitle">Добавьте сюда часто используемые рубрики, чтобы быстро выбирать их для записей</string>
-    <string name="site_settings_categories_empty_button">Создать рубрику</string>
     <string name="site_settings_categories_title">Рубрики</string>
     <string name="site_settings_blogging_reminders_title">Напоминания блоггинга</string>
     <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
@@ -232,6 +236,7 @@ Language: ru
     <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
+    <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
     <string name="gutenberg_native_none">Нет</string>
@@ -476,7 +481,6 @@ Language: ru
     <string name="backup_download_generic_failure">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="backup_download_details_action_button_content_description">Кнопка создания скачиваемой резервной копии</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s - выбранная точка создания резервной копии для скачивания.</string>
-    <string name="gutenberg_native_image_link_url">Ссылка изображения</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: ru
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
+    <string name="gutenberg_native_remove_block">Удалить блок</string>
     <string name="gutenberg_native_duplicate_block">Дублировать блок</string>
     <string name="gutenberg_native_copy_block">Копировать блок</string>
     <string name="gutenberg_native_copied_block">Скопированный блок</string>

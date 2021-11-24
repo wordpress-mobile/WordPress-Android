@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 09:57:30+0000
+Translation-Revision-Date: 2021-11-15 20:21:40+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Dacă adaugi un domeniu personalizat, vizitatorii îți vor găsi mai ușor site-ul</string>
+    <string name="domains_paid_plan_add_your_domain_title">Adaugă-ți domeniul</string>
+    <string name="my_site_create_first_post_excerpt">Articolele apar pe pagina blogului în ordine cronologică inversă. Este timpul să-ți împărtășești ideile întregii lumi!</string>
+    <string name="my_site_create_first_post_title">Scrie primul tău articol</string>
+    <string name="my_site_untitled_post">Fără titlu</string>
+    <string name="my_site_post_card_scheduled_title">Articole programate în viitor</string>
+    <string name="my_site_post_card_draft_title">Lucrează pe un articol în ciornă</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate către site-ul tău \n %s</string>
+    <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate la site-ul tău %s</string>
     <string name="gutenberg_native_create_link">Creează o legătură</string>
     <string name="domain_registration_result_description">Acum îți inițializăm noul tău domeniu &lt;b&gt;%s&lt;/b&gt;. Poate dura până la 30 de minute până când domeniul tău începe să funcționeze.</string>
     <string name="domain_registration_result_title">Felicitări, ai cumpărat!</string>
@@ -164,12 +171,9 @@ Language: ro
     <string name="support_ticket_subject">Suport WordPress pentru Android</string>
     <string name="fab_add_category_desc">Creează o categorie</string>
     <string name="gutenberg_native_remove_as_featured_image">Înlătură imaginea, ca imagine reprezentativă</string>
-    <string name="site_settings_categories_empty_title">Nu ai nicio categorie</string>
-    <string name="site_settings_categories_empty_subtitle">Adaugă aici categoriile folosite frecvent ca să le poți selecta rapid când stabilești categoriile articolelor tale</string>
     <string name="site_settings_categories_hint">Administrează-ți categoriile site-ului</string>
     <string name="page_is_posts_page_warning">Conținutul paginii tale cu ultimele articole este generat automat și nu poate fi editat.</string>
     <string name="site_settings_categories_title">Categorii</string>
-    <string name="site_settings_categories_empty_button">Creează o categorie</string>
     <string name="site_settings_blogging_reminders_title">Reamintiri publicare</string>
     <string name="gutenberg_native_border_settings">Setări chenar</string>
     <string name="storage_utils_dialog_ok_button">Vezi spațiul de stocare</string>
@@ -233,6 +237,7 @@ Language: ro
     <string name="gutenberg_native_embed_link">Înglobează legătura</string>
     <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
     <string name="gutenberg_native_create_embed">Creează înglobare</string>
+    <string name="gutenberg_native_custom_url">URL personalizat</string>
     <string name="gutenberg_native_column_d">Coloana %d</string>
     <string name="gutenberg_native_none">Nimic</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrie pe scurt legătura pentru a ajuta utilizatorii care folosesc cititorul de ecran</string>
@@ -476,7 +481,6 @@ Language: ro
     <string name="backup_download_generic_failure">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
     <string name="backup_download_details_action_button_content_description">Buton Creează copii de siguranță care se pot descărca</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s este punctul selectat pentru a crea o copie de siguranță care se poate descărca.</string>
-    <string name="gutenberg_native_image_link_url">URL legătură la imagine</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -824,6 +828,7 @@ Language: ro
     <string name="gutenberg_native_block_cut">Bloc șters</string>
     <string name="gutenberg_native_block_copied">Bloc copiat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titlul site-ului poate fi modificat numai de un utilizator cu rolul de administrator.</string>
+    <string name="gutenberg_native_remove_block">Înlătură blocul</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modificări nesalvate</string>
     <string name="reader_title_tag_preview">Subiect</string>
     <string name="error_update_site_title_network">Nu am putut actualiza titlul site-ului. Verifică conexiunea la rețea și încearcă din nou.</string>

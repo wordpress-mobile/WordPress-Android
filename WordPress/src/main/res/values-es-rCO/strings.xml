@@ -165,9 +165,6 @@ Language: es_CO
     <string name="fab_add_category_desc">Crear una categoría</string>
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
-    <string name="site_settings_categories_empty_title">Aún no tienes categorías</string>
-    <string name="site_settings_categories_empty_subtitle">Añade aquí las categorías que uses frecuentemente para que puedan ser seleccionadas rápidamente al categorizar tus entradas </string>
-    <string name="site_settings_categories_empty_button">Crear una categoría</string>
     <string name="site_settings_categories_title">Categorías</string>
     <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
@@ -476,7 +473,6 @@ Language: es_CO
     <string name="backup_download_generic_failure">Ha ocurrido un problema al gestionar la petición. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="backup_download_details_action_button_content_description">Botón Crear copia de seguridad descargable</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
-    <string name="gutenberg_native_image_link_url">URL del vínculo de la imagen</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>

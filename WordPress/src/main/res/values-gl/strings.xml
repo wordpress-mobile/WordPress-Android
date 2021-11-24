@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-02 15:17:05+0000
+Translation-Revision-Date: 2021-11-16 14:33:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Engadir un dominio personalizado fai que sexa máis fácil para os teus visitantes encontrar o teu sitio</string>
+    <string name="domains_paid_plan_add_your_domain_title">Engade o teu dominio</string>
+    <string name="my_site_create_first_post_excerpt">As entradas aparecen na páxina do teu blog en orde cronoloxicamente inverso. É o momento de compartir as túas ideas co mundo!</string>
+    <string name="my_site_create_first_post_title">Crear a túa primeira entrada</string>
+    <string name="my_site_untitled_post">Sen título</string>
+    <string name="my_site_post_card_scheduled_title">Seguintes entradas programadas</string>
+    <string name="my_site_post_card_draft_title">Traballa no borrador dunha entrada</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis o primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /ano&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Os teus dominios redirixirán ao teu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear unha ligazón</string>
@@ -165,9 +172,6 @@ Language: gl_ES
     <string name="fab_add_category_desc">Crear unha categoría</string>
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Xestiona as categorías do teu sitio</string>
-    <string name="site_settings_categories_empty_title">Aínda non tes categorías</string>
-    <string name="site_settings_categories_empty_subtitle">Engade aquí as categorías que uses frecuentemente para que poidan ser seleccionadas rapidamente ao categorizar as túas entradas</string>
-    <string name="site_settings_categories_empty_button">Crear unha categoría</string>
     <string name="site_settings_categories_title">Categorías</string>
     <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="page_is_posts_page_warning">O contido da páxina das túas últimas entradas xérase automaticamente e non se pode editar.</string>
@@ -232,6 +236,7 @@ Language: gl_ES
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
+    <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear uhna incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
     <string name="gutenberg_native_none">Ningunha</string>
@@ -476,7 +481,6 @@ Language: gl_ES
     <string name="backup_download_generic_failure">Ocorreu un problema ao xestionar a petición. Por favor, inténtao de novo máis tarde.</string>
     <string name="backup_download_details_action_button_content_description">Botón Crear copia de seguridade descargable</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s é o punto seleccionado para crear unha copia de seguridade descargable.</string>
-    <string name="gutenberg_native_image_link_url">URL do vínculo da imaxe</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: gl_ES
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
+    <string name="gutenberg_native_remove_block">Eliminar o bloque</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>

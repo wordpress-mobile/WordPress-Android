@@ -162,9 +162,6 @@ Language: ko_KR
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
-    <string name="site_settings_categories_empty_title">카테고리가 없습니다.</string>
-    <string name="site_settings_categories_empty_subtitle">글을 분류할 때 빠르게 선택할 수 있도록 자주 사용하는 카테고리 추가</string>
-    <string name="site_settings_categories_empty_button">카테고리 생성</string>
     <string name="site_settings_categories_title">카테고리</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
     <string name="site_settings_blogging_reminders_title">블로깅 알림</string>
@@ -474,7 +471,6 @@ Language: ko_KR
     <string name="backup_download_another_download_running">다른 다운로드를 실행하고 있습니다.</string>
     <string name="backup_download_progress_page_title">백업 다운로드하기</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">이미지 링크 URL</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="threat_fix_fixable_delete">젯팩 검사하기가 영향이 있는 파일이나 디렉터리를 지울 것입니다.</string>

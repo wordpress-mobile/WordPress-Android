@@ -457,7 +457,8 @@
     <!--My Site Card/ Item Base Styles-->
     <style name="MySiteCardItemTitle">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
@@ -467,11 +468,12 @@
 
     <style name="MySiteCardItemSubtitle">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
     <!--My Site Styles-->
@@ -509,20 +511,12 @@
         <item name="android:outlineProvider">none</item>
     </style>
 
-    <style name="MySiteQuickActionButtonLabel">
+    <style name="MySiteQuickActionButtonLabel" parent="MySiteCardItemSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:layout_centerHorizontal">true</item>
-    </style>
-
-    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
     </style>
 
@@ -771,25 +765,17 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="QuickStartTypeTitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeTitle" parent="MySiteCardItemTitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="QuickStartTypeSubtitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeSubtitle" parent="MySiteCardItemSubtitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
     </style>
 
     <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
@@ -797,7 +783,17 @@
         <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
     </style>
 
-    <!--My Site Card - Post-->
+    <!--My Site Card-->
+    <style name="MySiteCardFooterLinkItem">
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="android:paddingBottom">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
 
     <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>
@@ -1247,6 +1243,7 @@
 
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_width">match_parent</item>

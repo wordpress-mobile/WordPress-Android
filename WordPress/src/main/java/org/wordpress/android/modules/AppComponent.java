@@ -184,6 +184,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsFragment;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobService;
@@ -428,6 +429,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(NotificationsDetailListFragment object);
 
     void inject(ReaderCommentListActivity object);
+
+    void inject(ThreadedCommentsFragment object);
 
     void inject(ReaderSubsActivity object);
 
