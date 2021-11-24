@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -121,7 +122,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 hasAutoSave = hasAutoSave
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
-        val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
+        val statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
                 TRASHED -> {
@@ -147,7 +148,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postInfo = postInfo,
                 statuses = statuses,
                 statusesColor = statusesColor,
-                statusesDelimiter = statusesDelimeter,
+                statusesDelimiter = statusesDelimiter,
                 progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
@@ -156,7 +157,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
-                disableRippleEffect = postStatus == PostStatus.TRASHED
+                disableRippleEffect = postStatus == TRASHED
         )
 
         return PostListItemUiState(
@@ -368,9 +369,9 @@ class PostListItemUiStateHelper @Inject constructor(
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean
     ): List<PostListButtonType> {
-        val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
+        val canRetryUpload = uploadUiState is UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
+                (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
@@ -380,7 +381,8 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocalDraft &&
                 !isLocallyChanged
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
+        val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
+        val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
@@ -394,26 +396,17 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowPublishButton) {
             buttonTypes.add(
-                    if (canRetryUpload) {
-                        BUTTON_RETRY
-                    } else if (!siteHasCapabilitiesToPublish) {
-                        BUTTON_SUBMIT
-                    } else if (postStatus == SCHEDULED && isLocallyChanged) {
-                        BUTTON_SYNC
-                    } else {
-                        BUTTON_PUBLISH
+                    when {
+                        canRetryUpload -> BUTTON_RETRY
+                        !siteHasCapabilitiesToPublish -> BUTTON_SUBMIT
+                        postStatus == SCHEDULED && isLocallyChanged -> BUTTON_SYNC
+                        else -> BUTTON_PUBLISH
                     }
             )
         }
 
         if (canShowViewButton) {
-            buttonTypes.add(
-                    if (isLocalDraft || isLocallyChanged) {
-                        BUTTON_PREVIEW
-                    } else {
-                        BUTTON_VIEW
-                    }
-            )
+            buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
         }
 
         if (canShowStats) {
@@ -426,15 +419,28 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
-        when {
-            isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
-            postStatus == TRASHED -> {
-                buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
-            }
-            postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
+        if (canShowCopyUrlButton) {
+            buttonTypes.add(BUTTON_COPY_URL)
         }
 
+        buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
+
         return buttonTypes
+    }
+
+    private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
+        add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
+    }
+
+    private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(
+        isLocalDraft: Boolean,
+        postStatus: PostStatus
+    ) {
+        when {
+            isLocalDraft -> add(BUTTON_DELETE)
+            postStatus == TRASHED -> add(BUTTON_DELETE_PERMANENTLY)
+            postStatus != TRASHED -> add(BUTTON_TRASH)
+        }
     }
 
     private fun MutableList<PostListButtonType>.addMoveToDraftActionIfAvailable(postStatus: PostStatus) {
