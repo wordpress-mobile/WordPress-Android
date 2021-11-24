@@ -13,6 +13,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_large"
     android:paddingEnd="@dimen/margin_medium_large">
 
     <com.google.android.material.textview.MaterialTextView

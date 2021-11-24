@@ -5,8 +5,18 @@
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:importantForAccessibility="no"
-    android:paddingTop="@dimen/margin_small">
+    android:importantForAccessibility="no">
+
+    <View
+        android:id="@+id/selected_comment_indicator"
+        android:layout_width="@dimen/reader_comments_selected_indicator_width"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/comment_container"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/comment_container"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/divider"
@@ -14,15 +24,16 @@
         android:layout_height="@dimen/list_divider_height"
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="?attr/wpColorSurfaceSecondary"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
-        android:paddingTop="@dimen/margin_large"
-        android:id="@+id/comment_content_container"
+        android:id="@+id/comment_container"
+        android:paddingTop="@dimen/margin_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider">
@@ -37,10 +48,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginEnd="@dimen/reader_card_content_padding"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:layout_toEndOf="@+id/spacer_comment_indent"
             android:orientation="vertical">
 

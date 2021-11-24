@@ -104,6 +104,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private final ImageView mImgAvatar;
         private final View mSpacerIndent;
+        private final View mSelectedCommentIndicator;
         private final View mTopCommentDivider;
         private final View mAuthorContainer;
         private final View mAuthorBadge;
@@ -116,7 +117,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         CommentHolder(View view) {
             super(view);
 
-            mCommentContainer = view.findViewById(R.id.comment_content_container);
+            mCommentContainer = view.findViewById(R.id.comment_container);
+            mSelectedCommentIndicator = view.findViewById(R.id.selected_comment_indicator);
 
             mTxtAuthor = view.findViewById(R.id.text_comment_author);
             mTxtText = view.findViewById(R.id.text_comment_text);
@@ -165,7 +167,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
         mColorHighlight = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary),
                         context.getResources().getInteger(R.integer.selected_list_item_opacity));
 
         setHasStableIds(true);
@@ -313,9 +315,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
             commentHolder.mCommentContainer.setBackgroundColor(mColorHighlight);
             commentHolder.mProgress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
+            commentHolder.mSelectedCommentIndicator.setVisibility(View.VISIBLE);
         } else {
             commentHolder.mCommentContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
+            commentHolder.mSelectedCommentIndicator.setVisibility(View.GONE);
         }
 
         commentHolder.mShareButton.setOnClickListener(
