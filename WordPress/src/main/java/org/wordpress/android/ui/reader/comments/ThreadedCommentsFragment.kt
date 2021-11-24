@@ -636,6 +636,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 )
             }
 
+            setCommentShareListener { commentUrl -> shareComment(commentUrl) }
+
             // Enable post title click if we came here directly from notifications or deep linking
             if (directOperation != null) {
                 enableHeaderClicks()
@@ -937,6 +939,13 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper?.isRefreshing = refreshing
+    }
+
+    private fun shareComment(commentUrl: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl)
+        startActivity(Intent.createChooser(shareIntent, getString(string.share_link)))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
