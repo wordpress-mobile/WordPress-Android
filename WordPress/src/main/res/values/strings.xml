@@ -1557,8 +1557,6 @@
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
     <string name="reader_follow_comments_subscribe_success_enable_push">Following this conversation\nEnable in-app notifications?</string>
     <string name="reader_follow_comments_unsubscribe_from_all_success">Unsubscribed from this conversation</string>
     <string name="reader_follow_comments_subscribe_to_push_success">In-app notifications enabled</string>
@@ -1680,10 +1678,9 @@
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
+    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -2241,6 +2238,7 @@
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
+    <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>

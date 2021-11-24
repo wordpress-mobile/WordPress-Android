@@ -164,12 +164,9 @@ Language: zh_CN
     <string name="fab_add_category_desc">创建分类</string>
     <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
     <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
-    <string name="site_settings_categories_empty_subtitle">在这里添加您经常使用的分类，以便在对您的文章进行分类时可以快速选择。</string>
-    <string name="site_settings_categories_empty_title">您没有任何分类</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
     <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
     <string name="site_settings_categories_title">分类</string>
-    <string name="site_settings_categories_empty_button">创建分类</string>
     <string name="site_settings_blogging_reminders_title">博客提醒</string>
     <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_message">我们需要在设备上保存您的内容才能发布。查看您的存储设置并删除文件以释放空间。</string>
@@ -476,7 +473,6 @@ Language: zh_CN
     <string name="backup_download_generic_failure">处理请求时出现问题。 请稍后重试。</string>
     <string name="backup_download_details_action_button_content_description">“创建可下载备份”按钮</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s 是要创建下载备份的选定点。</string>
-    <string name="gutenberg_native_image_link_url">图片链接</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>

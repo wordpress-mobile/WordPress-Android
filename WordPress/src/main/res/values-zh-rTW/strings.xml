@@ -163,9 +163,6 @@ Language: zh_TW
     <string name="fab_add_category_desc">建立分類</string>
     <string name="support_ticket_subject">Android 版 WordPress 支援</string>
     <string name="site_settings_categories_hint">管理你的網站分類</string>
-    <string name="site_settings_categories_empty_title">你沒有任何分類</string>
-    <string name="site_settings_categories_empty_subtitle">請在此處新增你常用的標籤，為文章分類時就能快速選取</string>
-    <string name="site_settings_categories_empty_button">建立分類</string>
     <string name="site_settings_categories_title">分類</string>
     <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
     <string name="site_settings_blogging_reminders_title">網誌提醒</string>
@@ -474,7 +471,6 @@ Language: zh_TW
     <string name="backup_download_generic_failure">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="backup_download_details_action_button_content_description">建立可下載備份按鈕</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s 是選定建立可下載備份的時間點。</string>
-    <string name="gutenberg_native_image_link_url">圖片連結 URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>

@@ -35,7 +35,7 @@ class SiteIconProgressSourceTest : BaseUnitTest() {
     fun `when source site, then icon progress bar is not visible`() = test {
         onShowSiteIconProgressBar.value = false
 
-        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
         assertThat(siteIconProgressBarVisible).isFalse
     }

@@ -165,9 +165,6 @@ Language: tr
     <string name="fab_add_category_desc">Kategori oluştur</string>
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
-    <string name="site_settings_categories_empty_title">Hiç kategoriniz yok</string>
-    <string name="site_settings_categories_empty_subtitle">Gönderilerinizi kategorilere ayırırken hızlı bir şekilde seçilebilmesi için sık kullandığınız kategorilerinizi buraya ekleyin</string>
-    <string name="site_settings_categories_empty_button">Bir kategori oluştur</string>
     <string name="site_settings_categories_title">Kategoriler</string>
     <string name="site_settings_blogging_reminders_title">Blog hatırlatıcıları</string>
     <string name="page_is_posts_page_warning">Güncel paylaşımlar sayfanızın içeriği, otomatik olarak oluşturulur ve düzenlenemez.</string>
@@ -476,7 +473,6 @@ Language: tr
     <string name="backup_download_generic_failure">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="backup_download_details_action_button_content_description">İndirilebilir yedekleme düğmesi oluştur</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s indirme yedeklemesi oluşturmak için seçtiğiniz saattir.</string>
-    <string name="gutenberg_native_image_link_url">Görsel bağlantı adresi</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>

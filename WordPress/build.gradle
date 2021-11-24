@@ -113,8 +113,8 @@ android {
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
-        buildConfigField "boolean", "FOLLOW_BY_PUSH_NOTIFICATION", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
+        buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
@@ -186,6 +186,7 @@ android {
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
 
             buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "true"
+            buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions

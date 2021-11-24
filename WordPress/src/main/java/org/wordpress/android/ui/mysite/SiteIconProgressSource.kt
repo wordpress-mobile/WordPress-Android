@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class SiteIconProgressSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository
 ) : MySiteSource<ShowSiteIconProgressBar> {
-    override fun buildSource(
+    override fun build(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) = selectedSiteRepository.showSiteIconProgressBar

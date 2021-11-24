@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
-import org.wordpress.android.ui.reader.FollowCommentsUiState;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -93,7 +92,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private PostHeaderHolder mHeaderHolder;
-    private FollowCommentsUiState mFollowButtonState;
 
     class CommentHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mContainer;
@@ -181,13 +179,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mIsHeaderClickEnabled = true;
     }
 
-    public void updateFollowingState(FollowCommentsUiState followButtonState) {
-        mFollowButtonState = followButtonState;
-        if (mHeaderHolder != null && mHeaderHolder.mHeaderView != null) {
-            mHeaderHolder.mHeaderView.setFollowButtonState(followButtonState);
-        }
-    }
-
     @Override
     public int getItemViewType(int position) {
         return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_COMMENT;
@@ -228,7 +219,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             mHeaderHolder = (PostHeaderHolder) holder;
-            mHeaderHolder.mHeaderView.setPost(mPost, mFollowButtonState);
+            mHeaderHolder.mHeaderView.setPost(mPost);
             if (mIsHeaderClickEnabled) {
                 mHeaderHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -517,6 +508,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void setHighlightCommentId(long commentId, boolean showProgress) {
         mHighlightCommentId = commentId;
         mShowProgressForHighlightedComment = showProgress;
+    }
+
+    public long getHighlightCommentId() {
+        return mHighlightCommentId;
     }
 
     /*

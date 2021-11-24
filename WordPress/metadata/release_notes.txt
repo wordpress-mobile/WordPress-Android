@@ -1,3 +1,2 @@
-- We added Media File and Attachment Page options to the image block's Link To menu so you can set commonly used URLs.
-- We fixed an issue that made the interface crash when users copied and pasted lists from Microsoft Word.
+- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
 - We solved a problem with content autosaves so they now run more smoothly.

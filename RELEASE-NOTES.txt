@@ -3,12 +3,14 @@
 18.8
 -----
 * [*] Users can now upload files to forms when using the Preview within the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/15572]
+* [*] Editor: Replace snackbar with compact notice when switching between HTML or Visual mode [https://github.com/wordpress-mobile/WordPress-Android/pull/15583]
+* [*] Fixed an issue where multiple screens were rendered incorrectly in RTL interface languages [https://github.com/wordpress-mobile/WordPress-Android/pull/15597]
+
 
 18.7
 -----
 * [*] Block editor: Fixed a race condition when autosaving content [https://github.com/WordPress/gutenberg/pull/36072]
 * [**] Block editor: Image block: Add ability to quickly link images to Media Files and Attachment Pages [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3971]
-* [**] Block editor: Fixed a crash that could occur when copying lists from Microsoft Word. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4174]
 
 18.6
 -----

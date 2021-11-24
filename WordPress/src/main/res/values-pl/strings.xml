@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 09:45:42+0000
+Translation-Revision-Date: 2021-11-17 06:31:37+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -32,11 +32,8 @@ Language: pl
     <string name="fab_add_category_desc">Utwórz kategorię</string>
     <string name="support_ticket_subject">Wsparcie dla WordPressa dla Androida</string>
     <string name="site_settings_categories_hint">Zarządzaj kategoriami swojej witryny</string>
-    <string name="site_settings_categories_empty_title">Nie masz żadnych kategorii</string>
-    <string name="site_settings_categories_empty_subtitle">Dodaj tutaj często używane kategorie aby z nich wygodnie skorzystać kiedy kategoryzujesz swoje wpisy</string>
     <string name="site_settings_categories_title">Kategorie</string>
     <string name="site_settings_blogging_reminders_title">Przypomnienia o blogowaniu</string>
-    <string name="site_settings_categories_empty_button">Utwórz kategorię</string>
     <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
@@ -637,7 +634,6 @@ Language: pl
     <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
-    <string name="weekday_saturday">Sobota</string>
     <string name="weekday_wednesday">Środa</string>
     <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
@@ -646,6 +642,7 @@ Language: pl
     <string name="weekday_tuesday">wtorek</string>
     <string name="weekday_thursday">czwartek</string>
     <string name="weekday_friday">piątek</string>
+    <string name="weekday_saturday">sobota</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
@@ -2249,7 +2246,7 @@ Language: pl
     <string name="site_settings_rp_preview2_site">w \"Aplikacjach\"</string>
     <string name="site_settings_rp_preview2_title">Aplikacja WordPress dla Androida przeszła dużą aktualizację wyglądu</string>
     <string name="site_settings_rp_preview1_site">W sekcji \"Urządzenia mobilne\"</string>
-    <string name="site_settings_rp_preview1_title">Duża aktualizacja dla iPhone/iPad jest dostępna</string>
+    <string name="site_settings_rp_preview1_title">Dostępna jest duża aktualizacja iPhona/iPada</string>
     <string name="site_settings_rp_show_images_title">Pokaż obrazki</string>
     <string name="site_settings_rp_show_header_title">Pokaż nagłówek</string>
     <string name="site_settings_rp_switch_summary">Wyświetla odpowiednią zawartość z twojej witryny poniżej twoich wpisów.</string>

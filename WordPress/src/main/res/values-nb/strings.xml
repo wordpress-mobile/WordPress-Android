@@ -25,7 +25,6 @@ Language: nb_NO
     <string name="fab_add_category_desc">Opprett kategori</string>
     <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
     <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
-    <string name="site_settings_categories_empty_button">Opprett en kategori</string>
     <string name="site_settings_categories_title">Kategorier</string>
     <string name="site_settings_blogging_reminders_title">Bloggepåminnere</string>
     <string name="gutenberg_native_s_block">%s-blokk</string>

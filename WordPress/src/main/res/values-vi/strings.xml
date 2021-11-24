@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-03 14:25:14+0000
+Translation-Revision-Date: 2021-11-14 15:18:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
@@ -165,9 +165,6 @@ Language: vi_VN
     <string name="fab_add_category_desc">Tạo Chuyên mục</string>
     <string name="support_ticket_subject">Hỗ trợ cho WordPress Android</string>
     <string name="site_settings_categories_hint">Quản lý chuyên mục</string>
-    <string name="site_settings_categories_empty_title">Bạn chưa có chuyên mục nào</string>
-    <string name="site_settings_categories_empty_subtitle">Thêm những chuyên mục thường dùng ở đây, chúng sẽ xuất hiện nhanh để bạn chọn khi đăng bài</string>
-    <string name="site_settings_categories_empty_button">Tạo chuyên mục</string>
     <string name="site_settings_categories_title">Chuyên mục</string>
     <string name="site_settings_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="page_is_posts_page_warning">Nội dung từ những bài viết gần đây nhất sẽ được tự động tạo và không thể chỉnh sửa.</string>
@@ -476,7 +473,6 @@ Language: vi_VN
     <string name="backup_download_generic_failure">Có vấn đề khi xử lý yêu cầu. Xin thử lại sau.</string>
     <string name="backup_download_details_action_button_content_description">Nút tạo bản sao lưu có thể tải về</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s là điểm đã chọn để tạo bản sao lưu có thể tải về.</string>
-    <string name="gutenberg_native_image_link_url">URL ảnh liên kết tới</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -2350,7 +2346,7 @@ Language: vi_VN
     <string name="signout">Đăng xuất</string>
     <string name="sign_in_wpcom">Đăng nhập WordPress.com</string>
     <string name="reader_label_global_related_posts">Đọc thêm trên WordPress.com</string>
-    <string name="reader_label_local_related_posts">Bài viết khác từ %s</string>
+    <string name="reader_label_local_related_posts">Bài viết khác của %s</string>
     <string name="preference_open_device_settings">Thông tin ứng dụng</string>
     <string name="invite_invalid_email">%s: Email không hợp lệ</string>
     <string name="invite_user_blocked_invites">%s: Người dùng đã chặn thư mời</string>
@@ -2659,7 +2655,7 @@ Language: vi_VN
     <string name="notifications_empty_action_followers_likes">Nhận thông báo: bình luận từ bài viết bạn đã đọc</string>
     <string name="notifications_empty_action_comments">Tạo thảo luận: bình luận bài viết từ các trang mà bạn theo dõi</string>
     <string name="notifications_empty_action_unread">Khuấy động bằng cách viết một bài mới</string>
-    <string name="notifications_empty_action_all">Lấy kích hoạt! Bình luận về bài viết từ các blog bạn theo dõi.</string>
+    <string name="notifications_empty_action_all">Chủ động! Bình luận về bài viết trên các blog bạn theo dõi.</string>
     <string name="notifications_empty_comments">Chưa có bình luận</string>
     <string name="notifications_empty_unread">Bạn đã xem hết thông báo!</string>
     <string name="reader_short_comment_count_multi">%s Bình luận</string>

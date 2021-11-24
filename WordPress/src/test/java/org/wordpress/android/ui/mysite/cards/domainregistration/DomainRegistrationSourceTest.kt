@@ -36,6 +36,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     private val site = SiteModel()
     private lateinit var result: MutableList<DomainCreditAvailable>
     private lateinit var source: DomainRegistrationSource
+    private lateinit var isRefreshing: MutableList<Boolean>
 
     @InternalCoroutinesApi
     @Before
@@ -50,6 +51,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         result = mutableListOf()
+        isRefreshing = mutableListOf()
     }
 
     @Test
@@ -99,6 +101,35 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         assertThat(result.last().isDomainCreditAvailable).isFalse
     }
 
+    @Test
+    fun `when build is invoked, then refresh is false`() = test {
+        source.refresh.observeForever { isRefreshing.add(it) }
+
+        source.build(testScope(), siteLocalId)
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        source.refresh.observeForever { isRefreshing.add(it) }
+
+        source.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
+        source.refresh.observeForever { isRefreshing.add(it) }
+
+        source.build(testScope(), siteLocalId).observeForever { }
+        source.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
     private fun setupSite(
         site: SiteModel,
         isFree: Boolean = false,
@@ -109,7 +140,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { source.onPlansFetched(event) }
         }
-        source.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
+        source.build(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(

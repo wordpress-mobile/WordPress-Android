@@ -111,7 +111,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         result = mutableListOf()
         isRefreshing = mutableListOf()
-        quickStartCardSource.buildSource(testScope(), siteLocalId).observeForever { result.add(it) }
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
     }
 
@@ -197,7 +196,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         assertModel()
@@ -292,7 +291,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
@@ -305,7 +304,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartCardSource.buildSource(testScope(), site.id)
+        quickStartCardSource.build(testScope(), site.id)
         quickStartCardSource.refresh()
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteLocalId.toLong(), EDIT_HOMEPAGE, true)
@@ -322,11 +321,43 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                 assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
             }
 
+    @Test
+    fun `when source is invoked, then refresh is false`() = test {
+        initBuild()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        quickStartCardSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        initStore()
+
+        val updatedSiteId = 2
+        site.id = updatedSiteId
+        site.showOnFront = ShowOnFront.POSTS.value
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
+        quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
+
+        quickStartCardSource.build(testScope(), site.id)
+
+        quickStartCardSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, GROW)).thenReturn(true)
-        whenever(resourceProvider.getString(any())).thenReturn(Companion.ALL_TASKS_COMPLETED_MESSAGE)
-        whenever(htmlCompat.fromHtml(Companion.ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
+        whenever(resourceProvider.getString(any())).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
+        whenever(htmlCompat.fromHtml(ALL_TASKS_COMPLETED_MESSAGE)).thenReturn(ALL_TASKS_COMPLETED_MESSAGE)
 
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
@@ -342,6 +373,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     private suspend fun initStore(
         nextUncompletedTask: QuickStartTask? = null
     ) {
+        initBuild()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
                 DynamicCardsModel(
@@ -373,6 +405,10 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteLocalId.toLong()))
                 .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+    }
+
+    private fun initBuild() {
+        quickStartCardSource.build(testScope(), siteLocalId).observeForever { result.add(it) }
     }
 
     private fun assertModel() {

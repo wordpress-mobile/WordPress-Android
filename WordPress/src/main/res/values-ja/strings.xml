@@ -162,10 +162,7 @@ Language: ja_JP
     <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除 </string>
     <string name="fab_add_category_desc">カテゴリーを作成</string>
     <string name="support_ticket_subject">WordPress for Android サポート</string>
-    <string name="site_settings_categories_empty_subtitle">頻繁に使用するカテゴリーをここに追加しておけば、投稿にカテゴリーを設定するときにすばやく選択できます</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
-    <string name="site_settings_categories_empty_title">カテゴリーがありません</string>
-    <string name="site_settings_categories_empty_button">カテゴリーを作成</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
     <string name="site_settings_blogging_reminders_title">ブログ投稿のリマインダー</string>
@@ -474,7 +471,6 @@ Language: ja_JP
     <string name="backup_download_generic_failure">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="backup_download_details_action_button_content_description">ダウンロード可能なバックアップを作成ボタン</string>
     <string name="backup_download_details_description_with_two_parameters">ダウンロード可能なバックアップを作成するタイミングとして、%1$s %2$s を選択しています。</string>
-    <string name="gutenberg_native_image_link_url">画像リンク URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
