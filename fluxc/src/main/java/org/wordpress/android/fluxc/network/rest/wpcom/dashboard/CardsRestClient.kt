@@ -70,7 +70,8 @@ class CardsRestClient @Inject constructor(
         @SerializedName("ID") val id: Int,
         @SerializedName("post_title") val title: String?,
         @SerializedName("post_content") val content: String?,
-        @SerializedName("post_modified_gmt") val date: String,
+        @SerializedName("post_date_gmt") val date: String,
+        @SerializedName("post_modified_gmt") val modified: String,
         @SerializedName("featured_image") val featuredImage: String?
     ) {
         fun toPost() = PostCardModel(
@@ -78,6 +79,7 @@ class CardsRestClient @Inject constructor(
                 title = title,
                 content = content,
                 date = CardsUtils.fromDate(date),
+                modified = CardsUtils.fromDate(modified),
                 featuredImage = featuredImage
         )
     }
