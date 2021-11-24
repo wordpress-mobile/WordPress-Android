@@ -32,13 +32,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.PARSE_ERROR
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.REQUEST_TOO_LARGE
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import java.io.IOException
@@ -84,7 +89,25 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
+    fun fetchMediaList(site: SiteModel, number: Int, offset: Int, mimeType: MimeType.Type?) {
+        coroutineEngine.launch(MEDIA, this, "Fetching Media using WPCom's v2 API") {
+            val payload = syncFetchMediaList(site, number, offset, mimeType)
+            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
+        }
+    }
+
     private fun syncUploadMedia(site: SiteModel, media: MediaModel): Flow<ProgressPayload> {
+        fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
+            media.setUploadState(FAILED)
+            val payload = ProgressPayload(media, 1f, false, error)
+            try {
+                sendBlocking(payload)
+                close()
+            } catch (e: CancellationException) {
+                // the flow has been cancelled
+            }
+        }
+
         return callbackFlow {
             val url = WPAPI.media.getWPComUrl(site.siteId)
             val body = WPRestUploadRequestBody(media) { media, progress ->
@@ -123,7 +146,7 @@ class WPV2MediaRestClient @Inject constructor(
                     if (response.isSuccessful) {
                         try {
                             val res = gson.fromJson(response.body!!.string(), MediaWPRESTResponse::class.java)
-                            val uploadedMedia = res.toMediaModel()
+                            val uploadedMedia = res.toMediaModel(site.id)
                             val payload = ProgressPayload(uploadedMedia, 1f, true, false)
                             try {
                                 sendBlocking(payload)
@@ -141,7 +164,7 @@ class WPV2MediaRestClient @Inject constructor(
                             handleFailure(media, error)
                         }
                     } else {
-                        val error = response.parseError()
+                        val error = response.parseUploadError()
                         handleFailure(media, error)
                     }
                 }
@@ -153,18 +176,47 @@ class WPV2MediaRestClient @Inject constructor(
         }
     }
 
-    private fun ProducerScope<ProgressPayload>.handleFailure(media: MediaModel, error: MediaError) {
-        media.setUploadState(FAILED)
-        val payload = ProgressPayload(media, 1f, false, error)
-        try {
-            sendBlocking(payload)
-            close()
-        } catch (e: CancellationException) {
-            // the flow has been cancelled
+    private suspend fun syncFetchMediaList(
+        site: SiteModel,
+        perPage: Int,
+        offset: Int,
+        mimeType: MimeType.Type?
+    ): FetchMediaListResponsePayload {
+        val url = WPAPI.media.getWPComUrl(site.siteId)
+        val params = mutableMapOf(
+                "per_page" to perPage.toString()
+        )
+        if (offset > 0) {
+            params["offset"] = offset.toString()
+        }
+        if (mimeType != null) {
+            params["mime_type"] = mimeType.value
+        }
+        val response = WPComGsonRequestBuilder().syncGetRequest(
+                this,
+                url,
+                params,
+                Array<MediaWPRESTResponse>::class.java
+        )
+
+        return when (response) {
+            is Error -> {
+                val errorMessage = "could not parse Fetch all media response: $response"
+                AppLog.w(MEDIA, errorMessage)
+                val error = MediaError(PARSE_ERROR)
+                error.logMessage = errorMessage
+                FetchMediaListResponsePayload(site, error, mimeType)
+            }
+            is Success -> {
+                val mediaList = response.data.map { it.toMediaModel(site.id) }
+                AppLog.v(MEDIA, "Fetched media list for site with size: " + mediaList.size)
+                val canLoadMore = mediaList.size == perPage
+                FetchMediaListResponsePayload(site, mediaList, offset > 0, canLoadMore, mimeType)
+            }
         }
     }
 
-    private fun Response.parseError(): MediaError {
+    private fun Response.parseUploadError(): MediaError {
         val mediaError = MediaError(MediaErrorType.fromHttpStatusCode(code))
         mediaError.statusCode = code
         mediaError.logMessage = message
