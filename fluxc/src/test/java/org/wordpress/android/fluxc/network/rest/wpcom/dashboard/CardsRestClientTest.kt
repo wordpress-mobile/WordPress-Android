@@ -45,27 +45,27 @@ private val DRAFT_POST_RESPONSE_TWO = PostResponse(
         id = 708,
         title = null,
         content = "<!-- wp:paragraph -->\n<p>Draft Content 2</p>\n<!-- /wp:paragraph -->",
+        featuredImage = "https://test.blog/wp-content/uploads/2021/11/draft-photo-2.jpeg?w=200",
         date = "2021-11-02 15:47:42",
-        modified = "2021-11-02 15:48:00",
-        featuredImage = "https://test.blog/wp-content/uploads/2021/11/draft-photo-2.jpeg?w=200"
+        modified = "2021-11-02 15:48:00"
 )
 
 private val DRAFT_POST_RESPONSE_ONE = PostResponse(
         id = 659,
         title = "Draft Title 1",
         content = "<!-- wp:paragraph -->\n<p>Draft Content 1</p>\n<!-- /wp:paragraph -->",
+        featuredImage = null,
         date = "2021-10-27 12:25:57",
-        modified = "2021-10-27 12:26:01",
-        featuredImage = null
+        modified = "2021-10-27 12:26:01"
 )
 
 private val SCHEDULED_POST_RESPONSE_ONE = PostResponse(
         id = 762,
         title = "Scheduled Title 1",
         content = null,
+        featuredImage = "https://test.blog/wp-content/uploads/2021/11/scheduled-photo-1.jpeg?w=200",
         date = "2021-12-26 23:00:33",
-        modified = "2021-11-05 09:05:30",
-        featuredImage = "https://test.blog/wp-content/uploads/2021/11/scheduled-photo-1.jpeg?w=200"
+        modified = "2021-11-05 09:05:30"
 )
 
 private val POSTS_RESPONSE = PostsResponse(
