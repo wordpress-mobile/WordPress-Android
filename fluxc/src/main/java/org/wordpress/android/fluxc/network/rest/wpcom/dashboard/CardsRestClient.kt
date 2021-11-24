@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -71,14 +70,14 @@ class CardsRestClient @Inject constructor(
         @SerializedName("ID") val id: Int,
         @SerializedName("post_title") val title: String?,
         @SerializedName("post_content") val content: String?,
-        @SerializedName("post_modified") val date: Date,
+        @SerializedName("post_modified") val date: String,
         @SerializedName("featured_image") val featuredImage: String?
     ) {
         fun toPost() = PostCardModel(
                 id = id,
                 title = title,
                 content = content,
-                date = date,
+                date = CardsUtils.fromDate(date),
                 featuredImage = featuredImage
         )
     }
