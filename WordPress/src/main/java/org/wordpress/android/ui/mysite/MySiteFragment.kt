@@ -537,11 +537,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
-        activity?.let { parent ->
+        activity?.let {
             snackbarSequencer.enqueue(
                     SnackbarItem(
                             info = Info(
-                                    view = parent.findViewById(R.id.coordinator),
+                                    view = requireView(),
                                     textRes = holder.message,
                                     duration = holder.duration,
                                     isImportant = holder.isImportant
