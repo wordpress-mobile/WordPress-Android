@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:importantForAccessibility="no"
-    android:paddingTop="@dimen/margin_extra_large">
+    android:paddingTop="@dimen/margin_small">
 
     <View
         android:id="@+id/divider"
@@ -14,13 +14,14 @@
         android:layout_height="@dimen/list_divider_height"
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:background="?attr/wpColorSurfaceSecondary"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
+        android:paddingTop="@dimen/margin_large"
         android:id="@+id/comment_content_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
