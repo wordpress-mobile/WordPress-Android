@@ -70,7 +70,7 @@ class CardsRestClient @Inject constructor(
         @SerializedName("ID") val id: Int,
         @SerializedName("post_title") val title: String?,
         @SerializedName("post_content") val content: String?,
-        @SerializedName("post_modified") val date: String,
+        @SerializedName("post_modified_gmt") val date: String,
         @SerializedName("featured_image") val featuredImage: String?
     ) {
         fun toPost() = PostCardModel(
