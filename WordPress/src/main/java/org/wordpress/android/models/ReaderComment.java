@@ -144,7 +144,7 @@ public class ReaderComment {
     }
 
     public String getShortUrl() {
-        return mShortUrl;
+        return StringUtils.notNullStr(mShortUrl);
     }
 
     public void setShortUrl(String shortUrl) {
