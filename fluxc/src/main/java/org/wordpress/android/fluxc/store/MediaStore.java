@@ -817,6 +817,8 @@ public class MediaStore extends Store {
         }
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+        } else if (payload.site.isJetpackCPConnected()) {
+            mWPV2MediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
         }
