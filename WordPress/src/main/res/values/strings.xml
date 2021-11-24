@@ -1678,10 +1678,9 @@
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
+    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -2239,6 +2238,7 @@
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
+    <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-09 03:16:02+0000
+Translation-Revision-Date: 2021-11-18 00:02:36+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">إضافة نطاق مخصص، يسهّل للزائرين العثور على موقعك</string>
+    <string name="my_site_post_card_scheduled_title">المقالات المجدولة القادمة</string>
+    <string name="my_site_untitled_post">بدون عنوان</string>
+    <string name="my_site_create_first_post_title">إنشاء تدوينتك الأولى</string>
+    <string name="my_site_create_first_post_excerpt">تظهر المقالات على صفحة مدونتك بترتيب زمني عكسي. حان الوقت لمشاركة أفكارك مع العالم!</string>
+    <string name="domains_paid_plan_add_your_domain_title">إضافة نطاقك</string>
+    <string name="my_site_post_card_draft_title">العمل على مسودة مقالة</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;مجاني للعام الأول &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s في العام&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">سيتم توجيه النطاقات الخاصة بك إلى موقعك على %s</string>
+    <string name="domains_redirected_domains_blurb">سيتم توجيه نطاقاتك إلى موقعك على %s</string>
     <string name="gutenberg_native_create_link">إنشاء رابط</string>
     <string name="domain_registration_result_title">تهانينا على إتمام عملية الشراء!</string>
     <string name="domain_registration_result_description">جاري الآن إعداد نطاقك الجديد &lt;b&gt;%s&lt;/b&gt;. قد يستغرق ما يصل إلى 30 دقيقة ليبدء نطاقك بالعمل.</string>
@@ -17,8 +24,8 @@ Language: ar
     <string name="post_settings_post_sticky">تثبيت المقالة في الصفحة الأمامية</string>
     <string name="post_settings_mark_as_sticky_options_header">وضع علامة كمُثبَّت</string>
     <string name="reader_follow_comments_unfollow_conversation">إلغاء متابعة المحادثة</string>
-    <string name="reader_follow_comments_enable_push_notifications">تفعيل إشعارات التطبيق</string>
     <string name="reader_follow_comments_message">إنك تتابع هذه المحادثة. ستتلقى تنبيهات عبر البريد الإلكتروني عند نشر تعليقات جديدة.</string>
+    <string name="reader_follow_comments_enable_push_notifications">تمكين التنبيهات داخل التطبيق</string>
     <string name="reader_follow_comments_bottom_sheet_description">إدارة خيارات متابعة المحادثة، النافذة المنبثقة</string>
     <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">يتعذر تعطيل التنبيهات داخل التطبيق</string>
     <string name="reader_follow_comments_could_not_subscribe_to_push_error">يتعذر تمكين التنبيهات داخل التطبيق</string>
@@ -27,8 +34,8 @@ Language: ar
     <string name="reader_follow_comments_unsubscribe_from_all_success">تم إلغاء الاشتراك من هذه المحادثة</string>
     <string name="reader_follow_comments_subscribe_success_enable_push">متابعة هذه المحادثة\nهل تريد تمكين التنبيهات داخل التطبيق؟</string>
     <string name="domains_search_for_a_domain_button">البحث عن نطاق</string>
-    <string name="domains_paid_plan_claim_your_domain_caption">لديك تسجيل مجال مجاني مدته عام واحد متضمن في خطتك</string>
     <string name="domains_free_plan_get_your_domain_caption">النطاقات التي تم شراؤها على هذا الموقع ستعيد توجيه الزائرين إلى &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">لديك تسجيل نطاق مجاني مدته عام واحد ضمن خطتك</string>
     <string name="domains_paid_plan_claim_your_domain_title">طالب بنطاقك المجاني</string>
     <string name="domains_manage_domains">إدارة النطاقات</string>
     <string name="domains_add_a_domain">إضافة نطاق</string>
@@ -39,7 +46,7 @@ Language: ar
     <string name="domains_primary_site_more_menu_change_site_address">تغيير عنوان الموقع</string>
     <string name="domains_primary_site_caption">عنوان ووردبريس.كوم المجاني الخاص بك هو</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /سنة&lt;/span&gt;</string>
-    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s للعام الأول &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s في العام&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;⁦%1$s⁩ للسنة الأولى &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;⁦%2$s⁩ / سنة&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">هل تريد تجاهلها؟</string>
     <string name="comment_edit_cancel_dialog_title">هناك تغييرات غير محفوظة</string>
     <string name="comment_edit_comment_error">يتعذر أن يكون التعليق فارغًا</string>
@@ -164,11 +171,8 @@ Language: ar
     <string name="fab_add_category_desc">إنشاء تصنيف</string>
     <string name="gutenberg_native_set_as_featured_image">تعيين كصورة بارزة </string>
     <string name="support_ticket_subject">دعم ووردبريس لـ Android</string>
-    <string name="site_settings_categories_empty_subtitle">أضف تصنيفاتك المستخدمة بكثرة هنا بحيث يمكن تحديدها بسرعة عندما تقوم بإضافة تصنيفات إلى مقالاتك</string>
-    <string name="site_settings_categories_empty_title">ليس لديك أي تصنيفات</string>
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
-    <string name="site_settings_categories_empty_button">إنشاء تصنيف</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
     <string name="site_settings_blogging_reminders_title">تذكيرات التدوين</string>
     <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
@@ -233,6 +237,7 @@ Language: ar
     <string name="gutenberg_native_embed_link">تضمين رابط</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_create_embed">إنشاء تضمين</string>
+    <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
     <string name="gutenberg_native_column_d">عمود %d</string>
     <string name="gutenberg_native_none">بدون</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
@@ -477,7 +482,6 @@ Language: ar
     <string name="backup_download_another_download_running">هناك عملية تنزيل قيد التشغيل.</string>
     <string name="backup_download_progress_page_title">تنزيل النسخة الاحتياطية</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">رابط الصورة URL</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="threat_fix">إصلاح التهديد</string>
@@ -824,6 +828,7 @@ Language: ar
     <string name="gutenberg_native_block_cut">المكوِّن الذي تم قصه</string>
     <string name="gutenberg_native_block_copied">المكوِّن الذي تم نسخه</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
+    <string name="gutenberg_native_remove_block">إزالة المكوّن</string>
     <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
     <string name="reader_title_tag_preview">موضوع</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>

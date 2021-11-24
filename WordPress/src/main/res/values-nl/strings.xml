@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-04 09:28:04+0000
+Translation-Revision-Date: 2021-11-15 21:32:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Een eigen domein maakt het eenvoudig voor je bezoekers om je site te vinden</string>
+    <string name="domains_paid_plan_add_your_domain_title">Voeg je domein toe</string>
+    <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen.</string>
+    <string name="my_site_create_first_post_title">Maak je eerste bericht</string>
+    <string name="my_site_untitled_post">Ongetiteld</string>
+    <string name="my_site_post_card_scheduled_title">Aankomende geplande berichten</string>
+    <string name="my_site_post_card_draft_title">Werk aan een conceptbericht</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op %s</string>
     <string name="gutenberg_native_create_link">Maak link</string>
@@ -165,9 +172,6 @@ Language: nl
     <string name="fab_add_category_desc">Maak categorie</string>
     <string name="support_ticket_subject">WordPress voor Android ondersteuning</string>
     <string name="site_settings_categories_hint">Beheer je site categorieën</string>
-    <string name="site_settings_categories_empty_title">Je hebt geen categorieën</string>
-    <string name="site_settings_categories_empty_subtitle">Voeg je veelgebruikte categorieën hier toe, zodat ze snel geselecteerd kunnen worden, als je je berichten categoriseert</string>
-    <string name="site_settings_categories_empty_button">Maak een categorie</string>
     <string name="site_settings_categories_title">Categorieën</string>
     <string name="site_settings_blogging_reminders_title">Blogging herinneringen</string>
     <string name="page_is_posts_page_warning">De inhoud van je laatste berichten pagina is automatisch gegenereerd en kan niet bewerkt worden.</string>
@@ -232,6 +236,7 @@ Language: nl
     <string name="gutenberg_native_featured">Uitgelicht</string>
     <string name="gutenberg_native_embed_link">Sluit link in</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
+    <string name="gutenberg_native_custom_url">Aangepaste URL</string>
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_none">Geen</string>
@@ -476,7 +481,6 @@ Language: nl
     <string name="backup_download_generic_failure">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="backup_download_details_action_button_content_description">Maak een downloadbare back-up knop</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is het geselecteerde punt om een te downloaden back-up te maken.</string>
-    <string name="gutenberg_native_image_link_url">Afbeelding link URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: nl
     <string name="quick_start_dialog_update_site_title_message_short">Tik &lt;b&gt;%1$s&lt;/b&gt; om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options">%s blok opties</string>
+    <string name="gutenberg_native_remove_block">Verwijder blok</string>
     <string name="gutenberg_native_duplicate_block">Blok dupliceren</string>
     <string name="gutenberg_native_copy_block">Blok copieren</string>
     <string name="gutenberg_native_copied_block">Blok gecopieerd</string>

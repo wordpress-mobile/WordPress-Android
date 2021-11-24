@@ -163,11 +163,11 @@ public class ReaderTagTable {
             throw new IllegalArgumentException("null tag cursor");
         }
 
-        String tagSlug = c.getString(c.getColumnIndex("tag_slug"));
-        String tagDisplayName = c.getString(c.getColumnIndex("tag_display_name"));
-        String tagTitle = c.getString(c.getColumnIndex("tag_title"));
-        String endpoint = c.getString(c.getColumnIndex("endpoint"));
-        ReaderTagType tagType = ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
+        String tagSlug = c.getString(c.getColumnIndexOrThrow("tag_slug"));
+        String tagDisplayName = c.getString(c.getColumnIndexOrThrow("tag_display_name"));
+        String tagTitle = c.getString(c.getColumnIndexOrThrow("tag_title"));
+        String endpoint = c.getString(c.getColumnIndexOrThrow("endpoint"));
+        ReaderTagType tagType = ReaderTagType.fromInt(c.getInt(c.getColumnIndexOrThrow("tag_type")));
 
         return new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, tagType);
     }

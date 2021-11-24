@@ -41,12 +41,12 @@ public class CategoryModel {
             return;
         }
 
-        id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN_NAME));
-        name = cursor.getString(cursor.getColumnIndex(NAME_COLUMN_NAME));
-        slug = cursor.getString(cursor.getColumnIndex(SLUG_COLUMN_NAME));
-        description = cursor.getString(cursor.getColumnIndex(DESC_COLUMN_NAME));
-        parentId = cursor.getInt(cursor.getColumnIndex(PARENT_ID_COLUMN_NAME));
-        postCount = cursor.getInt(cursor.getColumnIndex(POST_COUNT_COLUMN_NAME));
+        id = cursor.getInt(cursor.getColumnIndexOrThrow(ID_COLUMN_NAME));
+        name = cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN_NAME));
+        slug = cursor.getString(cursor.getColumnIndexOrThrow(SLUG_COLUMN_NAME));
+        description = cursor.getString(cursor.getColumnIndexOrThrow(DESC_COLUMN_NAME));
+        parentId = cursor.getInt(cursor.getColumnIndexOrThrow(PARENT_ID_COLUMN_NAME));
+        postCount = cursor.getInt(cursor.getColumnIndexOrThrow(POST_COUNT_COLUMN_NAME));
         isInLocalTable = true;
     }
 

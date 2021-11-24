@@ -86,8 +86,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no items in db with internet available, when vm starts, then list of items from network is displayed`() {
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
-                .thenReturn(arrayListOf(), mock())
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(), mock())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel.start(siteModel)
@@ -101,8 +100,7 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no items in db and api error occurs, when vm starts, then error is displayed`() {
-        whenever(getCategoriesUseCase.getSiteCategories(siteModel))
-                .thenReturn(arrayListOf())
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         viewModel.start(siteModel)
 
@@ -111,6 +109,54 @@ class CategoriesListViewModelTest : BaseUnitTest() {
 
         viewModel.onTaxonomyChanged(getGenericTaxonomyError())
         assertTrue(uiStates.last() is GenericError)
+    }
+
+    @Test
+    fun `given error occurs, when retry is invoked, then loading is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(getGenericTaxonomyError())
+        (uiStates.last() as GenericError).action.invoke()
+
+        verify(getCategoriesUseCase, times(2)).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is Loading)
+    }
+
+    @Test
+    fun `given api error occurs, when retry is invoked on no network, then no network is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true).thenReturn(false)
+        viewModel.start(siteModel)
+
+        viewModel.onTaxonomyChanged(getGenericTaxonomyError())
+        (uiStates.last() as GenericError).action.invoke()
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is NoConnection)
+    }
+
+    @Test
+    fun `given no network, when retry is invoked, then no connection error is displayed`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel.start(siteModel)
+
+        (uiStates.last() as NoConnection).action.invoke()
+
+        verify(getCategoriesUseCase, never()).fetchSiteCategories(siteModel)
+        assertTrue(uiStates.last() is NoConnection)
+    }
+
+    @Test
+    fun `given network available, when retry is invoked, then list of items from network is displayed`() {
+        whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(), mock())
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false).thenReturn(true)
+        viewModel.start(siteModel)
+
+        (uiStates.last() as NoConnection).action.invoke()
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+        viewModel.onTaxonomyChanged(getTaxonomyChangedCallback())
+        assertTrue(uiStates.last() is Content)
     }
 
     private fun getGenericTaxonomyError(): OnTaxonomyChanged {

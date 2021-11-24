@@ -190,6 +190,10 @@ public class AppSettingsFragment extends PreferenceFragment
         removeWhatsNewPreference();
         mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
 
+        if (mUnifiedAboutFeatureConfig.isEnabled()) {
+            removeAboutCategory();
+        }
+
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
@@ -227,6 +231,13 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.removePreference(experimentalPreference);
     }
 
+    private void removeAboutCategory() {
+        PreferenceCategory aboutPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(aboutPreferenceCategory);
+    }
 
     private void removeWhatsNewPreference() {
         PreferenceCategory aboutTheAppPreferenceCategory =

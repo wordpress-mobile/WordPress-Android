@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-02 08:38:58+0000
+Translation-Revision-Date: 2021-11-15 20:53:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Adding a custom domain makes it easy for visitors to find your site</string>
+    <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>
+    <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
+    <string name="my_site_create_first_post_title">Create your first post</string>
+    <string name="my_site_untitled_post">Untitled</string>
+    <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
+    <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Free for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="gutenberg_native_create_link">Create link</string>
@@ -165,9 +172,6 @@ Language: en_GB
     <string name="fab_add_category_desc">Create category</string>
     <string name="support_ticket_subject">WordPress for Android support</string>
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
-    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
-    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorising your posts</string>
-    <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_title">Categories</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
@@ -232,6 +236,7 @@ Language: en_GB
     <string name="gutenberg_native_featured">Featured</string>
     <string name="gutenberg_native_embed_link">Embed link</string>
     <string name="gutenberg_native_display_post_date">Display post date</string>
+    <string name="gutenberg_native_custom_url">Custom URL</string>
     <string name="gutenberg_native_create_embed">Create embed</string>
     <string name="gutenberg_native_column_d">Column %d</string>
     <string name="gutenberg_native_none">None</string>
@@ -476,7 +481,6 @@ Language: en_GB
     <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
-    <string name="gutenberg_native_image_link_url">Image Link URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: en_GB
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Binning this post will also discard local changes, are you sure you want to continue?</string>
     <string name="gutenberg_native_s_block_options">%s block options</string>
+    <string name="gutenberg_native_remove_block">Remove block</string>
     <string name="gutenberg_native_duplicate_block">Duplicate block</string>
     <string name="gutenberg_native_copy_block">Copy block</string>
     <string name="gutenberg_native_copied_block">Copied block</string>
