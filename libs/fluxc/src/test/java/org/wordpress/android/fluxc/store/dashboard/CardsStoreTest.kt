@@ -14,12 +14,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
-import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -28,7 +28,7 @@ import kotlin.test.assertNull
 const val POST_ID = 1
 const val POST_TITLE = "title"
 const val POST_CONTENT = "content"
-val POST_DATE = Date()
+const val POST_DATE = "2021-11-24 01:12:34"
 const val POST_FEATURED_IMAGE = "featuredImage"
 
 /* RESPONSE */
@@ -57,7 +57,7 @@ private val POST_MODEL = PostCardModel(
         id = POST_ID,
         title = POST_TITLE,
         content = POST_CONTENT,
-        date = POST_DATE,
+        date = CardsUtils.fromDate(POST_DATE),
         featuredImage = POST_FEATURED_IMAGE
 )
 
