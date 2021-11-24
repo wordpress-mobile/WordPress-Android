@@ -936,6 +936,9 @@ class SiteRestClient @Inject constructor(
             if (from.options.active_modules != null) {
                 site.activeModules = from.options.active_modules.joinToString(",")
             }
+            from.options.jetpack_connection_active_plugins?.let {
+                site.activeJetpackConnectionPlugins = it.joinToString(",")
+            }
             try {
                 site.maxUploadSize = java.lang.Long.valueOf(from.options.max_upload_size)
             } catch (e: NumberFormatException) {
