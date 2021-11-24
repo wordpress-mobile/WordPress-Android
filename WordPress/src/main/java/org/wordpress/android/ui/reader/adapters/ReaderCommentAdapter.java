@@ -97,7 +97,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private PostHeaderHolder mHeaderHolder;
 
     class CommentHolder extends RecyclerView.ViewHolder {
-        private final ViewGroup mContainer;
+        private final ViewGroup mCommentContainer;
         private final TextView mTxtAuthor;
         private final TextView mTxtText;
         private final TextView mTxtDate;
@@ -116,7 +116,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         CommentHolder(View view) {
             super(view);
 
-            mContainer = view.findViewById(R.id.layout_container);
+            mCommentContainer = view.findViewById(R.id.comment_content_container);
 
             mTxtAuthor = view.findViewById(R.id.text_comment_author);
             mTxtText = view.findViewById(R.id.text_comment_text);
@@ -311,10 +311,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
-            commentHolder.mContainer.setBackgroundColor(mColorHighlight);
+            commentHolder.mCommentContainer.setBackgroundColor(mColorHighlight);
             commentHolder.mProgress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else {
-            commentHolder.mContainer.setBackgroundColor(0);
+            commentHolder.mCommentContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
         }
 
