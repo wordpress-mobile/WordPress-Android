@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -49,8 +50,8 @@ class CardsRestClient @Inject constructor(
     data class CardsResponse(
         @SerializedName("posts") val posts: PostsResponse
     ) {
-        fun toCards() = CardsModel(
-                posts = posts.toPosts()
+        fun toCards() = listOf(
+                posts.toPosts()
         )
     }
 
@@ -59,7 +60,7 @@ class CardsRestClient @Inject constructor(
         @SerializedName("draft") val draft: List<PostResponse>,
         @SerializedName("scheduled") val scheduled: List<PostResponse>
     ) {
-        fun toPosts() = CardsModel.PostsModel(
+        fun toPosts() = PostsCardModel(
                 hasPublished = hasPublished,
                 draft = draft.map { it.toPost() },
                 scheduled = scheduled.map { it.toPost() }
@@ -73,7 +74,7 @@ class CardsRestClient @Inject constructor(
         @SerializedName("post_modified") val date: Date,
         @SerializedName("featured_image") val featuredImage: String?
     ) {
-        fun toPost() = CardsModel.PostsModel.PostModel(
+        fun toPost() = PostCardModel(
                 id = id,
                 title = title,
                 content = content,

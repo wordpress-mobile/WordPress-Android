@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store.dashboard
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.store.Store
@@ -27,15 +26,13 @@ class CardsStore @Inject constructor(
 
     private fun storeCards(
         payload: FetchedCardsPayload<CardsResponse>
-    ): OnCardsFetched<CardsModel> {
-        return when {
-            payload.isError -> OnCardsFetched(payload.error)
-            payload.response != null -> {
-                // TODO: Store in db.
-                OnCardsFetched(payload.response.toCards())
-            }
-            else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
+    ) = when {
+        payload.isError -> OnCardsFetched(payload.error)
+        payload.response != null -> {
+            // TODO: Store in db.
+            OnCardsFetched(payload.response.toCards())
         }
+        else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
