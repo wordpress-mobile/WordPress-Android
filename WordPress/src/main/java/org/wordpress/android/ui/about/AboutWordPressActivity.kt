@@ -10,6 +10,7 @@ import com.automattic.about.model.SocialsConfig
 import org.wordpress.android.R
 
 class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
+    @SuppressWarnings("RegexpSingleline")
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
