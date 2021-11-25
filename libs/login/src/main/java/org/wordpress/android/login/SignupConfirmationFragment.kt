@@ -8,12 +8,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.login_include_email_header.*
-import kotlinx.android.synthetic.main.signup_confirmation_screen.*
-import kotlinx.android.synthetic.main.toolbar_login.*
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
 import javax.inject.Inject
@@ -88,6 +89,7 @@ class SignupConfirmationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as AppCompatActivity?)?.apply {
+            val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
             setSupportActionBar(toolbar)
             supportActionBar?.apply {
                 setTitle(R.string.sign_up_label)
@@ -95,16 +97,17 @@ class SignupConfirmationFragment : Fragment() {
             }
         }
 
-        email.text = mEmail
+        view.findViewById<TextView>(R.id.email).text = mEmail
 
+        val avatarProgressBar = view.findViewById<ProgressBar>(R.id.avatar_progress)
         val avatarRequestListener = object : AvatarRequestListener {
             override fun onRequestFinished() {
-                avatar_progress.visibility = View.GONE
+                avatarProgressBar.visibility = View.GONE
             }
         }
 
-        loadAvatarFromUrl(this, mPhotoUrl, gravatar, avatarRequestListener)
-        signup_confirmation_button.setOnClickListener {
+        loadAvatarFromUrl(this, mPhotoUrl, view.findViewById(R.id.gravatar), avatarRequestListener)
+        view.findViewById<AppCompatButton>(R.id.signup_confirmation_button).setOnClickListener {
             mAnalyticsListener.trackCreateAccountClick()
             mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
         }
