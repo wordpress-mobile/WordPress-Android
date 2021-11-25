@@ -29,9 +29,6 @@ public enum NotificationAction implements IAction {
     FETCH_NOTIFICATION, // Fetch a single notification
     @Action(payloadType = MarkNotificationsSeenPayload.class)
     MARK_NOTIFICATIONS_SEEN, // Submit the time notifications were last seen
-    @Action(payloadType = MarkNotificationsReadPayload.class)
-    @Deprecated // Use suspendable markNotificationsRead directly
-    MARK_NOTIFICATIONS_READ, // Mark one or more notifications as read by user
 
     // Remote responses
     @Action(payloadType = RegisterDeviceResponsePayload.class)
