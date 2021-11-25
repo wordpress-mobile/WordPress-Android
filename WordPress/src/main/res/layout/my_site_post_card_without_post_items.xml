@@ -44,12 +44,12 @@
             android:layout_height="0dp"
             android:importantForAccessibility="no"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/img_write_72dp" />
+            tools:srcCompat="@drawable/img_write_212dp" />
 
         <include
             android:id="@+id/my_site_card_footer_link"
