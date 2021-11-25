@@ -18,7 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
-import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -105,8 +105,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         menu.removeItem(R.id.nav_reader)
     }
 
+    @SuppressLint("WrongConstant")
     private fun disableShiftMode() {
-        labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
+        labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
     }
 
     private fun assignNavigationListeners(assign: Boolean) {
