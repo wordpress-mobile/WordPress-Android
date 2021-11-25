@@ -32,7 +32,7 @@ class MySiteSourceManager @Inject constructor(
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
-    val mySiteSources: List<MySiteSource<*>> = listOf(
+    private val mySiteSources: List<MySiteSource<*>> = listOf(
             selectedSiteSource,
             siteIconProgressSource,
             quickStartCardSource,
@@ -56,11 +56,11 @@ class MySiteSourceManager @Inject constructor(
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
-                    return false
+                    return true
                 }
             }
         }
-        return true
+        return false
     }
 
     fun refresh() {
