@@ -83,7 +83,6 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
-import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -988,7 +987,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
 
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site, PostListType.DRAFTS))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
     }
 
     @Test
@@ -999,7 +998,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
                 assertThat(navigationActions)
-                        .containsOnly(SiteNavigationAction.OpenScheduledPosts(site, PostListType.SCHEDULED))
+                        .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
             }
 
     /* POST CARD - POST ITEM */
