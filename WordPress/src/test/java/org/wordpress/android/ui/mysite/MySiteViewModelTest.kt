@@ -843,7 +843,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_REMOVE_NEXT_STEPS_DIALOG))
 
-       verify(mySiteSourceManager).refresh()
+        verify(mySiteSourceManager).refresh()
     }
 
     @Test
@@ -967,7 +967,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(mySiteSourceManager).onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
     }
-
 
     @Test
     fun `when dynamic QS remove menu item is clicked, then the request is passed to MySiteSourceManager`() = test {
