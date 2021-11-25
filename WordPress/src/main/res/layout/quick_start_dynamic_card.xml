@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_extra_medium_large">
+    android:paddingBottom="@dimen/margin_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_width="@dimen/quick_start_card_progress_indicator_size"
             android:layout_height="@dimen/quick_start_card_progress_indicator_size"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/content_margin_site_row_start"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:indeterminate="false"
             android:progressDrawable="@drawable/quick_start_card_progress_drawable"
             tools:progress="75"
@@ -32,13 +32,10 @@
 
         <TextView
             android:id="@+id/quick_start_card_title"
+            style="@style/MySitePostItemTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             tools:text="Quick Start card" />
 
         <ImageButton

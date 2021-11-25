@@ -81,8 +81,6 @@
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
-    <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -302,7 +300,6 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>

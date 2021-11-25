@@ -63,4 +63,8 @@ sealed class SiteNavigationAction {
         val type: QuickStartTaskType,
         @StringRes val title: Int
     ) : SiteNavigationAction()
+    data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
+    data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
+    data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
+    data class EditPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
 }
