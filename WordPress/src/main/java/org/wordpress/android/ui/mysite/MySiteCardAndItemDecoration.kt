@@ -16,6 +16,7 @@ class MySiteCardAndItemDecoration(
         state: RecyclerView.State
     ) {
         val position = parent.getChildAdapterPosition(view)
+        if (position < 0) return
         when (parent.adapter?.getItemViewType(position)) {
             MySiteCardAndItem.Type.LIST_ITEM.ordinal,
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> {
