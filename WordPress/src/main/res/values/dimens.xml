@@ -227,6 +227,10 @@
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">160dp</dimen>
 
+    <dimen name="reader_comments_actions_height">24dp</dimen>
+    <dimen name="reader_comments_content_line_height">24dp</dimen>
+    <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
+
     <!-- Increased touch targets to make views more accessible -->
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
