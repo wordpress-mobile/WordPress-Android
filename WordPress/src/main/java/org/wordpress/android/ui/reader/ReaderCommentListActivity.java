@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
@@ -515,6 +516,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void shareComment(String commentUrl) {
+        mReaderTracker.trackPost(
+                Stat.READER_ARTICLE_COMMENT_SHARED,
+                mPost
+        );
+
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl);
