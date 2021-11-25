@@ -522,8 +522,6 @@
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -545,18 +543,6 @@
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="MySiteListRowAlertIcon">
-        <item name="tint">?attr/wpColorWarningLight</item>
-        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
-        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
-        <item name="android:layout_alignParentStart">true</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginEnd">@dimen/my_site_list_row_icon_margin_right</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -582,17 +568,6 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="MySiteListRowDescription">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
@@ -625,7 +600,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
@@ -1232,6 +1206,8 @@
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
@@ -1251,7 +1227,7 @@
     <!-- Reader styles -->
     <style name="SubfilterSectionItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="SubfilterSectionTitle">

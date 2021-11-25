@@ -35,5 +35,6 @@ class PostItemViewHolder(
         )
         featuredImage.visibility = if (postItem.featuredImageUrl == null) View.INVISIBLE else View.VISIBLE
         iconTime.setVisible(postItem.isTimeIconVisible)
+        itemView.setOnClickListener { postItem.onClick.invoke() }
     }
 }
