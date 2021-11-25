@@ -264,6 +264,7 @@ class MySiteViewModel @Inject constructor(
             ),
             PostCardBuilderParams(
                     mockedPostsData = mockedPostsData,
+                    onPostItemClick = this::onPostItemClick,
                     onFooterLinkClick = this::onPostCardFooterLinkClick
             ),
             QuickActionsCardBuilderParams(
@@ -765,10 +766,20 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun onPostCardFooterLinkClick(postCardType: PostCardType) {
-        selectedSiteRepository.getSelectedSite()?.let {
-            // TODO: ashiagr implement navigation
+    private fun onPostItemClick(postId: Int) {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
+        }
+    }
+
+    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            _onNavigation.value = when (postCardType) {
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
+                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
+                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
+            }
         }
     }
 

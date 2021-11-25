@@ -38,6 +38,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -66,32 +68,9 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
@@ -175,6 +154,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
+    private val postId = 100
     private lateinit var site: SiteModel
     private lateinit var siteInfoCard: SiteInfoCard
     private val onSiteChange = MutableLiveData<SiteModel>()
@@ -204,6 +184,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var removeMenuItemClickAction: (() -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
+    private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
+    private var onPostItemClick: ((postId: Int) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -216,8 +198,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     MockedPostsData(
                             posts = Posts(
                                     hasPublishedPosts = true,
-                                    draft = listOf(Post(id = "1", title = "")),
-                                    scheduled = listOf(Post(id = "1", title = ""))
+                                    draft = listOf(Post(id = 1, title = "")),
+                                    scheduled = listOf(Post(id = 1, title = ""))
                             )
                     )
             )
@@ -394,7 +376,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `avatar press opens me screen`() {
         viewModel.onAvatarPressed()
 
-        assertThat(navigationActions).containsOnly(OpenMeScreen)
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMeScreen)
     }
 
     /* LOGIN - NAVIGATION TO STATS */
@@ -405,7 +387,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.handleSuccessfulLoginResult()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     /* EMPTY VIEW */
@@ -440,7 +422,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onAddSitePressed()
 
-        assertThat(navigationActions).containsOnly(AddNewSite(true))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.AddNewSite(true))
     }
 
     /* ON RESUME */
@@ -761,14 +743,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `site info card url click opens site`() = test {
         invokeSiteInfoCardAction(SiteInfoCardAction.URL_CLICK)
 
-        assertThat(navigationActions).containsOnly(OpenSite(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
         invokeSiteInfoCardAction(SiteInfoCardAction.SWITCH_SITE_CLICK)
 
-        assertThat(navigationActions).containsOnly(OpenSitePicker(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSitePicker(site))
     }
 
     /* QUICK ACTIONS CARD */
@@ -795,7 +777,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -809,7 +791,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -823,7 +805,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
@@ -837,7 +819,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
 
     @Test
@@ -851,7 +833,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
@@ -870,7 +852,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
-        assertThat(navigationActions).containsOnly(OpenPages(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
@@ -880,7 +862,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsPagesClickAction).invoke()
 
         verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsOnly(OpenPages(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
@@ -889,7 +871,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPostsClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenPosts(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
     }
 
     @Test
@@ -898,7 +880,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsMediaClickAction).invoke()
 
-        assertThat(navigationActions).containsOnly(OpenMedia(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -911,7 +893,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
 
-        assertThat(navigationActions).containsOnly(OpenDomainRegistration(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDomainRegistration(site))
     }
 
     @Test
@@ -943,7 +925,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        assertThat(navigationActions.last()).isInstanceOf(OpenQuickStartFullScreenDialog::class.java)
+        assertThat(navigationActions.last())
+                .isInstanceOf(SiteNavigationAction.OpenQuickStartFullScreenDialog::class.java)
     }
 
     @Test
@@ -1060,7 +1043,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.checkAndStartQuickStart(siteLocalId)
 
         assertThat(navigationActions).containsExactly(
-                ShowQuickStartDialog(
+                SiteNavigationAction.ShowQuickStartDialog(
                         R.string.quick_start_dialog_need_help_manage_site_title,
                         R.string.quick_start_dialog_need_help_manage_site_message,
                         R.string.quick_start_dialog_need_help_manage_site_button_positive,
@@ -1123,20 +1106,74 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartCardSource).refresh()
     }
 
+    /* POST CARDS */
+
+    @Test
+    fun `given create first card, when footer link is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_FIRST)
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `given create next card, when footer link is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.CREATE_NEXT)
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `given draft post card, when footer link is clicked, then draft posts screen is opened`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site))
+    }
+
+    @Test
+    fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
+
+                assertThat(navigationActions)
+                        .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
+            }
+
+    /* POST CARD - POST ITEM */
+
+    @Test
+    fun `when post item is clicked, then post is opened for edit`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(postId)
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditPost(site, postId))
+            }
+
     /* ITEM CLICK */
 
     @Test
     fun `activity item click emits OpenActivity navigation event`() {
         invokeItemClickAction(ListItemAction.ACTIVITY_LOG)
 
-        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenActivityLog(site))
     }
 
     @Test
     fun `scan item click emits OpenScan navigation event`() {
         invokeItemClickAction(ListItemAction.SCAN)
 
-        assertThat(navigationActions).containsExactly(OpenScan(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenScan(site))
     }
 
     @Test
@@ -1144,14 +1181,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.PLAN)
 
         verify(quickStartRepository).completeTask(QuickStartTask.EXPLORE_PLANS)
-        assertThat(navigationActions).containsExactly(OpenPlan(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
     @Test
     fun `posts item click emits OpenPosts navigation event`() {
         invokeItemClickAction(ListItemAction.POSTS)
 
-        assertThat(navigationActions).containsExactly(OpenPosts(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPosts(site))
     }
 
     @Test
@@ -1159,63 +1196,63 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.PAGES)
 
         verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
-        assertThat(navigationActions).containsExactly(OpenPages(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
     }
 
     @Test
     fun `admin item click emits OpenAdmin navigation event`() {
         invokeItemClickAction(ListItemAction.ADMIN)
 
-        assertThat(navigationActions).containsExactly(OpenAdmin(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenAdmin(site))
     }
 
     @Test
     fun `sharing item click emits OpenSharing navigation event`() {
         invokeItemClickAction(ListItemAction.SHARING)
 
-        assertThat(navigationActions).containsExactly(OpenSharing(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSharing(site))
     }
 
     @Test
     fun `site settings item click emits OpenSiteSettings navigation event`() {
         invokeItemClickAction(ListItemAction.SITE_SETTINGS)
 
-        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSiteSettings(site))
     }
 
     @Test
     fun `themes item click emits OpenThemes navigation event`() {
         invokeItemClickAction(ListItemAction.THEMES)
 
-        assertThat(navigationActions).containsExactly(OpenThemes(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenThemes(site))
     }
 
     @Test
     fun `plugins item click emits OpenPlugins navigation event`() {
         invokeItemClickAction(ListItemAction.PLUGINS)
 
-        assertThat(navigationActions).containsExactly(OpenPlugins(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlugins(site))
     }
 
     @Test
     fun `media item click emits OpenMedia navigation event`() {
         invokeItemClickAction(ListItemAction.MEDIA)
 
-        assertThat(navigationActions).containsExactly(OpenMedia(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMedia(site))
     }
 
     @Test
     fun `comments item click emits OpenMedia navigation event`() {
         invokeItemClickAction(ListItemAction.COMMENTS)
 
-        assertThat(navigationActions).containsExactly(OpenComments(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenComments(site))
     }
 
     @Test
     fun `view site item click emits OpenSite navigation event`() {
         invokeItemClickAction(ListItemAction.VIEW_SITE)
 
-        assertThat(navigationActions).containsExactly(OpenSite(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenSite(site))
     }
 
     @Test
@@ -1225,7 +1262,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(OpenStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -1236,7 +1273,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(OpenStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenStats(site))
     }
 
     @Test
@@ -1253,7 +1290,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
 
     @Test
@@ -1264,7 +1301,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         invokeItemClickAction(ListItemAction.STATS)
 
-        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     /* ITEM VISIBILITY */
@@ -1353,7 +1390,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMediaPicker(site))
     }
 
     @Test
@@ -1362,7 +1399,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        assertThat(navigationActions).containsExactly(OpenMediaPicker(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenMediaPicker(site))
     }
 
     @Test
@@ -1530,7 +1567,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
-            val postCard = initPostCard()
+            val postCard = initPostCard(it)
             listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
         }.whenever(cardsBuilder).build(
                 domainRegistrationCardBuilderParams = any(),
@@ -1638,12 +1675,27 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initPostCard() = PostCardWithPostItems(
-            postCardType = DRAFT,
-            title = UiStringRes(0),
-            postItems = emptyList(),
-            footerLink = FooterLink(label = UiStringRes(0), onClick = mock())
-    )
+    private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
+        val params = (mockInvocation.arguments.filterIsInstance<PostCardBuilderParams>()).first()
+        onPostItemClick = params.onPostItemClick
+        onPostCardFooterLinkClick = params.onFooterLinkClick
+        return PostCardWithPostItems(
+                postCardType = PostCardType.DRAFT,
+                title = UiStringRes(0),
+                postItems = listOf(
+                        PostItem(
+                                title = UiStringRes(0),
+                                excerpt = UiStringRes(0),
+                                featuredImageUrl = "",
+                                onClick = { (onPostItemClick as (Int) -> Unit).invoke(postId) }
+                        )
+                ),
+                footerLink = FooterLink(
+                        label = UiStringRes(0),
+                        onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
+                )
+        )
+    }
 
     fun ViewModel.invokeOnCleared() {
         val viewModelStore = ViewModelStore()

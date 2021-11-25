@@ -80,6 +80,7 @@ import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
+import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
@@ -590,6 +591,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        viewCurrentBlogPostsOfType(context, site, null);
+    }
+
+    public static void viewCurrentBlogPostsOfType(Context context, SiteModel site, PostListType postListType) {
         if (site == null) {
             AppLog.e(T.POSTS, "Site cannot be null when opening posts");
             AnalyticsTracker.track(
@@ -601,7 +606,11 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        context.startActivity(PostsListActivity.buildIntent(context, site));
+        if (postListType == null) {
+            context.startActivity(PostsListActivity.buildIntent(context, site));
+        } else {
+            context.startActivity(PostsListActivity.buildIntent(context, site, postListType, false, null));
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
@@ -1479,6 +1488,13 @@ public class ActivityLauncher {
         intent = new Intent(activity, LoginActivity.class);
         LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginWithoutMagicLink(Fragment fragment) {
+        Intent intent;
+        intent = new Intent(fragment.getContext(), LoginActivity.class);
+        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForJetpackStats(Fragment fragment) {

@@ -234,6 +234,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/about_the_app_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/row_about_the_app"
+                    style="@style/MeListRowLayout">
+
+                    <ImageView
+                        android:id="@+id/me_about_icon"
+                        style="@style/MeListRowIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_wordpress_white_24dp" />
+
+                    <org.wordpress.android.util.widgets.AutoResizeTextView
+                        android:id="@+id/me_about_text_view"
+                        style="@style/MeListRowTextView"
+                        android:text="@string/me_btn_about" />
+
+                </LinearLayout>
+
+                <View style="@style/MeListSectionDividerView" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/row_logout"
                 style="@style/MeListRowLayout">
 
