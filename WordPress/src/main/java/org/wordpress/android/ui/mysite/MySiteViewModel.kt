@@ -741,13 +741,13 @@ class MySiteViewModel @Inject constructor(
         postCardsSource.refresh()
     }
 
-    fun onPostItemClick(postId: Int) {
+    private fun onPostItemClick(postId: Int) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
         }
     }
 
-    fun onPostCardFooterLinkClick(postCardType: PostCardType) {
+    private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
