@@ -16,6 +16,7 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class PostCardBuilderParams(
         val mockedPostsData: MockedPostsData?,
+        val onPostItemClick: (postId: Int) -> Unit,
         val onFooterLinkClick: (postCardType: PostCardType) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 

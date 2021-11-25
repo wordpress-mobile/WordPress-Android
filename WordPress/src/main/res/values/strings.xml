@@ -309,6 +309,7 @@
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="button_copy">Duplicate</string>
+    <string name="button_copy_link">Copy link</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -505,6 +506,7 @@
     <string name="remove_account">Remove site</string>
 
     <!-- post actions -->
+    <string name="post_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="post_trashed">Post sent to trash</string>
     <string name="post_trashing">Post is being trashed</string>
     <string name="post_restored">Post restored</string>
