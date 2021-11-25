@@ -174,10 +174,6 @@ class NotificationStore @Inject constructor(
             NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
-            NotificationAction.MARK_NOTIFICATIONS_READ ->
-                coroutineEngine.launch(T.API, this, "markNotificationsRead") {
-                    markNotificationsRead(action.payload as MarkNotificationsReadPayload)
-                }
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
                 handleRegisteredDevice(action.payload as RegisterDeviceResponsePayload)
@@ -487,10 +483,7 @@ class NotificationStore @Inject constructor(
                 result.notifications?.forEach {
                     changedNotificationLocalIds.add(it.noteId)
                 }
-                causeOfChange = NotificationAction.MARK_NOTIFICATIONS_READ
             }
-            // Legacy client code still expects the event in event bus
-            emitChange(onNotificationChanged)
             onNotificationChanged
         }
     }
