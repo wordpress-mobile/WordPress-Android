@@ -30,7 +30,6 @@ const val POST_TITLE = "title"
 const val POST_CONTENT = "content"
 const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
-const val POST_MODIFIED = "2021-11-24 01:12:34"
 
 /* RESPONSE */
 
@@ -39,8 +38,7 @@ private val POST_RESPONSE = PostResponse(
         title = POST_TITLE,
         content = POST_CONTENT,
         featuredImage = POST_FEATURED_IMAGE,
-        date = POST_DATE,
-        modified = POST_MODIFIED
+        date = POST_DATE
 )
 
 private val POSTS_RESPONSE = PostsResponse(
@@ -60,8 +58,7 @@ private val POST_MODEL = PostCardModel(
         title = POST_TITLE,
         content = POST_CONTENT,
         featuredImage = POST_FEATURED_IMAGE,
-        date = CardsUtils.fromDate(POST_DATE),
-        modified = CardsUtils.fromDate(POST_MODIFIED)
+        date = CardsUtils.fromDate(POST_DATE)
 )
 
 private val POSTS_MODEL = PostsCardModel(

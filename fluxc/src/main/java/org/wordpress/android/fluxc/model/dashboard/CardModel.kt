@@ -21,8 +21,7 @@ sealed class CardModel(
             val title: String?,
             val content: String?,
             val featuredImage: String?,
-            val date: Date,
-            val modified: Date
+            val date: Date
         )
     }
 }
