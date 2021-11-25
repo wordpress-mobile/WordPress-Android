@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.TypedValue
@@ -41,3 +42,10 @@ fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateL
 // https://developer.android.com/reference/android/content/res/Configuration.html#locale
 val Context.currentLocale: Locale
     get() = ConfigurationCompat.getLocales(resources.configuration)[0]
+
+/**
+ * Gets the clipboard manager system service
+ * @see android.content.ClipboardManager
+ */
+val Context.clipboardManager: ClipboardManager?
+    get() = ContextCompat.getSystemService(this, ClipboardManager::class.java)
