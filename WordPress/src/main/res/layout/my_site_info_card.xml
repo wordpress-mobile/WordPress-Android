@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--- The layout does not include the default my site card margins on the root layout as the quick start dot,
+ (to be shown on the site icon layout) extends beyond the card margins and was found to cut off outside it.
+ The margins are applied to the icon container rather than on the card. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
