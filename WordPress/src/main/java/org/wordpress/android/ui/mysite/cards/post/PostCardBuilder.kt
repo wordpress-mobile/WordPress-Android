@@ -16,14 +16,14 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.mockedPostsData?.posts
-//        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-//                ?.let { hasPublishedPosts ->
-//                    if (hasPublishedPosts) {
+        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                ?.let { hasPublishedPosts ->
+                    if (hasPublishedPosts) {
                         add(createNextPostCard(params.onFooterLinkClick))
-//                    } else {
+                    } else {
                         add(createFirstPostCard(params.onFooterLinkClick))
-//                    }
-//                }
+                    }
+                }
         posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
         posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
     }
@@ -33,7 +33,7 @@ class PostCardBuilder @Inject constructor() {
                     postCardType = PostCardType.CREATE_FIRST,
                     title = UiStringRes(R.string.my_site_create_first_post_title),
                     excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                    imageRes = R.drawable.img_write_72dp,
+                    imageRes = R.drawable.img_write_212dp,
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_create_post),
                             onClick = onFooterLinkClick
@@ -45,7 +45,7 @@ class PostCardBuilder @Inject constructor() {
                     postCardType = PostCardType.CREATE_NEXT,
                     title = UiStringRes(R.string.my_site_create_next_post_title),
                     excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                    imageRes = R.drawable.img_write_72dp,
+                    imageRes = R.drawable.img_write_212dp,
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_create_post),
                             onClick = onFooterLinkClick
