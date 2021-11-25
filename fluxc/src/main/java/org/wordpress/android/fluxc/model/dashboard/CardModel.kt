@@ -18,8 +18,8 @@ sealed class CardModel(
     ) : CardModel(Type.POSTS) {
         data class PostCardModel(
             val id: Int,
-            val title: String?,
-            val content: String?,
+            val title: String,
+            val content: String,
             val featuredImage: String?,
             val date: Date
         )
