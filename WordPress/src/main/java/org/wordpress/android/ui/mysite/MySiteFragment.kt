@@ -304,7 +304,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.negativeButtonLabel
         )
         is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
-        is SiteNavigationAction.OpenDrafts ->
+        is SiteNavigationAction.OpenDraftsPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.OpenScheduledPosts ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)

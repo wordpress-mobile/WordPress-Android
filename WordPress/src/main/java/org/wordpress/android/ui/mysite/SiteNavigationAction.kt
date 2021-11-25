@@ -5,7 +5,6 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
-import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.util.UriWrapper
 
 sealed class SiteNavigationAction {
@@ -64,8 +63,8 @@ sealed class SiteNavigationAction {
         val type: QuickStartTaskType,
         @StringRes val title: Int
     ) : SiteNavigationAction()
-    data class OpenDrafts(val site: SiteModel, val postListType: PostListType) : SiteNavigationAction()
-    data class OpenScheduledPosts(val site: SiteModel, val postListType: PostListType) : SiteNavigationAction()
+    data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
+    data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
     data class EditPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
 }

@@ -988,7 +988,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
 
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDrafts(site, PostListType.DRAFTS))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenDraftsPosts(site, PostListType.DRAFTS))
     }
 
     @Test

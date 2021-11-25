@@ -60,7 +60,6 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
-import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -753,8 +752,8 @@ class MySiteViewModel @Inject constructor(
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
-                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDrafts(site, PostListType.DRAFTS))
-                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site, PostListType.SCHEDULED))
+                PostCardType.DRAFT -> Event(SiteNavigationAction.OpenDraftsPosts(site))
+                PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
         }
     }
