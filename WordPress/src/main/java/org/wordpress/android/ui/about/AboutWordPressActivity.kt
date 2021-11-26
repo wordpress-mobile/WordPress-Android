@@ -9,7 +9,6 @@ import com.automattic.about.model.LegalConfig
 import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
-import kotlinx.coroutines.delay
 import org.wordpress.android.R
 
 class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
@@ -18,7 +17,6 @@ class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
                 shareConfigFactory = {
-                    delay(timeMillis = 5000) // Simulate remote call
                     ShareConfig(
                             subject = "WordPress",
                             message = "Hey! Here is a link to download the WordPress app. " +
