@@ -18,12 +18,12 @@ class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
                 shareConfigFactory = {
-                    delay(5000) // Simulate remote call
+                    delay(timeMillis = 5000) // Simulate remote call
                     ShareConfig(
                             subject = "WordPress",
                             message = "Hey! Here is a link to download the WordPress app. " +
                                     "I'm really enjoying it and thought you might too!\n" +
-                                    "https://apps.wordpress.com/get?campaign=app_share_link",
+                                    "https://apps.wordpress.com/get?campaign=app_share_link"
                     )
                 },
                 rateUsConfig = RateUsConfig(
