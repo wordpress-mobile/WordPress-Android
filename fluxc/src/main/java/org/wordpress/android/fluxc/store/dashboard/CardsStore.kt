@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.dashboard
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -46,10 +45,8 @@ class CardsStore @Inject constructor(
 
     fun getCards(
         site: SiteModel
-    ): Flow<CardsResult<List<CardModel>>> {
-        return cardsDao.get(site.id).map { cards ->
-            CardsResult(cards.map { it.toCard() })
-        }
+    ) = cardsDao.get(site.id).map { cards ->
+        CardsResult(cards.map { it.toCard() })
     }
 
     /* PAYLOADS */
