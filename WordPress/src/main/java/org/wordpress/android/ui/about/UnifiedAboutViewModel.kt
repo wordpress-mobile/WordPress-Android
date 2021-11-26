@@ -40,7 +40,6 @@ class UnifiedAboutViewModel @Inject constructor(
             shareConfigFactory = ::createShareConfig,
             rateUsConfig = RateUsConfig.fromContext(contextProvider.getContext()),
             socialsConfig = SocialsConfig(
-                    instagramUsername = WP_SOCIAL_HANDLE,
                     twitterUsername = WP_SOCIAL_HANDLE
             ),
             legalConfig = LegalConfig(
