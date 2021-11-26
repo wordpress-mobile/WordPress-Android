@@ -12,7 +12,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
-    @SuppressWarnings("RegexpSingleline")
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
@@ -46,6 +45,6 @@ class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
     )
 
     companion object {
-        private const val WP_SOCIAL_HANDLE = "wordpressdotcom"
+        private const val WP_SOCIAL_HANDLE = "wordpressdotcom" // CHECKSTYLE IGNORE
     }
 }
