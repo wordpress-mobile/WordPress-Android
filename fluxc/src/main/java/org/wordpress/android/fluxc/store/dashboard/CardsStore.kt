@@ -80,5 +80,8 @@ class CardsStore @Inject constructor(
         TIMEOUT
     }
 
-    class CardsError(var type: CardsErrorType, var message: String? = null) : OnChangedError
+    class CardsError(
+        val type: CardsErrorType,
+        val message: String? = null
+    ) : OnChangedError
 }
