@@ -21,6 +21,7 @@ import org.wordpress.android.ui.JetpackRemoteInstallFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
@@ -717,6 +718,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentsDetailsActivity object);
 
     void inject(UnifiedCommentDetailsFragment object);
+
+    void inject(UnifiedAboutActivity object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

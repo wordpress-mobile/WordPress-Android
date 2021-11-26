@@ -9,9 +9,19 @@ import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
+import javax.inject.Inject
 
 class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
+    @Inject lateinit var viewModel: UnifiedAboutViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (application as WordPress).component().inject(this)
+        setContentView(R.layout.unified_about_activity)
+    }
+
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
@@ -28,11 +38,6 @@ class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
                 ),
                 onDismiss = { onBackPressed() }
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.unified_about_activity)
     }
 
     private fun createShareConfig() = ShareConfig(
