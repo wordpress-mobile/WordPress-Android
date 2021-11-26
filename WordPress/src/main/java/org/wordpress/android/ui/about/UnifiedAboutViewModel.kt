@@ -34,7 +34,7 @@ class UnifiedAboutViewModel @Inject constructor(
             legalConfig = LegalConfig(
                     tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
-                    acknowledgementsUrl = "file:///android_asset/licenses.html"
+                    acknowledgementsUrl = WP_ACKNOWLEDGEMENTS_URL
             ),
             onDismiss = ::onDismiss
     )
@@ -52,5 +52,6 @@ class UnifiedAboutViewModel @Inject constructor(
 
     companion object {
         private const val WP_SOCIAL_HANDLE = "wordpressdotcom" // CHECKSTYLE IGNORE
+        private const val WP_ACKNOWLEDGEMENTS_URL = "file:///android_asset/licenses.html"
     }
 }
