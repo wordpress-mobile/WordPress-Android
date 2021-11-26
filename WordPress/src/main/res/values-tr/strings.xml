@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 13:52:38+0000
+Translation-Revision-Date: 2021-11-24 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Özel bir alan adı eklemek ziyaretçilerin sitenizi bulmasını kolaylaştırır</string>
+    <string name="domains_paid_plan_add_your_domain_title">Aalan adınızı ekleyin</string>
+    <string name="my_site_create_first_post_excerpt">Gönderiler blog sayfanızda ters kronolojik sırada görünür. Fikirlerinizi dünyayla paylaşmanın zamanı geldi!</string>
+    <string name="my_site_post_card_scheduled_title">Yaklaşan zamanlanmış gönderiler</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
@@ -229,6 +233,7 @@ Language: tr
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
+    <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
     <string name="gutenberg_native_none">Hiçbiri</string>
