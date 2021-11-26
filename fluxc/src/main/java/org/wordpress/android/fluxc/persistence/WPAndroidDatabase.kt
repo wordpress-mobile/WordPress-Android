@@ -36,7 +36,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun dashboardCardsDao(): CardsDao
 
     companion object {
-        const val WP_DB_NAME = "wp-android-database"
+        private const val WP_DB_NAME = "wp-android-database"
 
         fun buildDb(applicationContext: Context) = Room.databaseBuilder(
                 applicationContext,
@@ -49,7 +49,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_3_4)
                 .build()
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
@@ -91,7 +91,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_2_3 = object : Migration(2, 3) {
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
@@ -120,7 +120,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_3_4 = object : Migration(3, 4) {
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL("ALTER TABLE BloggingReminders ADD COLUMN hour INTEGER DEFAULT 10 NOT NULL")
