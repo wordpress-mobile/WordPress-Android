@@ -9,6 +9,7 @@ import com.automattic.about.model.LegalConfig
 import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
+import org.wordpress.android.Constants
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.Dismiss
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
@@ -32,7 +33,7 @@ class UnifiedAboutViewModel @Inject constructor(
             ),
             legalConfig = LegalConfig(
                     tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
-                    privacyPolicyUrl = "https://automattic.com/privacy/",
+                    privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
                     acknowledgementsUrl = "file:///android_asset/licenses.html"
             ),
             onDismiss = ::onDismiss
