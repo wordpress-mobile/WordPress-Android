@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.store.dashboard
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
@@ -49,7 +49,9 @@ class CardsStore @Inject constructor(
     fun getCards(
         site: SiteModel
     ): Flow<OnCardsFetched<List<CardModel>>> {
-        return flowOf()
+        return cardsDao.get(site.id).map { cards ->
+            OnCardsFetched(cards.map { it.toCard() })
+        }
     }
 
     /* PAYLOADS */
