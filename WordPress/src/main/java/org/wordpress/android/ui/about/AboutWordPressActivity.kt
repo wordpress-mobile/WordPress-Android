@@ -16,9 +16,7 @@ class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
                 shareConfigFactory = ::createShareConfig,
-                rateUsConfig = RateUsConfig(
-                        packageName = "org.wordpress.android"
-                ),
+                rateUsConfig = RateUsConfig.fromContext(this),
                 socialsConfig = SocialsConfig(
                         instagramUsername = WP_SOCIAL_HANDLE,
                         twitterUsername = WP_SOCIAL_HANDLE
