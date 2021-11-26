@@ -1562,14 +1562,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
-    // to manage SnackBar in Activity, instead of Fragment
-    public void showQuickStartSnackBar(WPDialogSnackbar snackbar) {
-        hideQuickStartSnackBar();
-        mQuickStartSnackbar = snackbar;
-        mQuickStartSnackbar.show();
-    }
-
     private void hideQuickStartSnackBar() {
         if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
             mQuickStartSnackbar.dismiss();

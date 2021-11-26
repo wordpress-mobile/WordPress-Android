@@ -77,8 +77,8 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
@@ -116,12 +116,15 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
+import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -131,7 +134,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -225,6 +227,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
     @Inject UnifiedThreadedCommentsFeatureConfig mUnifiedThreadedCommentsFeatureConfig;
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -898,19 +901,20 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
-            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                    requireContext(),
-                    R.string.quick_start_dialog_follow_sites_message_short_search,
-                    R.drawable.ic_search_white_24dp);
-
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(getSnackbarParent(), title,
-                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
-
-            ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
-
-            SiteModel selectedSite = getSelectedSite();
-            if (selectedSite != null) mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
+            showQuickStartSnackbar();
+            if (getSelectedSite() != null) mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
         }
+    }
+
+    private void showQuickStartSnackbar() {
+        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                requireContext(),
+                R.string.quick_start_dialog_follow_sites_message_short_search,
+                R.drawable.ic_search_white_24dp
+        );
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(new SnackbarItem.Info(mRecyclerView, new UiStringText(title), Snackbar.LENGTH_LONG))
+        );
     }
 
     @Override
