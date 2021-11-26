@@ -71,7 +71,7 @@ class UnifiedAboutViewModel @Inject constructor(
     }
 
     companion object {
-        private const val WP_SOCIAL_HANDLE = "wordpressdotcom" // CHECKSTYLE IGNORE
+        private const val WP_SOCIAL_HANDLE = "wordpress"
         private const val WP_ACKNOWLEDGEMENTS_URL = "file:///android_asset/licenses.html"
         private const val WP_APPS_URL = "https://apps.wordpress.com/"
     }
