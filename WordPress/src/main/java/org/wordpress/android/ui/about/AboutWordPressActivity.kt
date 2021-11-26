@@ -16,14 +16,7 @@ class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
-                shareConfigFactory = {
-                    ShareConfig(
-                            subject = "WordPress",
-                            message = "Hey! Here is a link to download the WordPress app. " +
-                                    "I'm really enjoying it and thought you might too!\n" +
-                                    "https://apps.wordpress.com/get?campaign=app_share_link"
-                    )
-                },
+                shareConfigFactory = ::createShareConfig,
                 rateUsConfig = RateUsConfig(
                         packageName = "org.wordpress.android"
                 ),
@@ -44,4 +37,11 @@ class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.about_word_press_activity)
     }
+
+    private fun createShareConfig() = ShareConfig(
+            subject = "WordPress",
+            message = "Hey! Here is a link to download the WordPress app. " +
+                    "I'm really enjoying it and thought you might too!\n" +
+                    "https://apps.wordpress.com/get?campaign=app_share_link"
+    )
 }
