@@ -481,7 +481,8 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAboutPreferenceClick() {
-        if (mUnifiedAboutFeatureConfig.isEnabled()) {
+        // Temporarily limiting this feature to the WordPress app
+        if (mUnifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             startActivity(new Intent(getActivity(), UnifiedAboutActivity.class));
         } else {
             startActivity(new Intent(getActivity(), AboutActivity.class));
