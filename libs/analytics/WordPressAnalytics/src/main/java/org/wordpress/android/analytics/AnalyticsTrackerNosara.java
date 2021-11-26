@@ -2130,6 +2130,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_content_fetch_failed";
             case EDITOR_BLOCK_INSERTED:
                 return "editor_block_inserted";
+            case ABOUT_SCREEN_SHOWN:
+                return "about_screen_shown";
+            case ABOUT_SCREEN_DISMISSED:
+                return "about_screen_dismissed";
+            case ABOUT_SCREEN_BUTTON_TAPPED:
+                return "about_screen_button_tapped";
+            case ABOUT_RATE_US_TAPPED:
+                return "rate_us_tapped";
+            case ABOUT_SHARE_WITH_FRIENDS_TAPPED:
+                return "share_with_friends_tapped";
+            case ABOUT_TWITTER_HANDLE_TAPPED:
+                return "twitter_tapped";
+            case ABOUT_INSTAGRAM_HANDLE_TAPPED:
+                return "instagram_tapped";
+            case ABOUT_FACEBOOK_HANDLE_TAPPED:
+                return "facebook_tapped";
+            case ABOUT_LEGAL_MORE_TAPPED:
+                return "legal_and_more_tapped";
+            case ABOUT_AUTOMATTIC_FAMILY_TAPPED:
+                return "automattic_family_tapped";
+            case ABOUT_WORK_WITH_US_TAPPED:
+                return "work_with_us_tapped";
+            case ABOUT_TERMS_OF_SERVICE_TAPPED:
+                return "terms_of_service_tapped";
+            case ABOUT_PRIVACY_POLICY_TAPPED:
+                return "privacy_policy_tapped";
+            case ABOUT_CALIFORNIA_PRIVACY_NOTICE_TAPPED:
+                return "california_privacy_notice_tapped";
+            case ABOUT_SOURCE_CODE_TAPPED:
+                return "scource_code_tapped";
+            case ABOUT_ACKNOWLEDGEMENTS_TAPPED:
+                return "acknowledgements_tapped";
         }
         return null;
     }
