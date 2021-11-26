@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.test
 
 /* DATE */
@@ -202,18 +202,18 @@ class CardsRestClientTest {
     @Suppress("SameParameterValue")
     private fun assertSuccess(
         expected: CardsResponse,
-        actual: FetchedCardsPayload<CardsResponse>
+        actual: CardsPayload<CardsResponse>
     ) {
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)
             assertFalse(isError)
-            assertEquals(FetchedCardsPayload(expected), this)
+            assertEquals(CardsPayload(expected), this)
         }
     }
 
     private fun assertError(
         expected: CardsErrorType,
-        actual: FetchedCardsPayload<CardsResponse>
+        actual: CardsPayload<CardsResponse>
     ) {
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)

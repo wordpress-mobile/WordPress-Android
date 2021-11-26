@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel): FetchedCardsPayload<CardsResponse> {
+    suspend fun fetchCards(site: SiteModel): CardsPayload<CardsResponse> {
         val url = WPCOMV2.sites.site(site.siteId).dashboard.cards.url
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
@@ -41,8 +41,8 @@ class CardsRestClient @Inject constructor(
                 CardsResponse::class.java
         )
         return when (response) {
-            is Success -> FetchedCardsPayload(response.data)
-            is Error -> FetchedCardsPayload(response.error.toCardsError())
+            is Success -> CardsPayload(response.data)
+            is Error -> CardsPayload(response.error.toCardsError())
         }
     }
 

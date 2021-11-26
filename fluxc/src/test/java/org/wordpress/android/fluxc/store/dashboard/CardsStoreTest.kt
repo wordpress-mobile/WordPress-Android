@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.OnCardsFetched
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
@@ -118,7 +118,7 @@ class CardsStoreTest {
 
     @Test
     fun `given cards response, when fetch cards gets triggered, then null no error cards model is returned`() = test {
-        val payload = FetchedCardsPayload(CARDS_RESPONSE)
+        val payload = CardsPayload(CARDS_RESPONSE)
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
 
         val result = cardsStore.fetchCards(siteModel)
@@ -129,7 +129,7 @@ class CardsStoreTest {
 
     @Test
     fun `given card response with exception, when fetch cards gets triggered, then cards error is returned`() = test {
-        val payload = FetchedCardsPayload(CARDS_RESPONSE)
+        val payload = CardsPayload(CARDS_RESPONSE)
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
         whenever(dao.insertWithDate(siteModel.id, CARDS_MODEL)).thenThrow(IllegalStateException("Error"))
 
@@ -143,7 +143,7 @@ class CardsStoreTest {
     @Test
     fun `given cards error, when fetch cards gets triggered, then cards error is returned`() = test {
         val errorType = CardsErrorType.API_ERROR
-        val payload = FetchedCardsPayload<CardsResponse>(CardsError(errorType))
+        val payload = CardsPayload<CardsResponse>(CardsError(errorType))
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
 
         val result = cardsStore.fetchCards(siteModel)
@@ -155,7 +155,7 @@ class CardsStoreTest {
 
     @Test
     fun `given empty cards payload, when fetch cards gets triggered, then cards error is returned`() = test {
-        val payload = FetchedCardsPayload<CardsResponse>()
+        val payload = CardsPayload<CardsResponse>()
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
 
         val result = cardsStore.fetchCards(siteModel)
