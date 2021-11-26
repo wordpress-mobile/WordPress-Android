@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -33,6 +32,7 @@ import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
@@ -109,11 +109,11 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     private fun PagesListFragmentBinding.setupObservers() {
-        viewModel.pages.observe(viewLifecycleOwner, Observer { data ->
+        viewModel.pages.observe(viewLifecycleOwner, { data ->
             data?.let { setPages(data.first, data.second, data.third) }
         })
 
-        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer { position ->
+        viewModel.scrollToPosition.observe(viewLifecycleOwner, { position ->
             position?.let {
                 val smoothScroller = object : LinearSmoothScroller(context) {
                     override fun getVerticalSnapPreference(): Int {
