@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.store.dashboard
 
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
@@ -16,13 +19,19 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
+import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.OnCardsFetched
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+
+/* SITE */
+
+const val SITE_LOCAL_ID = 1
 
 /* POST */
 
@@ -72,6 +81,19 @@ private val CARDS_MODEL = listOf(
         POSTS_MODEL
 )
 
+/* ENTITY */
+
+private val POSTS_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.POSTS.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(POSTS_MODEL)
+)
+
+private val CARDS_ENTITY = listOf(
+        POSTS_ENTITY
+)
+
 @RunWith(MockitoJUnitRunner::class)
 class CardsStoreTest {
     @Mock private lateinit var siteModel: SiteModel
@@ -87,6 +109,11 @@ class CardsStoreTest {
                 dao,
                 initCoroutineEngine()
         )
+        setUpMocks()
+    }
+
+    private fun setUpMocks() {
+        whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
     }
 
     @Test
@@ -136,5 +163,14 @@ class CardsStoreTest {
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.INVALID_RESPONSE, result.error.type)
         assertNull(result.error.message)
+    }
+
+    @Test
+    fun `when get cards gets triggered, then a flow of cards model is returned`() = test {
+        whenever(dao.get(SITE_LOCAL_ID)).thenReturn(flowOf(CARDS_ENTITY))
+
+        val result = cardsStore.getCards(siteModel).single()
+
+        assertThat(result).isEqualTo(OnCardsFetched(CARDS_MODEL))
     }
 }

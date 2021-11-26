@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store.dashboard
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
@@ -46,8 +48,8 @@ class CardsStore @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     fun getCards(
         site: SiteModel
-    ) = coroutineEngine.run(AppLog.T.DB, this, "getCards") {
-        // TODO: Get from db.
+    ): Flow<OnCardsFetched<List<CardModel>>> {
+        return flowOf()
     }
 
     /* PAYLOADS */
