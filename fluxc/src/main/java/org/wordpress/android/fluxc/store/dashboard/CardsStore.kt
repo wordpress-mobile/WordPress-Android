@@ -21,7 +21,6 @@ class CardsStore @Inject constructor(
     private val cardsDao: CardsDao,
     private val coroutineEngine: CoroutineEngine
 ) {
-    @Suppress("unused")
     suspend fun fetchCards(
         site: SiteModel
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
@@ -45,7 +44,6 @@ class CardsStore @Inject constructor(
         else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
     fun getCards(
         site: SiteModel
     ): Flow<OnCardsFetched<List<CardModel>>> {
