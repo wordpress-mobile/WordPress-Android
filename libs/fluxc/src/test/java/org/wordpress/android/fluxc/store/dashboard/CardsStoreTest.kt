@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.OnCardsFetched
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
@@ -171,6 +171,6 @@ class CardsStoreTest {
 
         val result = cardsStore.getCards(siteModel).single()
 
-        assertThat(result).isEqualTo(OnCardsFetched(CARDS_MODEL))
+        assertThat(result).isEqualTo(CardsResult(CARDS_MODEL))
     }
 }

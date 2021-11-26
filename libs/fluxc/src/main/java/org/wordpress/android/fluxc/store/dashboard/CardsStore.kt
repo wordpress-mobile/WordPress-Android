@@ -31,24 +31,24 @@ class CardsStore @Inject constructor(
     private suspend fun storeCards(
         site: SiteModel,
         payload: CardsPayload<CardsResponse>
-    ): OnCardsFetched<List<CardModel>> = when {
-        payload.isError -> OnCardsFetched(payload.error)
+    ): CardsResult<List<CardModel>> = when {
+        payload.isError -> CardsResult(payload.error)
         payload.response != null -> {
             try {
                 cardsDao.insertWithDate(site.id, payload.response.toCards())
-                OnCardsFetched()
+                CardsResult()
             } catch (e: Exception) {
-                OnCardsFetched(CardsError(CardsErrorType.GENERIC_ERROR))
+                CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))
             }
         }
-        else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
+        else -> CardsResult(CardsError(CardsErrorType.INVALID_RESPONSE))
     }
 
     fun getCards(
         site: SiteModel
-    ): Flow<OnCardsFetched<List<CardModel>>> {
+    ): Flow<CardsResult<List<CardModel>>> {
         return cardsDao.get(site.id).map { cards ->
-            OnCardsFetched(cards.map { it.toCard() })
+            CardsResult(cards.map { it.toCard() })
         }
     }
 
@@ -64,7 +64,7 @@ class CardsStore @Inject constructor(
 
     /* ACTIONS */
 
-    data class OnCardsFetched<T>(
+    data class CardsResult<T>(
         val model: T? = null,
         val cached: Boolean = false
     ) : Store.OnChanged<CardsError>() {
