@@ -11,7 +11,7 @@ import com.automattic.about.model.SocialsConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 
-class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
+class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
                 headerConfig = HeaderConfig.fromContext(this),
@@ -32,7 +32,7 @@ class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.about_word_press_activity)
+        setContentView(R.layout.unified_about_activity)
     }
 
     private fun createShareConfig() = ShareConfig(

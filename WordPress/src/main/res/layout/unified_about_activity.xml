@@ -5,4 +5,4 @@
     android:name="com.automattic.about.ui.AboutFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.about.AboutWordPressActivity" />
+    tools:context=".ui.about.UnifiedAboutActivity" />
