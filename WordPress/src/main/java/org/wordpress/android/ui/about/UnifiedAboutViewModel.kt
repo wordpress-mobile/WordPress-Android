@@ -10,12 +10,14 @@ import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.Dismiss
+import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class UnifiedAboutViewModel @Inject constructor(
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val wpUrlUtils: WpUrlUtilsWrapper
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<UnifiedAboutNavigationAction>>()
     val onNavigation: LiveData<Event<UnifiedAboutNavigationAction>> = _onNavigation
@@ -29,7 +31,7 @@ class UnifiedAboutViewModel @Inject constructor(
                     twitterUsername = WP_SOCIAL_HANDLE
             ),
             legalConfig = LegalConfig(
-                    tosUrl = "https://wordpress.com/tos/",
+                    tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
                     privacyPolicyUrl = "https://automattic.com/privacy/",
                     acknowledgementsUrl = "file:///android_asset/licenses.html"
             ),
