@@ -98,7 +98,7 @@
       <property name="format" value=".*dotcom(?!.*checkstyle ignore)"/>
       <property name="ignoreCase" value="true"/>
       <property name="message" value="You should not use _dotcom_, use _wpcom_ instead"/>
-      <property name="severity" value="warning"/>
+      <property name="severity" value="error"/>
     </module>
 
     <!-- Specific to WordPress -->
