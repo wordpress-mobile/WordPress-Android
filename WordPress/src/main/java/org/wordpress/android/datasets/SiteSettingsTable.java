@@ -150,15 +150,15 @@ public final class SiteSettingsTable {
             int optimizeImageOldSettings = cursor.getInt(columnIndex);
             AppPrefs.setImageOptimize(optimizeImageOldSettings == 1);
             AppPrefs.setImageOptimizeMaxSize(
-                    cursor.getInt(cursor.getColumnIndex("maxImageWidth")));
+                    cursor.getInt(cursor.getColumnIndexOrThrow("maxImageWidth")));
             AppPrefs.setImageOptimizeQuality(
-                    cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
+                    cursor.getInt(cursor.getColumnIndexOrThrow("imageEncoderQuality")));
             AppPrefs.setVideoOptimize(
-                    cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1);
+                    cursor.getInt(cursor.getColumnIndexOrThrow("optimizedVideo")) == 1);
             AppPrefs.setVideoOptimizeWidth(
-                    cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
+                    cursor.getInt(cursor.getColumnIndexOrThrow("maxVideoWidth")));
             AppPrefs.setVideoOptimizeQuality(
-                    cursor.getInt(cursor.getColumnIndex("videoEncoderBitrate")));
+                    cursor.getInt(cursor.getColumnIndexOrThrow("videoEncoderBitrate")));
 
             // Delete the old columns? --> cannot drop a specific column in SQLite 3 ;(
 

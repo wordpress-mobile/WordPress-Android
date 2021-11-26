@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
@@ -96,6 +97,12 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 import kotlin.Unit;
 
+/**
+ * @deprecated
+ * Threaded Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this or related classes, please ping klymyam or develric
+ */
+@Deprecated
 public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
@@ -368,7 +375,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         mViewModel.start(mBlogId, mPostId);
     }
 
-
     @Override
     public void onCollapse(@Nullable Bundle result) {
         if (result != null) {
@@ -509,6 +515,19 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         EventBus.getDefault().unregister(this);
     }
 
+    private void shareComment(String commentUrl) {
+        mReaderTracker.trackPost(
+                Stat.READER_ARTICLE_COMMENT_SHARED,
+                mPost
+        );
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl);
+
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_link)));
+    }
+
     private void setReplyToCommentId(long commentId, boolean doFocus) {
         mReplyToCommentId = commentId;
         mEditComment.setHint(mReplyToCommentId == 0
@@ -620,6 +639,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
+            // adapter calls this when user taps share icon
+            mCommentAdapter.setCommentShareListener(this::shareComment);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {

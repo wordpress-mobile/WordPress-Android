@@ -2,8 +2,11 @@
 
 18.8
 -----
+* [*] Users can now upload files to forms when using the Preview within the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/15572]
+* [**] Posts List: Adds copy post link functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/15570]
 * [*] Editor: Replace snackbar with compact notice when switching between HTML or Visual mode [https://github.com/wordpress-mobile/WordPress-Android/pull/15583]
 * [*] Fixed an issue where multiple screens were rendered incorrectly in RTL interface languages [https://github.com/wordpress-mobile/WordPress-Android/pull/15597]
+* [*] Updated UI of post comments [https://github.com/wordpress-mobile/WordPress-Android/pull/15595]
 
 
 18.7

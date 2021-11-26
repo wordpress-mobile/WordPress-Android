@@ -24,8 +24,8 @@ class PostCardBuilder @Inject constructor() {
                         add(createFirstPostCard(params.onFooterLinkClick))
                     }
                 }
-        posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params.onFooterLinkClick)) }
-        posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params.onFooterLinkClick)) }
+        posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
+        posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
     }
 
     private fun createFirstPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
@@ -33,7 +33,7 @@ class PostCardBuilder @Inject constructor() {
                     postCardType = PostCardType.CREATE_FIRST,
                     title = UiStringRes(R.string.my_site_create_first_post_title),
                     excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                    imageRes = R.drawable.img_write_72dp,
+                    imageRes = R.drawable.img_write_212dp,
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_create_post),
                             onClick = onFooterLinkClick
@@ -45,52 +45,54 @@ class PostCardBuilder @Inject constructor() {
                     postCardType = PostCardType.CREATE_NEXT,
                     title = UiStringRes(R.string.my_site_create_next_post_title),
                     excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
-                    imageRes = R.drawable.img_write_72dp,
+                    imageRes = R.drawable.img_write_212dp,
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_create_post),
                             onClick = onFooterLinkClick
                     )
             )
 
-    private fun List<Post>.createDraftPostsCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
+    private fun List<Post>.createDraftPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
                     postCardType = PostCardType.DRAFT,
                     title = UiStringRes(R.string.my_site_post_card_draft_title),
-                    postItems = mapToDraftPostItems(),
+                    postItems = mapToDraftPostItems(params.onPostItemClick),
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
-                            onClick = onFooterLinkClick
+                            onClick = params.onFooterLinkClick
                     )
             )
 
-    private fun List<Post>.createScheduledPostsCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
+    private fun List<Post>.createScheduledPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
                     postCardType = PostCardType.SCHEDULED,
                     title = UiStringRes(R.string.my_site_post_card_scheduled_title),
-                    postItems = mapToScheduledPostItems(),
+                    postItems = mapToScheduledPostItems(params.onPostItemClick),
                     footerLink = FooterLink(
                             label = UiStringRes(R.string.my_site_post_card_link_go_to_scheduled_posts),
-                            onClick = onFooterLinkClick
+                            onClick = params.onFooterLinkClick
                     )
             )
 
     private fun Posts.hasDraftsOrScheduledPosts() =
             this.draft?.isNotEmpty() == true || this.scheduled?.isNotEmpty() == true
 
-    private fun List<Post>.mapToDraftPostItems() = map { post ->
+    private fun List<Post>.mapToDraftPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
         PostItem(
                 title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
                 excerpt = post.excerpt?.let { UiStringText(it) },
-                featuredImageUrl = post.featuredImageUrl
+                featuredImageUrl = post.featuredImageUrl,
+                onClick = { post.id?.let { onPostItemClick.invoke(it) } }
         )
     }
 
-    private fun List<Post>.mapToScheduledPostItems() = map { post ->
+    private fun List<Post>.mapToScheduledPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
         PostItem(
                 title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
                 excerpt = UiStringText("Today at 1:04 PM"), // TODO: ashiagr - remove hardcoded text
                 featuredImageUrl = post.featuredImageUrl,
-                isTimeIconVisible = true
+                isTimeIconVisible = true,
+                onClick = { post.id?.let { onPostItemClick.invoke(it) } }
         )
     }
 }

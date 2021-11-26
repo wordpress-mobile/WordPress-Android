@@ -630,6 +630,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_comments_opened";
             case READER_ARTICLE_COMMENT_LIKED:
                 return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_SHARED:
+                return "reader_article_comment_shared";
             case READER_ARTICLE_COMMENT_UNLIKED:
                 return "reader_article_comment_unliked";
             case READER_ARTICLE_DETAIL_LIKED:

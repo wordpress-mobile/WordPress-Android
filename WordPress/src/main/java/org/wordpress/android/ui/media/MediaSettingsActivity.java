@@ -862,8 +862,8 @@ public class MediaSettingsActivity extends LocaleAwareActivity
                 Cursor cursor = dm.query(query);
                 if (cursor != null && cursor.moveToFirst()) {
                     // meaning of `reason` depends on the value of COLUMN_STATUS
-                    int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-                    int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                    int reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));
+                    int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
                     if (status == DownloadManager.STATUS_FAILED) {
                         ToastUtils.showToast(MediaSettingsActivity.this, R.string.error_media_save);
                         // If an HTTP error occurred, this will hold the HTTP status code as defined in RFC 2616.

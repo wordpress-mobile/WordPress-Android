@@ -56,6 +56,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -90,6 +91,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,6 +189,10 @@ public class AppSettingsFragment extends PreferenceFragment
         removeWhatsNewPreference();
         mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
 
+        if (mUnifiedAboutFeatureConfig.isEnabled()) {
+            removeAboutCategory();
+        }
+
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
@@ -224,6 +230,13 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.removePreference(experimentalPreference);
     }
 
+    private void removeAboutCategory() {
+        PreferenceCategory aboutPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(aboutPreferenceCategory);
+    }
 
     private void removeWhatsNewPreference() {
         PreferenceCategory aboutTheAppPreferenceCategory =
