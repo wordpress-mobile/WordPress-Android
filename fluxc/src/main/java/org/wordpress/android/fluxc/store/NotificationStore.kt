@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -29,7 +30,8 @@ class NotificationStore @Inject constructor(
     dispatcher: Dispatcher,
     private val context: Context,
     private val notificationRestClient: NotificationRestClient,
-    private val notificationSqlUtils: NotificationSqlUtils
+    private val notificationSqlUtils: NotificationSqlUtils,
+    private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     companion object {
         const val WPCOM_PUSH_DEVICE_UUID = "NOTIFICATIONS_UUID_PREF_KEY"
@@ -172,9 +174,6 @@ class NotificationStore @Inject constructor(
             NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
-            NotificationAction.MARK_NOTIFICATIONS_READ ->
-                markNotificationsRead(action.payload as MarkNotificationsReadPayload)
-
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
                 handleRegisteredDevice(action.payload as RegisterDeviceResponsePayload)
@@ -188,9 +187,6 @@ class NotificationStore @Inject constructor(
                 handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
-            NotificationAction.MARKED_NOTIFICATIONS_READ ->
-                handleMarkedNotificationsRead(action.payload as MarkNotificationsReadResponsePayload)
-
             // local actions
             NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
         }
@@ -460,37 +456,36 @@ class NotificationStore @Inject constructor(
         emitChange(onNotificationChanged)
     }
 
-    private fun markNotificationsRead(payload: MarkNotificationsReadPayload) {
-        notificationRestClient.markNotificationRead(payload.notifications)
-    }
+    @Suppress("MemberVisibilityCanBePrivate")
+    suspend fun markNotificationsRead(payload: MarkNotificationsReadPayload): OnNotificationChanged {
+        return coroutineEngine.withDefaultContext(T.API, this, "markNotificationsRead") {
+            val result = notificationRestClient.markNotificationRead(payload.notifications)
+            // Update the notification in the database
+            var rowsAffected = 0
+            if (result.success) {
+                result.notifications?.forEach {
+                    it.read = true // Just in case it wasn't set by the calling client
+                    rowsAffected += notificationSqlUtils.insertOrUpdateNotification(it)
+                }
+            }
 
-    private fun handleMarkedNotificationsRead(payload: MarkNotificationsReadResponsePayload) {
-        // Update the notification in the database
-        var rowsAffected = 0
-        if (payload.success) {
-            payload.notifications?.forEach {
-                it.read = true // Just in case it wasn't set by the calling client
-                rowsAffected += notificationSqlUtils.insertOrUpdateNotification(it)
+            // Create and dispatch result
+            val onNotificationChanged = if (result.isError) {
+                OnNotificationChanged(rowsAffected).apply {
+                    error = result.error
+                    success = false
+                }
+            } else {
+                OnNotificationChanged(rowsAffected).apply {
+                    success = true
+                }
+            }.apply {
+                result.notifications?.forEach {
+                    changedNotificationLocalIds.add(it.noteId)
+                }
             }
+            onNotificationChanged
         }
-
-        // Create and dispatch result
-        val onNotificationChanged = if (payload.isError) {
-            OnNotificationChanged(rowsAffected).apply {
-                error = payload.error
-                success = false
-            }
-        } else {
-            OnNotificationChanged(rowsAffected).apply {
-                success = true
-            }
-        }.apply {
-            payload.notifications?.forEach {
-                changedNotificationLocalIds.add(it.noteId)
-            }
-            causeOfChange = NotificationAction.MARK_NOTIFICATIONS_READ
-        }
-        emitChange(onNotificationChanged)
     }
 
     private fun updateNotification(payload: NotificationModel) {
