@@ -30,7 +30,7 @@ class UnifiedAboutViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val wpUrlUtils: WpUrlUtilsWrapper,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val buildConfig: BuildConfigWrapper,
+    private val buildConfig: BuildConfigWrapper
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<UnifiedAboutNavigationAction>>()
     val onNavigation: LiveData<Event<UnifiedAboutNavigationAction>> = _onNavigation
