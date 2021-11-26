@@ -30,7 +30,7 @@ class CardsStore @Inject constructor(
 
     private suspend fun storeCards(
         site: SiteModel,
-        payload: FetchedCardsPayload<CardsResponse>
+        payload: CardsPayload<CardsResponse>
     ): OnCardsFetched<List<CardModel>> = when {
         payload.isError -> OnCardsFetched(payload.error)
         payload.response != null -> {
@@ -54,7 +54,7 @@ class CardsStore @Inject constructor(
 
     /* PAYLOADS */
 
-    data class FetchedCardsPayload<T>(
+    data class CardsPayload<T>(
         val response: T? = null
     ) : Payload<CardsError>() {
         constructor(error: CardsError) : this() {
