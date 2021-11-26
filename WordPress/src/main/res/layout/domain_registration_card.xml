@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_site_register_domain_cta"
+    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_large">
+    android:foreground="?attr/selectableItemBackground">
 
-    <!--Register Domain-->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            style="@style/MySiteListRowLayout"
-            android:foreground="@null"
-            tools:ignore="UnusedAttribute">
-
-            <ImageView
-                android:id="@+id/my_site_register_domain_icon"
-                style="@style/MySiteListRowAlertIcon"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_notice_white_24dp" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/my_site_register_domain_text_view"
-                style="@style/MySiteListRowTextView"
-                android:text="@string/register_domain" />
-        </LinearLayout>
+        android:layout_margin="@dimen/margin_extra_large">
 
         <com.google.android.material.textview.MaterialTextView
-            style="@style/MySiteListRowDescription"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/my_site_custom_domain_name" />
-    </LinearLayout>
+            android:id="@+id/title"
+            style="@style/MySiteCardItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/register_domain"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/description"
+            style="@style/MySiteCardItemSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="5"
+            android:text="@string/my_site_custom_domain_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>
