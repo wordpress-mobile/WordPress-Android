@@ -37,6 +37,7 @@ import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.viewmodel.ResourceProvider;
 
 import javax.inject.Inject;
 
@@ -60,6 +61,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject ResourceProvider mResourceProvider;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -179,7 +181,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     private void showQuickStartSnackbar() {
-        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(requireContext(),
+        Spannable title = mQuickStartUtilsWrapper.stylizeThemedQuickStartPrompt(requireContext(),
                 R.string.quick_start_dialog_enable_sharing_message_short_connections);
         mSnackbarSequencer.enqueue(
                 new SnackbarItem(new Info(mRecycler, new UiStringText(title), Snackbar.LENGTH_LONG))
