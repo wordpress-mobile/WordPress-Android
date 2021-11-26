@@ -21,8 +21,8 @@ class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
                         packageName = "org.wordpress.android"
                 ),
                 socialsConfig = SocialsConfig(
-                        instagramUsername = "wordpressdotcom",
-                        twitterUsername = "wordpressdotcom"
+                        instagramUsername = WP_SOCIAL_HANDLE,
+                        twitterUsername = WP_SOCIAL_HANDLE
                 ),
                 legalConfig = LegalConfig(
                         tosUrl = "https://wordpress.com/tos/",
@@ -44,4 +44,8 @@ class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
                     "I'm really enjoying it and thought you might too!\n" +
                     "https://apps.wordpress.com/get?campaign=app_share_link"
     )
+
+    companion object {
+        private const val WP_SOCIAL_HANDLE = "wordpressdotcom"
+    }
 }
