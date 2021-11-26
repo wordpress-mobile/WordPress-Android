@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store.dashboard
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
@@ -23,16 +24,21 @@ class CardsStore @Inject constructor(
         site: SiteModel
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
         val payload = restClient.fetchCards(site)
-        return@withDefaultContext storeCards(payload)
+        return@withDefaultContext storeCards(site, payload)
     }
 
-    private fun storeCards(
+    private suspend fun storeCards(
+        site: SiteModel,
         payload: FetchedCardsPayload<CardsResponse>
-    ) = when {
+    ): OnCardsFetched<List<CardModel>> = when {
         payload.isError -> OnCardsFetched(payload.error)
         payload.response != null -> {
-            // TODO: Store in db.
-            OnCardsFetched(payload.response.toCards())
+            try {
+                cardsDao.insertWithDate(site.id, payload.response.toCards())
+                OnCardsFetched()
+            } catch (e: Exception) {
+                OnCardsFetched(CardsError(CardsErrorType.GENERIC_ERROR))
+            }
         }
         else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
     }
