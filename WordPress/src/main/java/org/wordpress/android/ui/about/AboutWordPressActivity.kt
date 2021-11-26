@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.about
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.automattic.about.model.AboutConfig
 import com.automattic.about.model.AboutConfigProvider
 import com.automattic.about.model.HeaderConfig
@@ -10,8 +9,9 @@ import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
 import com.automattic.about.model.SocialsConfig
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 
-class AboutWordPressActivity : AppCompatActivity(), AboutConfigProvider {
+class AboutWordPressActivity : LocaleAwareActivity(), AboutConfigProvider {
     @SuppressWarnings("RegexpSingleline")
     override fun getAboutConfig(): AboutConfig {
         return AboutConfig(
