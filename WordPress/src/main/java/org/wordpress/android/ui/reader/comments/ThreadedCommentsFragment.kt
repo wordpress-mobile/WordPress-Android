@@ -70,6 +70,14 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.APPROVE
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.DIVIDER_NO_ACTION
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.EDIT
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.SHARE
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.SPAM
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.TRASH
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType.UNAPROVE
 import org.wordpress.android.ui.reader.services.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion.Companion.fromUserSuggestions
@@ -637,7 +645,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 )
             }
 
-            setCommentShareListener { commentUrl -> shareComment(commentUrl) }
+            setCommentShareListener { comment, action -> performCommentAction(comment, action) }
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (directOperation != null) {
@@ -940,6 +948,18 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper?.isRefreshing = refreshing
+    }
+
+    private fun performCommentAction(comment: ReaderComment, action: ReaderCommentMenuActionType) {
+        when (action) {
+            APPROVE -> {}
+            UNAPROVE -> {}
+            SPAM -> {}
+            TRASH -> {}
+            EDIT -> {}
+            SHARE -> shareComment(comment.shortUrl)
+            DIVIDER_NO_ACTION -> {}
+        }
     }
 
     private fun shareComment(commentUrl: String) {

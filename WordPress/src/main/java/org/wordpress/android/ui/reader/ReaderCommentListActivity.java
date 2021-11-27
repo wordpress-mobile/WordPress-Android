@@ -62,6 +62,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -515,6 +516,26 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         EventBus.getDefault().unregister(this);
     }
 
+    private void performCommentAction(ReaderComment comment, ReaderCommentMenuActionType action) {
+        switch (action) {
+            case APPROVE:
+                break;
+            case UNAPROVE:
+                break;
+            case SPAM:
+                break;
+            case TRASH:
+                break;
+            case EDIT:
+                break;
+            case SHARE:
+                shareComment(comment.getShortUrl());
+                break;
+            case DIVIDER_NO_ACTION:
+                break;
+        }
+    }
+
     private void shareComment(String commentUrl) {
         mReaderTracker.trackPost(
                 Stat.READER_ARTICLE_COMMENT_SHARED,
@@ -640,7 +661,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
             // adapter calls this when user taps share icon
-            mCommentAdapter.setCommentShareListener(this::shareComment);
+            mCommentAdapter.setCommentShareListener(this::performCommentAction);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {
