@@ -449,6 +449,12 @@
     <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
+    <string name="reader_comment_menu_unapprove">Unapprove</string>
+    <string name="reader_comment_menu_spam">Mark as Spam</string>
+    <string name="reader_comment_menu_trash">Move to Trash</string>
+    <string name="reader_comment_menu_edit">Edit</string>
+
+
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
     <string name="dlg_approving_comments">Approving</string>
     <string name="dlg_unapproving_comments">Unapproving</string>
