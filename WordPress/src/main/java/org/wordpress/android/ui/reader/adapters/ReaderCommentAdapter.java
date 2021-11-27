@@ -3,14 +3,19 @@ package org.wordpress.android.ui.reader.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,23 +24,31 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.Divider;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.PrimaryItemMenu;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ContextExtensionsKt;
@@ -48,6 +61,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActio
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -76,22 +90,26 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int NUM_HEADERS = 1;
 
+    private SiteModel mPostsSite;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject UiHelpers mUiHelpers;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
 
-    public interface ShareCommentListener {
-        void onShareButtonTapped(String commentUrl);
+    public interface CommentMenuActionListener {
+        void onCommentMenuItemTapped(ReaderComment comment, ReaderCommentMenuActionType actionType);
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();
     private RequestReplyListener mReplyListener;
-    private ShareCommentListener mShareCommentListener;
+    private CommentMenuActionListener mCommentMenuActionListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private PostHeaderHolder mHeaderHolder;
@@ -108,7 +126,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final View mTopCommentDivider;
         private final View mAuthorContainer;
         private final View mAuthorBadge;
-        private final View mShareButton;
+        private final View mActionButtonContainer;
+        private final ImageView mActionButton;
         private final ProgressBar mProgress;
 
         private final ViewGroup mReplyView;
@@ -132,7 +151,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mAuthorContainer = view.findViewById(R.id.layout_author);
             mAuthorBadge = view.findViewById(R.id.author_badge);
 
-            mShareButton = view.findViewById(R.id.share_button_container);
+            mActionButtonContainer = view.findViewById(R.id.comment_action_button_container);
+            mActionButton = view.findViewById(R.id.comment_action_button);
 
             mReplyView = view.findViewById(R.id.reply_container);
             mCountLikes = view.findViewById(R.id.count_likes);
@@ -159,6 +179,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
 
+        mPostsSite = mSiteStore.getSiteBySiteId(post.blogId);
+
         // calculate the max width of comment content
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -177,8 +199,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mReplyListener = replyListener;
     }
 
-    public void setCommentShareListener(ShareCommentListener shareCommentListener) {
-        mShareCommentListener = shareCommentListener;
+    public void setCommentShareListener(CommentMenuActionListener commentMenuActionListener) {
+        mCommentMenuActionListener = commentMenuActionListener;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener dataLoadedListener) {
@@ -292,6 +314,66 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mAuthorBadge.setVisibility(View.GONE);
         }
 
+        if (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts()) {
+            commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
+
+            commentHolder.mActionButtonContainer.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View v) {
+                    Context context = commentHolder.mActionButton.getContext();
+
+                    ListPopupWindow menuPopup = new ListPopupWindow(context);
+
+                    ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
+                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPROVE,
+                            new UiStringRes(R.string.reader_comment_menu_unapprove),
+                            new UiStringRes(R.string.reader_comment_menu_unapprove),
+                            R.drawable.ic_cross_in_circle_white_24dp));
+
+                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SPAM,
+                            new UiStringRes(R.string.reader_comment_menu_spam),
+                            new UiStringRes(R.string.reader_comment_menu_spam),
+                            R.drawable.ic_spam_white_24dp));
+
+                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.TRASH,
+                            new UiStringRes(R.string.reader_comment_menu_trash),
+                            new UiStringRes(R.string.reader_comment_menu_trash),
+                            R.drawable.ic_trash_white_24dp));
+
+                    actions.add(new Divider());
+
+                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
+                            new UiStringRes(R.string.reader_comment_menu_edit),
+                            new UiStringRes(R.string.reader_comment_menu_edit),
+                            R.drawable.ic_pencil_white_24dp));
+
+                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
+                            new UiStringRes(R.string.share_desc),
+                            new UiStringRes(R.string.share_desc),
+                            R.drawable.ic_share_white_24dp));
+
+
+                    menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+                    menuPopup.setAdapter(new ReaderCommentMenuActionAdapter(context, mUiHelpers, actions));
+                    menuPopup.setDropDownGravity(Gravity.END);
+                    menuPopup.setAnchorView(commentHolder.mActionButton);
+                    menuPopup.setModal(true);
+                    menuPopup.setOnItemClickListener(new OnItemClickListener() {
+                        @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            mCommentMenuActionListener
+                                    .onCommentMenuItemTapped(comment, actions.get(position).getType());
+                            menuPopup.dismiss();
+                        }
+                    });
+                    menuPopup.show();
+                }
+            });
+        } else {
+            commentHolder.mActionButton.setImageResource(R.drawable.ic_share_white_24dp);
+            commentHolder.mActionButtonContainer.setOnClickListener(
+                    v -> mCommentMenuActionListener
+                            .onCommentMenuItemTapped(comment, ReaderCommentMenuActionType.SHARE));
+        }
+
         // show indentation spacer for comments with parents and indent it based on comment level
         int indentWidth;
         if (comment.parentId != 0 && comment.level > 0) {
@@ -321,9 +403,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mProgress.setVisibility(View.GONE);
             commentHolder.mSelectedCommentIndicator.setVisibility(View.GONE);
         }
-
-        commentHolder.mShareButton.setOnClickListener(
-                v -> mShareCommentListener.onShareButtonTapped(comment.getShortUrl()));
 
         if (!mAccountStore.hasAccessToken()) {
             commentHolder.mReplyView.setVisibility(View.GONE);
@@ -612,4 +691,5 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             notifyItemChanged(0); // notify header to update itself
         }
     }
+
 }

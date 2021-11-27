@@ -65,7 +65,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_large"
-                    app:layout_constraintEnd_toStartOf="@+id/share_button_container"
+                    app:layout_constraintEnd_toStartOf="@+id/comment_action_button_container"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
@@ -133,7 +133,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <RelativeLayout
-                    android:id="@+id/share_button_container"
+                    android:id="@+id/comment_action_button_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:selectableItemBackgroundBorderless"
@@ -144,7 +144,7 @@
                     app:layout_constraintTop_toTopOf="@+id/layout_author">
 
                     <ImageView
-                        android:id="@+id/share_comment_button"
+                        android:id="@+id/comment_action_button"
                         android:layout_width="@dimen/stats_block_icon_size"
                         android:layout_height="@dimen/stats_block_icon_size"
                         android:layout_centerInParent="true"
