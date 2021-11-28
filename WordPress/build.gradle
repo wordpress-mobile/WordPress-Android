@@ -242,6 +242,10 @@ android {
 
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
+        // These excluding lines are required for mediapicker library
+        exclude 'META-INF/metadata.kotlin_module'
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude 'META-INF/metadata.jvm.kotlin_module'
     }
 
     bundle {
@@ -423,8 +427,14 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
 
-    implementation "org.wordpress:mediapicker:$mediapickerVersion"
-    implementation "org.wordpress.mediapicker:source-device:$mediapickerVersion"
+    implementation("org.wordpress:mediapicker:$mediapickerVersion") {
+        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+        exclude group: 'androidx.appcompat', module: 'appcompat'
+        exclude group: 'androidx.core', module: 'core-ktx'
+    }
+    implementation("org.wordpress.mediapicker:source-device:$mediapickerVersion") {
+        exclude group: 'androidx.core', module: 'core-ktx'
+    }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
