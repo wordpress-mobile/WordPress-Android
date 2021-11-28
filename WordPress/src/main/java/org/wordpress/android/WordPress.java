@@ -20,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -43,7 +42,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.wordpress.stories.compose.NotificationTrackerProvider;
 import com.wordpress.stories.compose.frame.StoryNotificationType;
-import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -63,7 +61,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
-import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -74,7 +71,6 @@ import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
-import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
@@ -137,8 +133,11 @@ import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+import dagger.hilt.EntryPoints;
+import dagger.hilt.android.HiltAndroidApp;
 import kotlinx.coroutines.CoroutineScope;
 
+@HiltAndroidApp
 public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
@@ -163,6 +162,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     private static StoryNotificationTrackerProvider mStoryNotificationTrackerProvider;
 
     private static GoogleApiClient mCredentialsClient;
+
+    @Inject WellSqlInitializer mWellSqlInitializer;
 
     @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
 
@@ -200,10 +201,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject OAuthAuthenticator mOAuthAuthenticator;
     public static OAuthAuthenticator sOAuthAuthenticator;
 
-    protected AppComponent mAppComponent;
-
     public AppComponent component() {
-        return mAppComponent;
+        return EntryPoints.get(this, AppComponent.class);
     }
 
     /**
@@ -255,14 +254,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        // This call needs be made before accessing any methods in android.webkit package
-        setWebViewDataDirectorySuffixOnAndroidP();
-
-        initWellSql();
-
-        // Init Dagger
-        initDaggerComponent();
-        component().inject(this);
         mDispatcher.register(this);
         mAppConfig.init();
 
@@ -379,17 +370,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         androidx.work.Configuration config =
                 (new androidx.work.Configuration.Builder()).setWorkerFactory(mWordPressWorkerFactory).build();
         WorkManager.initialize(this, config);
-    }
-
-    // note that this is overridden in WordPressDebug
-    protected void initWellSql() {
-        WellSql.init(new WellSqlConfig(getApplicationContext()));
-    }
-
-    protected void initDaggerComponent() {
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
     }
 
     private void sanitizeMediaUploadStateForSite() {
@@ -743,34 +723,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             }
         }
         return mUserAgent;
-    }
-
-    /*
-     * Since Android P:
-     * "Apps can no longer share a single WebView data directory across processes.
-     * If your app has more than one process using WebView, CookieManager, or any other API in the android.webkit
-     * package, your app will crash when the second process calls a WebView method."
-     *
-     * (see https://developer.android.com/about/versions/pie/android-9.0-migration)
-     *
-     * Also here: https://developer.android.com/about/versions/pie/android-9.0-changes-28#web-data-dirs
-     *
-     * "If your app must use instances of WebView in more than one process, you must assign a unique data
-     * directory suffix for each process, using the WebView.setDataDirectorySuffix() method, before
-     * using a given instance of WebView in that process."
-     *
-     * While we don't explicitly use a different process other than the default, making the directory suffix be
-     * the actual process name will ensure there's one directory per process, should the Application's
-     * onCreate() method be called from a different process any time.
-     *
-    */
-    private void setWebViewDataDirectorySuffixOnAndroidP() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            String procName = getProcessName();
-            if (!TextUtils.isEmpty(procName)) {
-                WebView.setDataDirectorySuffix(procName);
-            }
-        }
     }
 
     /*

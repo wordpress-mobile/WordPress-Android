@@ -1,16 +1,7 @@
 package org.wordpress.android.modules;
 
-import android.app.Application;
-
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.DatabaseModule;
-import org.wordpress.android.fluxc.module.OkHttpClientModule;
-import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
-import org.wordpress.android.fluxc.module.ReleaseToolsModule;
-import org.wordpress.android.login.di.LoginFragmentModule;
-import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -45,11 +36,11 @@ import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditFragment;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesFragment;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
@@ -206,7 +197,6 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsModule;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
@@ -221,7 +211,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
-import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -235,40 +224,17 @@ import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
-import javax.inject.Singleton;
+import dagger.hilt.EntryPoint;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.android.AndroidInjector;
-import dagger.android.support.AndroidSupportInjectionModule;
-
-@Singleton
-@Component(modules = {
-        ApplicationModule.class,
-        AppConfigModule.class,
-        OkHttpClientModule.class,
-        ReleaseNetworkModule.class,
-        LegacyModule.class,
-        ReleaseToolsModule.class,
-        DatabaseModule.class,
-        AndroidSupportInjectionModule.class,
-        ViewModelModule.class,
-        StatsModule.class,
-        SupportModule.class,
-        ThreadModule.class,
-        TrackerModule.class,
-        SuggestionSourceModule.class,
-        ExperimentModule.class,
-        // Login flow library
-        LoginAnalyticsModule.class,
-        LoginFragmentModule.class,
-        LoginServiceModule.class,
-        CrashLoggingModule.class
-})
-public interface AppComponent extends AndroidInjector<WordPress> {
-    @Override
-    void inject(WordPress instance);
-
+/**
+ * This is actually an entry point aggregator for Hilt. But project uses dagger and old AppComponent interface is needed
+ * in many places. This interface will be removed once all classes here use Hilt and @AndroidEntryPoint.
+ */
+@InstallIn(SingletonComponent.class)
+@EntryPoint
+public interface AppComponent {
     void inject(WPMainActivity object);
 
     void inject(SiteCreationService object);
@@ -714,14 +680,4 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentsDetailsActivity object);
 
     void inject(UnifiedCommentDetailsFragment object);
-
-    // Allows us to inject the application without having to instantiate any modules, and provides the Application
-    // in the app graph
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        AppComponent.Builder application(Application application);
-
-        AppComponent build();
-    }
 }

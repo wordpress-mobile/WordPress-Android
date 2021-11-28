@@ -20,7 +20,7 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroup "org.wordpress.mediapicker"
+//            includeGroup "org.wordpress.mediapicker"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
         }
@@ -60,6 +60,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 detekt {
     baseline = file("${project.rootDir}/config/detekt/baseline.xml")
@@ -118,6 +119,10 @@ android {
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
+
+        // TODO remove this once the hilt migration is complete
+        javaCompileOptions.annotationProcessorOptions.arguments['dagger.hilt.disableModulesHaveInstallInCheck'] = 'true'
+
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -243,9 +248,9 @@ android {
         pickFirst 'META-INF/-no-jdk.kotlin_module'
 
         // These excluding lines are required for mediapicker library
-        exclude 'META-INF/metadata.kotlin_module'
-        exclude 'META-INF/gradle/incremental.annotation.processors'
-        exclude 'META-INF/metadata.jvm.kotlin_module'
+//        exclude 'META-INF/metadata.kotlin_module'
+//        exclude 'META-INF/gradle/incremental.annotation.processors'
+//        exclude 'META-INF/metadata.jvm.kotlin_module'
     }
 
     bundle {
@@ -409,6 +414,8 @@ dependencies {
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
@@ -427,14 +434,14 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
 
-    implementation("org.wordpress:mediapicker:$mediapickerVersion") {
-        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
-        exclude group: 'androidx.appcompat', module: 'appcompat'
-        exclude group: 'androidx.core', module: 'core-ktx'
-    }
-    implementation("org.wordpress.mediapicker:source-device:$mediapickerVersion") {
-        exclude group: 'androidx.core', module: 'core-ktx'
-    }
+//    implementation("org.wordpress:mediapicker:$mediapickerVersion") {
+//        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+//        exclude group: 'androidx.appcompat', module: 'appcompat'
+//        exclude group: 'androidx.core', module: 'core-ktx'
+//    }
+//    implementation("org.wordpress.mediapicker:source-device:$mediapickerVersion") {
+//        exclude group: 'androidx.core', module: 'core-ktx'
+//    }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
