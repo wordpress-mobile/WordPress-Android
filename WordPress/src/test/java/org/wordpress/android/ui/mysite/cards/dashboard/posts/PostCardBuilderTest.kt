@@ -6,12 +6,11 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
@@ -295,24 +294,24 @@ class PostCardBuilderTest : BaseUnitTest() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun List<PostCard>.filterCreateFirstPostCard() =
-            (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
-                    ?.firstOrNull { it.postCardType == PostCardType.CREATE_FIRST }
+    private fun List<PostCard>.filterCreateFirstPostCard() = (
+            filter { it.type == MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>
+            )?.firstOrNull { it.postCardType == PostCardType.CREATE_FIRST }
 
     @Suppress("UNCHECKED_CAST")
-    private fun List<PostCard>.filterCreateNextPostCard() =
-            (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
-                    ?.firstOrNull { it.postCardType == PostCardType.CREATE_NEXT }
+    private fun List<PostCard>.filterCreateNextPostCard() = (
+            filter { it.type == MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>
+            )?.firstOrNull { it.postCardType == PostCardType.CREATE_NEXT }
 
     @Suppress("UNCHECKED_CAST")
-    private fun List<PostCard>.filterDraftPostCard() =
-            (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
-                    ?.firstOrNull { it.postCardType == PostCardType.DRAFT }
+    private fun List<PostCard>.filterDraftPostCard() = (
+            filter { it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>
+            )?.firstOrNull { it.postCardType == PostCardType.DRAFT }
 
     @Suppress("UNCHECKED_CAST")
-    private fun List<PostCard>.filterScheduledPostCard() =
-            (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
-                    ?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
+    private fun List<PostCard>.filterScheduledPostCard() = (
+            filter { it.type == MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>
+            )?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(
             PostCardBuilderParams(
