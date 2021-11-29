@@ -26,7 +26,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
 @ExperimentalCoroutinesApi
-@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
