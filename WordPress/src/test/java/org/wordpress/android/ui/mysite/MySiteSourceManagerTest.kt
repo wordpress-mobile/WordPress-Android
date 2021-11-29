@@ -260,4 +260,12 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(dynamicCardsSource).removeItem(id)
     }
+
+    /* QUICK START */
+    @Test
+    fun `when quick start is refreshed, then quickStartCardSource refresh() is invoked`() {
+        mySiteSourceManager.refreshQuickStart()
+
+        verify(quickStartCardSource).refresh()
+    }
 }
