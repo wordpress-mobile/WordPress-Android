@@ -7,6 +7,7 @@
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <!-- Normal permissions, access automatically granted to app -->
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -165,6 +166,10 @@
             android:name=".ui.prefs.AboutActivity"
             android:label="@string/about_the_app"
             android:theme="@style/WordPress.NoActionBar.DarkNavbar" />
+        <activity
+            android:name=".ui.about.UnifiedAboutActivity"
+            android:label="@string/about_the_app"
+            android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
@@ -545,6 +550,11 @@
         </activity-alias>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
+            android:label="@string/reader_title_comments"
+            android:theme="@style/WordPress.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".ui.reader.comments.ThreadedCommentsActivity"
             android:label="@string/reader_title_comments"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />

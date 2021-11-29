@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteSource
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
@@ -33,19 +33,15 @@ class DomainRegistrationSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper
-) : MySiteSource<DomainCreditAvailable> {
+) : MySiteRefreshSource<DomainCreditAvailable> {
     private var continuation: CancellableContinuation<OnPlansFetched>? = null
-    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
         data.refreshData(coroutineScope, siteLocalId)
         data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return data
-    }
-
-    fun refresh() {
-        refresh.postValue(true)
     }
 
     private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
@@ -98,11 +94,6 @@ class DomainRegistrationSource @Inject constructor(
                 postState(DomainCreditAvailable(false))
             }
         }
-    }
-
-    private fun MediatorLiveData<DomainCreditAvailable>.postState(value: DomainCreditAvailable) {
-        refresh.postValue(false)
-        this@postState.postValue(value)
     }
 
     init {

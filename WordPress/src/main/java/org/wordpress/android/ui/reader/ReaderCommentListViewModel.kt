@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
@@ -32,8 +31,7 @@ class ReaderCommentListViewModel
 @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var followStatusGetJob: Job? = null
@@ -154,12 +152,11 @@ class ReaderCommentListViewModel
     private fun onFollowConversationClicked(askSubscribe: Boolean) {
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
-            val enableSnackbarAction = followByPushNotificationFeatureConfig.isEnabled() && askSubscribe
             followCommentsHandler.handleFollowCommentsClicked(
                     blogId,
                     postId,
                     askSubscribe,
-                    if (enableSnackbarAction) ::enablePushNotificationsFromSnackbarAction else null
+                    if (askSubscribe) ::enablePushNotificationsFromSnackbarAction else null
             )
         }
     }

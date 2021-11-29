@@ -47,7 +47,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -62,7 +62,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isTrue
         assertThat(result!!.scanAvailable).isTrue
@@ -77,7 +77,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -93,7 +93,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPCom).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -108,7 +108,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -124,7 +124,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isTrue
     }
@@ -137,11 +137,45 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
         scanAndBackupSource.refresh()
 
         verify(jetpackCapabilitiesUseCase, times(2)).getJetpackPurchasedProducts(any())
+    }
+
+    @Test
+    fun `when source is invoked, then refresh is false`() = test {
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.build(testScope(), siteLocalId)
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
+        )
+
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
     }
 }

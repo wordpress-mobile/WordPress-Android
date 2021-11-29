@@ -3,112 +3,35 @@
 <!--
     post header on reader comment activity
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_section"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
-    android:paddingStart="@dimen/reader_card_margin"
-    android:paddingTop="@dimen/margin_large"
-    android:paddingEnd="@dimen/reader_card_margin">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingEnd="@dimen/margin_medium_large">
 
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/reply_to_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingEnd="@dimen/reader_card_content_padding">
+        android:textAppearance="?attr/textAppearanceOverline"
+        tools:text="REPLY TO PAMELA NGUEYEN" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="@dimen/material_emphasis_high_type"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        tools:text="The best moment of any trip, for me, is when I finally getting back home." />
 
-            <ImageView
-                android:id="@+id/image_post_avatar"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:contentDescription="@null"
-                tools:src="@drawable/bg_rectangle_placeholder_user_32dp" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_blog_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="?attr/colorOnSurface"
-                tools:text="text_blog_name" />
-
-        </LinearLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_post_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="serif"
-            android:maxLines="2"
-            android:paddingTop="@dimen/margin_medium"
-            android:paddingBottom="@dimen/margin_small"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            tools:text="text_post_title" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_post_dateline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceCaption"
-            tools:text="text_post_date" />
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_container"
-            app:shimmer_auto_start="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <org.wordpress.android.ui.reader.views.ReaderFollowButton
-                android:id="@+id/button_follow_comments"
-                style="@style/Reader.Follow.Button.Comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <LinearLayout
-                android:id="@+id/button_skeleton"
-                android:layout_width="@dimen/reader_follow_button_skeleton_width"
-                android:layout_height="@dimen/reader_follow_button_min_height"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                tools:visibility="visible" >
-
-                <View
-                    android:layout_width="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:layout_height="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:background="@color/gray_30" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/reader_follow_button_skeleton_icon_size"
-                    android:layout_marginStart="@dimen/reader_follow_button_skeleton_icon_text_margin"
-                    android:background="@color/gray_30" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-    </LinearLayout>
-</FrameLayout>
+</LinearLayout>

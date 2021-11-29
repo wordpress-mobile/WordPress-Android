@@ -1,6 +1,0 @@
-18.5:
-Incorporar conteúdo externo ficou ainda mais fácil com os novos blocos de mídia incorporada para Facebook, Instagram, Loom e SmartFrame.
-
-Além disso, corrigimos um bug que impedia a edição de URLs incorporáveis e agora as detectamos quando coladas em um parágrafo vazio.
-
-Por fim, os blocos de citação destacada e pré-formatado agora têm texto personalizado e cor de fundo.

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-19 05:49:04+0000
+Translation-Revision-Date: 2021-11-16 13:45:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Añadir un dominio personalizado hace que sea más fácil para tus visitantes encontrar tu sitio</string>
+    <string name="domains_paid_plan_add_your_domain_title">Añade tu dominio</string>
+    <string name="my_site_create_first_post_excerpt">Las entradas aparecen en la página de tu blog en orden cronológicamente inverso. ¡Es el momento de compartir tus ideas con el mundo!</string>
+    <string name="my_site_create_first_post_title">Crear tu primera entrada</string>
+    <string name="my_site_untitled_post">Sin título</string>
+    <string name="my_site_post_card_scheduled_title">Siguientes entradas programadas</string>
+    <string name="my_site_post_card_draft_title">Trabaja en el borrador de una entrada </string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
     <string name="domain_registration_result_title">¡Felicidades por tu compra!</string>
     <string name="domain_registration_result_description">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; está siendo configurando. Tu dominio puede tardar hasta 30 minutos en empezar a funcionar.</string>
@@ -28,7 +37,6 @@ Language: es
     <string name="domains_search_for_a_domain_button">Buscar un dominio</string>
     <string name="domains_free_plan_get_your_domain_caption">Los dominios comprados en este sitio redirigirán a los visitantes a &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_add_a_domain">Añadir un dominio</string>
-    <string name="domains_redirected_domains_blurb">Tus dominios redirigirán a tu sitio en &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Aprende más&lt;/a&gt;.</string>
     <string name="domains_manage_domains">Gestionar los dominios</string>
     <string name="domains_paid_plan_claim_your_domain_title">Reclama tu dominio gratuito</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Caduca el %s&lt;/span&gt;</string>
@@ -38,7 +46,7 @@ Language: es
     <string name="domains_site_domain_expires">Caduca el %s</string>
     <string name="domains_primary_site_caption">Tu dirección gratuita de WordPress.com es</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /año&lt;/span&gt;</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_menu_done">Hecho</string>
     <string name="comment_edit_user_name">Nombre</string>
     <string name="comment_edit_comment">Comentario</string>
@@ -163,12 +171,9 @@ Language: es
     <string name="gutenberg_native_remove_as_featured_image">Eliminar como imagen destacada</string>
     <string name="gutenberg_native_set_as_featured_image">Establecer como imagen destacada</string>
     <string name="support_ticket_subject">Soporte de WordPress para Android</string>
-    <string name="site_settings_categories_empty_subtitle">Añade aquí las categorías que uses frecuentemente para que puedan ser seleccionadas rápidamente al categorizar tus entradas </string>
-    <string name="site_settings_categories_empty_title">Aún no tienes categorías</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
     <string name="site_settings_categories_title">Categorías</string>
-    <string name="site_settings_categories_empty_button">Crear una categoría</string>
     <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="gutenberg_native_border_settings">Ajustes del borde</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
@@ -178,7 +183,6 @@ Language: es
     <string name="gutenberg_native_y_axis_position">Posición del eje Y</string>
     <string name="gutenberg_native_x_axis_position">Posición del eje X</string>
     <string name="gutenberg_native_type_a_url">Teclea una URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Toca para añadir contenido</string>
     <string name="gutenberg_native_slash_inserter_results">Resultados del insertador de corte</string>
     <string name="gutenberg_native_s_has_url_set">%s tiene una URL configurada</string>
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL configurada</string>
@@ -233,6 +237,7 @@ Language: es
     <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
+    <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
     <string name="gutenberg_native_none">Ninguna</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
@@ -477,7 +482,6 @@ Language: es
     <string name="backup_download_details_action_button_content_description">Botón Crear copia de seguridad descargable</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">URL del vínculo de la imagen</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">entrada cruzada</string>
@@ -824,6 +828,7 @@ Language: es
     <string name="gutenberg_native_block_cut">Bloque cortado</string>
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">El título del sitio solo puede ser cambiado por un usuario con el perfil de administrador.</string>
+    <string name="gutenberg_native_remove_block">Eliminar el bloque</string>
     <string name="my_site_title_changer_dialog_hint">El título del sitio se muestra en la barra de título de un navegador web y en la cabecera de la mayoría de los temas.</string>
     <string name="error_update_site_title_network">No se ha podido actualizar el título del sitio. Comprueba tu conexión de red e inténtalo nuevamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>

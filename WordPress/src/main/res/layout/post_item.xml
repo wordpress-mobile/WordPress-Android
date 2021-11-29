@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:foreground="?attr/selectableItemBackground"
     android:paddingBottom="@dimen/my_site_card_row_padding"
     android:paddingEnd="@dimen/my_site_card_row_padding"
     android:paddingStart="@dimen/my_site_card_row_padding"
@@ -16,7 +17,7 @@
         style="@style/MySitePostItemTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintBottom_toTopOf="@+id/excerpt"
         app:layout_constraintEnd_toStartOf="@+id/featured_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,10 +41,11 @@
         style="@style/MySitePostItemExcerpt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_large"
-        app:layout_constraintEnd_toStartOf="@+id/featured_image"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/title"
         app:layout_constraintStart_toEndOf="@+id/icon_time"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
 
     <ImageView
@@ -52,9 +54,11 @@
         android:layout_height="@dimen/my_site_post_item_image_size"
         android:contentDescription="@string/featured_image_desc"
         android:scaleType="centerCrop"
+        android:layout_marginStart="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintStart_toEndOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

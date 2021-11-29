@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.posts
 
+import android.content.ClipData
 import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.clipboardManager
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -32,6 +36,13 @@ sealed class PostListAction {
     class RetryUpload(
         val post: PostModel,
         val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
+    ) : PostListAction()
+    class CopyUrl(
+        val site: SiteModel,
+        val post: PostModel,
+        val showSnackbar: (SnackbarMessageHolder) -> Unit,
+        val messageSuccess: SnackbarMessageHolder,
+        val messageError: SnackbarMessageHolder
     ) : PostListAction()
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -90,6 +101,22 @@ fun handlePostListAction(
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
+        }
+        is PostListAction.CopyUrl -> {
+            try {
+                activity.clipboardManager?.setPrimaryClip(
+                        ClipData.newPlainText("${action.post.id}", action.post.link)
+                ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
+
+                action.showSnackbar.invoke(action.messageSuccess)
+            } catch (e: Exception) {
+                /**
+                 * Ignore any exceptions here as certain devices have bugs and will fail.
+                 * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
+                 */
+                AppLog.e(AppLog.T.POSTS, e)
+                action.showSnackbar.invoke(action.messageError)
+            }
         }
     }
 }

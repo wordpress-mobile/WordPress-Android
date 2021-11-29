@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.Pos
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -41,7 +40,6 @@ class ReaderCommentsFollowUseCaseTest {
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
-    @Mock private lateinit var followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
 
     private lateinit var followCommentsUseCase: ReaderCommentsFollowUseCase
 
@@ -52,15 +50,13 @@ class ReaderCommentsFollowUseCaseTest {
     fun setup() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(followByPushNotificationFeatureConfig.isEnabled()).thenReturn(false)
 
         followCommentsUseCase = ReaderCommentsFollowUseCase(
                 networkUtilsWrapper,
                 postSubscribersApiCallsProvider,
                 accountStore,
                 readerTracker,
-                readerPostTableWrapper,
-                followByPushNotificationFeatureConfig
+                readerPostTableWrapper
         )
     }
 
@@ -153,7 +149,7 @@ class ReaderCommentsFollowUseCaseTest {
                         true,
                         false,
                         false,
-                        UiStringRes(R.string.reader_follow_comments_subscribe_success),
+                        UiStringRes(R.string.reader_follow_comments_subscribe_success_enable_push),
                         false
                 )
         ))

@@ -1,0 +1,3 @@
+18.7:
+- We hebben de "Link naar" instelling voor het afbeeldingblok uitgebreid met "Media bestand" en "Bijlage pagina" opties naast de al bestaande "Aangepaste URL" optie.
+- We hebben een probleem opgelost met automatisch inhouden opslaan, zodat zij nu soepeler draaien.

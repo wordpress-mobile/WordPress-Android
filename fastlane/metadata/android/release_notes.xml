@@ -1,153 +1,90 @@
 <ar>
-18.5:
-أصبح تضمين المحتوى الخارجي أكثر سهولة باستخدام مكوِّنات تضمين فيسبوك وإنستغرام وLoom وSmartframe الجديدة.
-
-كن على اطلاع دائمًا بشأن المحادثات التي تقوم بمتابعتها من خلال التنبيهات المنبثقة للقارئ الجديد الخاصة بمحادثات تعليقات المقالة التي تتم متابعتها.
-
-بالإضافة إلى ذلك، يمكنك الآن تخصيص لون النص والخلفية في المكوِّنات المهيأة والمنسَّقة سابقًا.
+18.7:
+- قمنا بتوسيع إعداد "رابط إلى" الخاص بمكوِّن الصورة لتضمين خيارات "ملف الوسائط" و"صفحة المرفق" إلى جانب خيار "عنوان URL مخصص" الموجود سابقًا.
+- قمنا بحل مشكلة بشأن عمليات حفظ المحتوى التلقائية، لذا تعمل الآن بسلاسة أكبر.
 </ar>
 <de-DE>
-18.5:
-Das Einbetten externer Inhalte ist jetzt noch einfacher: mit den neuen Embed-Blöcken für Facebook, Instagram, Loom und Smartframe.
-
-Mit den neuen Reader-Push-Benachrichtigungen für Unterhaltungen zu Beitragskommentaren, denen du folgst, bist du immer auf dem Laufenden über die Unterhaltungen, denen du folgst.
-
-Außerdem kannst du jetzt in den Pullquote- und Vorformatiert-Blöcken den Text und die Hintergrundfarbe anpassen.
+18.7:
+- Der Einstellung „Link zu“ im Bildblock wurden neben der vorhandenen Option „Individuelle URL“ die Optionen „Mediendatei“ und „Anhang-Seite“ hinzugefügt.
+- Die automatische Speicherung von Inhalten funktioniert jetzt reibungsloser.
 </de-DE>
 <en-US>
-18.5:
-Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.
-
-Always be up-to-date with the conversations you follow via the new Reader push notifications for followed post comments conversations.
-
-Plus, you can now customize text and background color in the Pullquote and Preformatted blocks.
+18.7:
+- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
+- We solved a problem with content autosaves so they now run more smoothly.
 </en-US>
 <es-ES>
-18.5:
-La incrustación de contenido externo ahora es más fácil con los nuevos bloques de incrustación de Facebook, Instagram, Loom y Smartframe.
-
-Mantente siempre al día de las conversaciones que sigues a través de los nuevos avisos instantáneos del lector para los comentarios publicados en las conversaciones seguidas.
-
-Además, ahora puedes personalizar el texto y el color de fondo en los bloques de párrafo de cita y preformateado.
+18.7:
+- Hemos ampliado el ajuste «Enlace a» para el bloque de imágenes para incluir las opciones «Archivo de medios» y «Página de adjuntos» además de la opción preexistente «URL personalizada».
+- Hemos solucionado un problema con el guardado automático del contenido, por lo que ahora se ejecuta más fluidamente.
 </es-ES>
 <fr-CA>
-18.5 :
-L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
-
-Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
-
-De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
+18.7 :
+- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
+- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
 </fr-CA>
 <fr-FR>
-18.5 :
-L’intégration de contenus externe s’ouvre encore plus avec l’arrivée de nouveaux blocs d’intégration pour Facebook, Instagram, Loom et Smartframe.
-
-Restez toujours connecté-e aux conversations que vous suivez grâce aux nouvelles notifications instantanées du Lecteur pour les commentaires d’articles suivis.
-
-De plus, vous pouvez désormais personnaliser le texte et la couleur d’arrière-plan dans les blocs Citation et Préformaté.
+18.7 :
+- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
+- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
 </fr-FR>
 <iw-IL>
-18.5:
-ההטמעה של תוכן קלה עכשיו יותר עם בלוקים להטמעת תוכן של פייסבוק, אינסטגרם, Loom ו-Smartframe.
-
-לקבל עדכונים שוטפים לגבי שיחות שנמצאות במעקב שלך דרך האפשרות החדשה ב-Reader להודעות בדחיפה שיעדכנו אותך על שיחות בתגובות שבפוסטים במעקב.
-
-בנוסף, עכשיו אפשר לבצע התאמה לטקסט ולצבע הרקע בבלוקים של ציטוטים ו-Preformatted.
+18.7:
+- הרחבנו את ההגדרות של 'קישור אל' בבלוק התמונה והוספנו את האפשרויות 'קובץ מדיה' ו'עמוד עם קובץ מצורף' לצד האפשרות 'כתובת URL מותאמת' שהייתה כבר קיימת.
+- פתרנו בעיה עם השמירה האוטומטית של התוכן כדי שהתהליך יהיה יציב יותר.
 </iw-IL>
 <id>
-18.5:
-Menyematkan konten eksternal jadi lebih mudah dengan blok sematan Facebook, Instagram, Loom, dan Smartframe yang baru.
-
-Ketahui kondisi terkini percakapan yang Anda ikuti melalui Pemberitahuan push pembaca untuk percakapan komentar pos yang diikuti.
-
-Selain itu, sekarang Anda dapat menyesuaikan teks dan warna latar belakang di blok Kutipan Besar dan blok Praformat.
+18.7:
+- Kami memperluas pengaturan "Tautan Ke" untuk blok gambar agar mencakup pilihan "Berkas Media" dan "Halaman Lampiran" di samping opsi "URL Kustom" yang sudah ada.
+- Kami menyelesaikan masalah pada penyimpanan otomatis konten sehingga dapat berjalan dengan lebih lancar.
 </id>
 <it-IT>
-18.5:
-Incorporare contenuti esterni è diventato più semplice con i nuovi blocchi Incorporamenti Facebook, Instagram, Loom e Smartframe.
-
-Rimani sempre aggiornato sulle conversazioni che segui tramite le nuove notifiche push del Reader per le conversazioni dei commenti agli articoli seguiti.
-
-Inoltre, ora puoi personalizzare il testo e il colore di sfondo nei blocchi Citazione evidenziata e Preformattato.
+18.7:
+- Abbiamo ampliato l'impostazione "Collega a" per il blocco immagine per includere le opzioni "File multimediale" e "Pagina allegato" insieme all'opzione preesistente "URL personalizzato".
+- Abbiamo risolto un problema con i salvataggi automatici dei contenuti in modo che ora funzionino in modo più fluido.
 </it-IT>
 <ja-JP>
-18.5:
-Facebook、Instagram、Loom、SmartFrame の埋め込みブロックで、外部コンテンツの埋め込みが簡単になりました。
-
-フォロー済みの投稿コメントの会話向けの新しい Reader のプッシュ通知で、フォロー中の会話の最新情報をいつでも把握できます。
-
-さらに、プルクオートブロックと整形済みブロックで、テキスト色と背景色をカスタマイズできるようになりました。
+18.7:
+- 画像ブロックの「リンク先」設定を拡張し、既存の「カスタム URL」に加えて「メディアファイル」と「添付ファイルページ」のオプションを追加しました。
+- コンテンツの自動保存に関する問題を解決したため、よりスムーズに実行できるようになりました。
 </ja-JP>
 <ko-KR>
-18.5:
-새로운 페이스북, 인스타그램, Loom 및 Smartframe 임베드 블록 덕분에 외부 콘텐츠를 임베드하는 작업이 더 쉬워졌습니다.
-
-팔로우한 글 댓글 대화에 대한 새로운 리더 푸시 알림을 통해 팔로우하는 대화를 항상 최신 상태로 유지하세요.
-
-또한, 이제는 요약글 블록과 정형화된 형식 블록에서 텍스트와 배경 색상을 사용자 정의할 수 있습니다.
+18.7:
+- 이미지 블록에 대한 "링크" 설정을 확장하여 이미 있는 "사용자 정의 URL" 옵션과 함께 "미디어 파일" 옵션과 "첨부 페이지" 옵션을 포함했습니다.
+- 콘텐츠 자동저장이 더 원활하게 실행되도록 문제를 해결했습니다.
 </ko-KR>
 <nl-NL>
-18.5:
-
-Het insluiten van externe inhoud is net eenvoudiger geworden met de nieuwe insluit blokken voor Facebook, Instagram, Loom en Smartframe.
-
-Blijf altijd op de hoogte van de gesprekken die je volgt via de nieuwe Reader push kennisgevingen voor gevolgde gesprekken over reacties op berichten.
-
-Bovendien kun je nu tekst en achtergrondkleur aanpassen in de blokken Pullquote en Preformatted.
+18.7:
+- We hebben de "Link naar" instelling voor het afbeeldingblok uitgebreid met "Media bestand" en "Bijlage pagina" opties naast de al bestaande "Aangepaste URL" optie.
+- We hebben een probleem opgelost met automatisch inhouden opslaan, zodat zij nu soepeler draaien.
 </nl-NL>
 <pt-BR>
-18.5:
-Incorporar conteúdo externo ficou ainda mais fácil com os novos blocos de mídia incorporada para Facebook, Instagram, Loom e SmartFrame.
-
-Além disso, corrigimos um bug que impedia a edição de URLs incorporáveis e agora as detectamos quando coladas em um parágrafo vazio.
-
-Por fim, os blocos de citação destacada e pré-formatado agora têm texto personalizado e cor de fundo.
+18.7:
+- Ampliamos a configuração "Link para" de forma que o bloco de imagem inclua as opções "Arquivo de mídia" e "Página de anexo" juntamente com a opção já existente "URL personalizada".
+- Corrigimos um problema no salvamento automático de conteúdo para deixá-lo mais estável.
 </pt-BR>
 <ru-RU>
-18,5:
-Встраивание внешнего содержимого стало еще проще с новыми блоками встраивания Facebook, Instagram, Loom и Smartframe.
-
-Всегда будьте в курсе бесед (и комментариев), на которые вы подписаны, с помощью новых push-уведомлений в Чтиве.
-
-Кроме того, теперь вы можете настроить цвет текста и фона в блоках выдержки и преформатированного текста.
+18.7:
+- Мы расширили параметр «Ссылка на» для блока изображения, включив в него параметры «Медиа-файл» и «Страница вложения» наряду с уже существующим параметром «Пользовательский URL».
+- Мы решили проблему с автосохранением содержимого, теперь это работает гладко.
 </ru-RU>
 <sv-SE>
-18.5:
-Nu har det blivit enklare att lägga in externt innehåll med inbäddningsblock för Facebook, Instagram, Loom och Smartframe.
-
-Håll koll på de konversationer du följer med hjälp av de nya push-meddelandena i läsaren.
-
-Dessutom kan du nu välja färg på text och bakgrund i blocken för framhävt citat och förformatterad text.
+18.7:
+- Utöver det tidigare alternativet att länka till anpassad URL har vi inställningarna för bildblocket lagt till alternativ för att länka till själva mediafilen eller till bilagans egen sida.
+- Vi har löst ett problem med autosparning med innehåll så att de nu fungerar smidigare.
 </sv-SE>
 <tr-TR>
-18.5:
-Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
-
-Takip ettiğiniz gönderi yorumlarına yönelik yeni Okuyucu anlık bildirimleri aracılığıyla, takip ettiğiniz konuşmalardan her zaman haberdar olun.
-
-Ayrıca şimdi Alıntı ve Önceden Biçimlendirilmiş bloklarda metin ve arka plan rengini özelleştirebilirsiniz.
+18.7:
+- Görsel bloku için "Bağlantı" ayarını, önceden var olan "Özel URL" seçeneğinin yanı sıra "Ortam Dosyası" ve "Ek Sayfası" seçeneklerini içerecek şekilde genişlettik.
+- İçeriğin otomatik olarak kaydedilmesi işleviyle ilgili bir sorun çözülerek artık daha düzgün çalışması sağlandı.
 </tr-TR>
-<vi>
-18.5:
-Cho phép chèn khối mã nhúng Facebook, Instagram, Loom, và Smartframe.
-
-Luôn nhận thông báo từ những thảo luận mà bạn theo dõi trên ứng dụng.
-
-Cuối cùng, bạn đã có thể chỉnh màu chữ và màu nền của hai khối Pullquote và Preformatted.
-</vi>
 <zh-CN>
-18.5：
-新的 Facebook、Instagram、Loom 和 Smartframe 嵌入区块让嵌入外部内容变得更加容易。
-
-通过针对已关注文章评论对话的新阅读器推送通知，随时了解您关注的对话的最新动态。
-
-此外，您现在还可以自定义醒目引文和预格式化区块中的文本和背景颜色。
+18.7：
+- 我们扩展了图片区块的“链接到”设置，在已有的“自定义 URL”选项旁边添加了“媒体文件”和“附件页面”选项。
+- 我们解决了内容自动发送的问题，使其现在运行得更加顺畅。
 </zh-CN>
 <zh-TW>
-18.5：
-全新的 Facebook、Instagram、Loom 和 Smartframe 嵌入區塊，讓嵌入外部內容變得更簡單。
-
-透過追蹤文章留言討論用的全新閱讀器推播通知，隨時掌握你追蹤的討論進度。
-
-此外，你現在可在重要引述和預設格式區塊中自訂文字和背景色彩。
+18.7：
+- 我們拓展了圖片區塊的「連結至」設定，新增「媒體檔案」和「附件頁面」選項，以及之前就有的「自訂 URL」選項。
+- 我們解決了內容自動儲存功能的問題，現在這些功能可順利執行。
 </zh-TW>

@@ -1,6 +1,0 @@
-18.5:
-Yeni Facebook, Instagram, Loom ve Smartframe gömülü bloklarıyla harici içeriği gömmek artık daha kolay.
-
-Takip ettiğiniz gönderi yorumlarına yönelik yeni Okuyucu anlık bildirimleri aracılığıyla, takip ettiğiniz konuşmalardan her zaman haberdar olun.
-
-Ayrıca şimdi Alıntı ve Önceden Biçimlendirilmiş bloklarda metin ve arka plan rengini özelleştirebilirsiniz.

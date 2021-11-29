@@ -11,7 +11,6 @@ import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.Pos
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.VolleyUtils
-import org.wordpress.android.util.config.FollowByPushNotificationFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -19,8 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @Suppress("TooManyFunctions")
 class PostSubscribersApiCallsProvider @Inject constructor(
-    private val contextProvider: ContextProvider,
-    private val followByPushNotificationFeatureConfig: FollowByPushNotificationFeatureConfig
+    private val contextProvider: ContextProvider
 ) {
     suspend fun getCanFollowComments(blogId: Long): Boolean = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/"
@@ -185,7 +183,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
     private fun getFollowingStateResult(json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
             if (it.has(KEY_I_SUBSCRIBE) &&
-                    (it.has(KEY_RECEIVES_NOTIFICATIONS) || !followByPushNotificationFeatureConfig.isEnabled())) {
+                    (it.has(KEY_RECEIVES_NOTIFICATIONS))) {
                 Success(
                         isFollowing = it.optBoolean(KEY_I_SUBSCRIBE, false),
                         isReceivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
