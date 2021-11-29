@@ -367,7 +367,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
     }
 
-    @Test fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+    @Test
+    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
 
         onSiteSelected.value = null
@@ -391,6 +392,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
         val firstResume = true
+        
         viewModel.onResume(firstResume)
 
         verify(mySiteSourceManager).onResume(firstResume)
@@ -399,6 +401,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
         val firstResume = false
+
         viewModel.onResume(firstResume)
 
         verify(mySiteSourceManager).onResume(firstResume)
