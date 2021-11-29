@@ -392,7 +392,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
         val firstResume = true
-        
+
         viewModel.onResume(firstResume)
 
         verify(mySiteSourceManager).onResume(firstResume)

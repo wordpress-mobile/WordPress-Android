@@ -77,7 +77,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     /* ON REFRESH */
-    
+
     @Test
     fun `given phase 2 is enabled, when refresh, then all sources are refreshed`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
