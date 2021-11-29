@@ -67,13 +67,13 @@ class MySiteSourceManager @Inject constructor(
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             refreshAllSources()
         } else {
-            refreshSelectSources()
+            refreshSubsetOfAllSources()
         }
     }
 
     fun onResume(isFirstResume: Boolean) {
         when (isFirstResume) {
-            true -> refreshSelectSources()
+            true -> refreshSubsetOfAllSources()
             false -> refresh()
         }
     }
@@ -88,7 +88,7 @@ class MySiteSourceManager @Inject constructor(
         mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }
 
-    private fun refreshSelectSources() {
+    private fun refreshSubsetOfAllSources() {
         selectedSiteSource.updateSiteSettingsIfNecessary()
         currentAvatarSource.refresh()
         quickStartCardSource.refresh()
