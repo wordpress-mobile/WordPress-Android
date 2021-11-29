@@ -3,12 +3,12 @@ package org.wordpress.android.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import com.automattic.about.model.UnifiedAboutScreen
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendAppName
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult
@@ -16,12 +16,12 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.about.UnifiedAboutTracker
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.ui.recommend.RecommendAppState
 import org.wordpress.android.ui.recommend.RecommendAppState.ApiFetchedResult
 import org.wordpress.android.ui.recommend.RecommendAppState.FetchingApi
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -35,7 +35,7 @@ class MeViewModel
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val unifiedAboutTracker: UnifiedAboutTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -82,7 +82,7 @@ class MeViewModel
     fun getSite() = selectedSiteRepository.getSelectedSite()
 
     fun showUnifiedAbout() {
-        analyticsTracker.track(Stat.ABOUT_SCREEN_BUTTON_TAPPED, getSite())
+        unifiedAboutTracker.trackScreenShown(UnifiedAboutScreen.MAIN.value)
         _showUnifiedAbout.value = Event(true)
     }
 
