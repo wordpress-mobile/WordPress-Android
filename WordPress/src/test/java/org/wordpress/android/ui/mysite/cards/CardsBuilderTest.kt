@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -101,11 +101,12 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
+
     @Test
     fun `when domain credit is available, then correct event is tracked`() {
         buildCards(isDomainCreditAvailable = true)
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }
 
     /* QUICK ACTIONS CARD */
@@ -150,6 +151,7 @@ class CardsBuilderTest {
     }
 
     /* POST CARD */
+
     @Test
     fun `given mySiteDashboardPhase2 disabled, then post card is not built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
