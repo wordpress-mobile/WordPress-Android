@@ -42,7 +42,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
-import org.wordpress.android.ui.about.AboutWordPressActivity;
+import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -481,8 +481,9 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAboutPreferenceClick() {
-        if (mUnifiedAboutFeatureConfig.isEnabled()) {
-            startActivity(new Intent(getActivity(), AboutWordPressActivity.class));
+        // Temporarily limiting this feature to the WordPress app
+        if (mUnifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            startActivity(new Intent(getActivity(), UnifiedAboutActivity.class));
         } else {
             startActivity(new Intent(getActivity(), AboutActivity.class));
         }

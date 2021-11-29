@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-11 16:54:08+0000
+Translation-Revision-Date: 2021-11-25 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">הוספה של דומיין מותאם אישית תעזור למבקרים למצוא את החנות שלך</string>
+    <string name="domains_paid_plan_add_your_domain_title">להוסיף את הדומיין שלך</string>
+    <string name="my_site_create_first_post_excerpt">פוסטים מופיעים בעמוד הבלוג שלך בסדר כרונולוגי הפוך. זה הזמן לשתף את הרעיונות שלך עם העולם!</string>
+    <string name="my_site_create_first_post_title">ליצור את הפוסט הראשון שלך</string>
+    <string name="my_site_untitled_post">ללא כותרת</string>
+    <string name="my_site_post_card_scheduled_title">פוסטים שמתוזמנים למועד קרוב</string>
+    <string name="my_site_post_card_draft_title">לערוך פוסט טיוטה</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;בחינם לשנה הראשונה&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s לשנה&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">הדומיינים שלך יפנו לאתר שלך בכתובת %s</string>
     <string name="gutenberg_native_create_link">ליצור קישור</string>
@@ -227,6 +234,7 @@ Language: he_IL
     <string name="gutenberg_native_embed_link">קישור מוטמע</string>
     <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
+    <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>
     <string name="gutenberg_native_none">ללא</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
@@ -817,6 +825,7 @@ Language: he_IL
     <string name="gutenberg_native_block_cut">הבלוק נחתך</string>
     <string name="gutenberg_native_block_copied">הבלוק הועתק</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">רק משתמשים בעלי תפקיד של מנהלי מערכת יכולים לשנות את שם האתר.</string>
+    <string name="gutenberg_native_remove_block">להסיר בלוק</string>
     <string name="my_site_title_changer_dialog_hint">שם האתר מוצג בסרגל הכותרת של הדפדפן ובתור הכותרת עליונה ברוב ערכות העיצוב.</string>
     <string name="reader_title_tag_preview">נושא</string>
     <string name="error_update_site_title_network">לא ניתן היה לעדכן את שם האתר. יש לבדוק את החיבור לרשת ולנסות שוב.</string>

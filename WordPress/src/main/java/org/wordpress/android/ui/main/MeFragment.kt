@@ -43,7 +43,7 @@ import org.wordpress.android.networking.GravatarApi
 import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.about.AboutWordPressActivity
+import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -161,7 +161,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (unifiedAboutFeatureConfig.isEnabled()) {
+        // Temporarily limiting this feature to the WordPress app
+        if (unifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             recommendTheAppContainer.isVisible = false
             aboutTheAppContainer.isVisible = true
 
@@ -173,7 +174,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
-            startActivity(Intent(activity, AboutWordPressActivity::class.java))
+            startActivity(Intent(activity, UnifiedAboutActivity::class.java))
         })
 
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
