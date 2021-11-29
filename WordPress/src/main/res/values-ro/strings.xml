@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 20:21:40+0000
+Translation-Revision-Date: 2021-11-25 14:08:30+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -1820,7 +1820,6 @@ Language: ro
     <string name="menu_visual_mode_done_snackbar">Comutat la modul vizual</string>
     <string name="menu_html_mode_done_snackbar">Comutat la modul HTML</string>
     <string name="file_size_in_gigabytes">%s GO</string>
-    <string name="file_size_in_megabytes">%s MO</string>
     <string name="file_size_in_kilobytes">%s kO</string>
     <string name="file_size_in_bytes">%s O</string>
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
@@ -1840,6 +1839,7 @@ Language: ro
     <string name="comment_spam_talkback">Comentariul a fost marcat ca spam</string>
     <string name="comment_approved_talkback">Comentariul a fost aprobat</string>
     <string name="comment_unapproved_talkback">Comentariul nu a fost aprobat</string>
+    <string name="file_size_in_megabytes">%s Mo</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -2971,7 +2971,7 @@ Language: ro
     <string name="tos">Termenii de funcționare a serviciului</string>
     <string name="app_title">WordPress pentru Android</string>
     <string name="image_alignment">Aliniere</string>
-    <string name="refresh">Reîmprospătare</string>
+    <string name="refresh">Reîmprospătează</string>
     <string name="untitled">Fără titlu</string>
     <string name="edit">Editare</string>
     <string name="immediately">Imediat</string>
