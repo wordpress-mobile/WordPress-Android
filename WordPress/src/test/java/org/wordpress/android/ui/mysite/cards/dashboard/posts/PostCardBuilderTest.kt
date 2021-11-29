@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard
+package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -13,10 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.CREATE_FIRST
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.CREATE_NEXT
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.DRAFT
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.SCHEDULED
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
@@ -88,7 +84,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         assertThat(createFirstPostCard).isEqualTo(
                 PostCardWithoutPostItems(
-                        postCardType = CREATE_FIRST,
+                        postCardType = PostCardType.CREATE_FIRST,
                         title = UiStringRes(R.string.my_site_create_first_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
                         imageRes = R.drawable.img_write_212dp,
@@ -146,7 +142,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         assertThat(createFirstPostCard).isEqualTo(
                 PostCardWithoutPostItems(
-                        postCardType = CREATE_NEXT,
+                        postCardType = PostCardType.CREATE_NEXT,
                         title = UiStringRes(R.string.my_site_create_next_post_title),
                         excerpt = UiStringRes(R.string.my_site_create_next_post_excerpt),
                         imageRes = R.drawable.img_write_212dp,
@@ -301,22 +297,22 @@ class PostCardBuilderTest : BaseUnitTest() {
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterCreateFirstPostCard() =
             (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
-                    ?.firstOrNull { it.postCardType == CREATE_FIRST }
+                    ?.firstOrNull { it.postCardType == PostCardType.CREATE_FIRST }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterCreateNextPostCard() =
             (filter { it.type == POST_CARD_WITHOUT_POST_ITEMS } as? List<PostCardWithoutPostItems>)
-                    ?.firstOrNull { it.postCardType == CREATE_NEXT }
+                    ?.firstOrNull { it.postCardType == PostCardType.CREATE_NEXT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterDraftPostCard() =
             (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
-                    ?.firstOrNull { it.postCardType == DRAFT }
+                    ?.firstOrNull { it.postCardType == PostCardType.DRAFT }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterScheduledPostCard() =
             (filter { it.type == POST_CARD_WITH_POST_ITEMS } as? List<PostCardWithPostItems>)
-                    ?.firstOrNull { it.postCardType == SCHEDULED }
+                    ?.firstOrNull { it.postCardType == PostCardType.SCHEDULED }
 
     private fun buildPostCards(mockedData: MockedPostsData) = builder.build(
             PostCardBuilderParams(

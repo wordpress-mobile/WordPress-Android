@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard
+package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard

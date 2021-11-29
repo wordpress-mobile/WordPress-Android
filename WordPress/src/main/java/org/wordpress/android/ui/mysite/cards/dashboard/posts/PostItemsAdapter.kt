@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard
+package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
