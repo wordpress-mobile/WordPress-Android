@@ -19,7 +19,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class MySiteSourceManager @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val currentAvatarSource: CurrentAvatarSource,
