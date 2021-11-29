@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-03 14:32:20+0000
+Translation-Revision-Date: 2021-11-05 15:19:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: eu_ES
 -->
 <resources>
+    <string name="domains_title">Domeinuak</string>
+    <string name="post_status_sticky">Itsaskorra</string>
+    <string name="comment_edit_user_name">Izena</string>
+    <string name="comment_edit_comment">Iruzkina</string>
+    <string name="comment_edit_web_address">Web helbidea</string>
+    <string name="comment_edit_email_address">E-posta helbidea</string>
+    <string name="comment_edit_menu_done">Eginda</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="my_site_btn_domains">Domeinuak</string>
+    <string name="gutenberg_native_selected_s">Hautatuta: %s</string>
+    <string name="gutenberg_native_move_blocks">Mugitu blokeak</string>
+    <string name="create_site_notification_create_site_action">Sortu gunea</string>
     <string name="gutenberg_native_what_is_a_block">Zer da blokea?</string>
     <string name="stats_disabled_title">Estatistiken bila?</string>
     <string name="login_epilogue_create_new_site_button">Sortu gune berria</string>

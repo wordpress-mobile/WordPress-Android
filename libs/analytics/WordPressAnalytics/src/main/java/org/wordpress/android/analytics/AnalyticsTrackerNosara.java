@@ -630,6 +630,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_comments_opened";
             case READER_ARTICLE_COMMENT_LIKED:
                 return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_SHARED:
+                return "reader_article_comment_shared";
             case READER_ARTICLE_COMMENT_UNLIKED:
                 return "reader_article_comment_unliked";
             case READER_ARTICLE_DETAIL_LIKED:
@@ -1855,6 +1857,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_suggestion_queried";
             case DOMAIN_CREDIT_NAME_SELECTED:
                 return "domain_credit_name_selected";
+            case DOMAINS_DASHBOARD_VIEWED:
+                return "domains_dashboard_viewed";
+            case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
+                return "domains_dashboard_get_domain_tapped";
+            case DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED:
+                return "domains_dashboard_add_domain_tapped";
+            case DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED:
+                return "domains_dashboard_select_domain_tapped";
+            case DOMAINS_REGISTRATION_FORM_VIEWED:
+                return "domains_registration_form_viewed";
+            case DOMAINS_REGISTRATION_FORM_SUBMITTED:
+                return "domains_registration_form_submitted";
+            case DOMAINS_PURCHASE_WEBVIEW_VIEWED:
+                return "domains_purchase_webview_viewed";
+            case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
+                return "domains_purchase_domain_success";
             case QUICK_ACTION_STATS_TAPPED:
             case QUICK_ACTION_PAGES_TAPPED:
             case QUICK_ACTION_POSTS_TAPPED:
@@ -2040,6 +2058,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_create_sheet_shown";
             case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
                 return "my_site_create_sheet_action_tapped";
+            case MY_SITE_NO_SITES_VIEW_DISPLAYED:
+                return "my_site_no_sites_view_displayed";
+            case MY_SITE_NO_SITES_VIEW_ACTION_TAPPED:
+                return "my_site_no_sites_view_action_tapped";
+            case MY_SITE_NO_SITES_VIEW_HIDDEN:
+                return "my_site_no_sites_view_hidden";
             case POST_LIST_CREATE_SHEET_SHOWN:
                 return "post_list_create_sheet_shown";
             case POST_LIST_CREATE_SHEET_ACTION_TAPPED:

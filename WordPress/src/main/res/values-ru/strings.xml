@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-18 19:56:49+0000
+Translation-Revision-Date: 2021-11-15 20:33:39+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Добавление пользовательского домена сделает доступ к вашему сайту проще</string>
+    <string name="domains_paid_plan_add_your_domain_title">Добавление домена</string>
+    <string name="my_site_create_first_post_excerpt">Записи появляются на странице в вашего блога в обратном хронологическом порядке. Самое время поделиться вашими мыслями с миром!</string>
+    <string name="my_site_create_first_post_title">Создайте свою первую запись</string>
+    <string name="my_site_untitled_post">Без названия</string>
+    <string name="my_site_post_card_scheduled_title">Запланированные к публикации записи</string>
+    <string name="my_site_post_card_draft_title">Работа над черновой записью</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
     <string name="gutenberg_native_create_link">Создать ссылку</string>
     <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается, это может занять до 30 минут пока он станет доступен.</string>
     <string name="domain_registration_result_title">Поздравляем с приобретением!</string>
@@ -29,7 +38,6 @@ Language: ru
     <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
     <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
     <string name="domains_manage_domains">Управление доменами</string>
-    <string name="domains_redirected_domains_blurb">Ваши домены будут перенаправлять на сайт &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Узнать больше&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Добавить домен</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Истекает %s</string>
@@ -37,7 +45,7 @@ Language: ru
     <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
     <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
     <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / в год&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s за первый год &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s в год&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /в год&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Хотите отменить их?</string>
     <string name="comment_edit_cancel_dialog_title">Имеются несохраненные изменения</string>
@@ -164,9 +172,6 @@ Language: ru
     <string name="fab_add_category_desc">Создать рубрику</string>
     <string name="support_ticket_subject">Поддержка WordPress для Android</string>
     <string name="site_settings_categories_hint">Управлять рубриками сайта</string>
-    <string name="site_settings_categories_empty_title">Нет рубрик</string>
-    <string name="site_settings_categories_empty_subtitle">Добавьте сюда часто используемые рубрики, чтобы быстро выбирать их для записей</string>
-    <string name="site_settings_categories_empty_button">Создать рубрику</string>
     <string name="site_settings_categories_title">Рубрики</string>
     <string name="site_settings_blogging_reminders_title">Напоминания блоггинга</string>
     <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
@@ -178,7 +183,6 @@ Language: ru
     <string name="gutenberg_native_y_axis_position">Позиция по оси Y</string>
     <string name="gutenberg_native_x_axis_position">Позиция по оси X</string>
     <string name="gutenberg_native_type_a_url">Введите URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Нажмите для добавления содержимого</string>
     <string name="gutenberg_native_slash_inserter_results">Результат вставки по слешу</string>
     <string name="gutenberg_native_s_has_url_set">Для %s установлен URL</string>
     <string name="gutenberg_native_s_has_no_url_set">URL для %s не установлен</string>
@@ -232,6 +236,7 @@ Language: ru
     <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_embed_link">Встроить ссылку</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
+    <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
     <string name="gutenberg_native_none">Нет</string>
@@ -476,7 +481,6 @@ Language: ru
     <string name="backup_download_generic_failure">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="backup_download_details_action_button_content_description">Кнопка создания скачиваемой резервной копии</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s - выбранная точка создания резервной копии для скачивания.</string>
-    <string name="gutenberg_native_image_link_url">Ссылка изображения</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: ru
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
+    <string name="gutenberg_native_remove_block">Удалить блок</string>
     <string name="gutenberg_native_duplicate_block">Дублировать блок</string>
     <string name="gutenberg_native_copy_block">Копировать блок</string>
     <string name="gutenberg_native_copied_block">Скопированный блок</string>

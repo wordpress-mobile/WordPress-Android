@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -210,7 +211,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -477,11 +477,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    post, site, isNewPost);
+                    post, site, isNewPost, mAnalyticsTrackerWrapper);
         }
     }
 
-    @Override
+    @Override @SuppressWarnings("checkstyle:MethodLength")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -496,7 +496,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // TODO: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
         if (mSite != null) {
             SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
@@ -592,9 +592,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             // retrieve Editor session data if switched editors
-            if (isRestarting && extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) != null) {
-                mPostEditorAnalyticsSession =
-                        (PostEditorAnalyticsSession) extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
+            if (isRestarting && extras.containsKey(STATE_KEY_EDITOR_SESSION_DATA)) {
+                mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+                        .fromBundle(extras, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
             }
         } else {
             mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS));
@@ -602,8 +602,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
-            mPostEditorAnalyticsSession =
-                    (PostEditorAnalyticsSession) savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
+            mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+                    .fromBundle(savedInstanceState, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
@@ -1506,14 +1506,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return false;
     }
 
-    private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
-        mUploadUtilsWrapper.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
-                mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
-                        : R.string.menu_visual_mode_done_snackbar,
-                R.string.menu_undo_snackbar_action,
-                onUndoClickListener);
-    }
-
     private void refreshEditorContent() {
         mHasSetPostContent = false;
         fillContentEditorFields();
@@ -1583,21 +1575,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
         trackPostSessionEditorModeSwitch();
         invalidateOptionsMenu();
-        showToggleHtmlModeSnackbar();
+        showEditorModeSwitchedNotice();
     }
 
-    private void showToggleHtmlModeSnackbar() {
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            toggledHtmlModeSnackbar(view -> {
-                // switch back
-                ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-            });
-        } else if (mEditorFragment instanceof GutenbergEditorFragment) {
-            toggledHtmlModeSnackbar(view -> {
-                // switch back
-                ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-            });
-        }
+    private void showEditorModeSwitchedNotice() {
+        String message = getString(mHtmlModeMenuStateOn
+                ? R.string.menu_html_mode_switched_notice
+                : R.string.menu_visual_mode_switched_notice
+        );
+        mEditorFragment.showNotice(message);
     }
 
     private void trackPostSessionEditorModeSwitch() {
@@ -1724,6 +1710,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository,
                 this::updateFromEditor,
                 (post, result) -> {
+                    mViewModel.setSavingPostOnEditorExit(false);
                     // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
                         listener.onPostUpdatedFromUI(result);
@@ -1737,46 +1724,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
      *   1. Shows and hides the editor's progress dialog;
      *   2. Saves the post via {@link EditPostActivity#updateAndSavePostAsync(OnPostUpdatedFromUIListener)};
      *   3. Invokes the listener method parameter
-     *   4. If there were changes in the post that needed to be saved, for debug builds the app will crash, and
-     *      for release builds we send an exception to Sentry because this
-     *      indicates that the editor's autosave mechanism failed to save all changes to the post. Ideally,
-     *      there should never be any changes that need to be saved when exiting the editor because all changes
-     *      should be caught by the autosave mechanism, but there is a known issue where there will be unsaved
-     *      changes when the user quickly exits the editor after making changes. For that reason we send that as
-     *      a separate event to Sentry.
      */
     private void updateAndSavePostAsyncOnEditorExit(@NonNull final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             return;
         }
-
-        // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
-        boolean isAutosavePending = mViewModel.isAutosavePending();
-
+        mViewModel.setSavingPostOnEditorExit(true);
         mViewModel.showSavingProgressDialog();
-        updateAndSavePostAsync((result) -> {
-            listener.onPostUpdatedFromUI(result);
-
-            if (result == Updated.INSTANCE) {
-                SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
-                if (BuildConfig.DEBUG) {
-                    throw new RuntimeException(
-                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
-                    );
-                } else {
-                    CrashLoggingExtKt.sendReportWithTag(mCrashLogging, exception, T.EDITOR);
-                    AppLog.e(T.EDITOR, exception.getMessage());
-                }
-            } else {
-                AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
-            }
-        });
+        updateAndSavePostAsync((result) -> listener.onPostUpdatedFromUI(result));
     }
 
     private UpdateFromEditor updateFromEditor(String oldContent) {
         try {
-            String title = (String) mEditorFragment.getTitle();
-            String content = (String) mEditorFragment.getContent(oldContent);
+            // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
+            Pair<CharSequence, CharSequence> titleAndContent = mEditorFragment.getTitleAndContent(oldContent);
+            String title = (String) titleAndContent.first;
+            String content = (String) titleAndContent.second;
             return new PostFields(title, content);
         } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");

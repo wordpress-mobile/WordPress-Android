@@ -45,6 +45,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
@@ -79,6 +80,7 @@ import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
+import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
@@ -589,6 +591,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        viewCurrentBlogPostsOfType(context, site, null);
+    }
+
+    public static void viewCurrentBlogPostsOfType(Context context, SiteModel site, PostListType postListType) {
         if (site == null) {
             AppLog.e(T.POSTS, "Site cannot be null when opening posts");
             AnalyticsTracker.track(
@@ -600,7 +606,11 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        context.startActivity(PostsListActivity.buildIntent(context, site));
+        if (postListType == null) {
+            context.startActivity(PostsListActivity.buildIntent(context, site));
+        } else {
+            context.startActivity(PostsListActivity.buildIntent(context, site, postListType, false, null));
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
@@ -640,6 +650,12 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
+    }
+
+    public static void viewUnifiedCommentsDetails(Context context, SiteModel site) {
+        Intent intent = new Intent(context, UnifiedCommentsDetailsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
@@ -683,10 +699,22 @@ public class ActivityLauncher {
 
     public static void viewDomainRegistrationActivityForResult(Activity activity, @NonNull SiteModel site,
                                                                @NonNull DomainRegistrationPurpose purpose) {
-        Intent intent = new Intent(activity, DomainRegistrationActivity.class);
+        Intent intent = createDomainRegistrationActivityIntent(activity, site, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    public static void viewDomainRegistrationActivityForResult(Fragment fragment, @NonNull SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+    }
+
+    private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
+                                                                   @NonNull DomainRegistrationPurpose purpose) {
+        Intent intent = new Intent(context, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
-        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
+        return intent;
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
@@ -1460,6 +1488,13 @@ public class ActivityLauncher {
         intent = new Intent(activity, LoginActivity.class);
         LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginWithoutMagicLink(Fragment fragment) {
+        Intent intent;
+        intent = new Intent(fragment.getContext(), LoginActivity.class);
+        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForJetpackStats(Fragment fragment) {

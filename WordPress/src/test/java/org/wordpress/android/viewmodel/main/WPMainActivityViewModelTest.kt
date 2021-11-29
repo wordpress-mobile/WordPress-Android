@@ -369,7 +369,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(quickStartRepository).completeTask(any(), any())
+        verify(quickStartRepository).completeTask(any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false

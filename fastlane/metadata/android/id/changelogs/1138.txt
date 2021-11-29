@@ -1,0 +1,3 @@
+18.7:
+- Kami memperluas pengaturan "Tautan Ke" untuk blok gambar agar mencakup pilihan "Berkas Media" dan "Halaman Lampiran" di samping opsi "URL Kustom" yang sudah ada.
+- Kami menyelesaikan masalah pada penyimpanan otomatis konten sehingga dapat berjalan dengan lebih lancar.

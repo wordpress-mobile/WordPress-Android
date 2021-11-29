@@ -507,7 +507,7 @@ class PostsListActivity : LocaleAwareActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)

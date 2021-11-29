@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-04 18:57:09+0000
+Translation-Revision-Date: 2021-11-08 12:47:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -345,6 +345,7 @@ Language: el_GR
     <string name="change_photo">Αλλαγή φωτογραφίας</string>
     <string name="dlg_saving_tag">Αποθήκευση</string>
     <string name="dlg_deleting_tag">Διαγραφή</string>
+    <string name="my_site_btn_site_pages">Σελίδες</string>
     <string name="tag_description_hint">Περιγραφή</string>
     <string name="tag_name_hint">Ετικέτα</string>
     <string name="add_new_tag">Προσθήκη Νέας Ετικέτας</string>
@@ -979,6 +980,8 @@ Language: el_GR
     <string name="site_picker_title">Επιλογή ιστότοπου</string>
     <string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
     <string name="my_site_header_publish">Δημοσιεύω</string>
+    <string name="my_site_btn_blog_posts">Άρθρα</string>
+    <string name="my_site_btn_site_settings">Ρυθμίσεις ιστότοπου</string>
     <string name="my_site_header_configuration">Ρυθμίσεις</string>
     <string name="reader_label_new_posts_subtitle">Πατήστε για να τα δείτε</string>
     <string name="deselect_all">Αποεπιλογή όλων</string>

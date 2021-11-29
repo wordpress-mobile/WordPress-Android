@@ -12,7 +12,7 @@ STATISTIEKEN
 
 KENNISGEVINGEN
 - Ontvang kennisgevingen over reacties, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je site.
-- Reageer op nieuwe commentaren zodra ze verschijnen om het gesprek vlot te laten verlopen en je lezers te erkennen.
+- Reageer op nieuwe reacties zodra ze verschijnen om het gesprek vlot te laten verlopen en je lezers te erkennen.
 
 PUBLICEREN
 - Maak updates, verhalen, fotoverslagen, aankondigingen en wat je maar wilt! -- met de editor.
@@ -32,7 +32,7 @@ Waarom WordPress?
 
 Er zijn talloze bloggingservices, sitebouwers en sociale netwerken. Waarom zou je je site maken met WordPress?
 
-WordPress stuurt meer dan een derde van alle sites op het web aan. Het wordt gebruikt door hobbyblogs, bedrijven van elke omvang, webwinkels en zelfs de grootste nieuwssites. De kans is groot dat veel van jouw favoriete sites op WordPress draaien.
+WordPress stuurt meer dan een derde van alle sites op het web aan. Het wordt gebruikt door hobbyblogs, bedrijven van elke omvang, webwinkels en zelfs de grootste nieuwssites. De kans is groot dat veel van je favoriete sites op WordPress draaien.
 
 Met WordPress blijf je eigenaar van je inhoud. Op andere sociale netwerken word je als handelswaar behandeld en ben je niet de eigenaar van de inhoud van je berichten. Maar met WordPress zijn je publicaties helemaal van jou en kun je ze overal meenemen.
 

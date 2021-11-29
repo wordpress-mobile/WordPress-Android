@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.post.PostCardType
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
@@ -67,8 +70,8 @@ class CardsBuilderTest {
         get() = MockedPostsData(
                 posts = Posts(
                         hasPublishedPosts = true,
-                        draft = listOf(Post(id = "1", title = "draft")),
-                        scheduled = listOf(Post(id = "1", title = "scheduled"))
+                        draft = listOf(Post(id = 1, title = "draft")),
+                        scheduled = listOf(Post(id = 1, title = "scheduled"))
                 )
         )
 
@@ -184,7 +187,7 @@ class CardsBuilderTest {
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
                 ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData),
+                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock(), mock()),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
@@ -295,9 +298,11 @@ class CardsBuilderTest {
     )
 
     private fun initPostCard() = listOf(
-            PostCard(
+            PostCardWithPostItems(
+                    postCardType = PostCardType.DRAFT,
                     title = UiStringText(""),
-                    postTitle = UiStringText("")
+                    postItems = emptyList(),
+                    footerLink = FooterLink(UiStringText(""), onClick = mock())
             )
     )
 }

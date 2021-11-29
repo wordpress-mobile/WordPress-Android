@@ -1,0 +1,39 @@
+{
+  "posts": {
+    "has_published_posts": true,
+    "draft": [
+      {
+        "id": 3172,
+        "title": "A refreshed draft post 1...",
+        "modified": "2021-07-27T16:07:45+00:00",
+        "featured_image_url": "https://draft_1_feature_image_url"
+      },
+      {
+        "id": 3173,
+        "title": "A refreshed draft post 2...",
+        "modified": "2021-07-28T16:07:45+00:00",
+        "featured_image_url": "https://draft_2_feature_image_url"
+      }
+    ],
+    "scheduled": [
+      {
+        "id": 4172,
+        "title": "A refreshed scheduled post 1...",
+        "modified": "2021-07-27T16:07:45+00:00",
+        "featured_image_url": "https://schedule_1_feature_image_url"
+      },
+      {
+        "id": 4173,
+        "title": "A refreshed scheduled post 2...",
+        "modified": "2021-07-28T16:07:45+00:00",
+        "featured_image_url": "https://schedule_2_feature_image_url"
+      },
+      {
+        "id": 4174,
+        "title": "A refreshed scheduled post 3...",
+        "modified": "2021-07-29T16:07:45+00:00",
+        "featured_image_url": "https://schedule_3_feature_image_url"
+      }
+    ]
+  }
+}

@@ -11,21 +11,29 @@ steps:
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew checkstyle
+    artifact_paths:
+      - "**/build/reports/checkstyle/checkstyle.*"
   - label: "ktlint"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew ciktlint
+    artifact_paths:
+      - "**/build/ktlint.xml"
   - label: "detekt"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew WordPress:detekt
+    artifact_paths:
+      - "**/build/reports/detekt/detekt.html"
   - label: "lint"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew lintWordpressVanillaRelease
+    artifact_paths:
+      - "**/build/reports/lint-results*.*"
   - label: "Test WordPress"
     <<: *docker-container
     command: |

@@ -43,7 +43,10 @@ class DomainRegistrationMainViewModel @Inject constructor(
 
     fun selectDomain(domainProductDetails: DomainProductDetails) {
         _onNavigation.value = when (domainRegistrationPurpose) {
-            DOMAIN_PURCHASE -> Event(OpenDomainRegistrationCheckout(site, domainProductDetails))
+            DOMAIN_PURCHASE -> {
+                analyticsTracker.track(Stat.DOMAINS_REGISTRATION_FORM_VIEWED)
+                Event(OpenDomainRegistrationCheckout(site, domainProductDetails))
+            }
             else -> {
                 analyticsTracker.track(Stat.DOMAIN_CREDIT_NAME_SELECTED)
                 Event(OpenDomainRegistrationDetails(domainProductDetails))
@@ -53,12 +56,16 @@ class DomainRegistrationMainViewModel @Inject constructor(
 
     fun completeDomainRegistration(event: DomainRegistrationCompletedEvent) {
         _onNavigation.value = when (domainRegistrationPurpose) {
-            CTA_DOMAIN_CREDIT_REDEMPTION, DOMAIN_PURCHASE -> Event(OpenDomainRegistrationResult(event))
+            CTA_DOMAIN_CREDIT_REDEMPTION, DOMAIN_PURCHASE -> {
+                analyticsTracker.track(Stat.DOMAINS_REGISTRATION_FORM_SUBMITTED)
+                Event(OpenDomainRegistrationResult(event))
+            }
             else -> Event(FinishDomainRegistration(event))
         }
     }
 
     fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        analyticsTracker.track(Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS) // TODO: is it a success or just a back press
         _onNavigation.value = Event(FinishDomainRegistration(event))
     }
 }

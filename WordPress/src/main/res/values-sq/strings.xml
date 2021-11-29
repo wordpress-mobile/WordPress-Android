@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-07 11:16:57+0000
+Translation-Revision-Date: 2021-11-10 15:18:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
+    <string name="gutenberg_native_create_link">Krijo lidhje</string>
+    <string name="domain_registration_result_description">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset. Mund të duhen deri në 30 minuta që përkatësia juaj të fillojë të funksionojë.</string>
+    <string name="domain_registration_result_title">Përgëzime për blerjen tuaj!</string>
+    <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
+    <string name="domains_title">Përkatësi</string>
+    <string name="post_status_sticky">Ngjitës</string>
+    <string name="post_settings_post_sticky">Ngjite postimin te faqja ballore</string>
+    <string name="post_settings_mark_as_sticky_options_header">Vëri shenjë si ngjitës</string>
+    <string name="reader_follow_comments_unfollow_conversation">Mos e ndiq më bisedën</string>
+    <string name="reader_follow_comments_enable_push_notifications">Aktivizo njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_message">Po e ndiqni këtë bisedë. Do të merrni njoftime me email, kur botohen komente të reja.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Administroni mundësi ndjekjeje bisede, dritarja Flluskë</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">S’u çaktivizuan dot njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">S’u aktivizuan dot njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Njoftime brenda aplikacionit të çaktivizuara</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Njoftime brenda aplikacionit të aktivizuara</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">U shpajtua prej kësaj bisede</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Po ndiqet kjo bisedë\nTë aktivizohen njoftimet brenda aplikacionit?</string>
     <string name="domains_search_for_a_domain_button">Kërkoni për një përkatësi</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Me planin tuaj keni të përfshirë një regjistrim përkatësie falas për një vit</string>
+    <string name="domains_free_plan_get_your_domain_caption">Përkatësitë e blera në këtë sajt do t’i ridrejtojnë vizitorët te &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kërkoni përkatësinë tuaj falas</string>
     <string name="domains_manage_domains">Administroni Përkatësi</string>
-    <string name="domains_redirected_domains_blurb">Përkatësitë tuaja do të ridrejtojnë te sajti juaj në &lt;b&gt;%s&lt;/b&gt;. &lt;a href=\"https://wordpress.com/support/site-redirect/\"&gt;Mësoni më tepër&lt;/a&gt;.</string>
     <string name="domains_add_a_domain">Shtoni një përkatësi</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Skadon më %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Skadon më %s</string>
@@ -18,8 +38,8 @@ Language: sq_AL
     <string name="domains_primary_site_address_chip">Adresë parësore sajti</string>
     <string name="domains_primary_site_more_menu_change_site_address">Ndryshoni adresën e sajtit</string>
     <string name="domains_primary_site_caption">Adresa juaj falas WordPress.com është</string>
-    <string name="domain_suggestions_list_item_cost_free">&lt;strong&gt;&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;/strong&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /vit&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Doni të hidhen tej?</string>
     <string name="comment_edit_cancel_dialog_title">Ka ndryshime të paruajtura</string>
     <string name="comment_edit_comment_error">Komenti s’mund të jetë i zbrazët</string>
@@ -145,9 +165,6 @@ Language: sq_AL
     <string name="gutenberg_native_set_as_featured_image">Vëre Si Figurë të Zgjedhur </string>
     <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur </string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
-    <string name="site_settings_categories_empty_title">S’keni ndonjë kategori</string>
-    <string name="site_settings_categories_empty_subtitle">Shtoni këtu kategoritë që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur caktoni kategori për postimet tuaja</string>
-    <string name="site_settings_categories_empty_button">Krijoni një kategori</string>
     <string name="site_settings_categories_title">Kategori</string>
     <string name="site_settings_blogging_reminders_title">Kujtues blogimi</string>
     <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
@@ -159,7 +176,6 @@ Language: sq_AL
     <string name="gutenberg_native_y_axis_position">Pozicion në boshtin Y</string>
     <string name="gutenberg_native_x_axis_position">Pozicion në boshtin X</string>
     <string name="gutenberg_native_type_a_url">Shtypni një URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Prekeni që të shotni lëndë</string>
     <string name="gutenberg_native_s_has_url_set">%s ka të caktuar URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s s’ka të caktuar URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s shndërruar në blloqe të rregullt</string>
@@ -210,6 +226,7 @@ Language: sq_AL
     <string name="gutenberg_native_featured">Të zgjedhura</string>
     <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
+    <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
     <string name="gutenberg_native_none">Asnjë</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
@@ -453,7 +470,6 @@ Language: sq_AL
     <string name="backup_download_generic_failure">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
     <string name="backup_download_details_action_button_content_description">Buton “Krijoni kopjeruajtje të shkarkueshme”</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s është pika e përzgjedhur për të krijuar një kopjeruajtje të shkarkueshme.</string>
-    <string name="gutenberg_native_image_link_url">URL Lidhjeje Figure</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -1293,6 +1309,7 @@ Language: sq_AL
     <string name="domain_contact_information_country_hint">Vend</string>
     <string name="domain_contact_information_country_code_hint">Kod vendi</string>
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_register_domain_button">Regjistroni përkatësi</string>
     <string name="domain_contact_information_organization_hint">Ent (në daçi)</string>
     <string name="domain_contact_information_description">Për t’jua bërë më të lehtë, kemi paraplotësuar të dhëna tuajat të kontaktit\n       në WordPress.com. Ju lutemi, shqyrtojini, që të siguroheni se janë të dhënat e sakta që doni të përdoren për këtë përkatësi.</string>
     <string name="domain_contact_information_title">Të dhëna kontakti përkatësie</string>

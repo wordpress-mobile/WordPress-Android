@@ -309,6 +309,7 @@
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="button_copy">Duplicate</string>
+    <string name="button_copy_link">Copy link</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -430,6 +431,7 @@
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
+    <string name="comment_author_badge">Author</string>
     <string name="comment_tracker_label_all" translatable="false">All</string>
     <string name="comment_tracker_label_pending" translatable="false">Pending</string>
     <string name="comment_tracker_label_unreplied" translatable="false">Unreplied</string>
@@ -504,6 +506,7 @@
     <string name="remove_account">Remove site</string>
 
     <!-- post actions -->
+    <string name="post_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="post_trashed">Post sent to trash</string>
     <string name="post_trashing">Post is being trashed</string>
     <string name="post_restored">Post restored</string>
@@ -666,9 +669,10 @@
 
     <!-- Categories -->
     <string name="site_settings_categories_title">Categories</string>
-    <string name="site_settings_categories_empty_button">Create a category</string>
-    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
-    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
+    <string name="site_settings_categories_no_network_title" translatable="false">@string/no_network_title</string>
+    <string name="site_settings_categories_no_network_subtitle" translatable="false">@string/no_network_message</string>
+    <string name="site_settings_categories_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
+    <string name="site_settings_categories_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -1556,8 +1560,6 @@
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
     <string name="reader_follow_comments_subscribe_success_enable_push">Following this conversation\nEnable in-app notifications?</string>
     <string name="reader_follow_comments_unsubscribe_from_all_success">Unsubscribed from this conversation</string>
     <string name="reader_follow_comments_subscribe_to_push_success">In-app notifications enabled</string>
@@ -1679,10 +1681,9 @@
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
+    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
+    <string name="menu_visual_mode_switched_notice">Switched to Visual mode</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -2009,7 +2010,6 @@
     <string name="reader_label_new_posts_subtitle">Tap to show them</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="reader_label_followed_blog">Site followed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
@@ -2202,6 +2202,18 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
+    <!-- My Site - Post Card -->
+    <string name="my_site_post_card_draft_title">Work on a draft post</string>
+    <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
+    <string name="my_site_untitled_post">Untitled</string>
+    <string name="my_site_create_first_post_title">Create your first post</string>
+    <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
+    <string name="my_site_create_next_post_title">Create your next post</string>
+    <string name="my_site_create_next_post_excerpt">Posting regularly helps build your audience!</string>
+    <string name="my_site_post_card_link_create_post">Create a post</string>
+    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -2228,6 +2240,7 @@
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
+    <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
@@ -2485,6 +2498,8 @@
     <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
+    <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Adding a custom domain makes it easy for visitors to find your site</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
     <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
@@ -3395,6 +3410,7 @@
     <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources">Current unit is %s</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources">Custom URL</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Customize blocks</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
@@ -3481,7 +3497,6 @@
     <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources">How to edit your post</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
     <string name="gutenberg_native_image_settings" tools:ignore="UnusedResources">Image settings</string>
     <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources">Insert crosspost</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
@@ -3556,6 +3571,7 @@
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
     <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Remove as Featured Image </string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
@@ -3613,7 +3629,6 @@ translators: Block name. %s: The localized block name -->
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
-    <string name="gutenberg_native_tap_to_add_content" tools:ignore="UnusedResources">Tap to add content</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>

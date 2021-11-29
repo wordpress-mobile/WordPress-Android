@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
@@ -32,6 +33,7 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.UnifiedCommentsDetailFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
@@ -41,6 +43,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Inject lateinit var unifiedCommentsDetailFeatureConfig: UnifiedCommentsDetailFeatureConfig
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -148,13 +151,17 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        commentDetails.launch(
-                CommentDetailsActivityRequest(
-                        commentId,
-                        commentStatus,
-                        selectedSiteRepository.getSelectedSite()!!
-                )
-        )
+        if (unifiedCommentsDetailFeatureConfig.isEnabled()) {
+            ActivityLauncher.viewUnifiedCommentsDetails(context, selectedSiteRepository.getSelectedSite())
+        } else {
+            commentDetails.launch(
+                    CommentDetailsActivityRequest(
+                            commentId,
+                            commentStatus,
+                            selectedSiteRepository.getSelectedSite()!!
+                    )
+            )
+        }
     }
 
     val commentDetails = registerForActivityResult(CommentDetailsActivityContract()) { response:

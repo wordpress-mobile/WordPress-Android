@@ -40,6 +40,9 @@ class MeViewModel
     private val _recommendUiState = MutableLiveData<RecommendAppState>()
     val recommendUiState: LiveData<Event<RecommendAppUiState>> = _recommendUiState.map { it.toUiState() }
 
+    private val _showUnifiedAbout = MutableLiveData<Event<Boolean>>()
+    val showUnifiedAbout: LiveData<Event<Boolean>> = _showUnifiedAbout
+
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
         val error: String? = null,
@@ -74,6 +77,10 @@ class MeViewModel
     }
 
     fun getSite() = selectedSiteRepository.getSelectedSite()
+
+    fun showUnifiedAbout() {
+        _showUnifiedAbout.value = Event(true)
+    }
 
     fun onRecommendTheApp() {
         when (val state = _recommendUiState.value) {

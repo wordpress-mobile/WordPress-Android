@@ -10,17 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:aevButton="@string/site_settings_categories_empty_button"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevSubtitle="@string/site_settings_categories_empty_subtitle"
-        app:aevTitle="@string/site_settings_categories_empty_title"
+        app:aevTitle="@string/loading"
         tools:visibility="visible" />
 
     <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@+id/categories_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:dividerHeight="@dimen/divider_size"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
