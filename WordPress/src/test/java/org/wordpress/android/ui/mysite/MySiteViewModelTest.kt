@@ -49,11 +49,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
@@ -189,8 +189,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 completedTasks = emptyList()
         )
 
-    private val postsUpdate = MutableLiveData(
-            PostsUpdate(
+    private val cardsUpdate = MutableLiveData(
+            CardsUpdate(
                     MockedPostsData(
                             posts = Posts(
                                     hasPublishedPosts = true,
@@ -226,7 +226,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dynamicCardsSource.build(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(cardsSource.build(any(), any())).thenReturn(postsUpdate)
+        whenever(cardsSource.build(any(), any())).thenReturn(cardsUpdate)
         whenever(quickStartCardSource.build(any(), any())).thenReturn(quickStartUpdate)
         whenever(siteIconProgressSource.build(any(), any())).thenReturn(showSiteIconProgressBar)
         whenever(selectedSiteSource.build(any(), any())).thenReturn(selectedSite)

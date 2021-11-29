@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.testScope
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
@@ -30,7 +30,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when source is requested upon start, then mocked data is loaded`() = test {
-        var result: PostsUpdate? = null
+        var result: CardsUpdate? = null
         cardSource.build(testScope(), 1).observeForever {
             it?.let {
                 result = it
@@ -41,7 +41,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when refresh is invoked, then data is refreshed`() = test {
-        val result: MutableList<PostsUpdate?> = mutableListOf()
+        val result: MutableList<CardsUpdate?> = mutableListOf()
         cardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
         cardSource.refresh.observeForever { isRefreshing.add(it) }
 
@@ -72,7 +72,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when data has been refreshed, then refresh is set to false`() = test {
-        val result: MutableList<PostsUpdate?> = mutableListOf()
+        val result: MutableList<CardsUpdate?> = mutableListOf()
         cardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
         cardSource.refresh.observeForever { isRefreshing.add(it) }
 

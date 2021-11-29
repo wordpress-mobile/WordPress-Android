@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,17 +15,17 @@ import javax.inject.Singleton
 @Singleton
 class CardsSource @Inject constructor(
     private val mockedDataJsonUtils: MockedDataJsonUtils
-) : MySiteRefreshSource<PostsUpdate> {
+) : MySiteRefreshSource<CardsUpdate> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<PostsUpdate> {
-        val result = MediatorLiveData<PostsUpdate>()
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
+        val result = MediatorLiveData<CardsUpdate>()
         result.refreshData(coroutineScope)
         result.addSource(refresh) { result.refreshData(coroutineScope, refresh.value) }
         return result
     }
 
-    private fun MediatorLiveData<PostsUpdate>.refreshData(
+    private fun MediatorLiveData<CardsUpdate>.refreshData(
         coroutineScope: CoroutineScope,
         isRefresh: Boolean? = null
     ) {
@@ -44,13 +44,13 @@ class CardsSource @Inject constructor(
         }
     }
 
-    private fun MediatorLiveData<PostsUpdate>.refreshData(
+    private fun MediatorLiveData<CardsUpdate>.refreshData(
         coroutineScope: CoroutineScope,
         jsonString: String?
     ) {
         coroutineScope.launch {
             val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
-            postState(PostsUpdate(mockedPostsData))
+            postState(CardsUpdate(mockedPostsData))
         }
     }
 }

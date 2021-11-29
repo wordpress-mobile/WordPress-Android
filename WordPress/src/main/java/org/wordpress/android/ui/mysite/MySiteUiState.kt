@@ -3,11 +3,11 @@ package org.wordpress.android.ui.mysite
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
@@ -43,7 +43,7 @@ data class MySiteUiState(
             val cards: List<DynamicCardType>
         ) : PartialState()
 
-        data class PostsUpdate(val mockedPostsData: MockedPostsData? = null) : PartialState()
+        data class CardsUpdate(val mockedPostsData: MockedPostsData? = null) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
@@ -64,7 +64,7 @@ data class MySiteUiState(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
-            is PostsUpdate -> this.copy(mockedPostsData = partialState.mockedPostsData)
+            is CardsUpdate -> this.copy(mockedPostsData = partialState.mockedPostsData)
         }
     }
 }
