@@ -74,11 +74,7 @@ class MySiteSourceManager @Inject constructor(
     fun onResume(isFirstResume: Boolean) {
         when (isFirstResume) {
             true -> refreshSelectSources()
-            false -> if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-                refreshAllSources()
-            } else {
-                refreshSelectSources()
-            }
+            false -> refresh()
         }
     }
 
