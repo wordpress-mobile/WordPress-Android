@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard
 
 enum class PostCardType(val id: Int) {
     CREATE_FIRST(0),

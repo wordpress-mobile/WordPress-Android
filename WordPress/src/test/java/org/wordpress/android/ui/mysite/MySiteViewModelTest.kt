@@ -65,12 +65,12 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardsSource
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository

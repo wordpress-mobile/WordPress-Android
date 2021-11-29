@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
@@ -7,8 +7,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject

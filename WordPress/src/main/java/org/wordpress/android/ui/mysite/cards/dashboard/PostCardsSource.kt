@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedDataJsonUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 

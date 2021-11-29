@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
@@ -10,10 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedDataJsonUtils
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 
 class PostCardsSourceTest : BaseUnitTest() {
     @Mock lateinit var mockedDataJsonUtils: MockedDataJsonUtils

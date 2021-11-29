@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mysite
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 

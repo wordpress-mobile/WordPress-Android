@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard
 
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -13,13 +13,13 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_FIRST
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.CREATE_NEXT
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.DRAFT
-import org.wordpress.android.ui.mysite.cards.post.PostCardType.SCHEDULED
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.CREATE_FIRST
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.CREATE_NEXT
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.DRAFT
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType.SCHEDULED
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 

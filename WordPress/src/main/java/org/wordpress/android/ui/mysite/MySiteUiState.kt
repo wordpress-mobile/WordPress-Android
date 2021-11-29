@@ -11,7 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 
 data class MySiteUiState(

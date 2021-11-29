@@ -30,11 +30,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.post.mockdata
+package org.wordpress.android.ui.mysite.cards.dashboard.mockdata
 
 import com.google.gson.Gson
 import org.wordpress.android.util.AppLog
