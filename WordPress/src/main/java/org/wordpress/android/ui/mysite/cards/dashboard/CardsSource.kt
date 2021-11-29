@@ -5,17 +5,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CardsSource @Inject constructor(
-    private val mockedDataJsonUtils: MockedDataJsonUtils
-) : MySiteRefreshSource<CardsUpdate> {
+class CardsSource @Inject constructor() : MySiteRefreshSource<CardsUpdate> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
@@ -30,27 +27,16 @@ class CardsSource @Inject constructor(
         isRefresh: Boolean? = null
     ) {
         when (isRefresh) {
-            null, true -> {
-                val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(
-                        if (isRefresh == null) {
-                            R.raw.mocked_posts_data
-                        } else {
-                            R.raw.mocked_refresh_posts_data
-                        }
-                )
-                refreshData(coroutineScope, jsonString)
-            }
+            null, true -> refreshData(coroutineScope)
             else -> Unit // Do nothing
         }
     }
 
     private fun MediatorLiveData<CardsUpdate>.refreshData(
-        coroutineScope: CoroutineScope,
-        jsonString: String?
+        coroutineScope: CoroutineScope
     ) {
         coroutineScope.launch {
-            val mockedPostsData = mockedDataJsonUtils.getMockedPostsDataFromJsonString(jsonString!!)
-            postState(CardsUpdate(mockedPostsData))
+            postState(CardsUpdate(CardsResult()))
         }
     }
 }

@@ -1,30 +1,20 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 
 class CardsSourceTest : BaseUnitTest() {
-    @Mock lateinit var mockedDataJsonUtils: MockedDataJsonUtils
     private lateinit var cardSource: CardsSource
     private lateinit var isRefreshing: MutableList<Boolean>
 
     @Before
     fun setUp() {
-        whenever(mockedDataJsonUtils.getJsonStringFromRawResource(any())).thenReturn("string")
-        whenever(mockedDataJsonUtils.getMockedPostsDataFromJsonString(any())).thenReturn(mockedPostsData)
-        cardSource = CardsSource(mockedDataJsonUtils)
+        cardSource = CardsSource()
         isRefreshing = mutableListOf()
     }
 
@@ -36,7 +26,7 @@ class CardsSourceTest : BaseUnitTest() {
                 result = it
             }
         }
-        assertThat(result?.mockedPostsData).isNotNull
+        assertThat(result?.cards).isNotNull
     }
 
     @Test
@@ -47,8 +37,8 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.first()?.mockedPostsData).isNotNull
-        assertThat(result.last()?.mockedPostsData).isNotNull
+        assertThat(result.first()?.cards).isNotNull
+        assertThat(result.last()?.cards).isNotNull
         assertThat(result.size).isEqualTo(2)
     }
 
@@ -80,13 +70,4 @@ class CardsSourceTest : BaseUnitTest() {
 
         assertThat(isRefreshing.last()).isFalse
     }
-
-    private val mockedPostsData: MockedPostsData
-        get() = MockedPostsData(
-                posts = Posts(
-                        hasPublishedPosts = true,
-                        draft = listOf(Post(id = 1, title = "draft")),
-                        scheduled = listOf(Post(id = 1, title = "scheduled"))
-                )
-        )
 }
