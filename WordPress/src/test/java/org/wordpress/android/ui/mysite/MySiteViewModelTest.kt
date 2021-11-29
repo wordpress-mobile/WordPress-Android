@@ -65,8 +65,8 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
@@ -131,7 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
-    @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var cardsSource: CardsSource
     @Mock lateinit var quickStartCardSource: QuickStartCardSource
     @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
     @Mock lateinit var selectedSiteSource: SelectedSiteSource
@@ -226,7 +226,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dynamicCardsSource.build(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(postCardsSource.build(any(), any())).thenReturn(postsUpdate)
+        whenever(cardsSource.build(any(), any())).thenReturn(postsUpdate)
         whenever(quickStartCardSource.build(any(), any())).thenReturn(quickStartUpdate)
         whenever(siteIconProgressSource.build(any(), any())).thenReturn(showSiteIconProgressBar)
         whenever(selectedSiteSource.build(any(), any())).thenReturn(selectedSite)
@@ -259,7 +259,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                postCardsSource,
+                cardsSource,
                 selectedSiteSource,
                 siteIconProgressSource,
                 mySiteDashboardPhase2FeatureConfig

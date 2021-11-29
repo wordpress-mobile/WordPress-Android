@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PostCardsSource @Inject constructor(
+class CardsSource @Inject constructor(
     private val mockedDataJsonUtils: MockedDataJsonUtils
 ) : MySiteRefreshSource<PostsUpdate> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)

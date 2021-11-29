@@ -36,8 +36,8 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.PostCardType
-import org.wordpress.android.ui.mysite.cards.dashboard.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -114,7 +114,7 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val postCardsSource: PostCardsSource,
+    private val cardsSource: CardsSource,
     selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
     mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
@@ -156,7 +156,7 @@ class MySiteViewModel @Inject constructor(
             domainRegistrationSource,
             scanAndBackupSource,
             dynamicCardsSource,
-            postCardsSource
+            cardsSource
     )
 
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -739,7 +739,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        postCardsSource.refresh()
+        cardsSource.refresh()
     }
 
     private fun onPostItemClick(postId: Int) {

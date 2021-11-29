@@ -15,23 +15,23 @@ import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Post
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedPostsData.Posts
 
-class PostCardsSourceTest : BaseUnitTest() {
+class CardsSourceTest : BaseUnitTest() {
     @Mock lateinit var mockedDataJsonUtils: MockedDataJsonUtils
-    private lateinit var postCardSource: PostCardsSource
+    private lateinit var cardSource: CardsSource
     private lateinit var isRefreshing: MutableList<Boolean>
 
     @Before
     fun setUp() {
         whenever(mockedDataJsonUtils.getJsonStringFromRawResource(any())).thenReturn("string")
         whenever(mockedDataJsonUtils.getMockedPostsDataFromJsonString(any())).thenReturn(mockedPostsData)
-        postCardSource = PostCardsSource(mockedDataJsonUtils)
+        cardSource = CardsSource(mockedDataJsonUtils)
         isRefreshing = mutableListOf()
     }
 
     @Test
     fun `when source is requested upon start, then mocked data is loaded`() = test {
         var result: PostsUpdate? = null
-        postCardSource.build(testScope(), 1).observeForever {
+        cardSource.build(testScope(), 1).observeForever {
             it?.let {
                 result = it
             }
@@ -42,10 +42,10 @@ class PostCardsSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then data is refreshed`() = test {
         val result: MutableList<PostsUpdate?> = mutableListOf()
-        postCardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
-        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+        cardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
+        cardSource.refresh.observeForever { isRefreshing.add(it) }
 
-        postCardSource.refresh()
+        cardSource.refresh()
 
         assertThat(result.first()?.mockedPostsData).isNotNull
         assertThat(result.last()?.mockedPostsData).isNotNull
@@ -54,18 +54,18 @@ class PostCardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when source is invoked, then refresh is false`() = test {
-        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+        cardSource.refresh.observeForever { isRefreshing.add(it) }
 
-        postCardSource.build(testScope(), 1)
+        cardSource.build(testScope(), 1)
 
         assertThat(isRefreshing.last()).isFalse
     }
 
     @Test
     fun `when refresh is invoked, then refresh is true`() = test {
-        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+        cardSource.refresh.observeForever { isRefreshing.add(it) }
 
-        postCardSource.refresh()
+        cardSource.refresh()
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -73,10 +73,10 @@ class PostCardsSourceTest : BaseUnitTest() {
     @Test
     fun `when data has been refreshed, then refresh is set to false`() = test {
         val result: MutableList<PostsUpdate?> = mutableListOf()
-        postCardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
-        postCardSource.refresh.observeForever { isRefreshing.add(it) }
+        cardSource.build(testScope(), 1).observeForever { it?.let { result.add(it) } }
+        cardSource.refresh.observeForever { isRefreshing.add(it) }
 
-        postCardSource.refresh()
+        cardSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse
     }
