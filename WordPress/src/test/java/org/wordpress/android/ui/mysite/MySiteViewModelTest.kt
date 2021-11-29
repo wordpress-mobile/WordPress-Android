@@ -222,7 +222,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(mySiteSourceManager.build(anyOrNull(), any())).thenReturn(partialStates)
+        whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)

@@ -136,7 +136,7 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
             val result = MediatorLiveData<SiteIdToState>()
-            for (newSource in mySiteSourceManager.build(siteLocalId, viewModelScope)) {
+            for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
                 result.addSource(newSource) { partialState ->
                     if (partialState != null) {
                         result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)

@@ -43,7 +43,7 @@ class MySiteSourceManager @Inject constructor(
             postCardsSource
     )
 
-    fun build(siteLocalId: Int?, coroutineScope: CoroutineScope): List<LiveData<out PartialState>> {
+    fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
             mySiteSources.map { source -> source.build(coroutineScope, siteLocalId).distinctUntilChanged() }
         } else {
