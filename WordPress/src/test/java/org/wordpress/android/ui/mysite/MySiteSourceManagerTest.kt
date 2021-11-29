@@ -44,7 +44,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
 
     @InternalCoroutinesApi
-    @Suppress("LongMethod")
     @Before
     fun setUp() = test {
         selectedSite.value = null
