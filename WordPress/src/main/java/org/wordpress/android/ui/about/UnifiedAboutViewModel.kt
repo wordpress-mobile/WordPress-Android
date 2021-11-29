@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.automattic.about.model.AboutConfig
+import com.automattic.about.model.AnalyticsConfig
 import com.automattic.about.model.HeaderConfig
 import com.automattic.about.model.LegalConfig
 import com.automattic.about.model.RateUsConfig
@@ -30,7 +31,8 @@ class UnifiedAboutViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val wpUrlUtils: WpUrlUtilsWrapper,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
-    private val buildConfig: BuildConfigWrapper
+    private val buildConfig: BuildConfigWrapper,
+    private val unifiedAboutTracker: UnifiedAboutTracker
 ) : ViewModel() {
     private val _onNavigation = MutableLiveData<Event<UnifiedAboutNavigationAction>>()
     val onNavigation: LiveData<Event<UnifiedAboutNavigationAction>> = _onNavigation
@@ -47,7 +49,12 @@ class UnifiedAboutViewModel @Inject constructor(
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
                     acknowledgementsUrl = WP_ACKNOWLEDGEMENTS_URL
             ),
-            onDismiss = ::onDismiss
+            onDismiss = ::onDismiss,
+            analyticsTracker = AnalyticsConfig(
+                    trackScreenShown = ::trackScreenShown,
+                    trackScreenDismissed = ::trackScreenDismissed,
+                    trackButtonTapped = ::trackButtonTapped
+            )
     )
 
     private suspend fun createShareConfig(): ShareConfig {
@@ -73,5 +80,17 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val WP_SOCIAL_HANDLE = "wordpress"
         private const val WP_ACKNOWLEDGEMENTS_URL = "file:///android_asset/licenses.html"
         private const val WP_APPS_URL = "https://apps.wordpress.com/"
+    }
+
+    private fun trackScreenShown(screen: String) {
+        unifiedAboutTracker.trackScreenShown(screen = screen)
+    }
+
+    private fun trackScreenDismissed(screen: String) {
+        unifiedAboutTracker.trackScreenDismissed(screen = screen)
+    }
+
+    private fun trackButtonTapped(button: String) {
+        unifiedAboutTracker.trackButtonTapped(button = button)
     }
 }
