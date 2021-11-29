@@ -15,6 +15,7 @@ enum MediaBlockType {
     VIDEO("video"),
     MEDIA_TEXT("media-text"),
     GALLERY("gallery"),
+    TILED_GALLERY("tiled-gallery"),
     COVER("cover"),
     FILE("file"),
     AUDIO("audio");
