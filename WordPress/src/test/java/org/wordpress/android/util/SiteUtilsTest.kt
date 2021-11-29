@@ -46,17 +46,6 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `hasCustomDomain returns true when site has custom domain`() {
-        val site = SiteModel()
-        site.url = "http://wordpress.com"
-
-        assertTrue(SiteUtils.hasCustomDomain(site))
-
-        site.url = "https://***.wordpress.com"
-        assertFalse(SiteUtils.hasCustomDomain(site))
-    }
-
-    @Test
     fun `checkMinimalJetpackVersion doesnt fail when Jetpack version is false`() {
         val site = SiteModel()
         site.jetpackVersion = "false"

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 13:17:56+0000
+Translation-Revision-Date: 2021-11-23 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">添加自定义域，使访客可以轻松地找到您的站点</string>
+    <string name="domains_paid_plan_add_your_domain_title">添加您的域</string>
+    <string name="my_site_create_first_post_excerpt">文章在您的博客页面上按时间顺序倒序显示。 立即与全世界分享您的观点！</string>
+    <string name="my_site_create_first_post_title">创建您的第一篇文章</string>
+    <string name="my_site_untitled_post">未命名</string>
+    <string name="my_site_post_card_scheduled_title">即将发布的预发布文章</string>
+    <string name="my_site_post_card_draft_title">继续撰写文章草稿</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免费，&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">您的域将重定向至您的站点：%s。</string>
     <string name="gutenberg_native_create_link">创建链接</string>
@@ -164,12 +171,9 @@ Language: zh_CN
     <string name="fab_add_category_desc">创建分类</string>
     <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
     <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
-    <string name="site_settings_categories_empty_subtitle">在这里添加您经常使用的分类，以便在对您的文章进行分类时可以快速选择。</string>
-    <string name="site_settings_categories_empty_title">您没有任何分类</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
     <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
     <string name="site_settings_categories_title">分类</string>
-    <string name="site_settings_categories_empty_button">创建分类</string>
     <string name="site_settings_blogging_reminders_title">博客提醒</string>
     <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_message">我们需要在设备上保存您的内容才能发布。查看您的存储设置并删除文件以释放空间。</string>
@@ -233,6 +237,7 @@ Language: zh_CN
     <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
+    <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_column_d">列 %d</string>
     <string name="gutenberg_native_none">无</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
@@ -476,7 +481,6 @@ Language: zh_CN
     <string name="backup_download_generic_failure">处理请求时出现问题。 请稍后重试。</string>
     <string name="backup_download_details_action_button_content_description">“创建可下载备份”按钮</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s 是要创建下载备份的选定点。</string>
-    <string name="gutenberg_native_image_link_url">图片链接</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -824,6 +828,7 @@ Language: zh_CN
     <string name="gutenberg_native_block_cut">已剪切区块</string>
     <string name="gutenberg_native_block_copied">已拷贝区块</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">站点标题只能由担任管理员角色的用户更改。</string>
+    <string name="gutenberg_native_remove_block">移除区块</string>
     <string name="my_site_title_changer_dialog_hint">站点标题显示在网络浏览器的标题栏中，以及大部分主题的页眉中。</string>
     <string name="reader_title_tag_preview">主题</string>
     <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>

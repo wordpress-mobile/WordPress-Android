@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-10 09:54:08+0000
+Translation-Revision-Date: 2021-11-24 09:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">カスタムドメインを追加すると、訪問者がサイトを見つけやすくなります</string>
+    <string name="domains_paid_plan_add_your_domain_title">ドメインを追加</string>
+    <string name="my_site_create_first_post_excerpt">投稿はブログページに新しいものから順に表示されます。 あなたのアイデアを世界中のユーザーとシェアしましょう !</string>
+    <string name="my_site_create_first_post_title">最初の投稿を作成</string>
+    <string name="my_site_untitled_post">無題</string>
+    <string name="my_site_post_card_scheduled_title">予約済み投稿</string>
+    <string name="my_site_post_card_draft_title">下書き投稿を作成</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;1年目は無料 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / 年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">ドメインはご自分のサイト (%s) に転送されます</string>
     <string name="gutenberg_native_create_link">リンクを作成</string>
@@ -162,10 +169,7 @@ Language: ja_JP
     <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除 </string>
     <string name="fab_add_category_desc">カテゴリーを作成</string>
     <string name="support_ticket_subject">WordPress for Android サポート</string>
-    <string name="site_settings_categories_empty_subtitle">頻繁に使用するカテゴリーをここに追加しておけば、投稿にカテゴリーを設定するときにすばやく選択できます</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
-    <string name="site_settings_categories_empty_title">カテゴリーがありません</string>
-    <string name="site_settings_categories_empty_button">カテゴリーを作成</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
     <string name="site_settings_blogging_reminders_title">ブログ投稿のリマインダー</string>
@@ -231,6 +235,7 @@ Language: ja_JP
     <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
+    <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
     <string name="gutenberg_native_none">なし</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
@@ -474,7 +479,6 @@ Language: ja_JP
     <string name="backup_download_generic_failure">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="backup_download_details_action_button_content_description">ダウンロード可能なバックアップを作成ボタン</string>
     <string name="backup_download_details_description_with_two_parameters">ダウンロード可能なバックアップを作成するタイミングとして、%1$s %2$s を選択しています。</string>
-    <string name="gutenberg_native_image_link_url">画像リンク URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -822,6 +826,7 @@ Language: ja_JP
     <string name="gutenberg_native_block_cut">ブロックを切り取りました</string>
     <string name="gutenberg_native_block_copied">ブロックをコピーしました</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
+    <string name="gutenberg_native_remove_block">ブロックを削除</string>
     <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
     <string name="reader_title_tag_preview">トピック</string>
     <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>

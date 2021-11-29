@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.editor.BuildConfig;
@@ -21,7 +22,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceive
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
@@ -183,13 +184,15 @@ public class GutenbergContainerFragment extends Fragment {
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
      */
-    public CharSequence getContent(CharSequence originalContent, OnGetContentTimeout onGetContentTimeout) {
-        return mWPAndroidGlueCode.getContent(originalContent, onGetContentTimeout);
+    public CharSequence getContent(CharSequence originalContent, OnGetContentInterrupted onGetContentInterrupted) {
+        return mWPAndroidGlueCode.getContent(originalContent, onGetContentInterrupted);
     }
 
-    public CharSequence getTitle(OnGetContentTimeout onGetContentTimeout) {
-        return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
+                                                               OnGetContentInterrupted onGetContentInterrupted) {
+        return mWPAndroidGlueCode.getTitleAndContent(originalContent, onGetContentInterrupted);
     }
+
 
     public void triggerGetContentInfo(OnContentInfoReceivedListener onContentInfoReceivedListener) {
         mWPAndroidGlueCode.triggerGetContentInfo(onContentInfoReceivedListener);

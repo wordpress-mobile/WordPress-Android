@@ -1,11 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-30 21:12:53+0000
+Translation-Revision-Date: 2021-11-20 11:00:42+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Přidání vlastní domény usnadní návštěvníkům nalezení vašeho webu</string>
+    <string name="domains_paid_plan_add_your_domain_title">Přidejte svou doménu</string>
+    <string name="my_site_create_first_post_excerpt">Příspěvky se na stránce vašeho blogu zobrazují v obráceném chronologickém pořadí. Je čas podělit se o své nápady se světem!</string>
+    <string name="my_site_create_first_post_title">Vytvořte svůj první příspěvek</string>
+    <string name="my_site_untitled_post">Nepojmenované</string>
+    <string name="my_site_post_card_scheduled_title">Nadcházející plánované příspěvky</string>
+    <string name="my_site_post_card_draft_title">Práce na konceptu příspěvku</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;První rok zdarma &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /rok&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Vaše domény budou přesměrovány na váš web na %s</string>
+    <string name="gutenberg_native_create_link">Vytvořit odkaz</string>
+    <string name="domain_registration_result_description">Vaše nová doména &lt;b&gt;%s&lt;/b&gt; se nastavuje. Může trvat až 30 minut, než vaše doména začne fungovat.</string>
+    <string name="domain_registration_result_title">Gratulujeme k nákupu!</string>
+    <string name="domains_suggestions_select_domain">Vybrat doménu</string>
+    <string name="domains_title">Domény</string>
+    <string name="post_status_sticky">Připnuté</string>
+    <string name="post_settings_post_sticky">Připnutý příspěvek na úvodní stránce</string>
+    <string name="post_settings_mark_as_sticky_options_header">Označit jako připnutý</string>
+    <string name="reader_follow_comments_unfollow_conversation">Sledujte konverzaci</string>
+    <string name="reader_follow_comments_enable_push_notifications">Povolit oznámení v aplikaci</string>
+    <string name="reader_follow_comments_message">Sledujete tuto konverzaci. O zveřejnění nových komentářů budete informováni e-mailem.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Správa možností sledování konverzace, vyskakovací okno</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Oznámení v aplikaci se nepodařilo zakázat</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Nelze aktivovat oznámení v aplikaci</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Oznámení v aplikaci jsou zakázána</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Oznámení v aplikaci povolena</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Odhlášeni z této konverzace</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Po tomto rozhovoru↵\nPovolit oznámení v aplikaci?</string>
+    <string name="domains_search_for_a_domain_button">Vyhledejte doménu</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domény zakoupené na tomto webu přesměrují návštěvníky na &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Součástí vašeho plánu je bezplatná registrace domény na jeden rok</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Získat doménu zdarma</string>
+    <string name="domains_manage_domains">Spravovat domény</string>
+    <string name="domains_add_a_domain">Přidat doménu</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Platnost vyprší %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Platnost vyprší %s</string>
+    <string name="domains_site_domains">Domény vašeho webu</string>
+    <string name="domains_primary_site_address_chip">Primární adresa webu</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Změnit adresu stránky</string>
+    <string name="domains_primary_site_caption">Vaše bezplatná adresa na WordPress.com je</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s za první rok &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /rok&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /rok&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Chcete je zahodit?</string>
+    <string name="comment_edit_cancel_dialog_title">Existují neuložené změny</string>
+    <string name="comment_edit_comment_error">Komentář nemůže být prázdný</string>
+    <string name="comment_edit_user_email_error">E-mail uživatele není platný</string>
+    <string name="comment_edit_web_address_error">Webová adresa není platná</string>
+    <string name="comment_edit_user_name_error">Uživatelské jméno nemůže být prázdné</string>
+    <string name="comment_edit_email_address">E-mailová adresa</string>
+    <string name="comment_edit_web_address">Webová adresa</string>
+    <string name="comment_edit_comment">Komentář</string>
+    <string name="comment_edit_user_name">Jméno</string>
+    <string name="comment_edit_menu_done">Hotovo</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Náhledy bloků pro vložení budou brzy k dispozici</string>
+    <string name="weekly_roundup">Týdenní shrnutí</string>
+    <string name="gutenberg_native_embed_options">Možnosti vložení</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Dvojitým klepnutím zobrazíte možnosti vložení.</string>
+    <string name="quick_start_list_create_site_message">Stránka vytvořena! Dokončete další úkol.</string>
+    <string name="like_faces_others_like_text">Toto se líbí &lt;a href=\"\"&gt;%1$s blogerům&lt;/a&gt;.</string>
+    <string name="like_faces_one_blogger_likes_text">To se líbí &lt;a href=\"\"&gt;1 blogerovi&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_others_like_text">Toto se líbí &lt;a href=\"\"&gt;vám a %1$s bloggerům&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;To se líbí vám a 1 bloggerovi&lt;/a&gt;.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;To se vám&lt;/a&gt; líbí.</string>
+    <string name="gutenberg_native_line_height">Výška řádku</string>
+    <string name="domains_free_plan_get_your_domain_title">Získejte svou doménu</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="recommend_app_generic_get_template_error">Neznámá chyba při načítání šablony doporučené aplikace</string>
+    <string name="recommend_app_bad_format_response">Přijata neplatná odpověď</string>
+    <string name="recommend_app_null_response">Žádná odpověď přijata</string>
+    <string name="recommend_app_subject">WordPress Apps – Aplikace pro jakoukoli obrazovku</string>
+    <string name="me_btn_share">Sdílejte WordPress s přítelem</string>
+    <string name="my_site_quick_actions_title">Rychlé odkazy</string>
+    <string name="my_site_btn_domains">Domény</string>
+    <string name="weekly_roundup_notification_text">Vaše stránky zaznamenaly %1$d zobrazení, %2$d lajků, %3$d komentářů.</string>
+    <string name="weekly_roundup_notification_title">Týdenní shrnutí: %s</string>
+    <string name="blogging_reminders_notification_time">Doba oznámení</string>
+    <string name="blogging_reminders_epilogue_body_everyday_with_time">Připomenutí blogu budete dostávat &lt;b&gt;každý&lt;/b&gt; na &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="blogging_reminders_site_settings_label">%1$s týdně v %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Ovládací prvky formátování textu se při úpravě textového bloku nacházejí na panelu nástrojů nad klávesnicí</string>
+    <string name="gutenberg_native_selected_s">Vybráno: %s</string>
+    <string name="gutenberg_native_select_a_color_above">Vyberte barvu výše</string>
+    <string name="gutenberg_native_navigates_to_select_s">Přejde k výběru %s</string>
+    <string name="gutenberg_native_move_blocks">Posunout bloky</string>
+    <string name="gutenberg_native_how_to_edit_your_post">Jak upravit svůj příspěvek</string>
+    <string name="gutenberg_native_how_to_edit_your_page">Jak upravit svou stránku</string>
+    <string name="gutenberg_native_customize_blocks">Přizpůsobte bloky</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Změny vybraného obrázku nebudou ovlivněny tlačítky zpět/znovu.</string>
+    <string name="gutenberg_native_applies_the_setting">Použije nastavení</string>
+    <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Bloky můžete přeskupit klepnutím na blok a následným klepnutím na šipky nahoru a dolů, které se zobrazují na levé spodní straně bloku, abyste jej přesunuli nad nebo pod jiné bloky.</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks">Vítejte ve světě bloků</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Chcete-li odstranit blok, vyberte blok a kliknutím na tři tečky v pravé dolní části bloku zobrazte nastavení. Odtud vyberte možnost odstranění bloku.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Některé bloky mají další nastavení. Klepnutím na ikonu nastavení v pravém dolním rohu bloku zobrazíte další možnosti.</string>
+    <string name="gutenberg_native_s_block_newly_available">%s blok, nově k dispozici</string>
+    <string name="gutenberg_native_rich_text_editing">Úprava bohatého textu</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">Jakmile se seznámíte s názvy různých bloků, můžete přidat blok zadáním lomítka následovaného názvem bloku – například /image nebo /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Nechte svůj obsah vyniknout přidáním obrázků, gifů, videí a vložených médií na své stránky.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Vyzkoušejte to přidáním několika bloků do svého příspěvku nebo stránky!</string>
+    <string name="gutenberg_native_embed_media">Vložit médiální soubory</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">Každý blok má své vlastní nastavení. Chcete-li je najít, klepněte na blok. Jeho nastavení se zobrazí na panelu nástrojů ve spodní části obrazovky.</string>
+    <string name="gutenberg_native_build_layouts">Sestavte rozvržení</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Bloky jsou části obsahu, které můžete vkládat, přeskupovat a upravovat, aniž byste museli vědět, jak kódovat. Bloky představují snadný a moderní způsob, jak vytvořit krásná rozvržení.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Bloky vám umožňují soustředit se na psaní obsahu s vědomím, že všechny nástroje pro formátování, které potřebujete, vám pomohou předat vaše sdělení.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Uspořádejte obsah do sloupců, přidejte tlačítka Výzva k akci a překryjte obrázky textem.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Nový blok můžete kdykoli přidat klepnutím na ikonu + na panelu nástrojů vlevo dole.</string>
+    <string name="quick_start_sites_type_tasks_completed">Dokončeno: %1$s z %2$s</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">Naučte se základy pomocí rychlého průvodce.</string>
+    <string name="comment_batch_moderation_error">Nepodařilo se moderovat jeden nebo více komentářů</string>
+    <string name="create_site_notification_create_site_action">Vytvořit stránku</string>
+    <string name="create_site_notification_text">Zprovozněte svůj web v několika rychlých krocích</string>
+    <string name="create_site_notification_title">Vytvořte si svůj WordPress web</string>
+    <string name="stats_disabled_enable_stats_error_message">Nelze aktivovat statistiky webu</string>
+    <string name="stats_disabled_enable_stats_button">Povolit statistiky webu</string>
+    <string name="stats_disabled_subtitle">Povolte statistiky webu, abyste viděli podrobné informace o své návštěvnosti, hodnoceních Líbí se mi, komentářích a odběratelích.</string>
+    <string name="stats_disabled_title">Hledáte statistiky?</string>
+    <string name="gutenberg_native_what_is_a_block">Co je to blok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout vložený obsah příspěvku.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Usilovně pracujeme na přidání podpory pro náhledy %s. Mezitím si můžete prohlédnout náhled vloženého obsahu na stránce.</string>
+    <string name="gutenberg_native_unable_to_embed_media">Nelze vložit média</string>
+    <string name="gutenberg_native_try_another_search_term">Zkuste vyhledat jiný výraz</string>
+    <string name="gutenberg_native_no_blocks_found">Nebyly nalezeny žádné bloky</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s náhledy zatím nejsou k dispozici</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s náhledy bloků pro vložení budou brzy k dispozici</string>
+    <string name="gutenberg_native_double_tap_to_preview_post">Dvojitým klepnutím zobrazíte náhled příspěvku.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page">Dvojitým klepnutím zobrazíte náhled stránky.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Zobrazuje se na kartě prohlížeče návštěvníka a na dalších místech online.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Ukaž mi to</string>
+    <string name="quick_start_dialog_need_help_manage_site_title">Chcete trochu pomoci se správou tohoto webu pomocí aplikace?</string>
+    <string name="login_epilogue_create_new_site_button">Vytvořte nový web</string>
+    <string name="login_epilogue_mysites_subheading">Stránky můžete kdykoli změnit.</string>
+    <string name="login_epilogue_mysites_heading">Vyberte web, který chcete otevřít</string>
+    <string name="scan_multisite_not_supported_subtitle">Je nám líto, Jetpack Scan v tuto chvíli není kompatibilní s vícemístnými instalacemi WordPress.</string>
+    <string name="scan_multisite_not_supported_title">WordPress síť webů není podporována</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Neplatná URL. Zadejte platnou adresu URL.</string>
     <string name="gutenberg_native_embed_caption_s">Vložit titulek. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Vložit titulek. Prázdný</string>
@@ -21,12 +152,12 @@ Language: cs_CZ
     <string name="blogging_reminders_epilogue_body_no_reminders">Nemáte nastavena žádná připomenutí.</string>
     <string name="blogging_reminders_epilogue_not_set_title">Připomenutí odstraněny!</string>
     <string name="blogging_reminders_epilogue_body_days_with_time">Dostanete připomenutí blogovat %1$s týdně na %2$s na %3$s.</string>
-    <string name="blogging_reminders_update">Aktualizace</string>
     <string name="blogging_reminders_not_set">Žádná sada</string>
     <string name="blogging_reminders_n_a_week">%s za týden</string>
     <string name="set_your_blogging_reminders_button">Nastavit připomenutí</string>
     <string name="set_up_blogging_reminders_message">Nastavte připomenutí blogů na dny, které chcete zveřejnit.</string>
     <string name="post_publishing_set_up_blogging_reminders_message">Váš příspěvek se publikuje… mezitím můžete nastavit připomenutí blogů na dny, které chcete zveřejnit.</string>
+    <string name="blogging_reminders_update">Aktualizovat</string>
     <string name="set_your_blogging_reminders_title">Nastavte si připomenutí blogů</string>
     <string name="blogging_reminders_notification_text">Toto je vaše připomenutí, abyste dnes něco vytvořili</string>
     <string name="blogging_reminders_notification_title">Je čas blogovat na %s</string>
@@ -40,11 +171,8 @@ Language: cs_CZ
     <string name="fab_add_category_desc">Vytvořit rubriku</string>
     <string name="gutenberg_native_remove_as_featured_image">Odstranit náhledový obrázek</string>
     <string name="gutenberg_native_set_as_featured_image">Použít jako náhledový obrázek</string>
-    <string name="site_settings_categories_empty_title">Nemáte žádné rubriky</string>
     <string name="site_settings_categories_hint">Spravujte rubriky svého webu</string>
-    <string name="site_settings_categories_empty_subtitle">Přidejte sem často používané rubriky, aby je bylo možné rychle vybrat při kategorizaci vašich příspěvků</string>
     <string name="site_settings_categories_title">Rubriky</string>
-    <string name="site_settings_categories_empty_button">Vytvořit rubriku</string>
     <string name="page_is_posts_page_warning">Obsah stránky s nejnovějšími příspěvky je generován automaticky a nelze jej upravovat.</string>
     <string name="site_settings_blogging_reminders_title">Připomenutí blogů</string>
     <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
@@ -100,11 +228,20 @@ Language: cs_CZ
     <string name="gutenberg_native_mention">Zmínit</string>
     <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
     <string name="gutenberg_native_post_content_settings">Nastavení obsahu příspěvku</string>
+    <string name="gutenberg_native_preview_page">Náhled stránky</string>
+    <string name="gutenberg_native_preview_post">Náhled příspěvku</string>
+    <string name="gutenberg_native_retry">Opakovat</string>
+    <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_featured">Doporučené</string>
     <string name="gutenberg_native_embed_link">Vložit odkaz</string>
     <string name="gutenberg_native_display_post_date">Zobrazit datum příspěvku</string>
+    <string name="gutenberg_native_custom_url">Vlastní URL</string>
+    <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
+    <string name="gutenberg_native_column_d">Sloupec %d</string>
     <string name="gutenberg_native_none">Žádný</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
+    <string name="gutenberg_native_add_blocks">Přidat bloky</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
     <string name="gutenberg_native_transform_s_to">Změnit %s na</string>
@@ -345,7 +482,6 @@ Language: cs_CZ
     <string name="backup_download_another_download_running">Probíhá další stahování.</string>
     <string name="backup_download_progress_page_title">Stáhnout zálohu</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">URL odkaz na obrázek</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan odstraní ovlivněný soubor nebo adresář.</string>
@@ -361,8 +497,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -660,6 +796,7 @@ Language: cs_CZ
     <string name="signup_confirmation_title">Potvrzení registrace</string>
     <string name="enter_your_site_address">Zadejte svou stávající adresu</string>
     <string name="gutenberg_native_block_removed">Blok odstraněn</string>
+    <string name="gutenberg_native_convert_to_link">Převést na odkaz</string>
     <string name="continue_terms_of_service_text">Pokračováním vyjadřujete souhlas s našimi %1$spodmínkami služby%2$s.</string>
     <string name="signup_confirmation_message">Tuto e-mailovou adresu použijeme k vytvoření vašeho nového účtu WordPress.com.</string>
     <string name="signup_magic_link_message">Poslali jsme vám e-mailem odkaz na přihlášení k vytvoření nového účtu WordPress.com. Zkontrolujte svůj e-mail v tomto zařízení a klepněte na odkaz v e-mailu, který obdržíte z WordPress.com.</string>
@@ -691,16 +828,19 @@ Language: cs_CZ
     <string name="gutenberg_native_block_pasted">Blok byl vložen</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Název webu může změnit pouze uživatel s rolí správce.</string>
     <string name="gutenberg_native_block_copied">Blok zkopírován</string>
+    <string name="gutenberg_native_remove_block">Odstranit blok</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Neuložené změny</string>
     <string name="error_update_site_title_network">Název webu se nepodařilo aktualizovat. Zkontrolujte připojení k síti a zkuste to znovu.</string>
     <string name="reader_title_tag_preview">Téma</string>
     <string name="my_site_title_changer_dialog_hint">Název webu se zobrazuje v záhlaví webového prohlížeče a u většiny šablon se zobrazuje v záhlaví.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Otevřít odkaz v prohlížeči</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Přejde na předchozí stránku s obsahem</string>
     <string name="gutenberg_native_customize_gradient">Přizpůsobte přechod</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dvojitým klepnutím vyberte možnost</string>
     <string name="gutenberg_native_gradient_type">Typ přechodu</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Přejde na vlastní výběr barev</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Přejde k přizpůsobení přechodu</string>
+    <string name="gutenberg_native_go_back">Zpět</string>
     <string name="pages_list_author">Autor stránky</string>
     <string name="everyone">Každý</string>
     <string name="me">Já</string>
@@ -2656,6 +2796,7 @@ Language: cs_CZ
     <string name="signing_out">Odhlašuji…</string>
     <string name="mnu_comment_liked">To se mi líbí</string>
     <string name="reader_label_like">To se mi líbí</string>
+    <string name="help_and_support">Nápověda a podpora</string>
     <string name="reader_toast_err_generic">Nepodařilo se provést tuto akci</string>
     <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
     <string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>

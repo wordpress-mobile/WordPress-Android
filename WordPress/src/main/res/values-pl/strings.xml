@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 09:45:42+0000
+Translation-Revision-Date: 2021-11-24 15:19:58+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_title">Dodaj swoją domenę</string>
+    <string name="my_site_create_first_post_title">Stwórz swój pierwszy wpis</string>
+    <string name="my_site_untitled_post">Bez tytułu</string>
+    <string name="my_site_post_card_scheduled_title">Nadchodzące zaplanowane wpisy</string>
+    <string name="my_site_post_card_draft_title">Pracuj nad wpisem roboczym</string>
+    <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
+    <string name="domains_suggestions_select_domain">Wybierz domenę</string>
+    <string name="domains_title">Domeny</string>
+    <string name="post_status_sticky">Przyklejony</string>
+    <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
+    <string name="post_settings_mark_as_sticky_options_header">Oznaczony jako przypięty</string>
+    <string name="reader_follow_comments_unfollow_conversation">Przestań obserwować konwersację</string>
+    <string name="domains_search_for_a_domain_button">Wyszukaj domenę</string>
+    <string name="domains_manage_domains">Zarządzaj domenami</string>
+    <string name="domains_add_a_domain">Dodaj domenę</string>
+    <string name="domains_site_domain_expires">Wygasa w dniu %s</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Zmień adres witryny</string>
+    <string name="comment_edit_cancel_dialog_title">Masz niezapisane zmiany.</string>
+    <string name="comment_edit_comment_error">Komentarz nie może być pusty</string>
+    <string name="comment_edit_email_address">Adres email</string>
+    <string name="comment_edit_web_address">Adres w sieci Web</string>
+    <string name="comment_edit_comment">Komentarz</string>
+    <string name="comment_edit_user_name_error">Nazwa użytkownika nie może być pusta</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Witamy w świecie bloków</string>
     <string name="create_site_notification_create_site_action">Utwórz witrynę</string>
+    <string name="login_epilogue_create_new_site_button">Utwórz nową witrynę</string>
+    <string name="login_epilogue_mysites_subheading">Możesz przełączyć się pomiędzy witrynami w dowolnym momencie.</string>
+    <string name="login_epilogue_mysites_heading">Wybierz witrynę, która chcesz otworzyć</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Nieprawidłowy adres URL. Wprowadź poprawny adres URL.</string>
     <string name="gutenberg_native_add_link_0fcaed3b">DODAJ ODNOŚNIK</string>
     <string name="activity_log_visit_our_documentation_page">przejdź do strony z dokumentacją</string>
@@ -32,11 +58,8 @@ Language: pl
     <string name="fab_add_category_desc">Utwórz kategorię</string>
     <string name="support_ticket_subject">Wsparcie dla WordPressa dla Androida</string>
     <string name="site_settings_categories_hint">Zarządzaj kategoriami swojej witryny</string>
-    <string name="site_settings_categories_empty_title">Nie masz żadnych kategorii</string>
-    <string name="site_settings_categories_empty_subtitle">Dodaj tutaj często używane kategorie aby z nich wygodnie skorzystać kiedy kategoryzujesz swoje wpisy</string>
     <string name="site_settings_categories_title">Kategorie</string>
     <string name="site_settings_blogging_reminders_title">Przypomnienia o blogowaniu</string>
-    <string name="site_settings_categories_empty_button">Utwórz kategorię</string>
     <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
@@ -44,7 +67,10 @@ Language: pl
     <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
     <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
     <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
+    <string name="gutenberg_native_s_has_url_set">%s ma ustawiony adres URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s nie ma ustawionego adresu URL</string>
     <string name="gutenberg_native_s_block">blok %s</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s przekształcone na zwykłe bloki</string>
     <string name="gutenberg_native_minimum_height">Minimalna wysokość</string>
     <string name="gutenberg_native_media_options">Opcje mediów</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">NIeprawidłowy adres URL. Nie odnaleziono pliku dźwiękowego.</string>
@@ -75,6 +101,9 @@ Language: pl
     <string name="gutenberg_native_s_social_icon">Ikona społecznościowa %s</string>
     <string name="gutenberg_native_mention">Wzmianka</string>
     <string name="gutenberg_native_post_meta_settings">Ustawienia metadanych wpisu</string>
+    <string name="gutenberg_native_preview_post">Podgląd wpisu</string>
+    <string name="gutenberg_native_preview_page">Podgląd strony</string>
+    <string name="gutenberg_native_post_content_settings">Ustawienia treści wpisu</string>
     <string name="gutenberg_native_featured">Wyróżnione</string>
     <string name="gutenberg_native_embed_link">Osadź odnośnik</string>
     <string name="gutenberg_native_display_post_date">Pokazuj datę wpisu</string>
@@ -162,12 +191,19 @@ Language: pl
     <string name="threat_found_header">Znaleziono</string>
     <string name="activity_log_currently_backing_up_title">Tworzenie kopii zapasowej do pobrania</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem zarchiwizowana</string>
+    <string name="scan_request_failed_title">Coś poszło nie tak</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Tworzenie kopii zapasowej witryny</string>
+    <string name="activity_log_currently_backing_up_message">Tworzenie kopii zapasowej witryny od %1$s %2$s</string>
     <string name="pick_audio">Wybierz plik dźwiękowy</string>
     <string name="restore_another_process_running">Trwa równoległe odzyskiwanie.</string>
+    <string name="restore_complete_failed_icon_content_description">Ikona błędu</string>
+    <string name="restore_complete_failed_action_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="restore_complete_failed_title">Przywracanie nie powiodło się</string>
     <string name="restore_complete_icon_content_description">Ikona przywracania</string>
     <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_complete_visit_site_action_button">Odwiedź witrynę</string>
+    <string name="restore_complete_visit_site_button_content_description">Przycisk Przejdź do witryny</string>
+    <string name="restore_complete_done_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="restore_progress_header">Trwa przywracanie witryny</string>
     <string name="restore_progress_icon_content_description">Przywróć ikonę witryny</string>
     <string name="restore_warning_header">Ostrzeżenie</string>
@@ -178,17 +214,20 @@ Language: pl
     <string name="restore_details_choose_items_header">Wybierz elementy, które chcesz przywrócić:</string>
     <string name="restore">Przywróć</string>
     <string name="backup_download_complete_failed_action_button">Gotowe</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Przycisk \"Wykonano\"</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="quick_start_card_menu_remove">Nie pokazuj ponownie</string>
     <string name="quick_start_card_menu_pin">Przypnij ten element</string>
     <string name="backup_download_complete_failed_title">Nie powiodło się pobieranie</string>
     <string name="web_preview_mobile">Urządzenie przenośne</string>
+    <string name="quick_start_dialog_review_pages_title">Przejrzyj strony witryny</string>
     <string name="quick_start_dialog_edit_homepage_title">Edytuj stronę domową</string>
     <string name="reader_menu_mark_as_unseen">Oznacz jako nie przeczytaną</string>
     <string name="reader_menu_mark_as_seen">Oznacz jako przeczytane</string>
     <string name="error_media_upload_failed_for_reason">Nie udało się przesłać plików mediów.\n%1$s</string>
     <string name="error_media_not_enough_storage">Brak wystarczającej przestrzeni dla witryny</string>
     <string name="reader_marked_post_as_seen">Oznacz wpis jako przeczytany</string>
+    <string name="reader_marked_post_as_unseen">Oznacz wpis jako nieprzeczytany</string>
     <string name="threat_fix_all_status_success_message_singular">Zagrożenie zostało z powodzeniem usunięte.</string>
     <string name="threat_fix_all_error_message">Błąd podczas usuwania zagrożeń. Proszę skontaktować się ze wsparciem.</string>
     <string name="threat_fix_all_confirmation_message_singular">Proszę o potwierdzenie, że chcesz usunąć jedno aktywne zagrożenie.</string>
@@ -205,12 +244,22 @@ Language: pl
     <string name="backup_active_filter_empty_subtitle">Spróbuj dostosować zakres dat</string>
     <string name="backup_active_filter_empty_title">Nie odnaleziono pasujących kopii zapasowych</string>
     <string name="scan_history_fixed_threats_tab">Określone</string>
+    <string name="scan_scanning_title">Skanowanie plików</string>
+    <string name="scan_preparing_to_scan_title">Przygotowanie do skanowania</string>
+    <string name="scan_history">Historia skanowania</string>
     <string name="backup_empty_title">Twoja pierwsza kopia zapasowa będzie wkrótce gotowa</string>
     <string name="gutenberg_native_change_block_position">Zmień pozycję bloku</string>
     <string name="gutenberg_native_move_to_bottom">Przenieś na dół</string>
     <string name="label_control_upload">Prześlij</string>
     <string name="jetpack_icon_content_description">ikona</string>
     <string name="backup_download_complete_info">Przesłaliśmy również odnośnik do twojego pliku na adres email.</string>
+    <string name="backup_download_complete_download_action_button_content_description">Przycisk pobierania</string>
+    <string name="backup_download_complete_download_share_action_button">Przycisk udostępniania</string>
+    <string name="backup_download_complete_download_action_button">Pobierz</string>
+    <string name="backup_download_complete_page_title">Twoja kopia zapasowa</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_page_title">Pobierz kopię zapasową</string>
+    <string name="backup_download_another_download_running">Trwa równoległe zadanie pobierania.</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -240,6 +289,7 @@ Language: pl
     <string name="scan_now">Skanuj teraz</string>
     <string name="backup">Kopia zapasowa</string>
     <string name="activity_log_activity_type_error_title">Brak połączenia</string>
+    <string name="activity_log_activity_type_filter_active_label">Typ aktywności (%s)</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
     <string name="backup_item_themes">Motywy WordPressa</string>
@@ -489,6 +539,7 @@ Language: pl
     <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
+    <string name="gutenberg_native_convert_to_link">Przekształć na odnośnik</string>
     <string name="continue_terms_of_service_text">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="signup_confirmation_message">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
     <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com. Sprawdź pocztę na tym urządzeniu, i stuknij odnośnik we wiadomości email, którą otrzymasz od WordPress.com</string>
@@ -512,6 +563,7 @@ Language: pl
     <string name="quick_start_list_update_site_title_title">Sprawdź tytuł witryny</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
+    <string name="gutenberg_native_remove_block">Usuń blok</string>
     <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
     <string name="gutenberg_native_copy_block">Skopiuj blok</string>
     <string name="gutenberg_native_copied_block">Skopiowany blok</string>
@@ -637,7 +689,6 @@ Language: pl
     <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
-    <string name="weekday_saturday">Sobota</string>
     <string name="weekday_wednesday">Środa</string>
     <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
@@ -646,6 +697,7 @@ Language: pl
     <string name="weekday_tuesday">wtorek</string>
     <string name="weekday_thursday">czwartek</string>
     <string name="weekday_friday">piątek</string>
+    <string name="weekday_saturday">sobota</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
@@ -1005,6 +1057,7 @@ Language: pl
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Rejestrowanie nazwy domeny…</string>
     <string name="domain_registration_state_picker_dialog_title">Wybierz stan</string>
     <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
+    <string name="domain_contact_information_register_domain_button">Zarejestruj domenę</string>
     <string name="domain_contact_information_postal_code_hint">Kod pocztowy</string>
     <string name="domain_contact_information_city_hint">Miasto</string>
     <string name="domain_contact_information_address_hint_two">Adres 2</string>
@@ -1083,6 +1136,7 @@ Language: pl
     <string name="stats_months_and_years_period_label">Okres</string>
     <string name="stats_detail_months_and_years">Miesiące i lata</string>
     <string name="stats_insights_load_more">Wczytaj więcej</string>
+    <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
     <string name="published_on">Opublikowano w dniu: %s</string>
     <string name="publish_on">Zostanie opublikowany w dniu: %s</string>
     <string name="stats_months_and_years_views_label">Wyświetlenia</string>
@@ -1656,6 +1710,7 @@ Language: pl
     <string name="dlg_saving_tag">Zapisywanie</string>
     <string name="dlg_deleting_tag">Usuwanie</string>
     <string name="dlg_confirm_delete_tag">Trwale usunąć tag \'%s\'? </string>
+    <string name="my_site_btn_site_pages">Strony</string>
     <string name="error_tag_exists">Tag o tej nazwie już istnieje</string>
     <string name="tag_description_hint">Opis </string>
     <string name="tag_name_hint">Tag</string>
@@ -2249,7 +2304,7 @@ Language: pl
     <string name="site_settings_rp_preview2_site">w \"Aplikacjach\"</string>
     <string name="site_settings_rp_preview2_title">Aplikacja WordPress dla Androida przeszła dużą aktualizację wyglądu</string>
     <string name="site_settings_rp_preview1_site">W sekcji \"Urządzenia mobilne\"</string>
-    <string name="site_settings_rp_preview1_title">Duża aktualizacja dla iPhone/iPad jest dostępna</string>
+    <string name="site_settings_rp_preview1_title">Dostępna jest duża aktualizacja iPhona/iPada</string>
     <string name="site_settings_rp_show_images_title">Pokaż obrazki</string>
     <string name="site_settings_rp_show_header_title">Pokaż nagłówek</string>
     <string name="site_settings_rp_switch_summary">Wyświetla odpowiednią zawartość z twojej witryny poniżej twoich wpisów.</string>
@@ -2412,7 +2467,9 @@ Language: pl
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>
     <string name="my_site_btn_view_admin">Przejdź do kokpitu</string>
     <string name="my_site_header_publish">Opublikuj</string>
+    <string name="my_site_btn_blog_posts">Wpisy na blogu</string>
     <string name="my_site_header_look_and_feel">Wygląd</string>
+    <string name="my_site_btn_site_settings">Ustawienia witryny</string>
     <string name="my_site_header_configuration">Konfiguracja</string>
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="show">Pokaż</string>
@@ -2482,6 +2539,7 @@ Language: pl
     <string name="reader_label_like">Lubię</string>
     <string name="comment_reply_to_user">Odpowiedz użytkownikowi %s</string>
     <string name="reader_label_comments_closed">Możliwość komentowania została wyłączona</string>
+    <string name="help_and_support">Pomoc i wsparcie</string>
     <string name="reader_toast_err_generic">Nie można wykonać tego działania</string>
     <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
     <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>

@@ -11,6 +11,13 @@ msgstr ""
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_187"
+msgid ""
+"18.7:\n"
+"- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.\n"
+"- We solved a problem with content autosaves so they now run more smoothly.\n"
+msgstr ""
+
 msgctxt "release_note_186"
 msgid ""
 "18.6:\n"
@@ -18,16 +25,6 @@ msgid ""
 "- Native editor onboarding features are available to everyone, including the new block badge.\n"
 "- The Help screen won't break out of its box when rotated between portrait and landscape.\n"
 "- We fixed more loading glitches in the Embed block.\n"
-msgstr ""
-
-msgctxt "release_note_185"
-msgid ""
-"18.5:\n"
-"Embedding external content just got easier with the new Facebook, Instagram, Loom, and Smartframe embed blocks.\n"
-"\n"
-"Plus, we now detect embeddable URLs when pasted into an empty paragraph, and we fixed a bug with prevented embedded URLs from being edited.\n"
-"\n"
-"Finally, Pullquote and Preformatted blocks now have customizable text and background color.\n"
 msgstr ""
 
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!

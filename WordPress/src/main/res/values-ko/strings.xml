@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-09 09:54:08+0000
+Translation-Revision-Date: 2021-11-23 15:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">방문자가 사이트를 쉽게 찾을 수 있도록 사용자 정의 도메인 추가하기</string>
+    <string name="domains_paid_plan_add_your_domain_title">도메인 추가</string>
+    <string name="my_site_create_first_post_excerpt">글은 시간 역순으로 블로그 페이지에 표시됩니다. 전 세계와 아이디어 공유할 때가 되었습니다!</string>
+    <string name="my_site_create_first_post_title">첫 번째 글 작성</string>
+    <string name="my_site_untitled_post">제목 없음</string>
+    <string name="my_site_post_card_scheduled_title">공개 예정된 글</string>
+    <string name="my_site_post_card_draft_title">임시글로 글 작업</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">도메인이 %s의 사이트로 리디렉팅됩니다.</string>
     <string name="gutenberg_native_create_link">링크 생성</string>
@@ -162,9 +169,6 @@ Language: ko_KR
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
-    <string name="site_settings_categories_empty_title">카테고리가 없습니다.</string>
-    <string name="site_settings_categories_empty_subtitle">글을 분류할 때 빠르게 선택할 수 있도록 자주 사용하는 카테고리 추가</string>
-    <string name="site_settings_categories_empty_button">카테고리 생성</string>
     <string name="site_settings_categories_title">카테고리</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
     <string name="site_settings_blogging_reminders_title">블로깅 알림</string>
@@ -230,6 +234,7 @@ Language: ko_KR
     <string name="gutenberg_native_embed_link">링크 임베드</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
+    <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_column_d">열 %d</string>
     <string name="gutenberg_native_none">없음</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
@@ -474,7 +479,6 @@ Language: ko_KR
     <string name="backup_download_another_download_running">다른 다운로드를 실행하고 있습니다.</string>
     <string name="backup_download_progress_page_title">백업 다운로드하기</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
-    <string name="gutenberg_native_image_link_url">이미지 링크 URL</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="threat_fix_fixable_delete">젯팩 검사하기가 영향이 있는 파일이나 디렉터리를 지울 것입니다.</string>
@@ -821,6 +825,7 @@ Language: ko_KR
     <string name="gutenberg_native_copied_block">복사된 블록</string>
     <string name="gutenberg_native_copy_block">블록 복사하기</string>
     <string name="gutenberg_native_duplicate_block">블록 복제하기</string>
+    <string name="gutenberg_native_remove_block">블록 제거</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">저장하지 않은 변경사항</string>
     <string name="error_update_site_title_network">사이트 제목을 업데이트할 수 없습니다. 네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="reader_title_tag_preview">주제</string>

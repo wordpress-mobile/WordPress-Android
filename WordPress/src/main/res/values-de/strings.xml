@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 18:27:35+0000
+Translation-Revision-Date: 2021-11-23 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Mit einer individuellen Domain ist deine Website für Besucher leichter zu finden</string>
+    <string name="domains_paid_plan_add_your_domain_title">Deine Domain hinzufügen</string>
+    <string name="my_site_create_first_post_excerpt">Beiträge werden auf deiner Blogseite in umgekehrter chronologischer Reihenfolge angezeigt. Es ist an der Zeit, deine Ideen mit der Welt zu teilen!</string>
+    <string name="my_site_create_first_post_title">Erstelle deinen ersten Beitrag</string>
+    <string name="my_site_untitled_post">Ohne Titel</string>
+    <string name="my_site_post_card_scheduled_title">Anstehende geplante Beiträge</string>
+    <string name="my_site_post_card_draft_title">An einem Beitragsentwurf arbeiten</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter %s weiterleiten</string>
     <string name="gutenberg_native_create_link">Link erstellen</string>
@@ -165,9 +172,6 @@ Language: de
     <string name="fab_add_category_desc">Kategorie erstellen</string>
     <string name="support_ticket_subject">WordPress für Android-Support</string>
     <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
-    <string name="site_settings_categories_empty_title">Es sind keine Kategorien vorhanden</string>
-    <string name="site_settings_categories_empty_subtitle">Füge deine häufig verwendeten Kategorien hier hinzu, sodass du sie beim Kategorisieren deiner Beiträge schnell auswählen kannst</string>
-    <string name="site_settings_categories_empty_button">Eine Kategorie erstellen</string>
     <string name="site_settings_categories_title">Kategorien</string>
     <string name="site_settings_blogging_reminders_title">Blog-Erinnerungen</string>
     <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
@@ -232,6 +236,7 @@ Language: de
     <string name="gutenberg_native_featured">Beitragsbild</string>
     <string name="gutenberg_native_embed_link">Link einbetten</string>
     <string name="gutenberg_native_display_post_date">Beitragsdatum anzeigen</string>
+    <string name="gutenberg_native_custom_url">Individuelle URL</string>
     <string name="gutenberg_native_create_embed">Einbettung erstellen</string>
     <string name="gutenberg_native_column_d">Spalte %d</string>
     <string name="gutenberg_native_none">Keine</string>
@@ -476,7 +481,6 @@ Language: de
     <string name="backup_download_generic_failure">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="backup_download_details_action_button_content_description">Herunterladbares Backup-Button erstellen</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s ist der ausgewählte Punkt, um ein herunterladbares Backup zu erstellen.</string>
-    <string name="gutenberg_native_image_link_url">Bild-Link-URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: de
     <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b&gt;%1$s&lt;/b&gt;, um einen neuen Titel festzulegen.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
     <string name="gutenberg_native_s_block_options">%s Blockoptionen</string>
+    <string name="gutenberg_native_remove_block">Block entfernen</string>
     <string name="gutenberg_native_duplicate_block">Block duplizieren</string>
     <string name="gutenberg_native_copy_block">Block kopieren</string>
     <string name="gutenberg_native_copied_block">Kopierter Block</string>

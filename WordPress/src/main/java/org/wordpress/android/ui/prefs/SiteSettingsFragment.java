@@ -886,9 +886,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void updateTitle() {
         if (mSite != null) {
             SiteModel updatedSite = mSiteStore.getSiteByLocalId(mSite.getId());
-            updatedSite.setName(mSiteSettings.getTitle());
-            // Locally save the site
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+            // updatedSite can be null after site deletion or site removal (.org sites)
+            if (updatedSite != null) {
+                updatedSite.setName(mSiteSettings.getTitle());
+                // Locally save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+            }
         }
     }
 

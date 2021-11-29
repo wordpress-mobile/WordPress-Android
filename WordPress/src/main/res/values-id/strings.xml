@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-13 03:13:16+0000
+Translation-Revision-Date: 2021-11-23 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Menambahkan domain kustom agar pengunjung mudah menemukan situs Anda</string>
+    <string name="domains_paid_plan_add_your_domain_title">Tambahkan domain Anda</string>
+    <string name="my_site_create_first_post_excerpt">Pos ditampilkan di halaman blog Anda dalam urutan kronologis terbalik. Saatnya membagikan ide Anda kepada dunia!</string>
+    <string name="my_site_create_first_post_title">Buat pos pertama Anda</string>
+    <string name="my_site_untitled_post">Tak Berjudul</string>
+    <string name="my_site_post_card_scheduled_title">Pos terjadwal mendatang</string>
+    <string name="my_site_post_card_draft_title">Buat pos konsep</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis untuk tahun pertama &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Domain Anda akan dialihkan ke situs Anda di %s</string>
     <string name="gutenberg_native_create_link">Buat tautan</string>
@@ -165,9 +172,6 @@ Language: id
     <string name="fab_add_category_desc">Buat Kategori</string>
     <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
     <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
-    <string name="site_settings_categories_empty_title">Anda tidak memiliki kategori</string>
-    <string name="site_settings_categories_empty_subtitle">Tambahkan kategori yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat mengategorikan pos</string>
-    <string name="site_settings_categories_empty_button">Buat kategori</string>
     <string name="site_settings_categories_title">Kategori</string>
     <string name="site_settings_blogging_reminders_title">Pengingat blogging</string>
     <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
@@ -232,6 +236,7 @@ Language: id
     <string name="gutenberg_native_featured">Andalan</string>
     <string name="gutenberg_native_embed_link">Sematkan tautan</string>
     <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
+    <string name="gutenberg_native_custom_url">URL Tersuai</string>
     <string name="gutenberg_native_create_embed">Buat sematan</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_none">Tidak ada</string>
@@ -476,7 +481,6 @@ Language: id
     <string name="backup_download_generic_failure">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="backup_download_details_action_button_content_description">Buat tombol cadangan yang dapat diunduh</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s adalah titik yang dipilih untuk membuat cadangan yang dapat diunduh.</string>
-    <string name="gutenberg_native_image_link_url">URL Tautan Gambar</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -816,6 +820,7 @@ Language: id
     <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
+    <string name="gutenberg_native_remove_block">Hapus blok</string>
     <string name="gutenberg_native_duplicate_block">Duplikasi blok</string>
     <string name="gutenberg_native_copy_block">Salin blok</string>
     <string name="gutenberg_native_copied_block">Blok disalin</string>
