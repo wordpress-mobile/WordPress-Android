@@ -9,7 +9,7 @@ plugins {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 31
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 21
