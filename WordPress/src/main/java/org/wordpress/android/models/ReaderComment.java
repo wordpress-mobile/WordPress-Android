@@ -19,6 +19,7 @@ public class ReaderComment {
     private String mAuthorUrl;
     private String mStatus;
     private String mText;
+    private String mShortUrl;
 
     private String mPublished;
     public long timestamp;
@@ -44,6 +45,7 @@ public class ReaderComment {
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
         comment.mStatus = JSONUtils.getString(json, "status");
+        comment.mShortUrl = JSONUtils.getString(json, "short_URL");
 
         // note that content may contain html, adapter needs to handle it
         comment.mText = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
@@ -141,6 +143,14 @@ public class ReaderComment {
         return !TextUtils.isEmpty(mAuthorAvatar);
     }
 
+    public String getShortUrl() {
+        return StringUtils.notNullStr(mShortUrl);
+    }
+
+    public void setShortUrl(String shortUrl) {
+        mShortUrl = shortUrl;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -158,6 +168,7 @@ public class ReaderComment {
                && StringUtils.equals(mStatus, otherComment.mStatus)
                && StringUtils.equals(mText, otherComment.mText)
                && StringUtils.equals(mPublished, otherComment.mPublished)
+               && StringUtils.equals(mShortUrl, otherComment.mShortUrl)
                && timestamp == otherComment.timestamp
                && authorId == otherComment.authorId
                && authorBlogId == otherComment.authorBlogId

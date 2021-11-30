@@ -1,0 +1,3 @@
+18.7:
+- Ampliamos a configuração "Link para" de forma que o bloco de imagem inclua as opções "Arquivo de mídia" e "Página de anexo" juntamente com a opção já existente "URL personalizada".
+- Corrigimos um problema no salvamento automático de conteúdo para deixá-lo mais estável.

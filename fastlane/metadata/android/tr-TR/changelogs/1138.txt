@@ -1,0 +1,3 @@
+18.7:
+- Görsel bloku için "Bağlantı" ayarını, önceden var olan "Özel URL" seçeneğinin yanı sıra "Ortam Dosyası" ve "Ek Sayfası" seçeneklerini içerecek şekilde genişlettik.
+- İçeriğin otomatik olarak kaydedilmesi işleviyle ilgili bir sorun çözülerek artık daha düzgün çalışması sağlandı.

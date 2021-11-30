@@ -1,2 +1,12 @@
-- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
-- We solved a problem with content autosaves so they now run more smoothly.
+* [*] Users can now upload files to forms when using the Preview within the editor. [https://github.com/wordpress-mobile/WordPress-Android/pull/15572]
+* [**] Posts List: Adds copy post link functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/15570]
+* [*] Editor: Replace snackbar with compact notice when switching between HTML or Visual mode [https://github.com/wordpress-mobile/WordPress-Android/pull/15583]
+* [*] Fixed an issue where multiple screens were rendered incorrectly in RTL interface languages [https://github.com/wordpress-mobile/WordPress-Android/pull/15597]
+* [*] Updated UI of post comments [https://github.com/wordpress-mobile/WordPress-Android/pull/15595]
+* [**] Block editor: Add clipboard link suggestion to image block and button block. [https://github.com/WordPress/gutenberg/pull/35972]
+* [*] Block editor: Embed block: Include link in block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4189]
+* [**] Block editor: Fix tab titles translation of inserter menu. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4248]
+* [**] Block editor: Gallery block: When a gallery block is added, the media options are auto opened for v2 of the Gallery block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4277]
+* [*] Block editor: Media & Text block: Fix an issue where the text font size would be bigger than expected in some cases. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4252]
+
+
