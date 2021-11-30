@@ -1,0 +1,3 @@
+18.7:
+Vi har expanderat inställningen "Länka till" för bildblocket så att den inkluderar alternativen "Mediafil" och "Bilagssida" tillsammans med det tidigare alternativet "Anpassad URL".
+- Vi har åtgärdat ett problem med automatiskt sparande av innehåll, så att det nu går smidigare.

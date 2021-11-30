@@ -481,7 +481,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override
+    @Override @SuppressWarnings("checkstyle:MethodLength")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -496,7 +496,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // TODO: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
         if (mSite != null) {
             SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
