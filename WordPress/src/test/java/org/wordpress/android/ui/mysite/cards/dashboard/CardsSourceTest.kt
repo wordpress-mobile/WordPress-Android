@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 const val SITE_LOCAL_ID = 1
 
+@InternalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var cardsStore: CardsStore
@@ -27,7 +30,11 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        cardSource = CardsSource(selectedSiteRepository, cardsStore)
+        cardSource = CardsSource(
+                selectedSiteRepository,
+                cardsStore,
+                TEST_DISPATCHER
+        )
         isRefreshing = mutableListOf()
         setUpMocks()
     }
