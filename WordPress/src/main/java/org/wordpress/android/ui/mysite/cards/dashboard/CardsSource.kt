@@ -5,7 +5,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -25,9 +27,24 @@ class CardsSource @Inject constructor(
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
         val result = MediatorLiveData<CardsUpdate>()
+        result.getData(coroutineScope, siteLocalId)
         result.refreshData(coroutineScope, siteLocalId)
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return result
+    }
+
+    private fun MediatorLiveData<CardsUpdate>.getData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int
+    ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId) {
+            coroutineScope.launch(bgDispatcher) {
+                cardsStore.getCards(selectedSite).collect { result ->
+                    postState(CardsUpdate(result))
+                }
+            }
+        }
     }
 
     private fun MediatorLiveData<CardsUpdate>.refreshData(
@@ -45,10 +62,20 @@ class CardsSource @Inject constructor(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
     ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId) {
+            fetchCardsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+        }
+    }
+
+    private fun MediatorLiveData<CardsUpdate>.fetchCardsAndPostErrorIfAvailable(
+        coroutineScope: CoroutineScope,
+        selectedSite: SiteModel
+    ) {
         coroutineScope.launch(bgDispatcher) {
-            val selectedSite = selectedSiteRepository.getSelectedSite()
-            if (selectedSite != null && selectedSite.id == siteLocalId) {
-                postState(CardsUpdate(cardsStore.fetchCards(selectedSite)))
+            val result = cardsStore.fetchCards(selectedSite)
+            result.error?.let {
+                postState(CardsUpdate(result))
             }
         }
     }
