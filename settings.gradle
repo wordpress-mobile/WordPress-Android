@@ -27,6 +27,7 @@ gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-
 gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
 gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
 gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
+gradle.ext.aboutAutomatticBinaryPath = "com.automattic:about"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -100,6 +101,15 @@ if (localBuilds.exists()) {
                 substitute module("$gradle.ext.aztecAndroidWordPressCommentsPath") with project(':wordpress-comments')
                 substitute module("$gradle.ext.aztecAndroidGlideLoaderPath") with project(':glide-loader')
                 substitute module("$gradle.ext.aztecAndroidPicassoLoaderPath") with project(':picasso-loader')
+            }
+        }
+    }
+
+    if (ext.has("localAboutAutomatticPath")) {
+        includeBuild(ext.localAboutAutomatticPath) {
+            dependencySubstitution {
+                println "Substituting about-automattic with the local build"
+                substitute module("$gradle.ext.aboutAutomatticBinaryPath") using project(':library')
             }
         }
     }

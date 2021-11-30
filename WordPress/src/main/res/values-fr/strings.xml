@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-16 09:04:07+0000
+Translation-Revision-Date: 2021-11-23 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">L’ajout d’un domaine personnalisé permet aux visiteurs de trouver facilement votre site</string>
+    <string name="domains_paid_plan_add_your_domain_title">Ajouter votre domaine</string>
+    <string name="my_site_create_first_post_excerpt">Les articles apparaissent sur votre page de blog dans l’ordre chronologique inverse. Il est temps de partager vos idées avec le monde entier !</string>
+    <string name="my_site_untitled_post">Sans titre</string>
+    <string name="my_site_post_card_scheduled_title">Articles planifiés à venir</string>
+    <string name="my_site_create_first_post_title">Créer votre premier article</string>
+    <string name="my_site_post_card_draft_title">Travailler sur un brouillon d’article</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit la 1ère année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Vos domaines renverront vers votre site à %s</string>
     <string name="gutenberg_native_create_link">Créer un lien</string>

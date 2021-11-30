@@ -38,6 +38,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_REPLIED_TO
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_SHARED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED
 import org.wordpress.android.databinding.ThreadedCommentsFragmentBinding
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -636,6 +637,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 )
             }
 
+            setCommentShareListener { commentUrl -> shareComment(commentUrl) }
+
             // Enable post title click if we came here directly from notifications or deep linking
             if (directOperation != null) {
                 enableHeaderClicks()
@@ -937,6 +940,15 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper?.isRefreshing = refreshing
+    }
+
+    private fun shareComment(commentUrl: String) {
+        readerTracker.trackPost(READER_ARTICLE_COMMENT_SHARED, post)
+
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, commentUrl)
+        startActivity(Intent.createChooser(shareIntent, getString(string.share_link)))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
