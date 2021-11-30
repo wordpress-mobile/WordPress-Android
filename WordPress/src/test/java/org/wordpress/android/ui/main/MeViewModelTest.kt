@@ -19,7 +19,6 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendTemplateData
 import org.wordpress.android.test
-import org.wordpress.android.ui.about.UnifiedAboutTracker
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
@@ -32,7 +31,6 @@ class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var recommendApiCallsProvider: RecommendApiCallsProvider
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock lateinit var unifiedAboutTracker: UnifiedAboutTracker
 
     private lateinit var viewModel: MeViewModel
 
@@ -45,8 +43,7 @@ class MeViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 selectedSiteRepository,
                 recommendApiCallsProvider,
-                analyticsUtilsWrapper,
-                unifiedAboutTracker
+                analyticsUtilsWrapper
         )
 
         setupObservers()

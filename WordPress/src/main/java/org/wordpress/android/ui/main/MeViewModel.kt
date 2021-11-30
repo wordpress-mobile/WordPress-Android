@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import com.automattic.about.model.UnifiedAboutScreen
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -16,7 +15,6 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.about.UnifiedAboutTracker
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource.ME
 import org.wordpress.android.ui.recommend.RecommendAppState
@@ -35,7 +33,6 @@ class MeViewModel
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recommendApiCallsProvider: RecommendApiCallsProvider,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val unifiedAboutTracker: UnifiedAboutTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -82,7 +79,6 @@ class MeViewModel
     fun getSite() = selectedSiteRepository.getSelectedSite()
 
     fun showUnifiedAbout() {
-        unifiedAboutTracker.trackScreenShown(UnifiedAboutScreen.MAIN.value)
         _showUnifiedAbout.value = Event(true)
     }
 
