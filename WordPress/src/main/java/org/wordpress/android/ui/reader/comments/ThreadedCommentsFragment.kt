@@ -44,6 +44,8 @@ import org.wordpress.android.databinding.ThreadedCommentsFragmentBinding
 import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.UserSuggestionTable
+import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderPost
@@ -116,7 +118,9 @@ import javax.inject.Inject
         "LongMethod",
         "TooManyFunctions"
 )
-class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener {
+class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
+        OnConfirmListener,
+        OnCollapseListener {
     private var binding: ThreadedCommentsFragmentBinding? = null
 
     private var blogId: Long = 0
@@ -156,7 +160,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mViewModel = ViewModelProvider(this, viewModelFactory).get(ReaderCommentListViewModel::class.java)
+        mViewModel = ViewModelProvider(
+                this,
+                viewModelFactory
+        ).get(ReaderCommentListViewModel::class.java)
     }
 
     private fun ThreadedCommentsFragmentBinding.setupToolbar() {
@@ -204,9 +211,15 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
 
         layoutCommentBox.run {
             editComment.initializeWithPrefix('@')
-            editComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", postId, blogId))
+            editComment.getAutoSaveTextHelper()
+                    .setUniqueId(String.format(Locale.US, "%d%d", postId, blogId))
             editComment.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -243,7 +256,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             )
         }
 
-        suggestionServiceConnectionManager = SuggestionServiceConnectionManager(requireActivity(), blogId).also {
+        suggestionServiceConnectionManager = SuggestionServiceConnectionManager(
+                requireActivity(),
+                blogId
+        ).also {
             suggestionAdapter = setupUserSuggestions(
                     blogId,
                     requireActivity(),
@@ -309,7 +325,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             val layoutManager = recyclerView.layoutManager
             if (scrollPosition != null && layoutManager != null) {
                 if (scrollPosition.isSmooth) {
-                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(requireActivity()) {
+                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(
+                            requireActivity()
+                    ) {
                         override fun getVerticalSnapPreference(): Int {
                             return SNAP_TO_START
                         }
@@ -317,7 +335,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     smoothScrollerToTop.targetPosition = scrollPosition.position
                     layoutManager.startSmoothScroll(smoothScrollerToTop)
                 } else {
-                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollPosition.position, 0)
+                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+                            scrollPosition.position,
+                            0
+                    )
                 }
                 appbarMain.post { appbarMain.requestLayout() }
             }
@@ -331,7 +352,11 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
             if (bottomSheet != null) return@observe
             event.applyIfNotHandled {
-                make(coordinator, uiHelpers.getTextOfUiString(requireActivity(), this.message), Snackbar.LENGTH_LONG)
+                make(
+                        coordinator,
+                        uiHelpers.getTextOfUiString(requireActivity(), this.message),
+                        Snackbar.LENGTH_LONG
+                )
                         .setAction(this.buttonTitle?.let {
                             uiHelpers.getTextOfUiString(requireActivity(), this.buttonTitle)
                         }) { this.buttonAction.invoke() }
@@ -717,7 +742,11 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                                     .show()
                         }
                     } else {
-                        val comment = ReaderCommentTable.getComment(post!!.blogId, post!!.postId, commentId)
+                        val comment = ReaderCommentTable.getComment(
+                                post!!.blogId,
+                                post!!.postId,
+                                commentId
+                        )
                         if (comment == null) {
                             ToastUtils.showToast(
                                     requireActivity(),
@@ -730,7 +759,11 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                             )
                         } else {
                             val wpComUserId: Long = accountStore.getAccount().getUserId()
-                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId) &&
+                            if (ReaderCommentActions.performLikeAction(
+                                            comment,
+                                            true,
+                                            wpComUserId
+                                    ) &&
                                     getCommentAdapter().refreshComment(commentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(commentId)
                                 readerTracker.trackPost(
@@ -817,7 +850,12 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         if (showProgress) {
             showProgress()
         }
-        ReaderCommentService.startService(requireActivity(), post!!.blogId, post!!.postId, requestNextPage)
+        ReaderCommentService.startService(
+                requireActivity(),
+                post!!.blogId,
+                post!!.postId,
+                requestNextPage
+        )
     }
 
     private fun checkEmptyView() {
@@ -953,13 +991,43 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     private fun performCommentAction(comment: ReaderComment, action: ReaderCommentMenuActionType) {
         when (action) {
             APPROVE -> {}
-            UNAPROVE -> {}
-            SPAM -> {}
-            TRASH -> {}
+            UNAPROVE -> {
+                moderateComment(comment, UNAPPROVED)
+            }
+            SPAM -> {
+                moderateComment(comment, CommentStatus.SPAM)
+            }
+            TRASH -> {
+                moderateComment(comment, CommentStatus.TRASH)
+            }
             EDIT -> {}
             SHARE -> shareComment(comment.shortUrl)
             DIVIDER_NO_ACTION -> {}
         }
+    }
+
+    private fun moderateComment(comment: ReaderComment, newStatus: CommentStatus) {
+        getCommentAdapter().removeComment(comment.commentId)
+        val actionListener = CommentActionListener { succeeded: Boolean, newComment: ReaderComment? ->
+            if (!isAdded) {
+                return@CommentActionListener
+            }
+            if (succeeded) {
+                getCommentAdapter().removeComment(comment.commentId)
+            } else {
+                getCommentAdapter().addComment(comment)
+                ToastUtils.showToast(
+                        requireActivity(), string.reader_toast_err_comment_failed,
+                        LONG
+                )
+            }
+            checkEmptyView()
+        }
+        ReaderCommentActions.moderateComment(
+                comment,
+                newStatus,
+                actionListener
+        )
     }
 
     private fun shareComment(commentUrl: String) {

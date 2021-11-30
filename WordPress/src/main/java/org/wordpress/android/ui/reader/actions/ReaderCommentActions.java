@@ -11,6 +11,7 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
@@ -181,5 +182,41 @@ public class ReaderCommentActions {
 
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
+    }
+
+    public static void moderateComment(final ReaderComment comment,
+                                                final CommentStatus newStatus,
+                                                  final ReaderActions.CommentActionListener actionListener) {
+        if (comment == null) {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("content", comment.getText());
+        params.put("date", comment.getPublished());
+        params.put("status", newStatus.toString());
+
+        final String path = "sites/" + comment.blogId + "/comments/" + comment.commentId;
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
+                ReaderCommentTable.addOrUpdateComment(newComment);
+                if (actionListener != null) {
+                    actionListener.onActionResult(true, newComment);
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.w(T.READER, "comment failed");
+            AppLog.e(T.READER, volleyError);
+            if (actionListener != null) {
+                actionListener.onActionResult(false, null);
+            }
+        };
+
+        AppLog.i(T.READER, "submitting comment");
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 }
