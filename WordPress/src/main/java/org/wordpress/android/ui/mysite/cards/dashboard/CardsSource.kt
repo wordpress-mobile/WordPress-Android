@@ -5,14 +5,19 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CardsSource @Inject constructor() : MySiteRefreshSource<CardsUpdate> {
+class CardsSource @Inject constructor(
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val cardsStore: CardsStore
+) : MySiteRefreshSource<CardsUpdate> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
