@@ -71,7 +71,6 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -223,7 +222,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackCapabilities,
             currentAvatar,
             dynamicCards,
-            postsUpdate,
+            cardsUpdate,
             quickStartUpdate,
             showSiteIconProgressBar,
             selectedSite

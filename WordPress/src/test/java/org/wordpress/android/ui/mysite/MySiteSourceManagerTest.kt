@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
@@ -33,7 +33,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
-    @Mock lateinit var postCardsSource: PostCardsSource
+    @Mock lateinit var cardsSource: CardsSource
     @Mock lateinit var quickStartCardSource: QuickStartCardSource
     @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
     @Mock lateinit var selectedSiteSource: SelectedSiteSource
@@ -55,9 +55,10 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 quickStartCardSource,
                 scanAndBackupSource,
                 selectedSiteSource,
-                postCardsSource,
+                cardsSource,
                 siteIconProgressSource,
-                mySiteDashboardPhase2FeatureConfig)
+                mySiteDashboardPhase2FeatureConfig
+        )
 
         allRefreshedMySiteSources = listOf(
                 selectedSiteSource,
@@ -67,7 +68,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 domainRegistrationSource,
                 scanAndBackupSource,
                 dynamicCardsSource,
-                postCardsSource
+                cardsSource
         )
 
         selectRefreshedMySiteSources = listOf(

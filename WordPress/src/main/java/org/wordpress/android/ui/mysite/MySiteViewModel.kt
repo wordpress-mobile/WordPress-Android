@@ -38,9 +38,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -138,19 +136,19 @@ class MySiteViewModel @Inject constructor(
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
 
     val state: LiveData<MySiteUiState> =
-        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
-            val result = MediatorLiveData<SiteIdToState>()
-            for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
-                result.addSource(newSource) { partialState ->
-                    if (partialState != null) {
-                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+            selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                val result = MediatorLiveData<SiteIdToState>()
+                for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
+                    result.addSource(newSource) { partialState ->
+                        if (partialState != null) {
+                            result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+                        }
                     }
                 }
-            }
-            // We want to filter out the empty state where we have a site ID but site object is missing.
-            // Without this check there is an emission of a NoSites state even if we have the site
-            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-        }.distinctUntilChanged()
+                // We want to filter out the empty state where we have a site ID but site object is missing.
+                // Without this check there is an emission of a NoSites state even if we have the site
+                result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+            }.distinctUntilChanged()
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
