@@ -1,0 +1,3 @@
+18.7:
+- Hemos ampliado el ajuste «Enlace a» para el bloque de imágenes para incluir las opciones «Archivo de medios» y «Página de adjuntos» además de la opción preexistente «URL personalizada».
+- Hemos solucionado un problema con el guardado automático del contenido, por lo que ahora se ejecuta más fluidamente.

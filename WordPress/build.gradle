@@ -281,6 +281,7 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
     implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
     testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"

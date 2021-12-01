@@ -1,23 +1,19 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.annotation.FeatureInDevelopment
+import org.wordpress.android.annotation.Feature
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig.Companion.UNIFIED_ABOUT_REMOTE_FIELD
 import javax.inject.Inject
 
-/**
- * Feature configuration for Unified About Screen
- */
-// TODO: Uncomment the lines @Feature and UNIFIED_ABOUT_REMOTE_FIELD when remote field is configured and
-//  remove line @FeatureInDevelopment and this to-do lines
-@FeatureInDevelopment
+@Feature(UNIFIED_ABOUT_REMOTE_FIELD, true)
 class UnifiedAboutFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
         appConfig,
-        BuildConfig.UNIFIED_ABOUT
-//        UNIFIED_ABOUT_REMOTE_FIELD
+        BuildConfig.UNIFIED_ABOUT,
+        UNIFIED_ABOUT_REMOTE_FIELD
 ) {
     companion object {
-        const val UNIFIED_ABOUT_REMOTE_FIELD = "unified_about_remote_field"
+        const val UNIFIED_ABOUT_REMOTE_FIELD = "unified_about_enabled"
     }
 }
