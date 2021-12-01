@@ -27,12 +27,14 @@ class SelectedSiteSource @Inject constructor(
             .map { SelectedSite(it) }
 
     override fun refresh() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
+        updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             super.refresh()
             dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
         }
     }
+
+    fun updateSiteSettingsIfNecessary() = selectedSiteRepository.updateSiteSettingsIfNecessary()
 
     init {
         dispatcher.register(this)
