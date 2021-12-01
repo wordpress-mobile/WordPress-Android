@@ -62,6 +62,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int mContentWidth;
 
     private long mHighlightCommentId = 0;
+    private long mReplyTargetComment = 0;
     private long mAnimateLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
@@ -112,6 +113,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final ProgressBar mProgress;
 
         private final ViewGroup mReplyView;
+        private final ImageView mReplyButtonIcon;
+        private final TextView mReplyButtonLabel;
         private final ReaderIconCountView mCountLikes;
 
         CommentHolder(View view) {
@@ -135,6 +138,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mShareButton = view.findViewById(R.id.share_button_container);
 
             mReplyView = view.findViewById(R.id.reply_container);
+            mReplyButtonLabel = view.findViewById(R.id.reply_button_label);
+            mReplyButtonIcon = view.findViewById(R.id.reply_button_icon);
             mCountLikes = view.findViewById(R.id.count_likes);
 
             mTxtText.setLinksClickable(true);
@@ -320,6 +325,20 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mCommentContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
             commentHolder.mSelectedCommentIndicator.setVisibility(View.GONE);
+        }
+
+        if (mReplyTargetComment != 0 && mReplyTargetComment == comment.commentId) {
+            commentHolder.mReplyButtonLabel.setTextColor(ContextExtensionsKt
+                    .getColorFromAttribute(commentHolder.mReplyButtonLabel.getContext(), R.attr.colorPrimary));
+            commentHolder.mReplyButtonIcon.setImageTintList(ContextExtensionsKt
+                    .getColorStateListFromAttribute(commentHolder.mReplyButtonLabel.getContext(), R.attr.colorPrimary));
+        } else {
+            commentHolder.mReplyButtonLabel.setTextColor(ContextExtensionsKt
+                    .getColorFromAttribute(commentHolder.mReplyButtonLabel.getContext(),
+                            R.attr.wpColorOnSurfaceMedium));
+            commentHolder.mReplyButtonIcon.setImageTintList(ContextExtensionsKt
+                    .getColorStateListFromAttribute(commentHolder.mReplyButtonLabel.getContext(),
+                            R.attr.wpColorOnSurfaceMedium));
         }
 
         commentHolder.mShareButton.setOnClickListener(
@@ -529,6 +548,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void setHighlightCommentId(long commentId, boolean showProgress) {
         mHighlightCommentId = commentId;
         mShowProgressForHighlightedComment = showProgress;
+    }
+
+    public void setReplyTargetComment(long commentId) {
+        mReplyTargetComment = commentId;
     }
 
     public long getHighlightCommentId() {
