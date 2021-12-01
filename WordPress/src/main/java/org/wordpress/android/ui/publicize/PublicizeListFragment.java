@@ -37,7 +37,6 @@ import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.viewmodel.ResourceProvider;
 
 import javax.inject.Inject;
 
@@ -61,7 +60,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject SnackbarSequencer mSnackbarSequencer;
-    @Inject ResourceProvider mResourceProvider;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
