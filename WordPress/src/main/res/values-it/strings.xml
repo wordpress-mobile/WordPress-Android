@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-11 21:03:28+0000
+Translation-Revision-Date: 2021-11-24 18:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">L\'aggiunta di un dominio personalizzato consente ai visitatori di trovare facilmente il tuo sito</string>
+    <string name="domains_paid_plan_add_your_domain_title">Aggiungi il tuo dominio</string>
+    <string name="my_site_create_first_post_title">Crea il tuo primo articolo</string>
+    <string name="my_site_create_first_post_excerpt">Gli articoli vengono visualizzati sulla pagina del tuo blog in ordine cronologico inverso. È tempo di condividere le tue idee con il mondo.</string>
+    <string name="my_site_untitled_post">Senza titolo</string>
+    <string name="my_site_post_card_scheduled_title">Prossimi articoli pianificati</string>
+    <string name="my_site_post_card_draft_title">Lavora su una bozza di articolo</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su %s</string>
     <string name="gutenberg_native_create_link">Crea link</string>
@@ -230,6 +237,7 @@ Language: it
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
+    <string name="gutenberg_native_custom_url">URL personalizzata</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
     <string name="gutenberg_native_none">Nessuno</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
@@ -820,6 +828,7 @@ Language: it
     <string name="gutenberg_native_block_cut">Blocco tagliato</string>
     <string name="gutenberg_native_block_copied">Blocco copiato</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Il titolo del sito può essere modificato solamente da un utente con il ruolo di amministratore.</string>
+    <string name="gutenberg_native_remove_block">Rimuovi il blocco</string>
     <string name="my_site_title_changer_dialog_hint">Il titolo del sito viene visualizzato nella barra del titolo di un browser web e nell\'intestazione nella maggior parte dei temi.</string>
     <string name="reader_title_tag_preview">Argomento</string>
     <string name="error_update_site_title_network">Impossibile aggiornare il titolo del sito. Controlla la connessione di rete e riprova.</string>

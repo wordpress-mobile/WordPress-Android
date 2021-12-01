@@ -339,7 +339,7 @@ public class ReaderCommentTable {
         comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_liked")));
         comment.pageNumber = c.getInt(c.getColumnIndexOrThrow("page_number"));
 
-        comment.setShortUrl(c.getString(c.getColumnIndex("short_url")));
+        comment.setShortUrl(c.getString(c.getColumnIndexOrThrow("short_url")));
 
         return comment;
     }

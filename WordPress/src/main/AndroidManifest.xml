@@ -167,7 +167,7 @@
             android:label="@string/about_the_app"
             android:theme="@style/WordPress.NoActionBar.DarkNavbar" />
         <activity
-            android:name=".ui.about.AboutWordPressActivity"
+            android:name=".ui.about.UnifiedAboutActivity"
             android:label="@string/about_the_app"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
