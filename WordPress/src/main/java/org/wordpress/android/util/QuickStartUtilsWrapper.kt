@@ -34,7 +34,7 @@ class QuickStartUtilsWrapper
     }
 
     @JvmOverloads
-    fun stylizeThemedQuickStartPrompt(
+    fun stylizeQuickStartPrompt(
         activityContext: Context,
         messageId: Int,
         iconId: Int = QuickStartUtils.ICON_NOT_SET
@@ -42,7 +42,6 @@ class QuickStartUtilsWrapper
         return QuickStartUtils.stylizeQuickStartPrompt(
                 activityContext = activityContext,
                 messageId = messageId,
-                isThemedSnackbar = true,
                 iconId = iconId
         )
     }

@@ -179,8 +179,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     private void showQuickStartSnackbar() {
-        Spannable title = mQuickStartUtilsWrapper.stylizeThemedQuickStartPrompt(requireContext(),
-                R.string.quick_start_dialog_enable_sharing_message_short_connections);
+        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                requireContext(),
+                R.string.quick_start_dialog_enable_sharing_message_short_connections
+        );
         mSnackbarSequencer.enqueue(
                 new SnackbarItem(new Info(mRecycler, new UiStringText(title), Snackbar.LENGTH_LONG))
         );

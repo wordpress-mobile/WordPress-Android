@@ -179,7 +179,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
 
     fun PagesListFragmentBinding.showSnackbar() {
         view?.post {
-            val title = quickStartUtilsWrapper.stylizeThemedQuickStartPrompt(
+            val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
                     requireContext(),
                     R.string.quick_start_dialog_edit_homepage_message_pages_short,
                     R.drawable.ic_homepage_16dp

@@ -227,7 +227,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
-            val message = quickStartUtils.stylizeThemedQuickStartPrompt(
+            val message = quickStartUtils.stylizeQuickStartPrompt(
                     requireContext(),
                     activeTutorialPrompt.shortMessagePrompt,
                     activeTutorialPrompt.iconId
