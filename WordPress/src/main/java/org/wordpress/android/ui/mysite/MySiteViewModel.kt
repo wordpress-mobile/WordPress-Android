@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
@@ -114,10 +115,10 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val postCardsSource: PostCardsSource,
-    selectedSiteSource: SelectedSiteSource,
+    postCardsSource: PostCardsSource,
+    private val selectedSiteSource: SelectedSiteSource,
     siteIconProgressSource: SiteIconProgressSource,
-    mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -126,7 +127,7 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
-    private val _onShowSwipeRefreshLayout = MutableLiveData((Event(mySiteDashboardPhase2FeatureConfig.isEnabled())))
+    private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -159,25 +160,26 @@ class MySiteViewModel @Inject constructor(
             postCardsSource
     )
 
-    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
-        val result = MediatorLiveData<SiteIdToState>()
-        val currentSources = if (siteLocalId != null) {
-            mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
-        } else {
-            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.build(viewModelScope).distinctUntilChanged() }
-        }
-        for (newSource in currentSources) {
-            result.addSource(newSource) { partialState ->
-                if (partialState != null) {
-                    result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+    val state: LiveData<MySiteUiState> =
+        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+            val result = MediatorLiveData<SiteIdToState>()
+            val currentSources = if (siteLocalId != null) {
+                mySiteSources.map { source -> source.build(viewModelScope, siteLocalId).distinctUntilChanged() }
+            } else {
+                mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+                        .map { source -> source.build(viewModelScope).distinctUntilChanged() }
+            }
+            for (newSource in currentSources) {
+                result.addSource(newSource) { partialState ->
+                    if (partialState != null) {
+                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+                    }
                 }
             }
-        }
-        // We want to filter out the empty state where we have a site ID but site object is missing.
-        // Without this check there is an emission of a NoSites state even if we have the site
-        result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-    }.distinctUntilChanged()
+            // We want to filter out the empty state where we have a site ID but site object is missing.
+            // Without this check there is an emission of a NoSites state even if we have the site
+            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+        }.distinctUntilChanged()
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
@@ -483,9 +485,34 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh() {
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            refreshNew()
+        } else {
+            refreshOld()
+        }
+    }
+
+    private fun refreshNew() {
+        mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+    }
+
+    private fun refreshOld() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         quickStartCardSource.refresh()
         currentAvatarSource.refresh()
+    }
+
+    fun onResume(isFirstResume: Boolean) {
+        when (isFirstResume) {
+            true -> refreshOld()
+            false -> if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                refreshNew()
+            } else {
+                refreshOld()
+            }
+        }
+        checkAndShowQuickStartNotice()
+        _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }
 
     fun clearActiveQuickStartTask() {
@@ -671,6 +698,7 @@ class MySiteViewModel @Inject constructor(
         domainRegistrationSource.clear()
         quickStartRepository.clear()
         scanAndBackupSource.clear()
+        selectedSiteSource.clear()
         super.onCleared()
     }
 
@@ -738,10 +766,6 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    fun onPullToRefresh() {
-        postCardsSource.refresh()
-    }
-
     private fun onPostItemClick(postId: Int) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
@@ -757,6 +781,19 @@ class MySiteViewModel @Inject constructor(
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
         }
+    }
+
+    fun isRefreshing() = areSourcesRefreshing()
+
+    private fun areSourcesRefreshing(): Boolean {
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+                if (it.isRefreshing() == true) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {

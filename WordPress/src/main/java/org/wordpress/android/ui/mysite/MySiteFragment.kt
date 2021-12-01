@@ -95,6 +95,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
 
+    // Capture and track the first `onResume` event so we can circumvent refreshing sources on initial onResume
+    private var isFirstResume = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // The following prevents the soft keyboard from leaving a white space when dismissed.
@@ -174,7 +177,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (NetworkUtils.checkConnection(requireActivity())) {
-                viewModel.onPullToRefresh()
+                viewModel.refresh()
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
@@ -185,6 +188,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
+            hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state.cardAndItems)
                 is State.NoSites -> loadEmptyView(state.shouldShowImage)
@@ -372,8 +376,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
-        viewModel.checkAndShowQuickStartNotice()
+        viewModel.onResume(isFirstResume)
+        isFirstResume = false
     }
 
     override fun onPause() {
@@ -512,10 +516,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
+        actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        swipeToRefreshHelper.isRefreshing = false
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
@@ -525,7 +529,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
         }
-        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
@@ -553,6 +556,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
         swipeToRefreshHelper.setEnabled(isEnabled)
+    }
+
+    private fun hideRefreshIndicatorIfNeeded() {
+        if (swipeToRefreshHelper.isRefreshing) {
+            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+        }
     }
 
     companion object {

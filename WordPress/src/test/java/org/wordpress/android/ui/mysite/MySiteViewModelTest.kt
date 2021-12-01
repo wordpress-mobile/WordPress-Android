@@ -2,6 +2,9 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
@@ -49,6 +52,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
@@ -200,6 +204,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                     )
             )
     )
+    private lateinit var allRefreshedMySiteSources: List<MySiteSource<*>>
+    private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
 
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
@@ -214,6 +220,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @InternalCoroutinesApi
+    @Suppress("LongMethod")
     fun init(enableMySiteDashboardConfig: Boolean = false) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
@@ -317,6 +324,22 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        allRefreshedMySiteSources = listOf(
+                selectedSiteSource,
+                siteIconProgressSource,
+                quickStartCardSource,
+                currentAvatarSource,
+                domainRegistrationSource,
+                scanAndBackupSource,
+                dynamicCardsSource,
+                postCardsSource
+        )
+
+        selectRefreshedMySiteSources = listOf(
+                quickStartCardSource,
+                currentAvatarSource
+        )
     }
 
     /* SITE STATE */
@@ -402,27 +425,153 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(SiteNavigationAction.AddNewSite(true))
     }
 
+    /* ON RESUME */
+
+    @Test
+    fun `given not first resume and phase 2 disabled, when on resume, then update site settings if necessary`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(false)
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `given not first resume and phase 2 disabled, when on resume, then refresh quick start`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(false)
+
+        verify(quickStartCardSource).refresh()
+    }
+
+    @Test
+    fun `given not first resume and phase 2 disabled, when on resume, then refresh current avatar`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onResume(false)
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given first resume and phase 2 disabled, when on resume, then update site settings if necessary`() {
+        viewModel.onResume(true)
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `given first resume and phase 2 disabled, when on resume, then refresh quick start`() {
+        viewModel.onResume(true)
+
+        verify(quickStartCardSource).refresh()
+    }
+
+    @Test
+    fun `given first resume and phase 2 disabled, when on resume, then refresh current avatar`() {
+        viewModel.onResume(true)
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then update site settings if necessary`() {
+        viewModel.onResume(true)
+
+        verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
+    }
+
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then refresh quick start`() {
+        viewModel.onResume(true)
+
+        verify(quickStartCardSource).refresh()
+    }
+
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then refresh current avatar`() {
+        viewModel.onResume(true)
+
+        verify(currentAvatarSource).refresh()
+    }
+
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then refresh is invoked`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.onResume(false)
+
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
+    }
+
+    @Test
+    fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
+        viewModel.onResume(false)
+
+        verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
     /* REFRESH */
 
     @Test
-    fun `when refresh is triggered, then update site settings if necessary`() {
+    fun `given phase 2 is enabled, when refresh, then all sources are refreshed`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.refresh()
+
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
+    }
+
+    @Test
+    fun `given phase 2 is disabled, when refresh, then select sources refresh`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.refresh()
+
+        selectRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { verify(it).refresh() }
+    }
+
+    @Test
+    fun `given phase 2 disabled, when refresh, then updateSiteSettings is invoked`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
         viewModel.refresh()
 
         verify(selectedSiteRepository).updateSiteSettingsIfNecessary()
     }
 
     @Test
-    fun `when refresh is triggered, then refresh quick start`() {
-        viewModel.refresh()
+    fun `given phase 2 enabled and refreshing, when is refreshing, then refresh indicator should show`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            whenever(it.isRefreshing()).thenReturn(true)
+        }
 
-        verify(quickStartCardSource).refresh()
+        val result = viewModel.isRefreshing()
+
+        assertThat(result).isTrue
     }
 
     @Test
-    fun `when refresh is triggered, then refresh current avatar`() {
-        viewModel.refresh()
+    fun `given phase 2 enabled and not refreshing, when is refreshing, then refresh indicator should not show`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        allRefreshedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            whenever(it.isRefreshing()).thenReturn(false)
+        }
 
-        verify(currentAvatarSource).refresh()
+        val result = viewModel.isRefreshing()
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `given phase 2 is disabled, when is refreshing, then refresh indicator should hide`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        val result = viewModel.isRefreshing()
+
+        assertThat(result).isFalse
     }
 
     @Test
@@ -854,7 +1003,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* START/IGNORE QUICK START + QUICK START DIALOG */
-    // todo: annmarie
     @Test
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
@@ -911,7 +1059,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
-    // todo: annmarie
     @Test
     fun `when start QS is triggered, then QS starts`() {
         whenever(selectedSiteRepository.getSelectedSiteLocalId()).thenReturn(site.id)
@@ -1295,18 +1442,64 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* SWIPE REFRESH */
     @InternalCoroutinesApi
     @Test
-    fun `when my site feature flag is enabled, then swipe refresh layout is enabled`() = test {
+    fun `given not first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
         init(enableMySiteDashboardConfig = true)
+
+        viewModel.onResume(false)
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
     }
 
     @InternalCoroutinesApi
     @Test
-    fun `when my site feature flag is disabled, then swipe refresh layout is disabled`() {
+    fun `given not first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
         init(enableMySiteDashboardConfig = false)
 
+        viewModel.onResume(false)
+
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
+        init(enableMySiteDashboardConfig = true)
+
+        viewModel.onResume(true)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
+        init(enableMySiteDashboardConfig = false)
+
+        viewModel.onResume(true)
+
+        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
+    }
+
+    /* CLEARED */
+    @Test
+    fun `when cleared() is invoked, then domainRegistrationSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(domainRegistrationSource).clear()
+    }
+
+    @Test
+    fun `when cleared() is invoked, then scanAndBackupSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(scanAndBackupSource).clear()
+    }
+
+    @Test
+    fun `when cleared() is invoked, then selectedSiteSource clear() is invoked`() {
+        viewModel.invokeOnCleared()
+
+        verify(selectedSiteSource).clear()
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -1502,5 +1695,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                         onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
                 )
         )
+    }
+
+    fun ViewModel.invokeOnCleared() {
+        val viewModelStore = ViewModelStore()
+        val viewModelProvider = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T = this@invokeOnCleared as T
+        })
+        viewModelProvider.get(this@invokeOnCleared::class.java)
+        viewModelStore.clear()
     }
 }
