@@ -32,6 +32,7 @@ public class SiteWPComRestResponse implements Response {
         public long page_for_posts;
         public boolean publicize_permanently_disabled;
         public List<String> active_modules;
+        public List<String> jetpack_connection_active_plugins;
     }
 
     public static class Plan {
