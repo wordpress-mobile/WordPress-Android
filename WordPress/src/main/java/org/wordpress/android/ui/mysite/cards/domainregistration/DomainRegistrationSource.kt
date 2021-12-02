@@ -34,8 +34,10 @@ class DomainRegistrationSource @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper
 ) : MySiteRefreshSource<DomainCreditAvailable> {
-    private var continuation: CancellableContinuation<OnPlansFetched>? = null
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+
+    private val continuations:
+             MutableMap<Int, CancellableContinuation<OnPlansFetched>?> = mutableMapOf()
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
@@ -74,25 +76,32 @@ class DomainRegistrationSource @Inject constructor(
         siteLocalId: Int,
         selectedSite: SiteModel
     ) {
-        continuation?.cancel()
-        continuation = null
-        coroutineScope.launch(bgDispatcher) {
-            try {
-                val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
-                    continuation = cancellableContinuation
-                    fetchPlans(selectedSite)
-                }
-                continuation = null
-                if (event.isError) {
-                    val message = "An error occurred while fetching plans : " + event.error.message
-                    appLogWrapper.e(DOMAIN_REGISTRATION, message)
+        if (continuations[siteLocalId] == null) {
+            coroutineScope.launch(bgDispatcher) {
+                try {
+                    val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
+                        continuations[siteLocalId] = cancellableContinuation
+                        fetchPlans(selectedSite)
+                    }
+                    when {
+                        event.isError -> {
+                            val message = "An error occurred while fetching plans : " + event.error.message
+                            appLogWrapper.e(DOMAIN_REGISTRATION, message)
+                            postState(DomainCreditAvailable(false))
+                        }
+                        siteLocalId == event.site.id -> {
+                            postState(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
+                        }
+                        else -> {
+                            postState(DomainCreditAvailable(false))
+                        }
+                    }
+                } catch (e: CancellationException) {
                     postState(DomainCreditAvailable(false))
-                } else if (siteLocalId == event.site.id) {
-                    postState(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
                 }
-            } catch (e: CancellationException) {
-                postState(DomainCreditAvailable(false))
             }
+        } else {
+            appLogWrapper.d(DOMAIN_REGISTRATION, "A request is already running for $siteLocalId")
         }
     }
 
@@ -108,6 +117,10 @@ class DomainRegistrationSource @Inject constructor(
 
     private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPlansFetched(event: OnPlansFetched) = continuation?.resume(event)
+    fun onPlansFetched(event: OnPlansFetched) {
+        continuations[event.site.id]?.resume(event)
+        continuations[event.site.id] = null
+    }
 }
