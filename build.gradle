@@ -21,7 +21,11 @@ buildscript {
     }
 
     dependencies {
+        // Fixes "R8: Unexpected error during rewriting of Kotlin metadata for class ..." issue in AGP
+        // See: https://issuetracker.google.com/issues/194915678
+        classpath 'com.android.tools:r8:3.0.73'
         classpath 'com.android.tools.build:gradle:4.2.2'
+
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
