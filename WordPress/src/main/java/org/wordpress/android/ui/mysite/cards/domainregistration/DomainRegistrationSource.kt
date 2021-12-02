@@ -116,7 +116,6 @@ class DomainRegistrationSource @Inject constructor(
 
     private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPlansFetched(event: OnPlansFetched) {
         continuations[event.site.id]?.resume(event)
