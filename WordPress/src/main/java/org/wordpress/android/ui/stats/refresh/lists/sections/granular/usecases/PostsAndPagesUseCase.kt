@@ -112,7 +112,7 @@ constructor(
         } else {
             val header = Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label)
             items.add(header)
-            val maxViews = domainModel.views.maxBy { it.views }?.views ?: 0
+            val maxViews = domainModel.views.maxByOrNull { it.views }?.views ?: 0
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_white_24dp

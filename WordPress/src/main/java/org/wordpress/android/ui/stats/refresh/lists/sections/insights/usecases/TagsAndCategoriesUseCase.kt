@@ -100,7 +100,7 @@ class TagsAndCategoriesUseCase
                     header
             )
             val tagsList = mutableListOf<BlockListItem>()
-            val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
+            val maxViews = domainModel.tags.maxByOrNull { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
