@@ -155,8 +155,8 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(success).thenReturn(success)
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
         cardSource.refresh.observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         cardSource.refresh()
 
@@ -169,8 +169,8 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(success).thenReturn(apiError)
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
         cardSource.refresh.observeForever { }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         cardSource.refresh()
 
@@ -195,8 +195,8 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
         cardSource.refresh.observeForever { result.add(it) }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
@@ -210,14 +210,15 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(success)
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
         cardSource.refresh.observeForever { result.add(it) }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isFalse
-        assertThat(result.last()).isTrue
+        assertThat(result.size).isEqualTo(3)
+        assertThat(result[0]).isFalse // init
+        assertThat(result[1]).isFalse // build(...) -> cardsStore.getCards(...)
+        assertThat(result[2]).isTrue // refresh()
     }
 
     @Test
@@ -225,14 +226,17 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(apiError)
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
         cardSource.refresh.observeForever { result.add(it) }
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isFalse
-        assertThat(result.last()).isFalse
+        assertThat(result.size).isEqualTo(5)
+        assertThat(result[0]).isFalse // init
+        assertThat(result[1]).isFalse // build(...) -> cardsStore.getCards(...)
+        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[4]).isFalse // refresh() -> cardsStore.fetchCards(...) -> error
     }
 
     /* INVALID SITE */
@@ -253,8 +257,8 @@ class CardsSourceTest : BaseUnitTest() {
     fun `given invalid site, when refresh is invoked, then error data is loaded`() = test {
         val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
-        cardSource.build(testScope(), invalidSiteLocalId).observeForever { result.add(it) }
         cardSource.refresh.observeForever { }
+        cardSource.build(testScope(), invalidSiteLocalId).observeForever { result.add(it) }
 
         cardSource.refresh()
 
