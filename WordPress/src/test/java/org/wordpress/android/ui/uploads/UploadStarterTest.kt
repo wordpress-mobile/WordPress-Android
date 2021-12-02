@@ -21,7 +21,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Rule
 import org.junit.Test
@@ -495,7 +494,6 @@ class UploadStarterTest {
         whenever(pageStore.getPagesWithLocalChanges(siteModel)).thenReturn(listOf())
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createUploadStarter(
         connectionStatus: LiveData<ConnectionStatus> = createConnectionStatusLiveData(null),
         uploadServiceFacade: UploadServiceFacade = this.uploadServiceFacade,

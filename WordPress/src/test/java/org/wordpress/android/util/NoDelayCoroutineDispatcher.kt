@@ -7,7 +7,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
 
-@UseExperimental(InternalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class)
 class NoDelayCoroutineDispatcher : CoroutineDispatcher(), Delay {
     override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
         continuation.resume(Unit)

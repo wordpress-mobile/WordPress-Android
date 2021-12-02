@@ -32,7 +32,7 @@ class PostListViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: PostListViewModel
 
-    @UseExperimental(InternalCoroutinesApi::class)
+    @OptIn(InternalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()

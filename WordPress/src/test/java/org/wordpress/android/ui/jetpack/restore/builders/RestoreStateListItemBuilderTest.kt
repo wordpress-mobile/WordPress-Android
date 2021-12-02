@@ -3,7 +3,6 @@ package org.wordpress.android.ui.jetpack.restore.builders
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +26,6 @@ private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
         "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
                 "to enable one click site restores from backups."
 
-@InternalCoroutinesApi
 class RestoreStateListItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: RestoreStateListItemBuilder
 

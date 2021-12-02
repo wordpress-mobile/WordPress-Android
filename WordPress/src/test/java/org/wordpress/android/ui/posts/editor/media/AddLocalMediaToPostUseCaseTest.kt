@@ -23,7 +23,7 @@ import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase.CreateMe
 import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.OptimizeMediaResult
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class)
 class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `addNewMediaToEditorAsync returns true on success`() = test {
