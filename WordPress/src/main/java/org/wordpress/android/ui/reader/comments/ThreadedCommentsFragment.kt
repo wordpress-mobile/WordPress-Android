@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.comments
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -16,7 +15,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -110,9 +108,7 @@ import javax.inject.Inject
         "LongMethod",
         "TooManyFunctions"
 )
-class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
-        OnConfirmListener,
-        OnCollapseListener {
+class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), OnConfirmListener, OnCollapseListener {
     private var binding: ThreadedCommentsFragmentBinding? = null
 
     private var blogId: Long = 0
@@ -152,10 +148,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mViewModel = ViewModelProvider(
-                this,
-                viewModelFactory
-        ).get(ReaderCommentListViewModel::class.java)
+        mViewModel = ViewModelProvider(this, viewModelFactory).get(ReaderCommentListViewModel::class.java)
     }
 
     private fun ThreadedCommentsFragmentBinding.setupToolbar() {
@@ -203,15 +196,9 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
 
         layoutCommentBox.run {
             editComment.initializeWithPrefix('@')
-            editComment.getAutoSaveTextHelper()
-                    .setUniqueId(String.format(Locale.US, "%d%d", postId, blogId))
+            editComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", postId, blogId))
             editComment.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -248,10 +235,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
             )
         }
 
-        suggestionServiceConnectionManager = SuggestionServiceConnectionManager(
-                requireActivity(),
-                blogId
-        ).also {
+        suggestionServiceConnectionManager = SuggestionServiceConnectionManager(requireActivity(), blogId).also {
             suggestionAdapter = setupUserSuggestions(
                     blogId,
                     requireActivity(),
@@ -317,9 +301,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
             val layoutManager = recyclerView.layoutManager
             if (scrollPosition != null && layoutManager != null) {
                 if (scrollPosition.isSmooth) {
-                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(
-                            requireActivity()
-                    ) {
+                    val smoothScrollerToTop: SmoothScroller = object : LinearSmoothScroller(requireActivity()) {
                         override fun getVerticalSnapPreference(): Int {
                             return SNAP_TO_START
                         }
@@ -327,10 +309,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
                     smoothScrollerToTop.targetPosition = scrollPosition.position
                     layoutManager.startSmoothScroll(smoothScrollerToTop)
                 } else {
-                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-                            scrollPosition.position,
-                            0
-                    )
+                    (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollPosition.position, 0)
                 }
                 appbarMain.post { appbarMain.requestLayout() }
             }
@@ -344,11 +323,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
                     fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
             if (bottomSheet != null) return@observe
             event.applyIfNotHandled {
-                make(
-                        coordinator,
-                        uiHelpers.getTextOfUiString(requireActivity(), this.message),
-                        Snackbar.LENGTH_LONG
-                )
+                make(coordinator, uiHelpers.getTextOfUiString(requireActivity(), this.message), Snackbar.LENGTH_LONG)
                         .setAction(this.buttonTitle?.let {
                             uiHelpers.getTextOfUiString(requireActivity(), this.buttonTitle)
                         }) { this.buttonAction.invoke() }
@@ -538,30 +513,25 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
     }
 
     private fun setReplyToCommentId(commentId: Long, doFocus: Boolean) {
-        if (replyToCommentId == commentId) {
-            clearHighlightedComment()
-            replyToCommentId = 0
-        } else {
-            replyToCommentId = commentId
-            binding?.layoutCommentBox?.run {
-                editComment.setHint(
-                        if (replyToCommentId == 0L) {
-                            string.reader_hint_comment_on_post
-                        } else {
-                            string.reader_hint_comment_on_comment
-                        }
-                )
-                if (doFocus) {
-                    editComment.postDelayed({
-                        val isFocusableInTouchMode: Boolean = editComment.isFocusableInTouchMode()
-                        editComment.isFocusableInTouchMode = true
-                        EditTextUtils.showSoftInput(editComment)
-                        editComment.isFocusableInTouchMode = isFocusableInTouchMode
-                        setupReplyToComment()
-                    }, SHOW_SOFT_KEYBOARD_DELAY)
-                } else {
+        replyToCommentId = commentId
+        binding?.layoutCommentBox?.run {
+            editComment.setHint(
+                    if (replyToCommentId == 0L) {
+                        string.reader_hint_comment_on_post
+                    } else {
+                        string.reader_hint_comment_on_comment
+                    }
+            )
+            if (doFocus) {
+                editComment.postDelayed({
+                    val isFocusableInTouchMode: Boolean = editComment.isFocusableInTouchMode()
+                    editComment.isFocusableInTouchMode = true
+                    EditTextUtils.showSoftInput(editComment)
+                    editComment.isFocusableInTouchMode = isFocusableInTouchMode
                     setupReplyToComment()
-                }
+                }, SHOW_SOFT_KEYBOARD_DELAY)
+            } else {
+                setupReplyToComment()
             }
         }
     }
@@ -573,32 +543,18 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
         binding?.layoutCommentBox?.run {
             if (replyToCommentId != 0L) {
                 getCommentAdapter().setHighlightCommentId(replyToCommentId, false)
-                getCommentAdapter().setReplyTargetComment(replyToCommentId)
                 getCommentAdapter().notifyDataSetChanged()
                 scrollToCommentId(replyToCommentId)
+
                 // reset to replying to the post when user hasn't entered any text and hits
                 // the back button in the editText to hide the soft keyboard
                 editComment.setOnBackListener {
                     if (EditTextUtils.isEmpty(editComment)) {
                         setReplyToCommentId(0, false)
-                        clearHighlightedComment()
                     }
                 }
             } else {
                 editComment.setOnBackListener(null)
-            }
-        }
-    }
-
-    private fun clearHighlightedComment() {
-        binding?.layoutCommentBox?.run {
-            getCommentAdapter().setHighlightCommentId(0, false)
-            getCommentAdapter().setReplyTargetComment(0)
-            getCommentAdapter().notifyDataSetChanged()
-            editComment.let {
-                val imm = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                imm?.hideSoftInputFromWindow(it.windowToken, 0)
-                it.setHint(string.reader_hint_comment_on_post)
             }
         }
     }
@@ -753,11 +709,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
                                     .show()
                         }
                     } else {
-                        val comment = ReaderCommentTable.getComment(
-                                post!!.blogId,
-                                post!!.postId,
-                                commentId
-                        )
+                        val comment = ReaderCommentTable.getComment(post!!.blogId, post!!.postId, commentId)
                         if (comment == null) {
                             ToastUtils.showToast(
                                     requireActivity(),
@@ -770,11 +722,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
                             )
                         } else {
                             val wpComUserId: Long = accountStore.getAccount().getUserId()
-                            if (ReaderCommentActions.performLikeAction(
-                                            comment,
-                                            true,
-                                            wpComUserId
-                                    ) &&
+                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId) &&
                                     getCommentAdapter().refreshComment(commentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(commentId)
                                 readerTracker.trackPost(
@@ -861,12 +809,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
         if (showProgress) {
             showProgress()
         }
-        ReaderCommentService.startService(
-                requireActivity(),
-                post!!.blogId,
-                post!!.postId,
-                requestNextPage
-        )
+        ReaderCommentService.startService(requireActivity(), post!!.blogId, post!!.postId, requestNextPage)
     }
 
     private fun checkEmptyView() {
@@ -977,7 +920,6 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment),
                 // add the "fake" comment to the adapter, highlight it, and show a progress bar
                 // next to it while it's submitted
                 getCommentAdapter().setHighlightCommentId(newComment.commentId, true)
-                getCommentAdapter().setReplyTargetComment(0)
                 getCommentAdapter().addComment(newComment)
                 // make sure it's scrolled into view
                 scrollToCommentId(fakeCommentId)
