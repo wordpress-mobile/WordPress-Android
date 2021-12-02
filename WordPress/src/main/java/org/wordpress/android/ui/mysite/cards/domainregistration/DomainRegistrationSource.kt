@@ -36,8 +36,7 @@ class DomainRegistrationSource @Inject constructor(
 ) : MySiteRefreshSource<DomainCreditAvailable> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    private val continuations:
-             MutableMap<Int, CancellableContinuation<OnPlansFetched>?> = mutableMapOf()
+    private val continuations: MutableMap<Int, CancellableContinuation<OnPlansFetched>?> = mutableMapOf()
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
