@@ -17,9 +17,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -36,8 +39,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -135,19 +137,20 @@ class MySiteViewModel @Inject constructor(
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
 
     val state: LiveData<MySiteUiState> =
-        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
-            val result = MediatorLiveData<SiteIdToState>()
-            for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
-                result.addSource(newSource) { partialState ->
-                    if (partialState != null) {
-                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+            selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                val result = MediatorLiveData<SiteIdToState>()
+                for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
+                    result.addSource(newSource) { partialState ->
+                        if (partialState != null) {
+                            result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
+                        }
                     }
                 }
-            }
-            // We want to filter out the empty state where we have a site ID but site object is missing.
-            // Without this check there is an emission of a NoSites state even if we have the site
-            result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-        }.addDistinctUntilChangedIfNeeded()
+                // We want to filter out the empty state where we have a site ID but site object is missing.
+                // Without this check there is an emission of a NoSites state even if we have the site
+                result.filter { it.siteId == null || it.state.site != null }.map { it.state }
+            }.addDistinctUntilChangedIfNeeded()
+
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
@@ -160,7 +163,7 @@ class MySiteViewModel @Inject constructor(
             quickStartCategories,
             pinnedDynamicCard,
             visibleDynamicCards,
-            mockedPostData
+            cards
     ) ->
         val state = if (site != null) {
             buildSiteSelectedStateAndScroll(
@@ -173,7 +176,7 @@ class MySiteViewModel @Inject constructor(
                     visibleDynamicCards,
                     backupAvailable,
                     scanAvailable,
-                    mockedPostData
+                    cards
             )
         } else {
             buildNoSiteState()
@@ -192,7 +195,7 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        mockedPostsData: MockedPostsData?
+        cards: CardsResult<List<CardModel>>?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -204,7 +207,7 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                mockedPostsData
+                cards
         )
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -224,14 +227,14 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        mockedPostsData: MockedPostsData?
+        cards: CardsResult<List<CardModel>>?
     ) = cardsBuilder.build(
             DomainRegistrationCardBuilderParams(
                     isDomainCreditAvailable = isDomainCreditAvailable,
                     domainRegistrationClick = this::domainRegistrationClick
             ),
             PostCardBuilderParams(
-                    mockedPostsData = mockedPostsData,
+                    posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                     onPostItemClick = this::onPostItemClick,
                     onFooterLinkClick = this::onPostCardFooterLinkClick
             ),
