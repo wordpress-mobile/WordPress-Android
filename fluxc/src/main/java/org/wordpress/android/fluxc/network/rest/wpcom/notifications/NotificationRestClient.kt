@@ -12,6 +12,9 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
@@ -42,7 +45,8 @@ class NotificationRestClient @Inject constructor(
     private val dispatcher: Dispatcher,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent
+    userAgent: UserAgent,
+    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     companion object {
         const val NOTIFICATION_DEFAULT_FIELDS = "id,type,read,body,subject,timestamp,meta,note_hash"
@@ -256,27 +260,33 @@ class NotificationRestClient @Inject constructor(
      *
      * https://developer.wordpress.com/docs/api/1/post/notifications/read/
      */
-    fun markNotificationRead(notifications: List<NotificationModel>) {
+    suspend fun markNotificationRead(notifications: List<NotificationModel>): MarkNotificationsReadResponsePayload {
         val url = WPCOMREST.notifications.read.urlV1_1
         // "9999" Ensures the "read" count of the notification is decremented enough so the notification
         // is marked read across all devices (just like WPAndroid)
         val params = mutableMapOf<String, String>()
         notifications.iterator().forEach { params["counts[${it.remoteNoteId}]"] = "9999" }
-        val request = WPComGsonRequest.buildFormPostRequest(url, params, NotificationReadApiResponse::class.java,
-                { response: NotificationReadApiResponse ->
-                    val payload = MarkNotificationsReadResponsePayload(notifications, response.success)
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsReadAction(payload))
-                },
-                { networkError ->
-                    val payload = MarkNotificationsReadResponsePayload().apply {
-                        error = NotificationError(
-                                NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message
-                        )
-                    }
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsReadAction(payload))
-                })
-        add(request)
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                params,
+                null,
+                NotificationReadApiResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                MarkNotificationsReadResponsePayload(notifications, response.data.success)
+            }
+            is Error -> {
+                MarkNotificationsReadResponsePayload().apply {
+                    error = NotificationError(
+                            NotificationErrorType.fromString(response.error.apiError),
+                            response.error.message
+                    )
+                }
+            }
+        }
     }
 
     private fun networkErrorToRegistrationError(wpComError: WPComGsonNetworkError): DeviceRegistrationError {

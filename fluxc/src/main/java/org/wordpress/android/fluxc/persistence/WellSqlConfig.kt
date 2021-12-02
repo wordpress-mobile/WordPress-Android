@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 166
+        return 167
     }
 
     override fun getDbName(): String {
@@ -1826,7 +1826,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 165 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_PHONE TEXT")
                 }
-                166 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                166 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_JETPACK_CONNECTION_PLUGINS TEXT")
+                }
+                167 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel")
                 }
             }

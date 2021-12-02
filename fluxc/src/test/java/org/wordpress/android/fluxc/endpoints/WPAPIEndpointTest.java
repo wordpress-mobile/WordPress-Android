@@ -30,6 +30,10 @@ public class WPAPIEndpointTest {
         // Users
         assertEquals("/users/", WPAPI.users.getEndpoint());
         assertEquals("/users/me/", WPAPI.users.me.getEndpoint());
+
+        // Plugins
+        assertEquals("/plugins/", WPAPI.plugins.getEndpoint());
+        assertEquals("/plugins/jetpack/jetpack/", WPAPI.plugins.name("jetpack/jetpack").getEndpoint());
     }
 
     @Test
@@ -40,5 +44,6 @@ public class WPAPIEndpointTest {
         assertEquals("wp/v2/comments/", WPAPI.comments.getUrlV2());
         assertEquals("wp/v2/users/", WPAPI.users.getUrlV2());
         assertEquals("wp/v2/users/me/", WPAPI.users.me.getUrlV2());
+        assertEquals("wp/v2/plugins/", WPAPI.plugins.getUrlV2());
     }
 }

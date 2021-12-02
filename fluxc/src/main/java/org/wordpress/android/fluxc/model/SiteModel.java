@@ -134,6 +134,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     @Column private String mActiveModules;
     @Column private boolean mIsPublicizePermanentlyDisabled;
+    @Column private String mActiveJetpackConnectionPlugins;
 
     // Zendesk meta
     @Column private String mZendeskPlan;
@@ -749,6 +750,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setActiveModules(String activeModules) {
         mActiveModules = activeModules;
+    }
+
+    public String getActiveJetpackConnectionPlugins() {
+        return mActiveJetpackConnectionPlugins;
+    }
+
+    public void setActiveJetpackConnectionPlugins(String activeJetpackConnectionPlugins) {
+        mActiveJetpackConnectionPlugins = activeJetpackConnectionPlugins;
     }
 
     public boolean isActiveModuleEnabled(String moduleName) {
