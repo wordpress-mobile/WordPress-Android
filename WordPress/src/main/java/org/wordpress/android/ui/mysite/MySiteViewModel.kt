@@ -151,7 +151,6 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded()
 
-
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
             site,
