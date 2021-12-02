@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -44,10 +44,10 @@ class MySiteSourceManager @Inject constructor(
 
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            mySiteSources.map { source -> source.build(coroutineScope, siteLocalId).distinctUntilChanged() }
+            mySiteSources.map { source -> source.build(coroutineScope, siteLocalId).addDistinctUntilChangedIfNeeded() }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.build(coroutineScope).distinctUntilChanged() }
+                    .map { source -> source.build(coroutineScope).addDistinctUntilChangedIfNeeded() }
         }
     }
 
@@ -92,6 +92,13 @@ class MySiteSourceManager @Inject constructor(
         currentAvatarSource.refresh()
         quickStartCardSource.refresh()
     }
+
+    private fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(): LiveData<X> =
+            if (!mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                Transformations.distinctUntilChanged(this)
+            } else {
+                this
+            }
 
     /* QUICK START */
 

@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -146,7 +147,7 @@ class MySiteViewModel @Inject constructor(
             // We want to filter out the empty state where we have a site ID but site object is missing.
             // Without this check there is an emission of a NoSites state even if we have the site
             result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-        }.distinctUntilChanged()
+        }.addDistinctUntilChangedIfNeeded()
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
@@ -721,6 +722,13 @@ class MySiteViewModel @Inject constructor(
         if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         setVisible()
     }
+
+    private fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(): LiveData<X> =
+            if (!mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                Transformations.distinctUntilChanged(this)
+            } else {
+                this
+            }
 
     data class UiModel(
         val accountAvatarUrl: String,
