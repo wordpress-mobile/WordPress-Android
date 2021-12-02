@@ -2206,6 +2206,7 @@
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
     <string name="my_site_untitled_post">Untitled</string>
+    <string name="my_site_no_content_post">No Content</string>
     <string name="my_site_create_first_post_title">Create your first post</string>
     <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
     <string name="my_site_create_next_post_title">Create your next post</string>
@@ -3402,6 +3403,8 @@
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
+    <!-- translators: Copy URL from the clipboard, https://sample.url -->
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources">Copy URL from the clipboard, %s</string>
     <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources">Create embed</string>
     <string name="gutenberg_native_create_link" tools:ignore="UnusedResources">Create link</string>
     <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources">Crosspost</string>
@@ -3482,8 +3485,10 @@
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
     <string name="gutenberg_native_featured" tools:ignore="UnusedResources">Featured</string>
+    <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Featured Image</string>
     <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">File block settings</string>
     <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">File name</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">From clipboard</string>
     <!-- translators: accessibility text. %s: gallery caption. -->
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Give it a try by adding a few blocks to your post or page!</string>

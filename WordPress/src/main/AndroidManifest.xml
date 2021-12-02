@@ -167,6 +167,10 @@
             android:label="@string/about_the_app"
             android:theme="@style/WordPress.NoActionBar.DarkNavbar" />
         <activity
+            android:name=".ui.about.UnifiedAboutActivity"
+            android:label="@string/about_the_app"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"

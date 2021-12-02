@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -105,6 +106,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         menu.removeItem(R.id.nav_reader)
     }
 
+    @SuppressLint("WrongConstant")
     private fun disableShiftMode() {
         labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
     }

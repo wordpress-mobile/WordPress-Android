@@ -100,6 +100,11 @@ class CategoriesListViewModel @Inject constructor(
         // todo implement the logic of creating category
     }
 
+    @SuppressWarnings("unused")
+    fun onCategoryClicked(categoryNode: CategoryNode) {
+        // todo implement the logic of showing detail page
+    }
+
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
         if (event.isError) {
             if (_uiState.value is Loading) _uiState.value = GenericError(::onRetryClicked)
@@ -111,10 +116,14 @@ class CategoriesListViewModel @Inject constructor(
         }
     }
 
-    sealed class UiState {
-        data class Content(val list: List<CategoryNode>) : UiState()
-        object Loading : UiState()
-        sealed class Error : UiState() {
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val contentVisible: Boolean = false,
+        val errorVisible: Boolean = false
+    ) {
+        data class Content(val list: List<CategoryNode>) : UiState(contentVisible = true)
+        object Loading : UiState(loadingVisible = true)
+        sealed class Error : UiState(errorVisible = true) {
             abstract val image: Int
             abstract val title: UiString
             abstract val subtitle: UiString

@@ -13,8 +13,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
-import org.wordpress.android.ui.mysite.cards.post.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.cards.siteinfo.MySiteInfoViewHolder

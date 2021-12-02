@@ -43,6 +43,7 @@ import org.wordpress.android.networking.GravatarApi
 import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -51,7 +52,6 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.prefs.AboutActivity
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -161,7 +161,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (unifiedAboutFeatureConfig.isEnabled()) {
+        // Temporarily limiting this feature to the WordPress app
+        if (unifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
             recommendTheAppContainer.isVisible = false
             aboutTheAppContainer.isVisible = true
 
@@ -173,7 +174,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
-            startActivity(Intent(activity, AboutActivity::class.java))
+            startActivity(Intent(activity, UnifiedAboutActivity::class.java))
         })
 
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {

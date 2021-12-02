@@ -1,0 +1,3 @@
+18.7:
+- Utöver det tidigare alternativet att länka till anpassad URL har vi inställningarna för bildblocket lagt till alternativ för att länka till själva mediafilen eller till bilagans egen sida.
+- Vi har löst ett problem med autosparning med innehåll så att de nu fungerar smidigare.
