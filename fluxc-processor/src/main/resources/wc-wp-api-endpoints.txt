@@ -70,3 +70,5 @@
 
 /data/countries
 /system_status
+
+/tracker
