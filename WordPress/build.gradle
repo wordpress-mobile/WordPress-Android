@@ -185,7 +185,6 @@ android {
             versionName versionProperties.getProperty("alpha.versionName")
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
 
-            buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
             buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "true"
         }
 
