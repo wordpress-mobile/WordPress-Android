@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -44,6 +47,8 @@ class CardsSource @Inject constructor(
                     postState(CardsUpdate(result))
                 }
             }
+        } else {
+            postState(CardsUpdate(CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))))
         }
     }
 
@@ -65,6 +70,8 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             fetchCardsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+        } else {
+            postState(CardsUpdate(CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))))
         }
     }
 
