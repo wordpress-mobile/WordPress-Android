@@ -1,3 +1,4 @@
+@file:Suppress("MultiLineIfElse")
 package org.wordpress.android.ui.pages
 
 import android.graphics.drawable.Drawable
@@ -39,7 +40,6 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
-@Suppress("MultiLineIfElse")
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
