@@ -51,6 +51,8 @@
 
 /payments/terminal/locations/store
 
+/wc_stripe/account/summary
+
 /taxes
 /taxes/classes/
 
