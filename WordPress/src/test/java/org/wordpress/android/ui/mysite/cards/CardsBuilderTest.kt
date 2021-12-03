@@ -12,8 +12,10 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -30,11 +32,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -45,6 +44,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
@@ -66,12 +66,26 @@ class CardsBuilderTest {
                 completedTasks = emptyList()
         )
 
-    private val mockedPostsData: MockedPostsData
-        get() = MockedPostsData(
-                posts = Posts(
-                        hasPublishedPosts = true,
-                        draft = listOf(Post(id = 1, title = "draft")),
-                        scheduled = listOf(Post(id = 1, title = "scheduled"))
+    private val posts: PostsCardModel
+        get() = PostsCardModel(
+                hasPublished = true,
+                draft = listOf(
+                        PostCardModel(
+                                id = 1,
+                                title = "draft",
+                                content = "content",
+                                featuredImage = "featuredImage",
+                                date = Date()
+                        )
+                ),
+                scheduled = listOf(
+                        PostCardModel(
+                                id = 2,
+                                title = "scheduled",
+                                content = "",
+                                featuredImage = null,
+                                date = Date()
+                        )
                 )
         )
 
@@ -101,11 +115,12 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
+
     @Test
     fun `when domain credit is available, then correct event is tracked`() {
         buildCards(isDomainCreditAvailable = true)
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }
 
     /* QUICK ACTIONS CARD */
@@ -150,6 +165,7 @@ class CardsBuilderTest {
     }
 
     /* POST CARD */
+
     @Test
     fun `given mySiteDashboardPhase2 disabled, then post card is not built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
@@ -187,7 +203,7 @@ class CardsBuilderTest {
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = mock()
                 ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock(), mock()),
+                postCardBuilderParams = PostCardBuilderParams(posts, mock(), mock()),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
