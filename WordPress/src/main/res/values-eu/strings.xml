@@ -396,7 +396,6 @@ Language: eu_ES
     <string name="delete_post">Bidalketa ezabatu?</string>
     <string name="share_link">Partekatu esteka</string>
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
-    <string name="reader_label_reply">Erantzun</string>
     <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>

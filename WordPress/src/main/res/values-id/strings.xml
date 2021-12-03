@@ -578,8 +578,6 @@ Language: id
     <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_get_status_error">Terjadi error saat mengambil data status langganan untuk pos</string>
-    <string name="reader_follow_comments_unsubscribe_success">Berhasil berhenti berlangganan komentar</string>
-    <string name="reader_follow_comments_subscribe_success">Berhasil berlangganan komentar</string>
     <string name="reader_follow_comments_bad_format_response">Respons yang diterima tidak valid</string>
     <string name="reader_follow_comments_null_response">Tidak ada respons yang diterima</string>
     <string name="activity_log_activity_type_filter_clear">Hapus</string>
@@ -1811,10 +1809,7 @@ Language: id
     <string name="signup_with_google_progress">Mendaftar dengan Google…</string>
     <string name="jetpack_connection_failed_with_reason">Koneksi ke Jetpack gagal: %s</string>
     <string name="jetpack_already_connected_toast">Anda sudah terhubung dengan Jetpack!</string>
-    <string name="menu_undo_snackbar_action">URUNGKAN</string>
-    <string name="menu_visual_mode_done_snackbar">Beralih ke mode Visual</string>
     <string name="menu_visual_mode">Mode Visual</string>
-    <string name="menu_html_mode_done_snackbar">Beralih ke mode HTML</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Pratinjau</string>
     <string name="menu_save_as_draft">Simpan sebagai Konsep</string>
@@ -2898,7 +2893,6 @@ Language: id
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
-    <string name="reader_label_reply">Balas</string>
     <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
     <string name="reader_toast_err_get_post">Gagal membuka pos ini</string>

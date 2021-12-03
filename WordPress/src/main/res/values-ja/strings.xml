@@ -574,10 +574,8 @@ Language: ja_JP
     <string name="reader_follow_comments_could_not_unsubscribe_error">この投稿のコメントをフォロー解除できませんでした</string>
     <string name="reader_follow_comments_could_not_subscribe_error">この投稿のコメントをフォローできませんでした</string>
     <string name="reader_follow_comments_get_status_error">投稿の購読ステータスを取得中にエラーが発生しました</string>
-    <string name="reader_follow_comments_unsubscribe_success">コメントの購読を正常に解除しました</string>
     <string name="reader_btn_follow_comments">メールで会話をフォロー</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
-    <string name="reader_follow_comments_subscribe_success">コメントの購読を正常に登録しました</string>
     <string name="reader_follow_comments_bad_format_response">無効な応答を受信しました</string>
     <string name="reader_follow_comments_null_response">応答がありませんでした</string>
     <string name="activity_log_activity_type_filter_clear">クリア</string>
@@ -1808,14 +1806,11 @@ Language: ja_JP
     <string name="signup_with_google_progress">Google アカウントで登録中…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack への接続に失敗しました:%s</string>
     <string name="jetpack_already_connected_toast">すでに Jetpack に接続しています</string>
-    <string name="menu_undo_snackbar_action">取り消し</string>
     <string name="menu_visual_mode">ビジュアルモード</string>
     <string name="menu_html_mode">HTML モード</string>
     <string name="menu_preview">プレビュー</string>
     <string name="menu_save_as_draft">下書きとして保存</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">ビジュアルモードに切り替えました</string>
-    <string name="menu_html_mode_done_snackbar">HTML モードに切り替えました</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s KB</string>
@@ -2894,7 +2889,6 @@ Language: ja_JP
     <string name="share_link">リンクを共有</string>
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
-    <string name="reader_label_reply">返信</string>
     <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="reader_likes_multi">%,d 人が「いいね」しています</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」しました</string>

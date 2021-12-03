@@ -267,7 +267,6 @@ Language: hi_IN
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
-    <string name="reader_label_reply">जवाब दें</string>
     <string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
     <string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
     <string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>

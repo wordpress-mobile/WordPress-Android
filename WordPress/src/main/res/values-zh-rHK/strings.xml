@@ -573,11 +573,9 @@ Language: zh_TW
     <string name="reader_follow_comments_could_not_unsubscribe_error">無法取消訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_could_not_subscribe_error">無法訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_get_status_error">擷取文章訂閱狀態時發生錯誤</string>
-    <string name="reader_follow_comments_unsubscribe_success">已成功取消訂閱留言</string>
     <string name="reader_btn_following_comments">透過電子郵件追蹤對話</string>
     <string name="reader_btn_follow_comments">透過電子郵件追蹤對話</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
-    <string name="reader_follow_comments_subscribe_success">已成功訂閱留言</string>
     <string name="reader_follow_comments_bad_format_response">收到無效回應</string>
     <string name="reader_follow_comments_null_response">未收到回應</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
@@ -1808,14 +1806,11 @@ Language: zh_TW
     <string name="open_external_link_desc">開啟外部連結</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
-    <string name="menu_undo_snackbar_action">復原</string>
     <string name="menu_visual_mode">視覺化模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_save_as_draft">儲存為草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">已切換至「視覺化」模式</string>
-    <string name="menu_html_mode_done_snackbar">已切換至「HTML」模式</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -2895,7 +2890,6 @@ Language: zh_TW
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>
     <string name="reader_likes_multi">%,d 人說這個讚</string>
-    <string name="reader_label_reply">回覆</string>
     <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
