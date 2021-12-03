@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mIsHeaderClickEnabled;
 
     private final int mColorHighlight;
+    private final ColorStateList mReplyButtonHighlightedColor;
+    private final ColorStateList mReplyButtonNormalColorColor;
 
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_COMMENT = 2;
@@ -174,6 +177,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mColorHighlight = ColorUtils
                 .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary),
                         context.getResources().getInteger(R.integer.selected_list_item_opacity));
+
+        mReplyButtonHighlightedColor = ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.colorPrimary);
+        mReplyButtonNormalColorColor =
+                ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.wpColorOnSurfaceMedium);
 
         setHasStableIds(true);
     }
@@ -328,17 +335,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         if (mReplyTargetComment != 0 && mReplyTargetComment == comment.commentId) {
-            commentHolder.mReplyButtonLabel.setTextColor(ContextExtensionsKt
-                    .getColorFromAttribute(commentHolder.mReplyButtonLabel.getContext(), R.attr.colorPrimary));
-            commentHolder.mReplyButtonIcon.setImageTintList(ContextExtensionsKt
-                    .getColorStateListFromAttribute(commentHolder.mReplyButtonLabel.getContext(), R.attr.colorPrimary));
+            commentHolder.mReplyButtonLabel.setTextColor(mReplyButtonHighlightedColor);
+            commentHolder.mReplyButtonIcon.setImageTintList(mReplyButtonHighlightedColor);
         } else {
-            commentHolder.mReplyButtonLabel.setTextColor(ContextExtensionsKt
-                    .getColorFromAttribute(commentHolder.mReplyButtonLabel.getContext(),
-                            R.attr.wpColorOnSurfaceMedium));
-            commentHolder.mReplyButtonIcon.setImageTintList(ContextExtensionsKt
-                    .getColorStateListFromAttribute(commentHolder.mReplyButtonLabel.getContext(),
-                            R.attr.wpColorOnSurfaceMedium));
+            commentHolder.mReplyButtonLabel.setTextColor(mReplyButtonNormalColorColor);
+            commentHolder.mReplyButtonIcon.setImageTintList(mReplyButtonNormalColorColor);
         }
 
         commentHolder.mShareButton.setOnClickListener(
