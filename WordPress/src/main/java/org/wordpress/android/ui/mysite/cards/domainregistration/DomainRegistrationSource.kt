@@ -38,6 +38,14 @@ class DomainRegistrationSource @Inject constructor(
 
     private val continuations = mutableMapOf<Int, CancellableContinuation<OnPlansFetched>?>()
 
+    init {
+        dispatcher.register(this)
+    }
+
+    fun clear() {
+        dispatcher.unregister(this)
+    }
+    
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
         val data = MediatorLiveData<DomainCreditAvailable>()
         data.refreshData(coroutineScope, siteLocalId)
@@ -102,14 +110,6 @@ class DomainRegistrationSource @Inject constructor(
         } else {
             appLogWrapper.d(DOMAIN_REGISTRATION, "A request is already running for $siteLocalId")
         }
-    }
-
-    init {
-        dispatcher.register(this)
-    }
-
-    fun clear() {
-        dispatcher.unregister(this)
     }
 
     private fun shouldFetchPlans(site: SiteModel) = !siteUtils.onFreePlan(site)
