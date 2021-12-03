@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -17,8 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
-import java.util.Date
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel): FetchedCardsPayload<CardsResponse> {
+    suspend fun fetchCards(site: SiteModel): CardsPayload<CardsResponse> {
         val url = WPCOMV2.sites.site(site.siteId).dashboard.cards.url
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
@@ -41,16 +41,16 @@ class CardsRestClient @Inject constructor(
                 CardsResponse::class.java
         )
         return when (response) {
-            is Success -> FetchedCardsPayload(response.data)
-            is Error -> FetchedCardsPayload(response.error.toCardsError())
+            is Success -> CardsPayload(response.data)
+            is Error -> CardsPayload(response.error.toCardsError())
         }
     }
 
     data class CardsResponse(
         @SerializedName("posts") val posts: PostsResponse
     ) {
-        fun toCards() = CardsModel(
-                posts = posts.toPosts()
+        fun toCards() = listOf(
+                posts.toPosts()
         )
     }
 
@@ -59,7 +59,7 @@ class CardsRestClient @Inject constructor(
         @SerializedName("draft") val draft: List<PostResponse>,
         @SerializedName("scheduled") val scheduled: List<PostResponse>
     ) {
-        fun toPosts() = CardsModel.PostsModel(
+        fun toPosts() = PostsCardModel(
                 hasPublished = hasPublished,
                 draft = draft.map { it.toPost() },
                 scheduled = scheduled.map { it.toPost() }
@@ -67,18 +67,18 @@ class CardsRestClient @Inject constructor(
     }
 
     data class PostResponse(
-        @SerializedName("ID") val id: Int,
-        @SerializedName("post_title") val title: String?,
-        @SerializedName("post_content") val content: String?,
-        @SerializedName("post_modified") val date: Date,
-        @SerializedName("featured_image") val featuredImage: String?
+        @SerializedName("id") val id: Int,
+        @SerializedName("title") val title: String,
+        @SerializedName("content") val content: String,
+        @SerializedName("featured_image") val featuredImage: String?,
+        @SerializedName("date") val date: String
     ) {
-        fun toPost() = CardsModel.PostsModel.PostModel(
+        fun toPost() = PostCardModel(
                 id = id,
                 title = title,
                 content = content,
-                date = date,
-                featuredImage = featuredImage
+                featuredImage = featuredImage,
+                date = CardsUtils.fromDate(date)
         )
     }
 }

@@ -32,9 +32,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.FetchedCardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.test
-import java.text.SimpleDateFormat
 
 /* DATE */
 
@@ -44,26 +43,26 @@ private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
 private val DRAFT_POST_RESPONSE_TWO = PostResponse(
         id = 708,
-        title = null,
-        content = "<!-- wp:paragraph -->\n<p>Draft Content 2</p>\n<!-- /wp:paragraph -->",
-        date = SimpleDateFormat(DATE_FORMAT_PATTERN).parse("2021-11-02 17:48:00")!!,
-        featuredImage = "https://test.blog/wp-content/uploads/2021/11/draft-photo-2.jpeg?w=200"
+        title = "",
+        content = "Draft Content 2",
+        featuredImage = "https://test.blog/wp-content/uploads/2021/11/draft-featured-image-2.jpeg?w=200",
+        date = "2021-11-02 15:47:42"
 )
 
 private val DRAFT_POST_RESPONSE_ONE = PostResponse(
         id = 659,
         title = "Draft Title 1",
-        content = "<!-- wp:paragraph -->\n<p>Draft Content 1</p>\n<!-- /wp:paragraph -->",
-        date = SimpleDateFormat(DATE_FORMAT_PATTERN).parse("2021-10-27 15:26:01")!!,
-        featuredImage = null
+        content = "Draft Content 1",
+        featuredImage = null,
+        date = "2021-10-27 12:25:57"
 )
 
 private val SCHEDULED_POST_RESPONSE_ONE = PostResponse(
         id = 762,
         title = "Scheduled Title 1",
-        content = null,
-        date = SimpleDateFormat(DATE_FORMAT_PATTERN).parse("2021-11-05 11:05:30")!!,
-        featuredImage = "https://test.blog/wp-content/uploads/2021/11/scheduled-photo-1.jpeg?w=200"
+        content = "",
+        featuredImage = "https://test.blog/wp-content/uploads/2021/11/scheduled-featured-image-1.jpeg?w=200",
+        date = "2021-12-26 23:00:33"
 )
 
 private val POSTS_RESPONSE = PostsResponse(
@@ -203,18 +202,18 @@ class CardsRestClientTest {
     @Suppress("SameParameterValue")
     private fun assertSuccess(
         expected: CardsResponse,
-        actual: FetchedCardsPayload<CardsResponse>
+        actual: CardsPayload<CardsResponse>
     ) {
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)
             assertFalse(isError)
-            assertEquals(FetchedCardsPayload(expected), this)
+            assertEquals(CardsPayload(expected), this)
         }
     }
 
     private fun assertError(
         expected: CardsErrorType,
-        actual: FetchedCardsPayload<CardsResponse>
+        actual: CardsPayload<CardsResponse>
     ) {
         with(actual) {
             assertEquals(site, this@CardsRestClientTest.site)
