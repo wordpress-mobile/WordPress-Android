@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.Transformations.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -44,10 +44,16 @@ class MySiteSourceManager @Inject constructor(
 
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            mySiteSources.map { source -> source.build(coroutineScope, siteLocalId).addDistinctUntilChangedIfNeeded() }
+            mySiteSources.map { source ->
+                source.build(coroutineScope, siteLocalId)
+                        .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+            }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.build(coroutineScope).addDistinctUntilChangedIfNeeded() }
+                    .map { source ->
+                        source.build(coroutineScope)
+                                .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+                    }
         }
     }
 
@@ -93,13 +99,6 @@ class MySiteSourceManager @Inject constructor(
         quickStartCardSource.refresh()
     }
 
-    private fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(): LiveData<X> =
-            if (!mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-                Transformations.distinctUntilChanged(this)
-            } else {
-                this
-            }
-
     /* QUICK START */
 
     fun refreshQuickStart() {
@@ -123,3 +122,10 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 }
+
+fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(isNeeded: Boolean): LiveData<X> =
+        if (isNeeded) {
+            distinctUntilChanged(this)
+        } else {
+            this
+        }
