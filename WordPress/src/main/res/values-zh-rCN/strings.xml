@@ -575,11 +575,9 @@ Language: zh_CN
     <string name="reader_follow_comments_could_not_unsubscribe_error">无法取消订阅本博客的评论</string>
     <string name="reader_follow_comments_could_not_subscribe_error">无法订阅本博客的评论</string>
     <string name="reader_follow_comments_get_status_error">获取博客订阅状态时出错</string>
-    <string name="reader_follow_comments_unsubscribe_success">已成功取消订阅评论</string>
     <string name="reader_btn_following_comments">通过电子邮件关注对话</string>
     <string name="reader_btn_follow_comments">通过电子邮件关注对话</string>
     <string name="my_site_btn_jetpack_settings">Jetpack设置</string>
-    <string name="reader_follow_comments_subscribe_success">已成功订阅评论</string>
     <string name="reader_follow_comments_bad_format_response">收到无效响应</string>
     <string name="reader_follow_comments_null_response">未收到任何响应</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
@@ -1811,14 +1809,11 @@ Language: zh_CN
     <string name="profile_picture">%s 的个人资料照片</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack 连接中断：%s</string>
     <string name="jetpack_already_connected_toast">您已连接至 Jetpack</string>
-    <string name="menu_undo_snackbar_action">撤消</string>
     <string name="menu_visual_mode">可视模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">预览</string>
     <string name="menu_save_as_draft">保存为草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">已切换至可视模式</string>
-    <string name="menu_html_mode_done_snackbar">已切换至 HTML 模式</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s KB</string>
@@ -2896,7 +2891,6 @@ Language: zh_CN
     <string name="media_error_no_permission">您无权查看媒体库</string>
     <string name="share_link">分享链接</string>
     <string name="reader_empty_posts_in_tag_updating">正在获取文章…</string>
-    <string name="reader_label_reply">回复</string>
     <string name="comment_spammed">评论被标记为垃圾评论</string>
     <string name="reader_likes_multi">%,d 人喜欢了</string>
     <string name="reader_likes_you_and_multi">您和另外 %,d 人喜欢了</string>

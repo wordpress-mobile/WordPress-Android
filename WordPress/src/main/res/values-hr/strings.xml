@@ -516,7 +516,6 @@ Language: hr
     <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava…</string>
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
     <string name="reader_likes_multi">%,d ljudi se ovo sviđa</string>
-    <string name="reader_label_reply">Odgovor</string>
     <string name="comment_spammed">Komentar označen kao spam</string>
     <string name="cant_share_no_visible_blog">Ne možete dijeliti na WordPressu bez vidljivog bloga</string>
     <string name="pick_photo">Odaberi sliku</string>

@@ -570,8 +570,6 @@ Language: pt_BR
     <string name="reader_follow_comments_could_not_unsubscribe_error">Não foi possível cancelar a inscrição dos comentários deste post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Não foi possível inscrever-se nos comentários deste post</string>
     <string name="reader_follow_comments_get_status_error">Erro ao coletar o status da assinatura do post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Inscrição nos comentários cancelada</string>
-    <string name="reader_follow_comments_subscribe_success">Inscrição nos comentários concluída</string>
     <string name="reader_follow_comments_bad_format_response">Resposta inválida recebida</string>
     <string name="reader_follow_comments_null_response">Nenhuma resposta recebida</string>
     <string name="activity_log_activity_type_filter_clear">Limpar</string>
@@ -1802,10 +1800,7 @@ Language: pt_BR
     <string name="signup_with_google_progress">Acessando com o Google…</string>
     <string name="jetpack_connection_failed_with_reason">A conexão com o Jetpack falhou: %s</string>
     <string name="jetpack_already_connected_toast">Você já está conectado ao Jetpack</string>
-    <string name="menu_undo_snackbar_action">Desfazer</string>
-    <string name="menu_visual_mode_done_snackbar">Mudar para o modo visual</string>
     <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode_done_snackbar">Mudar para o modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Visualizar</string>
     <string name="menu_save_as_draft">Salvar como rascunho</string>
@@ -2889,7 +2884,6 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="reader_likes_you_and_multi">Você e %,d outros curtiram isso</string>
     <string name="reader_likes_multi">%,d pessoas curtiram isso</string>
-    <string name="reader_label_reply">Responder</string>
     <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
     <string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>

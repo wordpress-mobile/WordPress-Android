@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 20:33:39+0000
+Translation-Revision-Date: 2021-11-29 20:31:46+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Из буфера обмена</string>
+    <string name="gutenberg_native_featured_image">Изображение записи</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Скопировать URL из буфера обмена, %s</string>
+    <string name="me_btn_about">О WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Перейти к запланированным записям</string>
+    <string name="my_site_post_card_link_go_to_drafts">Перейти в черновики</string>
+    <string name="my_site_post_card_link_create_post">Создать запись</string>
+    <string name="my_site_create_next_post_excerpt">Регулярные публикации помогают вам формировать аудиторию!</string>
+    <string name="my_site_create_next_post_title">Создайте вашу следующую запись</string>
+    <string name="menu_visual_mode_switched_notice">Переход в визуальный режим</string>
+    <string name="menu_html_mode_switched_notice">Переход в режим HTML</string>
+    <string name="post_link_copied_to_clipboard">Ссылка скопирована в буфер обмена</string>
+    <string name="comment_author_badge">Автор</string>
+    <string name="button_copy_link">Скопировать ссылку</string>
     <string name="domains_paid_plan_add_your_domain_caption">Добавление пользовательского домена сделает доступ к вашему сайту проще</string>
     <string name="domains_paid_plan_add_your_domain_title">Добавление домена</string>
     <string name="my_site_create_first_post_excerpt">Записи появляются на странице в вашего блога в обратном хронологическом порядке. Самое время поделиться вашими мыслями с миром!</string>
@@ -578,8 +592,6 @@ Language: ru
     <string name="reader_follow_comments_could_not_unsubscribe_error">Невозможно отписаться от комментариев для этой записи</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Невозможно подписаться на комментарии для этой записи</string>
     <string name="reader_follow_comments_get_status_error">Ошибка получения статуса подписки для записи</string>
-    <string name="reader_follow_comments_unsubscribe_success">Вы отписались от комментариев</string>
-    <string name="reader_follow_comments_subscribe_success">Вы подписались на комментарии</string>
     <string name="reader_follow_comments_bad_format_response">Получен неверный ответ</string>
     <string name="reader_follow_comments_null_response">Ответ не получен</string>
     <string name="activity_log_activity_type_filter_clear">Очистить</string>
@@ -1811,10 +1823,7 @@ Language: ru
     <string name="signup_with_google_progress">Регистрация через Google…</string>
     <string name="jetpack_connection_failed_with_reason">Подключение к Jetpack не удалось: %s</string>
     <string name="jetpack_already_connected_toast">Вы уже подключили Jetpack</string>
-    <string name="menu_undo_snackbar_action">ОТМЕНИТЬ</string>
-    <string name="menu_visual_mode_done_snackbar">Переход в визуальный режим.</string>
     <string name="menu_visual_mode">Визуальный режим</string>
-    <string name="menu_html_mode_done_snackbar">Переход в режим HTML</string>
     <string name="menu_html_mode">Режим HTML</string>
     <string name="menu_preview">Предпросмотр</string>
     <string name="menu_save_as_draft">Сохранить как черновик</string>
@@ -2898,7 +2907,6 @@ Language: ru
     <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="reader_likes_you_and_multi">Вам и %,d другим понравилось это.</string>
     <string name="reader_likes_multi">Понравилось %,d людям</string>
-    <string name="reader_label_reply">Ответ</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
     <string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
