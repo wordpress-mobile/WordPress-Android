@@ -12,15 +12,18 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
+import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
+import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-        version = 4,
+        version = 5,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
             PlanOfferId::class,
             PlanOfferFeature::class,
-            CommentEntity::class
+            CommentEntity::class,
+            CardEntity::class
         ]
 )
 abstract class WPAndroidDatabase : RoomDatabase() {
@@ -30,6 +33,9 @@ abstract class WPAndroidDatabase : RoomDatabase() {
 
     abstract fun commentsDao(): CommentsDao
 
+    abstract fun dashboardCardsDao(): CardsDao
+
+    @Suppress("MemberVisibilityCanBePrivate")
     companion object {
         const val WP_DB_NAME = "wp-android-database"
 
