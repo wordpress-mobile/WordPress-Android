@@ -1,10 +1,12 @@
 package org.wordpress.android.fluxc.store.dashboard
 
+import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -15,39 +17,41 @@ import javax.inject.Singleton
 @Singleton
 class CardsStore @Inject constructor(
     private val restClient: CardsRestClient,
+    private val cardsDao: CardsDao,
     private val coroutineEngine: CoroutineEngine
 ) {
-    @Suppress("unused")
     suspend fun fetchCards(
         site: SiteModel
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
         val payload = restClient.fetchCards(site)
-        return@withDefaultContext storeCards(payload)
+        return@withDefaultContext storeCards(site, payload)
     }
 
-    private fun storeCards(
-        payload: FetchedCardsPayload<CardsResponse>
-    ): OnCardsFetched<CardsModel> {
-        return when {
-            payload.isError -> OnCardsFetched(payload.error)
-            payload.response != null -> {
-                // TODO: Store in db.
-                OnCardsFetched(payload.response.toCards())
+    private suspend fun storeCards(
+        site: SiteModel,
+        payload: CardsPayload<CardsResponse>
+    ): CardsResult<List<CardModel>> = when {
+        payload.isError -> CardsResult(payload.error)
+        payload.response != null -> {
+            try {
+                cardsDao.insertWithDate(site.id, payload.response.toCards())
+                CardsResult()
+            } catch (e: Exception) {
+                CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))
             }
-            else -> OnCardsFetched(CardsError(CardsErrorType.INVALID_RESPONSE))
         }
+        else -> CardsResult(CardsError(CardsErrorType.INVALID_RESPONSE))
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
     fun getCards(
         site: SiteModel
-    ) = coroutineEngine.run(AppLog.T.DB, this, "getCards") {
-        // TODO: Get from db.
+    ) = cardsDao.get(site.id).map { cards ->
+        CardsResult(cards.map { it.toCard() })
     }
 
     /* PAYLOADS */
 
-    data class FetchedCardsPayload<T>(
+    data class CardsPayload<T>(
         val response: T? = null
     ) : Payload<CardsError>() {
         constructor(error: CardsError) : this() {
@@ -57,7 +61,7 @@ class CardsStore @Inject constructor(
 
     /* ACTIONS */
 
-    data class OnCardsFetched<T>(
+    data class CardsResult<T>(
         val model: T? = null,
         val cached: Boolean = false
     ) : Store.OnChanged<CardsError>() {
@@ -76,5 +80,8 @@ class CardsStore @Inject constructor(
         TIMEOUT
     }
 
-    class CardsError(var type: CardsErrorType, var message: String? = null) : OnChangedError
+    class CardsError(
+        val type: CardsErrorType,
+        val message: String? = null
+    ) : OnChangedError
 }

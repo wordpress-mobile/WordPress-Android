@@ -8,23 +8,38 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
+import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import javax.inject.Singleton
 
 @Module
 class DatabaseModule {
-    @Singleton @Provides fun provideDatabase(context: Context): WPAndroidDatabase {
+    @Singleton
+    @Provides
+    fun provideDatabase(context: Context): WPAndroidDatabase {
         return buildDb(context)
     }
 
-    @Singleton @Provides fun provideBloggingRemindersDao(wpAndroidDatabase: WPAndroidDatabase): BloggingRemindersDao {
+    @Singleton
+    @Provides
+    fun provideBloggingRemindersDao(wpAndroidDatabase: WPAndroidDatabase): BloggingRemindersDao {
         return wpAndroidDatabase.bloggingRemindersDao()
     }
 
-    @Singleton @Provides fun providePlanOffersDao(wpAndroidDatabase: WPAndroidDatabase): PlanOffersDao {
+    @Singleton
+    @Provides
+    fun providePlanOffersDao(wpAndroidDatabase: WPAndroidDatabase): PlanOffersDao {
         return wpAndroidDatabase.planOffersDao()
     }
 
-    @Singleton @Provides fun provideCommentsDao(wpAndroidDatabase: WPAndroidDatabase): CommentsDao {
+    @Singleton
+    @Provides
+    fun provideCommentsDao(wpAndroidDatabase: WPAndroidDatabase): CommentsDao {
         return wpAndroidDatabase.commentsDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDashboardCardsDao(wpAndroidDatabase: WPAndroidDatabase): CardsDao {
+        return wpAndroidDatabase.dashboardCardsDao()
     }
 }
