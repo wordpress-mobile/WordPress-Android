@@ -6,10 +6,7 @@ import android.os.AsyncTask;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -317,55 +314,51 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts()) {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
 
-            commentHolder.mActionButtonContainer.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View v) {
-                    Context context = commentHolder.mActionButton.getContext();
+            commentHolder.mActionButtonContainer.setOnClickListener(v -> {
+                Context context = commentHolder.mActionButton.getContext();
 
-                    ListPopupWindow menuPopup = new ListPopupWindow(context);
+                ListPopupWindow menuPopup = new ListPopupWindow(context);
 
-                    ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
-                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPROVE,
-                            new UiStringRes(R.string.reader_comment_menu_unapprove),
-                            new UiStringRes(R.string.reader_comment_menu_unapprove),
-                            R.drawable.ic_cross_in_circle_white_24dp));
+                ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPROVE,
+                        new UiStringRes(R.string.reader_comment_menu_unapprove),
+                        new UiStringRes(R.string.reader_comment_menu_unapprove),
+                        R.drawable.ic_cross_in_circle_white_24dp));
 
-                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SPAM,
-                            new UiStringRes(R.string.reader_comment_menu_spam),
-                            new UiStringRes(R.string.reader_comment_menu_spam),
-                            R.drawable.ic_spam_white_24dp));
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SPAM,
+                        new UiStringRes(R.string.reader_comment_menu_spam),
+                        new UiStringRes(R.string.reader_comment_menu_spam),
+                        R.drawable.ic_spam_white_24dp));
 
-                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.TRASH,
-                            new UiStringRes(R.string.reader_comment_menu_trash),
-                            new UiStringRes(R.string.reader_comment_menu_trash),
-                            R.drawable.ic_trash_white_24dp));
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.TRASH,
+                        new UiStringRes(R.string.reader_comment_menu_trash),
+                        new UiStringRes(R.string.reader_comment_menu_trash),
+                        R.drawable.ic_trash_white_24dp));
 
-                    actions.add(new Divider());
+                actions.add(new Divider());
 
-                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
-                            new UiStringRes(R.string.reader_comment_menu_edit),
-                            new UiStringRes(R.string.reader_comment_menu_edit),
-                            R.drawable.ic_pencil_white_24dp));
+//                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
+//                            new UiStringRes(R.string.reader_comment_menu_edit),
+//                            new UiStringRes(R.string.reader_comment_menu_edit),
+//                            R.drawable.ic_pencil_white_24dp));
 
-                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
-                            new UiStringRes(R.string.share_desc),
-                            new UiStringRes(R.string.share_desc),
-                            R.drawable.ic_share_white_24dp));
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
+                        new UiStringRes(R.string.reader_comment_menu_share),
+                        new UiStringRes(R.string.reader_comment_menu_share),
+                        R.drawable.ic_share_white_24dp));
 
 
-                    menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-                    menuPopup.setAdapter(new ReaderCommentMenuActionAdapter(context, mUiHelpers, actions));
-                    menuPopup.setDropDownGravity(Gravity.END);
-                    menuPopup.setAnchorView(commentHolder.mActionButton);
-                    menuPopup.setModal(true);
-                    menuPopup.setOnItemClickListener(new OnItemClickListener() {
-                        @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            mCommentMenuActionListener
-                                    .onCommentMenuItemTapped(comment, actions.get(position).getType());
-                            menuPopup.dismiss();
-                        }
-                    });
-                    menuPopup.show();
-                }
+                menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+                menuPopup.setAdapter(new ReaderCommentMenuActionAdapter(context, mUiHelpers, actions));
+                menuPopup.setDropDownGravity(Gravity.END);
+                menuPopup.setAnchorView(commentHolder.mActionButton);
+                menuPopup.setModal(true);
+                menuPopup.setOnItemClickListener((parent, view, position1, id) -> {
+                    mCommentMenuActionListener
+                            .onCommentMenuItemTapped(comment, actions.get(position1).getType());
+                    menuPopup.dismiss();
+                });
+                menuPopup.show();
             });
         } else {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_share_white_24dp);

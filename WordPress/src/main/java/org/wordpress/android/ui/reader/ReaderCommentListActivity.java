@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,6 +45,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -59,6 +61,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.CommentActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -99,8 +102,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 import kotlin.Unit;
 
 /**
- * @deprecated
- * Threaded Comments are being refactored as part of Comments Unification project. If you are adding any
+ * @deprecated Threaded Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this or related classes, please ping klymyam or develric
  */
 @Deprecated
@@ -294,6 +296,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
     }
+
     private void initObservers(Bundle savedInstanceState) {
         AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
 
@@ -521,10 +524,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case APPROVE:
                 break;
             case UNAPROVE:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
                 break;
             case SPAM:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_spammed);
                 break;
             case TRASH:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_trashed);
                 break;
             case EDIT:
                 break;
@@ -535,6 +541,49 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 break;
         }
     }
+
+    private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {
+        getCommentAdapter().removeComment(comment.commentId);
+        Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
+                                      .setAction(R.string.undo, view -> {
+                                          getCommentAdapter().addComment(comment);
+                                      });
+
+        snackbar.addCallback(new BaseCallback<Snackbar>() {
+            @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+
+                if (getCommentAdapter().positionOfCommentId(comment.commentId) != -1) {
+                    return;
+                }
+
+                CommentActionListener actionListener = (succeeded, newComment) -> {
+                    if (isFinishing()) {
+                        return;
+                    }
+
+                    if (succeeded) {
+                        getCommentAdapter().removeComment(comment.commentId);
+                    } else {
+                        getCommentAdapter().addComment(comment);
+                        ToastUtils.showToast(
+                                ReaderCommentListActivity.this,
+                                R.string.comment_moderation_error
+                        );
+                    }
+                    checkEmptyView();
+                };
+                ReaderCommentActions.moderateComment(
+                        comment,
+                        newStatus,
+                        actionListener
+                );
+            }
+        });
+
+        snackbar.show();
+    }
+
 
     private void shareComment(String commentUrl) {
         mReaderTracker.trackPost(

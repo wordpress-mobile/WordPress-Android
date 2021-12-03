@@ -414,6 +414,7 @@
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_unarppoved">Comment unapproved</string>
     <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
@@ -453,6 +454,7 @@
     <string name="reader_comment_menu_spam">Mark as Spam</string>
     <string name="reader_comment_menu_trash">Move to Trash</string>
     <string name="reader_comment_menu_edit">Edit</string>
+    <string name="reader_comment_menu_share">@string/share_desc</string>
 
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
@@ -480,6 +482,7 @@
     <string name="comment_q_action_replying">Replying…</string>
     <string name="comment_q_action_copied_url">Link address copied</string>
     <string name="comment_batch_moderation_error">Failed to moderate one or more comments</string>
+    <string name="comment_moderation_error">Failed to moderate comments</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
