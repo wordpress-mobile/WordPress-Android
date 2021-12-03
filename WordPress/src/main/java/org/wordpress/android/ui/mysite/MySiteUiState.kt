@@ -2,16 +2,17 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.PostsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 
 data class MySiteUiState(
@@ -25,7 +26,7 @@ data class MySiteUiState(
     val quickStartCategories: List<QuickStartCategory> = listOf(),
     val pinnedDynamicCard: DynamicCardType? = null,
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
-    val mockedPostsData: MockedPostsData? = null
+    val cards: CardsResult<List<CardModel>>? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -43,7 +44,7 @@ data class MySiteUiState(
             val cards: List<DynamicCardType>
         ) : PartialState()
 
-        data class PostsUpdate(val mockedPostsData: MockedPostsData? = null) : PartialState()
+        data class CardsUpdate(val cards: CardsResult<List<CardModel>>) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
@@ -64,7 +65,7 @@ data class MySiteUiState(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
-            is PostsUpdate -> this.copy(mockedPostsData = partialState.mockedPostsData)
+            is CardsUpdate -> this.copy(cards = partialState.cards)
         }
     }
 }
