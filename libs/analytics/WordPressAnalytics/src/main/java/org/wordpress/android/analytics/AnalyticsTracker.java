@@ -814,7 +814,10 @@ public final class AnalyticsTracker {
         CREATE_SITE_NOTIFICATION_SCHEDULED,
         RECOMMEND_APP_ENGAGED,
         RECOMMEND_APP_CONTENT_FETCH_FAILED,
-        EDITOR_BLOCK_INSERTED
+        EDITOR_BLOCK_INSERTED,
+        ABOUT_SCREEN_SHOWN,
+        ABOUT_SCREEN_DISMISSED,
+        ABOUT_SCREEN_BUTTON_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

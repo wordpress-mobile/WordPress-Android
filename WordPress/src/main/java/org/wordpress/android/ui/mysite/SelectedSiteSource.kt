@@ -12,9 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
@@ -29,12 +27,14 @@ class SelectedSiteSource @Inject constructor(
             .map { SelectedSite(it) }
 
     override fun refresh() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
+        updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             super.refresh()
             dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
         }
     }
+
+    fun updateSiteSettingsIfNecessary() = selectedSiteRepository.updateSiteSettingsIfNecessary()
 
     init {
         dispatcher.register(this)

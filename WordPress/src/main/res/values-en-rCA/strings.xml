@@ -476,8 +476,6 @@ Language: en_CA
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
@@ -1705,10 +1703,7 @@ Language: en_CA
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -2788,7 +2783,6 @@ Language: en_CA
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

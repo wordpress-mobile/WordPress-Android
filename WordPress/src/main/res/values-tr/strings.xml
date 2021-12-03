@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-12 13:52:38+0000
+Translation-Revision-Date: 2021-11-24 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="domains_paid_plan_add_your_domain_caption">Özel bir alan adı eklemek ziyaretçilerin sitenizi bulmasını kolaylaştırır</string>
+    <string name="domains_paid_plan_add_your_domain_title">Aalan adınızı ekleyin</string>
+    <string name="my_site_create_first_post_excerpt">Gönderiler blog sayfanızda ters kronolojik sırada görünür. Fikirlerinizi dünyayla paylaşmanın zamanı geldi!</string>
+    <string name="my_site_post_card_scheduled_title">Yaklaşan zamanlanmış gönderiler</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
@@ -229,6 +233,7 @@ Language: tr
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
+    <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
     <string name="gutenberg_native_none">Hiçbiri</string>
@@ -570,8 +575,6 @@ Language: tr
     <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
     <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
-    <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
-    <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
     <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
     <string name="activity_log_activity_type_filter_clear">Temizle</string>
@@ -1802,10 +1805,7 @@ Language: tr
     <string name="signup_with_google_progress">Google ile kaydolunuyor…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
-    <string name="menu_undo_snackbar_action">GERİ AL</string>
-    <string name="menu_visual_mode_done_snackbar">Görsel moda geçildi</string>
     <string name="menu_visual_mode">Görsel mod</string>
-    <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML modu</string>
     <string name="menu_preview">Önizleme</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
@@ -2889,7 +2889,6 @@ Language: tr
     <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
-    <string name="reader_label_reply">Yanıtla</string>
     <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>

@@ -1,126 +1,90 @@
 <ar>
-18.6:
-- يمكنك الآن استخدام وضع علامة على وسم HTML وتغيير نص زر مكوِّن البحث ولون الخلفية.
-- ميزات إعداد المحرر الأصلي متاحة للجميع، بما في ذلك شارة المكوِّن الجديد.
-- لن تخرج شاشة التعليمات من صندوقها عند تدويرها من الوضع الرأسي إلى الوضع الأفقي.
-- أصلحنا مزيدًا من المشكلات الخاصة بالتحميل الموجودة في مكوِّن التضمين.
+18.7:
+- قمنا بتوسيع إعداد "رابط إلى" الخاص بمكوِّن الصورة لتضمين خيارات "ملف الوسائط" و"صفحة المرفق" إلى جانب خيار "عنوان URL مخصص" الموجود سابقًا.
+- قمنا بحل مشكلة بشأن عمليات حفظ المحتوى التلقائية، لذا تعمل الآن بسلاسة أكبر.
 </ar>
 <de-DE>
-18.6:
-- Du kannst jetzt das Tag „Mark HTML“ nutzen, um den Text und die Hintergrundfarbe des Buttons „Block suchen“.
-- Onboarding-Funktionen des nativen Editors, darunter auch das Badge „Neuer Block“, stehen allen zur Verfügung.
-- Der Hilfe-Bildschirm bleibt in seinem Rahmen, wenn er von Hoch- zu Querformat gedreht wird.
-- Wir haben weitere Ladestörungen des Embed-Blocks behoben.
+18.7:
+- Der Einstellung „Link zu“ im Bildblock wurden neben der vorhandenen Option „Individuelle URL“ die Optionen „Mediendatei“ und „Anhang-Seite“ hinzugefügt.
+- Die automatische Speicherung von Inhalten funktioniert jetzt reibungsloser.
 </de-DE>
 <en-US>
-18.6:
-- You can now use the Mark HTML tag and change the Search block button's text and background color.
-- Native editor onboarding features are available to everyone, including the new block badge.
-- The Help screen won't break out of its box when rotated between portrait and landscape.
-- We fixed more loading glitches in the Embed block.
+18.7:
+- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
+- We solved a problem with content autosaves so they now run more smoothly.
 </en-US>
 <es-ES>
-18.6:
-- Ahora puedes usar la etiqueta HTML Mark y cambiar el texto y el color de fondo del botón del bloque de búsqueda.
-- Las características nativas incorporadas del editor están disponibles para todos, incluyendo la nueva insignia de bloque.
-- La pantalla de ayuda no se sale de su caja cuando se rota entre retrato y panorámica.
-- Hemos corregido más fallos de carga en el bloque de incrustación.
+18.7:
+- Hemos ampliado el ajuste «Enlace a» para el bloque de imágenes para incluir las opciones «Archivo de medios» y «Página de adjuntos» además de la opción preexistente «URL personalizada».
+- Hemos solucionado un problema con el guardado automático del contenido, por lo que ahora se ejecuta más fluidamente.
 </es-ES>
 <fr-CA>
-18.6 :
-- Vous pouvez désormais utiliser la balise HTML Mark et modifier le texte et la couleur d‘arrière-plan du bouton de bloc Recherche.
-- Les fonctionnalités d‘accueil de l‘éditeur natif sont disponibles pour tous, y compris le nouveau badge de bloc.
-- L‘écran d‘aide ne sort plus de sa position lorsqu‘il passe du mode Portrait à Paysage.
-- Nous avons corrigé d‘autres problèmes de chargement dans le bloc Embarquer.
+18.7 :
+- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
+- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
 </fr-CA>
 <fr-FR>
-18.6 :
-- Vous pouvez désormais utiliser la balise HTML Mark et modifier le texte et la couleur d‘arrière-plan du bouton de bloc Recherche.
-- Les fonctionnalités d‘accueil de l‘éditeur natif sont disponibles pour tous, y compris le nouveau badge de bloc.
-- L‘écran d‘aide ne sort plus de sa position lorsqu‘il passe du mode Portrait à Paysage.
-- Nous avons corrigé d‘autres problèmes de chargement dans le bloc Embarquer.
+18.7 :
+- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
+- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
 </fr-FR>
 <iw-IL>
-18.6:
-- כעת אפשר להשתמש בתגית 'לסמן HTML' ולשנות את הטקסט וצבע הרקע בכפתור של בלוק החיפוש.
-- אפשרויות להתחלת עבודה עם העורך המקורי זמינות לכולם, כולל תג הבלוק החדש.
-- המסך 'עזרה' לא יחרוג מהגבולות שלו בעת סיבוב התצוגה מהאורך לרוחב.
-- תיקנו בעיות טעינה נוספות בבלוק ההטמעה.
+18.7:
+- הרחבנו את ההגדרות של 'קישור אל' בבלוק התמונה והוספנו את האפשרויות 'קובץ מדיה' ו'עמוד עם קובץ מצורף' לצד האפשרות 'כתובת URL מותאמת' שהייתה כבר קיימת.
+- פתרנו בעיה עם השמירה האוטומטית של התוכן כדי שהתהליך יהיה יציב יותר.
 </iw-IL>
 <id>
-18.6
-- You can now use the Mark HTML tag and change the Search block button's text and background colour.
-- Native editor onboarding features are available to everyone, including the new block badge.
-- The Help screen won't break out of its box when rotated between portrait and landscape.
-- We fixed more loading glitches in the Embed block.
+18.7:
+- Kami memperluas pengaturan "Tautan Ke" untuk blok gambar agar mencakup pilihan "Berkas Media" dan "Halaman Lampiran" di samping opsi "URL Kustom" yang sudah ada.
+- Kami menyelesaikan masalah pada penyimpanan otomatis konten sehingga dapat berjalan dengan lebih lancar.
 </id>
 <it-IT>
-18.6:
-- Ora puoi usare il tag HTML Mark e modificare il testo del pulsante del blocco Cerca e il colore di sfondo.
-- Le funzionalità di avviamento dell'editor native sono disponibili per tutti, incluso il nuovo badge del blocco.
-- La schermata Guida non si staccherà più dalla sua casella durante la rotazione da orizzontale a verticale e viceversa.
-- Abbiamo corretto ulteriori problemi di caricamento nel blocco Incorporamenti.
+18.7:
+- Abbiamo ampliato l'impostazione "Collega a" per il blocco immagine per includere le opzioni "File multimediale" e "Pagina allegato" insieme all'opzione preesistente "URL personalizzato".
+- Abbiamo risolto un problema con i salvataggi automatici dei contenuti in modo che ora funzionino in modo più fluido.
 </it-IT>
 <ja-JP>
-18.6:
-- Mark HTML タグを使って、「検索」ブロックボタンのテキストや背景色を変更できるようになりました。
-- ネイティブエディターのオンボーディング機能は、新しいブロックバッジを含め、だれでも利用できます。
-- ヘルプ画面を縦向きや横向きに回転させても、枠からはみ出ないようになりました。
-- 埋め込みブロックの読み込みエラーを修正しました。
+18.7:
+- 画像ブロックの「リンク先」設定を拡張し、既存の「カスタム URL」に加えて「メディアファイル」と「添付ファイルページ」のオプションを追加しました。
+- コンテンツの自動保存に関する問題を解決したため、よりスムーズに実行できるようになりました。
 </ja-JP>
 <ko-KR>
-18.6:
-- 이제는 HTML 표시 태그를 사용하고 검색 블록 버튼의 텍스트와 배경 색상을 변경할 수 있습니다.
-- 새 블록 배지를 포함하여 기본적으로 제공되는 편집기 온보딩 기능을 누구나 사용할 수 있습니다.
-- 세로와 가로 사이에서 회전할 때 도움말 화면이 상자를 벗어나지 않습니다.
-- 임베드 블록의 로딩 결함을 더 해결했습니다.
+18.7:
+- 이미지 블록에 대한 "링크" 설정을 확장하여 이미 있는 "사용자 정의 URL" 옵션과 함께 "미디어 파일" 옵션과 "첨부 페이지" 옵션을 포함했습니다.
+- 콘텐츠 자동저장이 더 원활하게 실행되도록 문제를 해결했습니다.
 </ko-KR>
 <nl-NL>
-18.6:
-- Je kunt nu de HTML mark tag gebruiken, en de tekst en achtergrondkleur van de zoek blok knop wijzigen.
-- Native editor onboarding functies zijn voor iedereen beschikbaar, inclusief de nieuwe blok badge.
-- Het hulpscherm loopt niet uit zijn box wanneer het wordt gedraaid tussen staand en liggend.
-- We hebben meer laadproblemen in het insluit blok opgelost.
+18.7:
+- We hebben de "Link naar" instelling voor het afbeeldingblok uitgebreid met "Media bestand" en "Bijlage pagina" opties naast de al bestaande "Aangepaste URL" optie.
+- We hebben een probleem opgelost met automatisch inhouden opslaan, zodat zij nu soepeler draaien.
 </nl-NL>
 <pt-BR>
-18.6:
-- Agora você pode usar a tag HTML Mark para alterar as cores do texto e de fundo do botão do bloco pesquisa.
-- Recursos do editor nativo estão disponíveis para todos, incluindo o aviso de novo bloco.
-- A tela de ajuda não quebra mais ao trocar entre o modo retrato e paisagem.
-- Corrigimos mais erros de carregamento no bloco de mídia incorporada.
+18.7:
+- Ampliamos a configuração "Link para" de forma que o bloco de imagem inclua as opções "Arquivo de mídia" e "Página de anexo" juntamente com a opção já existente "URL personalizada".
+- Corrigimos um problema no salvamento automático de conteúdo para deixá-lo mais estável.
 </pt-BR>
 <ru-RU>
-18.6:
-- Теперь вы можете использовать HTML-тег mark и изменить цвет текста и фона кнопки блока поиска.
-- Стартовые возможности встроенного редактора доступны всем, включая значов нового блока.
-- Экран справки не деформируется при повороте между книжной и альбомной ориентацией.
-- Мы исправили больше ошибок загрузки в блоке встраивания.
+18.7:
+- Мы расширили параметр «Ссылка на» для блока изображения, включив в него параметры «Медиа-файл» и «Страница вложения» наряду с уже существующим параметром «Пользовательский URL».
+- Мы решили проблему с автосохранением содержимого, теперь это работает гладко.
 </ru-RU>
 <sv-SE>
-18.6:
-- Nu kan du använda HTML-taggen ”mark” och ändra text- och bakgrundsfärg för sökblockets knapp.
-- Välkomstfunktioner för den inbyggda redigeraren är tillgängliga för alla, inklusive det nya block-märket.
-- Hjälpsidan hoppar inte längre ut ur sin ruta när man roterar enheten mellan liggande och stående format.
-- Vi har rättat några fler laddningsproblem i inbäddningsblocket.
+18.7:
+- Utöver det tidigare alternativet att länka till anpassad URL har vi inställningarna för bildblocket lagt till alternativ för att länka till själva mediafilen eller till bilagans egen sida.
+- Vi har löst ett problem med autosparning med innehåll så att de nu fungerar smidigare.
 </sv-SE>
 <tr-TR>
-18.6:
-- Artık HTML İşaretleme etiketini kullanabilir ve Arama bloku düğmesinin metin ve arka plan rengini değiştirebilirsiniz.
-- Yeni blok rozeti de dahil olmak üzere yerel düzenleyici destek özellikleri artık herkes tarafından kullanılabilir.
-- Dikey ve yatay görünüm arasında geçiş yapıldığında Yardım ekranı artık çerçevesinden çıkmıyor.
-- Gömülü bloktaki diğer yükleme hatalarını düzelttik.
+18.7:
+- Görsel bloku için "Bağlantı" ayarını, önceden var olan "Özel URL" seçeneğinin yanı sıra "Ortam Dosyası" ve "Ek Sayfası" seçeneklerini içerecek şekilde genişlettik.
+- İçeriğin otomatik olarak kaydedilmesi işleviyle ilgili bir sorun çözülerek artık daha düzgün çalışması sağlandı.
 </tr-TR>
 <zh-CN>
-18.6：
-- 现在，您可以使用 Mark HTML 标签并更改“搜索”区块按钮的文本和背景颜色。
-- 已面向所有人开放原生编辑器登录功能，包括新的区块徽章。
--“帮助”屏幕在竖屏和横屏之间旋转时不会再跳出框。
-- 我们还修复了嵌更多入区块中的加载故障。
+18.7：
+- 我们扩展了图片区块的“链接到”设置，在已有的“自定义 URL”选项旁边添加了“媒体文件”和“附件页面”选项。
+- 我们解决了内容自动发送的问题，使其现在运行得更加顺畅。
 </zh-CN>
 <zh-TW>
-18.6:
-- 你現在可以使用「標記 HTML」標籤並變更搜尋區塊按鈕的文字和背景顏色。
-- 人人都能使用原生編輯器入門功能，包括新的區塊徽章。
-- 在直向檢視和橫向檢視之間旋轉時，「說明」部分不會超出畫面範圍。
-- 我們修正了嵌入內容區塊的其他載入問題。
+18.7：
+- 我們拓展了圖片區塊的「連結至」設定，新增「媒體檔案」和「附件頁面」選項，以及之前就有的「自訂 URL」選項。
+- 我們解決了內容自動儲存功能的問題，現在這些功能可順利執行。
 </zh-TW>

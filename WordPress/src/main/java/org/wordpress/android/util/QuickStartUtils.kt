@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
@@ -62,7 +61,6 @@ object QuickStartUtils {
     fun stylizeQuickStartPrompt(
         activityContext: Context,
         messageId: Int,
-        isThemedSnackbar: Boolean = true,
         iconId: Int = ICON_NOT_SET
     ): Spannable {
         val spanTagOpen = activityContext.getString(R.string.quick_start_span_start)
@@ -91,11 +89,7 @@ object QuickStartUtils {
         )
         // nothing to highlight
         if (startOfHighlight != -1 && endOfHighlight != -1) {
-            val highlightColor = if (isThemedSnackbar) {
-                activityContext.getColorFromAttribute(R.attr.colorSurface)
-            } else {
-                ContextCompat.getColor(activityContext, android.R.color.white)
-            }
+            val highlightColor = activityContext.getColorFromAttribute(R.attr.colorSurface)
             mutableSpannedMessage.setSpan(
                     ForegroundColorSpan(highlightColor),
                     startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

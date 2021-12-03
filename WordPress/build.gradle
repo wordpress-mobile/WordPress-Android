@@ -185,7 +185,6 @@ android {
             versionName versionProperties.getProperty("alpha.versionName")
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
 
-            buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "true"
             buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "true"
         }
 
@@ -282,6 +281,7 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
     implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
     testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"

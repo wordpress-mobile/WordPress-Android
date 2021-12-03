@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 20:21:40+0000
+Translation-Revision-Date: 2021-12-01 18:27:51+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="my_site_post_card_link_go_to_drafts">Mergi la ciorne</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Mergi la articole programate</string>
+    <string name="me_btn_about">Despre WordPress</string>
+    <string name="gutenberg_native_featured_image">Imagine reprezentativă</string>
+    <string name="gutenberg_native_from_clipboard">Din clipbord</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Plasează URL-ul din clipbord, %s</string>
+    <string name="button_copy_link">Copiază legătura</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="menu_visual_mode_switched_notice">Am comutat la modul vizual</string>
+    <string name="menu_html_mode_switched_notice">Am comutat la modul HTML</string>
+    <string name="my_site_create_next_post_title">Creează următorul articol</string>
+    <string name="my_site_post_card_link_create_post">Creează un articol</string>
+    <string name="post_link_copied_to_clipboard">Am copiat legătura în clipboard</string>
+    <string name="my_site_create_next_post_excerpt">Publicările dese te ajută să-ți construiești audiența!</string>
     <string name="domains_paid_plan_add_your_domain_caption">Dacă adaugi un domeniu personalizat, vizitatorii îți vor găsi mai ușor site-ul</string>
     <string name="domains_paid_plan_add_your_domain_title">Adaugă-ți domeniul</string>
     <string name="my_site_create_first_post_excerpt">Articolele apar pe pagina blogului în ordine cronologică inversă. Este timpul să-ți împărtășești ideile întregii lumi!</string>
     <string name="my_site_create_first_post_title">Scrie primul tău articol</string>
     <string name="my_site_untitled_post">Fără titlu</string>
     <string name="my_site_post_card_scheduled_title">Articole programate în viitor</string>
-    <string name="my_site_post_card_draft_title">Lucrează pe un articol în ciornă</string>
+    <string name="my_site_post_card_draft_title">Lucrează într-un articol ciornă</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate la site-ul tău %s</string>
     <string name="gutenberg_native_create_link">Creează o legătură</string>
@@ -576,10 +590,8 @@ Language: ro
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nu am putut face dezabonarea la comentarii pentru acest articol</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nu am putut face abonarea la comentarii pentru acest articol</string>
     <string name="reader_follow_comments_get_status_error">Eroare la aducerea stării abonamentului pentru articol</string>
-    <string name="reader_follow_comments_unsubscribe_success">Te-ai dezabonat cu succes de la comentarii</string>
     <string name="reader_btn_following_comments">Urmăresc conversația prin email</string>
     <string name="reader_btn_follow_comments">Urmărește conversația prin email</string>
-    <string name="reader_follow_comments_subscribe_success">Te-ai abonat cu succes la comentarii</string>
     <string name="reader_follow_comments_bad_format_response">Am primit un răspuns invalid</string>
     <string name="reader_follow_comments_null_response">Nu am primit niciun răspuns</string>
     <string name="activity_log_activity_type_filter_clear">Șterge</string>
@@ -1811,23 +1823,18 @@ Language: ro
     <string name="open_external_link_desc">Deschide legătura externă</string>
     <string name="jetpack_connection_failed_with_reason">Conectarea la Jetpack a eșuat: %s</string>
     <string name="jetpack_already_connected_toast">Ești deja conectat la Jetpack</string>
-    <string name="menu_undo_snackbar_action">REVENIRE</string>
     <string name="menu_visual_mode">Modul vizual</string>
     <string name="menu_html_mode">Modul HTML</string>
     <string name="menu_preview">Previzualizează</string>
     <string name="menu_save_as_draft">Salvează ca ciornă</string>
     <string name="file_size_in_terabytes">%s TO</string>
-    <string name="menu_visual_mode_done_snackbar">Comutat la modul vizual</string>
-    <string name="menu_html_mode_done_snackbar">Comutat la modul HTML</string>
     <string name="file_size_in_gigabytes">%s GO</string>
-    <string name="file_size_in_megabytes">%s MO</string>
     <string name="file_size_in_kilobytes">%s kO</string>
     <string name="file_size_in_bytes">%s O</string>
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
     <string name="site_settings_quota_space_title">Spațiu folosit</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca nefiind spam</string>
-    <string name="comment_delete_talkback">Comentariu șters</string>
     <string name="comment_untrash_talkback">Comentariu restaurat</string>
     <string name="comment_trash_talkback">Comentariu trimis la gunoi</string>
     <string name="comment_liked_talkback">Comentariu apreciat</string>
@@ -1840,6 +1847,8 @@ Language: ro
     <string name="comment_spam_talkback">Comentariul a fost marcat ca spam</string>
     <string name="comment_approved_talkback">Comentariul a fost aprobat</string>
     <string name="comment_unapproved_talkback">Comentariul nu a fost aprobat</string>
+    <string name="file_size_in_megabytes">%s Mo</string>
+    <string name="comment_delete_talkback">Comentariul a fost șters</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -2515,8 +2524,8 @@ Language: ro
     <string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
     <string name="dlg_sure_to_delete_comment">Ștergi definitiv acest comentariu?</string>
     <string name="mnu_comment_delete_permanently">Ștergere</string>
-    <string name="comment_deleted_permanently">Comentariu șters</string>
     <string name="mnu_comment_untrash">Restaurare</string>
+    <string name="comment_deleted_permanently">Comentariul a fost șters</string>
     <string name="comments_empty_list_filtered_spam">Niciun comentariu spam</string>
     <string name="could_not_load_page">Nu pot încărca pagina</string>
     <string name="comment_status_all">Tot</string>
@@ -2695,11 +2704,11 @@ Language: ro
     <string name="connectionbar_no_connection">Nicio conexiune</string>
     <string name="post_trashed">Articol trimis la gunoi</string>
     <string name="button_stats">Statistici</string>
-    <string name="button_trash">Gunoi</string>
     <string name="button_view">Vizualizare</string>
     <string name="button_edit">Editare</string>
     <string name="button_publish">Publică</string>
     <string name="button_preview">Previzualizează</string>
+    <string name="button_trash">Aruncă la gunoi</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest site</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest site nu a putut fi găsit</string>
     <string name="undo">Revenire</string>
@@ -2768,11 +2777,11 @@ Language: ro
     <string name="stats_followers_seconds_ago">acum o secundă</string>
     <string name="stats_view_top_posts_and_pages">Articole și pagini</string>
     <string name="stats_view_videos">Videouri</string>
-    <string name="stats_view_publicize">Publicizare</string>
     <string name="stats_view_followers">Urmăritori</string>
     <string name="stats_views">Vizualizări</string>
     <string name="stats_likes">Aprecieri</string>
     <string name="themes_fetching">Se aduc teme…</string>
+    <string name="stats_view_publicize">Publicitate</string>
     <string name="ssl_certificate_details">Detalii</string>
     <string name="cab_selected">%d selectate</string>
     <string name="reader_title_photo_viewer">%1$d din %2$d</string>
@@ -2897,7 +2906,6 @@ Language: ro
     <string name="share_link">Partajează legătura</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
-    <string name="reader_label_reply">Răspunde</string>
     <string name="reader_likes_you_and_multi">Tu și alții %,d apreciați asta</string>
     <string name="reader_likes_multi">%,d persoane apreciază asta</string>
     <string name="comment_spammed">Comentariul a fost marcat ca spam</string>
@@ -2971,7 +2979,7 @@ Language: ro
     <string name="tos">Termenii de funcționare a serviciului</string>
     <string name="app_title">WordPress pentru Android</string>
     <string name="image_alignment">Aliniere</string>
-    <string name="refresh">Reîmprospătare</string>
+    <string name="refresh">Reîmprospătează</string>
     <string name="untitled">Fără titlu</string>
     <string name="edit">Editare</string>
     <string name="immediately">Imediat</string>

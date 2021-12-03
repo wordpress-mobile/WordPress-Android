@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-02 04:29:26+0000
+Translation-Revision-Date: 2021-11-30 05:08:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Desde el portapapeles</string>
+    <string name="gutenberg_native_featured_image">Imagen destacada</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar la URL desde el portapapeles, %s</string>
+    <string name="me_btn_about">Acerca de WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Ir a las entradas programadas</string>
+    <string name="my_site_post_card_link_go_to_drafts">Ir a los borradores</string>
+    <string name="my_site_post_card_link_create_post">Crear una entrada</string>
+    <string name="my_site_create_next_post_excerpt">¡Publicar regularmente ayuda a crear tu audiencia!</string>
+    <string name="my_site_create_next_post_title">Crear tu próxima entrada</string>
+    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
+    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
+    <string name="post_link_copied_to_clipboard">Enlace copiado al portapapeles</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="button_copy_link">Copiar el enlace</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Añadir un dominio personalizado hace que sea más fácil para tus visitantes encontrar tu sitio</string>
+    <string name="domains_paid_plan_add_your_domain_title">Añade tu dominio</string>
+    <string name="my_site_create_first_post_excerpt">Las entradas aparecen en la página de tu blog en orden cronológicamente inverso. ¡Es el momento de compartir tus ideas con el mundo!</string>
+    <string name="my_site_create_first_post_title">Crear tu primera entrada</string>
+    <string name="my_site_untitled_post">Sin título</string>
+    <string name="my_site_post_card_scheduled_title">Siguientes entradas programadas</string>
+    <string name="my_site_post_card_draft_title">Trabaja en el borrador de una entrada </string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
@@ -229,6 +250,7 @@ Language: es_CO
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
+    <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
     <string name="gutenberg_native_none">Ninguna</string>
@@ -570,8 +592,6 @@ Language: es_CO
     <string name="reader_follow_comments_could_not_unsubscribe_error">No se ha podido anular la suscripción a los comentarios de esta entrada</string>
     <string name="reader_follow_comments_could_not_subscribe_error">No se ha podido crear la suscripción a los comentarios de esta entrada</string>
     <string name="reader_follow_comments_get_status_error">Error al recuperar el estado de suscripción para la entrada</string>
-    <string name="reader_follow_comments_unsubscribe_success">Cancelada correctamente la suscripción a los comentarios</string>
-    <string name="reader_follow_comments_subscribe_success">Suscrito correctamente a los comentarios</string>
     <string name="reader_follow_comments_bad_format_response">Respuesta recibida no válida</string>
     <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
     <string name="activity_log_activity_type_filter_clear">Vaciar</string>
@@ -812,6 +832,7 @@ Language: es_CO
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para configurar un nuevo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
+    <string name="gutenberg_native_remove_block">Eliminar el bloque</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>
@@ -1802,10 +1823,7 @@ Language: es_CO
     <string name="signup_with_google_progress">Registrarse con Google…</string>
     <string name="jetpack_connection_failed_with_reason">Se ha producido un error en la conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Ya estás conectado a Jetpack</string>
-    <string name="menu_undo_snackbar_action">DESHACER</string>
-    <string name="menu_visual_mode_done_snackbar">Cambiado a modo visual</string>
     <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
@@ -2889,7 +2907,6 @@ Language: es_CO
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
-    <string name="reader_label_reply">Responder</string>
     <string name="cant_share_no_visible_blog">No se puede compartir en WordPress si no tienes un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
     <string name="reader_toast_err_get_post">No fue posible recuperar esta entrada</string>

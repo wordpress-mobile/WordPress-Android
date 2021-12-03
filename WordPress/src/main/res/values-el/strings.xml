@@ -1149,7 +1149,6 @@ Language: el_GR
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
     <string name="share_link">Κοινοποίηση συνδέσμου</string>
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
-    <string name="reader_label_reply">Απάντηση</string>
     <string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
     <string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
     <string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
