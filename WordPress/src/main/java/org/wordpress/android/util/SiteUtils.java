@@ -352,7 +352,7 @@ public class SiteUtils {
 
     // TODO: Double check minimal Jetpack version
     public static boolean supportsTiledGalleryFeature(SiteModel site) {
-        return site != null && (site.isWPCom() || site.isWPComAtomic());
+        return site != null && site.isWPCom();
     }
 
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
