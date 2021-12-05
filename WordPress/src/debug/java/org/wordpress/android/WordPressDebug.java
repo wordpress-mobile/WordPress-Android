@@ -9,7 +9,6 @@ import androidx.work.WorkManager;
 import com.facebook.stetho.Stetho;
 import com.yarolegovich.wellsql.WellSql;
 
-import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -36,13 +35,6 @@ public class WordPressDebug extends WordPress {
     @Override
     protected void initWellSql() {
         WellSql.init(new WPWellSqlConfig(getApplicationContext()));
-    }
-
-    @Override
-    protected void initDaggerComponent() {
-        mAppComponent = DaggerAppComponentDebug.builder()
-                                               .application(this)
-                                               .build();
     }
 
     /**

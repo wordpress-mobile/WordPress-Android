@@ -29,8 +29,6 @@ import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
-import org.wordpress.android.modules.AppComponentTest;
-import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.io.IOException;
@@ -51,16 +49,12 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
     protected WordPress mAppContext;
-    protected AppComponentTest mMockedAppComponent;
 
     public static final int WIREMOCK_PORT = 8080;
 
     @Before
     public void setup() {
         mAppContext = ApplicationProvider.getApplicationContext();
-        mMockedAppComponent = DaggerAppComponentTest.builder()
-                                                    .application(mAppContext)
-                                                    .build();
 
         Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
                 Matchers.allOf(matchesTypes(

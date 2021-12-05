@@ -13,7 +13,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+import dagger.hilt.components.SingletonComponent;
 
+@InstallIn(SingletonComponent.class)
 @Module
 public class AppConfigModule {
     @Provides
@@ -22,7 +26,7 @@ public class AppConfigModule {
     }
 
     @Provides
-    public UserAgent provideUserAgent(Context appContext) {
+    public UserAgent provideUserAgent(@ApplicationContext Context appContext) {
         return new UserAgent(appContext, WordPress.USER_AGENT_APPNAME);
     }
 

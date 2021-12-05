@@ -74,7 +74,6 @@ import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
-import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
@@ -137,8 +136,11 @@ import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+import dagger.hilt.EntryPoints;
+import dagger.hilt.android.HiltAndroidApp;
 import kotlinx.coroutines.CoroutineScope;
 
+@HiltAndroidApp
 public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
@@ -200,10 +202,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject OAuthAuthenticator mOAuthAuthenticator;
     public static OAuthAuthenticator sOAuthAuthenticator;
 
-    protected AppComponent mAppComponent;
-
     public AppComponent component() {
-        return mAppComponent;
+        return EntryPoints.get(this, AppComponent.class);
     }
 
     /**
@@ -260,9 +260,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         initWellSql();
 
-        // Init Dagger
-        initDaggerComponent();
-        component().inject(this);
         mDispatcher.register(this);
         mAppConfig.init();
 
@@ -384,12 +381,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     // note that this is overridden in WordPressDebug
     protected void initWellSql() {
         WellSql.init(new WellSqlConfig(getApplicationContext()));
-    }
-
-    protected void initDaggerComponent() {
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
     }
 
     private void sanitizeMediaUploadStateForSite() {
