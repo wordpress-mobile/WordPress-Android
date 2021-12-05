@@ -7,7 +7,6 @@ import androidx.work.Configuration;
 import androidx.work.WorkManager;
 
 import com.facebook.stetho.Stetho;
-import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -30,11 +29,6 @@ public class WordPressDebug extends WordPress {
                 .setWorkerFactory(mWordPressWorkerFactory)
                 .build();
         WorkManager.initialize(this, config);
-    }
-
-    @Override
-    protected void initWellSql() {
-        WellSql.init(new WPWellSqlConfig(getApplicationContext()));
     }
 
     /**
