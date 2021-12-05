@@ -8,6 +8,7 @@ buildscript {
     ext.gutenbergMobileVersion = 'v1.68.0-alpha2'
     ext.storiesVersion = '1.2.0'
     ext.aboutAutomatticVersion = 'main-c764a2d66273d4c6aeed66bb7a5c75714d88c554'
+    ext.hiltVersion = '2.40.4'
 
     repositories {
         maven {
@@ -28,6 +29,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     }
 }
 
