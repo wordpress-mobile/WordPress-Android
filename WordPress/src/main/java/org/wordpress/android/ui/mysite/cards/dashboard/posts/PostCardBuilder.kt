@@ -11,9 +11,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
-class PostCardBuilder @Inject constructor() {
+class PostCardBuilder @Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.posts
         posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
