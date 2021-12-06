@@ -72,6 +72,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter
 import org.wordpress.android.ui.reader.services.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.suggestion.Suggestion.Companion.fromUserSuggestions
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
@@ -133,7 +134,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var readerTracker: ReaderTracker
 
-    private lateinit var mViewModel: ReaderCommentListViewModel
+    private lateinit var viewModel: ReaderCommentListViewModel
+    private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
     @Parcelize
     @SuppressLint("ParcelCreator")
@@ -148,7 +150,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mViewModel = ViewModelProvider(this, viewModelFactory).get(ReaderCommentListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderCommentListViewModel::class.java)
+        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
+                ConversationNotificationsViewModel::class.java
+        )
     }
 
     private fun ThreadedCommentsFragmentBinding.setupToolbar() {
@@ -186,7 +191,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
                 swipeToRefresh
         ) {
-            mViewModel.onSwipeToRefresh()
+            conversationViewModel.onRefresh()
             updatePostAndComments()
         }
 
@@ -295,7 +300,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     }
 
     private fun ThreadedCommentsFragmentBinding.initObservers() {
-        mViewModel.scrollTo.observeEvent(viewLifecycleOwner, { scrollPosition ->
+        viewModel.scrollTo.observeEvent(viewLifecycleOwner, { scrollPosition ->
             if (!isAdded) return@observeEvent
 
             val layoutManager = recyclerView.layoutManager
@@ -315,7 +320,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
         })
 
-        mViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
+        conversationViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
             if (!isAdded) return@observe
 
             val fm: FragmentManager = childFragmentManager
@@ -331,7 +336,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
         })
 
-        mViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+        conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
             if (!isAdded) return@observeEvent
 
             val fm: FragmentManager = childFragmentManager
@@ -339,7 +344,8 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
             if (showBottomSheetData.show && bottomSheet == null) {
                 bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
-                        showBottomSheetData.isReceivingNotifications
+                        showBottomSheetData.isReceivingNotifications,
+                        true
                 )
                 bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
             } else if (!showBottomSheetData.show && bottomSheet != null) {
@@ -347,7 +353,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
         })
 
-        mViewModel.start(blogId, postId)
+        conversationViewModel.start(blogId, postId)
     }
 
     override fun onCollapse(result: Bundle?) {
@@ -458,7 +464,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.threaded_comments_menu, menu)
-        mViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+        conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
             val bellItem = menu.findItem(R.id.manage_notifications_item)
             val followItem = menu.findItem(R.id.follow_item)
 
@@ -478,10 +484,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                     uiState.onManageNotificationsTapped.invoke()
                     true
                 }
-                followItem.actionView.isEnabled = uiState.isMenuEnabled
-                followText.isEnabled = uiState.isMenuEnabled
-                bellItem.isEnabled = uiState.isMenuEnabled
-                if (uiState.showMenuShimmer) {
+                followItem.actionView.isEnabled = uiState.flags.isMenuEnabled
+                followText.isEnabled = uiState.flags.isMenuEnabled
+                bellItem.isEnabled = uiState.flags.isMenuEnabled
+                if (uiState.flags.showMenuShimmer) {
                     if (!shimmerView.isShimmerVisible) {
                         shimmerView.showShimmer(true)
                     } else if (!shimmerView.isShimmerStarted) {
@@ -490,11 +496,10 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                 } else {
                     shimmerView.hideShimmer()
                 }
-                followItem.isVisible = uiState.isFollowMenuVisible
-                bellItem.isVisible = uiState.isBellMenuVisible
+                followItem.isVisible = uiState.flags.isFollowMenuVisible
+                bellItem.isVisible = uiState.flags.isBellMenuVisible
             }
-        }
-        )
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -656,7 +661,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
                         }
                         doDirectOperation()
                     } else if (restorePosition > 0) {
-                        mViewModel.scrollToPosition(restorePosition, false)
+                        viewModel.scrollToPosition(restorePosition, false)
                     }
                     restorePosition = 0
                     checkEmptyView()
@@ -841,7 +846,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     private fun scrollToCommentId(commentId: Long) {
         val position = getCommentAdapter().positionOfCommentId(commentId)
         if (position > -1) {
-            mViewModel.scrollToPosition(position, false)
+            viewModel.scrollToPosition(position, false)
         }
     }
 
@@ -851,7 +856,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
     private fun smoothScrollToCommentId(commentId: Long) {
         val position = getCommentAdapter().positionOfCommentId(commentId)
         if (position > -1) {
-            mViewModel.scrollToPosition(position, true)
+            viewModel.scrollToPosition(position, true)
         }
     }
 
