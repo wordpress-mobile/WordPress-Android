@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.reader.FollowConversationStatusFlags
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.DISABLE_PUSH_NOTIFICATION
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.ENABLE_PUSH_NOTIFICATION
@@ -213,6 +214,10 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         object FollowCommentsNotAllowed : FollowCommentsState()
 
         object UserNotAuthenticated : FollowCommentsState()
+
+        data class FlagsMappedState(
+            val flags: FollowConversationStatusFlags
+        ) : FollowCommentsState()
     }
 
     private enum class AnalyticsFollowCommentsAction(val action: String) {
