@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 20:53:50+0000
+Translation-Revision-Date: 2021-11-29 20:04:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">From clipboard</string>
+    <string name="gutenberg_native_featured_image">Featured image</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copy URL from the clipboard, %s</string>
+    <string name="me_btn_about">About WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
+    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
+    <string name="my_site_post_card_link_create_post">Create a post</string>
+    <string name="my_site_create_next_post_excerpt">Posting regularly helps build your audience!</string>
+    <string name="my_site_create_next_post_title">Create your next post</string>
+    <string name="menu_visual_mode_switched_notice">Switched to visual mode</string>
+    <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
+    <string name="post_link_copied_to_clipboard">Link copied to clipboard</string>
+    <string name="comment_author_badge">Author</string>
+    <string name="button_copy_link">Copy link</string>
     <string name="domains_paid_plan_add_your_domain_caption">Adding a custom domain makes it easy for visitors to find your site</string>
     <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>
     <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
@@ -578,8 +592,6 @@ Language: en_GB
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
@@ -1811,10 +1823,7 @@ Language: en_GB
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -2898,7 +2907,6 @@ Language: en_GB
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

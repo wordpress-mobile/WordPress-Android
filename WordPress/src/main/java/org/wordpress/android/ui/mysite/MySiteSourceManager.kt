@@ -7,8 +7,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.post.PostCardsSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
@@ -27,7 +27,7 @@ class MySiteSourceManager @Inject constructor(
     private val quickStartCardSource: QuickStartCardSource,
     private val scanAndBackupSource: ScanAndBackupSource,
     private val selectedSiteSource: SelectedSiteSource,
-    postCardsSource: PostCardsSource,
+    cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
@@ -39,7 +39,7 @@ class MySiteSourceManager @Inject constructor(
             domainRegistrationSource,
             scanAndBackupSource,
             dynamicCardsSource,
-            postCardsSource
+            cardsSource
     )
 
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {

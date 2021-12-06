@@ -197,7 +197,6 @@ Language: gd_GB
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
-    <string name="reader_label_reply">Freagair</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
     <string name="cant_share_no_visible_blog">Chan urrainn dhut co-roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
     <string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>

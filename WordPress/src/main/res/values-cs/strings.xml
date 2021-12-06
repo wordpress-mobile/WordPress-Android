@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-20 11:00:42+0000
+Translation-Revision-Date: 2021-11-29 21:52:37+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Ze schránky</string>
+    <string name="gutenberg_native_featured_image">Náhledový obrázek</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Zkopírujte URL adresu ze schránky, %s</string>
+    <string name="me_btn_about">O WordPressu</string>
+    <string name="my_site_post_card_link_go_to_drafts">Přejít na koncepty</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Přejít na plánované příspěvky</string>
+    <string name="my_site_post_card_link_create_post">Vytvořit příspěvek</string>
+    <string name="my_site_create_next_post_excerpt">Pravidelné zveřejňování pomáhá budovat vaše publikum!</string>
+    <string name="my_site_create_next_post_title">Vytvořte svůj další příspěvek</string>
+    <string name="menu_visual_mode_switched_notice">Přepnuto do vizuálního režimu.</string>
+    <string name="menu_html_mode_switched_notice">Přepnout na HTML mód</string>
+    <string name="post_link_copied_to_clipboard">Odkaz zkopírován do schránky</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="button_copy_link">Kopírovat odkaz</string>
     <string name="domains_paid_plan_add_your_domain_caption">Přidání vlastní domény usnadní návštěvníkům nalezení vašeho webu</string>
     <string name="domains_paid_plan_add_your_domain_title">Přidejte svou doménu</string>
     <string name="my_site_create_first_post_excerpt">Příspěvky se na stránce vašeho blogu zobrazují v obráceném chronologickém pořadí. Je čas podělit se o své nápady se světem!</string>
@@ -572,7 +586,6 @@ Language: cs_CZ
     <string name="gutenberg_native_file_block_settings">Nastavení blok souboru</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_btn_jetpack_settings">Nastavení Jetpacku</string>
-    <string name="reader_follow_comments_unsubscribe_success">Komentář byl úspěšně odhlášen</string>
     <string name="reader_follow_comments_get_status_error">Chyba při načítání stavu předplatného příspěvku</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nelze se přihlásit k odběru komentářů k tomuto příspěvku</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nelze zrušit odběr komentářů k tomuto příspěvku</string>
@@ -583,7 +596,6 @@ Language: cs_CZ
     <string name="activity_log_activity_type_filter_apply">Potvrdit</string>
     <string name="reader_follow_comments_null_response">Žádná odpověď přijata</string>
     <string name="reader_follow_comments_bad_format_response">Přijata neplatná odpověď</string>
-    <string name="reader_follow_comments_subscribe_success">Úspěšně jste se přihlásili k odběru komentářů</string>
     <string name="dialog_edit_story_unsupported_format_message">Jeden nebo více snímků nebylo přidáno do vašeho příběhu, protože příběhy momentálně nepodporují soubory GIF. Místo toho zvolte statický obrázek nebo pozadí videa.</string>
     <string name="dialog_edit_story_limited_message">Tento příběh byl upraven na jiném zařízení a schopnost upravovat určité objekty může být omezená.</string>
     <string name="dialog_edit_story_unavailable_title">Příběh nelze upravit</string>
@@ -1812,13 +1824,10 @@ Language: cs_CZ
     <string name="jetpack_connection_failed_with_reason">Připojení do Jetpack selhalo: %s</string>
     <string name="jetpack_already_connected_toast">Již jste připojení do Jetpack</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_html_mode_done_snackbar">Přepnout na HTML mód</string>
     <string name="menu_visual_mode">Vizualní mód</string>
     <string name="menu_html_mode">HTML mód</string>
     <string name="menu_preview">Náhled</string>
     <string name="menu_save_as_draft">Uložit jako koncept</string>
-    <string name="menu_undo_snackbar_action">VRÁTIT</string>
-    <string name="menu_visual_mode_done_snackbar">Přepnuto do vizuálního režimu.</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -2896,7 +2905,6 @@ Language: cs_CZ
     <string name="delete_page">Smazat stránku?</string>
     <string name="share_link">Sdílet odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítám příspěvky…</string>
-    <string name="reader_label_reply">Znovu</string>
     <string name="comment_spammed">Komentář byl označen jako spam</string>
     <string name="reader_likes_you_and_multi">To se líbí vám a dalším %,d</string>
     <string name="reader_likes_multi">To se mi líbí (%,d)</string>

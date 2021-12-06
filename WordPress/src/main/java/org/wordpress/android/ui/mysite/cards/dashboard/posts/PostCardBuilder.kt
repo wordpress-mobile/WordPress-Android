@@ -1,24 +1,24 @@
-package org.wordpress.android.ui.mysite.cards.post
+package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class PostCardBuilder @Inject constructor() {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
-        val posts = params.mockedPostsData?.posts
-        posts?.hasPublishedPosts?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                ?.let { hasPublishedPosts ->
-                    if (hasPublishedPosts) {
+        val posts = params.posts
+        posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                ?.let { hasPublished ->
+                    if (hasPublished) {
                         add(createNextPostCard(params.onFooterLinkClick))
                     } else {
                         add(createFirstPostCard(params.onFooterLinkClick))
@@ -52,7 +52,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun List<Post>.createDraftPostsCard(params: PostCardBuilderParams) =
+    private fun List<PostCardModel>.createDraftPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
                     postCardType = PostCardType.DRAFT,
                     title = UiStringRes(R.string.my_site_post_card_draft_title),
@@ -63,7 +63,7 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun List<Post>.createScheduledPostsCard(params: PostCardBuilderParams) =
+    private fun List<PostCardModel>.createScheduledPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
                     postCardType = PostCardType.SCHEDULED,
                     title = UiStringRes(R.string.my_site_post_card_scheduled_title),
@@ -74,25 +74,30 @@ class PostCardBuilder @Inject constructor() {
                     )
             )
 
-    private fun Posts.hasDraftsOrScheduledPosts() =
-            this.draft?.isNotEmpty() == true || this.scheduled?.isNotEmpty() == true
+    private fun PostsCardModel.hasDraftsOrScheduledPosts() = draft.isNotEmpty() || scheduled.isNotEmpty()
 
-    private fun List<Post>.mapToDraftPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
+    private fun List<PostCardModel>.mapToDraftPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
         PostItem(
-                title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
-                excerpt = post.excerpt?.let { UiStringText(it) },
-                featuredImageUrl = post.featuredImageUrl,
-                onClick = { post.id?.let { onPostItemClick.invoke(it) } }
+                title = constructPostTitle(post.title),
+                excerpt = constructPostContent(post.content),
+                featuredImageUrl = post.featuredImage,
+                onClick = { onPostItemClick.invoke(post.id) }
         )
     }
 
-    private fun List<Post>.mapToScheduledPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
+    private fun constructPostTitle(title: String) =
+            if (title.isEmpty()) UiStringRes(R.string.my_site_untitled_post) else UiStringText(title)
+
+    private fun constructPostContent(content: String) =
+            if (content.isEmpty()) UiStringRes(R.string.my_site_no_content_post) else UiStringText(content)
+
+    private fun List<PostCardModel>.mapToScheduledPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
         PostItem(
-                title = post.title?.let { UiStringText(it) } ?: UiStringRes(R.string.my_site_untitled_post),
-                excerpt = UiStringText("Today at 1:04 PM"), // TODO: ashiagr - remove hardcoded text
-                featuredImageUrl = post.featuredImageUrl,
+                title = constructPostTitle(post.title),
+                excerpt = UiStringText(post.date.toString()), // TODO: ashiagr - format date
+                featuredImageUrl = post.featuredImage,
                 isTimeIconVisible = true,
-                onClick = { post.id?.let { onPostItemClick.invoke(it) } }
+                onClick = { onPostItemClick.invoke(post.id) }
         )
     }
 }

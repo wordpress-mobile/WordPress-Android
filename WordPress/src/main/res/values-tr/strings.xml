@@ -575,8 +575,6 @@ Language: tr
     <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
     <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
-    <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
-    <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
     <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
     <string name="activity_log_activity_type_filter_clear">Temizle</string>
@@ -1807,10 +1805,7 @@ Language: tr
     <string name="signup_with_google_progress">Google ile kaydolunuyor…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
-    <string name="menu_undo_snackbar_action">GERİ AL</string>
-    <string name="menu_visual_mode_done_snackbar">Görsel moda geçildi</string>
     <string name="menu_visual_mode">Görsel mod</string>
-    <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML modu</string>
     <string name="menu_preview">Önizleme</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
@@ -2894,7 +2889,6 @@ Language: tr
     <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
-    <string name="reader_label_reply">Yanıtla</string>
     <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>

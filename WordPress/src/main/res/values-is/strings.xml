@@ -563,7 +563,6 @@ Language: is
     <string name="reader_empty_posts_in_tag_updating">Sæki færslur…</string>
     <string name="reader_likes_multi">%,d manns líkar þetta</string>
     <string name="comment_spammed">Athugasemd merkt sem amapóstur</string>
-    <string name="reader_label_reply">Svara</string>
     <string name="cant_share_no_visible_blog">Þú getur ekki deilt með WordPress án þess að hafa sýnilegt blogg</string>
     <string name="reader_likes_you_and_multi">Þú og %,d öðrum líkar þetta</string>
     <string name="reader_likes_you_and_one">Þú og einum öðrum líkar þetta</string>

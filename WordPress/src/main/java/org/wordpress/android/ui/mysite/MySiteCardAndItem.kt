@@ -14,7 +14,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
