@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions")
 class ConversationNotificationsViewModel @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -173,7 +174,7 @@ class ConversationNotificationsViewModel @Inject constructor(
         if (followCommentsState is FlagsMappedState) {
             return FollowConversationUiState(
                     flags = followCommentsState.flags,
-                    onFollowTapped = if (listOf(DISABLED, LOADING).contains(followCommentsState.flags.type)){
+                    onFollowTapped = if (listOf(DISABLED, LOADING).contains(followCommentsState.flags.type)) {
                         null
                     } else {
                         ::onFollowTapped
@@ -187,7 +188,6 @@ class ConversationNotificationsViewModel @Inject constructor(
             return FollowConversationUiState(
                     FollowConversationStatusFlags(
                             type = stateType,
-                            //showFollowButton = followCommentsState !is UserNotAuthenticated,
                             isFollowing = isFollowing,
                             isReceivingNotifications = if (followCommentsState is FollowStateChanged) {
                                 followCommentsState.isReceivingNotifications
@@ -201,7 +201,7 @@ class ConversationNotificationsViewModel @Inject constructor(
                                 DISABLED, LOADING -> true
                                 GONE -> false
                                 VISIBLE_WITH_STATE -> !isFollowing
-                            },
+                            }
                     ),
                     onFollowTapped = if (listOf(DISABLED, LOADING).contains(stateType)) null else ::onFollowTapped,
                     onManageNotificationsTapped = ::onManageNotificationsTapped

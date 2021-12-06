@@ -19,7 +19,7 @@ data class FollowConversationStatusFlags(
     val isMenuEnabled: Boolean,
     val showMenuShimmer: Boolean,
     val isBellMenuVisible: Boolean,
-    val isFollowMenuVisible: Boolean,
+    val isFollowMenuVisible: Boolean
 ) : Parcelable
 
 enum class FollowCommentsUiStateType {
@@ -28,4 +28,3 @@ enum class FollowCommentsUiStateType {
     GONE,
     VISIBLE_WITH_STATE
 }
-

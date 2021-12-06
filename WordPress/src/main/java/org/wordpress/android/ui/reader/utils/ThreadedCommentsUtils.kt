@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.reader.utils
 
-import android.view.View
 import android.widget.TextView
-import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
