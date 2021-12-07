@@ -3849,4 +3849,7 @@ translators: Block name. %s: The localized block name -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text">Your site got %1$d views, %2$d likes, %3$d comments.</string>
+
+    <!-- About -->
+    <string name="about_blog">Blog</string>
 </resources>
