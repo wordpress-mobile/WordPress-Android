@@ -53,4 +53,9 @@ class ReaderUtilsWrapper @Inject constructor(
         postId: Long,
         commentId: Long
     ) = ReaderUtils.commentExists(blogId, postId, commentId)
+
+    fun getTextForCommentSnippet(numComments: Int): String? = ReaderUtils.getTextForCommentSnippet(
+            appContext,
+            numComments
+    )
 }
