@@ -79,7 +79,7 @@ dependencies {
     kapt fluxcProcessorProjectDependency
 
     // External libs
-    api 'org.greenrobot:eventbus:3.2.0'
+    api 'org.greenrobot:eventbus:3.3.0'
     api 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.0'
     api 'com.android.volley:volley:1.1.1'
