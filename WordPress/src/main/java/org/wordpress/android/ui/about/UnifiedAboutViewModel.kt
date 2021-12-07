@@ -60,9 +60,9 @@ class UnifiedAboutViewModel @Inject constructor(
             ),
             onDismiss = ::onDismiss,
             analyticsTracker = AnalyticsConfig(
-                    trackScreenShown = ::trackScreenShown,
-                    trackScreenDismissed = ::trackScreenDismissed,
-                    trackButtonTapped = ::trackButtonTapped
+                    trackScreenShown = unifiedAboutTracker::trackScreenShown,
+                    trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
+                    trackButtonTapped = unifiedAboutTracker::trackButtonTapped
             )
     )
 
@@ -95,17 +95,5 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val WP_APPS_URL = "https://apps.wordpress.com/"
         private const val WP_BLOG_URL = "https://blog.wordpress.com/"
         private const val BLOG_ITEM_NAME = "blog"
-    }
-
-    private fun trackScreenShown(screen: String) {
-        unifiedAboutTracker.trackScreenShown(screen = screen)
-    }
-
-    private fun trackScreenDismissed(screen: String) {
-        unifiedAboutTracker.trackScreenDismissed(screen = screen)
-    }
-
-    private fun trackButtonTapped(button: String) {
-        unifiedAboutTracker.trackButtonTapped(button = button)
     }
 }
