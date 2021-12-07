@@ -116,6 +116,7 @@ android {
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
+        buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
