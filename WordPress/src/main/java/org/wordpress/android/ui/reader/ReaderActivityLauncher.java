@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
@@ -230,6 +231,38 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
+        Intent intent = createShowReaderCommentsIntent(
+                context,
+                blogId,
+                postId,
+                directOperation,
+                commentId,
+                interceptedUri,
+                isNewThreadedComment
+        );
+        context.startActivity(intent);
+    }
+
+    public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, boolean isNewThreadedComment) {
+        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, isNewThreadedComment);
+    }
+
+    public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
+            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
+        Intent intent = createShowReaderCommentsIntent(
+                fragment.getContext(),
+                blogId,
+                postId,
+                directOperation,
+                commentId,
+                interceptedUri,
+                isNewThreadedComment
+        );
+        fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
+    }
+
+    private static Intent createShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
+            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
         Intent intent = new Intent(
                 context,
                 isNewThreadedComment ? ThreadedCommentsActivity.class : ReaderCommentListActivity.class
@@ -239,7 +272,8 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        context.startActivity(intent);
+
+        return intent;
     }
 
     /*
