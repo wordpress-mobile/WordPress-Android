@@ -481,7 +481,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
-        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(ConversationNotificationsViewModel::class.java)
+        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
+                ConversationNotificationsViewModel::class.java
+        )
 
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
@@ -537,7 +539,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 manageFollowConversationUiState(uiState, binding)
             })
 
-
             viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
                 manageCommentSnippetUiState(state)
             })
@@ -559,7 +560,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
-    private fun manageFollowConversationUiState(uiState: FollowConversationUiState, binding: ReaderFragmentPostDetailBinding) {
+    private fun manageFollowConversationUiState(
+        uiState: FollowConversationUiState,
+        binding: ReaderFragmentPostDetailBinding
+    ) {
         if (!isAdded) return
 
         with(binding) {
@@ -640,10 +644,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            commentsSnippetContainer.visibility = if (commentsSnippetFeatureConfig.isEnabled()) View.VISIBLE else View.GONE
+            commentsSnippetContainer.visibility = if (commentsSnippetFeatureConfig.isEnabled()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
             followConversationContainer.visibility = if (state.showFollowConversation) View.VISIBLE else View.GONE
             commentsNumTitle.text = readerUtilsWrapper.getTextForCommentSnippet(state.commentsNumber)
-
 
             setupCommentSnippetAdapter(this, state.snippetItems)
         }

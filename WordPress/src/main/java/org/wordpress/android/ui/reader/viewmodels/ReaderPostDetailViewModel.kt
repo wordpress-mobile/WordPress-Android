@@ -286,7 +286,11 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onRefreshCommentsData(blogId: Long, postId: Long, numReplies: Int) {
         if (!commentsSnippetFeatureConfig.isEnabled()) return
-        val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(blogId, postId, numReplies) ?: true
+        val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
+                blogId,
+                postId,
+                numReplies
+        ) ?: true
 
         if (!isRepliesDataChanged) return
 
@@ -867,10 +871,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onEventMainThread(event: UpdateCommentsStarted?) {
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         if (
-                event == null
-                || event.scenario != COMMENT_SNIPPET
-                || post?.blogId != event.blogId
-                || post?.postId != event.postId
+                event == null ||
+                event.scenario != COMMENT_SNIPPET ||
+                post?.blogId != event.blogId ||
+                post?.postId != event.postId
         ) {
             return
         }
@@ -883,11 +887,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onEventMainThread(event: UpdateCommentsEnded?) {
         if (!commentsSnippetFeatureConfig.isEnabled()) return
         if (
-                event == null
-                || event.scenario != COMMENT_SNIPPET
-                || event.result == null
-                || post?.blogId != event.blogId
-                || post?.postId != event.postId
+                event == null ||
+                event.scenario != COMMENT_SNIPPET ||
+                event.result == null ||
+                post?.blogId != event.blogId ||
+                post?.postId != event.postId
         ) {
             return
         }

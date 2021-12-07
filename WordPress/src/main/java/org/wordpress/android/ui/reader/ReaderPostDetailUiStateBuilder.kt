@@ -137,7 +137,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         readerPost: ReaderPost,
         onCommentSnippetClicked: (Long, Long) -> Unit
     ): List<CommentSnippetItemState> {
-        return when(commentSnippetState) {
+        return when (commentSnippetState) {
             is CommentSnippetData -> commentSnippetState.comments.map { readerComment ->
                 CommentState(
                         authorName = readerComment.authorName,
@@ -148,7 +148,9 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         ),
                         avatarUrl = gravatarUtilsWrapper.fixGravatarUrl(
                                 readerComment.authorAvatar,
-                                contextProvider.getContext().resources.getDimensionPixelSize(dimen.avatar_sz_extra_small)
+                                contextProvider.getContext().resources.getDimensionPixelSize(
+                                        dimen.avatar_sz_extra_small
+                                )
                         ),
                         showAuthorBadge = readerComment.authorId == readerPost.authorId,
                         commentText = readerComment.text,
