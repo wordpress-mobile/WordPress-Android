@@ -2,6 +2,12 @@ apply plugin: 'com.android.library'
 
 repositories {
     maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+        }
+    }
+    maven {
         url 'https://jitpack.io'
         content {
             includeGroup "com.github.Automattic"
