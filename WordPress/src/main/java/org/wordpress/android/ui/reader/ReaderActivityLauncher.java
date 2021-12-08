@@ -243,7 +243,12 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, boolean isNewThreadedComment) {
+    public static void showReaderCommentsForResult(
+            Fragment fragment,
+           long blogId,
+           long postId,
+           boolean isNewThreadedComment
+    ) {
         showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, isNewThreadedComment);
     }
 

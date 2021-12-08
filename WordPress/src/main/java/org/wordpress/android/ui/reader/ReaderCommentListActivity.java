@@ -499,7 +499,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                             followItem.setVisible(uiState.getFlags().isFollowMenuVisible());
                             bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
 
-                            setResult(RESULT_OK, new Intent().putExtra(FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY, uiState.getFlags()));
+                            setResult(
+                                    RESULT_OK,
+                                    new Intent().putExtra(FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY, uiState.getFlags())
+                            );
                         }
                     }
                 }
