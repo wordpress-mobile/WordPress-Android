@@ -251,7 +251,6 @@ Language: da_DK
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
     <string name="comment_spammed">Kommentar markeret som spam</string>
-    <string name="reader_label_reply">Besvar</string>
     <string name="reader_likes_multi">%,d personer synes godt om dette</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
     <string name="pick_photo">Vælg foto</string>

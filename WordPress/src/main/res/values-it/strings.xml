@@ -576,10 +576,8 @@ Language: it
     <string name="reader_follow_comments_could_not_unsubscribe_error">Impossibile annullare l\'abbonamento dai commenti per questo articolo</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Impossibile abbonarsi dai commenti per questo articolo</string>
     <string name="reader_follow_comments_get_status_error">Errore durante il recupero dello stato dell\'abbonamento per l\'articolo</string>
-    <string name="reader_follow_comments_unsubscribe_success">Annullamento dell\'abbonamento dai commenti completato</string>
     <string name="reader_btn_following_comments">Stai seguendo la conversazione tramite email</string>
     <string name="reader_btn_follow_comments">Segui la conversazione tramite email</string>
-    <string name="reader_follow_comments_subscribe_success">Abbonamento ai commenti completato</string>
     <string name="reader_follow_comments_bad_format_response">Risposta non valida ricevuta</string>
     <string name="reader_follow_comments_null_response">Nessuna risposta ricevuta</string>
     <string name="activity_log_activity_type_filter_clear">Pulisci</string>
@@ -1811,14 +1809,11 @@ Language: it
     <string name="open_external_link_desc">Apri link esterno</string>
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANNULLA</string>
     <string name="menu_visual_mode">Modalità visuale</string>
     <string name="menu_html_mode">Modalità HTML</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
     <string name="menu_save_as_draft">Salva come bozza</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">Passato alla modalità visuale.</string>
-    <string name="menu_html_mode_done_snackbar">Passato alla modalità HTML.</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -2898,7 +2893,6 @@ Language: it
     <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>
     <string name="reader_likes_multi">Piace a %,d persone</string>
-    <string name="reader_label_reply">Rispondi</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
     <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="reader_likes_you_and_one">Piace a te e a un\'altra persona</string>

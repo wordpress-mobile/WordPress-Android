@@ -575,13 +575,11 @@ Language: fr
     <string name="reader_follow_comments_could_not_unsubscribe_error">Impossible de se désabonner des commentaires pour cet article</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Impossible de s’abonner aux commentaires pour cet article</string>
     <string name="reader_follow_comments_get_status_error">Erreur de récupération du statut d’abonnement pour l’article</string>
-    <string name="reader_follow_comments_unsubscribe_success">Bien désabonné·e des commentaires</string>
     <string name="reader_btn_following_comments">Suivi de la discussion par e-mail</string>
     <string name="reader_btn_follow_comments">Suivre la discussion par e-mail</string>
     <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Effacer</string>
     <string name="activity_log_activity_type_filter_apply">Appliquer</string>
-    <string name="reader_follow_comments_subscribe_success">Bien abonné·e aux commentaires</string>
     <string name="reader_follow_comments_bad_format_response">Réponse reçue non valide</string>
     <string name="reader_follow_comments_null_response">Aucune réponse reçue</string>
     <string name="dialog_edit_story_unsupported_format_message">Une ou plusieurs diapositives n’ont pas été ajoutées à votre Story, car les Stories ne prennent pas en charge les fichiers GIF pour le moment. Veuillez plutôt choisir une image statique ou un arrière-plan vidéo.</string>
@@ -1811,14 +1809,11 @@ Language: fr
     <string name="open_external_link_desc">Ouvrir le lien externe</string>
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANNULER</string>
     <string name="menu_visual_mode">Mode visuel</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Prévisualiser</string>
     <string name="menu_save_as_draft">Enregistrer comme brouillon</string>
     <string name="file_size_in_terabytes">%s To</string>
-    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel</string>
-    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML</string>
     <string name="file_size_in_gigabytes">%s Go</string>
     <string name="file_size_in_megabytes">%s Mo</string>
     <string name="file_size_in_kilobytes">%s Ko</string>
@@ -2897,7 +2892,6 @@ Language: fr
     <string name="share_link">Lien de partage</string>
     <string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
-    <string name="reader_label_reply">Répondre</string>
     <string name="reader_likes_you_and_multi">Vous et %,d personnes aiment ça</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
     <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>

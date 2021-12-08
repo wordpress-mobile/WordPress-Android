@@ -578,8 +578,6 @@ Language: de
     <string name="reader_follow_comments_could_not_unsubscribe_error">Abmeldung von den Kommentaren für diesen Beitrag fehlgeschlagen</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Abonnement für Kommentare in diesem Beitrag fehlgeschlagen</string>
     <string name="reader_follow_comments_get_status_error">Fehler beim Abrufen des Abonnementstatus für den Beitrag</string>
-    <string name="reader_follow_comments_unsubscribe_success">Erfolgreich von den Kommentaren abgemeldet</string>
-    <string name="reader_follow_comments_subscribe_success">Kommentare erfolgreich abonniert</string>
     <string name="reader_follow_comments_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="reader_follow_comments_null_response">Keine Antwort erhalten</string>
     <string name="activity_log_activity_type_filter_clear">Löschen</string>
@@ -1811,10 +1809,7 @@ Language: de
     <string name="signup_with_google_progress">Anmelden mit Google …</string>
     <string name="jetpack_connection_failed_with_reason">Verbindung zu Jetpack fehlgeschlagen: %s</string>
     <string name="jetpack_already_connected_toast">Du bist bereits mit Jetpack verbunden</string>
-    <string name="menu_undo_snackbar_action">RÜCKGÄNGIG MACHEN</string>
-    <string name="menu_visual_mode_done_snackbar">Zum Visual-Modus gewechselt</string>
     <string name="menu_visual_mode">Visual-Modus</string>
-    <string name="menu_html_mode_done_snackbar">Zum HTML-Modus gewechselt</string>
     <string name="menu_html_mode">HTML-Modus</string>
     <string name="menu_preview">Vorschau</string>
     <string name="menu_save_as_draft">Als Entwurf speichern</string>
@@ -2898,7 +2893,6 @@ Language: de
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
     <string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
     <string name="reader_likes_multi">%d Leuten gefällt dies</string>
-    <string name="reader_label_reply">Antworten</string>
     <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>

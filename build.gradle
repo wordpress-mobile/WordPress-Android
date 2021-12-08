@@ -7,7 +7,7 @@ buildscript {
     ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'v1.68.0-alpha2'
     ext.storiesVersion = '1.2.0'
-    ext.aboutAutomatticVersion = 'main-14135ae8a4f259dab286ad73a9efe9a084421d07'
+    ext.aboutAutomatticVersion = 'main-c764a2d66273d4c6aeed66bb7a5c75714d88c554'
 
     repositories {
         maven {
@@ -130,7 +130,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = 'develop-6b043a14779528c6badf0a7e54071c32ec2b48ae'
+    fluxCVersion = 'develop-7df10d4eca3c2587309db4ccb03e78dafe94d84b'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'

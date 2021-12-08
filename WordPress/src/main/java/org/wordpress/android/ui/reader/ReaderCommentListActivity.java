@@ -529,7 +529,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void setReplyToCommentId(long commentId, boolean doFocus) {
-        mReplyToCommentId = commentId;
+        if (mReplyToCommentId == commentId) {
+            mReplyToCommentId = 0;
+        } else {
+            mReplyToCommentId = commentId;
+        }
         mEditComment.setHint(mReplyToCommentId == 0
                 ? R.string.reader_hint_comment_on_post
                 : R.string.reader_hint_comment_on_comment
@@ -555,9 +559,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
+        getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
+        getCommentAdapter().setReplyTargetComment(mReplyToCommentId);
+        getCommentAdapter().notifyDataSetChanged();
         if (mReplyToCommentId != 0) {
-            getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
-            getCommentAdapter().notifyDataSetChanged();
             scrollToCommentId(mReplyToCommentId);
 
             // reset to replying to the post when user hasn't entered any text and hits
@@ -903,6 +908,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 mSubmitReplyBtn.setEnabled(false);
                 // stop highlighting the fake comment and replace it with the real one
                 getCommentAdapter().setHighlightCommentId(0, false);
+                getCommentAdapter().setReplyTargetComment(0);
                 getCommentAdapter().replaceComment(fakeCommentId, newComment);
                 getCommentAdapter().refreshPost();
                 setReplyToCommentId(0, false);
@@ -932,6 +938,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
+            getCommentAdapter().setReplyTargetComment(0);
             getCommentAdapter().addComment(newComment);
             // make sure it's scrolled into view
             scrollToCommentId(fakeCommentId);

@@ -2130,6 +2130,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_content_fetch_failed";
             case EDITOR_BLOCK_INSERTED:
                 return "editor_block_inserted";
+            case ABOUT_SCREEN_SHOWN:
+                return "about_screen_shown";
+            case ABOUT_SCREEN_DISMISSED:
+                return "about_screen_dismissed";
+            case ABOUT_SCREEN_BUTTON_TAPPED:
+                return "about_screen_button_tapped";
         }
         return null;
     }

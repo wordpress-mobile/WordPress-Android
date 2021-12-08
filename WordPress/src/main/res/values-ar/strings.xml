@@ -573,7 +573,6 @@ Language: ar
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_btn_jetpack_settings">إعدادات Jetpack</string>
     <string name="new_site_creation_domain_header_title">اختيار نطاق</string>
-    <string name="reader_follow_comments_unsubscribe_success">تم إلغاء الاشتراك من التعليقات بنجاح</string>
     <string name="reader_follow_comments_get_status_error">خطأ في جلب حالة الاشتراك للمقالة</string>
     <string name="reader_follow_comments_could_not_subscribe_error">لا يمكن الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">لا يمكن إلغاء الاشتراك في التعليقات لهذه المقالة</string>
@@ -581,7 +580,6 @@ Language: ar
     <string name="reader_btn_follow_comments">تابع المحادثة عبر البريد الإلكتروني</string>
     <string name="activity_log_activity_type_filter_apply">تطبيق</string>
     <string name="activity_log_activity_type_filter_clear">مسح</string>
-    <string name="reader_follow_comments_subscribe_success">لقد اشتركت بالتعليقات بنجاح</string>
     <string name="reader_follow_comments_null_response">لم يتم تلقي أي ردّ</string>
     <string name="reader_follow_comments_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="dialog_edit_story_unsupported_format_message">لم تتم إضافة شريحة واحدة أو أكثر إلى قصتك لأن القصص لا تدعم ملفات GIF في الوقت الحالي. الرجاء اختيار صورة ثابتة أو خلفية فيديو بدلاً من ذلك.</string>
@@ -1811,14 +1809,11 @@ Language: ar
     <string name="notification_settings_switch_desc">الإشعارات</string>
     <string name="jetpack_connection_failed_with_reason">فشل الاتصال بـ Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">أنت متصل بالفعل بـ Jetpack</string>
-    <string name="menu_undo_snackbar_action">تراجع</string>
     <string name="menu_visual_mode">الوضع المرئي</string>
     <string name="menu_html_mode">وضع HTML</string>
     <string name="menu_preview">معاينة</string>
     <string name="menu_save_as_draft">حفظ كمسودة</string>
     <string name="file_size_in_terabytes">%s تيرابايت</string>
-    <string name="menu_html_mode_done_snackbar">تم التبديل إلى وضع HTML</string>
-    <string name="menu_visual_mode_done_snackbar">تم التبديل إلى الوضع المرئي</string>
     <string name="file_size_in_gigabytes">%s جيجابايت</string>
     <string name="file_size_in_megabytes">%s ميجابايت</string>
     <string name="file_size_in_kilobytes">%s كيلوبايت</string>
@@ -2896,7 +2891,6 @@ Language: ar
     <string name="comment_status_approved">تمّت الموافقة</string>
     <string name="share_link">رابط المشاركة</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
-    <string name="reader_label_reply">رد</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
     <string name="reader_likes_multi">%,d أحبوا هذا</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>

@@ -578,8 +578,6 @@ Language: gl_ES
     <string name="reader_follow_comments_could_not_unsubscribe_error">Non se puido anular a subscrición aos comentarios desta entrada</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Non se puido crear a subscrición aos comentarios desta entrada</string>
     <string name="reader_follow_comments_get_status_error">Erro ao recuperar o estado da subscrición para a entrada</string>
-    <string name="reader_follow_comments_unsubscribe_success">Cancelada correctamente a subscrición aos comentarios</string>
-    <string name="reader_follow_comments_subscribe_success">Subscrito correctamente aos comentarios</string>
     <string name="reader_follow_comments_bad_format_response">Resposta recibida non válida</string>
     <string name="reader_follow_comments_null_response">Non se recibiu ningunha resposta</string>
     <string name="activity_log_activity_type_filter_clear">Baleirar</string>
@@ -1811,10 +1809,7 @@ Language: gl_ES
     <string name="signup_with_google_progress">Rexístrarte con Google…</string>
     <string name="jetpack_connection_failed_with_reason">Fallou a conexión a Jetpack: %s</string>
     <string name="jetpack_already_connected_toast">Xa estás conectado a Jetpack</string>
-    <string name="menu_undo_snackbar_action">DESFACER</string>
-    <string name="menu_visual_mode_done_snackbar">Cambiado a modo visual</string>
     <string name="menu_visual_mode">Modo visual</string>
-    <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
     <string name="menu_save_as_draft">Gardar coma borrador</string>
@@ -2898,7 +2893,6 @@ Language: gl_ES
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="reader_likes_you_and_multi">A ti e a outros %,d gustoulles isto</string>
     <string name="reader_likes_multi">A %,d persoas gustoulles isto</string>
-    <string name="reader_label_reply">Responder</string>
     <string name="cant_share_no_visible_blog">Non podes compartir en WordPress se non tes algún blogue visible</string>
     <string name="comment_spammed">Comentario sinalado como spam</string>
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>

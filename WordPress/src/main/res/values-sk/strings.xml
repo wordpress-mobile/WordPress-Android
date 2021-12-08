@@ -354,10 +354,7 @@ Language: sk
     <string name="open_external_link_desc">Otvoriť externý odkaz</string>
     <string name="jetpack_connection_failed_with_reason">Pripojenie na Jetpack zlyhalo: %s</string>
     <string name="jetpack_already_connected_toast">Už ste pripojený na Jetpack</string>
-    <string name="menu_undo_snackbar_action">VRÁTIŤ SPÄŤ</string>
-    <string name="menu_visual_mode_done_snackbar">Prepnuté do vizuálneho módu</string>
     <string name="menu_visual_mode">Vizuálny mód</string>
-    <string name="menu_html_mode_done_snackbar">Prepnuté do HTML módu</string>
     <string name="menu_html_mode">HTML mód</string>
     <string name="menu_preview">Ukážka</string>
     <string name="menu_save_as_draft">Uložiť ako koncept</string>
@@ -1418,7 +1415,6 @@ Language: sk
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
-    <string name="reader_label_reply">Odpovedať</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>

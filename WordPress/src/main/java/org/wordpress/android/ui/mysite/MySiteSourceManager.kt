@@ -44,9 +44,17 @@ class MySiteSourceManager @Inject constructor(
 
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            mySiteSources.map { source ->
-                source.build(coroutineScope, siteLocalId)
-                        .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+            if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                mySiteSources.map { source ->
+                    source.build(coroutineScope, siteLocalId)
+                            .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+                }
+            } else {
+                mySiteSources.filterNot(CardsSource::class.java::isInstance)
+                        .map { source ->
+                            source.build(coroutineScope, siteLocalId)
+                                    .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+                        }
             }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
