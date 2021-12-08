@@ -131,7 +131,7 @@ class MySiteSourceManager @Inject constructor(
     }
 }
 
-fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(isNeeded: Boolean): LiveData<X> =
+inline fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(isNeeded: Boolean): LiveData<X> =
         if (isNeeded) {
             distinctUntilChanged(this)
         } else {
