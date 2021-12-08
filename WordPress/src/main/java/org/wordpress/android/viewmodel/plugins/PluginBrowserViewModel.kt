@@ -336,7 +336,7 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
 
-        site = if (site.isJetpackConnected && site.isUsingWpComRestApi) {
+        site = if (site.isUsingWpComRestApi) {
             requireNotNull(mSiteStore.getSiteBySiteId(site.siteId))
         } else {
             requireNotNull(mSiteStore.getSiteByLocalId(site.id))
