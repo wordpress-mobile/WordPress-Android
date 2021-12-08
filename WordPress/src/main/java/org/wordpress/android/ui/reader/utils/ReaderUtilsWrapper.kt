@@ -15,6 +15,7 @@ import javax.inject.Inject
  *
  */
 @Reusable
+@Suppress("TooManyFunctions")
 class ReaderUtilsWrapper @Inject constructor(
     private val appContext: Context,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider

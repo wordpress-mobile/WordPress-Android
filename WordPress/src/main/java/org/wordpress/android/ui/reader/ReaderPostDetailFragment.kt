@@ -485,6 +485,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ConversationNotificationsViewModel::class.java
         )
 
+        initObservers(binding)
+
+        val bundle = savedInstanceState ?: arguments
+        val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
+        val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            conversationViewModel.start(blogId, postId)
+        }
+        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
+    }
+
+    private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
             uiHelpers.updateVisibility(binding.progressLoading, it.loadingVisible)
@@ -504,6 +517,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 manageLikesUiState(state)
             })
         }
+
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
+
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
+
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
             conversationViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
@@ -543,21 +562,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 manageCommentSnippetUiState(state)
             })
         }
-
-        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
-
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
-
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
-
-        val bundle = savedInstanceState ?: arguments
-        val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
-        val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
-
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            conversationViewModel.start(blogId, postId)
-        }
-        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
     private fun manageFollowConversationUiState(
@@ -1244,16 +1248,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
             RequestCodes.READER_FOLLOW_CONVERSATION -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    if (commentsSnippetFeatureConfig.isEnabled()) {
-                        data?.let {
-                            val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
-                                    FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY
-                            )
-                            flags?.let {
-                                conversationViewModel.onUserNavigateFromComments(it)
-                            }
-                        }
+                if (resultCode == Activity.RESULT_OK && commentsSnippetFeatureConfig.isEnabled() && data != null) {
+                    val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
+                            FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY
+                    )
+                    flags?.let {
+                        conversationViewModel.onUserNavigateFromComments(it)
                     }
                 }
             }

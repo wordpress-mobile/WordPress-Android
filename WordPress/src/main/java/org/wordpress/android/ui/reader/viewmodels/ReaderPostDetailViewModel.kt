@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario.COMMENT_SNIPPET
 import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsStarted
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -93,6 +94,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LargeClass")
 class ReaderPostDetailViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
@@ -869,15 +871,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdateCommentsStarted?) {
-        if (!commentsSnippetFeatureConfig.isEnabled()) return
-        if (
-                event == null ||
-                event.scenario != COMMENT_SNIPPET ||
-                post?.blogId != event.blogId ||
-                post?.postId != event.postId
-        ) {
-            return
-        }
+        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
+        if (post?.blogId != event.blogId || post?.postId != event.postId) return
 
         _commentSnippetState.value = CommentSnippetState.Loading
     }
@@ -885,16 +880,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdateCommentsEnded?) {
-        if (!commentsSnippetFeatureConfig.isEnabled()) return
-        if (
-                event == null ||
-                event.scenario != COMMENT_SNIPPET ||
-                event.result == null ||
-                post?.blogId != event.blogId ||
-                post?.postId != event.postId
-        ) {
-            return
-        }
+        if (!commentsSnippetFeatureConfig.isEnabled() || event == null || event.scenario != COMMENT_SNIPPET) return
+        if (event.result == null || post?.blogId != event.blogId || post?.postId != event.postId) return
 
         launch(mainDispatcher) {
             // Check the cache
@@ -907,37 +894,41 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
             }
 
-            _commentSnippetState.value = if (comments == null) {
-                lastRenderedRepliesData = null
-                CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_post_fetch_failure))
-            } else {
-                when (event.result) {
-                    HAS_NEW, CHANGED, UNCHANGED -> {
-                        lastRenderedRepliesData = RenderedRepliesData(
-                                blogId = post?.blogId,
-                                postId = post?.postId,
-                                numReplies = post?.numReplies
-                        )
+            _commentSnippetState.value = getUpdatedSnippetState(comments, event.result)
+        }
+    }
 
-                        if (comments.isNotEmpty()) {
-                            CommentSnippetData(comments = comments)
-                        } else {
-                            CommentSnippetState.Empty(UiStringRes(
-                                    if (post?.isCommentsOpen != false) {
-                                        R.string.reader_empty_comments
-                                    } else {
-                                        R.string.reader_label_comments_closed
-                                    }
-                            ))
-                        }
+    private fun getUpdatedSnippetState(comments: ReaderCommentList?, result: UpdateResult): CommentSnippetState {
+        return if (comments == null) {
+            lastRenderedRepliesData = null
+            CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_post_fetch_failure))
+        } else {
+            when (result) {
+                HAS_NEW, CHANGED, UNCHANGED -> {
+                    lastRenderedRepliesData = RenderedRepliesData(
+                            blogId = post?.blogId,
+                            postId = post?.postId,
+                            numReplies = post?.numReplies
+                    )
+
+                    if (comments.isNotEmpty()) {
+                        CommentSnippetData(comments = comments)
+                    } else {
+                        CommentSnippetState.Empty(UiStringRes(
+                                if (post?.isCommentsOpen != false) {
+                                    R.string.reader_empty_comments
+                                } else {
+                                    R.string.reader_label_comments_closed
+                                }
+                        ))
                     }
-                    FAILED -> {
-                        lastRenderedRepliesData = null
-                        if (networkUtilsWrapper.isNetworkAvailable()) {
-                            CommentSnippetState.Failure(UiStringRes(R.string.no_network_message))
-                        } else {
-                            CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_fetch_failure))
-                        }
+                }
+                FAILED -> {
+                    lastRenderedRepliesData = null
+                    if (networkUtilsWrapper.isNetworkAvailable()) {
+                        CommentSnippetState.Failure(UiStringRes(R.string.no_network_message))
+                    } else {
+                        CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_fetch_failure))
                     }
                 }
             }
