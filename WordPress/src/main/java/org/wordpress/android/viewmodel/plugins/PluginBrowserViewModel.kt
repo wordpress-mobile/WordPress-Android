@@ -336,7 +336,11 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
 
-        site = requireNotNull(mSiteStore.getSiteBySiteId(site.siteId))
+        site = if (site.isJetpackConnected && site.isUsingWpComRestApi) {
+            requireNotNull(mSiteStore.getSiteBySiteId(site.siteId))
+        } else {
+            requireNotNull(mSiteStore.getSiteByLocalId(site.id))
+        }
     }
 
     // Keeping the data up to date
