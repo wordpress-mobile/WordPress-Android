@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/comments_number_title"
         app:layout_constraintBottom_toTopOf="@+id/comments_recycler_container"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/comments_recycler_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
