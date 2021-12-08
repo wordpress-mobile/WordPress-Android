@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
-    implementation 'org.wordpress:utils:1.19.0'
+    implementation 'org.wordpress:utils:2.2.0'
 
     lintChecks 'org.wordpress:lint:1.0.1'
 }
