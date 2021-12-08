@@ -450,7 +450,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
-    implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
+    implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
