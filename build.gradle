@@ -146,7 +146,7 @@ ext {
 
     coreLibraryDesugaringVersion = '1.1.5'
 
-    exoPlayerVersion = '2.9.3'
+    exoPlayerVersion = '2.12.3'
 
     // testing
     jUnitVersion = '4.13'
