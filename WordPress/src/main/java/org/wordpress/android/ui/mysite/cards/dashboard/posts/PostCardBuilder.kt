@@ -11,9 +11,15 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
-class PostCardBuilder @Inject constructor() {
+@Suppress("TooManyFunctions")
+class PostCardBuilder @Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
     fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
         val posts = params.posts
         posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
@@ -94,10 +100,17 @@ class PostCardBuilder @Inject constructor() {
     private fun List<PostCardModel>.mapToScheduledPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
         PostItem(
                 title = constructPostTitle(post.title),
-                excerpt = UiStringText(post.date.toString()), // TODO: ashiagr - format date
+                excerpt = UiStringText(constructPostDate(post.date)),
                 featuredImageUrl = post.featuredImage,
                 isTimeIconVisible = true,
                 onClick = { onPostItemClick.invoke(post.id) }
         )
+    }
+
+    private fun constructPostDate(date: Date) =
+            SimpleDateFormat(MONTH_DAY_FORMAT, localeManagerWrapper.getLocale()).format(date)
+
+    companion object {
+        private const val MONTH_DAY_FORMAT = "MMM d"
     }
 }
