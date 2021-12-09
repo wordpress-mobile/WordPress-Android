@@ -648,12 +648,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            commentsSnippetContainer.visibility = if (commentsSnippetFeatureConfig.isEnabled()) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-            followConversationContainer.visibility = if (state.showFollowConversation) View.VISIBLE else View.GONE
+            uiHelpers.updateVisibility(commentsSnippetContainer, commentsSnippetFeatureConfig.isEnabled())
+            uiHelpers.updateVisibility(followConversationContainer, state.showFollowConversation)
             commentsNumTitle.text = readerUtilsWrapper.getTextForCommentSnippet(state.commentsNumber)
 
             setupCommentSnippetAdapter(this, state.snippetItems)
