@@ -426,9 +426,12 @@ dependencies {
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
-    implementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    testImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
+
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'

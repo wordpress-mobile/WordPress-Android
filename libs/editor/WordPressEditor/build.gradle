@@ -73,9 +73,16 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
     }
     api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
     api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
+
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
