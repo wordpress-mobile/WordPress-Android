@@ -21,17 +21,27 @@ import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
+import static org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario.COMMENT_SNIPPET;
+import static org.wordpress.android.ui.reader.ReaderEvents.UpdateCommentsScenario.GENERIC;
+
 public class ReaderCommentService extends Service {
     private static final String ARG_POST_ID = "post_id";
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_COMMENT_ID = "comment_id";
-    private static final String ARG_NEXT_PAGE = "next_page";
+    private static final String ARG_PAGE_INFO = "page_info";
+
+    private enum PageInfo {
+        FIRST_PAGE,
+        NEXT_PAGE,
+        COMMENTS_SNIPPET_PAGE;
+    }
 
     private static int mCurrentPage;
 
@@ -43,7 +53,7 @@ public class ReaderCommentService extends Service {
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
-        intent.putExtra(ARG_NEXT_PAGE, requestNextPage);
+        intent.putExtra(ARG_PAGE_INFO, requestNextPage ? PageInfo.NEXT_PAGE : PageInfo.FIRST_PAGE);
         context.startService(intent);
     }
 
@@ -57,6 +67,19 @@ public class ReaderCommentService extends Service {
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
         intent.putExtra(ARG_COMMENT_ID, commentId);
+        intent.putExtra(ARG_PAGE_INFO, PageInfo.FIRST_PAGE);
+        context.startService(intent);
+    }
+
+    public static void startServiceForCommentSnippet(Context context, long blogId, long postId) {
+        if (context == null) {
+            return;
+        }
+
+        Intent intent = new Intent(context, ReaderCommentService.class);
+        intent.putExtra(ARG_BLOG_ID, blogId);
+        intent.putExtra(ARG_POST_ID, postId);
+        intent.putExtra(ARG_PAGE_INFO, PageInfo.COMMENTS_SNIPPET_PAGE);
         context.startService(intent);
     }
 
@@ -92,34 +115,57 @@ public class ReaderCommentService extends Service {
             return START_NOT_STICKY;
         }
 
-        EventBus.getDefault().post(new ReaderEvents.UpdateCommentsStarted());
-
         final long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
         final long postId = intent.getLongExtra(ARG_POST_ID, 0);
         final long commentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
-        boolean requestNextPage = intent.getBooleanExtra(ARG_NEXT_PAGE, false);
+        PageInfo pageInfo = (PageInfo) intent.getSerializableExtra(ARG_PAGE_INFO);
 
-        if (requestNextPage) {
-            int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
-            mCurrentPage = prevPage + 1;
-        } else {
-            mCurrentPage = 1;
+        UpdateCommentsScenario commentsScenario = pageInfo == PageInfo.COMMENTS_SNIPPET_PAGE
+                ? COMMENT_SNIPPET
+                : GENERIC;
+
+        EventBus.getDefault().post(new ReaderEvents.UpdateCommentsStarted(commentsScenario, blogId, postId));
+
+        final int commentsToRequest = pageInfo == PageInfo.COMMENTS_SNIPPET_PAGE
+                ? ReaderConstants.READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                : ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST;
+
+        switch (pageInfo) {
+            case NEXT_PAGE:
+                int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
+                mCurrentPage = prevPage + 1;
+                break;
+            case FIRST_PAGE:
+            case COMMENTS_SNIPPET_PAGE:
+            default:
+                mCurrentPage = 1;
+                break;
         }
 
-        updateCommentsForPost(blogId, postId, mCurrentPage, new UpdateResultListener() {
+        updateCommentsForPost(blogId, postId, mCurrentPage, commentsToRequest, new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
                 if (commentId > 0) {
                     if (ReaderCommentTable.commentExists(blogId, postId, commentId) || !result.isNewOrChanged()) {
-                        EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
+                        EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(
+                                result,
+                                commentsScenario,
+                                blogId,
+                                postId
+                        ));
                         stopSelf();
                     } else {
                         // Comment not found yet, request the next page
                         mCurrentPage++;
-                        updateCommentsForPost(blogId, postId, mCurrentPage, this);
+                        updateCommentsForPost(blogId, postId, mCurrentPage, commentsToRequest, this);
                     }
                 } else {
-                    EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
+                    EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(
+                            result,
+                            commentsScenario,
+                            blogId,
+                            postId
+                    ));
                     stopSelf();
                 }
             }
@@ -131,9 +177,10 @@ public class ReaderCommentService extends Service {
     private static void updateCommentsForPost(final long blogId,
                                               final long postId,
                                               final int pageNumber,
+                                              final int commentsToRequest,
                                               final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
-                      + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
+                      + "?number=" + Integer.toString(commentsToRequest)
                       + "&meta=likes"
                       + "&force=wpcom"
                       + "&hierarchical=true"

@@ -148,7 +148,7 @@ class MySiteViewModel @Inject constructor(
                 // We want to filter out the empty state where we have a site ID but site object is missing.
                 // Without this check there is an emission of a NoSites state even if we have the site
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-            }.distinctUntilChanged()
+            }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
