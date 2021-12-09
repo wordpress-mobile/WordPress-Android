@@ -925,7 +925,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
                 FAILED -> {
                     lastRenderedRepliesData = null
-                    if (networkUtilsWrapper.isNetworkAvailable()) {
+                    if (!networkUtilsWrapper.isNetworkAvailable()) {
                         CommentSnippetState.Failure(UiStringRes(R.string.no_network_message))
                     } else {
                         CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_fetch_failure))
