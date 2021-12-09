@@ -2,7 +2,7 @@ buildscript {
     ext.kotlinVersion = '1.5.32'
     ext.coroutinesVersion = '1.5.2'
     ext.navComponentVersion = '2.3.5'
-    ext.wordPressUtilsVersion = '2.2.0'
+    ext.wordPressUtilsVersion = 'trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6'
     ext.wordPressLoginVersion = '0.0.8'
     ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'v1.68.0-alpha2'
