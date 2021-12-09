@@ -257,7 +257,11 @@ class ReaderPostDetailUiStateBuilderTest {
             isCommentsOpen = true
         }
 
-        val snippetUiState = builder.buildCommentSnippetUiState(Loading, dummySourceReaderPost, dummyonCommentSnippetClicked)
+        val snippetUiState = builder.buildCommentSnippetUiState(
+                Loading,
+                dummySourceReaderPost,
+                dummyonCommentSnippetClicked
+        )
 
         assertThat(snippetUiState.showFollowConversation).isTrue()
     }
@@ -289,7 +293,11 @@ class ReaderPostDetailUiStateBuilderTest {
             add(comment)
         }
 
-        val snippetUiState = builder.buildCommentSnippetUiState(CommentSnippetData(comments = commentsList), dummySourceReaderPost, dummyonCommentSnippetClicked)
+        val snippetUiState = builder.buildCommentSnippetUiState(
+                CommentSnippetData(comments = commentsList),
+                dummySourceReaderPost,
+                dummyonCommentSnippetClicked
+        )
 
         assertThat(snippetUiState.snippetItems.first().type).isEqualTo(COMMENT)
         assertThat(snippetUiState.snippetItems[1].type).isEqualTo(BUTTON)
