@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/comments_number_title"
         app:layout_constraintTop_toTopOf="@+id/comments_number_title"
         android:orientation="horizontal"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="false">
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
