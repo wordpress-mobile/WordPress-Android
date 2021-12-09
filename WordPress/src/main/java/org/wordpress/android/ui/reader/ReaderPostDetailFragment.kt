@@ -1250,7 +1250,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.READER_FOLLOW_CONVERSATION -> {
                 if (resultCode == Activity.RESULT_OK && commentsSnippetFeatureConfig.isEnabled() && data != null) {
                     val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
-                            FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY
+                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY
                     )
                     flags?.let {
                         conversationViewModel.onUserNavigateFromComments(it)
