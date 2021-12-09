@@ -11,9 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class DynamicCardsSource
 @Inject constructor(
     private val dynamicCardStore: DynamicCardStore,
