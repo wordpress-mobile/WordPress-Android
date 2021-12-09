@@ -25,6 +25,8 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.ACTIVITY_LOG_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
@@ -66,7 +68,7 @@ class FormattableContentClickHandler @Inject constructor(
                 // Load the comment in the reader list if it exists, otherwise show a webview
                 val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
-                    showReaderCommentsList(activity, siteId, postId, id)
+                    showReaderCommentsList(activity, siteId, postId, id, ACTIVITY_LOG_DETAIL)
                 } else {
                     showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
@@ -150,13 +152,20 @@ class FormattableContentClickHandler @Inject constructor(
         ReaderActivityLauncher.showReaderLikingUsers(activity, blogId, postId)
     }
 
-    private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
+    private fun showReaderCommentsList(
+        activity: FragmentActivity,
+        siteId: Long,
+        postId: Long,
+        commentId: Long,
+        source: ThreadedCommentsActionSource
+    ) {
         ReaderActivityLauncher.showReaderComments(
                 activity,
                 siteId,
                 postId,
                 commentId,
-                unifiedThreadedCommentsFeatureConfig.isEnabled()
+                unifiedThreadedCommentsFeatureConfig.isEnabled(),
+                source.sourceDescription
         )
     }
 
