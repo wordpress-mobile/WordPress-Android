@@ -104,7 +104,7 @@ If you have questions or just want to say hi, join the [WordPress Slack](https:/
 ## Documentation
 
 - [Coding Style](docs/coding-style.md) - guidelines and validation and auto-formatting tools
-- [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests
+- [Pull Request Guidelines](docs/pull-request-guidelines.md) - branch naming and how to write good pull requests.
 
 Please read the [docs](docs/) for more.
 
