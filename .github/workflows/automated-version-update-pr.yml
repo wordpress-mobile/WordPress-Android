@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
-      PR_TITLE: ${{ github.event.inputs.title }}
+      TITLE: ${{ github.event.inputs.title || 'Automated gutenberg-mobile version update'  }}
       PR_URL: ${{ github.event.inputs.prURL }}
     steps:
       - uses: actions/checkout@v2
@@ -25,11 +25,6 @@ jobs:
       - name: Compute vars
         id: vars
         run: |
-          PR_TITLE_PREFIX = "Automated gutenberg-mobile version update"
-          if [[ $PR_TITLE ]]; then
-            PR_TITLE_PREFIX = $PR_TITLE
-          fi
-          
           # Check if the version contains a "-" character
           if [[ $GUTENBERG_MOBILE_VERSION == *"-"* ]]; then
             # Get the substring up to "-" which should be either "trunk" or the PR number
@@ -37,15 +32,15 @@ jobs:
 
             if [[ "$VERSION_PREFIX" == "trunk" ]]; then
               echo ::set-output name=branch_name::update-gb-mobile-version/for-trunk-update
-              echo ::set-output name=title::"$PR_TITLE_PREFIX for $VERSION_PREFIX"
+              echo ::set-output name=title::"$TITLE for $VERSION_PREFIX"
             else
               echo ::set-output name=branch_name::update-gb-mobile-version/for-pr-$VERSION_PREFIX
-              echo ::set-output name=title::"$PR_TITLE_PREFIX for PR $VERSION_PREFIX"
+              echo ::set-output name=title::"$TITLE for PR $VERSION_PREFIX"
             fi
           else
             # If the version doesn't contain a "-", it should be a tag
             echo ::set-output name=branch_name::update-gb-mobile-version/for-tag-$GUTENBERG_MOBILE_VERSION
-            echo ::set-output name=title::"$PR_TITLE_PREFIX for tag $GUTENBERG_MOBILE_VERSION"
+            echo ::set-output name=title::"$TITLE for tag $GUTENBERG_MOBILE_VERSION"
           fi
 
           echo ::set-output name=commit_message::"Update gutenbergMobileVersion to $GUTENBERG_MOBILE_VERSION - $PR_URL"
