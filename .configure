@@ -1,6 +1,6 @@
 {
   "project_name": "WordPress-Android",
-  "branch": "trunk",
+  "branch": "wpandroid-drop-jetifier",
   "pinned_hash": "d6d98bf9b7133aa7ae18ce8f2a41ef58bb344305",
   "files_to_copy": [
     {
