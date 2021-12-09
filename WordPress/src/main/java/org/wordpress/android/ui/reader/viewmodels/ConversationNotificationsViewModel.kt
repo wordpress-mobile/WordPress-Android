@@ -14,6 +14,8 @@ import org.wordpress.android.ui.reader.FollowCommentsUiStateType.LOADING
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_STATE
 import org.wordpress.android.ui.reader.FollowConversationStatusFlags
 import org.wordpress.android.ui.reader.ReaderFollowCommentsHandler
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.UNKNOWN
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FlagsMappedState
@@ -52,15 +54,17 @@ class ConversationNotificationsViewModel @Inject constructor(
 
     private var blogId: Long = 0
     private var postId: Long = 0
+    private var source: ThreadedCommentsActionSource = UNKNOWN
 
     data class ShowBottomSheetData(val show: Boolean, val isReceivingNotifications: Boolean = false)
 
-    fun start(blogId: Long, postId: Long) {
+    fun start(blogId: Long, postId: Long, source: ThreadedCommentsActionSource) {
         if (isStarted) return
         isStarted = true
 
         this.blogId = blogId
         this.postId = postId
+        this.source = source
 
         _updateFollowStatus.value = FollowCommentsNotAllowed
 
@@ -87,6 +91,7 @@ class ConversationNotificationsViewModel @Inject constructor(
                     blogId,
                     postId,
                     enable,
+                    source,
                     getSnackbarAction(fromSnackbar, enable)
             )
         }
@@ -150,6 +155,7 @@ class ConversationNotificationsViewModel @Inject constructor(
                     blogId,
                     postId,
                     askSubscribe,
+                    source,
                     if (askSubscribe) ::enablePushNotificationsFromSnackbarAction else null
             )
         }
