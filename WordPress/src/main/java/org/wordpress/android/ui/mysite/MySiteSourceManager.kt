@@ -31,7 +31,8 @@ class MySiteSourceManager @Inject constructor(
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
             selectedSiteSource,
@@ -44,9 +45,14 @@ class MySiteSourceManager @Inject constructor(
             cardsSource
     )
 
+    private val showDashboardCards: Boolean
+        get() = mySiteDashboardPhase2FeatureConfig.isEnabled() &&
+                !buildConfigWrapper.isJetpackApp &&
+                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            if (mySiteDashboardPhase2FeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp) {
+            if (showDashboardCards) {
                 mySiteSources.map { source ->
                     source.build(coroutineScope, siteLocalId)
                             .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())

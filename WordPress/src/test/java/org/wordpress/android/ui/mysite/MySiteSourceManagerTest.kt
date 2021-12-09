@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -47,6 +48,8 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteSource: SelectedSiteSource
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var builderConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var siteModel: SiteModel
     private lateinit var mySiteSourceManager: MySiteSourceManager
     private val selectedSite = MediatorLiveData<SelectedSite>()
     private lateinit var allRefreshedMySiteSources: List<MySiteSource<*>>
@@ -58,6 +61,9 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         selectedSite.value = null
+        whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+
         mySiteSourceManager = MySiteSourceManager(
                 analyticsTrackerWrapper,
                 currentAvatarSource,
@@ -69,7 +75,8 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 cardsSource,
                 siteIconProgressSource,
                 mySiteDashboardPhase2FeatureConfig,
-                builderConfigWrapper
+                builderConfigWrapper,
+                selectedSiteRepository
         )
 
         allRefreshedMySiteSources = listOf(
@@ -156,6 +163,18 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         mySiteSourceManager.build(coroutineScope, null)
 
         siteIndependentMySiteSources.forEach { verify(it as SiteIndependentSource).build(coroutineScope) }
+    }
+
+    @Test
+    fun `given non wpcom site, when build, then all sources except cards source are built`() {
+        val coroutineScope = testScope()
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        whenever(siteModel.isUsingWpComRestApi).thenReturn(false)
+
+        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
+
+        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
+        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
     }
 
     /* ON REFRESH */
