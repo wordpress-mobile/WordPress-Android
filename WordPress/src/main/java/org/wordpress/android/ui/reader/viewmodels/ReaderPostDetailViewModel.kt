@@ -305,9 +305,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     blogId,
                     postId
             )
-
         }
-
     }
 
     fun onRefreshLikersData(post: ReaderPost, isLikingAction: Boolean = false) {
