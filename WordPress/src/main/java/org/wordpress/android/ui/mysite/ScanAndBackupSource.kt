@@ -22,6 +22,10 @@ class ScanAndBackupSource @Inject constructor(
 ) : MySiteRefreshSource<JetpackCapabilities> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
+    fun clear() {
+        jetpackCapabilitiesUseCase.clear()
+    }
+
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
         val result = MediatorLiveData<JetpackCapabilities>()
         result.refreshData(coroutineScope, siteLocalId)
@@ -59,9 +63,5 @@ class ScanAndBackupSource @Inject constructor(
         } else {
             postState(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
         }
-    }
-
-    fun clear() {
-        jetpackCapabilitiesUseCase.clear()
     }
 }
