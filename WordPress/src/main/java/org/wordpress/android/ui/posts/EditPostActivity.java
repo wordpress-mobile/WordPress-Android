@@ -448,7 +448,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
+    private void newReblogPostSetup() {
+        Intent intent = getIntent();
+        final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
+        final String quote = intent.getStringExtra(EXTRA_REBLOG_POST_QUOTE);
+        final String citation = intent.getStringExtra(EXTRA_REBLOG_POST_CITATION);
+        final String image = intent.getStringExtra(EXTRA_REBLOG_POST_IMAGE);
+        String content = mReblogUtils.reblogContent(image, quote, title, citation);
+
+        newPostSetup(title, content);
+    }
+
     private void newPageFromLayoutPickerSetup(String title, String layoutSlug) {
+        String content = mSiteStore.getBlockLayoutContent(mSite, layoutSlug);
+        newPostSetup(title, content);
+    }
+
+    private void newPostSetup(String title, String content) {
         mIsNewPost = true;
 
         if (mSite == null) {
@@ -459,7 +475,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showErrorAndFinish(R.string.error_blog_hidden);
             return;
         }
-        String content = mSiteStore.getBlockLayoutContent(mSite, layoutSlug);
         // Create a new post
         mEditPostRepository.set(() -> {
             PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content,
@@ -552,6 +567,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
                     newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
                             extras.getString(EXTRA_PAGE_TEMPLATE));
+                } else if (ACTION_REBLOG.equals(action)) {
+                    newReblogPostSetup();
                 } else {
                     newPostSetup();
                 }
@@ -2362,8 +2379,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (NEW_MEDIA_POST.equals(action)) {
                 mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
                         getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
-            } else if (ACTION_REBLOG.equals(action)) {
-                setPostContentFromReblogAction();
             }
         }
 
@@ -2491,33 +2506,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
         if (mEditorFragment instanceof GutenbergEditorFragment) {
             ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
-        }
-    }
-
-    /**
-     * Sets the content of the reblogged post
-     */
-    private void setPostContentFromReblogAction() {
-        Intent intent = getIntent();
-        final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
-        final String quote = intent.getStringExtra(EXTRA_REBLOG_POST_QUOTE);
-        final String citation = intent.getStringExtra(EXTRA_REBLOG_POST_CITATION);
-        final String image = intent.getStringExtra(EXTRA_REBLOG_POST_IMAGE);
-        if (title != null && quote != null) {
-            mHasSetPostContent = true;
-            mEditPostRepository.updateAsync(postModel -> {
-                postModel.setTitle(title);
-                String content = mReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
-                postModel.setContent(content);
-                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
-                return true;
-            }, (postModel, result) -> {
-                if (result == UpdatePostResult.Updated.INSTANCE) {
-                    mEditorFragment.setTitle(postModel.getTitle());
-                    mEditorFragment.setContent(postModel.getContent());
-                }
-                return null;
-            });
         }
     }
 
