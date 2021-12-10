@@ -10,7 +10,7 @@ enum class ThreadedCommentsActionSource(val sourceDescription: String) {
     READER_POST_DETAILS_COMMENTS("reader_post_details_comments"),
     READER_THREADED_COMMENTS("reader_threaded_comments"),
     COMMENT_NOTIFICATION("comment_notification"),
-    MY_SITE_COMMENT("my_site_comment"),
+    MY_SITE_COMMENT("my_site_comment"), // TODO: currently not used but we could want to mimic iOS here
     COMMENT_LIKE_NOTIFICATION("comment_like_notification"),
     ACTIVITY_LOG_DETAIL("activity_log_detail"),
     DIRECT_OPERATION("direct_operation"),
