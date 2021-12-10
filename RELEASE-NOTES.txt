@@ -2,7 +2,7 @@
 
 18.9
 -----
-
+* [*] Added new About screen where the user can rate and share the app, visit our Twitter profile and blog, view other apps, and more. [https://github.com/wordpress-mobile/WordPress-Android/pull/15631]
 
 18.8
 -----
