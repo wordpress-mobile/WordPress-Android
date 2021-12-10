@@ -193,8 +193,12 @@ public class ReaderActivityLauncher {
     /*
      * show comments for the passed Ids
      */
-    public static void showReaderComments(Context context, long blogId, long postId, boolean isNewThreadedComment) {
-        showReaderComments(context, blogId, postId, null, 0, null, isNewThreadedComment);
+    public static void showReaderComments(Context context,
+                                          long blogId,
+                                          long postId,
+                                          boolean isNewThreadedComment,
+                                          String source) {
+        showReaderComments(context, blogId, postId, null, 0, null, isNewThreadedComment, source);
     }
 
 
@@ -206,7 +210,8 @@ public class ReaderActivityLauncher {
         long blogId,
         long postId,
         long commentId,
-        boolean isNewThreadedComment
+        boolean isNewThreadedComment,
+        String source
     ) {
         showReaderComments(
                 context,
@@ -215,7 +220,8 @@ public class ReaderActivityLauncher {
                 DirectOperation.COMMENT_JUMP,
                 commentId,
                 null,
-                isNewThreadedComment
+                isNewThreadedComment,
+                source
         );
     }
 
@@ -230,7 +236,7 @@ public class ReaderActivityLauncher {
      * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
+            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
         Intent intent = buildShowReaderCommentsIntent(
                 context,
                 blogId,
@@ -238,22 +244,24 @@ public class ReaderActivityLauncher {
                 directOperation,
                 commentId,
                 interceptedUri,
-                isNewThreadedComment
+                isNewThreadedComment,
+                source
         );
         context.startActivity(intent);
     }
 
     public static void showReaderCommentsForResult(
             Fragment fragment,
-           long blogId,
-           long postId,
-           boolean isNewThreadedComment
+            long blogId,
+            long postId,
+            boolean isNewThreadedComment,
+            String source
     ) {
-        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, isNewThreadedComment);
+        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, isNewThreadedComment, source);
     }
 
     public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
+            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
         Intent intent = buildShowReaderCommentsIntent(
                 fragment.getContext(),
                 blogId,
@@ -261,13 +269,14 @@ public class ReaderActivityLauncher {
                 directOperation,
                 commentId,
                 interceptedUri,
-                isNewThreadedComment
+                isNewThreadedComment,
+                source
         );
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
     }
 
     private static Intent buildShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment) {
+            directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
         Intent intent = new Intent(
                 context,
                 isNewThreadedComment ? ThreadedCommentsActivity.class : ReaderCommentListActivity.class
@@ -277,6 +286,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
 
         return intent;
     }

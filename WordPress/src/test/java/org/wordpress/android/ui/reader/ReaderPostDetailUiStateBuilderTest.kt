@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader
 
+import android.content.Context
+import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -11,9 +13,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.models.ReaderComment
+import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
@@ -22,10 +28,14 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetState.CommentSnippetData
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetState.Loading
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ExcerptFooterUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
+import org.wordpress.android.ui.reader.views.uistates.CommentItemType.BUTTON
+import org.wordpress.android.ui.reader.views.uistates.CommentItemType.COMMENT
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -36,6 +46,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Date
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -51,6 +62,8 @@ class ReaderPostDetailUiStateBuilderTest {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var context: Context
+    @Mock lateinit var resources: Resources
     @Mock lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock lateinit var readerSimplePost: ReaderSimplePost
@@ -65,6 +78,7 @@ class ReaderPostDetailUiStateBuilderTest {
         this.blogName = "blog name"
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
+    private val dummyonCommentSnippetClicked: (Long, Long) -> Unit = { _, _ -> }
     private val dummyFeaturedImageUrl = "/image/url"
     private val dummyVisitPostLinkText = "visit post"
     private val dummyDisplayPixelHeight = 100
@@ -235,6 +249,59 @@ class ReaderPostDetailUiStateBuilderTest {
 
                 assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
             }
+
+    @Test
+    fun `follow conversation shown if post isWP and comments are open`() {
+        dummySourceReaderPost.apply {
+            isExternal = false
+            isCommentsOpen = true
+        }
+
+        val snippetUiState = builder.buildCommentSnippetUiState(
+                Loading,
+                dummySourceReaderPost,
+                dummyonCommentSnippetClicked
+        )
+
+        assertThat(snippetUiState.showFollowConversation).isTrue()
+    }
+
+    @Test
+    fun `snippet contains comment and button`() {
+        dummySourceReaderPost.apply {
+            isExternal = false
+            isCommentsOpen = true
+        }
+
+        whenever(contextProvider.getContext()).thenReturn(context)
+        whenever(context.resources).thenReturn(resources)
+        whenever(resources.getDimensionPixelSize(anyInt())).thenReturn(10)
+
+        whenever(dateTimeUtilsWrapper.dateFromIso8601(anyString())).thenReturn(Date())
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
+
+        whenever(gravatarUtilsWrapper.fixGravatarUrl(anyString(), anyInt())).thenReturn("")
+
+        val comment = ReaderComment().apply {
+            authorName = ""
+            published = "2021-12-08T16:58:20-08:00"
+            authorAvatar = "https://avatar"
+            text = "test"
+        }
+
+        val commentsList = ReaderCommentList().apply {
+            add(comment)
+        }
+
+        val snippetUiState = builder.buildCommentSnippetUiState(
+                CommentSnippetData(comments = commentsList),
+                dummySourceReaderPost,
+                dummyonCommentSnippetClicked
+        )
+
+        assertThat(snippetUiState.snippetItems.first().type).isEqualTo(COMMENT)
+        assertThat(snippetUiState.snippetItems[1].type).isEqualTo(BUTTON)
+    }
 
     private fun buildRelatedPostsUiState(
         relatedPosts: ReaderSimplePostList = dummyRelatedPosts,

@@ -83,6 +83,8 @@ import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.DIRECT_OPERATION
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -492,7 +494,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
-            conversationViewModel.start(blogId, postId)
+            conversationViewModel.start(blogId, postId, READER_POST_DETAILS_COMMENTS)
         }
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
@@ -758,7 +760,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     this@ReaderPostDetailFragment,
                     blogId,
                     postId,
-                    mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                    mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                    this.source.sourceDescription
             )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
@@ -780,10 +783,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                replaceRelatedPostDetailWithHistory(
-                        postId = this.postId,
-                        blogId = this.blogId
-                )
+                replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
@@ -1416,7 +1416,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
                                 directOperation, commentId.toLong(), viewModel.interceptedUri,
-                                mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                                mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                                DIRECT_OPERATION.sourceDescription
                         )
                     }
 

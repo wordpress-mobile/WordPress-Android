@@ -353,7 +353,7 @@ class ThreadedCommentsFragment : Fragment(R.layout.threaded_comments_fragment), 
             }
         })
 
-        conversationViewModel.start(blogId, postId)
+        conversationViewModel.start(blogId, postId, ThreadedCommentsActionSource.READER_THREADED_COMMENTS)
     }
 
     override fun onCollapse(result: Bundle?) {
