@@ -448,6 +448,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
+    private void newPostFromShareAction() {
+        Intent intent = getIntent();
+        final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+        final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text));
+
+        newPostSetup(title, content);
+    }
+
     private void newReblogPostSetup() {
         Intent intent = getIntent();
         final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
@@ -567,6 +576,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
                     newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
                             extras.getString(EXTRA_PAGE_TEMPLATE));
+                } else if (Intent.ACTION_SEND.equals(action)) {
+                    newPostFromShareAction();
                 } else if (ACTION_REBLOG.equals(action)) {
                     newReblogPostSetup();
                 } else {
@@ -2374,7 +2385,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Special actions - these only make sense for empty posts that are going to be populated now
         if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
             String action = getIntent().getAction();
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
             } else if (NEW_MEDIA_POST.equals(action)) {
                 mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
