@@ -254,7 +254,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                         )
                     }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
-                        onRefreshCommentsData(post.blogId, post.postId, post.numReplies)
+                        onRefreshCommentsData(post.blogId, post.postId)
                     }
                     updatePostActions(post)
                 }
@@ -286,21 +286,28 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshCommentsData(blogId: Long, postId: Long, numReplies: Int) {
+    fun onRefreshCommentsData(blogId: Long, postId: Long) {
         if (!commentsSnippetFeatureConfig.isEnabled()) return
-        val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
-                blogId,
-                postId,
-                numReplies
-        ) ?: true
 
-        if (!isRepliesDataChanged) return
+        val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
 
-        ReaderCommentService.startServiceForCommentSnippet(
-                contextProvider.getContext(),
-                blogId,
-                postId
-        )
+        post?.let {
+            val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
+                    it.blogId,
+                    it.postId,
+                    it.numReplies
+            ) ?: true
+
+            if (!isRepliesDataChanged) return
+
+            ReaderCommentService.startServiceForCommentSnippet(
+                    contextProvider.getContext(),
+                    blogId,
+                    postId
+            )
+
+        }
+
     }
 
     fun onRefreshLikersData(post: ReaderPost, isLikingAction: Boolean = false) {

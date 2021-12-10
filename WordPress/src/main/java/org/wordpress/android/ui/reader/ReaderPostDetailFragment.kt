@@ -1181,16 +1181,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = viewModel.post
             if (isAdded && post != null) {
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    conversationViewModel.onUpdatePost(post.blogId, post.postId)
+                    viewModel.onRefreshCommentsData(post.blogId, post.postId)
+                }
+
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     viewModel.post?.let {
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
-                        }
-                        if (commentsSnippetFeatureConfig.isEnabled()) {
-                            conversationViewModel.onUpdatePost(it.blogId, it.postId)
-                            viewModel.onRefreshCommentsData(it.blogId, it.postId, it.numReplies)
                         }
                         viewModel.onUpdatePost(it)
                     }
@@ -1484,7 +1485,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         viewModel.onRefreshLikersData(it)
                     }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
-                        viewModel.onRefreshCommentsData(it.blogId, it.postId, it.numReplies)
+                        viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }
                     viewModel.onRelatedPostsRequested(it)
                 }
