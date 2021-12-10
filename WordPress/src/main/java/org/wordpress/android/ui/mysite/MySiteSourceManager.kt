@@ -50,21 +50,24 @@ class MySiteSourceManager @Inject constructor(
                 !buildConfigWrapper.isJetpackApp &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
 
-    private val filteredSiteDependentSources: List<MySiteSource<*>>
+    private val allSupportedMySiteSources: List<MySiteSource<*>>
         get() = if (showDashboardCards) {
             mySiteSources
         } else {
             mySiteSources.filterNot(CardsSource::class.java::isInstance)
         }
 
+    private val siteIndependentSources: List<SiteIndependentSource<*>>
+        get() = mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            filteredSiteDependentSources.map { source ->
+            allSupportedMySiteSources.map { source ->
                 source.build(coroutineScope, siteLocalId)
                         .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
             }
         } else {
-            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+            siteIndependentSources
                     .map { source ->
                         source.build(coroutineScope)
                                 .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
@@ -74,7 +77,7 @@ class MySiteSourceManager @Inject constructor(
 
     fun isRefreshing(): Boolean {
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            filteredSiteDependentSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
                     return true
                 }
@@ -105,7 +108,7 @@ class MySiteSourceManager @Inject constructor(
     }
 
     private fun refreshAllSources() {
-        filteredSiteDependentSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }
 
     private fun refreshSubsetOfAllSources() {
