@@ -15,8 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CommentNotificationsBottomSheetBinding
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -26,8 +26,7 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var contextProvider: ContextProvider
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
-    private lateinit var viewModel: ReaderCommentListViewModel
+    private lateinit var viewModel: ConversationNotificationsViewModel
 
     // this avoids a weird animation when opening this dialog from activity that is using
     // @style/WordPress.NoActionBar.TranslucentStatus
@@ -44,8 +43,9 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
 
         with(CommentNotificationsBottomSheetBinding.bind(view)) {
             val isReceivingPushNotifications = requireArguments().getBoolean(ARG_IS_RECEIVING_PUSH_NOTIFICATIONS)
+            val isAttachedToFragment = requireArguments().getBoolean(ARG_IS_ATTACHED_TO_FRAGMENT)
 
-            initViewModel()
+            initViewModel(isAttachedToFragment)
 
             if (savedInstanceState == null) {
                 enablePushNotifications.isChecked = isReceivingPushNotifications
@@ -68,15 +68,15 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(isAttachedToFragment: Boolean) {
         viewModel = ViewModelProvider(
-                if (mUnifiedThreadedCommentsFeatureConfig.isEnabled()) {
+                if (isAttachedToFragment) {
                     parentFragment as ViewModelStoreOwner
                 } else {
                     requireActivity()
                 },
                 viewModelFactory
-        ).get(ReaderCommentListViewModel::class.java)
+        ).get(ConversationNotificationsViewModel::class.java)
     }
 
     private fun CommentNotificationsBottomSheetBinding.initObservers() {
@@ -102,12 +102,17 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val ARG_IS_RECEIVING_PUSH_NOTIFICATIONS = "ARG_IS_RECEIVING_PUSH_NOTIFICATIONS"
+        private const val ARG_IS_ATTACHED_TO_FRAGMENT = "ARG_IS_ATTACHED_TO_FRAGMENT"
 
         @JvmStatic
-        fun newInstance(isReceivingPushNotifications: Boolean): CommentNotificationsBottomSheetFragment {
+        fun newInstance(
+            isReceivingPushNotifications: Boolean,
+            isAttachedToFragment: Boolean
+        ): CommentNotificationsBottomSheetFragment {
             val fragment = CommentNotificationsBottomSheetFragment()
             val bundle = Bundle()
             bundle.putBoolean(ARG_IS_RECEIVING_PUSH_NOTIFICATIONS, isReceivingPushNotifications)
+            bundle.putBoolean(ARG_IS_ATTACHED_TO_FRAGMENT, isAttachedToFragment)
             fragment.arguments = bundle
             return fragment
         }

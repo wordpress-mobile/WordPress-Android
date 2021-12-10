@@ -19,6 +19,14 @@ class SelectedSiteSource @Inject constructor(
 ) : MySiteRefreshSource<SelectedSite> {
     override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
+    init {
+        dispatcher.register(this)
+    }
+
+    fun clear() {
+        dispatcher.unregister(this)
+    }
+
     override fun build(
         coroutineScope: CoroutineScope,
         siteLocalId: Int
@@ -35,14 +43,6 @@ class SelectedSiteSource @Inject constructor(
     }
 
     fun updateSiteSettingsIfNecessary() = selectedSiteRepository.updateSiteSettingsIfNecessary()
-
-    init {
-        dispatcher.register(this)
-    }
-
-    fun clear() {
-        dispatcher.unregister(this)
-    }
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)

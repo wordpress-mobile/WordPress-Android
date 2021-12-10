@@ -23,6 +23,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_CARD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -131,7 +132,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 context,
                 event.blogId,
                 event.postId,
-                mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                READER_POST_CARD.sourceDescription
         )
         is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
         is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(

@@ -54,6 +54,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
@@ -533,7 +534,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 siteId,
                 postId,
                 commentId,
-                mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                ThreadedCommentsActionSource.COMMENT_NOTIFICATION.getSourceDescription()
         );
     }
 
