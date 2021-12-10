@@ -33,8 +33,8 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
-import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
@@ -84,6 +84,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ThreadedCommentsUtils mThreadedCommentsUtils;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -145,8 +146,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mReplyButtonIcon = view.findViewById(R.id.reply_button_icon);
             mCountLikes = view.findViewById(R.id.count_likes);
 
-            mTxtText.setLinksClickable(true);
-            mTxtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
+            mThreadedCommentsUtils.setLinksClickable(mTxtText, mIsPrivatePost);
         }
     }
 
@@ -162,7 +162,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
-        mIsPrivatePost = (post != null && post.isPrivate);
+        mIsPrivatePost = mThreadedCommentsUtils.isPrivatePost(post);
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);

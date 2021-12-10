@@ -46,6 +46,7 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/comment_body_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/reader_card_content_padding"
@@ -171,6 +172,7 @@
                 tools:text="text_comment_text" />
 
             <RelativeLayout
+                android:id="@+id/actions_container"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/reader_comments_actions_height"
                 android:orientation="horizontal">
