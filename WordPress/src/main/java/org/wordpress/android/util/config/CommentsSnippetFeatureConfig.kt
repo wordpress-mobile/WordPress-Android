@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * Configuration of the threaded comments below post improvement
  */
-@Feature(COMMENTS_SNIPPET_COMMENTS_REMOTE_FIELD, false)
+@Feature(COMMENTS_SNIPPET_COMMENTS_REMOTE_FIELD, true)
 class CommentsSnippetFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
