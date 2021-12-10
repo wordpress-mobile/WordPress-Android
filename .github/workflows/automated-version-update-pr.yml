@@ -7,6 +7,8 @@ on:
         required: false
       prURL:
         required: false
+      body:
+        required: false
 
 jobs:
   create-pull-request:
@@ -14,6 +16,7 @@ jobs:
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
       PR_TITLE: ${{ github.event.inputs.title || 'Automated gutenberg-mobile version update'  }}
+      PR_BODY: ${{ github.event.inputs.body || 'This PR incorporates changes from [gutenberg-mobile repo](https://github.com/wordpress-mobile/gutenberg-mobile).' }} 
       GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
     steps:
       - uses: actions/checkout@v2
@@ -43,11 +46,14 @@ jobs:
             echo ::set-output name=title::"$PR_TITLE for tag $GUTENBERG_MOBILE_VERSION"
           fi
 
-          echo ::set-output name=commit_message::"Update gutenbergMobileVersion to $GUTENBERG_MOBILE_VERSION - $GUTENBERG_MOBILE_PR_URL"
+          echo ::set-output name=commit_message::"Update gutenbergMobileVersion to $GUTENBERG_MOBILE_VERSION"
+          echo ::set-output name=pr_description::"##Description \n $PR_BODY \n\n Related Changes: $GUTENBERG_MOBILE_PR_URL"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: ${{ steps.vars.outputs.commit_message }}
           title: ${{ steps.vars.outputs.title }}
           branch: ${{ steps.vars.outputs.branch_name }}
+          labels: gutenberg-mobile
+          body: ${{ steps.vars.outputs.pr_description }}
           delete-branch: true
