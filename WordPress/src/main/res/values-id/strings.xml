@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-23 11:54:06+0000
+Translation-Revision-Date: 2021-12-08 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Dari papan klip</string>
+    <string name="gutenberg_native_featured_image">Gambar Andalan</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Salin URL dari papan klip, %s</string>
+    <string name="me_btn_about">Tentang WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Buka pos terjadwal</string>
+    <string name="my_site_post_card_link_go_to_drafts">Buka konsep</string>
+    <string name="my_site_post_card_link_create_post">Buat pos</string>
+    <string name="my_site_create_next_post_excerpt">Memposkan secara reguler membantu memperbanyak audiens Anda!</string>
+    <string name="my_site_create_next_post_title">Buat pos Anda selanjutnya</string>
+    <string name="menu_visual_mode_switched_notice">Beralih ke mode Visual</string>
+    <string name="menu_html_mode_switched_notice">Beralih ke mode HTML</string>
+    <string name="post_link_copied_to_clipboard">Tautan disalin ke papan klip</string>
+    <string name="comment_author_badge">Penulis</string>
+    <string name="button_copy_link">Salin tautan</string>
     <string name="domains_paid_plan_add_your_domain_caption">Menambahkan domain kustom agar pengunjung mudah menemukan situs Anda</string>
     <string name="domains_paid_plan_add_your_domain_title">Tambahkan domain Anda</string>
     <string name="my_site_create_first_post_excerpt">Pos ditampilkan di halaman blog Anda dalam urutan kronologis terbalik. Saatnya membagikan ide Anda kepada dunia!</string>

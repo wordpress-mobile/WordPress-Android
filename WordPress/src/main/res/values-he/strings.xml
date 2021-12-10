@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-25 10:54:08+0000
+Translation-Revision-Date: 2021-12-08 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">מהלוח</string>
+    <string name="gutenberg_native_featured_image">תמונה ראשית</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">להעתיק כתובת URL מהלוח, %s</string>
+    <string name="me_btn_about">אודות WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">מעבר אל פוסטים מתוזמנים</string>
+    <string name="my_site_post_card_link_go_to_drafts">מעבר לטיוטות</string>
+    <string name="my_site_post_card_link_create_post">ליצור פוסט</string>
+    <string name="my_site_create_next_post_excerpt">פרסום פוסטים באופן קבוע יעזור לך לבנות את הקהל!</string>
+    <string name="my_site_create_next_post_title">ליצור את הפוסט הבא שלך</string>
+    <string name="menu_visual_mode_switched_notice">הוחלף לעורך החזותי</string>
+    <string name="menu_html_mode_switched_notice">הוחלף לעורך HTML</string>
+    <string name="post_link_copied_to_clipboard">הקישור הועתק ללוח</string>
+    <string name="comment_author_badge">מחבר</string>
+    <string name="button_copy_link">להעתיק את הקישור</string>
     <string name="domains_paid_plan_add_your_domain_caption">הוספה של דומיין מותאם אישית תעזור למבקרים למצוא את החנות שלך</string>
     <string name="domains_paid_plan_add_your_domain_title">להוסיף את הדומיין שלך</string>
     <string name="my_site_create_first_post_excerpt">פוסטים מופיעים בעמוד הבלוג שלך בסדר כרונולוגי הפוך. זה הזמן לשתף את הרעיונות שלך עם העולם!</string>
