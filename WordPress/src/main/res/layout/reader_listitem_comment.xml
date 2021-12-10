@@ -130,6 +130,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/image_comment_avatar"
                         app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
                         app:layout_constraintTop_toBottomOf="@+id/text_comment_author"
+                        app:layout_constraintEnd_toEndOf="parent"
                         tools:text="Apr 30 2021" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

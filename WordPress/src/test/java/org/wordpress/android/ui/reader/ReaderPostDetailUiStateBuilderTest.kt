@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ExcerptFooterUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
@@ -30,7 +31,9 @@ import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -50,7 +53,10 @@ class ReaderPostDetailUiStateBuilderTest {
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var readerSimplePost: ReaderSimplePost
+    @Mock lateinit var readerSimplePost: ReaderSimplePost
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    @Mock lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    @Mock lateinit var threadedCommentsUtils: ThreadedCommentsUtils
     private lateinit var dummyRelatedPosts: ReaderSimplePostList
 
     private var dummySourceReaderPost = ReaderPost().apply {
@@ -76,6 +82,9 @@ class ReaderPostDetailUiStateBuilderTest {
                 contextProvider,
                 htmlUtilsWrapper,
                 htmlMessageUtils,
+                dateTimeUtilsWrapper,
+                gravatarUtilsWrapper,
+                threadedCommentsUtils,
                 resourceProvider
         )
     }

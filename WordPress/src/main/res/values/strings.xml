@@ -2106,6 +2106,11 @@
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_empty_comments">No comments yet</string>
+    <string name="reader_comments_fetch_failure">There was an error getting comments</string>
+    <string name="reader_comments_post_fetch_failure">There was an error getting post data</string>
+    <string name="reader_comments_view_all">View all comments</string>
+    <string name="reader_comments_be_first_to_comment">Be the first to comment</string>
+    <string name="reader_comments_follow_conversation">Follow Conversation</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_empty_search_title">No results found</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>

@@ -96,7 +96,9 @@ import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
+import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.ContextProvider
@@ -137,6 +139,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock private lateinit var contextProvider: ContextProvider
     @Mock private lateinit var engagementUtils: EngagementUtils
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -176,7 +180,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 getLikesHandler,
                 likesEnhancementsFeatureConfig,
                 engagementUtils,
-                htmlMessageUtils
+                htmlMessageUtils,
+                contextProvider,
+                networkUtilsWrapper,
+                commentsSnippetFeatureConfig
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
