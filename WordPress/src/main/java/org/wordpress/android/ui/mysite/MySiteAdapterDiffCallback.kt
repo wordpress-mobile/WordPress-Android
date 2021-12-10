@@ -84,10 +84,10 @@ class MySiteAdapterDiffCallback(
     // QuickStartTaskTypeItem
     private fun areContentsTheSame(oldItem: QuickStartTaskTypeItem, newItem: QuickStartTaskTypeItem) =
             oldItem.title == newItem.title &&
-                    oldItem.subtitle == newItem.subtitle &&
-                    oldItem.quickStartTaskType == newItem.quickStartTaskType &&
-                    oldItem.titleEnabled == newItem.titleEnabled &&
-                    oldItem.strikeThroughTitle == newItem.strikeThroughTitle
+            oldItem.subtitle == newItem.subtitle &&
+            oldItem.quickStartTaskType == newItem.quickStartTaskType &&
+            oldItem.titleEnabled == newItem.titleEnabled &&
+            oldItem.strikeThroughTitle == newItem.strikeThroughTitle
 
     // PostCardWithPostItems
     private fun areContentsTheSame(oldItem: PostCardWithPostItems, newItem: PostCardWithPostItems) =
@@ -112,6 +112,6 @@ class MySiteAdapterDiffCallback(
 
     private fun areContentsTheSame(oldItem: PostCardWithoutPostItems, newItem: PostCardWithoutPostItems) =
             oldItem.postCardType == newItem.postCardType &&
-                    oldItem.title == newItem.title &&
-                    oldItem.excerpt == newItem.excerpt
+            oldItem.title == newItem.title &&
+            oldItem.excerpt == newItem.excerpt
 }
