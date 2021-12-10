@@ -29,6 +29,12 @@ class CommentNotificationsBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
     private lateinit var viewModel: ReaderCommentListViewModel
 
+    // this avoids a weird animation when opening this dialog from activity that is using
+    // @style/WordPress.NoActionBar.TranslucentStatus
+    override fun getTheme(): Int {
+        return R.style.WordPress_BottomSheetDialogTheme_NonTranslucent
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.comment_notifications_bottom_sheet, container)
     }
