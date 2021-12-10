@@ -28,7 +28,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
-        classpath("com.dipien:bye-bye-jetifier:1.2.0")
     }
 }
 
@@ -223,27 +222,5 @@ tasks.register("configureApply") {
     doLast {
         println("Done")
     }
-}
-
-apply plugin: "com.dipien.byebyejetifier"
-
-byeByeJetifier {
-//    legacyGroupIdPrefixes = ["android.arch", "com.android.support"]
-//    excludedConfigurations = ["lintClassPath"]
-    excludedFilesFromScanning = [
-            // com.squareup.leakcanary:leakcanary-object-watcher-android-support-fragments:2.5
-            "leakcanary/internal/AndroidSupportFragmentDestroyWatcher",
-    ]
-}
-
-apply plugin: "com.dipien.byebyejetifier"
-
-byeByeJetifier {
-//    legacyGroupIdPrefixes = ["android.arch", "com.android.support"]
-//    excludedConfigurations = ["lintClassPath"]
-    excludedFilesFromScanning = [
-            // com.squareup.leakcanary:leakcanary-object-watcher-android-support-fragments:2.5
-            "leakcanary/internal/AndroidSupportFragmentDestroyWatcher",
-    ]
 }
 
