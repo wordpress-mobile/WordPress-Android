@@ -1647,4 +1647,17 @@
         <item name="android:paddingEnd">0dp</item>
         <item name="android:textAlignment">viewStart</item>
     </style>
+
+    <!-- Unified About -->
+    <style name="WordPress.UnifiedAbout" parent="WordPress.NoActionBar">
+        <item name="textAppearanceHeadline4">@style/TextAppearance.UnifiedAbout.Header.Title</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.UnifiedAbout.Toolbar.Title</item>
+    </style>
+
+    <style name="TextAppearance.UnifiedAbout.Header.Title" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.UnifiedAbout.Toolbar.Title" parent="TextAppearance.App.Toolbar.Title" />
 </resources>
