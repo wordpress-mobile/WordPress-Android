@@ -650,12 +650,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            commentsSnippetContainer.visibility = if (commentsSnippetFeatureConfig.isEnabled()) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-            followConversationContainer.visibility = if (state.showFollowConversation) View.VISIBLE else View.GONE
+            uiHelpers.updateVisibility(commentsSnippetContainer, commentsSnippetFeatureConfig.isEnabled())
+            uiHelpers.updateVisibility(followConversationContainer, state.showFollowConversation)
             commentsNumTitle.text = readerUtilsWrapper.getTextForCommentSnippet(state.commentsNumber)
 
             setupCommentSnippetAdapter(this, state.snippetItems)
@@ -1185,16 +1181,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = viewModel.post
             if (isAdded && post != null) {
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    conversationViewModel.onUpdatePost(post.blogId, post.postId)
+                    viewModel.onRefreshCommentsData(post.blogId, post.postId)
+                }
+
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     viewModel.post?.let {
                         if (likesEnhancementsFeatureConfig.isEnabled()) {
                             viewModel.onRefreshLikersData(it)
-                        }
-                        if (commentsSnippetFeatureConfig.isEnabled()) {
-                            conversationViewModel.onUpdatePost(it.blogId, it.postId)
-                            viewModel.onRefreshCommentsData(it.blogId, it.postId, it.numReplies)
                         }
                         viewModel.onUpdatePost(it)
                     }
@@ -1250,7 +1247,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.READER_FOLLOW_CONVERSATION -> {
                 if (resultCode == Activity.RESULT_OK && commentsSnippetFeatureConfig.isEnabled() && data != null) {
                     val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
-                            FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY
+                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY
                     )
                     flags?.let {
                         conversationViewModel.onUserNavigateFromComments(it)
@@ -1489,7 +1486,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         viewModel.onRefreshLikersData(it)
                     }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
-                        viewModel.onRefreshCommentsData(it.blogId, it.postId, it.numReplies)
+                        viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }
                     viewModel.onRelatedPostsRequested(it)
                 }

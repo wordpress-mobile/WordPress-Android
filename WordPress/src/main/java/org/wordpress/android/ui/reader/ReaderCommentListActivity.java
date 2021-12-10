@@ -95,7 +95,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
-import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY;
+import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 import kotlin.Unit;
@@ -504,7 +504,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                             bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
 
                             setResult(RESULT_OK, new Intent().putExtra(
-                                    FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY,
+                                    FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
                                     uiState.getFlags()
                             ));
                         }

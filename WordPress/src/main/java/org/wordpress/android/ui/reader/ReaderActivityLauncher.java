@@ -237,7 +237,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
-        Intent intent = createShowReaderCommentsIntent(
+        Intent intent = buildShowReaderCommentsIntent(
                 context,
                 blogId,
                 postId,
@@ -262,7 +262,7 @@ public class ReaderActivityLauncher {
 
     public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
-        Intent intent = createShowReaderCommentsIntent(
+        Intent intent = buildShowReaderCommentsIntent(
                 fragment.getContext(),
                 blogId,
                 postId,
@@ -275,7 +275,7 @@ public class ReaderActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
     }
 
-    private static Intent createShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
+    private static Intent buildShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, boolean isNewThreadedComment, String source) {
         Intent intent = new Intent(
                 context,
