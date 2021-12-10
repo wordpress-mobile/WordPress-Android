@@ -127,7 +127,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                 blogId,
                 postId,
                 post,
-                properties // TODOD
+                properties
         )
     }
 
@@ -193,7 +193,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                 blogId,
                 postId,
                 readerPostTableWrapper.getBlogPost(blogId, postId, true),
-                properties // TODOD
+                properties
         )
     }
 
