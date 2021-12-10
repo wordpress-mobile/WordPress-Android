@@ -1987,6 +1987,7 @@
     <string name="reader_btn_done">Done</string>
     <string name="reader_btn_follow_comments">Follow conversation by email</string>
     <string name="reader_btn_following_comments">Following conversation by email</string>
+    <string name="reader_btn_follow_conversation_settings">Follow conversation settings</string>
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
