@@ -1,3 +1,22 @@
+GIT
+  remote: git@github.com:wordpress-mobile/release-toolkit.git
+  revision: ef030b3e88c214e6353039c95e0546fb8983ceb2
+  ref: add/private-repo-support-for-downloading-files-from-github
+  specs:
+    fastlane-plugin-wpmreleasetoolkit (2.1.0)
+      activesupport (~> 5)
+      bigdecimal (~> 1.4)
+      chroma (= 0.2.0)
+      diffy (~> 3.3)
+      git (~> 1.3)
+      jsonlint (~> 0.3)
+      nokogiri (~> 1.11)
+      octokit (~> 4.18)
+      parallel (~> 1.14)
+      progress_bar (~> 1.3)
+      rake (>= 12.3, < 14.0)
+      rake-compiler (~> 1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -110,19 +129,6 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-wpmreleasetoolkit (2.1.0)
-      activesupport (~> 5)
-      bigdecimal (~> 1.4)
-      chroma (= 0.2.0)
-      diffy (~> 3.3)
-      git (~> 1.3)
-      jsonlint (~> 0.3)
-      nokogiri (~> 1.11)
-      octokit (~> 4.18)
-      parallel (~> 1.14)
-      progress_bar (~> 1.3)
-      rake (>= 12.3, < 14.0)
-      rake-compiler (~> 1.0)
     gh_inspector (1.1.3)
     git (1.9.1)
       rchardet (~> 1.8)
@@ -168,7 +174,7 @@ GEM
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    i18n (1.8.10)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
     json (2.6.1)
@@ -204,7 +210,7 @@ GEM
     public_suffix (4.0.6)
     racc (1.6.0)
     rake (13.0.6)
-    rake-compiler (1.1.1)
+    rake-compiler (1.1.4)
       rake
     rchardet (1.8.0)
     representable (3.1.1)
@@ -264,7 +270,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2)
-  fastlane-plugin-wpmreleasetoolkit (~> 2.0)
+  fastlane-plugin-wpmreleasetoolkit!
   nokogiri
   rmagick (~> 4.1)
 
