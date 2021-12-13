@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-01 19:45:15+0000
+Translation-Revision-Date: 2021-12-08 08:12:49+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -80,10 +80,10 @@ Language: pl
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Ty oraz %1$s blogujących&lt;/a&gt; lubi to.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Ty oraz 1 blogujący&lt;/a&gt; lubicie to.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ty&lt;/a&gt; to polubiłeś.</string>
-    <string name="gutenberg_native_line_height">Wysokość linii</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
+    <string name="gutenberg_native_line_height">Interlinia</string>
     <string name="recommend_app_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="recommend_app_null_response">Nie otrzymano odpowiedzi</string>
     <string name="recommend_app_subject">Aplikacje WordPress - Aplikacje na wszystkie urządzenia</string>
@@ -1981,7 +1981,7 @@ Language: pl
     <string name="plugin_updated_successfully">Z powodzeniem zaktualizowano %s</string>
     <string name="plugin_available_version">Wersja %s jest dostępna</string>
     <string name="plugin_detail_label_state_autoupdates">Autoaktualizacja</string>
-    <string name="plugin_detail_label_state_active">Aktywne</string>
+    <string name="plugin_detail_label_state_active">Włączono</string>
     <string name="plugin_inactive">Nieaktywne</string>
     <string name="plugins">Wtyczki</string>
     <string name="my_site_btn_plugins">Wtyczki</string>
@@ -2702,9 +2702,9 @@ Language: pl
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>
     <string name="my_site_btn_view_admin">Przejdź do kokpitu</string>
     <string name="my_site_header_publish">Opublikuj</string>
-    <string name="my_site_btn_blog_posts">Wpisy na blogu</string>
     <string name="my_site_header_look_and_feel">Wygląd</string>
     <string name="my_site_btn_site_settings">Ustawienia witryny</string>
+    <string name="my_site_btn_blog_posts">Wpisy</string>
     <string name="my_site_header_configuration">Konfiguracja</string>
     <string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
     <string name="show">Pokaż</string>

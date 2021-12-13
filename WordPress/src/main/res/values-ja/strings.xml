@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-24 09:54:06+0000
+Translation-Revision-Date: 2021-12-08 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">クリップボードから</string>
+    <string name="gutenberg_native_featured_image">アイキャッチ画像</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">クリップボードから URL (%s) をコピーします</string>
+    <string name="me_btn_about">WordPress について</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">予約済みの投稿に移動</string>
+    <string name="my_site_post_card_link_go_to_drafts">下書きに移動</string>
+    <string name="my_site_post_card_link_create_post">投稿を作成</string>
+    <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
+    <string name="my_site_create_next_post_title">次の投稿を作成</string>
+    <string name="menu_visual_mode_switched_notice">ビジュアルモードに切り替えました</string>
+    <string name="menu_html_mode_switched_notice">HTML モードに切り替えました</string>
+    <string name="post_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
+    <string name="comment_author_badge">投稿者</string>
+    <string name="button_copy_link">リンクをコピー</string>
     <string name="domains_paid_plan_add_your_domain_caption">カスタムドメインを追加すると、訪問者がサイトを見つけやすくなります</string>
     <string name="domains_paid_plan_add_your_domain_title">ドメインを追加</string>
     <string name="my_site_create_first_post_excerpt">投稿はブログページに新しいものから順に表示されます。 あなたのアイデアを世界中のユーザーとシェアしましょう !</string>

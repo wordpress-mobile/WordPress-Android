@@ -1,3 +1,0 @@
-18.7:
-- Der Einstellung „Link zu“ im Bildblock wurden neben der vorhandenen Option „Individuelle URL“ die Optionen „Mediendatei“ und „Anhang-Seite“ hinzugefügt.
-- Die automatische Speicherung von Inhalten funktioniert jetzt reibungsloser.
