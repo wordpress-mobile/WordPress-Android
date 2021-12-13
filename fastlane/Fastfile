@@ -744,6 +744,14 @@ REPOSITORY_NAME = 'WordPress-Android'
       github_release_prefix: "",
       exclusions: []
     },
+    {
+      name: "About Library",
+      import_key: "aboutAutomatticVersion",
+      repository: "Automattic/about-automattic-android",
+      strings_file_path: "library/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
+    },
   ]
 
   private_lane :send_strings_for_translation do |options|
