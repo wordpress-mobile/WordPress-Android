@@ -5,137 +5,221 @@
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/reader_card_margin"
-    android:layout_marginStart="@dimen/reader_card_margin"
-    android:importantForAccessibility="no"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium">
+    android:importantForAccessibility="no">
 
-    <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
-        android:id="@+id/spacer_comment_indent"
-        android:layout_width="@dimen/reader_comment_indent_per_level"
+        android:id="@+id/selected_comment_indicator"
+        android:layout_width="@dimen/reader_comments_selected_indicator_width"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/reader_card_content_padding"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/reader_card_content_padding"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_toEndOf="@+id/spacer_comment_indent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/layout_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/image_comment_avatar"
-                android:layout_width="@dimen/avatar_sz_extra_small"
-                android:layout_height="@dimen/avatar_sz_extra_small"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:importantForAccessibility="no"
-                tools:src="@drawable/bg_rectangle_placeholder_user_32dp" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_comment_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                tools:text="text_comment_author" />
-        </LinearLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:fontFamily="serif"
-            android:textAppearance="?attr/textAppearanceBody2"
-            tools:text="text_comment_text" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_comment_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/reply_container"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/wpColorOnSurfaceMedium"
-                tools:text="date" />
-
-            <LinearLayout
-                android:id="@+id/reply_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/count_likes"
-                android:background="?android:selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/margin_small"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingEnd="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small">
-
-                <ImageView
-                    android:layout_width="@dimen/reader_button_icon"
-                    android:layout_height="@dimen/reader_button_icon"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@null"
-                    android:padding="@dimen/margin_extra_small"
-                    android:src="@drawable/ic_reply_white_24dp"
-                    app:tint="?attr/wpColorOnSurfaceMedium" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/reader_label_reply"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?attr/wpColorOnSurfaceMedium" />
-            </LinearLayout>
-
-            <org.wordpress.android.ui.reader.views.ReaderIconCountView
-                android:id="@+id/count_likes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingStart="@dimen/margin_large"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingEnd="0dp"
-                android:paddingBottom="@dimen/margin_small" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <!-- progress bar that appears while submitting a comment -->
-    <ProgressBar
-        android:id="@+id/progress_comment"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@+id/comment_container"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/comment_container"
+        android:background="?attr/colorPrimary"
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?attr/wpColorSurfaceSecondary"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/comment_container"
+        android:paddingTop="@dimen/margin_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider">
+
+        <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
+        <View
+            android:id="@+id/spacer_comment_indent"
+            android:layout_width="@dimen/reader_comment_indent_per_level"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_toEndOf="@+id/spacer_comment_indent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/divider">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_author"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    app:layout_constraintEnd_toStartOf="@+id/share_button_container"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/image_comment_avatar"
+                        android:layout_width="@dimen/avatar_sz_medium"
+                        android:layout_height="@dimen/avatar_sz_medium"
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:contentDescription="@string/description_user"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_comment_author"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="?textAppearanceSubtitle2"
+                        android:textColor="?attr/wpColorOnSurfaceHigh"
+                        app:layout_constraintEnd_toStartOf="@+id/author_badge"
+                        app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
+                        app:layout_constraintTop_toTopOf="@+id/image_comment_avatar"
+                        tools:text="John Wapuu" />
+
+                    <FrameLayout
+                        android:id="@+id/author_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/text_comment_author"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/text_comment_author"
+                        app:layout_constraintTop_toTopOf="@+id/text_comment_author"
+                        tools:visibility="visible">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/bg_rectangle_rounded_primary_dark"
+                            android:paddingStart="@dimen/margin_small"
+                            android:paddingTop="@dimen/margin_extra_extra_small"
+                            android:paddingEnd="@dimen/margin_small"
+                            android:paddingBottom="@dimen/margin_extra_extra_small"
+                            android:text="@string/comment_author_badge"
+                            android:textAppearance="?attr/textAppearanceOverline"
+                            android:textColor="?attr/colorOnPrimary" />
+                    </FrameLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_comment_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:maxLines="1"
+                        android:textAppearance="?textAppearanceSubtitle2"
+                        android:textColor="?attr/wpColorOnSurfaceMedium"
+                        app:layout_constraintBottom_toBottomOf="@+id/image_comment_avatar"
+                        app:layout_constraintStart_toEndOf="@+id/image_comment_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/text_comment_author"
+                        tools:text="Apr 30 2021" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <RelativeLayout
+                    android:id="@+id/share_button_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="@+id/layout_author"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/layout_author">
+
+                    <ImageView
+                        android:id="@+id/share_comment_button"
+                        android:layout_width="@dimen/stats_block_icon_size"
+                        android:layout_height="@dimen/stats_block_icon_size"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/share_desc"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_share_white_24dp"
+                        android:tint="?attr/wpColorOnSurfaceMedium"
+                        android:tintMode="src_in" />
+
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/wpColorOnSurfaceHigh"
+                app:lineHeight="@dimen/reader_comments_content_line_height"
+                tools:text="text_comment_text" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/reader_comments_actions_height"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/reply_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="?android:selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_reply_material_white_24dp"
+                        android:tint="?attr/wpColorOnSurfaceMedium"
+                        android:tintMode="src_in" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_extra_small"
+                        android:gravity="center_vertical"
+                        android:text="@string/reply"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/wpColorOnSurfaceMedium" />
+
+                </LinearLayout>
+
+                <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                    android:id="@+id/count_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_toEndOf="@+id/reply_container" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- progress bar that appears while submitting a comment -->
+        <ProgressBar
+            android:id="@+id/progress_comment"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -83,7 +83,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val count = if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT
         val cutEntries = takeEntriesWithinGraphWidth(count, item.entries)
         val mappedEntries = cutEntries.mapIndexed { index, pair -> toBarEntry(pair, index) }
-        val maxYValue = cutEntries.maxBy { it.value }!!.value
+        val maxYValue = cutEntries.maxByOrNull { it.value }!!.value
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
@@ -272,7 +272,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataSet? {
-        val maxEntry = cut.maxBy { it.y } ?: return null
+        val maxEntry = cut.maxByOrNull { it.y } ?: return null
         val highlightedDataSet = cut.map {
             BarEntry(it.x, maxEntry.y, it.data)
         }

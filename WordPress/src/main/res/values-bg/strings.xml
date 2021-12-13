@@ -759,7 +759,6 @@ Language: bg
     <string name="reader_empty_posts_in_tag_updating">Извличане на публикации…</string>
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
     <string name="reader_likes_multi">%,d човека харесаха това</string>
-    <string name="reader_label_reply">Отговор</string>
     <string name="comment_spammed">Коментарът е отбелязан като спам</string>
     <string name="cant_share_no_visible_blog">Не можете да споделяте към WordPress без видим блог</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>

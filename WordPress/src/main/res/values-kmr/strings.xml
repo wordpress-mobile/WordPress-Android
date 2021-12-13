@@ -1185,10 +1185,7 @@ Language: ku_TR
     <string name="menu_visual_mode">Moda Dîtbarî</string>
     <string name="menu_preview">Pêşdîtin</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">Derbasî moda Dîtbarî bû</string>
-    <string name="menu_undo_snackbar_action">VEGERÎNE</string>
     <string name="menu_save_as_draft">Wekî reşnivîs tomar bike</string>
-    <string name="menu_html_mode_done_snackbar">Derbasî moda HTML\'ê bû</string>
     <string name="menu_html_mode">Moda HTML\'ê</string>
     <string name="comment_unliked_talkback">Ecibandina şîroveyê hat rakirin</string>
     <string name="comment_liked_talkback">Şîrove hat ecibandin</string>
@@ -2247,7 +2244,6 @@ Language: ku_TR
     <string name="invalid_site_url_message">Derbasdarbûna URL\'ya malperê ya te nivîsiye kontrol bike</string>
     <string name="share_link">Girêdanê parve bike</string>
     <string name="reader_empty_posts_in_tag_updating">Şandî tên stendin…</string>
-    <string name="reader_label_reply">Bibersivîne</string>
     <string name="reader_likes_multi">%,d kes ev eciband</string>
     <string name="reader_likes_you_and_multi">Te û %,d kesên din ev eciband</string>
     <string name="cant_share_no_visible_blog">Heta ku blogeke te ya xuyanbar tune be tu nikarî bi WordPressê parve bikî</string>

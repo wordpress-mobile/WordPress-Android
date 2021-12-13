@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
+import org.wordpress.android.ui.WPWebChromeClientWithFileChooser.OnShowFileChooserListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -58,7 +59,6 @@ import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
-import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
@@ -111,7 +111,7 @@ import kotlin.Unit;
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
 public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener, OnShowFileChooserListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -154,6 +154,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private View mPreviewModeButton;
     private TextView mDesktopPreviewHint;
     private boolean mPreviewModeChangeAllowed = false;
+    private WPWebChromeClientWithFileChooser mWPWebChromeClientWithFileChooser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -648,12 +649,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WebViewClient webViewClient = createWebViewClient(allowedURL);
 
         mWebView.setWebViewClient(webViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(
+        mWPWebChromeClientWithFileChooser = new WPWebChromeClientWithFileChooser(
                 this,
                 mWebView,
                 R.drawable.media_movieclip,
-                (ProgressBar) findViewById(R.id.progress_bar)
-        ));
+                (ProgressBar) findViewById(R.id.progress_bar),
+                this
+        );
+        mWebView.setWebChromeClient(mWPWebChromeClientWithFileChooser);
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
@@ -956,5 +959,18 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WPSnackbar.make(findViewById(R.id.webview_wrapper), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                   .show();
         loadWebContent();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mWPWebChromeClientWithFileChooser != null) {
+            mWPWebChromeClientWithFileChooser.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void startActivityForFileChooserResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
     }
 }

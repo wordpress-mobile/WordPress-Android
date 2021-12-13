@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
 
+import org.jsoup.Jsoup;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
@@ -255,6 +256,8 @@ public class ReaderPostRenderer {
      */
     private String getPostContent() {
         String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
+        content = removeInlineStyles(content);
+
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
 
@@ -275,6 +278,25 @@ public class ReaderPostRenderer {
         }
 
         return content;
+    }
+
+    /*
+     * Strips inline styles from post content
+     */
+    private String removeInlineStyles(String content) {
+        if (content.length() == 0) {
+            return content;
+        }
+
+        try {
+            return Jsoup.parseBodyFragment(content)
+                   .getAllElements()
+                   .removeAttr("style")
+                   .select("body")
+                   .html();
+        } catch (Exception e) {
+            return content;
+        }
     }
 
     /*

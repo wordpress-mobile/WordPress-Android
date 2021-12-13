@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-23 11:54:06+0000
+Translation-Revision-Date: 2021-12-08 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Dari papan klip</string>
+    <string name="gutenberg_native_featured_image">Gambar Andalan</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Salin URL dari papan klip, %s</string>
+    <string name="me_btn_about">Tentang WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Buka pos terjadwal</string>
+    <string name="my_site_post_card_link_go_to_drafts">Buka konsep</string>
+    <string name="my_site_post_card_link_create_post">Buat pos</string>
+    <string name="my_site_create_next_post_excerpt">Memposkan secara reguler membantu memperbanyak audiens Anda!</string>
+    <string name="my_site_create_next_post_title">Buat pos Anda selanjutnya</string>
+    <string name="menu_visual_mode_switched_notice">Beralih ke mode Visual</string>
+    <string name="menu_html_mode_switched_notice">Beralih ke mode HTML</string>
+    <string name="post_link_copied_to_clipboard">Tautan disalin ke papan klip</string>
+    <string name="comment_author_badge">Penulis</string>
+    <string name="button_copy_link">Salin tautan</string>
     <string name="domains_paid_plan_add_your_domain_caption">Menambahkan domain kustom agar pengunjung mudah menemukan situs Anda</string>
     <string name="domains_paid_plan_add_your_domain_title">Tambahkan domain Anda</string>
     <string name="my_site_create_first_post_excerpt">Pos ditampilkan di halaman blog Anda dalam urutan kronologis terbalik. Saatnya membagikan ide Anda kepada dunia!</string>
@@ -578,8 +592,6 @@ Language: id
     <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_get_status_error">Terjadi error saat mengambil data status langganan untuk pos</string>
-    <string name="reader_follow_comments_unsubscribe_success">Berhasil berhenti berlangganan komentar</string>
-    <string name="reader_follow_comments_subscribe_success">Berhasil berlangganan komentar</string>
     <string name="reader_follow_comments_bad_format_response">Respons yang diterima tidak valid</string>
     <string name="reader_follow_comments_null_response">Tidak ada respons yang diterima</string>
     <string name="activity_log_activity_type_filter_clear">Hapus</string>
@@ -1811,10 +1823,7 @@ Language: id
     <string name="signup_with_google_progress">Mendaftar dengan Google…</string>
     <string name="jetpack_connection_failed_with_reason">Koneksi ke Jetpack gagal: %s</string>
     <string name="jetpack_already_connected_toast">Anda sudah terhubung dengan Jetpack!</string>
-    <string name="menu_undo_snackbar_action">URUNGKAN</string>
-    <string name="menu_visual_mode_done_snackbar">Beralih ke mode Visual</string>
     <string name="menu_visual_mode">Mode Visual</string>
-    <string name="menu_html_mode_done_snackbar">Beralih ke mode HTML</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Pratinjau</string>
     <string name="menu_save_as_draft">Simpan sebagai Konsep</string>
@@ -2898,7 +2907,6 @@ Language: id
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
-    <string name="reader_label_reply">Balas</string>
     <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
     <string name="reader_toast_err_get_post">Gagal membuka pos ini</string>

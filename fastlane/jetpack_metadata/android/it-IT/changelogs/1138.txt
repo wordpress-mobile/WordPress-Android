@@ -1,3 +1,0 @@
-18.7:
-- Abbiamo ampliato l'impostazione "Collega a" per il blocco Immagine in modo da includere le opzioni "File multimediale" e "Pagina dell'allegato" accanto all'opzione preesistente "URL personalizzato".
-- Abbiamo risolto un problema con i salvataggi automatici dei contenuti per farli funzionare in modo più fluido.

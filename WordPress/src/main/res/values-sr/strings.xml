@@ -944,10 +944,7 @@ Language: sr_RS
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Сачувај као нацрт</string>
     <string name="menu_preview">Преглед</string>
-    <string name="menu_undo_snackbar_action">ВРАТИ</string>
-    <string name="menu_html_mode_done_snackbar">Пребачено на HTML режим</string>
     <string name="menu_html_mode">HTML режим</string>
-    <string name="menu_visual_mode_done_snackbar">Пребачено на визуални режим</string>
     <string name="menu_visual_mode">Визуални режим</string>
     <string name="signup_epilogue_screen_title">Нови налог</string>
     <string name="comment_unapproved_talkback">Коментар није одобрен</string>
@@ -1870,7 +1867,6 @@ Language: sr_RS
     <string name="share_link">Подели везу</string>
     <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
-    <string name="reader_label_reply">Одговор</string>
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпресу без видљивог блога</string>
     <string name="reader_likes_multi">%,d људи ово воли</string>

@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 21:32:38+0000
+Translation-Revision-Date: 2021-12-01 19:32:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Van klembord</string>
+    <string name="gutenberg_native_featured_image">Uitgelichte afbeelding</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopieer URL van het klembord, %s</string>
+    <string name="me_btn_about">Over WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Ga naar geplande berichten</string>
+    <string name="my_site_post_card_link_go_to_drafts">Ga naar concepten</string>
+    <string name="my_site_post_card_link_create_post">Maak een bericht</string>
+    <string name="my_site_create_next_post_excerpt">Regelmatig publiceren helpt je publiek opbouwen!</string>
+    <string name="my_site_create_next_post_title">Maak je volgende bericht aan</string>
+    <string name="menu_visual_mode_switched_notice">Overgeschakeld naar visuele modus</string>
+    <string name="menu_html_mode_switched_notice">Overgeschakeld naar HTML modus</string>
+    <string name="post_link_copied_to_clipboard">Link naar klembord gekopieerd</string>
+    <string name="comment_author_badge">Auteur</string>
+    <string name="button_copy_link">Kopieer link</string>
     <string name="domains_paid_plan_add_your_domain_caption">Een eigen domein maakt het eenvoudig voor je bezoekers om je site te vinden</string>
     <string name="domains_paid_plan_add_your_domain_title">Voeg je domein toe</string>
     <string name="my_site_create_first_post_excerpt">Berichten verschijnen op je blogpagina in omgekeerde chronologische volgorde. Het is tijd om je ideeēn met de wereld te delen.</string>
@@ -78,7 +92,7 @@ Language: nl
     <string name="me_btn_share">Deel WordPress met een vriend</string>
     <string name="my_site_quick_actions_title">Snelle links</string>
     <string name="my_site_btn_domains">Domeinen</string>
-    <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d likes, %3$d reacties gekregen.</string>
+    <string name="weekly_roundup_notification_text">Je site heeft %1$d weergaven, %2$d vind-ik-leuks, %3$d reacties gekregen.</string>
     <string name="weekly_roundup_notification_title">Wekelijkse roundup: %s</string>
     <string name="blogging_reminders_notification_time">Meldingtijd</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Je krijgt herinneringen om te bloggen &lt;b&gt;elke dag&lt;/b&gt; om &lt;b&gt;%s&lt;/b&gt;.</string>
@@ -176,7 +190,7 @@ Language: nl
     <string name="site_settings_blogging_reminders_title">Blogging herinneringen</string>
     <string name="page_is_posts_page_warning">De inhoud van je laatste berichten pagina is automatisch gegenereerd en kan niet bewerkt worden.</string>
     <string name="gutenberg_native_border_settings">Randinstellingen</string>
-    <string name="storage_utils_dialog_dont_show_button">Niet meer laten zien</string>
+    <string name="storage_utils_dialog_dont_show_button">Niet opnieuw tonen</string>
     <string name="storage_utils_dialog_ok_button">Bekijk de opslag</string>
     <string name="storage_utils_dialog_message">We moeten je inhoud op het apparaat opslaan voordat deze kan worden gepubliceerd. Bekijk je opslaginstellingen en verwijder bestanden om ruimte vrij te maken.</string>
     <string name="storage_utils_dialog_title">Onvoldoende apparaat opslag</string>
@@ -222,7 +236,7 @@ Language: nl
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Gebruikersprofiel onderste blad informatie</string>
-    <string name="likes_list_screen_title">Likes lijst %s</string>
+    <string name="likes_list_screen_title">Vind-ik-leuks lijst %s</string>
     <string name="gutenberg_native_sorting_and_filtering">Sortering en filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
@@ -251,7 +265,7 @@ Language: nl
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
     <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
-    <string name="like_title_plural">%d likes</string>
+    <string name="like_title_plural">%d vind-ik-leuks</string>
     <string name="like_title_singular">1 Like</string>
     <string name="suggestion">Suggestie:</string>
     <string name="gutenberg_native_use_icon_button">Gebruik pictogram knop</string>
@@ -272,8 +286,8 @@ Language: nl
     <string name="gutenberg_native_cancel_search">Zoekopdracht annuleren</string>
     <string name="gutenberg_native_button_position">Knop positie</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
-    <string name="get_likes_empty_state_title">Er is een fout opgetreden tijdens het ophalen van likes gegevens</string>
-    <string name="get_likes_unknown_error">Een onbekende fout vond plaats tijdens het ophalen van likes.</string>
+    <string name="get_likes_empty_state_title">Er is een fout opgetreden tijdens het ophalen van vind-ik-leuk gegevens</string>
+    <string name="get_likes_unknown_error">Een onbekende fout vond plaats tijdens het ophalen van vind-ik-leuk.</string>
     <string name="get_likes_no_network_error">Geen netwerk beschikbaar.</string>
     <string name="comments_empty_list_filtered_unreplied">Geen onbeantwoorde reacties</string>
     <string name="comment_status_unreplied">Onbeantwoord</string>
@@ -417,7 +431,7 @@ Language: nl
     <string name="backup_download_complete_failed_title">Download mislukt</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobiel</string>
-    <string name="quick_start_card_menu_remove">Niet meer tonen</string>
+    <string name="quick_start_card_menu_remove">Niet opnieuw tonen</string>
     <string name="quick_start_card_menu_pin">Pin dit</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
@@ -578,8 +592,6 @@ Language: nl
     <string name="reader_follow_comments_could_not_unsubscribe_error">Kon niet uitschrijven van reacties voor dit bericht</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Kon niet abonneren op reacties voor dit bericht</string>
     <string name="reader_follow_comments_get_status_error">Fout bij het ophalen van de abonneringstatus voor bericht</string>
-    <string name="reader_follow_comments_unsubscribe_success">Met succes uitgeschreven van de reacties</string>
-    <string name="reader_follow_comments_subscribe_success">Met succes geabonneerd op de reacties</string>
     <string name="reader_follow_comments_bad_format_response">Ongeldig antwoord ontvangen</string>
     <string name="reader_follow_comments_null_response">Geen antwoord ontvangen</string>
     <string name="activity_log_activity_type_filter_clear">Wissen</string>
@@ -613,7 +625,7 @@ Language: nl
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; antwoordde op je bericht</string>
-    <string name="login_prologue_third_subtitle_two">Je ontving &lt;b&gt;50 likes&lt;/b&gt; op je site vandaag</string>
+    <string name="login_prologue_third_subtitle_two">Je ontving &lt;b&gt;50 vind-ik-leuks&lt;/b&gt; op je site vandaag</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked je bericht</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrolbaar blokmenu gesloten.</string>
@@ -1008,7 +1020,7 @@ Language: nl
     <string name="post_list_tab_published_posts">Gepubliceerd</string>
     <string name="sharing_facebook_account_must_have_pages">De Facebook verbinding kan geen pagina\'s vinden. Publicize kan geen verbinding maken met Facebook profielen, alleen met gepubliceerde pagina\'s.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Niet verbonden</string>
-    <string name="notifications_tab_title_likes">Likes</string>
+    <string name="notifications_tab_title_likes">Vind-ik-leuks</string>
     <string name="notifications_tab_title_follows">Volgt</string>
     <string name="notifications_tab_title_comments">Reacties</string>
     <string name="notifications_tab_title_unread_notifications">Ongelezen</string>
@@ -1082,7 +1094,7 @@ Language: nl
     <string name="enter_credentials_for_site">Inloggen met je site-referenties voor %1$s.</string>
     <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
     <string name="reader_following_display_name">Volgen</string>
-    <string name="reader_my_likes_display_name">Waarderingen</string>
+    <string name="reader_my_likes_display_name">Vind-ik-leuks</string>
     <string name="reader_discover_display_name">Ontdek</string>
     <string name="reader_save_for_later_display_name">Opgeslagen</string>
     <string name="reader_filter_tags_title">Onderwerpen</string>
@@ -1373,8 +1385,8 @@ Language: nl
     <string name="error_user_username_instead_of_email">Log in met je WordPress.com-gebruikersnaam in plaats van met je e-mailadres.</string>
     <string name="stats_insights_average_words">Gemiddeld aantal woorden per bericht</string>
     <string name="stats_insights_total_words">Totaalaantal woorden</string>
-    <string name="stats_insights_average_likes">Gemiddeld aantal likes per bericht</string>
-    <string name="stats_insights_total_likes">Totaalaantal likes</string>
+    <string name="stats_insights_average_likes">Gemiddeld aantal vind-ik-leuk per bericht</string>
+    <string name="stats_insights_total_likes">Totaalaantal vind-ik-leuks</string>
     <string name="stats_insights_average_comments">Gemiddeld aantal reacties per bericht</string>
     <string name="stats_insights_total_comments">Totaalaantal reacties</string>
     <string name="stats_insights_posts">Berichten</string>
@@ -1660,7 +1672,7 @@ Language: nl
     <string name="reader_empty_followed_blogs_button_followed">Ga naar volgen</string>
     <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
     <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
-    <string name="notifications_empty_likes">Nog geen likes</string>
+    <string name="notifications_empty_likes">Nog geen vind-ik-leuks</string>
     <string name="notifications_empty_followers">Nog geen volgers</string>
     <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>
     <string name="activity_log_empty_subtitle">Wanneer je wijzigingen aan je site aanbrengt, kun je hier je activiteitengeschiedenis bekijken.</string>
@@ -1811,10 +1823,7 @@ Language: nl
     <string name="signup_with_google_progress">Inschrijven bij Google …</string>
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
-    <string name="menu_undo_snackbar_action">ONGEDAAN MAKEN</string>
-    <string name="menu_visual_mode_done_snackbar">Overgeschakeld op de visuele modus</string>
     <string name="menu_visual_mode">Visuele modus</string>
-    <string name="menu_html_mode_done_snackbar">Overgeschakeld op de HTML-modus</string>
     <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Voorbeeld bekijken</string>
     <string name="menu_save_as_draft">Opslaan als concept</string>
@@ -2220,14 +2229,14 @@ Language: nl
     <string name="cannot_connect_account_error">De %s verbinding kon niet tot stand worden gebracht omdat er geen account geselecteerd is.</string>
     <string name="connected">Verbonden</string>
     <string name="twitter">Twitter</string>
-    <string name="likes">Likes</string>
+    <string name="likes">Vind-ik-leuks</string>
     <string name="sharing_comment_likes_description">Toestaan dat alle reacties door jezelf en je lezers geliket kunnen worden</string>
     <string name="buttons">Knoppen</string>
     <string name="sharing_edit_more_buttons">Knoppen \'Meer\' bewerken</string>
     <string name="sharing_more_description">Een knop \'Meer\' bevat een vervolgkeuzemenu waarin knoppen voor delen worden weergegeven</string>
     <string name="sharing_sharing_buttons_description">Selecteer welke knoppen worden weergegeven onder je berichten</string>
     <string name="twitter_username">Twitter gebruikersnaam</string>
-    <string name="sharing_comment_likes">Reactie-likes</string>
+    <string name="sharing_comment_likes">Reactie vind-ik-leuks</string>
     <string name="button_style">Knopstijl</string>
     <string name="label">Label</string>
     <string name="sharing_buttons">Deel-knoppen</string>
@@ -2486,8 +2495,8 @@ Language: nl
     <string name="username_mentions">Vermeldingen van gebruikersnaam</string>
     <string name="site_achievements">Prestaties voor de site</string>
     <string name="site_follows">Volgers van site</string>
-    <string name="likes_on_my_posts">Likes voor mijn berichten</string>
-    <string name="likes_on_my_comments">Likes voor mijn reacties</string>
+    <string name="likes_on_my_posts">Vind-ik-leuks voor mijn berichten</string>
+    <string name="likes_on_my_comments">Vind-ik-leuks voor mijn reacties</string>
     <string name="comments_on_my_site">Reacties op mijn site</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
     <string name="site_settings_list_editor_summary_one">1 item</string>
@@ -2674,7 +2683,7 @@ Language: nl
     <string name="reader_discover_attribution_blog">Oorspronkelijk geplaatst op %s</string>
     <string name="reader_discover_attribution_author">Oorspronkelijk geplaatst door %s</string>
     <string name="reader_discover_attribution_author_and_blog">Oorspronkelijk geplaatst door %1$s op %2$s</string>
-    <string name="reader_short_like_count_multi">%s likes</string>
+    <string name="reader_short_like_count_multi">%s vind-ik-leuks</string>
     <string name="reader_short_like_count_one">1 like</string>
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d volgers</string>
@@ -2686,7 +2695,7 @@ Language: nl
     <string name="notifications_disabled">App meldingen zijn uitgeschakeld. Tik hier om ze in te schakelen in Instellingen.</string>
     <string name="notification_types">Melding typen</string>
     <string name="error_loading_notifications">Kan meldingsinstellingen niet laden</string>
-    <string name="comment_likes">Likes voor reactie</string>
+    <string name="comment_likes">Reactie vind-ik-leuks</string>
     <string name="app_notifications">App meldingen</string>
     <string name="email">E-mail</string>
     <string name="notifications_tab">Meldingen tab</string>
@@ -2768,7 +2777,7 @@ Language: nl
     <string name="stats_view_videos">Video\'s</string>
     <string name="stats_view_top_posts_and_pages">Berichten &amp; pagina\'s</string>
     <string name="stats_view_countries">Landen</string>
-    <string name="stats_likes">Waarderingen</string>
+    <string name="stats_likes">Vind-ik-leuks</string>
     <string name="stats_visitors">Bezoekers</string>
     <string name="stats_views">Weergaven</string>
     <string name="stats_timeframe_years">Jaren</string>
@@ -2898,7 +2907,6 @@ Language: nl
     <string name="reader_empty_posts_in_tag_updating">Berichten ophalen…</string>
     <string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>
     <string name="reader_likes_multi">%,d mensen vinden dit leuk</string>
-    <string name="reader_label_reply">Beantwoord</string>
     <string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
     <string name="comment_spammed">Reactie als spam gemarkeerd</string>
     <string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>

@@ -1,15 +1,13 @@
 buildscript {
-    ext.kotlinVersion = '1.4.20'
-    ext.serializationVersion = '1.0-M1-1.4.0-rc'
+    ext.kotlinVersion = '1.5.32'
+    ext.coroutinesVersion = '1.5.2'
     ext.navComponentVersion = '2.3.5'
-    ext.kotlin_coroutines_version = '1.3.9'
-    ext.coroutinesVersion = '1.3.9'
-    ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = '2.2.0'
     ext.wordPressLoginVersion = '0.0.8'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'v1.66.0'
+    ext.gutenbergMobileVersion = 'v1.67.0'
     ext.storiesVersion = '1.2.0'
+    ext.aboutAutomatticVersion = 'main-c764a2d66273d4c6aeed66bb7a5c75714d88c554'
 
     repositories {
         maven {
@@ -125,14 +123,14 @@ buildScan {
 
 ext {
     minSdkVersion = 24
-    compileSdkVersion = 30
+    compileSdkVersion = 31
     targetSdkVersion = 30
 
     coroutinesVersion = '1.3.9'
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.30.0'
+    fluxCVersion = '1.31.0'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'

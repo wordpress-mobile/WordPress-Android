@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-24 09:54:06+0000
+Translation-Revision-Date: 2021-12-08 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">クリップボードから</string>
+    <string name="gutenberg_native_featured_image">アイキャッチ画像</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">クリップボードから URL (%s) をコピーします</string>
+    <string name="me_btn_about">WordPress について</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">予約済みの投稿に移動</string>
+    <string name="my_site_post_card_link_go_to_drafts">下書きに移動</string>
+    <string name="my_site_post_card_link_create_post">投稿を作成</string>
+    <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
+    <string name="my_site_create_next_post_title">次の投稿を作成</string>
+    <string name="menu_visual_mode_switched_notice">ビジュアルモードに切り替えました</string>
+    <string name="menu_html_mode_switched_notice">HTML モードに切り替えました</string>
+    <string name="post_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
+    <string name="comment_author_badge">投稿者</string>
+    <string name="button_copy_link">リンクをコピー</string>
     <string name="domains_paid_plan_add_your_domain_caption">カスタムドメインを追加すると、訪問者がサイトを見つけやすくなります</string>
     <string name="domains_paid_plan_add_your_domain_title">ドメインを追加</string>
     <string name="my_site_create_first_post_excerpt">投稿はブログページに新しいものから順に表示されます。 あなたのアイデアを世界中のユーザーとシェアしましょう !</string>
@@ -574,10 +588,8 @@ Language: ja_JP
     <string name="reader_follow_comments_could_not_unsubscribe_error">この投稿のコメントをフォロー解除できませんでした</string>
     <string name="reader_follow_comments_could_not_subscribe_error">この投稿のコメントをフォローできませんでした</string>
     <string name="reader_follow_comments_get_status_error">投稿の購読ステータスを取得中にエラーが発生しました</string>
-    <string name="reader_follow_comments_unsubscribe_success">コメントの購読を正常に解除しました</string>
     <string name="reader_btn_follow_comments">メールで会話をフォロー</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
-    <string name="reader_follow_comments_subscribe_success">コメントの購読を正常に登録しました</string>
     <string name="reader_follow_comments_bad_format_response">無効な応答を受信しました</string>
     <string name="reader_follow_comments_null_response">応答がありませんでした</string>
     <string name="activity_log_activity_type_filter_clear">クリア</string>
@@ -1808,14 +1820,11 @@ Language: ja_JP
     <string name="signup_with_google_progress">Google アカウントで登録中…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack への接続に失敗しました:%s</string>
     <string name="jetpack_already_connected_toast">すでに Jetpack に接続しています</string>
-    <string name="menu_undo_snackbar_action">取り消し</string>
     <string name="menu_visual_mode">ビジュアルモード</string>
     <string name="menu_html_mode">HTML モード</string>
     <string name="menu_preview">プレビュー</string>
     <string name="menu_save_as_draft">下書きとして保存</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">ビジュアルモードに切り替えました</string>
-    <string name="menu_html_mode_done_snackbar">HTML モードに切り替えました</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s KB</string>
@@ -2894,7 +2903,6 @@ Language: ja_JP
     <string name="share_link">リンクを共有</string>
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
-    <string name="reader_label_reply">返信</string>
     <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="reader_likes_multi">%,d 人が「いいね」しています</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」しました</string>

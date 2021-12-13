@@ -402,22 +402,6 @@ public class UploadUtils {
         );
     }
 
-    public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
-                                                       View.OnClickListener onClickListener,
-                                                       SnackbarSequencer snackbarSequencer) {
-        snackbarSequencer.enqueue(new SnackbarItem(
-                new Info(
-                        view,
-                        new UiStringRes(messageRes),
-                        Snackbar.LENGTH_LONG,
-                        true
-                ),
-                new Action(new UiStringRes(buttonTitleRes), onClickListener),
-                null,
-                null
-        ));
-    }
-
     public static void showSnackbar(View view, int messageRes, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(

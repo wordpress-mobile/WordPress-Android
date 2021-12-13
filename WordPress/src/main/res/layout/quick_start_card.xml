@@ -4,12 +4,12 @@
     android:id="@+id/quick_start"
     style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_medium">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_medium">
 
         <include
             android:id="@+id/my_site_card_toolbar"
@@ -29,15 +29,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/my_site_card_toolbar" />
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/quick_start_customize" />
-
         <include
             android:id="@+id/quick_start_grow"
             layout="@layout/quick_start_task_type_item"
@@ -45,7 +36,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/quick_start_customize" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

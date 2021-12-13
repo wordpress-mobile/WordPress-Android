@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.util.SiteUtils
 import javax.inject.Inject
@@ -18,18 +19,14 @@ class ScanAndBackupSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-) : MySiteSource<JetpackCapabilities> {
-    val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+) : MySiteRefreshSource<JetpackCapabilities> {
+    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<JetpackCapabilities> {
         val result = MediatorLiveData<JetpackCapabilities>()
         result.refreshData(coroutineScope, siteLocalId)
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         return result
-    }
-
-    fun refresh() {
-        refresh.postValue(true)
     }
 
     private fun MediatorLiveData<JetpackCapabilities>.refreshData(
@@ -62,13 +59,6 @@ class ScanAndBackupSource @Inject constructor(
         } else {
             postState(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
         }
-    }
-
-    private fun MediatorLiveData<JetpackCapabilities>.postState(
-        jetpackCapabilities: JetpackCapabilities
-    ) {
-        refresh.postValue(false)
-        this@postState.postValue(jetpackCapabilities)
     }
 
     fun clear() {

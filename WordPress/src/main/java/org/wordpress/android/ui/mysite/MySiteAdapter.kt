@@ -13,15 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_CREATE_FIRST
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.POST_CARD_DRAFT_OR_SCHEDULED
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.post.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
@@ -51,20 +42,22 @@ class MySiteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteCardAndItemViewHolder<*> {
         return when (viewType) {
-            SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
-            QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
-            DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
-            QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
+            MySiteCardAndItem.Type.SITE_INFO_CARD.ordinal -> MySiteInfoViewHolder(parent, imageManager)
+            MySiteCardAndItem.Type.QUICK_ACTIONS_CARD.ordinal -> QuickActionsViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
+            MySiteCardAndItem.Type.QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD.ordinal -> QuickStartDynamicCardViewHolder(
                     parent,
                     quickStartViewPool,
                     nestedScrollStates,
                     uiHelpers
             )
-            CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
-            LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
-            POST_CARD_CREATE_FIRST.ordinal -> PostCardViewHolder.CreateFirst(parent, imageManager, uiHelpers)
-            POST_CARD_DRAFT_OR_SCHEDULED.ordinal -> PostCardViewHolder.DraftOrScheduled(parent, imageManager, uiHelpers)
+            MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
+            MySiteCardAndItem.Type.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
+                PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
+            MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS.ordinal ->
+                PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

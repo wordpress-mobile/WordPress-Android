@@ -45,6 +45,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -60,6 +61,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel
+    @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
 
     private var binding: ReaderDiscoverFragmentLayoutBinding? = null
 
@@ -125,7 +127,12 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, event.post.blogId, event.post.postId)
         is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
         is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, event.blogId, event.postId)
+        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
+                context,
+                event.blogId,
+                event.postId,
+                mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+        )
         is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
         is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
                 this@ReaderDiscoverFragment,

@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-23 17:54:08+0000
+Translation-Revision-Date: 2021-12-08 16:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">À partir du presse-papier</string>
+    <string name="gutenberg_native_featured_image">Image à la une</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiez l’URL à partir du presse-papier, %s</string>
+    <string name="me_btn_about">À propos de WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Accéder aux articles programmés</string>
+    <string name="my_site_post_card_link_go_to_drafts">Accéder aux brouillons</string>
+    <string name="my_site_post_card_link_create_post">Créer un article</string>
+    <string name="my_site_create_next_post_excerpt">Publier régulièrement vous aidera à élargir votre audience !</string>
+    <string name="my_site_create_next_post_title">Créer votre prochain article</string>
+    <string name="menu_visual_mode_switched_notice">Basculé en mode visuel</string>
+    <string name="menu_html_mode_switched_notice">Basculé en mode HTML</string>
+    <string name="post_link_copied_to_clipboard">Lien copié dans le presse-papier</string>
+    <string name="comment_author_badge">Auteur</string>
+    <string name="button_copy_link">Copier le lien</string>
     <string name="domains_paid_plan_add_your_domain_caption">L’ajout d’un domaine personnalisé permet aux visiteurs de trouver facilement votre site</string>
     <string name="domains_paid_plan_add_your_domain_title">Ajouter votre domaine</string>
     <string name="my_site_create_first_post_excerpt">Les articles apparaissent sur votre page de blog dans l’ordre chronologique inverse. Il est temps de partager vos idées avec le monde entier !</string>
@@ -575,13 +589,11 @@ Language: fr
     <string name="reader_follow_comments_could_not_unsubscribe_error">Impossible de se désabonner des commentaires pour cet article</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Impossible de s’abonner aux commentaires pour cet article</string>
     <string name="reader_follow_comments_get_status_error">Erreur de récupération du statut d’abonnement pour l’article</string>
-    <string name="reader_follow_comments_unsubscribe_success">Bien désabonné·e des commentaires</string>
     <string name="reader_btn_following_comments">Suivi de la discussion par e-mail</string>
     <string name="reader_btn_follow_comments">Suivre la discussion par e-mail</string>
     <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Effacer</string>
     <string name="activity_log_activity_type_filter_apply">Appliquer</string>
-    <string name="reader_follow_comments_subscribe_success">Bien abonné·e aux commentaires</string>
     <string name="reader_follow_comments_bad_format_response">Réponse reçue non valide</string>
     <string name="reader_follow_comments_null_response">Aucune réponse reçue</string>
     <string name="dialog_edit_story_unsupported_format_message">Une ou plusieurs diapositives n’ont pas été ajoutées à votre Story, car les Stories ne prennent pas en charge les fichiers GIF pour le moment. Veuillez plutôt choisir une image statique ou un arrière-plan vidéo.</string>
@@ -1811,14 +1823,11 @@ Language: fr
     <string name="open_external_link_desc">Ouvrir le lien externe</string>
     <string name="jetpack_connection_failed_with_reason">Échec de la connexion à Jetpack : %s</string>
     <string name="jetpack_already_connected_toast">Vous êtes déjà abonné à Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANNULER</string>
     <string name="menu_visual_mode">Mode visuel</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Prévisualiser</string>
     <string name="menu_save_as_draft">Enregistrer comme brouillon</string>
     <string name="file_size_in_terabytes">%s To</string>
-    <string name="menu_visual_mode_done_snackbar">Basculé en mode visuel</string>
-    <string name="menu_html_mode_done_snackbar">Basculé en mode HTML</string>
     <string name="file_size_in_gigabytes">%s Go</string>
     <string name="file_size_in_megabytes">%s Mo</string>
     <string name="file_size_in_kilobytes">%s Ko</string>
@@ -2897,7 +2906,6 @@ Language: fr
     <string name="share_link">Lien de partage</string>
     <string name="reader_empty_posts_in_tag_updating">Récupération des articles…</string>
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
-    <string name="reader_label_reply">Répondre</string>
     <string name="reader_likes_you_and_multi">Vous et %,d personnes aiment ça</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
     <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>

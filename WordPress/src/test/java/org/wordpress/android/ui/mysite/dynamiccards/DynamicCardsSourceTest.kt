@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.dynamiccards
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,11 +25,14 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
     private lateinit var dynamicCardsSource: DynamicCardsSource
     private val siteLocalId: Int = 1
+    private lateinit var isRefreshing: MutableList<Boolean>
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)
         whenever(siteModel.id).thenReturn(siteLocalId)
+        isRefreshing = mutableListOf()
     }
 
     @Test
@@ -42,7 +46,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
                 )
         )
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)
@@ -100,5 +104,41 @@ class DynamicCardsSourceTest : BaseUnitTest() {
         dynamicCardsSource.unpinItem()
 
         verifyZeroInteractions(dynamicCardStore)
+    }
+
+    @Test
+    fun `when source is invoked, then refresh is false`() = test {
+        dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
+
+        dynamicCardsSource.build(testScope(), siteLocalId)
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
+
+        dynamicCardsSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        val pinnedItem = GROW_QUICK_START
+        val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
+                DynamicCardsModel(
+                        pinnedItem,
+                        dynamicCardTypes
+                )
+        )
+        dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
+
+        dynamicCardsSource.build(testScope(), siteLocalId).observeForever { }
+        dynamicCardsSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
     }
 }

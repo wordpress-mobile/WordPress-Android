@@ -481,7 +481,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override
+    @Override @SuppressWarnings("checkstyle:MethodLength")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -496,7 +496,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // TODO: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
         if (mSite != null) {
             SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
@@ -1506,14 +1506,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return false;
     }
 
-    private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
-        mUploadUtilsWrapper.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
-                mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
-                        : R.string.menu_visual_mode_done_snackbar,
-                R.string.menu_undo_snackbar_action,
-                onUndoClickListener);
-    }
-
     private void refreshEditorContent() {
         mHasSetPostContent = false;
         fillContentEditorFields();
@@ -1583,21 +1575,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
         trackPostSessionEditorModeSwitch();
         invalidateOptionsMenu();
-        showToggleHtmlModeSnackbar();
+        showEditorModeSwitchedNotice();
     }
 
-    private void showToggleHtmlModeSnackbar() {
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            toggledHtmlModeSnackbar(view -> {
-                // switch back
-                ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-            });
-        } else if (mEditorFragment instanceof GutenbergEditorFragment) {
-            toggledHtmlModeSnackbar(view -> {
-                // switch back
-                ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-            });
-        }
+    private void showEditorModeSwitchedNotice() {
+        String message = getString(mHtmlModeMenuStateOn
+                ? R.string.menu_html_mode_switched_notice
+                : R.string.menu_visual_mode_switched_notice
+        );
+        mEditorFragment.showNotice(message);
     }
 
     private void trackPostSessionEditorModeSwitch() {
