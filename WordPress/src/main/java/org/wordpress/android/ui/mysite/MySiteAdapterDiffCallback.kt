@@ -11,7 +11,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 
-@Suppress("TooManyFunctions")
 class MySiteAdapterDiffCallback(
     private val oldCardAndItems: List<MySiteCardAndItem>,
     private val updatedCardAndItems: List<MySiteCardAndItem>
