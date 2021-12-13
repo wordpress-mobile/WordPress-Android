@@ -6,6 +6,5 @@ group :screenshots, optional: true do
   gem 'rmagick', '~> 4.1'
 end
 
-# TODO: Update it with a proper release or revert it back to '~> 2.0' before merge
-gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', ref: 'add/private-repo-support-for-downloading-files-from-github'
-#gem 'fastlane-plugin-wpmreleasetoolkit', '~> 2.0'
+# gem 'fastlane-plugin-wpmreleasetoolkit', git: 'git@github.com:wordpress-mobile/release-toolkit.git', ref: 'develop'
+gem 'fastlane-plugin-wpmreleasetoolkit', '~> 2.0'
