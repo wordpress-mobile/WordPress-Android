@@ -7,7 +7,7 @@ buildscript {
     ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'v1.68.0'
     ext.storiesVersion = '1.2.0'
-    ext.aboutAutomatticVersion = '21-9b1783356b263d0746b4859570af2f6484f44a80'
+    ext.aboutAutomatticVersion = 'main-9df59764f7cf2a7161826e102384cd04e2cfdaad'
 
     repositories {
         maven {
