@@ -1,13 +1,12 @@
 package org.wordpress.android.e2e;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.wordpress.android.InitializationRule;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
@@ -20,9 +19,18 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
 
-@RunWith(AndroidJUnit4.class)
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class LoginTests extends BaseTest {
-    @Rule
+    @Rule(order = 0)
+    public HiltAndroidRule rule = new HiltAndroidRule(this);
+
+    @Rule(order = 1)
+    public InitializationRule initRule = new InitializationRule();
+
+    @Rule(order = 2)
     public ActivityTestRule<LoginMagicLinkInterceptActivity> mMagicLinkActivityTestRule =
             new ActivityTestRule<>(LoginMagicLinkInterceptActivity.class, true, false);
 

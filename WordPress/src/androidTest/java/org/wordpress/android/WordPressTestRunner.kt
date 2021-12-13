@@ -5,10 +5,10 @@ import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
 
 /**
- * Custom AndroidJUnitRunner that replaces the original application with [WordPress].
+ * Custom AndroidJUnitRunner that replaces the original application with [WordPressTest_Application].
  */
 class WordPressTestRunner : AndroidJUnitRunner() {
     override fun newApplication(classLoader: ClassLoader, className: String, context: Context): Application {
-        return super.newApplication(classLoader, WordPress::class.java.name, context)
+        return super.newApplication(classLoader, WordPressTest_Application::class.java.name, context)
     }
 }

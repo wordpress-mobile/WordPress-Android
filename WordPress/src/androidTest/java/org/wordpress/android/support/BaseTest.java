@@ -1,5 +1,6 @@
 package org.wordpress.android.support;
 
+import android.app.Application;
 import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -23,7 +24,6 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -48,7 +48,7 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
-    protected WordPress mAppContext;
+    protected Application mAppContext;
 
     public static final int WIREMOCK_PORT = 8080;
 

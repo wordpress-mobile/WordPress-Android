@@ -2,12 +2,12 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import org.mockito.Mockito
 import org.wordpress.android.analytics.Tracker
 
-@InstallIn(SingletonComponent::class)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [TrackerModule::class])
 @Module
 class TrackerTestModule {
     @Provides
