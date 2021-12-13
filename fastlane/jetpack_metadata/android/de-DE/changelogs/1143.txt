@@ -1,0 +1,7 @@
+18.8:
+- Erhalte Linkvorschläge anstelle von automatisch ausgefüllten Links aus der Zwischenablage für Buttons und Bildblöcke.
+- Klicke auf „Link kopieren“, um Links zu veröffentlichten Beiträgen zu teilen.
+- Tabs des Inserter-Menüs stimmen mit der Sprache deines Geräts überein.
+- Beim Erstellen eines Galerieblocks werden die Medienoptionen des Geräts geöffnet.
+- Problem mit der Schriftgröße und visuelle RTL-Probleme wurden behoben.
+- Bearbeite Embed-Block-Links in den Blockeinstellungen.

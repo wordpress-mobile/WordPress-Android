@@ -165,9 +165,7 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (siteDomainsFeatureConfig.isEnabled() &&
-                site.hasCapabilityManageOptions ||
-                !siteUtilsWrapper.isAccessedViaWPComRest(site)) {
+        return if (hasManageOptionsCapability(site) || isNotAccessedViaWPComRest(site)) {
             ListItem(
                     R.drawable.ic_domains_white_24dp,
                     UiStringRes(R.string.my_site_btn_domains),
@@ -175,6 +173,12 @@ class SiteListItemBuilder @Inject constructor(
             )
         } else null
     }
+
+    private fun hasManageOptionsCapability(site: SiteModel) =
+            siteDomainsFeatureConfig.isEnabled() && site.hasCapabilityManageOptions
+
+    private fun isNotAccessedViaWPComRest(site: SiteModel) =
+            siteDomainsFeatureConfig.isEnabled() && !siteUtilsWrapper.isAccessedViaWPComRest(site)
 
     fun buildSiteSettingsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityManageOptions || !siteUtilsWrapper.isAccessedViaWPComRest(site)) {

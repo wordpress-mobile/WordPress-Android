@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-16 14:33:20+0000
+Translation-Revision-Date: 2021-12-05 21:18:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Desde o portapapeis</string>
+    <string name="gutenberg_native_featured_image">Imaxe destacada</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar a URL desde o portapapeis, %s</string>
+    <string name="me_btn_about">Acerca de WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Ir ás entradas programadas</string>
+    <string name="my_site_post_card_link_go_to_drafts">Ir aos borradores</string>
+    <string name="my_site_post_card_link_create_post">Crear unha entrada</string>
+    <string name="my_site_create_next_post_excerpt">Publicar regularmente axuda a crear a túa audiencia!</string>
+    <string name="my_site_create_next_post_title">Crear a túa seguinte entrada</string>
+    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
+    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
+    <string name="post_link_copied_to_clipboard">Ligazón copiada ao portapapeis</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="button_copy_link">Copiar ligazón</string>
     <string name="domains_paid_plan_add_your_domain_caption">Engadir un dominio personalizado fai que sexa máis fácil para os teus visitantes encontrar o teu sitio</string>
     <string name="domains_paid_plan_add_your_domain_title">Engade o teu dominio</string>
     <string name="my_site_create_first_post_excerpt">As entradas aparecen na páxina do teu blog en orde cronoloxicamente inverso. É o momento de compartir as túas ideas co mundo!</string>

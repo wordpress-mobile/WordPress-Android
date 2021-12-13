@@ -1,3 +1,0 @@
-18.7 :
-- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
-- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
