@@ -1549,7 +1549,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 title = UiStringRes(0),
                                 excerpt = UiStringRes(0),
                                 featuredImageUrl = "",
-                                onClick = { (onPostItemClick as (Int) -> Unit).invoke(postId) }
+                                onClick = ListItemInteraction.create {
+                                    (onPostItemClick as (Int) -> Unit).invoke(postId)
+                                }
                         )
                 ),
                 footerLink = FooterLink(
