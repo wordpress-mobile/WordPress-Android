@@ -163,7 +163,8 @@ class EngagedPeopleListFragment : Fragment() {
                             event.siteId,
                             event.commentPostId,
                             event.postOrCommentId,
-                            mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                            mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                            event.source.sourceDescription
                     )
                 }
                 is PreviewPostInReader -> {

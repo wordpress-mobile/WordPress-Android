@@ -62,6 +62,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
@@ -94,7 +95,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
-import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY;
+import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 import kotlin.Unit;
@@ -136,6 +137,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
+    private String mSource;
 
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
@@ -247,7 +249,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             mEditComment.setAdapter(mSuggestionAdapter);
         }
 
-        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
+        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost, mSource);
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
@@ -370,6 +372,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
+            mSource = savedInstanceState.getString(ReaderConstants.ARG_SOURCE);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -377,9 +380,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
+            mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
         }
 
-        mConversationViewModel.start(mBlogId, mPostId);
+        mConversationViewModel.start(mBlogId, mPostId, ThreadedCommentsActionSource.READER_THREADED_COMMENTS);
     }
 
     @Override
@@ -500,7 +504,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                             bellItem.setVisible(uiState.getFlags().isBellMenuVisible());
 
                             setResult(RESULT_OK, new Intent().putExtra(
-                                    FOLLOW_COMMENTS_UI_STATE_FLAGS_KEY,
+                                    FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY,
                                     uiState.getFlags()
                             ));
                         }
@@ -597,6 +601,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
+        outState.putString(ReaderConstants.ARG_SOURCE, mSource);
 
         super.onSaveInstanceState(outState);
     }

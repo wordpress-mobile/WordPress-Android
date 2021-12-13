@@ -398,6 +398,7 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_SITE_PREVIEW = "site_preview"
         const val SOURCE_TAG_PREVIEW = "tag_preview"
         const val SOURCE_POST_DETAIL = "post_detail"
+        const val SOURCE_POST_DETAIL_COMMENT_SNIPPET = "post_detail_comment_snippet"
         const val SOURCE_COMMENT = "comment"
         const val SOURCE_USER = "user"
         const val SOURCE_STATS = "stats"
