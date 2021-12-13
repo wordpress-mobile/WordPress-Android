@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.0
+-----
+
+
 18.9
 -----
 * [*] Block editor: Fixed an issue causing the editor to load indefinitely when sharing text from other apps or reblogging a post [https://github.com/wordpress-mobile/WordPress-Android/pull/15697]
