@@ -21,7 +21,7 @@ class QuickStartCardSource @Inject constructor(
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
 ) : MySiteRefreshSource<QuickStartUpdate> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(true)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         quickStartRepository.resetTask()

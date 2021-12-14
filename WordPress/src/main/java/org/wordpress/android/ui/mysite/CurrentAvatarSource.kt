@@ -12,7 +12,7 @@ import javax.inject.Inject
 class CurrentAvatarSource @Inject constructor(
     private val accountStore: AccountStore
 ) : SiteIndependentSource<CurrentAvatarUrl> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(true)
 
     override fun build(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
         val result = MediatorLiveData<CurrentAvatarUrl>()
