@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -87,7 +88,7 @@ class PostCardBuilder @Inject constructor(
                 title = constructPostTitle(post.title),
                 excerpt = constructPostContent(post.content),
                 featuredImageUrl = post.featuredImage,
-                onClick = { onPostItemClick.invoke(post.id) }
+                onClick = ListItemInteraction.create(post.id, onPostItemClick)
         )
     }
 
@@ -103,7 +104,7 @@ class PostCardBuilder @Inject constructor(
                 excerpt = UiStringText(constructPostDate(post.date)),
                 featuredImageUrl = post.featuredImage,
                 isTimeIconVisible = true,
-                onClick = { onPostItemClick.invoke(post.id) }
+                onClick = ListItemInteraction.create(post.id, onPostItemClick)
         )
     }
 

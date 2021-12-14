@@ -36,7 +36,6 @@ class MySiteAdapterDiffCallback(
         }
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCardAndItems[oldItemPosition] == updatedCardAndItems[newItemPosition]
-    }
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldCardAndItems[oldItemPosition] == updatedCardAndItems[newItemPosition]
 }
