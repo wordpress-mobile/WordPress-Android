@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
@@ -18,6 +19,8 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import javax.inject.Named
+
+const val REFRESH_DELAY = 500L
 
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -42,7 +45,7 @@ class CardsSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
                 cardsStore.getCards(selectedSite).collect { result ->
-                    postState(CardsUpdate(result))
+                    postValue(CardsUpdate(result))
                 }
             }
         } else {
@@ -78,9 +81,14 @@ class CardsSource @Inject constructor(
         selectedSite: SiteModel
     ) {
         coroutineScope.launch(bgDispatcher) {
+            delay(REFRESH_DELAY)
             val result = cardsStore.fetchCards(selectedSite)
-            result.error?.let {
-                postState(CardsUpdate(result))
+            val model = result.model
+            val error = result.error
+            when {
+                error != null -> postState(CardsUpdate(result))
+                model != null -> refresh.postValue(false)
+                else -> refresh.postValue(false)
             }
         }
     }
