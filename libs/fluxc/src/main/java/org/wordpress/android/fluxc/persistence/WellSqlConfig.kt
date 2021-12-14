@@ -1829,6 +1829,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 166 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_JETPACK_CONNECTION_PLUGINS TEXT")
                 }
+                167 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderModel")
+                }
             }
         }
         db.setTransactionSuccessful()
