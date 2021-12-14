@@ -845,7 +845,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
         private const val MAX_LOG_COUNT = 5
         private const val HTTP_CACHE_SIZE: Long = 5 * 1024 * 1024 // 5 MB
         private const val KILOBYTES_IN_BYTES = 1024
-        private const val MEMORY_CACHE_RATIO = 1 / 4 // Use 1/4th of the available memory for memory cache.
+        private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
 
         @SuppressLint("StaticFieldLeak") public var context: Context? = null
         private var sOAuthAuthenticator: OAuthAuthenticator? = null
@@ -965,7 +965,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
                 // The cache size will be measured in kilobytes rather than number of items.
                 // See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
                 val maxMemory = (Runtime.getRuntime().maxMemory() / KILOBYTES_IN_BYTES).toInt()
-                val cacheSize = maxMemory / MEMORY_CACHE_RATIO
+                val cacheSize = (maxMemory * MEMORY_CACHE_RATIO).toInt()
                 bitmapCache = BitmapLruCache(cacheSize)
             }
             return bitmapCache as BitmapLruCache
