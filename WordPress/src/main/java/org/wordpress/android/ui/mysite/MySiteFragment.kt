@@ -116,6 +116,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            swipeToRefreshHelper.isRefreshing = true
         }
     }
 
