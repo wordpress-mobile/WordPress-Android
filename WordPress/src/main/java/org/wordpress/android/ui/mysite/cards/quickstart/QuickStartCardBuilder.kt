@@ -16,7 +16,7 @@ import kotlin.math.roundToInt
 class QuickStartCardBuilder @Inject constructor() {
     fun build(params: QuickStartCardBuilderParams) = QuickStartCard(
             title = UiStringRes(R.string.quick_start_sites),
-            onRemoveMenuItemClick = ListItemInteraction.create { params.onQuickStartBlockRemoveMenuItemClick.invoke() },
+            onRemoveMenuItemClick = ListItemInteraction.create(params.onQuickStartBlockRemoveMenuItemClick),
             taskTypeItems = params.quickStartCategories.map {
                 buildQuickStartTaskTypeItem(
                         it,

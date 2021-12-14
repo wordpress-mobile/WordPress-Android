@@ -90,6 +90,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
@@ -2619,7 +2620,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         requireContext(),
                         post.blogId,
                         post.postId,
-                        mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                        mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
+                        ThreadedCommentsActionSource.READER_POST_CARD.getSourceDescription()
                 );
                 break;
             case TOGGLE_SEEN_STATUS:

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.automattic.about.model.AboutConfig
 import com.automattic.about.model.AnalyticsConfig
 import com.automattic.about.model.HeaderConfig
+import com.automattic.about.model.ItemConfig
 import com.automattic.about.model.LegalConfig
 import com.automattic.about.model.RateUsConfig
 import com.automattic.about.model.ShareConfig
@@ -18,6 +19,7 @@ import org.wordpress.android.models.recommend.RecommendApiCallsProvider.Recommen
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Failure
 import org.wordpress.android.models.recommend.RecommendApiCallsProvider.RecommendCallResult.Success
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.Dismiss
+import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.OpenBlog
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
@@ -44,6 +46,13 @@ class UnifiedAboutViewModel @Inject constructor(
             socialsConfig = SocialsConfig(
                     twitterUsername = WP_SOCIAL_HANDLE
             ),
+            customItems = listOf(
+                    ItemConfig(
+                            name = BLOG_ITEM_NAME,
+                            title = contextProvider.getContext().getString(R.string.about_blog),
+                            onClick = ::onBlogClick
+                    )
+            ),
             legalConfig = LegalConfig(
                     tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
@@ -51,9 +60,9 @@ class UnifiedAboutViewModel @Inject constructor(
             ),
             onDismiss = ::onDismiss,
             analyticsTracker = AnalyticsConfig(
-                    trackScreenShown = ::trackScreenShown,
-                    trackScreenDismissed = ::trackScreenDismissed,
-                    trackButtonTapped = ::trackButtonTapped
+                    trackScreenShown = unifiedAboutTracker::trackScreenShown,
+                    trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
+                    trackButtonTapped = unifiedAboutTracker::trackButtonTapped
             )
     )
 
@@ -76,21 +85,15 @@ class UnifiedAboutViewModel @Inject constructor(
         _onNavigation.postValue(Event(Dismiss))
     }
 
+    private fun onBlogClick() {
+        _onNavigation.postValue(Event(OpenBlog(WP_BLOG_URL)))
+    }
+
     companion object {
         private const val WP_SOCIAL_HANDLE = "wordpress"
         private const val WP_ACKNOWLEDGEMENTS_URL = "file:///android_asset/licenses.html"
         private const val WP_APPS_URL = "https://apps.wordpress.com/"
-    }
-
-    private fun trackScreenShown(screen: String) {
-        unifiedAboutTracker.trackScreenShown(screen = screen)
-    }
-
-    private fun trackScreenDismissed(screen: String) {
-        unifiedAboutTracker.trackScreenDismissed(screen = screen)
-    }
-
-    private fun trackButtonTapped(button: String) {
-        unifiedAboutTracker.trackButtonTapped(button = button)
+        private const val WP_BLOG_URL = "https://blog.wordpress.com/"
+        private const val BLOG_ITEM_NAME = "blog"
     }
 }

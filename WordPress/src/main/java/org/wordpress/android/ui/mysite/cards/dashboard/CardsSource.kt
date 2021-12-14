@@ -18,9 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,

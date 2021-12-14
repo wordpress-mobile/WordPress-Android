@@ -3,12 +3,21 @@ on:
     inputs:
       gutenbergMobileVersion:
         required: true
+      title:
+        required: false
+      prURL:
+        required: false
+      body:
+        required: false
 
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
+      PR_TITLE: ${{ github.event.inputs.title || 'Automated gutenberg-mobile version update for ' +  ${{ github.event.inputs.gutenbergMobileVersion }}   }}
+      PR_BODY: ${{ github.event.inputs.body || 'This PR incorporates changes from [gutenberg-mobile repo](https://github.com/wordpress-mobile/gutenberg-mobile).' }} 
+      GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,21 +35,22 @@ jobs:
 
             if [[ "$VERSION_PREFIX" == "trunk" ]]; then
               echo ::set-output name=branch_name::update-gb-mobile-version/for-trunk-update
-              echo ::set-output name=title::"Automated gutenberg-mobile version update for $VERSION_PREFIX"
             else
               echo ::set-output name=branch_name::update-gb-mobile-version/for-pr-$VERSION_PREFIX
-              echo ::set-output name=title::"Automated gutenberg-mobile version update for PR $VERSION_PREFIX"
             fi
           else
             # If the version doesn't contain a "-", it should be a tag
             echo ::set-output name=branch_name::update-gb-mobile-version/for-tag-$GUTENBERG_MOBILE_VERSION
-            echo ::set-output name=title::"Automated gutenberg-mobile version update for tag $GUTENBERG_MOBILE_VERSION"
           fi
+          echo ::set-output name=title::"$PR_TITLE"
           echo ::set-output name=commit_message::"Update gutenbergMobileVersion to $GUTENBERG_MOBILE_VERSION"
+          echo ::set-output name=pr_description::"##Description \n $PR_BODY \n\n Related Changes: $GUTENBERG_MOBILE_PR_URL"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: ${{ steps.vars.outputs.commit_message }}
           title: ${{ steps.vars.outputs.title }}
           branch: ${{ steps.vars.outputs.branch_name }}
+          labels: gutenberg-mobile
+          body: ${{ steps.vars.outputs.pr_description }}
           delete-branch: true

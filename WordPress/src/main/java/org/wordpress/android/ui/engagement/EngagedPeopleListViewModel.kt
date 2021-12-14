@@ -31,6 +31,7 @@ import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_LIKE_NOTIFICATION
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -274,7 +275,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         _onNavigationEvent.value = Event(
                 if (commentPostId > 0) {
                     if (readerUtilsWrapper.postAndCommentExists(siteId, commentPostId, postOrCommentId)) {
-                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId)
+                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId, COMMENT_LIKE_NOTIFICATION)
                     } else {
                         PreviewSiteByUrl(siteUrl, LIKED_COMMENT_USER_HEADER.sourceDescription)
                     }

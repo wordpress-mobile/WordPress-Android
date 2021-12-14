@@ -1,0 +1,7 @@
+18.8 :
+- Recevez des suggestions de liens au lieu des liens du presse-papier remplis autotmatiquement pour les blocs de boutons et d’images.
+- Cliquez sur « Copier le lien » pour partager le lien d’articles publiés.
+- Inserter menu tabs match your device's language.
+- Device media options open when creating a Gallery block.
+- Font size bug and RTL visual issues are resolved.
+- Edit Embed block link in Block Settings.

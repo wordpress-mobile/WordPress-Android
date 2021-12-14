@@ -180,6 +180,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.ReaderSearchActivity;
 import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
+import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
@@ -720,6 +721,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentDetailsFragment object);
 
     void inject(UnifiedAboutActivity object);
+
+    void inject(CommentSnippetAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
