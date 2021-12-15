@@ -1029,13 +1029,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* POST CARD - POST ITEM */
 
     @Test
-    fun `when post item is clicked, then post is opened for edit`() =
+    fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
             test {
                 initSelectedSite()
 
                 requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditPost(site, postId))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditDraftPost(site, postId))
+            }
+
+    @Test
+    fun `given scheduled post card, when post item is clicked, then post is opened for edit scheduled`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
     /* ITEM CLICK */

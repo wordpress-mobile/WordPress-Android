@@ -722,7 +722,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPostItemClick(params: PostItemClickParams) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            _onNavigation.value = Event(SiteNavigationAction.EditPost(site, params.postId))
+            when (params.postCardType) {
+                PostCardType.DRAFT -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditDraftPost(site, params.postId))
+                PostCardType.SCHEDULED -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
+                else -> Unit // Do nothing
+            }
         }
     }
 
