@@ -100,8 +100,8 @@ class PostListFragment : ViewPagerFragment() {
         mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
-        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, { optionaLayoutType ->
-            optionaLayoutType?.let { layoutType ->
+        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, { optionalLayoutType ->
+            optionalLayoutType?.let { layoutType ->
                 recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                 recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
 
