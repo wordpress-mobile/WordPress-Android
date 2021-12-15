@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import kotlinx.coroutines.CoroutineDispatcher
@@ -270,7 +269,7 @@ class PostListViewModel @Inject constructor(
     }
 
     init {
-        connectionStatus.observe(lifecycleOwner, Observer {
+        connectionStatus.observe(lifecycleOwner, {
             retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleOwner.lifecycleRegistry.markState(Lifecycle.State.CREATED)
