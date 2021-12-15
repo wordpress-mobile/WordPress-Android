@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
@@ -1364,6 +1365,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).clear()
     }
 
+    /* ORDERED LIST */
+    @InternalCoroutinesApi
+    @Test
+    fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        assertThat(getLastItems().last()).isInstanceOf(DynamicCard::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`(){
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        val postCardIndex = getLastItems().indexOfFirst { it is PostCard }
+        val dynamicCardIndex = getLastItems().indexOfFirst { it is DynamicCard }
+
+        assertThat(dynamicCardIndex).isLessThan(postCardIndex)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -1430,7 +1453,22 @@ class MySiteViewModelTest : BaseUnitTest() {
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val postCard = initPostCard(it)
-            listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
+            if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                listOf<MySiteCardAndItem>(
+                        siteInfoCard,
+                        quickActionsCard,
+                        domainRegistrationCard,
+                        quickStartCard,
+                        postCard
+                )
+            } else {
+                listOf<MySiteCardAndItem>(
+                        siteInfoCard,
+                        quickActionsCard,
+                        domainRegistrationCard,
+                        quickStartCard
+                )
+            }
         }.whenever(cardsBuilder).build(
                 domainRegistrationCardBuilderParams = any(),
                 postCardBuilderParams = any(),
