@@ -26,7 +26,7 @@ private const val POST_ID = 1
 private const val POST_TITLE = "title"
 private const val POST_CONTENT = "content"
 private const val FEATURED_IMAGE_URL = "featuredImage"
-private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")
+private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")!!
 
 // This class contains placeholder tests until mock data is removed
 @InternalCoroutinesApi
