@@ -268,12 +268,14 @@ class PostListFragment : ViewPagerFragment() {
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            postListType: PostListType
+            postListType: PostListType,
+            targetPostId: Int? = null
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
+            bundle.putSerializable(EXTRA_TARGET_POST_REMOTE_ID, targetPostId)
             fragment.arguments = bundle
             return fragment
         }

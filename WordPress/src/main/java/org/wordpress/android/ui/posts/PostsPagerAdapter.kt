@@ -10,6 +10,7 @@ import java.lang.ref.WeakReference
 class PostsPagerAdapter(
     private val pages: List<PostListType>,
     private val site: SiteModel,
+    private val targetPostId: Int?,
     val fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val listFragments = mutableMapOf<Int, WeakReference<PostListFragment>>()
@@ -17,7 +18,7 @@ class PostsPagerAdapter(
     override fun getCount(): Int = pages.size
 
     override fun getItem(position: Int): PostListFragment =
-            PostListFragment.newInstance(site, pages[position])
+            PostListFragment.newInstance(site, pages[position], targetPostId)
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as PostListFragment

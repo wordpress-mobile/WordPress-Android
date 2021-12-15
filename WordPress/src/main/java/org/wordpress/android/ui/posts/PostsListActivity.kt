@@ -169,9 +169,10 @@ class PostsListActivity : LocaleAwareActivity(),
 
             val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
             val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
+            val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_REMOTE_ID, 0).let { if (it != 0) it else null }
 
             setupActionBar()
-            setupContent()
+            setupContent(targetPostId)
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
             initCreateMenuViewModel(tabIndex, actionsShownByDefault)
@@ -188,7 +189,7 @@ class PostsListActivity : LocaleAwareActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun PostListActivityBinding.setupContent() {
+    private fun PostListActivityBinding.setupContent(targetPostId: Int?) {
         val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
         postListAuthorSelection.adapter = authorSelectionAdapter
 
@@ -221,7 +222,7 @@ class PostsListActivity : LocaleAwareActivity(),
             postListCreateMenuViewModel.onTooltipTapped()
         }
 
-        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
+        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, targetPostId, supportFragmentManager)
         postPager.adapter = postsPagerAdapter
     }
 
