@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -11,12 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.comments.CommentDetailFragment.*
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
@@ -51,6 +54,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private lateinit var commentListFilter: CommentFilter
+    private val sharedPreferences by lazy {
+        activity?.getSharedPreferences(COMMENT_FILE_KEY, Context.MODE_PRIVATE)
+    }
 
     var confirmationDialog: AlertDialog? = null
     var currentSnackbar: Snackbar? = null
@@ -167,7 +173,27 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     val commentDetails = registerForActivityResult(CommentDetailsActivityContract()) { response:
     CommentDetailsActivityResponse? ->
         if (response != null) {
-            viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                if (sharedPreferences?.getString(
+                        COMMENT_STATE_KEY,
+                        COMMENT_STATE_INITIAL
+                    ) == COMMENT_STATE_SUCCESSFULLY_EDITED
+                ) {
+                    viewModel.localCommentCacheUpdateHandler.requestCommentsUpdate()
+
+                    // If the user does a comment moderation next, add a short delay to avoid a
+                    // race condition updating data on the main comment list.
+                    delay(10)
+                }
+
+                if (sharedPreferences?.getString(
+                        COMMENT_MODERATION_KEY,
+                        COMMENT_MODERATION_INITIAL_STATE
+                    ) == COMMENT_MODERATION_SUCCESSFULLY
+                ) {
+                    viewModel.performSingleCommentModeration(response.commentId, response.commentStatus)
+                }
+            }
         }
     }
 
