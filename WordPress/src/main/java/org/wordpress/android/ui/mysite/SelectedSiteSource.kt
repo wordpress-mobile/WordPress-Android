@@ -17,7 +17,7 @@ class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
 ) : MySiteRefreshSource<SelectedSite> {
-    override val refresh = MutableLiveData(true)
+    override val refresh = MutableLiveData(selectedSiteRepository.hasSelectedSite())
 
     init {
         dispatcher.register(this)

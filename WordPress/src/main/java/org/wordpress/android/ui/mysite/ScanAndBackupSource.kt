@@ -20,7 +20,7 @@ class ScanAndBackupSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : MySiteRefreshSource<JetpackCapabilities> {
-    override val refresh = MutableLiveData(true)
+    override val refresh = MutableLiveData(selectedSiteRepository.hasSelectedSite())
 
     fun clear() {
         jetpackCapabilitiesUseCase.clear()

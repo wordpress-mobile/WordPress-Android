@@ -108,13 +108,15 @@ class MySiteSourceManager @Inject constructor(
     }
 
     private fun refreshAllSources() {
-        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            if (it is SiteIndependentSource || selectedSiteRepository.hasSelectedSite()) it.refresh()
+        }
     }
 
     private fun refreshSubsetOfAllSources() {
         selectedSiteSource.updateSiteSettingsIfNecessary()
         currentAvatarSource.refresh()
-        quickStartCardSource.refresh()
+        if (selectedSiteRepository.hasSelectedSite()) quickStartCardSource.refresh()
     }
 
     /* QUICK START */
