@@ -73,7 +73,14 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public void onBackPressed() {
-        onModerateComment(mCommentId, mStatusFilter);
+        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null) {
+            fragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -138,7 +145,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onModerateComment(mCommentId, mStatusFilter);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -273,15 +280,6 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                                   final CommentStatus newStatus) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
-    public void onModerateComment(final Long commentId,
-                                  final CommentStatus newStatus) {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, commentId);
         resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
         setResult(RESULT_OK, resultIntent);
         finish();
