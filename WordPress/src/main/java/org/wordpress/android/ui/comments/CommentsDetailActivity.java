@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.comments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -73,9 +75,9 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public void onBackPressed() {
+        shouldUpdateCommentOnUnifiedCommentList();
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
                 getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
-
         if (fragment != null) {
             fragment.onBackPressed();
         } else {
@@ -144,6 +146,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        shouldUpdateCommentOnUnifiedCommentList();
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -273,16 +276,33 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         }
     }
 
+    private void moderateComment(final Long commentId,
+                                 final CommentStatus newStatus) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, commentId);
+        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
+        setResult(RESULT_OK, resultIntent);
+    }
 
     @Override
     public void onModerateComment(final SiteModel site,
                                   final CommentModel comment,
                                   final CommentStatus newStatus) {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
-        setResult(RESULT_OK, resultIntent);
+        moderateComment(comment.getRemoteCommentId(), newStatus);
         finish();
+    }
+
+    public void shouldUpdateCommentOnUnifiedCommentList() {
+        if(isCommentUpdated()) {
+            moderateComment(mCommentId, mStatusFilter);
+        }
+    }
+
+    private Boolean isCommentUpdated() {
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(CommentDetailFragment.COMMENT_FILE_KEY, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(CommentDetailFragment.COMMENT_STATE_KEY, CommentDetailFragment.COMMENT_STATE_INITIAL)
+                .equals(CommentDetailFragment.COMMENT_STATE_SUCCESSFULLY_EDITED);
     }
 
     @Override
