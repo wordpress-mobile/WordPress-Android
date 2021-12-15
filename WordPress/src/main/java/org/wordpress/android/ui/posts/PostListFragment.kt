@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -101,7 +100,7 @@ class PostListFragment : ViewPagerFragment() {
         mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
-        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
+        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
                 recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                 recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
@@ -121,7 +120,7 @@ class PostListFragment : ViewPagerFragment() {
             }
         })
 
-        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner, Observer {
+        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner, {
             if (it != null) {
                 if (viewModel.updateAuthorFilterIfNotSearch(it)) {
                     recyclerView?.scrollToPosition(0)
@@ -151,7 +150,7 @@ class PostListFragment : ViewPagerFragment() {
 
     private fun initObservers() {
         if (postListType == SEARCH) {
-            mainViewModel.searchQuery.observe(viewLifecycleOwner, Observer {
+            mainViewModel.searchQuery.observe(viewLifecycleOwner, {
                 if (TextUtils.isEmpty(it)) {
                     postListAdapter.submitList(null)
                 }
@@ -159,22 +158,22 @@ class PostListFragment : ViewPagerFragment() {
             })
         }
 
-        viewModel.emptyViewState.observe(viewLifecycleOwner, Observer {
+        viewModel.emptyViewState.observe(viewLifecycleOwner, {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
 
-        viewModel.isFetchingFirstPage.observe(viewLifecycleOwner, Observer {
+        viewModel.isFetchingFirstPage.observe(viewLifecycleOwner, {
             swipeRefreshLayout?.isRefreshing = it == true
         })
 
-        viewModel.pagedListData.observe(viewLifecycleOwner, Observer {
+        viewModel.pagedListData.observe(viewLifecycleOwner, {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
 
-        viewModel.isLoadingMore.observe(viewLifecycleOwner, Observer {
+        viewModel.isLoadingMore.observe(viewLifecycleOwner, {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
-        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer {
+        viewModel.scrollToPosition.observe(viewLifecycleOwner, {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
             }
