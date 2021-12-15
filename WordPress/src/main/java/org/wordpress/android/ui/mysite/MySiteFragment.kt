@@ -320,9 +320,20 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     false,
                     PagePostCreationSourcesDetail.POST_FROM_MY_SITE
             )
-        // TODO: ashiagr this is unhandled right now as mocked post is being used which cannot be opened in the editor
-        is SiteNavigationAction.EditDraftPost -> Unit
-        is SiteNavigationAction.EditScheduledPost -> Unit
+        is SiteNavigationAction.EditDraftPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(
+                    requireActivity(),
+                    action.site,
+                    PostListType.DRAFTS,
+                    action.postId
+            )
+        is SiteNavigationAction.EditScheduledPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(
+                    requireActivity(),
+                    action.site,
+                    PostListType.SCHEDULED,
+                    action.postId
+            )
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

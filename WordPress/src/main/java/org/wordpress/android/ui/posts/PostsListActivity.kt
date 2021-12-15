@@ -64,6 +64,8 @@ import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
+const val EXTRA_TARGET_POST_REMOTE_ID = "targetPostRemoteId"
+
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
@@ -509,7 +511,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menu?.let {
+        menu.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
             toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
             viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
@@ -662,12 +664,14 @@ class PostsListActivity : LocaleAwareActivity(),
         }
 
         @JvmStatic
+        @Suppress("LongParameterList")
         fun buildIntent(
             context: Context,
             site: SiteModel,
             postListType: PostListType,
             actionsShownByDefault: Boolean,
-            notificationType: NotificationType? = null
+            notificationType: NotificationType? = null,
+            targetPostId: Int? = null
         ): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
@@ -675,6 +679,9 @@ class PostsListActivity : LocaleAwareActivity(),
             intent.putExtra(TAB_INDEX, postListType.ordinal)
             if (notificationType != null) {
                 intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+            }
+            if (targetPostId != null) {
+                intent.putExtra(EXTRA_TARGET_POST_REMOTE_ID, targetPostId)
             }
             return intent
         }

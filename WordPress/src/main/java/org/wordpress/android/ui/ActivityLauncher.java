@@ -591,10 +591,23 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        viewCurrentBlogPostsOfType(context, site, null);
+        viewCurrentBlogPostsOfType(context, site, null, null);
     }
 
-    public static void viewCurrentBlogPostsOfType(Context context, SiteModel site, PostListType postListType) {
+    public static void viewCurrentBlogPostsOfType(
+            Context context,
+            SiteModel site,
+            @Nullable PostListType postListType
+    ) {
+        viewCurrentBlogPostsOfType(context, site, postListType, null);
+    }
+
+    public static void viewCurrentBlogPostsOfType(
+            Context context,
+            SiteModel site,
+            @Nullable PostListType postListType,
+            @Nullable Integer postId
+    ) {
         if (site == null) {
             AppLog.e(T.POSTS, "Site cannot be null when opening posts");
             AnalyticsTracker.track(
@@ -609,7 +622,7 @@ public class ActivityLauncher {
         if (postListType == null) {
             context.startActivity(PostsListActivity.buildIntent(context, site));
         } else {
-            context.startActivity(PostsListActivity.buildIntent(context, site, postListType, false, null));
+            context.startActivity(PostsListActivity.buildIntent(context, site, postListType, false, null, postId));
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
