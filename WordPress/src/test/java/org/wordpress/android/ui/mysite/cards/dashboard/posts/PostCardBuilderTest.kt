@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLin
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -42,8 +43,8 @@ class PostCardBuilderTest : BaseUnitTest() {
             date = POST_DATE
     )
 
-    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = {}
-    private val onPostItemClick: (Int) -> Unit = {}
+    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = { }
+    private val onPostItemClick: (params: PostItemClickParams) -> Unit = { }
 
     @Before
     fun setUp() {

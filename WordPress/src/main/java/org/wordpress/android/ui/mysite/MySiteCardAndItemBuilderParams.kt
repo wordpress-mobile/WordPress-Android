@@ -16,9 +16,14 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class PostCardBuilderParams(
         val posts: PostsCardModel?,
-        val onPostItemClick: (postId: Int) -> Unit,
+        val onPostItemClick: (params: PostItemClickParams) -> Unit,
         val onFooterLinkClick: (postCardType: PostCardType) -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+    ) : MySiteCardAndItemBuilderParams() {
+        data class PostItemClickParams(
+            val postCardType: PostCardType,
+            val postId: Int
+        )
+    }
 
     data class QuickActionsCardBuilderParams(
         val siteModel: SiteModel,
