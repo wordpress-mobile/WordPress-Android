@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -47,6 +46,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
 import javax.inject.Named
@@ -82,6 +82,7 @@ class PostListViewModel @Inject constructor(
     private var photonHeight by Delegates.notNull<Int>()
 
     private var scrollToLocalPostId: LocalPostId? = null
+    private var navigateToRemotePostId: RemotePostId? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -129,13 +130,15 @@ class PostListViewModel @Inject constructor(
         postListViewModelConnector: PostListViewModelConnector,
         value: AuthorFilterSelection,
         photonWidth: Int,
-        photonHeight: Int
+        photonHeight: Int,
+        navigateToRemotePostId: RemotePostId?
     ) {
         if (isStarted) {
             return
         }
         this.photonHeight = photonHeight
         this.photonWidth = photonWidth
+        this.navigateToRemotePostId = navigateToRemotePostId
         connector = postListViewModelConnector
 
         isStarted = true

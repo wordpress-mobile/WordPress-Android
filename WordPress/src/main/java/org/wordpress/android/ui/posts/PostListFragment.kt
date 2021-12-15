@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ViewPagerFragment
@@ -32,6 +33,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
+import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -92,6 +94,7 @@ class PostListFragment : ViewPagerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+        val targetPostId = requireNotNull(arguments).getSerializable(EXTRA_TARGET_POST_REMOTE_ID) as Int?
 
         if (postListType == SEARCH) {
             recyclerView?.id = R.id.posts_search_recycler_view_id
@@ -139,10 +142,11 @@ class PostListFragment : ViewPagerFragment() {
 
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
         viewModel.start(
-                postListViewModelConnector,
-                mainViewModel.authorSelectionUpdated.value!!,
+                postListViewModelConnector = postListViewModelConnector,
+                value = mainViewModel.authorSelectionUpdated.value!!,
                 photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
+                navigateToRemotePostId = targetPostId?.let { RemotePostId(RemoteId(it.toLong())) }
         )
 
         initObservers()

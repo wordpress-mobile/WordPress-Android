@@ -32,7 +32,7 @@ class PostListViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: PostListViewModel
 
-    @UseExperimental(InternalCoroutinesApi::class)
+    @OptIn(InternalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()
@@ -71,7 +71,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 createPostListViewModelConnector(site = site, postListType = DRAFTS),
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
-                DEFAULT_PHOTON_DIMENSIONS
+                DEFAULT_PHOTON_DIMENSIONS,
+                null
         )
 
         // When
@@ -87,7 +88,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 createPostListViewModelConnector(site = site, postListType = SEARCH),
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
-                DEFAULT_PHOTON_DIMENSIONS
+                DEFAULT_PHOTON_DIMENSIONS,
+                null
         )
 
         val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
@@ -99,7 +101,7 @@ class PostListViewModelTest : BaseUnitTest() {
         viewModel.search("", 0)
 
         assertThat(emptyViewStateResults.size).isEqualTo(1)
-        assertThat(emptyViewStateResults[0].emptyViewVisible).isTrue()
+        assertThat(emptyViewStateResults[0].emptyViewVisible).isTrue
     }
 
     private companion object {
