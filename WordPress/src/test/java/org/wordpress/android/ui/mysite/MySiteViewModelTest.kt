@@ -1377,7 +1377,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`(){
+    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
 
