@@ -182,6 +182,11 @@ class PostListFragment : ViewPagerFragment() {
                 recyclerView?.scrollToPosition(index)
             }
         })
+        viewModel.navigateToPost.observe(viewLifecycleOwner, {
+            it?.let { index ->
+                recyclerView?.layoutManager?.findViewByPosition(index)?.performClick()
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
