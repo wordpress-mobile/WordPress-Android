@@ -161,8 +161,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        // Temporarily limiting this feature to the WordPress app
-        if (unifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+        if (unifiedAboutFeatureConfig.isEnabled()) {
             recommendTheAppContainer.isVisible = false
             aboutTheAppContainer.isVisible = true
 
