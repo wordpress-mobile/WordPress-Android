@@ -16,7 +16,7 @@ jobs:
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
       PR_TITLE: ${{ github.event.inputs.title || format('{{Automated gutenberg-mobile version update for {0} !}}', github.event.inputs.gutenbergMobileVersion ) }}
-      PR_BODY: ${{ github.event.inputs.body || format( '{{This PR incorporates changes from {0}.}}', github.event.inputs.prURL ) }}'' 
+      PR_BODY: ${{ github.event.inputs.body || format( '{{This PR incorporates changes from {0}.}}', github.event.inputs.prURL ) }}
       GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
     steps:
       - uses: actions/checkout@v2
