@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -137,6 +138,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
+
+    public static final String COMMENT_FILE_KEY = "commentStateFileKey";
+
+    public static final String COMMENT_STATE_KEY = "commentStateKey";
+    public static final String COMMENT_STATE_INITIAL = "commentStateInitial";
+    public static final String COMMENT_STATE_SUCCESSFULLY_EDITED = "commentStateSuccessfullyEdited";
+
+    public static final String COMMENT_MODERATION_KEY = "commentModerationKey";
+    public static final String COMMENT_MODERATION_INITIAL_STATE = "commentModerationInitialState";
+    public static final String COMMENT_MODERATION_SUCCESSFULLY = "commentModerationSuccessfully";
 
     enum CommentSource {
         NOTIFICATION,
@@ -441,6 +452,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         setupSuggestionServiceAndAdapter();
 
+        initCommentKeyValueData();
+
         return view;
     }
 
@@ -656,6 +669,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             reloadComment();
             AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
                     mCommentSource.toAnalyticsCommentActionSource(), mSite);
+            saveCommentKeyValueData(COMMENT_STATE_KEY, COMMENT_STATE_SUCCESSFULLY_EDITED);
         }
     }
 
@@ -670,6 +684,22 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
         }
+    }
+
+    private void initCommentKeyValueData() {
+        saveCommentKeyValueData(COMMENT_STATE_KEY, COMMENT_STATE_INITIAL);
+        saveCommentKeyValueData(COMMENT_MODERATION_KEY, COMMENT_MODERATION_INITIAL_STATE);
+    }
+
+    private void saveCommentKeyValueData(String key, String value) {
+        if(getActivity() == null) {
+            return;
+        }
+        SharedPreferences sharedPreferences =
+                requireActivity().getSharedPreferences(COMMENT_FILE_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
     /**
@@ -1001,6 +1031,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);
             // Sad, but onModerateComment does the moderation itself (due to the undo bar), this should be refactored,
             // That's why we don't call dispatchModerationAction() here.
+            saveCommentKeyValueData(COMMENT_MODERATION_KEY, COMMENT_MODERATION_SUCCESSFULLY);
         }
 
         updateStatusViews();
