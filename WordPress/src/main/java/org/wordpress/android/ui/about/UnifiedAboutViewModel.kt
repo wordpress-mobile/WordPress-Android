@@ -44,7 +44,7 @@ class UnifiedAboutViewModel @Inject constructor(
             shareConfigFactory = ::createShareConfig,
             rateUsConfig = RateUsConfig.fromContext(contextProvider.getContext()),
             socialsConfig = SocialsConfig(
-                    twitterUsername = WP_SOCIAL_HANDLE
+                    twitterUsername = if (buildConfig.isJetpackApp) JP_SOCIAL_HANDLE else WP_SOCIAL_HANDLE
             ),
             customItems = listOf(
                     ItemConfig(
@@ -56,14 +56,14 @@ class UnifiedAboutViewModel @Inject constructor(
             legalConfig = LegalConfig(
                     tosUrl = wpUrlUtils.buildTermsOfServiceUrl(contextProvider.getContext()),
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
-                    acknowledgementsUrl = WP_ACKNOWLEDGEMENTS_URL
+                    acknowledgementsUrl = LICENSES_FILE_URL
             ),
-            onDismiss = ::onDismiss,
             analyticsTracker = AnalyticsConfig(
                     trackScreenShown = unifiedAboutTracker::trackScreenShown,
                     trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
                     trackButtonTapped = unifiedAboutTracker::trackButtonTapped
-            )
+            ),
+            onDismiss = ::onDismiss
     )
 
     private suspend fun createShareConfig(): ShareConfig {
@@ -74,7 +74,8 @@ class UnifiedAboutViewModel @Inject constructor(
                 message = when (result) {
                     is Failure -> {
                         AppLog.e(T.MAIN, "Couldn't fetch recommend app template: ${result.error}")
-                        WP_APPS_URL // Returning generic message containing only the apps page URL
+                        // Returning generic message containing only the apps page URL
+                        if (buildConfig.isJetpackApp) JP_APPS_URL else WP_APPS_URL
                     }
                     is Success -> "${result.templateData.message}\n${result.templateData.link}"
                 }
@@ -86,14 +87,19 @@ class UnifiedAboutViewModel @Inject constructor(
     }
 
     private fun onBlogClick() {
-        _onNavigation.postValue(Event(OpenBlog(WP_BLOG_URL)))
+        _onNavigation.postValue(Event(OpenBlog(if (buildConfig.isJetpackApp) JP_BLOG_URL else WP_BLOG_URL)))
     }
 
     companion object {
-        private const val WP_SOCIAL_HANDLE = "wordpress"
-        private const val WP_ACKNOWLEDGEMENTS_URL = "file:///android_asset/licenses.html"
-        private const val WP_APPS_URL = "https://apps.wordpress.com/"
-        private const val WP_BLOG_URL = "https://blog.wordpress.com/"
         private const val BLOG_ITEM_NAME = "blog"
+        private const val LICENSES_FILE_URL = "file:///android_asset/licenses.html"
+
+        private const val WP_SOCIAL_HANDLE = "wordpress"
+        private const val WP_APPS_URL = "https://apps.wordpress.com"
+        private const val WP_BLOG_URL = "https://blog.wordpress.com"
+
+        private const val JP_SOCIAL_HANDLE = "jetpack"
+        private const val JP_APPS_URL = "https://jetpack.com/app"
+        private const val JP_BLOG_URL = "https://jetpack.com/blog"
     }
 }
