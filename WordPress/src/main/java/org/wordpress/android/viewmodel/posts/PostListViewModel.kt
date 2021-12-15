@@ -87,6 +87,9 @@ class PostListViewModel @Inject constructor(
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
 
+    private val _navigateToPost = SingleLiveEvent<Int>()
+    val navigateToPost: LiveData<Int> = _navigateToPost
+
     private val dataSource: PostListItemDataSource by lazy {
         PostListItemDataSource(
                 dispatcher = dispatcher,
@@ -338,6 +341,11 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun onDataUpdated(data: PagedPostList) {
+        checkAndUpdateScrollPosition(data)
+        checkAndNavigateToPost(data)
+    }
+
+    private fun checkAndUpdateScrollPosition(data: PagedPostList) {
         val localPostId = scrollToLocalPostId
         if (localPostId != null) {
             scrollToLocalPostId = null
@@ -356,6 +364,36 @@ class PostListViewModel @Inject constructor(
         return data.listIterator().withIndex().asSequence().find { listItem ->
             if (listItem.value is PostListItemUiState) {
                 (listItem.value as PostListItemUiState).data.localPostId == localPostId
+            } else {
+                false
+            }
+        }?.index
+    }
+
+    private fun checkAndNavigateToPost(data: PagedPostList) {
+        val remotePostId = navigateToRemotePostId
+        if (remotePostId != null) {
+            navigateToPost(data, remotePostId)
+        }
+    }
+
+    /**
+     * Since [onDataUpdated] can get triggered multiple times, reset the [navigateToRemotePostId] only when the item
+     * is found and the navigation trigger is actually invoked. This can happen either when [onDataUpdated] is triggered
+     * for the first time (database) or afterwards in a subsequent trigger (network).
+     */
+    private fun navigateToPost(data: PagedPostList, remotePostId: RemotePostId) {
+        val position = findItemListItem(data, remotePostId)
+        position?.let {
+            _navigateToPost.value = it
+            navigateToRemotePostId = null
+        } ?: AppLog.e(AppLog.T.POSTS, "NavigateToPost failed - the post not found.")
+    }
+
+    private fun findItemListItem(data: PagedPostList, remotePostId: RemotePostId): Int? {
+        return data.listIterator().withIndex().asSequence().find { listItem ->
+            if (listItem.value is PostListItemUiState) {
+                (listItem.value as PostListItemUiState).data.remotePostId == remotePostId
             } else {
                 false
             }
