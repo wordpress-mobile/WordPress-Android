@@ -473,6 +473,22 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         );
     }
 
+    private void checkRecordedVideoSizeBeforeUploadAndTrack() {
+        Uri uri = MediaUtils.getLastRecordedVideoUri(this);
+
+        if (mSite.getHasFreePlan()) {
+            if (mMediaUtilsWrapper.isAllowedUploadVideoFileSize(this, uri)) {
+                queueFileForUpload(uri, getContentResolver().getType(uri));
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_video_size_exceeds_limit, ToastUtils.Duration.LONG);
+            }
+        } else {
+            queueFileForUpload(uri, getContentResolver().getType(uri));
+        }
+
+        trackAddMediaFromDeviceEvents(true, true, uri);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -503,9 +519,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, true, uri);
+                    checkRecordedVideoSizeBeforeUploadAndTrack();
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
