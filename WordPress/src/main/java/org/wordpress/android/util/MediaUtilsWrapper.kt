@@ -1,6 +1,7 @@
 package org.wordpress.android.util
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
@@ -58,4 +59,26 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
             WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
+
+    fun isAllowedUploadVideoFileSize(context: Context, uri: Uri): Boolean {
+        val mediaColumns = arrayOf(android.provider.MediaStore.Video.Media.SIZE)
+        val cursor: Cursor? = context.contentResolver.query(
+                uri,
+                mediaColumns,
+                null,
+                null,
+                null
+        )
+
+        cursor?.moveToFirst()
+        val sizeColInd: Int? = cursor?.getColumnIndex(mediaColumns[0])
+        val fileSize: Long = sizeColInd?.let { cursor.getLong(it) } ?: 0
+        cursor?.close()
+
+        return fileSize <= SIZE_LIMIT_100_MB
+    }
+
+    companion object {
+        private const val SIZE_LIMIT_100_MB = 104857600
+    }
 }
