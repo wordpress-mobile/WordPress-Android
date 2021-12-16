@@ -1857,6 +1857,7 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_video_size_exceeds_limit">Video size exceeds 100MB limit allowed on the Free Plan.  Please sign-up for a paid plan.</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>

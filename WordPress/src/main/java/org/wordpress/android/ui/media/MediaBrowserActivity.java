@@ -79,6 +79,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -117,6 +118,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject MediaUtilsWrapper mMediaUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -449,6 +451,19 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
         final String mimeType = getContentResolver().getType(imageUri);
+
+        if (mSite.getHasFreePlan() && mMediaUtilsWrapper.isVideoMimeType(mimeType)) {
+            if (mMediaUtilsWrapper.isAllowedUploadVideoFileSize(this, imageUri)) {
+                fetchMediaAndDoNext(imageUri, requestCode, mimeType);
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_video_size_exceeds_limit, ToastUtils.Duration.LONG);
+            }
+        } else {
+            fetchMediaAndDoNext(imageUri, requestCode, mimeType);
+        }
+    }
+
+    private void fetchMediaAndDoNext(Uri imageUri, int requestCode, String mimeType) {
         WPMediaUtils.fetchMediaAndDoNext(this, imageUri,
                 uri -> queueFileForUpload(getOptimizedPictureIfNecessary(uri), mimeType));
         trackAddMediaFromDeviceEvents(
