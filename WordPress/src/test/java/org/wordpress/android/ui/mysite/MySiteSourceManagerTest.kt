@@ -63,6 +63,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         selectedSite.value = null
         whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
                 analyticsTrackerWrapper,
