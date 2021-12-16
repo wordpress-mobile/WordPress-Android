@@ -3120,6 +3120,7 @@
     <string name="error_unknown_page_type">Unknown page format</string>
 
     <!-- Posts -->
+    <string name="post_loading_dialog_text">Loading post</string>
     <string name="post_list_author">Post author</string>
     <string name="post_list_tab_published_posts">Published</string>
     <string name="post_list_tab_drafts">Drafts</string>

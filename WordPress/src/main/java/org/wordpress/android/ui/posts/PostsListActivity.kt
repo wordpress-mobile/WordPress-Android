@@ -108,6 +108,7 @@ class PostsListActivity : LocaleAwareActivity(),
     private var restorePreviousSearch = false
 
     private var progressDialog: ProgressDialog? = null
+    private var loadingDialog: PostLoadingDialogFragment? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -170,6 +171,11 @@ class PostsListActivity : LocaleAwareActivity(),
             val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
             val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
             val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_REMOTE_ID, 0).let { if (it != 0) it else null }
+
+            if (targetPostId != null) {
+                loadingDialog = PostLoadingDialogFragment()
+                loadingDialog?.show(supportFragmentManager, TAG_POST_LOADING_DIALOG)
+            }
 
             setupActionBar()
             setupContent(targetPostId)
@@ -459,6 +465,11 @@ class PostsListActivity : LocaleAwareActivity(),
         postListCreateMenuViewModel.onResume()
     }
 
+    override fun onStop() {
+        loadingDialog?.dismiss()
+        super.onStop()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -654,6 +665,8 @@ class PostsListActivity : LocaleAwareActivity(),
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
         private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
         private const val TAB_INDEX = "tab_index"
+
+        private const val TAG_POST_LOADING_DIALOG = "TAG_POST_LOADING_DIALOG"
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
