@@ -77,6 +77,10 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() = test {
+        site = SiteModel()
+        site.id = siteLocalId
+        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -107,8 +111,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
-        site = SiteModel()
-        site.id = siteLocalId
         result = mutableListOf()
         isRefreshing = mutableListOf()
         quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
@@ -373,7 +375,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     private suspend fun initStore(
         nextUncompletedTask: QuickStartTask? = null
     ) {
-        initBuild()
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
                 DynamicCardsModel(
@@ -405,6 +406,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteLocalId.toLong()))
                 .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+        initBuild()
     }
 
     private fun initBuild() {
