@@ -76,17 +76,18 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        setUpMocks()
         cardSource = CardsSource(
                 selectedSiteRepository,
                 cardsStore,
                 TEST_DISPATCHER
         )
-        setUpMocks()
     }
 
     private fun setUpMocks() {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
     }
 
     /* GET DATA */
@@ -182,27 +183,31 @@ class CardsSourceTest : BaseUnitTest() {
     /* IS REFRESHING */
 
     @Test
-    fun `when build is invoked, then refresh is set to false`() = test {
+    fun `when build is invoked, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
         cardSource.refresh.observeForever { result.add(it) }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.last()).isFalse
+        assertThat(result.last()).isTrue
     }
 
     @Test
-    fun `when refresh is invoked, then refresh is set to true`() = test {
+    fun `when refresh is invoked, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.fetchCards(siteModel)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isFalse
-        assertThat(result.last()).isTrue
+        assertThat(result.size).isEqualTo(4)
+        assertThat(result[0]).isTrue // init
+        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result[2]).isTrue // refresh()
+        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
     @Test
@@ -215,10 +220,11 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(3)
-        assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isFalse // build(...) -> cardsStore.getCards(...)
+        assertThat(result.size).isEqualTo(4)
+        assertThat(result[0]).isTrue // init
+        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
         assertThat(result[2]).isTrue // refresh()
+        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
     @Test
@@ -231,12 +237,11 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(5)
-        assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isFalse // build(...) -> cardsStore.getCards(...)
-        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
-        assertThat(result[3]).isTrue // refresh()
-        assertThat(result[4]).isFalse // refresh() -> cardsStore.fetchCards(...) -> error
+        assertThat(result.size).isEqualTo(4)
+        assertThat(result[0]).isTrue // init
+        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(result[2]).isTrue // refresh()
+        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> error
     }
 
     /* INVALID SITE */
