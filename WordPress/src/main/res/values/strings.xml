@@ -2406,7 +2406,7 @@
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
 
     <!--Recommend the app-->
-    <string name="recommend_app_subject">WordPress Apps - Apps for any screen</string>
+    <string name="recommend_app_subject">Automattic Apps - Apps for any screen</string>
     <string name="recommend_app_null_response">No response received</string>
     <string name="recommend_app_bad_format_response">Invalid response received</string>
     <string name="recommend_app_generic_get_template_error">Unknown error fetching recommend app template</string>
