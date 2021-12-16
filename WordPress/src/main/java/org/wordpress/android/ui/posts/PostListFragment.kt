@@ -297,7 +297,6 @@ class PostListFragment : ViewPagerFragment() {
     }
 
     companion object {
-        const val TAG = "post_list_fragment_tag"
         private const val NAVIGATE_TO_EDIT_POST_DELAY_MS = 1000L
 
         @JvmStatic
