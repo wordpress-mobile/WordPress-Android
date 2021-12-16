@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
+import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
 import javax.inject.Named
@@ -74,7 +75,9 @@ class PostListViewModel @Inject constructor(
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
-    private var isStarted: Boolean = false
+    private var isStarted = false
+    private var navigateToEditPost = false
+
     private lateinit var connector: PostListViewModelConnector
 
     private var photonWidth by Delegates.notNull<Int>()
@@ -378,14 +381,31 @@ class PostListViewModel @Inject constructor(
 
     /**
      * Since [onDataUpdated] can get triggered multiple times, reset the [navigateToRemotePostId] only when the item
-     * is found and the navigation trigger is actually invoked. This can happen either when [onDataUpdated] is triggered
-     * for the first time (database) or afterwards in a subsequent trigger (network).
+     * is found and the navigation trigger is actually invoked.
+     *
+     * Also, due to the way paging library works (see [PagedList]), and since this screen utilizes this solution,
+     * the [findItemListItem] process will return a valid result/index twice for a specific tab:
+     * - The first result might either be a [PostListItemUiState] or an [EndListIndicatorItem], and
+     * - The second result will always be an [EndListIndicatorItem].
+     * Since both results will return a valid index, it is safer to use the second result to make sure that no more
+     * [onDataUpdated] will occur for that specific tab. To achieve that the [navigateToEditPost] logic is being
+     * utilised. Also, by doing that the paging library gets some additional time to load the data, before it is being
+     * automatically selected right afterwards.
+     *
+     * PS: The database vs network trigger is not relevant since the paging library, through its data source solution,
+     * will be handling all that internally.
+     *
+     * NOTE: This whole solution is hacky and done this way to help us achieve a quick result, without needing to
+     * update the paging library or the underneath list store related implementation.
      */
     private fun navigateToPost(data: PagedPostList, remotePostId: RemotePostId) {
         val position = findItemListItem(data, remotePostId)
         position?.let {
-            _navigateToPost.value = it
-            navigateToRemotePostId = null
+            if (navigateToEditPost) {
+                _navigateToPost.value = it
+                navigateToRemotePostId = null
+            }
+            navigateToEditPost = true
         } ?: AppLog.e(AppLog.T.POSTS, "NavigateToPost failed - the post not found.")
     }
 
