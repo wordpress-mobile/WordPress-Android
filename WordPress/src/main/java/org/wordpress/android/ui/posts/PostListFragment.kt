@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -184,9 +185,33 @@ class PostListFragment : ViewPagerFragment() {
         })
         viewModel.navigateToPost.observe(viewLifecycleOwner, {
             it?.let { index ->
-                recyclerView?.layoutManager?.findViewByPosition(index)?.performClick()
+                navigateToPost(index)
             }
         })
+    }
+
+    /**
+     * In addition to the [PostListViewModel.navigateToPost] and its logic, which includes:
+     * - The [PostListViewModel.navigateToEditPost] to skip the first result, and
+     * - The [PostListViewModel.navigateToRemotePostId] to reset the navigation trigger.
+     * An extra delay of [NAVIGATE_TO_EDIT_POST_DELAY_MS] milliseconds it added to make sure that the list is submitted
+     * to the [PostListAdapter] paging related adapter (see [PagedListAdapter]). This will make sure that the newly
+     * submitted list updated the existing and potentially stale list.
+     *
+     * Otherwise, and due to the fact that the list submission can take some additional time, selecting the item might
+     * launch the [EditPostActivity] with a stale item and thus this might overwrite any remote changes.
+     *
+     * PS: A delay of half a second would have been sufficient enough, based on the testing that was done, but doubling
+     * this number to 1 second seemed safer to to make sure that no there will be less changes for the stale item to get
+     * selected.
+     *
+     * NOTE: This whole solution is hacky and done this way to help us achieve a quick result, without needing to
+     * update the paging library or the underneath list store related implementation.
+     */
+    private fun navigateToPost(index: Int) {
+        recyclerView?.postDelayed({
+            recyclerView?.layoutManager?.findViewByPosition(index)?.performClick()
+        }, NAVIGATE_TO_EDIT_POST_DELAY_MS)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -273,6 +298,7 @@ class PostListFragment : ViewPagerFragment() {
 
     companion object {
         const val TAG = "post_list_fragment_tag"
+        private const val NAVIGATE_TO_EDIT_POST_DELAY_MS = 1000L
 
         @JvmStatic
         fun newInstance(
