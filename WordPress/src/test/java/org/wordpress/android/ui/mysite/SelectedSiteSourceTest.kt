@@ -33,7 +33,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
-        source = SelectedSiteSource(selectedSiteRepository, dispatcher)
+        initSelectedSiteSource()
         result = mutableListOf()
         isRefreshing = mutableListOf()
     }
@@ -49,7 +49,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when refresh is invoked, then remote request is dispatched`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initSelectedSiteSource(hasSelectedSite = true)
 
         source.refresh()
 
@@ -58,7 +58,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no selected site, when refresh is invoked, then remote request is not dispatched`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        initSelectedSiteSource(hasSelectedSite = false)
 
         source.refresh()
 
@@ -66,17 +66,18 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when buildSource is invoked, then refresh is false`() = test {
+    fun `given selected site, when build is invoked, then refresh is true`() = test {
+        initSelectedSiteSource(hasSelectedSite = true)
         source.refresh.observeForever { isRefreshing.add(it) }
 
         source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
-        assertThat(isRefreshing.last()).isFalse
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test
     fun `given selected site, when refresh is invoked, then refresh is true`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initSelectedSiteSource(hasSelectedSite = true)
         source.refresh.observeForever { isRefreshing.add(it) }
 
         source.refresh()
@@ -86,7 +87,7 @@ class SelectedSiteSourceTest : BaseUnitTest() {
 
     @Test
     fun `given no selected site, when refresh is invoked, then refresh is false`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        initSelectedSiteSource(hasSelectedSite = false)
         source.refresh.observeForever { isRefreshing.add(it) }
 
         source.refresh()
@@ -104,5 +105,11 @@ class SelectedSiteSourceTest : BaseUnitTest() {
         source.onSiteChanged(OnSiteChanged(1, null))
 
         assertThat(isRefreshing.last()).isFalse
+    }
+
+    private fun initSelectedSiteSource(hasSelectedSite: Boolean = true) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(if (hasSelectedSite) site else null)
+        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(hasSelectedSite)
+        source = SelectedSiteSource(selectedSiteRepository, dispatcher)
     }
 }
