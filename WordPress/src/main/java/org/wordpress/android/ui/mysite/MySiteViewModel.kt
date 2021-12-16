@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -148,7 +149,7 @@ class MySiteViewModel @Inject constructor(
                 // We want to filter out the empty state where we have a site ID but site object is missing.
                 // Without this check there is an emission of a NoSites state even if we have the site
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
-            }.distinctUntilChanged()
+            }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
     val uiModel: LiveData<UiModel> = state.map { (
             currentAvatarUrl,
@@ -226,58 +227,81 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cards: CardsResult<List<CardModel>>?
-    ) = cardsBuilder.build(
-            DomainRegistrationCardBuilderParams(
-                    isDomainCreditAvailable = isDomainCreditAvailable,
-                    domainRegistrationClick = this::domainRegistrationClick
-            ),
-            PostCardBuilderParams(
-                    posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                    onPostItemClick = this::onPostItemClick,
-                    onFooterLinkClick = this::onPostCardFooterLinkClick
-            ),
-            QuickActionsCardBuilderParams(
-                    siteModel = site,
-                    activeTask = activeTask,
-                    onQuickActionStatsClick = this::quickActionStatsClick,
-                    onQuickActionPagesClick = this::quickActionPagesClick,
-                    onQuickActionPostsClick = this::quickActionPostsClick,
-                    onQuickActionMediaClick = this::quickActionMediaClick
-            ),
-            QuickStartCardBuilderParams(
-                    quickStartCategories = quickStartCategories,
-                    onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
-                    onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
-            ),
-            SiteInfoCardBuilderParams(
-                    site = site,
-                    showSiteIconProgressBar = showSiteIconProgressBar,
-                    titleClick = this::titleClick,
-                    iconClick = this::iconClick,
-                    urlClick = this::urlClick,
-                    switchSiteClick = this::switchSiteClick,
-                    activeTask = activeTask
-            )
-    ) + dynamicCardsBuilder.build(
-            quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
-            this::onDynamicCardMoreClick,
-            this::onQuickStartTaskCardClick
-    ) + siteItemsBuilder.build(
-            SiteItemsBuilderParams(
-                    site = site,
-                    activeTask = activeTask,
-                    backupAvailable = backupAvailable,
-                    scanAvailable = scanAvailable,
-                    onClick = this::onItemClick
-            )
-    )
+    ): List<MySiteCardAndItem> {
+        val cardsResult = cardsBuilder.build(
+                DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = this::domainRegistrationClick
+                ),
+                PostCardBuilderParams(
+                        posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                        onPostItemClick = this::onPostItemClick,
+                        onFooterLinkClick = this::onPostCardFooterLinkClick
+                ),
+                QuickActionsCardBuilderParams(
+                        siteModel = site,
+                        activeTask = activeTask,
+                        onQuickActionStatsClick = this::quickActionStatsClick,
+                        onQuickActionPagesClick = this::quickActionPagesClick,
+                        onQuickActionPostsClick = this::quickActionPostsClick,
+                        onQuickActionMediaClick = this::quickActionMediaClick
+                ),
+                QuickStartCardBuilderParams(
+                        quickStartCategories = quickStartCategories,
+                        onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
+                        onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
+                ),
+                SiteInfoCardBuilderParams(
+                        site = site,
+                        showSiteIconProgressBar = showSiteIconProgressBar,
+                        titleClick = this::titleClick,
+                        iconClick = this::iconClick,
+                        urlClick = this::urlClick,
+                        switchSiteClick = this::switchSiteClick,
+                        activeTask = activeTask
+                )
+        )
+        val dynamicCards = dynamicCardsBuilder.build(
+                quickStartCategories,
+                pinnedDynamicCard,
+                visibleDynamicCards,
+                this::onDynamicCardMoreClick,
+                this::onQuickStartTaskCardClick
+        )
+
+        val siteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = site,
+                        activeTask = activeTask,
+                        backupAvailable = backupAvailable,
+                        scanAvailable = scanAvailable,
+                        onClick = this::onItemClick
+                )
+        )
+        return orderForDisplay(cardsResult, dynamicCards, siteItems)
+    }
 
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(shouldShowImage)
+    }
+
+    private fun orderForDisplay(
+        cards: List<MySiteCardAndItem>,
+        dynamicCards: List<MySiteCardAndItem>,
+        siteItems: List<MySiteCardAndItem>
+    ): List<MySiteCardAndItem> {
+        val indexOfPostsCard = cards.indexOfFirst { it is PostCard }
+        return if (indexOfPostsCard == -1) {
+            cards + dynamicCards + siteItems
+        } else {
+            mutableListOf<MySiteCardAndItem>().apply {
+                addAll(cards)
+                addAll(indexOfPostsCard, dynamicCards)
+                addAll(siteItems)
+            }.toList()
+        }
     }
 
     private fun scrollToQuickStartTaskIfNecessary(

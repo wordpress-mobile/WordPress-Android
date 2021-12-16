@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.Transformations.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
@@ -29,7 +30,9 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
             selectedSiteSource,
@@ -42,18 +45,39 @@ class MySiteSourceManager @Inject constructor(
             cardsSource
     )
 
+    private val showDashboardCards: Boolean
+        get() = mySiteDashboardPhase2FeatureConfig.isEnabled() &&
+                !buildConfigWrapper.isJetpackApp &&
+                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+
+    private val allSupportedMySiteSources: List<MySiteSource<*>>
+        get() = if (showDashboardCards) {
+            mySiteSources
+        } else {
+            mySiteSources.filterNot(CardsSource::class.java::isInstance)
+        }
+
+    private val siteIndependentSources: List<SiteIndependentSource<*>>
+        get() = mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            mySiteSources.map { source -> source.build(coroutineScope, siteLocalId).distinctUntilChanged() }
+            allSupportedMySiteSources.map { source ->
+                source.build(coroutineScope, siteLocalId)
+                        .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+            }
         } else {
-            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.build(coroutineScope).distinctUntilChanged() }
+            siteIndependentSources
+                    .map { source ->
+                        source.build(coroutineScope)
+                                .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
+                    }
         }
     }
 
     fun isRefreshing(): Boolean {
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
                     return true
                 }
@@ -84,7 +108,7 @@ class MySiteSourceManager @Inject constructor(
     }
 
     private fun refreshAllSources() {
-        mySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
     }
 
     private fun refreshSubsetOfAllSources() {
@@ -116,3 +140,10 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 }
+
+inline fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(isNeeded: Boolean): LiveData<X> =
+        if (isNeeded) {
+            distinctUntilChanged(this)
+        } else {
+            this
+        }

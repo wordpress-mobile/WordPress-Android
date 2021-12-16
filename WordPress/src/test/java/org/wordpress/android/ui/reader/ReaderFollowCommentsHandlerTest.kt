@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_THREADED_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
@@ -80,13 +81,18 @@ class ReaderFollowCommentsHandlerTest {
                 userMessage = userMessage
         )
 
-        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, true)).thenReturn(
+        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(
+                blogId,
+                postId,
+                true,
+                READER_THREADED_COMMENTS
+        )).thenReturn(
                 flow { emit(state) }
         )
 
         setupObservers()
 
-        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, null)
+        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, READER_THREADED_COMMENTS, null)
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)
@@ -110,13 +116,24 @@ class ReaderFollowCommentsHandlerTest {
                 userMessage = userMessage
         )
 
-        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, true)).thenReturn(
+        whenever(readerCommentsFollowUseCase.setMySubscriptionToPost(
+                blogId,
+                postId,
+                true,
+                READER_THREADED_COMMENTS
+        )).thenReturn(
                 flow { emit(state) }
         )
 
         setupObservers()
 
-        followCommentsHandler.handleFollowCommentsClicked(blogId, postId, true, snackbarAction)
+        followCommentsHandler.handleFollowCommentsClicked(
+                blogId,
+                postId,
+                true,
+                READER_THREADED_COMMENTS,
+                snackbarAction
+        )
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)
@@ -142,13 +159,24 @@ class ReaderFollowCommentsHandlerTest {
                 forcePushNotificationsUpdate = true
         )
 
-        whenever(readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, true)).thenReturn(
+        whenever(readerCommentsFollowUseCase.setEnableByPushNotifications(
+                blogId,
+                postId,
+                true,
+                READER_THREADED_COMMENTS
+        )).thenReturn(
                 flow { emit(state) }
         )
 
         setupObservers()
 
-        followCommentsHandler.handleEnableByPushNotificationsClicked(blogId, postId, true, snackbarAction)
+        followCommentsHandler.handleEnableByPushNotificationsClicked(
+                blogId,
+                postId,
+                true,
+                READER_THREADED_COMMENTS,
+                snackbarAction
+        )
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)
