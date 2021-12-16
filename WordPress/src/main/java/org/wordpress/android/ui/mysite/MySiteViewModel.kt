@@ -228,7 +228,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cards: CardsResult<List<CardModel>>?
     ): List<MySiteCardAndItem> {
-        val cards = cardsBuilder.build(
+        val cardsResult = cardsBuilder.build(
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = this::domainRegistrationClick
@@ -278,7 +278,7 @@ class MySiteViewModel @Inject constructor(
                         onClick = this::onItemClick
                 )
         )
-        return orderForDisplay(cards, dynamicCards, siteItems)
+        return orderForDisplay(cardsResult, dynamicCards, siteItems)
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -296,7 +296,7 @@ class MySiteViewModel @Inject constructor(
         return if (indexOfPostsCard == -1) {
             cards + dynamicCards + siteItems
         } else {
-            return mutableListOf<MySiteCardAndItem>().apply {
+            mutableListOf<MySiteCardAndItem>().apply {
                 addAll(cards)
                 addAll(indexOfPostsCard, dynamicCards)
                 addAll(siteItems)
