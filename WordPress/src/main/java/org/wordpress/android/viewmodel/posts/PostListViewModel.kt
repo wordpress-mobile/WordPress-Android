@@ -373,25 +373,13 @@ class PostListViewModel @Inject constructor(
         }?.index
     }
 
-    private fun checkAndNavigateToPost(data: PagedPostList) {
-        val remotePostId = navigateToRemotePostId?.first
-        val targetPostListType = navigateToRemotePostId?.second
-        if (remotePostId != null && targetPostListType != null) {
-            navigateToPost(data, remotePostId)
-        }
-    }
-
     /**
-     * Since [onDataUpdated] can get triggered multiple times, reset the [navigateToRemotePostId] only when the item
-     * is found and the navigation trigger is actually invoked.
-     *
      * Also, due to the way paging library works (see [PagedList]), and since this screen utilizes this solution,
-     * the [findItemListItem] process will return a valid result/index twice for a specific tab:
-     * - The first result might either be a [PostListItemUiState] or an [EndListIndicatorItem], and
-     * - The second result will always be an [EndListIndicatorItem].
-     * Since both results will return a valid index, it is safer to use the second result to make sure that no more
-     * [onDataUpdated] will occur for that specific tab. To achieve that the [navigateToEditPost] logic is being
-     * utilised. Also, by doing that the paging library gets some additional time to load the data, before it is being
+     * the [findItemListItem] process will return a valid result/index multiple times for a specific tab. Any result
+     * might either be a [PostListItemUiState], an [EndListIndicatorItem] or an empty data.
+     *
+     * It is safer to use ignore the first result. To achieve that the [navigateToEditPost] logic is being utilised.
+     * Also, by doing that the paging library gets some additional time to load the data, before it is being
      * automatically selected right afterwards.
      *
      * PS: The database vs network trigger is not relevant since the paging library, through its data source solution,
@@ -400,14 +388,26 @@ class PostListViewModel @Inject constructor(
      * NOTE: This whole solution is hacky and done this way to help us achieve a quick result, without needing to
      * update the paging library or the underneath list store related implementation.
      */
+    private fun checkAndNavigateToPost(data: PagedPostList) {
+        val remotePostId = navigateToRemotePostId?.first
+        val targetPostListType = navigateToRemotePostId?.second
+        if (remotePostId != null && targetPostListType != null) {
+            if (navigateToEditPost) {
+                navigateToPost(data, remotePostId)
+            }
+            navigateToEditPost = true
+        }
+    }
+
+    /**
+     * Since [onDataUpdated] can get triggered multiple times, reset the [navigateToRemotePostId] only when the item
+     * is found and the navigation trigger is actually invoked.
+     */
     private fun navigateToPost(data: PagedPostList, remotePostId: RemotePostId) {
         val position = findItemListItem(data, remotePostId)
         position?.let {
-            if (navigateToEditPost) {
-                _navigateToPost.value = it
-                navigateToRemotePostId = null
-            }
-            navigateToEditPost = true
+            _navigateToPost.value = it
+            navigateToRemotePostId = null
         } ?: AppLog.e(AppLog.T.POSTS, "NavigateToPost failed - the post not found.")
     }
 
