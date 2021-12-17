@@ -156,6 +156,7 @@ ext {
     espressoVersion = '3.1.0'
     mockitoCoreVersion = "3.3.3"
     nhaarmanMockitoVersion = "2.2.0"
+    turbine_version = "0.7.0"
 }
 
 // Onboarding and dev env setup tasks
