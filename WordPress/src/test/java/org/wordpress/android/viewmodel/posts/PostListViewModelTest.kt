@@ -72,7 +72,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS,
-                null
+                Pair(null, null)
         )
 
         // When
@@ -89,7 +89,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 DEFAULT_AUTHOR_FILTER,
                 DEFAULT_PHOTON_DIMENSIONS,
                 DEFAULT_PHOTON_DIMENSIONS,
-                null
+                Pair(null, null)
         )
 
         val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
