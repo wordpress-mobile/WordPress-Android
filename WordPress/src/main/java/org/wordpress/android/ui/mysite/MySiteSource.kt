@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +30,11 @@ interface MySiteSource<T : PartialState> {
         }
 
         fun onRefreshed() {
-            refresh.value = false
+            if (Looper.getMainLooper().isCurrentThread) { // UI Thread
+                refresh.value = false
+            } else {
+                refresh.postValue(false)
+            }
         }
     }
 

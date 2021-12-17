@@ -87,8 +87,8 @@ class CardsSource @Inject constructor(
             val error = result.error
             when {
                 error != null -> postState(CardsUpdate(result))
-                model != null -> refresh.postValue(false)
-                else -> refresh.postValue(false)
+                model != null -> onRefreshed()
+                else -> onRefreshed()
             }
         }
     }
