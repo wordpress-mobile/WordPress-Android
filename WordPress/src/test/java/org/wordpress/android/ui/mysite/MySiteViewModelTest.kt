@@ -72,6 +72,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -130,6 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
+    @Mock lateinit var dashboardCardsTracker: DashboardCardsTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -271,7 +273,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
-                mySiteSourceManager
+                mySiteSourceManager,
+                dashboardCardsTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1015,6 +1018,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given draft post card, when footer link is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
+
+        verify(dashboardCardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
+    }
+
+    @Test
     fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
             test {
                 initSelectedSite()
@@ -1024,6 +1036,16 @@ class MySiteViewModelTest : BaseUnitTest() {
                 assertThat(navigationActions)
                         .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
             }
+
+    // todo: annmarie
+    @Test
+    fun `given scheduled post card, when footer link is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
+
+        verify(dashboardCardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+    }
 
     /* POST CARD - POST ITEM */
 
