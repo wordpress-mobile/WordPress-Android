@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
@@ -8,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase.CopyMediaResult
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase.CreateMediaModelsResult
 import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.OptimizeMediaResult
+import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
 
 /**
@@ -21,7 +23,9 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val appendMediaToEditorUseCase: AppendMediaToEditorUseCase,
-    private val uploadMediaUseCase: UploadMediaUseCase
+    private val uploadMediaUseCase: UploadMediaUseCase,
+    private val mediaUtilsWrapper: MediaUtilsWrapper,
+    private val context: Context
 ) {
     /**
      * Adds media items with existing localMediaId to the editor and optionally initiates an upload.
@@ -51,6 +55,45 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         doUploadAfterAdding: Boolean = true,
         trackEvent: Boolean = true
     ): Boolean {
+        var result = false
+
+        if (site.hasFreePlan) {
+            uriList.map {
+                result = if (mediaUtilsWrapper.isVideo(it) &&
+                        mediaUtilsWrapper.isAllowedUploadVideoDuration(context, it)) {
+                    processMediaUri(
+                            uriList,
+                            site,
+                            freshlyTaken,
+                            editorMediaListener,
+                            doUploadAfterAdding,
+                            trackEvent)
+                } else {
+                    editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
+                    false
+                }
+            }
+        } else {
+            result = processMediaUri(
+                    uriList,
+                    site,
+                    freshlyTaken,
+                    editorMediaListener,
+                    doUploadAfterAdding,
+                    trackEvent)
+        }
+
+        return result
+    }
+
+    private suspend fun processMediaUri(
+        uriList: List<Uri>,
+        site: SiteModel,
+        freshlyTaken: Boolean,
+        editorMediaListener: EditorMediaListener,
+        doUploadAfterAdding: Boolean = true,
+        trackEvent: Boolean = true
+    ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
         val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
 
@@ -68,7 +111,6 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 site.id,
                 optimizeMediaResult.optimizedMediaUris
         )
-
         // here we pass a map of "old" (before optimisation) Uris to the new MediaModels which contain
         // both the mediaModel ids and the optimized media URLs.
         // this way, the listener will be able to process from other models pointing to the old URLs

@@ -37,6 +37,7 @@ import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
@@ -78,6 +79,7 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -457,6 +459,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
         // no op - we're not doing any special handling while composing, only when saving in the UploadBridge
+    }
+
+    override fun showVideoDurationLimitWarning(fileName: String) {
+        ToastUtils.showToast(this, string.error_media_video_size_exceeds_limit, LONG)
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
