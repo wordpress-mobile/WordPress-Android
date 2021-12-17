@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import org.greenrobot.eventbus.EventBus
@@ -41,22 +43,31 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.HashMap
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.set
 
 class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
 
     @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private var binding: NotificationsListFragmentBinding? = null
+    private lateinit var viewModel: NotificationListViewModel
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -69,6 +80,8 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         shouldRefreshNotifications = true
+        viewModel = ViewModelProvider(this, viewModelFactory).get(NotificationListViewModel::class.java)
+        viewModel.start()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,6 +123,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
             }
         }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+            it.showSnackbar()
+        })
     }
 
     private fun buildTitles(): List<String> {
@@ -120,6 +136,16 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         result.add(TAB_POSITION_FOLLOW, getString(R.string.notifications_tab_title_follows))
         result.add(TAB_POSITION_LIKE, getString(R.string.notifications_tab_title_likes))
         return result
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        binding?.root?.let {
+            make(
+                it,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
     }
 
     override fun onPause() {
@@ -227,6 +253,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.notifications_settings) {
             ActivityLauncher.viewNotificationsSettings(activity)
+            return true
+        } else if (item.itemId == R.id.read_all_notifications) {
+            viewModel.onClickReadAllNotifications()
             return true
         }
         return super.onOptionsItemSelected(item)
