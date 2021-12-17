@@ -29,12 +29,12 @@ interface MySiteSource<T : PartialState> {
             this@postState.postValue(value)
         }
 
-        fun onRefreshed() {
-            if (Looper.getMainLooper().isCurrentThread) { // UI Thread
-                refresh.value = false
-            } else {
-                refresh.postValue(false)
-            }
+        fun onRefreshedMainThread() {
+            refresh.value = false
+        }
+
+        fun onRefreshedBackgroundThread() {
+            refresh.postValue(false)
         }
     }
 

@@ -48,6 +48,6 @@ class SelectedSiteSource @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
-        onRefreshed()
+        onRefreshedMainThread()
     }
 }
