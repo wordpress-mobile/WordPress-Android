@@ -1357,6 +1357,24 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
 
+    @Test
+    fun `given refresh, when invoked as PTR, then pull-to-refresh request is tracked`() {
+        initSelectedSite()
+
+        viewModel.refresh(isPullToRefresh = true)
+
+        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH)
+    }
+
+    @Test
+    fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
+        initSelectedSite()
+
+        viewModel.refresh()
+
+        verify(analyticsTrackerWrapper, times(0)).track(Stat.MY_SITE_PULL_TO_REFRESH)
+    }
+
     /* CLEARED */
     @Test
     fun `when vm cleared() is invoked, then MySiteSource clear() is invoked`() {
