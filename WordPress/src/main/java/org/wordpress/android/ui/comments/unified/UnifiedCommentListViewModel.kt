@@ -69,7 +69,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
-    val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
