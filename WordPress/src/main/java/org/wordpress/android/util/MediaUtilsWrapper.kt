@@ -3,10 +3,12 @@ package org.wordpress.android.util
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.util.Log
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -60,8 +62,8 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
             WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 
-    fun isAllowedUploadVideoFileSize(context: Context, uri: Uri): Boolean {
-        val mediaColumns = arrayOf(android.provider.MediaStore.Video.Media.SIZE)
+    fun isAllowedUploadVideoDuration(context: Context, uri: Uri): Boolean {
+        val mediaColumns = arrayOf(android.provider.MediaStore.Video.VideoColumns.DURATION)
         val cursor: Cursor? = context.contentResolver.query(
                 uri,
                 mediaColumns,
@@ -71,14 +73,14 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
         )
 
         cursor?.moveToFirst()
-        val sizeColInd: Int? = cursor?.getColumnIndex(mediaColumns[0])
-        val fileSize: Long = sizeColInd?.let { cursor.getLong(it) } ?: 0
+        val durationColIndex: Int? = cursor?.getColumnIndexOrThrow(mediaColumns[0])
+        val fileDuration: Long = durationColIndex?.let { cursor.getLong(it) } ?: 0
         cursor?.close()
 
-        return fileSize <= SIZE_LIMIT_100_MB
+        return TimeUnit.MILLISECONDS.toMinutes(fileDuration) <= DURATION_LIMIT_5_MIN
     }
 
     companion object {
-        private const val SIZE_LIMIT_100_MB = 104857600
+        private const val DURATION_LIMIT_5_MIN = 5
     }
 }
