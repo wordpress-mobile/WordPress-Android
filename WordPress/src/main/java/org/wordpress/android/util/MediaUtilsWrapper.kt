@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -61,6 +62,7 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
             WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 
+    @SuppressLint("InlinedApi")
     fun isAllowedUploadVideoDuration(context: Context, uri: Uri): Boolean {
         val mediaColumns = arrayOf(android.provider.MediaStore.Video.VideoColumns.DURATION)
         val cursor: Cursor? = context.contentResolver.query(
