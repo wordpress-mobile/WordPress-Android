@@ -95,7 +95,9 @@ class PostListFragment : ViewPagerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+
         val targetPostId = requireNotNull(arguments).getSerializable(EXTRA_TARGET_POST_REMOTE_ID) as Int?
+        val targetPostListType = requireNotNull(arguments).getSerializable(EXTRA_TARGET_POST_LIST_TYPE) as PostListType?
 
         if (postListType == SEARCH) {
             recyclerView?.id = R.id.posts_search_recycler_view_id
@@ -147,7 +149,10 @@ class PostListFragment : ViewPagerFragment() {
                 value = mainViewModel.authorSelectionUpdated.value!!,
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
-                navigateToRemotePostId = targetPostId?.let { RemotePostId(RemoteId(it.toLong())) }
+                navigateToRemotePostId = Pair(
+                        targetPostId?.let { RemotePostId(RemoteId(it.toLong())) },
+                        if (postListType == targetPostListType) targetPostListType else null
+                )
         )
 
         initObservers()
@@ -303,13 +308,15 @@ class PostListFragment : ViewPagerFragment() {
         fun newInstance(
             site: SiteModel,
             postListType: PostListType,
-            targetPostId: Int? = null
+            targetPostId: Int? = null,
+            targetPostListType: PostListType? = null
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             bundle.putSerializable(EXTRA_TARGET_POST_REMOTE_ID, targetPostId)
+            bundle.putSerializable(EXTRA_TARGET_POST_LIST_TYPE, targetPostListType)
             fragment.arguments = bundle
             return fragment
         }

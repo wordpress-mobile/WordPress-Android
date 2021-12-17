@@ -30,6 +30,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
@@ -84,7 +85,7 @@ class PostListViewModel @Inject constructor(
     private var photonHeight by Delegates.notNull<Int>()
 
     private var scrollToLocalPostId: LocalPostId? = null
-    private var navigateToRemotePostId: RemotePostId? = null
+    private var navigateToRemotePostId: Pair<RemotePostId?, PostListType?>? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -136,7 +137,7 @@ class PostListViewModel @Inject constructor(
         value: AuthorFilterSelection,
         photonWidth: Int,
         photonHeight: Int,
-        navigateToRemotePostId: RemotePostId?
+        navigateToRemotePostId: Pair<RemotePostId?, PostListType?>
     ) {
         if (isStarted) {
             return
@@ -373,8 +374,9 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun checkAndNavigateToPost(data: PagedPostList) {
-        val remotePostId = navigateToRemotePostId
-        if (remotePostId != null) {
+        val remotePostId = navigateToRemotePostId?.first
+        val targetPostListType = navigateToRemotePostId?.second
+        if (remotePostId != null && targetPostListType != null) {
             navigateToPost(data, remotePostId)
         }
     }

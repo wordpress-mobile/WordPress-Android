@@ -65,6 +65,7 @@ import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val EXTRA_TARGET_POST_REMOTE_ID = "targetPostRemoteId"
+const val EXTRA_TARGET_POST_LIST_TYPE = "targetPostListType"
 
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
@@ -169,10 +170,12 @@ class PostsListActivity : LocaleAwareActivity(),
 
             val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
             val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
+
             val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_REMOTE_ID, 0).let { if (it != 0) it else null }
+            val targetPostListType = intent.getSerializableExtra(EXTRA_TARGET_POST_LIST_TYPE) as PostListType?
 
             setupActionBar()
-            setupContent(targetPostId)
+            setupContent(targetPostId, targetPostListType)
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
             initCreateMenuViewModel(tabIndex, actionsShownByDefault)
@@ -189,7 +192,10 @@ class PostsListActivity : LocaleAwareActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun PostListActivityBinding.setupContent(targetPostId: Int?) {
+    private fun PostListActivityBinding.setupContent(
+        targetPostId: Int?,
+        targetPostListType: PostListType?
+    ) {
         val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
         postListAuthorSelection.adapter = authorSelectionAdapter
 
@@ -222,7 +228,13 @@ class PostsListActivity : LocaleAwareActivity(),
             postListCreateMenuViewModel.onTooltipTapped()
         }
 
-        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, targetPostId, supportFragmentManager)
+        postsPagerAdapter = PostsPagerAdapter(
+                POST_LIST_PAGES,
+                site,
+                targetPostId,
+                targetPostListType,
+                supportFragmentManager
+        )
         postPager.adapter = postsPagerAdapter
     }
 
@@ -681,6 +693,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             if (targetPostId != null) {
                 intent.putExtra(EXTRA_TARGET_POST_REMOTE_ID, targetPostId)
+                intent.putExtra(EXTRA_TARGET_POST_LIST_TYPE, postListType)
             }
             return intent
         }
