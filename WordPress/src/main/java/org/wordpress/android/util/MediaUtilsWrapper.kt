@@ -3,7 +3,6 @@ package org.wordpress.android.util
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.util.Log
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
