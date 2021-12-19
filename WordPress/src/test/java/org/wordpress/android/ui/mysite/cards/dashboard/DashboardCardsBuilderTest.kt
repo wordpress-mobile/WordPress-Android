@@ -12,6 +12,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -52,7 +53,25 @@ class DashboardCardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findPostCard()).isNotNull
     }
 
+    /* ERROR CARD */
+
+    @Test
+    fun `given no show error, when cards are built, then error card is not built`() {
+        val cards = buildDashboardCards(showErrorCard = false)
+
+        assertThat(cards.findErrorCard()).isNull()
+    }
+
+    @Test
+    fun `given show error, when cards are built, then error card is built`() {
+        val cards = buildDashboardCards(showErrorCard = true)
+
+        assertThat(cards.findErrorCard()).isNotNull
+    }
+
     private fun DashboardCards.findPostCard() = this.cards.find { it is PostCard } as? PostCard
+
+    private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
     private fun createPostCards() = listOf(
             PostCardWithPostItems(
@@ -65,12 +84,14 @@ class DashboardCardsBuilderTest : BaseUnitTest() {
 
     private fun buildDashboardCards(
         isMySiteDashboardPhase2FeatureConfigEnabled: Boolean = true,
-        hasPosts: Boolean = false
+        hasPosts: Boolean = false,
+        showErrorCard: Boolean = false
     ): DashboardCards {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         doAnswer { if (hasPosts) createPostCards() else emptyList() }.whenever(postCardBuilder).build(any())
         return dashboardCardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
+                        showErrorCard = showErrorCard,
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )
