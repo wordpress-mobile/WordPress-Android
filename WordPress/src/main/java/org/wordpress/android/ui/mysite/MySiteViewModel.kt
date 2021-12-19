@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -298,13 +298,13 @@ class MySiteViewModel @Inject constructor(
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
-        val indexOfPostsCard = cards.indexOfFirst { it is PostCard }
-        return if (indexOfPostsCard == -1) {
+        val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
+        return if (indexOfDashboardCards == -1) {
             cards + dynamicCards + siteItems
         } else {
             mutableListOf<MySiteCardAndItem>().apply {
                 addAll(cards)
-                addAll(indexOfPostsCard, dynamicCards)
+                addAll(indexOfDashboardCards, dynamicCards)
                 addAll(siteItems)
             }.toList()
         }

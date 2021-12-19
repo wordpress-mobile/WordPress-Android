@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
@@ -1408,14 +1407,14 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`() {
+    fun `given dashboard cards exist, when cardAndItems list is ordered, then dynamic cards precede dashboard cards`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
 
-        val postCardIndex = getLastItems().indexOfFirst { it is PostCard }
+        val dashboardCardsIndex = getLastItems().indexOfFirst { it is DashboardCards }
         val dynamicCardIndex = getLastItems().indexOfFirst { it is DynamicCard }
 
-        assertThat(dynamicCardIndex).isLessThan(postCardIndex)
+        assertThat(dynamicCardIndex).isLessThan(dashboardCardsIndex)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
