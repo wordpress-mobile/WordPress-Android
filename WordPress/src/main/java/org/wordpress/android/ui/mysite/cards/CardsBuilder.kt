@@ -51,7 +51,7 @@ class CardsBuilder @Inject constructor(
             }
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            cards.addAll(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
+            cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         }
         return cards
     }

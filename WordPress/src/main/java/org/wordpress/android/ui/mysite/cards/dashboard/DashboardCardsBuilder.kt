@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
@@ -12,11 +13,11 @@ class DashboardCardsBuilder @Inject constructor(
 ) {
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
-    ): List<MySiteCardAndItem> = mutableListOf<MySiteCardAndItem>().apply {
-        val cards = mutableListOf<MySiteCardAndItem>()
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            cards.addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
-        }
-        return cards
-    }
+    ): DashboardCards = DashboardCards(
+            cards = mutableListOf<DashboardCard>().apply {
+                if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                    addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
+                }
+            }
+    )
 }

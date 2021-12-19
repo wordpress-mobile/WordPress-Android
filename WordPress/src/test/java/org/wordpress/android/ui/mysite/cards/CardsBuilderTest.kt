@@ -19,9 +19,10 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -190,7 +191,9 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
-    private fun List<MySiteCardAndItem>.findPostCard() = this.find { it is PostCard } as PostCard?
+    private fun List<MySiteCardAndItem>.findPostCard() = (this.find { it is DashboardCards } as? DashboardCards)
+            ?.cards
+            ?.find { it is PostCard } as? PostCard
 
     private fun buildCards(
         activeTask: QuickStartTask? = null,
@@ -254,7 +257,7 @@ class CardsBuilderTest {
 
     private fun setUpDashboardCardsBuilder() {
         doAnswer {
-            initPostCard()
+            initDashboardCards()
         }.whenever(dashboardCardsBuilder).build(any())
     }
 
@@ -317,6 +320,8 @@ class CardsBuilderTest {
                     )
             )
     )
+
+    private fun initDashboardCards() = DashboardCards(cards = initPostCard())
 
     private fun initPostCard() = listOf(
             PostCardWithPostItems(

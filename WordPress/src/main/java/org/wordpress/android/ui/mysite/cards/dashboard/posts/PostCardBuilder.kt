@@ -1,14 +1,18 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import org.wordpress.android.R
+import org.wordpress.android.R.drawable
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -37,12 +41,12 @@ class PostCardBuilder @Inject constructor(
 
     private fun createFirstPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithoutPostItems(
-                    postCardType = PostCardType.CREATE_FIRST,
-                    title = UiStringRes(R.string.my_site_create_first_post_title),
-                    excerpt = UiStringRes(R.string.my_site_create_first_post_excerpt),
-                    imageRes = R.drawable.img_write_212dp,
+                    postCardType = CREATE_FIRST,
+                    title = UiStringRes(string.my_site_create_first_post_title),
+                    excerpt = UiStringRes(string.my_site_create_first_post_excerpt),
+                    imageRes = drawable.img_write_212dp,
                     footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_create_post),
+                            label = UiStringRes(string.my_site_post_card_link_create_post),
                             onClick = onFooterLinkClick
                     )
             )
@@ -61,11 +65,11 @@ class PostCardBuilder @Inject constructor(
 
     private fun List<PostCardModel>.createDraftPostsCard(params: PostCardBuilderParams) =
             PostCardWithPostItems(
-                    postCardType = PostCardType.DRAFT,
-                    title = UiStringRes(R.string.my_site_post_card_draft_title),
+                    postCardType = DRAFT,
+                    title = UiStringRes(string.my_site_post_card_draft_title),
                     postItems = mapToDraftPostItems(params.onPostItemClick),
                     footerLink = FooterLink(
-                            label = UiStringRes(R.string.my_site_post_card_link_go_to_drafts),
+                            label = UiStringRes(string.my_site_post_card_link_go_to_drafts),
                             onClick = params.onFooterLinkClick
                     )
             )
