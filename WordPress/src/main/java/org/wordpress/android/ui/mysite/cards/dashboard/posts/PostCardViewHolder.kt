@@ -5,10 +5,10 @@ import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.MySitePostCardWithPostItemsBinding
 import org.wordpress.android.databinding.MySitePostCardWithoutPostItemsBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageManager
@@ -16,8 +16,8 @@ import org.wordpress.android.util.viewBinding
 
 sealed class PostCardViewHolder<T : ViewBinding>(
     override val binding: T
-) : MySiteCardAndItemViewHolder<T>(binding) {
-    abstract fun bind(card: PostCard)
+) : DashboardCardViewHolder<T>(binding) {
+    abstract fun bind(card: DashboardCard)
 
     class PostCardWithoutPostItemsViewHolder(
         parent: ViewGroup,
@@ -26,7 +26,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
     ) : PostCardViewHolder<MySitePostCardWithoutPostItemsBinding>(
             parent.viewBinding(MySitePostCardWithoutPostItemsBinding::inflate)
     ) {
-        override fun bind(card: PostCard) = with(binding) {
+        override fun bind(card: DashboardCard) = with(binding) {
             val postCard = card as PostCardWithoutPostItems
             uiHelpers.setTextOrHide(title, postCard.title)
             uiHelpers.setTextOrHide(excerpt, postCard.excerpt)
@@ -49,7 +49,7 @@ sealed class PostCardViewHolder<T : ViewBinding>(
             binding.postItems.adapter = PostItemsAdapter(imageManager, uiHelpers)
         }
 
-        override fun bind(card: PostCard) = with(binding) {
+        override fun bind(card: DashboardCard) = with(binding) {
             val postCard = card as PostCardWithPostItems
             mySiteToolbar.update(postCard.title)
             (postItems.adapter as PostItemsAdapter).update(postCard.postItems)

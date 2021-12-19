@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -12,6 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
@@ -52,7 +54,7 @@ class MySiteAdapter(
             )
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
-            // TODO: ashiagr add dashboard cards
+            MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> DashboardCardsViewHolder(parent, imageManager, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -66,7 +68,7 @@ class MySiteAdapter(
             is QuickStartDynamicCardViewHolder -> holder.bind(items[position] as QuickStartDynamicCard)
             is MySiteCategoryItemViewHolder -> holder.bind(items[position] as CategoryHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
-            // TODO: ashiagr add dashboard cards view holder
+            is DashboardCardsViewHolder -> holder.bind(items[position] as DashboardCards)
         }
     }
 
