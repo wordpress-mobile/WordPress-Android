@@ -52,4 +52,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val scanAvailable: Boolean = false,
         val onClick: (ListItemAction) -> Unit
     ) : MySiteCardAndItemBuilderParams()
+
+    data class DashboardCardsBuilderParams(
+        val postCardBuilderParams: PostCardBuilderParams
+    ) : MySiteCardAndItemBuilderParams()
 }

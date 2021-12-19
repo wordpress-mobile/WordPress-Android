@@ -50,8 +50,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -1501,10 +1501,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
         }.whenever(cardsBuilder).build(
                 domainRegistrationCardBuilderParams = any(),
-                postCardBuilderParams = any(),
                 quickActionsCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
-                siteInfoCardBuilderParams = any()
+                siteInfoCardBuilderParams = any(),
+                dashboardCardsBuilderParams = any()
         )
     }
 
@@ -1606,9 +1606,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
-        val params = (mockInvocation.arguments.filterIsInstance<PostCardBuilderParams>()).first()
-        onPostItemClick = params.onPostItemClick
-        onPostCardFooterLinkClick = params.onFooterLinkClick
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onPostItemClick = params.postCardBuilderParams.onPostItemClick
+        onPostCardFooterLinkClick = params.postCardBuilderParams.onFooterLinkClick
         return PostCardWithPostItems(
                 postCardType = PostCardType.DRAFT,
                 title = UiStringRes(0),

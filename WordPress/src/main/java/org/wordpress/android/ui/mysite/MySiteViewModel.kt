@@ -27,6 +27,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -236,11 +237,6 @@ class MySiteViewModel @Inject constructor(
                         isDomainCreditAvailable = isDomainCreditAvailable,
                         domainRegistrationClick = this::domainRegistrationClick
                 ),
-                PostCardBuilderParams(
-                        posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                        onPostItemClick = this::onPostItemClick,
-                        onFooterLinkClick = this::onPostCardFooterLinkClick
-                ),
                 QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
@@ -262,6 +258,13 @@ class MySiteViewModel @Inject constructor(
                         urlClick = this::urlClick,
                         switchSiteClick = this::switchSiteClick,
                         activeTask = activeTask
+                ),
+                DashboardCardsBuilderParams(
+                        postCardBuilderParams = PostCardBuilderParams(
+                                posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                                onPostItemClick = this::onPostItemClick,
+                                onFooterLinkClick = this::onPostCardFooterLinkClick
+                        )
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
