@@ -771,6 +771,21 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <!--My Site Error Card-->
+    <style name="MySiteErrorCardTitle" parent="MySiteCardItemTitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="MySiteErrorCardSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
     <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
 

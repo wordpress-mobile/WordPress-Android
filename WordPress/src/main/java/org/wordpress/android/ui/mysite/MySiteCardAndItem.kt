@@ -88,6 +88,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             sealed class DashboardCard(
                 open val dashboardCardType: DashboardCardType
             ) {
+                data class ErrorCard(
+                    override val dashboardCardType: DashboardCardType = DashboardCardType.ERROR_CARD
+                ) : DashboardCard(dashboardCardType)
+
                 sealed class PostCard(
                     override val dashboardCardType: DashboardCardType,
                     open val footerLink: FooterLink

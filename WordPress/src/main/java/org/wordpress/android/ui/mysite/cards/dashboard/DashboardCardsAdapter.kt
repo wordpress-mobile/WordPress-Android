@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 
 import org.wordpress.android.ui.utils.UiHelpers
@@ -25,6 +26,7 @@ class DashboardCardsAdapter(
                 PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
+            DashboardCardType.ERROR_CARD.ordinal -> ErrorCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -33,6 +35,7 @@ class DashboardCardsAdapter(
 
     override fun onBindViewHolder(holder: DashboardCardViewHolder<*>, position: Int) {
         when (holder) {
+            is ErrorCardViewHolder -> holder.bind(items[position])
             is PostCardViewHolder<*> -> holder.bind(items[position])
         }
     }
