@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.DashboardCardPropertyType.POST
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type.POST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_NEXT
@@ -13,11 +13,11 @@ import javax.inject.Inject
 class CardsTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    enum class DashboardCardPropertyType(val label: String) {
+    enum class Type(val label: String) {
         POST("post")
     }
 
-    enum class DashboardCardPropertySubtype(val label: String) {
+    enum class Subtype(val label: String) {
         CREATE_FIRST("create_first"),
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
@@ -29,8 +29,8 @@ class CardsTracker @Inject constructor(
     }
 
     private fun trackDashboardCardFooterLinkClicked(
-        type: DashboardCardPropertyType,
-        subtype: DashboardCardPropertySubtype
+        type: Type,
+        subtype: Subtype
     ) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -41,12 +41,12 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun PostCardType.toSubtypeValue(): DashboardCardPropertySubtype {
+    private fun PostCardType.toSubtypeValue(): Subtype {
         return when (this) {
-            CREATE_FIRST -> DashboardCardPropertySubtype.CREATE_FIRST
-            CREATE_NEXT -> DashboardCardPropertySubtype.CREATE_NEXT
-            DRAFT -> DashboardCardPropertySubtype.DRAFT
-            SCHEDULED -> DashboardCardPropertySubtype.SCHEDULED
+            CREATE_FIRST -> Subtype.CREATE_FIRST
+            CREATE_NEXT -> Subtype.CREATE_NEXT
+            DRAFT -> Subtype.DRAFT
+            SCHEDULED -> Subtype.SCHEDULED
         }
     }
 
