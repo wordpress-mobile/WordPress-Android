@@ -71,12 +71,23 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly aztecVersion
+        }
     }
-    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
-    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
 
     implementation ("$gradle.ext.wputilsBinaryPath") {
         version {
