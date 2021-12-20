@@ -1023,7 +1023,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
 
-        verify(cardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
+        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.DRAFT)
     }
 
     @Test
@@ -1044,7 +1044,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
-        verify(cardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
     }
 
     /* POST CARD - POST ITEM */

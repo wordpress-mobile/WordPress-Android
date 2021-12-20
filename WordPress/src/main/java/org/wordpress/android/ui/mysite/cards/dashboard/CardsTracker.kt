@@ -19,11 +19,11 @@ class CardsTracker @Inject constructor(
         SCHEDULED("scheduled")
     }
 
-    fun trackDashboardPostCardFooterLinkClicked(postCardType: PostCardType) {
-        trackDashboardCardFooterLinkClicked(Type.POST, postCardType.toSubtypeValue())
+    fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
+        trackCardFooterLinkClicked(Type.POST, postCardType.toSubtypeValue())
     }
 
-    private fun trackDashboardCardFooterLinkClicked(
+    private fun trackCardFooterLinkClicked(
         type: Type,
         subtype: Subtype
     ) {

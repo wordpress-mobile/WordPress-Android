@@ -27,28 +27,28 @@ class CardsTrackerTest {
 
     @Test
     fun `when post create first footer link is clicked, then post create first event is tracked`() {
-        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_FIRST)
+        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.CREATE_FIRST)
 
         verifyFooterLinkClickedTracked(Type.POST, Subtype.CREATE_FIRST)
     }
 
     @Test
     fun `when post create next footer link is clicked, then post create next event is tracked`() {
-        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
+        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
 
         verifyFooterLinkClickedTracked(Type.POST, Subtype.CREATE_NEXT)
     }
 
     @Test
     fun `when post draft footer link is clicked, then post draft event is tracked`() {
-        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
+        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.DRAFT)
 
         verifyFooterLinkClickedTracked(Type.POST, Subtype.DRAFT)
     }
 
     @Test
     fun `when post scheduled footer link is clicked, then post scheduled event is tracked`() {
-        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+        cardsTracker.trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
 
         verifyFooterLinkClickedTracked(Type.POST, Subtype.SCHEDULED)
     }

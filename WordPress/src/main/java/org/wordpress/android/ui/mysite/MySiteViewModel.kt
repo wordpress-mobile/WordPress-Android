@@ -733,7 +733,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            cardsTracker.trackDashboardPostCardFooterLinkClicked(postCardType)
+            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
