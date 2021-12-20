@@ -81,6 +81,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -132,6 +133,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
+    @Mock lateinit var siteItemsTracker: SiteItemsTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -274,7 +276,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
-                cardsTracker
+                cardsTracker,
+                siteItemsTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1191,6 +1194,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `when site item is clicked, then event is tracked`() = test {
+        invokeItemClickAction(ListItemAction.POSTS)
+
+        verify(siteItemsTracker).trackSiteItemClicked(ListItemAction.POSTS)
     }
 
     /* ITEM VISIBILITY */
