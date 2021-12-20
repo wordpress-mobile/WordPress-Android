@@ -77,7 +77,12 @@ class MySiteSourceManager @Inject constructor(
 
     fun isRefreshing(): Boolean {
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            val source = if (selectedSiteRepository.hasSelectedSite()) {
+                allSupportedMySiteSources
+            } else {
+                siteIndependentSources
+            }
+            source.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
                     return true
                 }
