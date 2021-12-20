@@ -1037,9 +1037,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                         .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
             }
 
-    // todo: annmarie
     @Test
-    fun `given scheduled post card, when footer link is clicked, then event is tracked`() = test {
+    fun `given post card, when footer link is clicked, then event is tracked`() = test {
         initSelectedSite()
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
