@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-23 15:54:07+0000
+Translation-Revision-Date: 2021-12-07 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">클립보드에서</string>
+    <string name="gutenberg_native_featured_image">특성 이미지</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">클립보드에서 URL 복사, %s</string>
+    <string name="me_btn_about">워드프레스 소개</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">예약된 글로 이동</string>
+    <string name="my_site_post_card_link_go_to_drafts">임시글로 이동</string>
+    <string name="my_site_post_card_link_create_post">글 작성</string>
+    <string name="my_site_create_next_post_excerpt">정기적으로 글을 작성하면 잠재 고객 유치에 도움이 됩니다!</string>
+    <string name="my_site_create_next_post_title">다음 글 작성</string>
+    <string name="menu_visual_mode_switched_notice">비주얼 모드로 전환됨</string>
+    <string name="menu_html_mode_switched_notice">HTML 모드로 전환됨</string>
+    <string name="post_link_copied_to_clipboard">링크가 클립보드에 복사됨</string>
+    <string name="comment_author_badge">글쓴이</string>
+    <string name="button_copy_link">링크 복사</string>
     <string name="domains_paid_plan_add_your_domain_caption">방문자가 사이트를 쉽게 찾을 수 있도록 사용자 정의 도메인 추가하기</string>
     <string name="domains_paid_plan_add_your_domain_title">도메인 추가</string>
     <string name="my_site_create_first_post_excerpt">글은 시간 역순으로 블로그 페이지에 표시됩니다. 전 세계와 아이디어 공유할 때가 되었습니다!</string>

@@ -248,6 +248,10 @@
         </item>
     </style>
 
+    <style name="WordPress.BottomSheetDialogTheme.NonTranslucent" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
     <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">
             @style/WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay

@@ -1,0 +1,7 @@
+18.8:
+- Ontvang link suggesties in plaats van automatisch ingevulde klembord links voor knop- en afbeeldingsblokken.
+- Klik op "Link kopiëren" om gepubliceerde bericht links te delen.
+- Inserter menu tabs komen overeen met de taal van je apparaat.
+- Apparaat media-opties worden geopend bij het maken van een galerijblok.
+- Lettertypegrootte bug en RTL visuele problemen zijn opgelost.
+- Bewerk de insluitblok link in Blok instellingen.

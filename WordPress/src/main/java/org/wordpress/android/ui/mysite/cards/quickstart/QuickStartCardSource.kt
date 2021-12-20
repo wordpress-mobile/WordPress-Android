@@ -14,9 +14,7 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class QuickStartCardSource @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val quickStartStore: QuickStartStore,
