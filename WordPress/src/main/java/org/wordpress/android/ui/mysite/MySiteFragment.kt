@@ -177,7 +177,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (NetworkUtils.checkConnection(requireActivity())) {
-                viewModel.refresh()
+                viewModel.refresh(isPullToRefresh = true)
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
