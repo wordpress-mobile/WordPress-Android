@@ -54,6 +54,7 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class DashboardCardsBuilderParams(
+        val showErrorCard: Boolean = false,
         val postCardBuilderParams: PostCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 }
