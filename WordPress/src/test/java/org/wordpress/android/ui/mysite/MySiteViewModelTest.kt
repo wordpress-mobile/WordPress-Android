@@ -1018,15 +1018,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given draft post card, when footer link is clicked, then event is tracked`() = test {
-        initSelectedSite()
-
-        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
-
-        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.DRAFT)
-    }
-
-    @Test
     fun `given scheduled post card, when footer link is clicked, then scheduled posts screen is opened`() =
             test {
                 initSelectedSite()
