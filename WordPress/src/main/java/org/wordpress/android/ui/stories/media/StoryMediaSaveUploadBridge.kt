@@ -190,7 +190,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 override fun showVideoDurationLimitWarning(fileName: String) {
                     ToastUtils.showToast(
                             appContext,
-                            string.error_media_video_size_exceeds_limit,
+                            string.error_media_video_duration_exceeds_limit,
                             LONG
                     )
                 }

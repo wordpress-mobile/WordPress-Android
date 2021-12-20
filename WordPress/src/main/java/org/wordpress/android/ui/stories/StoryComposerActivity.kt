@@ -462,7 +462,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showVideoDurationLimitWarning(fileName: String) {
-        ToastUtils.showToast(this, string.error_media_video_size_exceeds_limit, LONG)
+        ToastUtils.showToast(this, string.error_media_video_duration_exceeds_limit, LONG)
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {

@@ -457,7 +457,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             if (mMediaUtilsWrapper.isAllowedUploadVideoDuration(this, videoUri)) {
                 fetchMediaAndDoNext(videoUri, requestCode, mimeType);
             } else {
-                ToastUtils.showToast(this, R.string.error_media_video_size_exceeds_limit, LONG);
+                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
             }
         } else {
             fetchMediaAndDoNext(videoUri, requestCode, mimeType);
@@ -481,7 +481,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             if (mMediaUtilsWrapper.isAllowedUploadVideoDuration(this, uri)) {
                 queueFileForUpload(uri, getContentResolver().getType(uri));
             } else {
-                ToastUtils.showToast(this, R.string.error_media_video_size_exceeds_limit, LONG);
+                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
             }
         } else {
             queueFileForUpload(uri, getContentResolver().getType(uri));
