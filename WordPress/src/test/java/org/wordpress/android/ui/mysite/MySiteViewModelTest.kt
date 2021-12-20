@@ -72,7 +72,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -131,7 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
-    @Mock lateinit var dashboardCardsTracker: DashboardCardsTracker
+    @Mock lateinit var cardsTracker: CardsTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -274,7 +274,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
-                dashboardCardsTracker
+                cardsTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1023,7 +1023,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.DRAFT)
 
-        verify(dashboardCardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
+        verify(cardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
     }
 
     @Test
@@ -1044,7 +1044,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
-        verify(dashboardCardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+        verify(cardsTracker).trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
     }
 
     /* POST CARD - POST ITEM */

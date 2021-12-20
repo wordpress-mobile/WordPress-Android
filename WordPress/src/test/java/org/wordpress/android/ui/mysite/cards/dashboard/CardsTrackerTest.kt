@@ -7,8 +7,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsTracker.DashboardCardPropertySubtype
-import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsTracker.DashboardCardPropertyType
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.DashboardCardPropertySubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.DashboardCardPropertyType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -16,39 +16,39 @@ private const val TYPE = "type"
 private const val SUBTYPE = "subtype"
 
 @RunWith(MockitoJUnitRunner::class)
-class DashboardCardsTrackerTest {
+class CardsTrackerTest {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    private lateinit var dashboardCardsTracker: DashboardCardsTracker
+    private lateinit var cardsTracker: CardsTracker
 
     @Before
     fun setUp() {
-        dashboardCardsTracker = DashboardCardsTracker(analyticsTracker)
+        cardsTracker = CardsTracker(analyticsTracker)
     }
 
     @Test
     fun `when post create first footer link is clicked, then post create first event is tracked`() {
-        dashboardCardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_FIRST)
+        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_FIRST)
 
         verifyFooterLinkClickedTracked(DashboardCardPropertyType.POST, DashboardCardPropertySubtype.CREATE_FIRST)
     }
 
     @Test
     fun `when post create next footer link is clicked, then post create next event is tracked`() {
-        dashboardCardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
+        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
 
         verifyFooterLinkClickedTracked(DashboardCardPropertyType.POST, DashboardCardPropertySubtype.CREATE_NEXT)
     }
 
     @Test
     fun `when post draft footer link is clicked, then post draft event is tracked`() {
-        dashboardCardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
+        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.DRAFT)
 
         verifyFooterLinkClickedTracked(DashboardCardPropertyType.POST, DashboardCardPropertySubtype.DRAFT)
     }
 
     @Test
     fun `when post scheduled footer link is clicked, then post scheduled event is tracked`() {
-        dashboardCardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+        cardsTracker.trackDashboardPostCardFooterLinkClicked(PostCardType.SCHEDULED)
 
         verifyFooterLinkClickedTracked(DashboardCardPropertyType.POST, DashboardCardPropertySubtype.SCHEDULED)
     }

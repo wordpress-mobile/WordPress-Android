@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsTracker.DashboardCardPropertyType.POST
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.DashboardCardPropertyType.POST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_NEXT
@@ -10,7 +10,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.SCHEDU
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-class DashboardCardsTracker @Inject constructor(
+class CardsTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     enum class DashboardCardPropertyType(val label: String) {
