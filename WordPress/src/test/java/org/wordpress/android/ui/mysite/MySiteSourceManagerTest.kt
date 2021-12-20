@@ -56,6 +56,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     private lateinit var allRefreshedMySiteSourcesExceptCardsSource: List<MySiteSource<*>>
     private lateinit var siteIndependentMySiteSources: List<MySiteSource<*>>
     private lateinit var selectRefreshedMySiteSources: List<MySiteSource<*>>
+    private lateinit var siteDependentMySiteSources: List<MySiteSource<*>>
 
     @InternalCoroutinesApi
     @Before
@@ -63,6 +64,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         selectedSite.value = null
         whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
                 analyticsTrackerWrapper,
@@ -108,6 +110,8 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 quickStartCardSource,
                 currentAvatarSource
         )
+
+        siteDependentMySiteSources = allRefreshedMySiteSources.filterNot(SiteIndependentSource::class.java::isInstance)
     }
 
     /* ON REFRESH */
@@ -157,12 +161,45 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given without site local id, when build, then all sources except cards source are built`() {
+    fun `given without site local id, when build, then all site independent sources are built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         val coroutineScope = testScope()
 
         mySiteSourceManager.build(coroutineScope, null)
 
         siteIndependentMySiteSources.forEach { verify(it as SiteIndependentSource).build(coroutineScope) }
+    }
+
+    @Test
+    fun `given without site local id, when build, then site dependent sources are not built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        val coroutineScope = testScope()
+
+        mySiteSourceManager.build(coroutineScope, null)
+
+        siteDependentMySiteSources.forEach { verify(it, times(0)).build(coroutineScope, SITE_LOCAL_ID) }
+    }
+
+    @Test
+    fun `given without site local id, when refresh, then site independent sources are built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        val coroutineScope = testScope()
+        mySiteSourceManager.build(coroutineScope, null)
+
+        mySiteSourceManager.refresh()
+
+        siteIndependentMySiteSources.forEach { verify(it as SiteIndependentSource).build(coroutineScope) }
+    }
+
+    @Test
+    fun `given without site local id, when refresh, then site dependent sources are not built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        val coroutineScope = testScope()
+        mySiteSourceManager.build(coroutineScope, null)
+
+        mySiteSourceManager.refresh()
+
+        siteDependentMySiteSources.forEach { verify(it, times(0)).build(coroutineScope, SITE_LOCAL_ID) }
     }
 
     @Test

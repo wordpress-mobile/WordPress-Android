@@ -116,6 +116,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            swipeToRefreshHelper.isRefreshing = true
         }
     }
 
@@ -559,9 +560,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun hideRefreshIndicatorIfNeeded() {
-        if (swipeToRefreshHelper.isRefreshing) {
-            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
-        }
+        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
     }
 
     companion object {

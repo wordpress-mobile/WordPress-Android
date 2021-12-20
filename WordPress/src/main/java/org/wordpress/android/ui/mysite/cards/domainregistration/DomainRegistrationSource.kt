@@ -34,7 +34,7 @@ class DomainRegistrationSource @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper
 ) : MySiteRefreshSource<DomainCreditAvailable> {
-    override val refresh = MutableLiveData(false)
+    override val refresh = MutableLiveData(true)
 
     private val continuations = mutableMapOf<Int, CancellableContinuation<OnPlansFetched>?>()
 

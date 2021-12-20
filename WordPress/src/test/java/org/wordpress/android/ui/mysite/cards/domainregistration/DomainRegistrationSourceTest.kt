@@ -41,6 +41,8 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
+        site.id = siteLocalId
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         source = DomainRegistrationSource(
                 TEST_DISPATCHER,
                 dispatcher,
@@ -48,8 +50,6 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
                 appLogWrapper,
                 siteUtils
         )
-        site.id = siteLocalId
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         result = mutableListOf()
         isRefreshing = mutableListOf()
     }
@@ -102,12 +102,12 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when build is invoked, then refresh is false`() = test {
+    fun `when build is invoked, then refresh is true`() = test {
         source.refresh.observeForever { isRefreshing.add(it) }
 
         source.build(testScope(), siteLocalId)
 
-        assertThat(isRefreshing.last()).isFalse
+        assertThat(isRefreshing.first()).isTrue
     }
 
     @Test
