@@ -79,7 +79,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun setUp() = test {
         site = SiteModel()
         site.id = siteLocalId
-        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,

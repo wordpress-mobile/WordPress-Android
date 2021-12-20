@@ -136,7 +136,6 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     ) {
         whenever(siteModel.id).thenReturn(siteLocalId)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(if (hasSelectedSite) siteModel else null)
-        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(hasSelectedSite)
         if (hasSelectedSite) {
             val pinnedItem = GROW_QUICK_START
             val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)

@@ -153,7 +153,6 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         scanPurchased: Boolean = false,
         backupPurchased: Boolean = false
     ) {
-        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(hasSelectedSite)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(if (hasSelectedSite) site else null)
         if (hasSelectedSite) {
             whenever(site.siteId).thenReturn(siteRemoteId)

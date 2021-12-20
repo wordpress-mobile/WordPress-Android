@@ -43,7 +43,6 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
         source = DomainRegistrationSource(
                 TEST_DISPATCHER,
                 dispatcher,

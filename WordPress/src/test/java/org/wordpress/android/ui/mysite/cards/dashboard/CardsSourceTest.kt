@@ -87,7 +87,6 @@ class CardsSourceTest : BaseUnitTest() {
     private fun setUpMocks() {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-        whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
     }
 
     /* GET DATA */
