@@ -2136,6 +2136,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "about_screen_dismissed";
             case ABOUT_SCREEN_BUTTON_TAPPED:
                 return "about_screen_button_tapped";
+            case MY_SITE_PULL_TO_REFRESH:
+                return "my_site_pull_to_refresh";
         }
         return null;
     }

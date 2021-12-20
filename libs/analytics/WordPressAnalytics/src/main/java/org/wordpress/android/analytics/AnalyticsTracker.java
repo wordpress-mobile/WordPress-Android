@@ -817,7 +817,8 @@ public final class AnalyticsTracker {
         EDITOR_BLOCK_INSERTED,
         ABOUT_SCREEN_SHOWN,
         ABOUT_SCREEN_DISMISSED,
-        ABOUT_SCREEN_BUTTON_TAPPED
+        ABOUT_SCREEN_BUTTON_TAPPED,
+        MY_SITE_PULL_TO_REFRESH
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
