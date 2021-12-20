@@ -474,7 +474,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         );
     }
 
-    private void checkRecordedVideoSizeBeforeUploadAndTrack() {
+    private void checkRecordedVideoDurationBeforeUploadAndTrack() {
         Uri uri = MediaUtils.getLastRecordedVideoUri(this);
 
         if (mSite.getHasFreePlan()) {
@@ -520,7 +520,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    checkRecordedVideoSizeBeforeUploadAndTrack();
+                    checkRecordedVideoDurationBeforeUploadAndTrack();
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
