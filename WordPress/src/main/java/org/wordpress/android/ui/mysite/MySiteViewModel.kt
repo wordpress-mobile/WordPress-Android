@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -106,7 +107,8 @@ class MySiteViewModel @Inject constructor(
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
-    private val mySiteSourceManager: MySiteSourceManager
+    private val mySiteSourceManager: MySiteSourceManager,
+    private val cardsTracker: CardsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -731,6 +733,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
+            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
