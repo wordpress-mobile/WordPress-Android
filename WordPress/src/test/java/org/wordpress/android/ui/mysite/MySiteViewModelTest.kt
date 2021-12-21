@@ -52,6 +52,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -179,7 +180,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
-    private var onPostItemClick: ((postId: Int) -> Unit)? = null
+    private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1043,13 +1044,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* POST CARD - POST ITEM */
 
     @Test
-    fun `when post item is clicked, then post is opened for edit`() =
+    fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
             test {
                 initSelectedSite()
 
-                requireNotNull(onPostItemClick).invoke(postId)
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditPost(site, postId))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditDraftPost(site, postId))
+            }
+
+    @Test
+    fun `given scheduled post card, when post item is clicked, then post is opened for edit scheduled`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
     /* ITEM CLICK */
@@ -1628,7 +1639,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 excerpt = UiStringRes(0),
                                 featuredImageUrl = "",
                                 onClick = ListItemInteraction.create {
-                                    (onPostItemClick as (Int) -> Unit).invoke(postId)
+                                    (onPostItemClick as (PostItemClickParams) -> Unit).invoke(
+                                            PostItemClickParams(PostCardType.DRAFT, postId)
+                                    )
                                 }
                         )
                 ),
