@@ -9,15 +9,14 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.Qui
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 
 sealed class MySiteCardAndItemBuilderParams {
-    data class DomainRegistrationCardBuilderParams(
-        val isDomainCreditAvailable: Boolean,
-        val domainRegistrationClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
-
-    data class PostCardBuilderParams(
-        val posts: PostsCardModel?,
-        val onPostItemClick: (postId: Int) -> Unit,
-        val onFooterLinkClick: (postCardType: PostCardType) -> Unit
+    data class SiteInfoCardBuilderParams(
+        val site: SiteModel,
+        val showSiteIconProgressBar: Boolean,
+        val titleClick: () -> Unit,
+        val iconClick: () -> Unit,
+        val urlClick: () -> Unit,
+        val switchSiteClick: () -> Unit,
+        val activeTask: QuickStartTask?
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickActionsCardBuilderParams(
@@ -29,20 +28,26 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionMediaClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
+    data class DomainRegistrationCardBuilderParams(
+        val isDomainCreditAvailable: Boolean,
+        val domainRegistrationClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
         val onQuickStartBlockRemoveMenuItemClick: () -> Unit,
         val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
-    data class SiteInfoCardBuilderParams(
-        val site: SiteModel,
-        val showSiteIconProgressBar: Boolean,
-        val titleClick: () -> Unit,
-        val iconClick: () -> Unit,
-        val urlClick: () -> Unit,
-        val switchSiteClick: () -> Unit,
-        val activeTask: QuickStartTask?
+    data class DashboardCardsBuilderParams(
+        val showErrorCard: Boolean = false,
+        val postCardBuilderParams: PostCardBuilderParams
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class PostCardBuilderParams(
+        val posts: PostsCardModel?,
+        val onPostItemClick: (postId: Int) -> Unit,
+        val onFooterLinkClick: (postCardType: PostCardType) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class SiteItemsBuilderParams(
@@ -51,10 +56,5 @@ sealed class MySiteCardAndItemBuilderParams {
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
         val onClick: (ListItemAction) -> Unit
-    ) : MySiteCardAndItemBuilderParams()
-
-    data class DashboardCardsBuilderParams(
-        val showErrorCard: Boolean = false,
-        val postCardBuilderParams: PostCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 }

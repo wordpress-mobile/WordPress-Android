@@ -233,9 +233,14 @@ class MySiteViewModel @Inject constructor(
         cards: CardsResult<List<CardModel>>?
     ): List<MySiteCardAndItem> {
         val cardsResult = cardsBuilder.build(
-                DomainRegistrationCardBuilderParams(
-                        isDomainCreditAvailable = isDomainCreditAvailable,
-                        domainRegistrationClick = this::domainRegistrationClick
+                SiteInfoCardBuilderParams(
+                        site = site,
+                        showSiteIconProgressBar = showSiteIconProgressBar,
+                        titleClick = this::titleClick,
+                        iconClick = this::iconClick,
+                        urlClick = this::urlClick,
+                        switchSiteClick = this::switchSiteClick,
+                        activeTask = activeTask
                 ),
                 QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -245,19 +250,14 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionPostsClick = this::quickActionPostsClick,
                         onQuickActionMediaClick = this::quickActionMediaClick
                 ),
+                DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = this::domainRegistrationClick
+                ),
                 QuickStartCardBuilderParams(
                         quickStartCategories = quickStartCategories,
                         onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
                         onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
-                ),
-                SiteInfoCardBuilderParams(
-                        site = site,
-                        showSiteIconProgressBar = showSiteIconProgressBar,
-                        titleClick = this::titleClick,
-                        iconClick = this::iconClick,
-                        urlClick = this::urlClick,
-                        switchSiteClick = this::switchSiteClick,
-                        activeTask = activeTask
                 ),
                 DashboardCardsBuilderParams(
                         postCardBuilderParams = PostCardBuilderParams(

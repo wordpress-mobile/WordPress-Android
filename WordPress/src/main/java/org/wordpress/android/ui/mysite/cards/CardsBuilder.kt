@@ -31,10 +31,10 @@ class CardsBuilder @Inject constructor(
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
     fun build(
-        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
-        quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
-        quickStartCardBuilderParams: QuickStartCardBuilderParams,
         siteInfoCardBuilderParams: SiteInfoCardBuilderParams,
+        quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
+        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
+        quickStartCardBuilderParams: QuickStartCardBuilderParams,
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
