@@ -1,13 +1,14 @@
 package org.wordpress.android.util
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.database.Cursor
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan
+import org.wordpress.android.util.AppLog.T
+import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -62,26 +63,19 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
             WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 
-    @SuppressLint("InlinedApi")
     fun isAllowedUploadVideoDuration(context: Context, uri: Uri): Boolean {
-        val mediaColumns = arrayOf(android.provider.MediaStore.Video.VideoColumns.DURATION)
-        val cursor: Cursor? = context.contentResolver.query(
-                uri,
-                mediaColumns,
-                null,
-                null,
-                null
-        )
+        val retriever = MediaMetadataRetriever()
 
-        cursor?.moveToFirst()
-        val durationColIndex: Int? = cursor?.getColumnIndexOrThrow(mediaColumns[0])
-        val fileDuration: Long = durationColIndex?.let { cursor.getLong(it) } ?: 0
-        cursor?.close()
+        try {
+            retriever.setDataSource(context, uri)
+        } catch (e: RuntimeException) {
+            AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
+        }
 
-        return TimeUnit.MILLISECONDS.toMinutes(fileDuration) <= DURATION_LIMIT_5_MIN
-    }
+        val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+        retriever.release()
 
-    companion object {
-        private const val DURATION_LIMIT_5_MIN = 5
+        val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)
+        return videoDuration <= allowedVideoDurationForFreeSites
     }
 }
