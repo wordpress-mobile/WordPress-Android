@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_rectangle_dotted_stroke_radius_4dp"
+        android:background="@drawable/bg_rectangle_dashed_stroke_radius_4dp"
         android:padding="@dimen/margin_extra_extra_large">
 
         <com.google.android.material.textview.MaterialTextView
