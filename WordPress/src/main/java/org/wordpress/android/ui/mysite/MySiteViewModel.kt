@@ -49,6 +49,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -108,7 +109,8 @@ class MySiteViewModel @Inject constructor(
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
-    private val cardsTracker: CardsTracker
+    private val cardsTracker: CardsTracker,
+    private val siteItemsTracker: SiteItemsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -321,6 +323,7 @@ class MySiteViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            siteItemsTracker.trackSiteItemClicked(action)
             val navigationAction = when (action) {
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
