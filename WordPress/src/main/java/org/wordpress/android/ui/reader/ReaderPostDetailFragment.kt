@@ -1253,6 +1253,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         conversationViewModel.onUserNavigateFromComments(it)
                     }
                 }
+                viewModel.onUserNavigateFromComments()
             }
         }
     }
