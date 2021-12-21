@@ -32,23 +32,12 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
-    @Ignore("until startup times are improved or idling resources are made more reliable")
     @Test
-    public void testSwitchToClassicAndPreview() {
+    public void testPreview() {
         String title = "Hello Espresso!";
 
         MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
-
-        mySitesPage.clickSettingsItem();
-
-        // Set to Gutenberg. Apparently the site is defaulting to Aztec still.
-        new SiteSettingsPage().setEditorToGutenberg();
-
-        // exit the Settings page
-        pressBack();
-
-        mySitesPage.clickBlogPostsItem();
 
         mySitesPage.startNewPost();
 
