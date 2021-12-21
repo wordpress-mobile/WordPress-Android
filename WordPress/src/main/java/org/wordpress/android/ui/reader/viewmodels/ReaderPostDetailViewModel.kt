@@ -903,6 +903,35 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onUserNavigateFromComments() {
+        performLocalRefresh()
+    }
+
+    private fun performLocalRefresh() {
+        // reload post from DB and update UI state
+        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
+        currentUiState?.let {
+            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                this.post = post
+                onUpdatePost(post)
+            }
+        }
+
+        // reload comments from DB and update comments snippet
+        launch(mainDispatcher) {
+            val comments: ReaderCommentList? = post?.let {
+                withContext(bgDispatcher) {
+                    ReaderCommentTable.getCommentsForPostSnippet(
+                            it,
+                            READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                    ) ?: ReaderCommentList()
+                }
+            }
+
+            _commentSnippetState.value = getUpdatedSnippetState(comments, UpdateResult.CHANGED)
+        }
+    }
+
     private fun getUpdatedSnippetState(comments: ReaderCommentList?, result: UpdateResult): CommentSnippetState {
         return if (comments == null) {
             lastRenderedRepliesData = null
