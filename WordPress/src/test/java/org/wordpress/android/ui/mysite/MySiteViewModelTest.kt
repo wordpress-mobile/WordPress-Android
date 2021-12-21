@@ -1500,10 +1500,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
         }.whenever(cardsBuilder).build(
-                domainRegistrationCardBuilderParams = any(),
-                quickActionsCardBuilderParams = any(),
-                quickStartCardBuilderParams = any(),
                 siteInfoCardBuilderParams = any(),
+                quickActionsCardBuilderParams = any(),
+                domainRegistrationCardBuilderParams = any(),
+                quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any()
         )
     }
