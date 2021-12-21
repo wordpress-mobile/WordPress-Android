@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import org.wordpress.android.R.dimen
 import org.wordpress.android.databinding.MySiteDashboardCardsBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -19,8 +18,8 @@ class CardsViewHolder(
 ) {
     init {
         with(binding.dashboardCards) {
-            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             adapter = CardsAdapter(imageManager, uiHelpers)
+            addItemDecoration(CardsDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large)))
         }
     }
 
