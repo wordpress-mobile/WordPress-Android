@@ -59,9 +59,11 @@ class AddLocalMediaToPostUseCase @Inject constructor(
 
         if (site.hasFreePlan) {
             uriList.map {
-                result = if (mediaUtilsWrapper.isVideo(it) &&
-                        mediaUtilsWrapper.isAllowedUploadVideoDuration(context, it)) {
-                    processMediaUri(
+                val videoDurationAllowed = mediaUtilsWrapper.isVideoFile(it) &&
+                        mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, it)
+
+                if (videoDurationAllowed) {
+                    result = processMediaUri(
                             uriList,
                             site,
                             freshlyTaken,
@@ -70,7 +72,6 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                             trackEvent)
                 } else {
                     editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
-                    false
                 }
             }
         } else {

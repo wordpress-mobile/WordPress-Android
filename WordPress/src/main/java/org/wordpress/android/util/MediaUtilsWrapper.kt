@@ -8,9 +8,9 @@ import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import org.wordpress.android.util.AppLog.T
-import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.IllegalArgumentException
 
 /**
  * Injectable wrapper around MediaUtils, WPMediaUtils, FluxC's MediaUtils & EditorMediaUtils.
@@ -63,19 +63,26 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
             WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 
-    fun isAllowedUploadVideoDuration(context: Context, uri: Uri): Boolean {
+    fun isVideoFile(mediaUri: Uri): Boolean =
+        isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
+
+    fun isAllowedVideoDurationForFreeSites(context: Context, uri: Uri): Boolean {
         val retriever = MediaMetadataRetriever()
 
         try {
             retriever.setDataSource(context, uri)
-        } catch (e: RuntimeException) {
+        } catch (e: IllegalArgumentException) {
             AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
         }
 
         val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
         retriever.release()
 
-        val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)
+        val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
         return videoDuration <= allowedVideoDurationForFreeSites
+    }
+
+    companion object {
+        private const val DURATION_5_MIN = 5L
     }
 }
