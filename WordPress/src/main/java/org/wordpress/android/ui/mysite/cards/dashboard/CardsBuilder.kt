@@ -8,7 +8,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
-class DashboardCardsBuilder @Inject constructor(
+class CardsBuilder @Inject constructor(
     private val postCardBuilder: PostCardBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {

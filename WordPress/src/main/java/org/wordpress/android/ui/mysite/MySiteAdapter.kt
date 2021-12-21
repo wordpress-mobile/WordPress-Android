@@ -13,7 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
-import org.wordpress.android.ui.mysite.cards.dashboard.DashboardCardsViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
@@ -54,7 +54,7 @@ class MySiteAdapter(
             )
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
-            MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> DashboardCardsViewHolder(parent, imageManager, uiHelpers)
+            MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(parent, imageManager, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -68,7 +68,7 @@ class MySiteAdapter(
             is QuickStartDynamicCardViewHolder -> holder.bind(items[position] as QuickStartDynamicCard)
             is MySiteCategoryItemViewHolder -> holder.bind(items[position] as CategoryHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
-            is DashboardCardsViewHolder -> holder.bind(items[position] as DashboardCards)
+            is CardsViewHolder -> holder.bind(items[position] as DashboardCards)
         }
     }
 

@@ -10,7 +10,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.viewBinding
 
-class DashboardCardsViewHolder(
+class CardsViewHolder(
     parentView: ViewGroup,
     imageManager: ImageManager,
     uiHelpers: UiHelpers
@@ -20,11 +20,11 @@ class DashboardCardsViewHolder(
     init {
         with(binding.dashboardCards) {
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            adapter = DashboardCardsAdapter(imageManager, uiHelpers)
+            adapter = CardsAdapter(imageManager, uiHelpers)
         }
     }
 
     fun bind(cards: DashboardCards) = with(binding) {
-        (dashboardCards.adapter as DashboardCardsAdapter).update(cards.cards)
+        (dashboardCards.adapter as CardsAdapter).update(cards.cards)
     }
 }

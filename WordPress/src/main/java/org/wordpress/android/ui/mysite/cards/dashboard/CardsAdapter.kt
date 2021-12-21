@@ -15,32 +15,32 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class DashboardCardsAdapter(
+class CardsAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
-) : Adapter<DashboardCardViewHolder<*>>() {
+) : Adapter<CardViewHolder<*>>() {
     private val items = mutableListOf<DashboardCard>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DashboardCardViewHolder<*> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
         return when (viewType) {
-            DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
+            CardType.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
-            DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
+            CardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
-            DashboardCardType.ERROR_CARD.ordinal -> ErrorCardViewHolder(parent)
+            CardType.ERROR_CARD.ordinal -> ErrorCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: DashboardCardViewHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: CardViewHolder<*>, position: Int) {
         when (holder) {
             is ErrorCardViewHolder -> holder.bind(items[position])
             is PostCardViewHolder<*> -> holder.bind(items[position])
         }
     }
 
-    override fun getItemViewType(position: Int) = items[position].dashboardCardType.ordinal
+    override fun getItemViewType(position: Int) = items[position].cardType.ordinal
 
     fun update(newItems: List<DashboardCard>) {
         val diffResult = DiffUtil.calculateDiff(DashboardCardsDiffUtil(items, newItems))
@@ -57,7 +57,7 @@ class DashboardCardsAdapter(
             val newItem = newList[newItemPosition]
             val oldItem = oldList[oldItemPosition]
 
-            return oldItem.dashboardCardType == newItem.dashboardCardType && when {
+            return oldItem.cardType == newItem.cardType && when {
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
                 oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
                 oldItem is ErrorCard && newItem is ErrorCard -> true

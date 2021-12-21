@@ -24,14 +24,14 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
-class DashboardCardsBuilderTest : BaseUnitTest() {
+class CardsBuilderTest : BaseUnitTest() {
     @Mock lateinit var postCardBuilder: PostCardBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    private lateinit var dashboardCardsBuilder: DashboardCardsBuilder
+    private lateinit var mCardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
-        dashboardCardsBuilder = DashboardCardsBuilder(
+        mCardsBuilder = CardsBuilder(
                 postCardBuilder = postCardBuilder,
                 mySiteDashboardPhase2FeatureConfig = mySiteDashboardPhase2FeatureConfig
         )
@@ -89,7 +89,7 @@ class DashboardCardsBuilderTest : BaseUnitTest() {
     ): DashboardCards {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         doAnswer { if (hasPosts) createPostCards() else emptyList() }.whenever(postCardBuilder).build(any())
-        return dashboardCardsBuilder.build(
+        return mCardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         showErrorCard = showErrorCard,
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
