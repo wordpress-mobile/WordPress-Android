@@ -3,6 +3,8 @@
 19.0
 -----
 
+* [**] Fix handling of Hebrew and Indonesian translations within the editor. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4397]
+
 
 18.9
 -----
