@@ -1,0 +1,7 @@
+18.8:
+- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.
+- Click "Copy Link" to share published post links.
+- Inserter menu tabs match your device's language.
+- Device media options open when creating a Gallery block.
+- Font size bug and RTL visual issues are resolved.
+- Edit Embed block link in Block Settings.

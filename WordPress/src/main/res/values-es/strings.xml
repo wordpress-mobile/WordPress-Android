@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-30 05:05:34+0000
+Translation-Revision-Date: 2021-12-07 07:34:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
@@ -1446,7 +1446,7 @@ Language: es
     <string name="quick_start_dialog_upload_icon_title">Elige un icono del sitio único</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de tu sitio %2$s para subir uno nuevo</string>
-    <string name="quick_start_dialog_publish_post_message">Guarda en borrador y publica tu una entrada.</string>
+    <string name="quick_start_dialog_publish_post_message">Guarda en borrador y publica una entrada.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorar planes</string>
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de marketing y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>

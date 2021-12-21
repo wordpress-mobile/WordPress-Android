@@ -106,7 +106,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val excerpt: UiString?,
                     val featuredImageUrl: String?,
                     val isTimeIconVisible: Boolean = false,
-                    val onClick: () -> Unit
+                    val onClick: ListItemInteraction
                 )
             }
 

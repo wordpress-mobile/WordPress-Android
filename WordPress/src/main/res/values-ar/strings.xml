@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-18 00:02:36+0000
+Translation-Revision-Date: 2021-12-05 04:18:37+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="my_site_post_card_link_go_to_drafts">الانتقال إلى المسودات</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">الانتقال إلى المقالات المجدولة</string>
+    <string name="me_btn_about">نبذة عن ووردبريس</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">نسخ الرابط URL من الحافظة، %s</string>
+    <string name="gutenberg_native_featured_image">الصورة البارزة</string>
+    <string name="gutenberg_native_from_clipboard">من الحافظة</string>
+    <string name="button_copy_link">نسخ الرابط</string>
+    <string name="comment_author_badge">الكاتب</string>
+    <string name="menu_html_mode_switched_notice">تم التبديل إلى وضع HTML</string>
+    <string name="menu_visual_mode_switched_notice">تم التبديل إلى الوضع المرئي</string>
+    <string name="post_link_copied_to_clipboard">تم نسخ الرابط إلى الحافظة</string>
+    <string name="my_site_create_next_post_title">أنشئ تدوينتك التالية</string>
+    <string name="my_site_create_next_post_excerpt">النشر بانتظام يساعد في بناء جمهورك!</string>
+    <string name="my_site_post_card_link_create_post">إنشاء مقالة</string>
     <string name="domains_paid_plan_add_your_domain_caption">إضافة نطاق مخصص، يسهّل للزائرين العثور على موقعك</string>
     <string name="my_site_post_card_scheduled_title">المقالات المجدولة القادمة</string>
     <string name="my_site_untitled_post">بدون عنوان</string>
@@ -110,8 +124,8 @@ Language: ar
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار. </string>
     <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
-    <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات باستخدام معاينة سريعة.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات من خلال جولة سريعة.</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
     <string name="create_site_notification_text">إعداد موقعك وتشغيله ببعض الخطوات السريعة فقط</string>
     <string name="create_site_notification_title">إنشاء موقع ووردبريس الخاص بك على الويب</string>
@@ -129,7 +143,7 @@ Language: ar
     <string name="gutenberg_native_s_previews_not_yet_available">معاينات %s غير متاحة حتى الآن</string>
     <string name="gutenberg_native_double_tap_to_preview_post">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
-    <string name="quick_start_list_upload_icon_subtitle">يظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
+    <string name="quick_start_list_upload_icon_subtitle">تظهر في علامة تبويب متصفح زائرك وأماكن أخرى عبر الإنترنت.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">خذني في جولة</string>
     <string name="quick_start_dialog_need_help_manage_site_title">هل تريد بعض المساعدة بشأن إدارة هذا الموقع باستخدام التطبيق؟</string>
     <string name="login_epilogue_create_new_site_button">إنشاء موقع جديد</string>
@@ -1432,7 +1446,7 @@ Language: ar
     <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
-    <string name="quick_start_dialog_publish_post_message">قمل بعمل مسودة مقالة وانشرها.</string>
+    <string name="quick_start_dialog_publish_post_message">اكتب مسودّة مقالة ثم أنشرها.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>

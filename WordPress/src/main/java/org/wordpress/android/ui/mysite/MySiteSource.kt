@@ -28,8 +28,12 @@ interface MySiteSource<T : PartialState> {
             this@postState.postValue(value)
         }
 
-        fun onRefreshed() {
+        fun onRefreshedMainThread() {
             refresh.value = false
+        }
+
+        fun onRefreshedBackgroundThread() {
+            refresh.postValue(false)
         }
     }
 

@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
@@ -71,6 +72,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -129,6 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
+    @Mock lateinit var cardsTracker: CardsTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -270,7 +273,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
-                mySiteSourceManager
+                mySiteSourceManager,
+                cardsTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1024,6 +1028,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                         .containsOnly(SiteNavigationAction.OpenScheduledPosts(site))
             }
 
+    @Test
+    fun `given post card, when footer link is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
+
+        verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+    }
+
     /* POST CARD - POST ITEM */
 
     @Test
@@ -1356,12 +1369,52 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
 
+    @Test
+    fun `given refresh, when invoked as PTR, then pull-to-refresh request is tracked`() {
+        initSelectedSite()
+
+        viewModel.refresh(isPullToRefresh = true)
+
+        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH)
+    }
+
+    @Test
+    fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
+        initSelectedSite()
+
+        viewModel.refresh()
+
+        verify(analyticsTrackerWrapper, times(0)).track(Stat.MY_SITE_PULL_TO_REFRESH)
+    }
+
     /* CLEARED */
     @Test
     fun `when vm cleared() is invoked, then MySiteSource clear() is invoked`() {
         viewModel.invokeOnCleared()
 
         verify(mySiteSourceManager).clear()
+    }
+
+    /* ORDERED LIST */
+    @InternalCoroutinesApi
+    @Test
+    fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        assertThat(getLastItems().last()).isInstanceOf(DynamicCard::class.java)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+
+        val postCardIndex = getLastItems().indexOfFirst { it is PostCard }
+        val dynamicCardIndex = getLastItems().indexOfFirst { it is DynamicCard }
+
+        assertThat(dynamicCardIndex).isLessThan(postCardIndex)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -1430,7 +1483,22 @@ class MySiteViewModelTest : BaseUnitTest() {
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val postCard = initPostCard(it)
-            listOf<MySiteCardAndItem>(siteInfoCard, quickActionsCard, domainRegistrationCard, quickStartCard, postCard)
+            if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+                listOf<MySiteCardAndItem>(
+                        siteInfoCard,
+                        quickActionsCard,
+                        domainRegistrationCard,
+                        quickStartCard,
+                        postCard
+                )
+            } else {
+                listOf<MySiteCardAndItem>(
+                        siteInfoCard,
+                        quickActionsCard,
+                        domainRegistrationCard,
+                        quickStartCard
+                )
+            }
         }.whenever(cardsBuilder).build(
                 domainRegistrationCardBuilderParams = any(),
                 postCardBuilderParams = any(),
@@ -1549,7 +1617,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 title = UiStringRes(0),
                                 excerpt = UiStringRes(0),
                                 featuredImageUrl = "",
-                                onClick = { (onPostItemClick as (Int) -> Unit).invoke(postId) }
+                                onClick = ListItemInteraction.create {
+                                    (onPostItemClick as (Int) -> Unit).invoke(postId)
+                                }
                         )
                 ),
                 footerLink = FooterLink(
