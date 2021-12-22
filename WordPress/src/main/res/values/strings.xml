@@ -2222,6 +2222,10 @@
     <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
 
+    <!-- My Site - Error Card -->
+    <string name="my_site_error_card_title">Some data wasn\'t loaded</string>
+    <string name="my_site_error_card_subtitle">Couldn\'t display more data about your site right now.</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>

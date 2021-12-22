@@ -3,12 +3,12 @@ package org.wordpress.android.ui.mysite.cards
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
@@ -27,15 +27,15 @@ class CardsBuilder @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val postCardBuilder: PostCardBuilder,
+    private val dashboardCardsBuilder: CardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
     fun build(
-        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
-        postCardBuilderParams: PostCardBuilderParams,
+        siteInfoCardBuilderParams: SiteInfoCardBuilderParams,
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
+        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
-        siteInfoCardBuilderParams: SiteInfoCardBuilderParams
+        dashboardCardsBuilderParams: DashboardCardsBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams))
@@ -51,7 +51,7 @@ class CardsBuilder @Inject constructor(
             }
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            cards.addAll(postCardBuilder.build(postCardBuilderParams))
+            cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         }
         return cards
     }

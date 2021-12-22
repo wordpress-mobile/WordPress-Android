@@ -26,7 +26,8 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
@@ -235,14 +236,14 @@ class MySiteViewModel @Inject constructor(
         cards: CardsResult<List<CardModel>>?
     ): List<MySiteCardAndItem> {
         val cardsResult = cardsBuilder.build(
-                DomainRegistrationCardBuilderParams(
-                        isDomainCreditAvailable = isDomainCreditAvailable,
-                        domainRegistrationClick = this::domainRegistrationClick
-                ),
-                PostCardBuilderParams(
-                        posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                        onPostItemClick = this::onPostItemClick,
-                        onFooterLinkClick = this::onPostCardFooterLinkClick
+                SiteInfoCardBuilderParams(
+                        site = site,
+                        showSiteIconProgressBar = showSiteIconProgressBar,
+                        titleClick = this::titleClick,
+                        iconClick = this::iconClick,
+                        urlClick = this::urlClick,
+                        switchSiteClick = this::switchSiteClick,
+                        activeTask = activeTask
                 ),
                 QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -252,19 +253,21 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionPostsClick = this::quickActionPostsClick,
                         onQuickActionMediaClick = this::quickActionMediaClick
                 ),
+                DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = this::domainRegistrationClick
+                ),
                 QuickStartCardBuilderParams(
                         quickStartCategories = quickStartCategories,
                         onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
                         onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
                 ),
-                SiteInfoCardBuilderParams(
-                        site = site,
-                        showSiteIconProgressBar = showSiteIconProgressBar,
-                        titleClick = this::titleClick,
-                        iconClick = this::iconClick,
-                        urlClick = this::urlClick,
-                        switchSiteClick = this::switchSiteClick,
-                        activeTask = activeTask
+                DashboardCardsBuilderParams(
+                        postCardBuilderParams = PostCardBuilderParams(
+                                posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                                onPostItemClick = this::onPostItemClick,
+                                onFooterLinkClick = this::onPostCardFooterLinkClick
+                        )
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -298,13 +301,13 @@ class MySiteViewModel @Inject constructor(
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
-        val indexOfPostsCard = cards.indexOfFirst { it is PostCard }
-        return if (indexOfPostsCard == -1) {
+        val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
+        return if (indexOfDashboardCards == -1) {
             cards + dynamicCards + siteItems
         } else {
             mutableListOf<MySiteCardAndItem>().apply {
                 addAll(cards)
-                addAll(indexOfPostsCard, dynamicCards)
+                addAll(indexOfDashboardCards, dynamicCards)
                 addAll(siteItems)
             }.toList()
         }

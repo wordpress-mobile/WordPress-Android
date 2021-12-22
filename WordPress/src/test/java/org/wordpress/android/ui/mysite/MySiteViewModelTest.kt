@@ -38,11 +38,11 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -50,8 +50,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -1428,14 +1428,14 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `given post cards exist, when cardAndItems list is ordered, then dynamic cards precede the post cards`() {
+    fun `given dashboard cards exist, when cardAndItems list is ordered, then dynamic cards precede dashboard cards`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
 
-        val postCardIndex = getLastItems().indexOfFirst { it is PostCard }
+        val dashboardCardsIndex = getLastItems().indexOfFirst { it is DashboardCards }
         val dynamicCardIndex = getLastItems().indexOfFirst { it is DynamicCard }
 
-        assertThat(dynamicCardIndex).isLessThan(postCardIndex)
+        assertThat(dynamicCardIndex).isLessThan(dashboardCardsIndex)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -1503,14 +1503,14 @@ class MySiteViewModelTest : BaseUnitTest() {
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
-            val postCard = initPostCard(it)
+            val dashboardCards = initDashboardCards(it)
             if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-                listOf<MySiteCardAndItem>(
+                listOf(
                         siteInfoCard,
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard,
-                        postCard
+                        dashboardCards
                 )
             } else {
                 listOf<MySiteCardAndItem>(
@@ -1521,11 +1521,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
         }.whenever(cardsBuilder).build(
-                domainRegistrationCardBuilderParams = any(),
-                postCardBuilderParams = any(),
+                siteInfoCardBuilderParams = any(),
                 quickActionsCardBuilderParams = any(),
+                domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
-                siteInfoCardBuilderParams = any()
+                dashboardCardsBuilderParams = any()
         )
     }
 
@@ -1626,10 +1626,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
+    private fun initDashboardCards(mockInvocation: InvocationOnMock): DashboardCards {
+        return DashboardCards(
+                cards = listOf(initPostCard(mockInvocation))
+        )
+    }
+
     private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
-        val params = (mockInvocation.arguments.filterIsInstance<PostCardBuilderParams>()).first()
-        onPostItemClick = params.onPostItemClick
-        onPostCardFooterLinkClick = params.onFooterLinkClick
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onPostItemClick = params.postCardBuilderParams.onPostItemClick
+        onPostCardFooterLinkClick = params.postCardBuilderParams.onFooterLinkClick
         return PostCardWithPostItems(
                 postCardType = PostCardType.DRAFT,
                 title = UiStringRes(0),
