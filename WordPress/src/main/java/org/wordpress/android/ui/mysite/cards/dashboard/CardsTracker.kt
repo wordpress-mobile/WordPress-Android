@@ -12,7 +12,7 @@ class CardsTracker @Inject constructor(
         POST("post")
     }
 
-    enum class Subtype(val label: String) {
+    enum class PostSubtype(val label: String) {
         CREATE_FIRST("create_first"),
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
@@ -25,7 +25,7 @@ class CardsTracker @Inject constructor(
 
     private fun trackCardFooterLinkClicked(
         type: Type,
-        subtype: Subtype
+        subtype: PostSubtype
     ) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -36,12 +36,12 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun PostCardType.toSubtypeValue(): Subtype {
+    private fun PostCardType.toSubtypeValue(): PostSubtype {
         return when (this) {
-            PostCardType.CREATE_FIRST -> Subtype.CREATE_FIRST
-            PostCardType.CREATE_NEXT -> Subtype.CREATE_NEXT
-            PostCardType.DRAFT -> Subtype.DRAFT
-            PostCardType.SCHEDULED -> Subtype.SCHEDULED
+            PostCardType.CREATE_FIRST -> PostSubtype.CREATE_FIRST
+            PostCardType.CREATE_NEXT -> PostSubtype.CREATE_NEXT
+            PostCardType.DRAFT -> PostSubtype.DRAFT
+            PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
         }
     }
 
