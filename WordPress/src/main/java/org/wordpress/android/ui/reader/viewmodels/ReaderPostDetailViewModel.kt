@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderCommentTable
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -119,7 +119,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -892,7 +893,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             // Check the cache
             val comments: ReaderCommentList? = post?.let {
                 withContext(bgDispatcher) {
-                    ReaderCommentTable.getCommentsForPostSnippet(
+                    readerCommentTableWrapper.getCommentsForPostSnippet(
                             it,
                             READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
                     ) ?: ReaderCommentList()
@@ -904,10 +905,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onUserNavigateFromComments() {
-        performLocalRefresh()
-    }
-
-    private fun performLocalRefresh() {
         // reload post from DB and update UI state
         val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
@@ -918,17 +915,21 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         // reload comments from DB and update comments snippet
-        launch(mainDispatcher) {
-            val comments: ReaderCommentList? = post?.let {
-                withContext(bgDispatcher) {
-                    ReaderCommentTable.getCommentsForPostSnippet(
-                            it,
-                            READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
-                    ) ?: ReaderCommentList()
+        // if it shows comments
+        if (_commentSnippetState.value !is CommentSnippetState.Failure &&
+                _commentSnippetState.value !is CommentSnippetState.Loading) {
+            launch(mainDispatcher) {
+                val comments: ReaderCommentList? = post?.let {
+                    withContext(bgDispatcher) {
+                        readerCommentTableWrapper.getCommentsForPostSnippet(
+                                it,
+                                READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                        ) ?: ReaderCommentList()
+                    }
                 }
-            }
 
-            _commentSnippetState.value = getUpdatedSnippetState(comments, UpdateResult.CHANGED)
+                _commentSnippetState.value = getUpdatedSnippetState(comments, CHANGED)
+            }
         }
     }
 
