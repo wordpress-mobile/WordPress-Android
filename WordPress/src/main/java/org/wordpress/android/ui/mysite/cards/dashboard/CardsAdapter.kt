@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
@@ -35,8 +36,8 @@ class CardsAdapter(
 
     override fun onBindViewHolder(holder: CardViewHolder<*>, position: Int) {
         when (holder) {
-            is ErrorCardViewHolder -> holder.bind(items[position])
-            is PostCardViewHolder<*> -> holder.bind(items[position])
+            is ErrorCardViewHolder -> holder.bind(items[position] as ErrorCard)
+            is PostCardViewHolder<*> -> holder.bind(items[position] as PostCard)
         }
     }
 
