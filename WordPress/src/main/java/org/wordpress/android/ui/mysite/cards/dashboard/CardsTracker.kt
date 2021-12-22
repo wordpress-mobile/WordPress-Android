@@ -20,18 +20,15 @@ class CardsTracker @Inject constructor(
     }
 
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
-        trackCardFooterLinkClicked(Type.POST, postCardType.toSubtypeValue())
+        trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
-    private fun trackCardFooterLinkClicked(
-        type: Type,
-        subtype: PostSubtype
-    ) {
+    private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
                 mapOf(
-                        TYPE to type.label,
-                        SUBTYPE to subtype.label
+                        TYPE to type,
+                        SUBTYPE to subtype
                 )
         )
     }
