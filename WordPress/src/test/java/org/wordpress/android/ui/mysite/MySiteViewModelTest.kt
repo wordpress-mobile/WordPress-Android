@@ -1061,6 +1061,33 @@ class MySiteViewModelTest : BaseUnitTest() {
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
+    /* DASHBOARD ERROR SNACKBAR */
+
+    @Test
+    fun `given show snackbar in cards update, when dashboard cards updated, then dashboard snackbar shown`() =
+            test {
+                initSelectedSite()
+
+                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = true)
+
+                assertThat(snackbars).containsOnly(
+                        SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
+                )
+            }
+
+    @Test
+    fun `given dashboard snackbar once shown, when a different partial state is updated, then snackbar not re-shown`() =
+            test {
+                initSelectedSite()
+                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = true)
+                snackbars.clear()
+
+                quickStartUpdate.value = QuickStartUpdate()
+
+                assertThat(snackbars).isEmpty()
+                assertThat(cardsUpdate.value?.showSnackbarError).isFalse
+            }
+
     /* ITEM CLICK */
 
     @Test
