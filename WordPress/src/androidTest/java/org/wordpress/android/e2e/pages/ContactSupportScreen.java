@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e.pages;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
@@ -34,7 +35,9 @@ public class ContactSupportScreen {
         return this;
     }
 
-    public HelpAndSupportScreen deleteUnsentMessageIfNeeded() {
+    public HelpAndSupportScreen goBackAndDeleteUnsentMessageIfNeeded() {
+        Espresso.pressBack();
+
         ViewInteraction unsentMessageAlert = onView(
                 withText("Going back will delete your message. "
                          + "Are you sure you want to delete it?"

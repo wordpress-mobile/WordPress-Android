@@ -10,9 +10,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.hamcrest.Matchers.allOf;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 
 public class HelpAndSupportScreen {
@@ -37,13 +38,17 @@ public class HelpAndSupportScreen {
     public HelpAndSupportScreen setEmailIfNeeded(String emailAddress) {
         ViewInteraction emailNotSet = onView(allOf(withId(R.id.contactEmailAddress), withText("Not set")));
 
-        if (isElementCompletelyDisplayed(emailNotSet)) {
-            emailNotSet.perform(ViewActions.click());
-            populateTextField(R.id.support_identity_input_dialog_email_edit_text, emailAddress);
+        if (!isElementDisplayed(emailNotSet)) return this;
 
-            onView(withText("OK")).perform(ViewActions.click());
-        }
+        emailNotSet.perform(ViewActions.click());
+        ViewInteraction emailInput = onView(allOf(
+                withId(R.id.support_identity_input_dialog_email_edit_text)
+        ));
 
+        if (!waitForElementToBeDisplayedWithoutFailure(emailInput)) return this;
+
+        populateTextField(emailInput, emailAddress);
+        onView(withText("OK")).perform(ViewActions.click());
         return this;
     }
 

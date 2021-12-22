@@ -1,7 +1,5 @@
 package org.wordpress.android.e2e;
 
-import androidx.test.espresso.Espresso;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +12,8 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 
 public class ContactUsTests extends BaseTest {
+    static String senderEmailAddress = "WPcomTest@test.com";
+
     @Before
     public void setUp() {
         logoutIfNecessary();
@@ -31,7 +31,7 @@ public class ContactUsTests extends BaseTest {
                 .chooseContinueWithWpCom()
                 .tapHelp()
                 .assertHelpAndSupportScreenLoaded()
-                .setEmailIfNeeded("WPcomTest@test.com")
+                .setEmailIfNeeded(senderEmailAddress)
                 .openContactUs()
                 .assertContactSupportScreenLoaded()
                 .assertSendButtonDisabled()
@@ -40,14 +40,12 @@ public class ContactUsTests extends BaseTest {
                 .setMessageText("")
                 .assertSendButtonDisabled();
         } finally {
-            Espresso.pressBack();
-            new ContactSupportScreen().deleteUnsentMessageIfNeeded();
+            new ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded();
         }
     }
 
     @Test
     public void messageCanBeSent() {
-        String senderEmailAddress = "WPcomTest@test.com";
         String userMessageText = "Please ignore, this is an automated test.";
         String automatedReplyText = "Mobile support will respond as soon as possible, "
                                     + "generally within 48-96 hours. "
@@ -65,8 +63,7 @@ public class ContactUsTests extends BaseTest {
                 .assertUserMessageDelivered(userMessageText)
                 .assertSystemMessageReceived(automatedReplyText);
         } finally {
-            Espresso.pressBack();
-            new ContactSupportScreen().deleteUnsentMessageIfNeeded();
+            new ContactSupportScreen().goBackAndDeleteUnsentMessageIfNeeded();
         }
     }
 
