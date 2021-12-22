@@ -171,6 +171,7 @@ class MySiteViewModel @Inject constructor(
             cardsUpdate
     ) ->
         val state = if (site != null) {
+            cardsUpdate?.showSnackbarError?.takeIf { it }?.let { handleCardsUpdateForSnackbarError() }
             buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
@@ -187,6 +188,10 @@ class MySiteViewModel @Inject constructor(
             buildNoSiteState()
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun handleCardsUpdateForSnackbarError() {
+        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
     }
 
     @Suppress("LongParameterList")
@@ -262,6 +267,7 @@ class MySiteViewModel @Inject constructor(
                         onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
                 ),
                 DashboardCardsBuilderParams(
+                        showErrorCard = cardsUpdate?.showErrorCard == true,
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                                 onPostItemClick = this::onPostItemClick,
