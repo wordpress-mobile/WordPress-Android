@@ -3648,6 +3648,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 
+    @Override public void showVideoDurationLimitWarning(@NonNull String fileName) {
+        ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG);
+    }
+
     @Override
     public Consumer<Exception> getExceptionLogger() {
         return (Exception e) -> AppLog.e(T.EDITOR, e);
