@@ -109,7 +109,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(data))
+        assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
     }
 
     /* REFRESH DATA */
@@ -134,7 +134,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(data))
+        assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
     }
 
     @Test
@@ -161,7 +161,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.refresh()
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(data))
+        assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
     }
 
     @Test
@@ -175,7 +175,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.refresh()
 
         assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isEqualTo(CardsUpdate(data))
+        assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
         assertThat(result.last()).isEqualTo(CardsUpdate(apiError))
     }
 

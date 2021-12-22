@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
@@ -190,31 +189,30 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private val cardsUpdate = MutableLiveData(
             CardsUpdate(
-                    CardsResult(
-                            listOf(
-                                    PostsCardModel(
-                                            hasPublished = true,
-                                            draft = listOf(
-                                                    PostCardModel(
-                                                            id = 1,
-                                                            title = "draft",
-                                                            content = "content",
-                                                            featuredImage = "featuredImage",
-                                                            date = Date()
-                                                    )
-                                            ),
-                                            scheduled = listOf(
-                                                    PostCardModel(
-                                                            id = 2,
-                                                            title = "scheduled",
-                                                            content = "",
-                                                            featuredImage = null,
-                                                            date = Date()
-                                                    )
+                    cards = listOf(
+                            PostsCardModel(
+                                    hasPublished = true,
+                                    draft = listOf(
+                                            PostCardModel(
+                                                    id = 1,
+                                                    title = "draft",
+                                                    content = "content",
+                                                    featuredImage = "featuredImage",
+                                                    date = Date()
+                                            )
+                                    ),
+                                    scheduled = listOf(
+                                            PostCardModel(
+                                                    id = 2,
+                                                    title = "scheduled",
+                                                    content = "",
+                                                    featuredImage = null,
+                                                    date = Date()
                                             )
                                     )
                             )
                     )
+
             )
     )
 
