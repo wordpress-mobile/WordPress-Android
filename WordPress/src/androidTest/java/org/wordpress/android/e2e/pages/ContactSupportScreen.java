@@ -53,6 +53,7 @@ public class ContactSupportScreen {
 
     // Assertions:
     public ContactSupportScreen assertContactSupportScreenLoaded() {
+        waitForElementToBeDisplayedWithoutFailure(textInput);
         textInput.check(matches(isCompletelyDisplayed()));
         sendButton.check(matches(isCompletelyDisplayed()));
         attachButton.check(matches(isCompletelyDisplayed()));
