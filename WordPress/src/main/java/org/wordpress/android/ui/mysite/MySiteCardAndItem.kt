@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
-import org.wordpress.android.ui.mysite.cards.dashboard.CardType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -28,6 +27,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         CATEGORY_HEADER_ITEM,
         LIST_ITEM,
         DASHBOARD_CARDS
+    }
+
+    enum class DashboardCardType {
+        ERROR_CARD,
+        POST_CARD_WITHOUT_POST_ITEMS,
+        POST_CARD_WITH_POST_ITEMS
     }
 
     sealed class Card(
@@ -86,16 +91,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val cards: List<DashboardCard>
         ) : MySiteCardAndItem(DASHBOARD_CARDS) {
             sealed class DashboardCard(
-                open val cardType: CardType
+                open val dashboardCardType: DashboardCardType
             ) {
                 data class ErrorCard(
-                    override val cardType: CardType = CardType.ERROR_CARD
-                ) : DashboardCard(cardType)
+                    override val dashboardCardType: DashboardCardType = DashboardCardType.ERROR_CARD
+                ) : DashboardCard(dashboardCardType)
 
                 sealed class PostCard(
-                    override val cardType: CardType,
+                    override val dashboardCardType: DashboardCardType,
                     open val footerLink: FooterLink
-                ) : DashboardCard(cardType) {
+                ) : DashboardCard(dashboardCardType) {
                     data class PostCardWithoutPostItems(
                         val postCardType: PostCardType,
                         val title: UiString,
@@ -103,7 +108,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         @DrawableRes val imageRes: Int,
                         override val footerLink: FooterLink
                     ) : PostCard(
-                            cardType = CardType.POST_CARD_WITHOUT_POST_ITEMS,
+                            dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
                             footerLink = footerLink
                     )
 
@@ -113,7 +118,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val postItems: List<PostItem>,
                         override val footerLink: FooterLink
                     ) : PostCard(
-                            cardType = CardType.POST_CARD_WITH_POST_ITEMS,
+                            dashboardCardType = DashboardCardType.POST_CARD_WITH_POST_ITEMS,
                             footerLink = footerLink
                     ) {
                         data class PostItem(
