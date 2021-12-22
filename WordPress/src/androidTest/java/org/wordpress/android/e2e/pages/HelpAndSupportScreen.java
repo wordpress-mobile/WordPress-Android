@@ -41,14 +41,15 @@ public class HelpAndSupportScreen {
         if (!isElementDisplayed(emailNotSet)) return this;
 
         emailNotSet.perform(ViewActions.click());
-        ViewInteraction emailInput = onView(allOf(
-                withId(R.id.support_identity_input_dialog_email_edit_text)
-        ));
+        ViewInteraction emailInput = onView(withId(R.id.support_identity_input_dialog_email_edit_text));
 
         if (!waitForElementToBeDisplayedWithoutFailure(emailInput)) return this;
 
         populateTextField(emailInput, emailAddress);
-        onView(withText("OK")).perform(ViewActions.click());
+        ViewInteraction okButton = onView(withText("OK"));
+        waitForElementToBeDisplayedWithoutFailure(okButton);
+        okButton.perform(ViewActions.click());
+
         return this;
     }
 
