@@ -70,9 +70,6 @@ class CardsSourceTest : BaseUnitTest() {
     private val apiError = CardsResult<List<CardModel>>(
             error = CardsError(CardsErrorType.API_ERROR)
     )
-    private val genericError = CardsResult<List<CardModel>>(
-            error = CardsError(CardsErrorType.GENERIC_ERROR)
-    )
 
     @Before
     fun setUp() {
@@ -138,7 +135,7 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given error, when build is invoked, then error data is also loaded (network)`() = test {
+    fun `given error, when build is invoked, then error snackbar is also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(apiError)
@@ -147,7 +144,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(apiError))
+        assertThat(result.first()).isEqualTo(CardsUpdate(cards = data.model, showSnackbarError = true))
     }
 
     @Test
@@ -176,7 +173,7 @@ class CardsSourceTest : BaseUnitTest() {
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
-        assertThat(result.last()).isEqualTo(CardsUpdate(apiError))
+        assertThat(result.last()).isEqualTo(CardsUpdate(cards = data.model, showSnackbarError = true))
     }
 
     /* IS REFRESHING */
@@ -246,7 +243,7 @@ class CardsSourceTest : BaseUnitTest() {
     /* INVALID SITE */
 
     @Test
-    fun `given invalid site, when build is invoked, then error data is loaded`() = test {
+    fun `given invalid site, when build is invoked, then error card is shown`() = test {
         val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
@@ -254,11 +251,11 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), invalidSiteLocalId).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(genericError))
+        assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
     }
 
     @Test
-    fun `given invalid site, when refresh is invoked, then error data is loaded`() = test {
+    fun `given invalid site, when refresh is invoked, then error card is shown`() = test {
         val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
         cardSource.refresh.observeForever { }
@@ -267,7 +264,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.refresh()
 
         assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isEqualTo(CardsUpdate(genericError))
-        assertThat(result.last()).isEqualTo(CardsUpdate(genericError))
+        assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
+        assertThat(result.last()).isEqualTo(CardsUpdate(showErrorCard = true))
     }
 }
