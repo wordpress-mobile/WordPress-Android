@@ -103,7 +103,6 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -191,7 +190,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ImageManager mImageManager;
-    @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
     @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
