@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
@@ -44,7 +43,7 @@ data class MySiteUiState(
             val cards: List<DynamicCardType>
         ) : PartialState()
 
-        data class CardsUpdate(val cards: CardsResult<List<CardModel>>) : PartialState()
+        data class CardsUpdate(val cards: List<CardModel>?) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {

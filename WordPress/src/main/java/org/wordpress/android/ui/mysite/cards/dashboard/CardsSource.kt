@@ -45,7 +45,7 @@ class CardsSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
                 cardsStore.getCards(selectedSite).collect { result ->
-                    postValue(CardsUpdate(result))
+                    postValue(CardsUpdate(result.model))
                 }
             }
         } else {

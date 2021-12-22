@@ -263,8 +263,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 DashboardCardsBuilderParams(
                         postCardBuilderParams = PostCardBuilderParams(
-                                posts = cardsUpdate?.cards?.model
-                                        ?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                                posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                                 onPostItemClick = this::onPostItemClick,
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         )
