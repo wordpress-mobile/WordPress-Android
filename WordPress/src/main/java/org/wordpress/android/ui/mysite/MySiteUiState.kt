@@ -26,7 +26,7 @@ data class MySiteUiState(
     val quickStartCategories: List<QuickStartCategory> = listOf(),
     val pinnedDynamicCard: DynamicCardType? = null,
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
-    val cards: CardsResult<List<CardModel>>? = null
+    val cardsUpdate: CardsUpdate? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -65,7 +65,7 @@ data class MySiteUiState(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
-            is CardsUpdate -> this.copy(cards = partialState.cards)
+            is CardsUpdate -> this.copy(cardsUpdate = partialState)
         }
     }
 }
