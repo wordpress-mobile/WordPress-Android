@@ -988,7 +988,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
     }
 
-    /* POST CARDS */
+    /* DASHBOARD POST CARD - FOOTER LINK */
 
     @Test
     fun `given create first card, when footer link is clicked, then editor is opened to create new post`() =
@@ -1039,7 +1039,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
     }
 
-    /* POST CARD - POST ITEM */
+    /* DASHBOARD POST CARD - POST ITEM */
 
     @Test
     fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
