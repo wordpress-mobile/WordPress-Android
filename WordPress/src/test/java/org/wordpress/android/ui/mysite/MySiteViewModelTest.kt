@@ -358,6 +358,20 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
     }
 
+    @Test
+    fun `when selected site is changed, then cardTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).resetShown()
+    }
+
+    @Test
+    fun `when selected site is changed, then cardShownTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(cardsShownTracker, atLeastOnce()).resetShown()
+    }
+
     /* AVATAR */
 
     @Test
