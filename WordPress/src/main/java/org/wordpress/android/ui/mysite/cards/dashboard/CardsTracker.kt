@@ -41,6 +41,7 @@ class CardsTracker @Inject constructor(
 
     fun resetShown() {
         cardsShownTracked.clear()
+        hasErrorCardShownTracked = false
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
