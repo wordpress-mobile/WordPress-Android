@@ -99,7 +99,6 @@ class CardsTrackerTest {
         )
     }
 
-
     private fun verifyFooterLinkClickedTracked(
         typeValue: Type,
         subtypeValue: PostSubtype
@@ -118,7 +117,7 @@ class CardsTrackerTest {
     }
 
     private fun buildDashboardCards(postCardType: PostCardType): DashboardCards {
-        val cards = when(postCardType) {
+        val cards = when (postCardType) {
             PostCardType.SCHEDULED, PostCardType.DRAFT -> buildPostCardsWithItems(postCardType)
             PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> buildPostCardsWithoutItems(postCardType)
         }
