@@ -101,7 +101,6 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.Date
 
@@ -125,7 +124,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
-    @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
@@ -269,7 +267,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartCardBuilder,
-                unifiedCommentsListFeatureConfig,
                 quickStartDynamicCardsFeatureConfig,
                 quickStartUtilsWrapper,
                 snackbarSequencer,
@@ -1145,10 +1142,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `comments item click emits OpenMedia navigation event`() {
+    fun `comments item click emits OpenUnifiedComments navigation event`() {
         invokeItemClickAction(ListItemAction.COMMENTS)
 
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenComments(site))
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenUnifiedComments(site))
     }
 
     @Test
