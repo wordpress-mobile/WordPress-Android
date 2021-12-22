@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -49,7 +46,7 @@ class CardsSource @Inject constructor(
                 }
             }
         } else {
-            postState(CardsUpdate(CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))))
+            postErrorState()
         }
     }
 
@@ -72,7 +69,7 @@ class CardsSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             fetchCardsAndPostErrorIfAvailable(coroutineScope, selectedSite)
         } else {
-            postState(CardsUpdate(CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))))
+            postErrorState()
         }
     }
 
@@ -86,10 +83,21 @@ class CardsSource @Inject constructor(
             val model = result.model
             val error = result.error
             when {
-                error != null -> postState(CardsUpdate(result))
+                error != null -> postErrorState()
                 model != null -> onRefreshedBackgroundThread()
                 else -> onRefreshedBackgroundThread()
             }
         }
+    }
+
+    private fun MediatorLiveData<CardsUpdate>.postErrorState() {
+        val lastStateCards = this.value?.cards
+        postState(
+                CardsUpdate(
+                        cards = lastStateCards,
+                        showErrorCard = lastStateCards.isNullOrEmpty(),
+                        showSnackbarError = lastStateCards?.isNotEmpty() == true
+                )
+        )
     }
 }
