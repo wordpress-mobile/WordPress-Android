@@ -10,9 +10,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 
@@ -35,25 +34,27 @@ public class HelpAndSupportScreen {
         return this;
     }
 
-    public HelpAndSupportScreen setEmailIfNeeded(String emailAddress) {
-        ViewInteraction emailNotSet = onView(allOf(withId(R.id.contactEmailAddress), withText("Not set")));
-
-        if (!isElementDisplayed(emailNotSet)) return this;
-
-        emailNotSet.perform(ViewActions.click());
-        ViewInteraction emailInput = onView(withId(R.id.support_identity_input_dialog_email_edit_text));
-
-        if (!waitForElementToBeDisplayedWithoutFailure(emailInput)) return this;
-
-        populateTextField(emailInput, emailAddress);
-        ViewInteraction okButton = onView(withId(android.R.id.button1));
-        okButton.perform(ViewActions.click());
-
-        return this;
-    }
-
     public ContactSupportScreen openContactUs() {
         contactUsButton.perform(ViewActions.click());
+        setEmailIfNeeded("WPcomTest@test.com", "TestUser");
         return new ContactSupportScreen();
+    }
+
+    public void setEmailIfNeeded(String emailAddress, String userName) {
+        ViewInteraction emailInput = onView(withId(R.id.support_identity_input_dialog_email_edit_text));
+
+        if (!waitForElementToBeDisplayedWithoutFailure(emailInput)) {
+            return;
+        }
+
+        populateTextField(emailInput, emailAddress);
+        ViewInteraction nameInput = onView(withId(R.id.support_identity_input_dialog_name_edit_text));
+        populateTextField(nameInput, userName);
+
+        onView(anyOf(
+                withText(android.R.string.ok),
+                withId(android.R.id.button1)
+        ))
+                .perform(ViewActions.click());
     }
 }

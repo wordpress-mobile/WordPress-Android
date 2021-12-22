@@ -12,8 +12,6 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 
 public class ContactUsTests extends BaseTest {
-    static String senderEmailAddress = "WPcomTest@test.com";
-
     @Before
     public void setUp() {
         logoutIfNecessary();
@@ -31,7 +29,6 @@ public class ContactUsTests extends BaseTest {
                 .chooseContinueWithWpCom()
                 .tapHelp()
                 .assertHelpAndSupportScreenLoaded()
-                .setEmailIfNeeded(senderEmailAddress)
                 .openContactUs()
                 .assertContactSupportScreenLoaded()
                 .assertSendButtonDisabled()
@@ -56,7 +53,6 @@ public class ContactUsTests extends BaseTest {
             new LoginFlow()
                 .chooseContinueWithWpCom()
                 .tapHelp()
-                .setEmailIfNeeded(senderEmailAddress)
                 .openContactUs()
                 .setMessageText(userMessageText)
                 .tapSendButton()
