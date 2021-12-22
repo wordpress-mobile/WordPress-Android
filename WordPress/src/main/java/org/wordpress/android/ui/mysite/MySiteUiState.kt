@@ -46,7 +46,7 @@ data class MySiteUiState(
         data class CardsUpdate(
             val cards: List<CardModel>? = null,
             val showErrorCard: Boolean = false,
-            val showSnackbarError: Boolean = false
+            var showSnackbarError: Boolean = false
         ) : PartialState()
     }
 
