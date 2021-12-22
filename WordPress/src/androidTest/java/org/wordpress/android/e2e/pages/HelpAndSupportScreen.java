@@ -1,19 +1,17 @@
 package org.wordpress.android.e2e.pages;
 
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.flows.LoginFlow;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
-import static org.wordpress.android.support.WPSupportUtils.*;
-
+import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.hamcrest.Matchers.allOf;
 
 
@@ -50,14 +48,7 @@ public class HelpAndSupportScreen {
     }
 
     public ContactSupportScreen openContactUs() {
-        clickOn(contactUsButton);
+        contactUsButton.perform(ViewActions.click());
         return new ContactSupportScreen();
     }
-
-    public LoginFlow navigateBack() {
-        Espresso.pressBack();
-        return new LoginFlow();
-    }
 }
-
-

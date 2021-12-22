@@ -26,18 +26,23 @@ public class ContactUsTests extends BaseTest {
 
     @Test
     public void sendButtonEnabledWhenTextIsEntered() {
-        new LoginFlow()
-            .chooseContinueWithWpCom()
-            .tapHelp()
-            .assertHelpAndSupportScreenLoaded()
-            .setEmailIfNeeded("WPcomTest@test.com")
-            .openContactUs()
-            .assertContactSupportScreenLoaded()
-            .assertSendButtonDisabled()
-            .setMessageText("Hello")
-            .assertSendButtonEnabled()
-            .setMessageText("")
-            .assertSendButtonDisabled();
+        try {
+            new LoginFlow()
+                .chooseContinueWithWpCom()
+                .tapHelp()
+                .assertHelpAndSupportScreenLoaded()
+                .setEmailIfNeeded("WPcomTest@test.com")
+                .openContactUs()
+                .assertContactSupportScreenLoaded()
+                .assertSendButtonDisabled()
+                .setMessageText("Hello")
+                .assertSendButtonEnabled()
+                .setMessageText("")
+                .assertSendButtonDisabled();
+        } finally {
+            Espresso.pressBack();
+            new ContactSupportScreen().deleteUnsentMessageIfNeeded();
+        }
     }
 
     @Test
