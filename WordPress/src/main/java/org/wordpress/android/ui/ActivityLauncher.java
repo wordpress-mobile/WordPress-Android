@@ -1490,13 +1490,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
-    public static void loginWithoutMagicLink(Fragment fragment) {
-        Intent intent;
-        intent = new Intent(fragment.getContext(), LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
-        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
     public static void loginForJetpackStats(Fragment fragment) {
         Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
         LoginMode.JETPACK_STATS.putInto(intent);
