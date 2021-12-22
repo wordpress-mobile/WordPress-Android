@@ -52,6 +52,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -81,6 +82,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -132,6 +134,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
+    @Mock lateinit var siteItemsTracker: SiteItemsTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -177,7 +180,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
-    private var onPostItemClick: ((postId: Int) -> Unit)? = null
+    private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -274,7 +277,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
-                cardsTracker
+                cardsTracker,
+                siteItemsTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1040,13 +1044,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* POST CARD - POST ITEM */
 
     @Test
-    fun `when post item is clicked, then post is opened for edit`() =
+    fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
             test {
                 initSelectedSite()
 
-                requireNotNull(onPostItemClick).invoke(postId)
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditPost(site, postId))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditDraftPost(site, postId))
+            }
+
+    @Test
+    fun `given scheduled post card, when post item is clicked, then post is opened for edit scheduled`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
     /* ITEM CLICK */
@@ -1191,6 +1205,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(ListItemAction.STATS)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `when site item is clicked, then event is tracked`() = test {
+        invokeItemClickAction(ListItemAction.POSTS)
+
+        verify(siteItemsTracker).trackSiteItemClicked(ListItemAction.POSTS)
     }
 
     /* ITEM VISIBILITY */
@@ -1624,7 +1645,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                                 excerpt = UiStringRes(0),
                                 featuredImageUrl = "",
                                 onClick = ListItemInteraction.create {
-                                    (onPostItemClick as (Int) -> Unit).invoke(postId)
+                                    (onPostItemClick as (PostItemClickParams) -> Unit).invoke(
+                                            PostItemClickParams(PostCardType.DRAFT, postId)
+                                    )
                                 }
                         )
                 ),

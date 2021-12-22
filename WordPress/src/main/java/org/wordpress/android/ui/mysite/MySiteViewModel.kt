@@ -30,6 +30,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -50,6 +51,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -109,7 +111,8 @@ class MySiteViewModel @Inject constructor(
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
-    private val cardsTracker: CardsTracker
+    private val cardsTracker: CardsTracker,
+    private val siteItemsTracker: SiteItemsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -324,6 +327,7 @@ class MySiteViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            siteItemsTracker.trackSiteItemClicked(action)
             val navigationAction = when (action) {
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
@@ -728,9 +732,15 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    private fun onPostItemClick(postId: Int) {
+    private fun onPostItemClick(params: PostItemClickParams) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
+            when (params.postCardType) {
+                PostCardType.DRAFT -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditDraftPost(site, params.postId))
+                PostCardType.SCHEDULED -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
+                else -> Unit // Do nothing
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -26,7 +27,7 @@ private const val POST_ID = 1
 private const val POST_TITLE = "title"
 private const val POST_CONTENT = "content"
 private const val FEATURED_IMAGE_URL = "featuredImage"
-private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")
+private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-06 12:34:56")!!
 
 // This class contains placeholder tests until mock data is removed
 @InternalCoroutinesApi
@@ -42,8 +43,8 @@ class PostCardBuilderTest : BaseUnitTest() {
             date = POST_DATE
     )
 
-    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = {}
-    private val onPostItemClick: (Int) -> Unit = {}
+    private val onPostCardFooterLinkClick: (PostCardType) -> Unit = { }
+    private val onPostItemClick: (params: PostItemClickParams) -> Unit = { }
 
     @Before
     fun setUp() {

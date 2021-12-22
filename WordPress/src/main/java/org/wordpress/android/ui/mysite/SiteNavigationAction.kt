@@ -59,12 +59,15 @@ sealed class SiteNavigationAction {
         @StringRes val positiveButtonLabel: Int,
         @StringRes val negativeButtonLabel: Int
     ) : SiteNavigationAction()
+
     data class OpenQuickStartFullScreenDialog(
         val type: QuickStartTaskType,
         @StringRes val title: Int
     ) : SiteNavigationAction()
+
     data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
-    data class EditPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
+    data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
+    data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
 }
