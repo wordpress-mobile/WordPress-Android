@@ -1,6 +1,12 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -8,6 +14,8 @@ import javax.inject.Inject
 class CardsTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val cardsShownTracked = mutableListOf<Pair<DashboardCardType, PostCardType>>()
+
     enum class Type(val label: String) {
         POST("post")
     }
@@ -23,6 +31,16 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
+    fun trackCardsShown(dashboardCards: DashboardCards) {
+        dashboardCards.cards.takeIf { it.isNotEmpty() }?.forEach {
+            trackCardShown(it)
+        }
+    }
+
+    fun resetShown() {
+        cardsShownTracked.clear()
+    }
+
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -31,6 +49,22 @@ class CardsTracker @Inject constructor(
                         SUBTYPE to subtype
                 )
         )
+    }
+
+    private fun trackCardShown(card: DashboardCard) = when (card) {
+        is ErrorCard -> { } // todo: implement tracking error card
+        is PostCardWithPostItems -> trackPostCardShown(Pair(card.dashboardCardType, card.postCardType))
+        is PostCardWithoutPostItems -> trackPostCardShown(Pair(card.dashboardCardType, card.postCardType))
+    }
+
+    private fun trackPostCardShown(pair: Pair<DashboardCardType, PostCardType>) {
+        if (!cardsShownTracked.contains(pair)) {
+            cardsShownTracked.add(pair)
+            analyticsTrackerWrapper.track(
+                    Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+                    mapOf(TYPE to Type.POST.label, SUBTYPE to pair.second.toSubtypeValue().label)
+            )
+        }
     }
 
     private fun PostCardType.toSubtypeValue(): PostSubtype {

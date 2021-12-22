@@ -778,12 +778,14 @@ class MySiteViewModel @Inject constructor(
             is NoSites -> { } // no op
             is SiteSelected -> {
                 state.cardAndItems.filterIsInstance<Card>().forEach { cardsShownTracker.trackCardShown(it.type) }
+                state.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackCardsShown(it) }
             }
         }
     }
 
     private fun resetShownTrackers() {
         cardsShownTracker.resetShown()
+        cardsTracker.resetShown()
     }
 
     data class UiModel(
