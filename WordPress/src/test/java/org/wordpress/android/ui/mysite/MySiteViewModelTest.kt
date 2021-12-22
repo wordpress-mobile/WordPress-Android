@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -807,6 +808,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
+    @Test
+    fun `when domain registration card is shown, then card shown event is tracked`() = test {
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        verify(cardsShownTracker, atLeastOnce()).trackCardShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
+    }
+
     /* QUICK START CARD */
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
@@ -1042,6 +1051,22 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
         verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+    }
+
+    @Test
+    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).trackCardsShown(any())
+    }
+
+    @Test
+    fun `when dashboard cards are not shown, then card shown events are not tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        initSelectedSite()
+
+        verify(cardsTracker, never()).trackCardsShown(any())
     }
 
     /* POST CARD - POST ITEM */
