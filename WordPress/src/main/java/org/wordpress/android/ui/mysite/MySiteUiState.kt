@@ -43,7 +43,11 @@ data class MySiteUiState(
             val cards: List<DynamicCardType>
         ) : PartialState()
 
-        data class CardsUpdate(val cards: List<CardModel>?) : PartialState()
+        data class CardsUpdate(
+            val cards: List<CardModel>? = null,
+            val showErrorCard: Boolean = false,
+            val showSnackbarError: Boolean = false
+        ) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
