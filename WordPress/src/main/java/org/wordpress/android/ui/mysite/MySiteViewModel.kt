@@ -148,6 +148,7 @@ class MySiteViewModel @Inject constructor(
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                resetShownTrackers()
                 val result = MediatorLiveData<SiteIdToState>()
                 for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
                     result.addSource(newSource) { partialState ->
@@ -779,6 +780,10 @@ class MySiteViewModel @Inject constructor(
                 state.cardAndItems.filterIsInstance<Card>().forEach { cardsShownTracker.trackCardShown(it.type) }
             }
         }
+    }
+
+    private fun resetShownTrackers() {
+        cardsShownTracker.resetShown()
     }
 
     data class UiModel(
