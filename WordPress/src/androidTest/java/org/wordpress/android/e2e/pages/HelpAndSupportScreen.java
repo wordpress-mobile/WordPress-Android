@@ -46,8 +46,7 @@ public class HelpAndSupportScreen {
         if (!waitForElementToBeDisplayedWithoutFailure(emailInput)) return this;
 
         populateTextField(emailInput, emailAddress);
-        ViewInteraction okButton = onView(withText("OK"));
-        waitForElementToBeDisplayedWithoutFailure(okButton);
+        ViewInteraction okButton = onView(withId(android.R.id.button1));
         okButton.perform(ViewActions.click());
 
         return this;
