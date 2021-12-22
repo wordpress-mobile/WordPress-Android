@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,12 +11,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
@@ -29,7 +28,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -37,16 +35,15 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
@@ -87,12 +84,18 @@ class CardsBuilderTest {
     }
 
     /* DOMAIN REGISTRATION CARD */
+    @Test
+    fun `when domain credit is available, then domain card is built`() {
+        val cards = buildCards(isDomainCreditAvailable = true)
+
+        assertThat(cards.findDomainRegistrationCard()).isNotNull
+    }
 
     @Test
-    fun `when domain credit is available, then correct event is tracked`() {
-        buildCards(isDomainCreditAvailable = true)
+    fun `when domain credit is not available, then domain card is not built`() {
+        val cards = buildCards(isDomainCreditAvailable = false)
 
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
+        assertThat(cards.findDomainRegistrationCard()).isNull()
     }
 
     /* QUICK ACTIONS CARD */
@@ -160,6 +163,9 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
     private fun List<MySiteCardAndItem>.findDashboardCards() = this.find { it is DashboardCards }
+
+    private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
+            this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun buildCards(
         activeTask: QuickStartTask? = null,
@@ -232,7 +238,6 @@ class CardsBuilderTest {
                 buildConfigWrapper,
                 quickStartDynamicCardsFeatureConfig,
                 siteInfoCardBuilder,
-                analyticsTrackerWrapper,
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
                 dashboardCardsBuilder,
