@@ -26,8 +26,8 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -176,7 +176,7 @@ class MySiteViewModel @Inject constructor(
             cards
     ) ->
         val state = if (site != null) {
-            buildSiteSelectedStateAndScroll(
+            val state = buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
                     activeTask,
@@ -188,10 +188,11 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cards
             )
+            trackCardsAndItemsShownIfNeeded(state)
+            state
         } else {
             buildNoSiteState()
         }
-        trackCardsAndItemsShownIfNeeded(state)
         UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
@@ -773,15 +774,10 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
-    private fun trackCardsAndItemsShownIfNeeded(state: State) {
-        when (state) {
-            is NoSites -> { } // no op
-            is SiteSelected -> {
-                state.cardAndItems.filterIsInstance<Card>()
-                        .forEach { domainRegistrationCardShownTracker.trackCardShown(it.type) }
-                state.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackCardsShown(it) }
-            }
-        }
+    private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
+        siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
+                .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
+        siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
     }
 
     private fun resetShownTrackers() {
