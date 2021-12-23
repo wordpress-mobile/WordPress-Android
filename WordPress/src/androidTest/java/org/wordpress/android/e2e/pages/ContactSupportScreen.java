@@ -14,33 +14,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
-import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class ContactSupportScreen {
-    // "Contact Support" screen looks differently depending on
-    // "gradle.properties" content (default or from Mobile Secrets).
-    // But the elements tree always contains all elements, some are
-    // just hidden.
-    // Locators below attempt to support both.
-    static ViewInteraction textInput = onView(allOf(
-            isCompletelyDisplayed(),
-            anyOf(
-                    withId(R.id.message_composer_input_text),
-                    withId(R.id.request_message_field)
-            )
-    ));
-    static ViewInteraction sendButton = onView(allOf(
-            isCompletelyDisplayed(),
-            anyOf(
-                    withId(R.id.message_composer_send_btn),
-                    withId(R.id.request_conversations_disabled_menu_ic_send)
-            )
-    ));
+    static ViewInteraction textInput = onView(withId(R.id.message_composer_input_text));
+    static ViewInteraction sendButton = onView(withId(R.id.message_composer_send_btn));
+    static ViewInteraction attachButton = onView(withId(R.id.attachments_indicator_icon));
 
     // Actions:
     public ContactSupportScreen tapSendButton() {
@@ -50,10 +32,6 @@ public class ContactSupportScreen {
 
     public ContactSupportScreen setMessageText(String text) {
         populateTextField(textInput, text);
-        // This sleep serves only one purpose: allowing human to notice
-        // that text was really entered. Especially matters when watching
-        // low-fps test video recordings from CI.
-        sleep();
         return this;
     }
 
@@ -75,8 +53,10 @@ public class ContactSupportScreen {
 
     // Assertions:
     public ContactSupportScreen assertContactSupportScreenLoaded() {
+        waitForElementToBeDisplayedWithoutFailure(textInput);
         textInput.check(matches(isCompletelyDisplayed()));
         sendButton.check(matches(isCompletelyDisplayed()));
+        attachButton.check(matches(isCompletelyDisplayed()));
         return this;
     }
 
