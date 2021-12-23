@@ -12,5 +12,6 @@ class ErrorCardViewHolder(
         parent.viewBinding(MySiteErrorCardBinding::inflate)
 ) {
     fun bind(card: ErrorCard) = with(binding) {
+        retry.setOnClickListener { card.onRetryClick.click() }
     }
 }

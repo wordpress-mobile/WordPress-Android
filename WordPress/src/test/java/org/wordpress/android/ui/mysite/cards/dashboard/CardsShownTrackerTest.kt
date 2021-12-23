@@ -109,7 +109,7 @@ class CardsShownTrackerTest {
     )
 
     private fun buildErrorCard(): DashboardCards {
-        val cards = listOf(ErrorCard())
+        val cards = listOf(ErrorCard(onRetryClick = mock()))
         val dashboardCard = mutableListOf<DashboardCard>()
         dashboardCard.addAll(cards)
         return DashboardCards(cards = cards)

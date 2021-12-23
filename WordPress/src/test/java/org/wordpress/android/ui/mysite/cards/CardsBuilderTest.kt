@@ -204,6 +204,7 @@ class CardsBuilderTest {
                         mock()
                 ),
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
+                    onErrorRetryClick = mock(),
                     postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )

@@ -5,6 +5,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
+import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
 class CardsBuilder @Inject constructor(
@@ -15,12 +16,14 @@ class CardsBuilder @Inject constructor(
     ): DashboardCards = DashboardCards(
             cards = mutableListOf<DashboardCard>().apply {
                 if (dashboardCardsBuilderParams.showErrorCard) {
-                    add(createErrorCard())
+                    add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
                 } else {
                     addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
                 }
             }.toList()
     )
 
-    private fun createErrorCard() = ErrorCard()
+    private fun createErrorCard(onErrorRetryClick: () -> Unit) = ErrorCard(
+            onRetryClick = ListItemInteraction.create(onErrorRetryClick)
+    )
 }
