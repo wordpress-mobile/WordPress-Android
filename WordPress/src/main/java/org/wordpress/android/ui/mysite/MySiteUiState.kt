@@ -46,29 +46,35 @@ data class MySiteUiState(
         data class CardsUpdate(
             val cards: List<CardModel>? = null,
             val showErrorCard: Boolean = false,
-            var showSnackbarError: Boolean = false
+            val showSnackbarError: Boolean = false
         ) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
+        val uiState = updateSnackbarStatusToShowOnlyOnce(partialState) ?: this
+
         return when (partialState) {
-            is CurrentAvatarUrl -> this.copy(currentAvatarUrl = partialState.url)
-            is SelectedSite -> this.copy(site = partialState.site)
-            is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
-            is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
-            is JetpackCapabilities -> this.copy(
+            is CurrentAvatarUrl -> uiState.copy(currentAvatarUrl = partialState.url)
+            is SelectedSite -> uiState.copy(site = partialState.site)
+            is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
+            is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
+            is JetpackCapabilities -> uiState.copy(
                     scanAvailable = partialState.scanAvailable,
                     backupAvailable = partialState.backupAvailable
             )
-            is QuickStartUpdate -> this.copy(
+            is QuickStartUpdate -> uiState.copy(
                     activeTask = partialState.activeTask,
                     quickStartCategories = partialState.categories
             )
-            is DynamicCardsUpdate -> this.copy(
+            is DynamicCardsUpdate -> uiState.copy(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
-            is CardsUpdate -> this.copy(cardsUpdate = partialState)
+            is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
         }
     }
+
+    private fun updateSnackbarStatusToShowOnlyOnce(partialState: PartialState) =
+            this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
+                    .takeIf { partialState !is CardsUpdate }
 }

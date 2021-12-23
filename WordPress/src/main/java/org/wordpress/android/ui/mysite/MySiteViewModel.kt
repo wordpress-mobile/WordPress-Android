@@ -171,7 +171,7 @@ class MySiteViewModel @Inject constructor(
             cardsUpdate
     ) ->
         val state = if (site != null) {
-            cardsUpdate?.showSnackbarError?.takeIf { it }?.let { cardsUpdate.handleCardsUpdateForSnackbarError() }
+            cardsUpdate?.checkAndShowSnackbarError()
             buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
@@ -190,9 +190,11 @@ class MySiteViewModel @Inject constructor(
         UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
-    private fun CardsUpdate.handleCardsUpdateForSnackbarError() {
-        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
-        this.showSnackbarError = false
+    private fun CardsUpdate.checkAndShowSnackbarError() {
+        if (showSnackbarError) {
+            _onSnackbarMessage
+                    .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
+        }
     }
 
     @Suppress("LongParameterList")
