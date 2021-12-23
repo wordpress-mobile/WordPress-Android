@@ -1074,19 +1074,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
 
-    @Test
-    fun `given dashboard snackbar once shown, when a different partial state is updated, then snackbar not re-shown`() =
-            test {
-                initSelectedSite()
-                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = true)
-                snackbars.clear()
-
-                quickStartUpdate.value = QuickStartUpdate()
-
-                assertThat(snackbars).isEmpty()
-                assertThat(cardsUpdate.value?.showSnackbarError).isFalse
-            }
-
     /* ITEM CLICK */
 
     @Test
