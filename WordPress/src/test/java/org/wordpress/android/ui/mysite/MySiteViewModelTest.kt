@@ -1074,6 +1074,18 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
 
+    @Test
+    fun `given show snackbar not in cards update, when dashboard cards updated, then dashboard snackbar not shown`() =
+            test {
+                initSelectedSite()
+
+                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = false)
+
+                assertThat(snackbars).doesNotContain(
+                        SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
+                )
+            }
+
     /* ITEM CLICK */
 
     @Test
