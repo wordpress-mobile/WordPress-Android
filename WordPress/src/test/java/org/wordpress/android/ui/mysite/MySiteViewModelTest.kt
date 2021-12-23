@@ -212,7 +212,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                                     )
                             )
                     )
-
             )
     )
 
