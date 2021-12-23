@@ -2,6 +2,7 @@ package org.wordpress.android.e2e;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.flows.LoginFlow;
@@ -41,6 +42,7 @@ public class ContactUsTests extends BaseTest {
         }
     }
 
+    @Ignore("As long as CI does not use gradle.properties from MobileSecrets")
     @Test
     public void messageCanBeSent() {
         String userMessageText = "Please ignore, this is an automated test.";
