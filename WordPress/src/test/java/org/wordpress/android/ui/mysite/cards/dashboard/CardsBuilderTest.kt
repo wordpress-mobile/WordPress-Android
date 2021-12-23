@@ -85,6 +85,7 @@ class CardsBuilderTest : BaseUnitTest() {
         return cardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         showErrorCard = showErrorCard,
+                        onErrorRetryClick = { },
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )
