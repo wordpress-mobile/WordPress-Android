@@ -271,6 +271,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 DashboardCardsBuilderParams(
                         showErrorCard = cardsUpdate?.showErrorCard == true,
+                        onErrorRetryClick = this::onDashboardErrorRetry,
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                                 onPostItemClick = this::onPostItemClick,
@@ -750,6 +751,10 @@ class MySiteViewModel @Inject constructor(
                 else -> Unit // Do nothing
             }
         }
+    }
+
+    private fun onDashboardErrorRetry() {
+        mySiteSourceManager.refresh()
     }
 
     private fun onPostCardFooterLinkClick(postCardType: PostCardType) {

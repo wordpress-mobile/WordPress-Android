@@ -38,6 +38,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
@@ -180,6 +182,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
+    private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1086,6 +1089,19 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
 
+    /* DASHBOARD ERROR CARD - RETRY */
+
+    @Test
+    fun `given error dashboard card, when retry is clicked, then refresh is triggered`() =
+            test {
+                initSelectedSite()
+                cardsUpdate.value = cardsUpdate.value?.copy(showErrorCard = true)
+
+                requireNotNull(onDashboardErrorRetryClick).invoke()
+
+                verify(mySiteSourceManager).refresh()
+            }
+
     /* ITEM CLICK */
 
     @Test
@@ -1650,9 +1666,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initDashboardCards(mockInvocation: InvocationOnMock): DashboardCards {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         return DashboardCards(
-                cards = listOf(initPostCard(mockInvocation))
+                cards = mutableListOf<DashboardCard>().apply {
+                    if (params.showErrorCard) {
+                        initErrorCard(mockInvocation)
+                    } else {
+                        initPostCard(mockInvocation)
+                    }
+                }
         )
+    }
+
+    private fun initErrorCard(mockInvocation: InvocationOnMock): ErrorCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onDashboardErrorRetryClick = params.onErrorRetryClick
+        return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
 
     private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {
