@@ -29,7 +29,6 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
-
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
@@ -45,7 +44,7 @@ class CardsTracker @Inject constructor(
     }
 
     fun trackShown(dashboardCards: DashboardCards) {
-       cardsShownTracker.track(dashboardCards)
+        cardsShownTracker.track(dashboardCards)
     }
 
     companion object {

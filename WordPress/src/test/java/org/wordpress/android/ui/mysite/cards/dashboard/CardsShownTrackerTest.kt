@@ -68,7 +68,6 @@ class CardsShownTrackerTest {
         )
     }
 
-
     private fun verifyCardShownTracked(type: String, subtype: String) {
         verify(analyticsTracker).track(
                 Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
