@@ -830,7 +830,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(
                 domainRegistrationCardShownTracker,
                 atLeastOnce()
-        ).trackCardShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
+        ).trackShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
     }
 
     /* QUICK START CARD */
@@ -1075,7 +1075,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
 
-        verify(cardsTracker, atLeastOnce()).trackCardsShown(any())
+        verify(cardsTracker, atLeastOnce()).trackShown(any())
     }
 
     @Test
@@ -1083,7 +1083,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
         initSelectedSite()
 
-        verify(cardsTracker, never()).trackCardsShown(any())
+        verify(cardsTracker, never()).trackShown(any())
     }
 
     /* POST CARD - POST ITEM */
