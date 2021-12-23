@@ -786,6 +786,13 @@
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
+    <style name="MySiteErrorCardRetry" parent="WordPress.Button.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+    </style>
+
     <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
 
