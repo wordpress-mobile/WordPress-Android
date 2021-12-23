@@ -416,7 +416,6 @@
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
-    <string name="comments_fetching">Fetching comments…</string>
     <string name="comment_approved_talkback">Comment approved</string>
     <string name="comment_unapproved_talkback">Comment unapproved</string>
     <string name="comment_liked_talkback">Comment liked</string>
@@ -450,11 +449,6 @@
     <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
-    <string name="dlg_approving_comments">Approving</string>
-    <string name="dlg_unapproving_comments">Unapproving</string>
-    <string name="dlg_spamming_comments">Marking as spam</string>
-    <string name="dlg_trashing_comments">Sending to trash</string>
-    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_confirm_action_trash">Trash</string>
     <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
