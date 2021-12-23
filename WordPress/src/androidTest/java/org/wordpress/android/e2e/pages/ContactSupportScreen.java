@@ -25,8 +25,7 @@ public class ContactSupportScreen {
     // "Contact Support" screen looks differently depending on
     // "gradle.properties" content (default or from Mobile Secrets).
     // But the elements tree always contains all elements, some are
-    // just hidden.
-    // Locators below attempt to support both.
+    // just hidden. Locators below attempt to support both variants.
     static ViewInteraction textInput = onView(allOf(
             isCompletelyDisplayed(),
             anyOf(
