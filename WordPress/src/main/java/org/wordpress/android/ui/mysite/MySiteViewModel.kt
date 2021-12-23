@@ -43,7 +43,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.CardsShownTracker
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -115,7 +115,7 @@ class MySiteViewModel @Inject constructor(
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
     private val siteItemsTracker: SiteItemsTracker,
-    private val cardsShownTracker: CardsShownTracker
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -777,14 +777,15 @@ class MySiteViewModel @Inject constructor(
         when (state) {
             is NoSites -> { } // no op
             is SiteSelected -> {
-                state.cardAndItems.filterIsInstance<Card>().forEach { cardsShownTracker.trackCardShown(it.type) }
+                state.cardAndItems.filterIsInstance<Card>()
+                        .forEach { domainRegistrationCardShownTracker.trackCardShown(it.type) }
                 state.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackCardsShown(it) }
             }
         }
     }
 
     private fun resetShownTrackers() {
-        cardsShownTracker.resetShown()
+        domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
     }
 

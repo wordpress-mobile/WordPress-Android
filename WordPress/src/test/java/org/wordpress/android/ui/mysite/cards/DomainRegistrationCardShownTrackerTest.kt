@@ -13,25 +13,25 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class CardsShownTrackerTest {
+class DomainRegistrationCardShownTrackerTest {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    private lateinit var cardsShownTracker: CardsShownTracker
+    private lateinit var mDomainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 
     @Before
     fun setUp() {
-        cardsShownTracker = CardsShownTracker(analyticsTracker)
+        mDomainRegistrationCardShownTracker = DomainRegistrationCardShownTracker(analyticsTracker)
     }
 
     @Test
     fun `when domain card is shown, then domain registration is tracked`() {
-        cardsShownTracker.trackCardShown(itemType = DOMAIN_REGISTRATION_CARD)
+        mDomainRegistrationCardShownTracker.trackCardShown(itemType = DOMAIN_REGISTRATION_CARD)
 
         verify(analyticsTracker).track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }
 
     @Test
     fun `when domain card is not shown, then domain registration is not tracked`() {
-        cardsShownTracker.trackCardShown(itemType = SITE_INFO_CARD)
+        mDomainRegistrationCardShownTracker.trackCardShown(itemType = SITE_INFO_CARD)
 
         verify(analyticsTracker, never()).track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }

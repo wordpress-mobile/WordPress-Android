@@ -74,7 +74,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
-import org.wordpress.android.ui.mysite.cards.CardsShownTracker
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -137,7 +137,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
-    @Mock lateinit var cardsShownTracker: CardsShownTracker
+    @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -282,7 +282,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteSourceManager,
                 cardsTracker,
                 siteItemsTracker,
-                cardsShownTracker
+                domainRegistrationCardShownTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -369,7 +369,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when selected site is changed, then cardShownTracker is reset`() = test {
         initSelectedSite()
 
-        verify(cardsShownTracker, atLeastOnce()).resetShown()
+        verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
     }
 
     /* AVATAR */
@@ -827,7 +827,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        verify(cardsShownTracker, atLeastOnce()).trackCardShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
+        verify(
+                domainRegistrationCardShownTracker,
+                atLeastOnce()
+        ).trackCardShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
     }
 
     /* QUICK START CARD */

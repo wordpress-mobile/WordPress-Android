@@ -6,7 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATIO
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-class CardsShownTracker @Inject constructor(
+class DomainRegistrationCardShownTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val cardsShownTracked = mutableListOf<MySiteCardAndItem.Type>()
