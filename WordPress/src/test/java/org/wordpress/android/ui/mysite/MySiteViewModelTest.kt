@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
@@ -190,27 +189,25 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private val cardsUpdate = MutableLiveData(
             CardsUpdate(
-                    CardsResult(
-                            listOf(
-                                    PostsCardModel(
-                                            hasPublished = true,
-                                            draft = listOf(
-                                                    PostCardModel(
-                                                            id = 1,
-                                                            title = "draft",
-                                                            content = "content",
-                                                            featuredImage = "featuredImage",
-                                                            date = Date()
-                                                    )
-                                            ),
-                                            scheduled = listOf(
-                                                    PostCardModel(
-                                                            id = 2,
-                                                            title = "scheduled",
-                                                            content = "",
-                                                            featuredImage = null,
-                                                            date = Date()
-                                                    )
+                    cards = listOf(
+                            PostsCardModel(
+                                    hasPublished = true,
+                                    draft = listOf(
+                                            PostCardModel(
+                                                    id = 1,
+                                                    title = "draft",
+                                                    content = "content",
+                                                    featuredImage = "featuredImage",
+                                                    date = Date()
+                                            )
+                                    ),
+                                    scheduled = listOf(
+                                            PostCardModel(
+                                                    id = 2,
+                                                    title = "scheduled",
+                                                    content = "",
+                                                    featuredImage = null,
+                                                    date = Date()
                                             )
                                     )
                             )
@@ -990,7 +987,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
     }
 
-    /* POST CARDS */
+    /* DASHBOARD POST CARD - FOOTER LINK */
 
     @Test
     fun `given create first card, when footer link is clicked, then editor is opened to create new post`() =
@@ -1041,7 +1038,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
     }
 
-    /* POST CARD - POST ITEM */
+    /* DASHBOARD POST CARD - POST ITEM */
 
     @Test
     fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
@@ -1061,6 +1058,32 @@ class MySiteViewModelTest : BaseUnitTest() {
                 requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
 
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
+            }
+
+    /* DASHBOARD ERROR SNACKBAR */
+
+    @Test
+    fun `given show snackbar in cards update, when dashboard cards updated, then dashboard snackbar shown`() =
+            test {
+                initSelectedSite()
+
+                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = true)
+
+                assertThat(snackbars).containsOnly(
+                        SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
+                )
+            }
+
+    @Test
+    fun `given show snackbar not in cards update, when dashboard cards updated, then dashboard snackbar not shown`() =
+            test {
+                initSelectedSite()
+
+                cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = false)
+
+                assertThat(snackbars).doesNotContain(
+                        SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
+                )
             }
 
     /* ITEM CLICK */

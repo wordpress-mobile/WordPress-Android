@@ -17,12 +17,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REF
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStart
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -169,9 +168,10 @@ class MySiteViewModel @Inject constructor(
             quickStartCategories,
             pinnedDynamicCard,
             visibleDynamicCards,
-            cards
+            cardsUpdate
     ) ->
         val state = if (site != null) {
+            cardsUpdate?.checkAndShowSnackbarError()
             buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
@@ -182,12 +182,19 @@ class MySiteViewModel @Inject constructor(
                     visibleDynamicCards,
                     backupAvailable,
                     scanAvailable,
-                    cards
+                    cardsUpdate
             )
         } else {
             buildNoSiteState()
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun CardsUpdate.checkAndShowSnackbarError() {
+        if (showSnackbarError) {
+            _onSnackbarMessage
+                    .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
+        }
     }
 
     @Suppress("LongParameterList")
@@ -201,7 +208,7 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cards: CardsResult<List<CardModel>>?
+        cardsUpdate: CardsUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -213,7 +220,7 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                cards
+                cardsUpdate
         )
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -233,7 +240,7 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cards: CardsResult<List<CardModel>>?
+        cardsUpdate: CardsUpdate?
     ): List<MySiteCardAndItem> {
         val cardsResult = cardsBuilder.build(
                 SiteInfoCardBuilderParams(
@@ -263,8 +270,9 @@ class MySiteViewModel @Inject constructor(
                         onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
                 ),
                 DashboardCardsBuilderParams(
+                        showErrorCard = cardsUpdate?.showErrorCard == true,
                         postCardBuilderParams = PostCardBuilderParams(
-                                posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                                posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                                 onPostItemClick = this::onPostItemClick,
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         )
