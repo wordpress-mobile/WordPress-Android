@@ -116,15 +116,18 @@ class CardsTrackerTest {
         )
     }
 
-    private fun buildDashboardCards(postCardType: PostCardType): DashboardCards {
-        val cards = when (postCardType) {
-            PostCardType.SCHEDULED, PostCardType.DRAFT -> buildPostCardsWithItems(postCardType)
-            PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> buildPostCardsWithoutItems(postCardType)
-        }
-        val dashboardCard = mutableListOf<DashboardCard>()
-        dashboardCard.addAll(cards)
-        return DashboardCards(cards = cards)
-    }
+    private fun buildDashboardCards(postCardType: PostCardType) = DashboardCards(
+            cards = mutableListOf<DashboardCard>().apply {
+                when (postCardType) {
+                    PostCardType.SCHEDULED, PostCardType.DRAFT -> addAll(buildPostCardsWithItems(postCardType))
+                    PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> addAll(
+                            buildPostCardsWithoutItems(
+                                    postCardType
+                            )
+                    )
+                }
+            }
+    )
 
     private fun buildPostCardsWithoutItems(postCardType: PostCardType) =
         listOf(PostCardWithoutPostItems(
