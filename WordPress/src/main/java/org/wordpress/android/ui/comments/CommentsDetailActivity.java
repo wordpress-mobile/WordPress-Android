@@ -30,6 +30,8 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.comments.unified.CommentConstants;
+import org.wordpress.android.ui.comments.unified.CommentInterfaces.OnLoadMoreListener;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -41,7 +43,7 @@ import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
+import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
 
 /**
  * @deprecated
@@ -50,7 +52,7 @@ import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PE
  */
 @Deprecated
 public class CommentsDetailActivity extends LocaleAwareActivity
-        implements CommentAdapter.OnLoadMoreListener,
+        implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
@@ -279,8 +281,8 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                                   final CommentModel comment,
                                   final CommentStatus newStatus) {
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
+        resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
+        resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
         setResult(RESULT_OK, resultIntent);
         finish();
     }
