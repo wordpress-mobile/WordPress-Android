@@ -51,7 +51,7 @@ data class MySiteUiState(
     }
 
     fun update(partialState: PartialState): MySiteUiState {
-        val uiState = updateSnackbarStatusToShowOnlyOnce(partialState) ?: this
+        val uiState = updateSnackbarStatusToShowOnlyOnce(partialState)
 
         return when (partialState) {
             is CurrentAvatarUrl -> uiState.copy(currentAvatarUrl = partialState.url)
@@ -75,6 +75,7 @@ data class MySiteUiState(
     }
 
     private fun updateSnackbarStatusToShowOnlyOnce(partialState: PartialState) =
-            this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
-                    .takeIf { partialState !is CardsUpdate }
+            if (partialState !is CardsUpdate) {
+                this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
+            } else this
 }
