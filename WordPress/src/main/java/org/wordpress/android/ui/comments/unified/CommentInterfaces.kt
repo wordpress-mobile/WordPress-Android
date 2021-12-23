@@ -1,9 +1,7 @@
-package org.wordpress.android.ui.comments.unified;
+package org.wordpress.android.ui.comments.unified
 
-public abstract class CommentInterfaces {
-    public interface OnLoadMoreListener {
-        void onLoadMore();
+abstract class CommentInterfaces {
+    interface OnLoadMoreListener {
+        fun onLoadMore()
     }
 }
-
-
