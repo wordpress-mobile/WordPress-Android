@@ -61,7 +61,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -120,7 +120,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
-    private val readerCommentTableWrapper: ReaderCommentTableWrapper
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper,
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -301,7 +302,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
             if (!isRepliesDataChanged) return
 
-            ReaderCommentService.startServiceForCommentSnippet(
+            readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
                     contextProvider.getContext(),
                     blogId,
                     postId

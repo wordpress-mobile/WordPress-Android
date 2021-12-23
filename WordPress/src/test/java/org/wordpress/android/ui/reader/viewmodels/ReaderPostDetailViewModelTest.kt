@@ -73,6 +73,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -146,6 +147,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
     @Mock private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+    @Mock private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -190,7 +192,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 contextProvider,
                 networkUtilsWrapper,
                 commentsSnippetFeatureConfig,
-                readerCommentTableWrapper
+                readerCommentTableWrapper,
+                readerCommentServiceStarterWrapper
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -989,12 +992,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         this.numReplies = 1
     }
 
-    private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList = ReaderCommentList().apply {
-        val comment = ReaderComment()
-        comment.commentId = 3
+    private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList =
+            ReaderCommentList().apply {
+                val comment = ReaderComment()
+                comment.commentId = 3
 
-       add(comment)
-    }
+                add(comment)
+            }
 
     private fun createDummyReaderPostDetailsUiState(
         post: ReaderPost,
