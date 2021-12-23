@@ -15,7 +15,7 @@ class DomainRegistrationCardShownTracker @Inject constructor(
         cardsShownTracked.clear()
     }
 
-    fun trackCardShown(itemType: MySiteCardAndItem.Type) {
+    fun trackShown(itemType: MySiteCardAndItem.Type) {
         if (itemType == DOMAIN_REGISTRATION_CARD) {
             if (!cardsShownTracked.contains(itemType)) {
                 cardsShownTracked.add(itemType)

@@ -24,14 +24,14 @@ class DomainRegistrationCardShownTrackerTest {
 
     @Test
     fun `when domain card is shown, then domain registration is tracked`() {
-        mDomainRegistrationCardShownTracker.trackCardShown(itemType = DOMAIN_REGISTRATION_CARD)
+        mDomainRegistrationCardShownTracker.trackShown(itemType = DOMAIN_REGISTRATION_CARD)
 
         verify(analyticsTracker).track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }
 
     @Test
     fun `when domain card is not shown, then domain registration is not tracked`() {
-        mDomainRegistrationCardShownTracker.trackCardShown(itemType = SITE_INFO_CARD)
+        mDomainRegistrationCardShownTracker.trackShown(itemType = SITE_INFO_CARD)
 
         verify(analyticsTracker, never()).track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
     }
