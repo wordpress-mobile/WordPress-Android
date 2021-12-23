@@ -34,9 +34,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/retry"
+            style="@style/MySiteErrorCardRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/MySiteErrorCardRetry"
             android:text="@string/retry"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
