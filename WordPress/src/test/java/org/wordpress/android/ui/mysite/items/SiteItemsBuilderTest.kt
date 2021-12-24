@@ -139,6 +139,19 @@ class SiteItemsBuilderTest {
     }
 
     @Test
+    fun `given my site improvements flag present, when build info item is invoked, then info item is built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        val infoItem = siteItemsBuilder.build(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = true
+                )
+        )
+
+        assertThat(infoItem).isNotNull
+    }
+
+    @Test
     fun `given stale message present, when build info item is invoked, then info item is built`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
