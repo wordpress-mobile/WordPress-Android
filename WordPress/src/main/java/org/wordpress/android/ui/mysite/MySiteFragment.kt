@@ -269,7 +269,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
         is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is SiteNavigationAction.OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is SiteNavigationAction.ConnectJetpackForStats ->
