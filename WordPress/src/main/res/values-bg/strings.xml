@@ -62,7 +62,6 @@ Language: bg
     <string name="quick_start_focus_point_description">докоснете тук</string>
     <string name="quick_start_list_create_site_title">Създайте своя сайт</string>
     <string name="quick_start_dialog_share_site_title">Споделете сайта си</string>
-    <string name="quick_start_dialog_need_help_title">Искате ли малко помощ, за да започнете?</string>
     <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
     <string name="login_error_button">Затваряне</string>
@@ -611,7 +610,6 @@ Language: bg
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
     <string name="my_site_header_look_and_feel">Изглед</string>
     <string name="my_site_header_publish">Публикуване</string>
-    <string name="my_site_btn_blog_posts">Публикации</string>
     <string name="my_site_header_configuration">Настройки</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
     <string name="hide">Скриване</string>
@@ -761,7 +759,6 @@ Language: bg
     <string name="reader_empty_posts_in_tag_updating">Извличане на публикации…</string>
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
     <string name="reader_likes_multi">%,d човека харесаха това</string>
-    <string name="reader_label_reply">Отговор</string>
     <string name="comment_spammed">Коментарът е отбелязан като спам</string>
     <string name="cant_share_no_visible_blog">Не можете да споделяте към WordPress без видим блог</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>

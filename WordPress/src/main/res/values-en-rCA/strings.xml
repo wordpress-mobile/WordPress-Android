@@ -31,13 +31,9 @@ Language: en_CA
     <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
     <string name="stats_disabled_title">Looking for stats?</string>
     <string name="gutenberg_native_what_is_a_block">What is a block?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the post.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">We’re working hard on adding support for embed previews. In the meantime, you can preview the embedded content on the page.</string>
     <string name="gutenberg_native_unable_to_embed_media">Unable to embed media</string>
     <string name="gutenberg_native_try_another_search_term">Try another search term</string>
     <string name="gutenberg_native_no_blocks_found">No blocks found</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Embed previews not yet available</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Embed block previews are coming soon</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Double tap to preview post.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Double tap to preview page.</string>
     <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
@@ -82,9 +78,6 @@ Language: en_CA
     <string name="fab_add_category_desc">Create category</string>
     <string name="support_ticket_subject">WordPress for Android support</string>
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
-    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
-    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
-    <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_title">Categories</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
@@ -96,7 +89,6 @@ Language: en_CA
     <string name="gutenberg_native_y_axis_position">Y–Axis Position</string>
     <string name="gutenberg_native_x_axis_position">X–Axis Position</string>
     <string name="gutenberg_native_type_a_url">Type a URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tap to add content</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter results</string>
     <string name="gutenberg_native_s_has_url_set">%s has URL set</string>
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
@@ -157,8 +149,6 @@ Language: en_CA
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe the purpose of the image. Leave empty if the image is purely decorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformed to %2$s</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
-    <string name="like_faces_plural_text">%d bloggers like this.</string>
-    <string name="like_faces_singular_text">One blogger likes this.</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_title_singular">One Like</string>
     <string name="suggestion">Suggestion:</string>
@@ -389,7 +379,6 @@ Language: en_CA
     <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
-    <string name="gutenberg_native_image_link_url">Image Link URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -487,8 +476,6 @@ Language: en_CA
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
@@ -1221,10 +1208,6 @@ Language: en_CA
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select Province</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
-    <string name="domain_registration_result_continue_button">continue</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is\n        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_state_hint">Province</string>
     <string name="domain_contact_information_city_hint">City</string>
@@ -1241,7 +1224,6 @@ Language: en_CA
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.\n        With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
@@ -1297,7 +1279,6 @@ Language: en_CA
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="publish_on">Publish on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="published_on">Published on: %s</string>
@@ -1335,7 +1316,6 @@ Language: en_CA
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites">Next Steps</string>
@@ -1347,7 +1327,6 @@ Language: en_CA
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -1530,9 +1509,6 @@ Language: en_CA
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
@@ -1727,10 +1703,7 @@ Language: en_CA
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -1879,7 +1852,6 @@ Language: en_CA
     <string name="plugin_byline">by %s</string>
     <string name="change_photo">Change photo</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="dlg_saving_tag">Saving</string>
     <string name="dlg_deleting_tag">Deleting</string>
@@ -2639,7 +2611,6 @@ Language: en_CA
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_configuration">Configuration</string>
@@ -2812,7 +2783,6 @@ Language: en_CA
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

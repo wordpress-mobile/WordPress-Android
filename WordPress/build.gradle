@@ -15,6 +15,7 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
@@ -98,10 +99,14 @@ android {
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
-        buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
+        buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
+        buildConfigField "boolean", "UNIFIED_ABOUT", "false"
+        buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -177,8 +182,8 @@ android {
             applicationIdSuffix ".prealpha"
             dimension "buildType"
 
-            versionName versionProperties.getProperty("alpha.versionName")
-            versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
+            versionName project.findProperty("installableBuildVersionName") ?: versionProperties.getProperty("alpha.versionName")
+            versionCode 1 // Fixed versionCode because those builds are not meant to be uploaded to the PlayStore.
         }
 
         // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
@@ -259,16 +264,16 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
     }
 
     // Then define the found properties as buildConfigFields
-    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
     fields_map.each {
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
 
 dependencies {
-    implementation "com.automattic:stories:$storiesVersion"
-    implementation "com.automattic.stories:mp4compose:$storiesVersion"
-    testImplementation "com.automattic.stories:photoeditor:$storiesVersion"
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
+    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
 
@@ -319,7 +324,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
@@ -467,6 +472,8 @@ dependencies {
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
+
+    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
 }
 
 configurations.all {

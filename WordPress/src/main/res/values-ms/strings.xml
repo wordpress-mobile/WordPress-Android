@@ -669,7 +669,6 @@ Language: ms
     <string name="my_site_btn_view_admin">Lihat Pentadbir</string>
     <string name="my_site_btn_view_site">Lihat Laman</string>
     <string name="my_site_btn_switch_site">Tukar Laman</string>
-    <string name="my_site_btn_blog_posts">Kiriman Blog</string>
     <string name="my_site_header_look_and_feel">Rupa dan Bentuk</string>
     <string name="my_site_header_publish">Terbit</string>
     <string name="my_site_header_configuration">Konfigurasi</string>
@@ -823,7 +822,6 @@ Language: ms
     <string name="reader_empty_posts_in_tag_updating">Mengambil kiriman…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d yang lain sukakannya</string>
     <string name="reader_likes_multi">%,d orang sukakanya</string>
-    <string name="reader_label_reply">Balas</string>
     <string name="cant_share_no_visible_blog">Anda tidak boleh berkongsi ke WordPress tanpa blog yang kelihatan</string>
     <string name="comment_spammed">Ulasan ditanda sebagai spam</string>
     <string name="reader_likes_you_and_one">Anda dan seorang lagi sukakannya</string>

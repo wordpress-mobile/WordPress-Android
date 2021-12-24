@@ -1,108 +1,126 @@
 <ar>
-18.1:
--موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
--زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
-- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+18.8:
+- احصل على اقتراحات الرابط بدلاً من روابط الحافظة المملوءة تلقائيًا الخاصة بمكوِّنات الزر والصورة.
+- انقر على "نسخ الرابط" لمشاركة روابط المقالة المنشورة.
+- تطابق علامات تبويب قائمة أداة الإدراج لغة جهازك.
+- يتم فتح خيارات وسائط الجهاز عند إنشاء مكوِّن المعرض.
+- تم حل خطأ حجم الخط والمشكلات المرئية من اليمين إلى اليسار.
+- قم بتحرير رابط مكوِّن التضمين في إعدادات المكوِّن.
 </ar>
 <de-DE>
-18.1:
-- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
-- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
-- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
+18.8:
+- Erhalte Linkvorschläge anstelle von automatisch ausgefüllten Links aus der Zwischenablage für Buttons und Bildblöcke.
+- Klicke auf „Link kopieren“, um Links zu veröffentlichten Beiträgen zu teilen.
+- Tabs des Inserter-Menüs stimmen mit der Sprache deines Geräts überein.
+- Beim Erstellen eines Galerieblocks werden die Medienoptionen des Geräts geöffnet.
+- Problem mit der Schriftgröße und visuelle RTL-Probleme wurden behoben.
+- Bearbeite Embed-Block-Links in den Blockeinstellungen.
 </de-DE>
 <en-US>
-18.1:
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+18.8:
+- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.
+- Click "Copy Link" to share published post links.
+- Inserter menu tabs match your device's language.
+- Device media options open when creating a Gallery block.
+- Font size bug and RTL visual issues are resolved.
+- Edit Embed block link in Block Settings.
 </en-US>
-<es-ES>
-18.1:
--Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
--Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
--Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
-</es-ES>
 <fr-CA>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.8 :
+- Recevez des suggestions de liens au lieu des liens du presse-papier remplis autotmatiquement pour les blocs de boutons et d’images.
+- Cliquez sur « Copier le lien » pour partager le lien d’articles publiés.
+- Inserter menu tabs match your device's language.
+- Device media options open when creating a Gallery block.
+- Font size bug and RTL visual issues are resolved.
+- Edit Embed block link in Block Settings.
 </fr-CA>
 <fr-FR>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+18.8 :
+- Recevez des suggestions de liens au lieu des liens du presse-papier remplis autotmatiquement pour les blocs de boutons et d’images.
+- Cliquez sur « Copier le lien » pour partager le lien d’articles publiés.
+- Inserter menu tabs match your device's language.
+- Device media options open when creating a Gallery block.
+- Font size bug and RTL visual issues are resolved.
+- Edit Embed block link in Block Settings.
 </fr-FR>
 <iw-IL>
-18.1:
-- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
-- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
-- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
+18.8:
+- לקבל הצעות לקישורים במקום קישורים של הלוח שהוזנו באופן אוטומטי לבלוק כפתור ולבלוק תמונה.
+- ללחוץ על 'להעתיק את הקישור' כדי לשתף קישורים לפוסטים שפורסמו.
+-הלשוניות בתפריט המוסיף תואמות לשפה במכשיר שלך.
+- אפשרויות המדיה במכשיר נפתחות כאשר יוצרים בלוק גלריה.
+- תיקנו באג שגרם לבעיות בגודל הגופן ובעיות בכיווניות מימין לשמאל.
+- לערוך קישור בבלוק ההטמעה דרך הגדרות הבלוק.
 </iw-IL>
 <id>
-18.1:
-- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
-- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
-- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
+18.8:
+- Dapatkan saran tautan alih-alih tautan papan klip yang terisi otomatis untuk blok Tombol dan Gambar.
+- Klik "Salin Tautan" untuk membagikan tautan pos yang telah diposkan.
+- Tab menu penyisip sesuai dengan bahasa perangkat Anda.
+- Pilihan media perangkat terbuka saat membuat blok Galeri.
+- Masalah bug ukuran font dan tampilan RTL telah diperbaiki.
+- Mengedit tautan blok Sematan di Pengaturan Blok.
 </id>
-<it-IT>
-18.1:
--Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
--Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
--Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
-</it-IT>
 <ja-JP>
-18.1:
--1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
--埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
--時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
+18.8:
+- ボタンブロックと画像ブロックのクリップボードリンクが自動入力される代わりに、リンク候補が表示されます。
+- 「リンクをコピー」をクリックすると、公開した投稿のリンクが共有されます。
+- 挿入メニューのタブは端末の言語と一致します。
+- ギャラリーブロックの作成時に端末のメディア設定が開きます。
+- フォントサイズのバグと RTL の視覚的な問題が解決されました。
+- ブロック設定で埋め込みブロックのリンクを編集します。
 </ja-JP>
 <ko-KR>
-18.1:
-- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
-- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
-- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
+18.8:
+- 버튼 및 이미지 블록의 자동으로 채워지는 클립보드 링크 대신에 링크 제안을 이용하세요.
+- 발행한 글 링크를 공유하려면 "링크 복사"를 클릭하세요.
+- 삽입기 메뉴 탭이 기기의 언어와 일치합니다.
+- 갤러리 블록을 만들 때 기기 미디어 옵션이 열립니다.
+- 글꼴 크기 버그와 RTL 비주얼 문제가 해결되었습니다.
+- 블록 설정에서 임베드 블록을 편집하세요.
 </ko-KR>
 <nl-NL>
-18.1:
--Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
--Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
--Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
+18.8:
+- Ontvang link suggesties in plaats van automatisch ingevulde klembord links voor knop- en afbeeldingsblokken.
+- Klik op "Link kopiëren" om gepubliceerde bericht links te delen.
+- Inserter menu tabs komen overeen met de taal van je apparaat.
+- Apparaat media-opties worden geopend bij het maken van een galerijblok.
+- Lettertypegrootte bug en RTL visuele problemen zijn opgelost.
+- Bewerk de insluitblok link in Blok instellingen.
 </nl-NL>
-<pt-BR>
-18,1:
-- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
-- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
-- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
-</pt-BR>
 <ru-RU>
-18.1:
--Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
--Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
--Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
+18.8:
+- Вместо автоматического заполнения из буфера, вы получите предложения для ссылок в блоках "Кнопка" и "Изображение"
+- Нажмите «Копировать ссылку», чтобы делиться ссылками на опубликованные записи.
+- Вкладки меню вставки теперь соответствуют языку вашего устройства.
+- Параметры мультимедиа для устройства открываются при создании блока галереи.
+- Исправлена ​​ошибка размера шрифта и визуальные проблемы RTL.
+- Редактирование ссылки в блоке вставки перенесено в настройки блока.
 </ru-RU>
 <sv-SE>
-18.1:
--Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
--Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
--En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
+18.8:
+- Få länkförslag istället för automatiskt ifyllda urklippslänkar för knapp- och bildblock.
+- Klicka på "Kopiera länk" för att dela publicerade inläggslänkar.
+- Infogarmenyns flikar matchar din enhets språk.
+- Enhetens mediaalternativ öppnas när du skapar ett galleriblock.
+- Textstorleksfel och visuella RTL-fel har åtgärdats.
+- Redigera länk för inbäddningsblock i blockinställningarna.
 </sv-SE>
 <tr-TR>
-18.1:
--Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
--Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
--Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
+18.8:
+- Düğme ve Görüntü blokları için otomatik olarak doldurulan pano bağlantıları yerine bağlantı önerileri alın. 
+- Yayınlanan gönderi bağlantılarını paylaşmak için "Bağlantıyı Kopyala"ya tıklayın.
+- Ekleyici menü sekmeleri cihazınızın diliyle eşleşir.
+- Bir Galeri bloku oluştururken cihaz medya seçenekleri açılır.
+- Yazı tipi boyutu hatası ve Görsel RTL sorunları çözüldü.
+- Blok Ayarları'ndan Gömülü blok bağlantısını düzenleyin.
 </tr-TR>
 <zh-CN>
-18.1:
--每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
--“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
--时间选择功能，允许您选择特定的时间来接收博客提醒。
+18.8：
+- 获取按钮和图像区块的链接建议，而不是自动填充的剪贴板链接。
+- 点击“复制链接”，分享已发布文章的链接。
+- 插入器菜单选项卡与您的设备语言相对应。
+- 设备媒体选项在创建图库区块时打开。
+- 字体大小错误和 RTL 视觉问题已解决。
+- 在”区块设置“中编辑嵌入区块链接。
 </zh-CN>
-<zh-TW>
-18.1：
--每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
--嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
--時間選取功能可讓你指定接收網誌提醒的時間。
-</zh-TW>

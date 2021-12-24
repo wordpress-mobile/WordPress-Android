@@ -164,10 +164,6 @@ Language: en_AU
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
-    <string name="domain_registration_result_continue_button">continue</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is\n        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_state_hint">State</string>
     <string name="domain_contact_information_city_hint">City</string>
@@ -184,7 +180,6 @@ Language: en_AU
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.\n        With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
@@ -238,7 +233,6 @@ Language: en_AU
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customise look and feel of your site later</string>
     <string name="publish_on">Publish on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="published_on">Published on: %s</string>
@@ -276,7 +270,6 @@ Language: en_AU
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
-    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
@@ -284,7 +277,6 @@ Language: en_AU
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -465,9 +457,6 @@ Language: en_AU
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
@@ -653,10 +642,7 @@ Language: en_AU
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -803,7 +789,6 @@ Language: en_AU
     <string name="plugin_byline">by %s</string>
     <string name="change_photo">Change photo</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="dlg_saving_tag">Saving</string>
     <string name="dlg_deleting_tag">Deleting</string>
@@ -1539,7 +1524,6 @@ Language: en_AU
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_configuration">Configuration</string>
@@ -1707,7 +1691,6 @@ Language: en_AU
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

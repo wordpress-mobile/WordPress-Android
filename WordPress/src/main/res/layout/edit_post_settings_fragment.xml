@@ -220,6 +220,27 @@
 
         </LinearLayout>
 
+        <!-- Mark as Sticky -->
+
+        <LinearLayout
+            android:id="@+id/post_settings_mark_as_sticky_container"
+            style="@style/PostSettingsCardViewInnerLayout" >
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_mark_as_sticky_options_header" />
+
+            <LinearLayout style="@style/PostSettingsContainer">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/post_settings_sticky_switch"
+                    style="@style/PostSettingsSwitch"
+                    android:text="@string/post_settings_post_sticky" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <!--More Options-->
 
         <LinearLayout style="@style/PostSettingsCardViewInnerLayout">

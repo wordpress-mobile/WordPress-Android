@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,129 +7,129 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
+import org.wordpress.android.databinding.DomainRegistrationActivityBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationCheckout
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
-        CTA_DOMAIN_CREDIT_REDEMPTION
+        CTA_DOMAIN_CREDIT_REDEMPTION,
+        DOMAIN_PURCHASE
     }
 
     companion object {
+        const val RESULT_REGISTERED_DOMAIN_EMAIL = "RESULT_REGISTERED_DOMAIN_EMAIL"
         const val DOMAIN_REGISTRATION_PURPOSE_KEY = "DOMAIN_REGISTRATION_PURPOSE_KEY"
     }
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
-    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
-    private lateinit var binding: DomainSuggestionsActivityBinding
+    private lateinit var binding: DomainRegistrationActivityBinding
+
+    private val openCheckout = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenCheckout()) {
+        it?.let {
+            viewModel.completeDomainRegistration(it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        with(DomainSuggestionsActivityBinding.inflate(layoutInflater)) {
+        with(DomainRegistrationActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             binding = this
 
-            domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
+            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
                     as DomainRegistrationPurpose
 
-            setSupportActionBar(toolbarDomain)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
-            }
-            setupViewModel()
+            setupToolbar()
+            setupViewModel(site, domainRegistrationPurpose)
+            setupObservers()
         }
     }
 
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DomainRegistrationMainViewModel::class.java)
-        viewModel.start()
+    private fun DomainRegistrationActivityBinding.setupToolbar() {
+        setSupportActionBar(toolbarDomain)
+        supportActionBar?.let {
+            it.setHomeButtonEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
 
-        viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
-            if (isVisible == true) {
-                var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
-                if (fragment == null) {
-                    fragment = DomainSuggestionsFragment.newInstance()
-                    showFragment(
-                            fragment,
-                            DomainSuggestionsFragment.TAG,
-                            slideIn = false,
-                            isRootFragment = true
-                    )
-                }
+    private fun setupViewModel(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DomainRegistrationMainViewModel::class.java)
+        viewModel.start(site, domainRegistrationPurpose)
+    }
+
+    private fun setupObservers() {
+        viewModel.onNavigation.observeEvent(this) {
+            when (it) {
+                is OpenDomainSuggestions -> showDomainSuggestions()
+                is OpenDomainRegistrationCheckout -> openDomainRegistrationCheckoutWebView(it.site, it.details)
+                is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
+                is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
+                is FinishDomainRegistration -> finishDomainRegistration(it.event)
             }
-        })
+        }
+    }
 
-        viewModel.selectedDomain.observe(this, { selectedDomain ->
-            selectedDomain?.let {
-                var fragment = supportFragmentManager.findFragmentByTag(
-                        DomainRegistrationDetailsFragment.TAG
-                )
+    private fun showDomainSuggestions() {
+        showFragment(DomainSuggestionsFragment.TAG, true) {
+            DomainSuggestionsFragment.newInstance()
+        }
+    }
 
-                if (fragment == null) {
-                    fragment = DomainRegistrationDetailsFragment.newInstance(it)
-                    showFragment(fragment!!, DomainRegistrationDetailsFragment.TAG)
-                }
-            }
-        })
+    private fun openDomainRegistrationCheckoutWebView(site: SiteModel, details: DomainProductDetails) {
+        openCheckout.launch(CheckoutDetails(site, details.domainName))
+    }
 
-        viewModel.domainRegistrationCompleted.observe(this, { event ->
-            event?.let {
-                if (shouldShowCongratsScreen()) {
-                    var fragment = supportFragmentManager.findFragmentByTag(
-                            DomainRegistrationResultFragment.TAG
-                    )
+    private fun showDomainRegistrationDetails(details: DomainProductDetails) {
+        showFragment(DomainRegistrationDetailsFragment.TAG) {
+            DomainRegistrationDetailsFragment.newInstance(details)
+        }
+    }
 
-                    if (fragment == null) {
-                        fragment = DomainRegistrationResultFragment.newInstance(
-                                it.domainName,
-                                it.email
-                        )
-                        showFragment(fragment!!, DomainRegistrationResultFragment.TAG)
-                    }
-                } else {
-                    val intent = Intent()
-                    intent.putExtra(
-                            DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL,
-                            it.email
-                    )
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                }
-            }
-        })
+    private fun showDomainRegistrationResult(event: DomainRegistrationCompletedEvent) {
+        showFragment(DomainRegistrationResultFragment.TAG) {
+            DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
+        }
+    }
+
+    private fun finishDomainRegistration(event: DomainRegistrationCompletedEvent) {
+        setResult(RESULT_OK, Intent().putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, event.email))
+        finish()
     }
 
     private fun showFragment(
-        fragment: Fragment,
         tag: String,
-        slideIn: Boolean = true,
-        isRootFragment: Boolean = false
-    ) {
-        val transaction = supportFragmentManager.beginTransaction()
-
-        if (slideIn) {
-            transaction.setCustomAnimations(
-                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-            )
+        isRootFragment: Boolean = false,
+        factory: () -> Fragment
+    ) = with(supportFragmentManager) {
+        beginTransaction().apply {
+            if (!isRootFragment) {
+                setCustomAnimations(
+                        R.anim.activity_slide_in_from_right,
+                        R.anim.activity_slide_out_to_left,
+                        R.anim.activity_slide_in_from_left,
+                        R.anim.activity_slide_out_to_right
+                )
+                addToBackStack(null)
+            }
+            replace(R.id.fragment_container, findFragmentByTag(tag) ?: factory(), tag)
+            commit()
         }
-        if (!isRootFragment) {
-            transaction.addToBackStack(null)
-        }
-
-        transaction.replace(R.id.fragment_container, fragment, tag).commit()
-    }
-
-    private fun shouldShowCongratsScreen(): Boolean {
-        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -46,6 +46,7 @@ public class RequestCodes {
     public static final int MULTI_SELECT_MEDIA_PICKER = 2600;
     public static final int SINGLE_SELECT_MEDIA_PICKER = 2601;
     public static final int MEDIA_SETTINGS = 2700;
+    public static final int WEB_CHROME_CLIENT_FILE_PICKER = 2710;
 
     // Jetpack
     public static final int REQUEST_JETPACK = 3000;
@@ -72,4 +73,7 @@ public class RequestCodes {
 
     // Reader Interests
     public static final int READER_INTERESTS = 9001;
+
+    // Comments related
+    public static final int READER_FOLLOW_CONVERSATION = 10000;
 }

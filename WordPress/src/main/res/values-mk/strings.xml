@@ -129,7 +129,6 @@ Language: mk
     <string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
     <string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
     <string name="reader_likes_multi">На %,d луѓе им се допаѓа ова</string>
-    <string name="reader_label_reply">Одговори</string>
     <string name="comment_spammed">Коментарот е означен како спам</string>
     <string name="pick_photo">Избери фотографија</string>
     <string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>

@@ -1,11 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 11:54:09+0000
+Translation-Revision-Date: 2021-12-07 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Dagli appunti</string>
+    <string name="gutenberg_native_featured_image">Immagine in evidenza</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copia l\'URL dagli appunti, %s</string>
+    <string name="me_btn_about">Informazioni su WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Vai agli articoli pianificati</string>
+    <string name="my_site_post_card_link_go_to_drafts">Vai alle bozze</string>
+    <string name="my_site_post_card_link_create_post">Crea un articolo</string>
+    <string name="my_site_create_next_post_excerpt">Pubblicare con regolarità aiuta a creare il tuo pubblico.</string>
+    <string name="my_site_create_next_post_title">Crea l\'articolo successivo</string>
+    <string name="menu_visual_mode_switched_notice">Passato alla modalità visuale.</string>
+    <string name="menu_html_mode_switched_notice">Passato alla modalità HTML.</string>
+    <string name="post_link_copied_to_clipboard">Link copiato negli appunti</string>
+    <string name="comment_author_badge">Autore</string>
+    <string name="button_copy_link">Copia link</string>
+    <string name="domains_paid_plan_add_your_domain_caption">L\'aggiunta di un dominio personalizzato consente ai visitatori di trovare facilmente il tuo sito</string>
+    <string name="domains_paid_plan_add_your_domain_title">Aggiungi il tuo dominio</string>
+    <string name="my_site_create_first_post_title">Crea il tuo primo articolo</string>
+    <string name="my_site_create_first_post_excerpt">Gli articoli vengono visualizzati sulla pagina del tuo blog in ordine cronologico inverso. È tempo di condividere le tue idee con il mondo.</string>
+    <string name="my_site_untitled_post">Senza titolo</string>
+    <string name="my_site_post_card_scheduled_title">Prossimi articoli pianificati</string>
+    <string name="my_site_post_card_draft_title">Lavora su una bozza di articolo</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">I domini reindirizzeranno al tuo sito su %s</string>
+    <string name="gutenberg_native_create_link">Crea link</string>
+    <string name="domain_registration_result_description">Il nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Potrebbero essere necessari fino a 30 minuti prima che il tuo dominio inizi a funzionare.</string>
+    <string name="domain_registration_result_title">Complimenti per l\'acquisto.</string>
+    <string name="domains_suggestions_select_domain">Seleziona dominio</string>
+    <string name="domains_title">Domini</string>
+    <string name="post_status_sticky">In evidenza</string>
+    <string name="post_settings_post_sticky">Metti in evidenza l\'articolo nella pagina iniziale</string>
+    <string name="post_settings_mark_as_sticky_options_header">Contrassegna come in evidenza</string>
+    <string name="reader_follow_comments_unfollow_conversation">Smetti di seguire la conversazione</string>
+    <string name="reader_follow_comments_enable_push_notifications">Attiva le notifiche in-app</string>
+    <string name="reader_follow_comments_message">Stai seguendo questa conversazione. Riceverai notifiche tramite e-mail quando vengono pubblicati nuovi commenti.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Gestisci le opzioni relative al seguire una conversazione, finestra popup</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Impossibile disattivare le notifiche in-app</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Impossibile attivare le notifiche in-app</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Notifiche in-app disattivate</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Notifiche in-app attivate</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Abbonamento a questa conversazione annullato</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Seguendo questa conversazione\nVuoi attivare le notifiche in-app?</string>
+    <string name="domains_search_for_a_domain_button">Cerca un dominio</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Il tuo piano include la registrazione del dominio per un anno gratuitamente</string>
+    <string name="domains_free_plan_get_your_domain_caption">I domini acquistati su questo sito reindirizzeranno i visitatori a &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Richiedi il tuo dominio gratuito</string>
+    <string name="domains_manage_domains">Gestisci domini</string>
+    <string name="domains_add_a_domain">Aggiungi un dominio</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Scade il giorno %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Scade il giorno %s</string>
+    <string name="domains_site_domains">I domini del tuo sito</string>
+    <string name="domains_primary_site_address_chip">Indirizzo principale del sito</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Modifica l\'indirizzo del sito</string>
+    <string name="domains_primary_site_caption">Il tuo indirizzo WordPress.com gratuito è</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/anno&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s per il primo anno a &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/all\'anno&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Desideri eliminare?</string>
+    <string name="comment_edit_cancel_dialog_title">Sono presenti modifiche non salvate</string>
+    <string name="comment_edit_comment_error">Il campo Commento non può essere vuoto</string>
+    <string name="comment_edit_user_email_error">E-mail utente non valida</string>
+    <string name="comment_edit_web_address_error">Indirizzo web non valido</string>
+    <string name="comment_edit_user_name_error">Il nome utente non può essere vuoto</string>
+    <string name="comment_edit_email_address">Indirizzo e-mail</string>
+    <string name="comment_edit_web_address">Indirizzo web</string>
+    <string name="comment_edit_comment">Commento</string>
+    <string name="comment_edit_user_name">Nome</string>
+    <string name="comment_edit_menu_done">Fatto</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Le anteprime dei blocchi incorporati sono in arrivo</string>
+    <string name="weekly_roundup">Resoconto settimanale</string>
+    <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
+    <string name="quick_start_list_create_site_message">Sito creato. Completa un\'altra attività.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A te e %1$s blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A te e 1 blogger&lt;/a&gt; piace questo.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A te&lt;/a&gt; piace questo.</string>
+    <string name="gutenberg_native_line_height">Altezza linea</string>
+    <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
+    <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
+    <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
+    <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
+    <string name="me_btn_share">Condividi WordPress con un amico</string>
+    <string name="my_site_quick_actions_title">Link veloci</string>
+    <string name="my_site_btn_domains">Domini</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -37,6 +123,7 @@ Language: it
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">I blocchi ti consentono di concentrarti sulla scrittura dei contenuti, perché tutti gli strumenti di formattazione di cui hai bisogno sono già lì per aiutarti a trasmettere il tuo messaggio.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organizza i tuoi contenuti in colonne, aggiungi pulsanti di inviti all\'azione e sovrapponi il testo alle immagini.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Aggiungi un nuovo blocco in qualsiasi momento toccando l\'icona + sulla barra degli strumenti nella parte inferiore sinistra. </string>
+    <string name="quick_start_sites_type_tasks_completed">%1$s di %2$s completati</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Scopri le nozioni di base grazie a una rapida guida dettagliata.</string>
     <string name="comment_batch_moderation_error">Non è stato possibile moderare uno o più commenti</string>
     <string name="create_site_notification_create_site_action">Crea il sito</string>
@@ -47,13 +134,13 @@ Language: it
     <string name="stats_disabled_subtitle">Attiva le statistiche del sito per vedere le informazioni dettagliate su traffico, Mi piace, commenti e abbonati.</string>
     <string name="stats_disabled_title">Cerchi le statistiche?</string>
     <string name="gutenberg_native_what_is_a_block">Che cos\'è un blocco?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Stiamo lavorando sodo per aggiungere il supporto per le anteprime incorporate. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nell\'articolo.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Stiamo lavorando sodo per aggiungere il supporto per le anteprime di %s. Nel frattempo, puoi visualizzare in anteprima il contenuto incorporato nella pagina.</string>
     <string name="gutenberg_native_unable_to_embed_media">Non è possibile incorporare il media</string>
     <string name="gutenberg_native_try_another_search_term">Prova un altro termine di ricerca</string>
     <string name="gutenberg_native_no_blocks_found">Nessun blocco trovato</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Anteprime incorporate non ancora disponibili</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Le anteprime dei blocchi incorporate saranno presto disponibili</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Le anteprime di %s non sono ancora disponibili</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Le anteprime %s dei blocchi incorporate saranno presto disponibili</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Tocca due volte per visualizzare l\'anteprima dell\'articolo.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Tocca due volte per visualizzare l\'anteprima della pagina.</string>
     <string name="quick_start_list_upload_icon_subtitle">Presente nella scheda del browser dei visitatori e in altri luoghi online</string>
@@ -99,9 +186,6 @@ Language: it
     <string name="fab_add_category_desc">Crea categoria</string>
     <string name="support_ticket_subject">Supporto WordPress per Android</string>
     <string name="site_settings_categories_hint">Gestisci le categorie del tuo sito</string>
-    <string name="site_settings_categories_empty_title">Non hai alcuna categoria</string>
-    <string name="site_settings_categories_empty_subtitle">Aggiungi qui le categorie che usati frequentemente in modo che possano essere rapidamente selezionate quando classifichi i tuoi articoli</string>
-    <string name="site_settings_categories_empty_button">Crea una categoria</string>
     <string name="site_settings_categories_title">Categorie</string>
     <string name="page_is_posts_page_warning">Il contenuto della pagina degli articoli recenti viene generato automaticamente e non può essere modificato.</string>
     <string name="site_settings_blogging_reminders_title">Promemoria relativi al blog</string>
@@ -113,7 +197,6 @@ Language: it
     <string name="gutenberg_native_y_axis_position">Posizione asse Y</string>
     <string name="gutenberg_native_x_axis_position">Posizione asse X</string>
     <string name="gutenberg_native_type_a_url">Digita un URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tocca per aggiungere il contenuto</string>
     <string name="gutenberg_native_slash_inserter_results">Risultati dello strumento per l\'inserimento della barra</string>
     <string name="gutenberg_native_s_has_url_set">%s ha un URL impostato</string>
     <string name="gutenberg_native_s_has_no_url_set">%s non ha un URL impostato</string>
@@ -161,9 +244,16 @@ Language: it
     <string name="gutenberg_native_post_meta_settings">Impostazioni dei metadati dell\'articolo</string>
     <string name="gutenberg_native_preview_page">Pagina di anteprima</string>
     <string name="gutenberg_native_preview_post">Anteprima articolo</string>
+    <string name="gutenberg_native_retry">Riprova</string>
+    <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_embed_link">Incorpora link</string>
     <string name="gutenberg_native_display_post_date">Visualizza data articolo</string>
+    <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
+    <string name="gutenberg_native_custom_url">URL personalizzata</string>
+    <string name="gutenberg_native_column_d">Colonna %d</string>
+    <string name="gutenberg_native_none">Nessuno</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
     <string name="gutenberg_native_add_blocks">Aggiungi blocchi</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>
@@ -175,8 +265,6 @@ Language: it
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrivi lo scopo dell\'immagine. Lascia vuoto, se l\'immagine è semplicemente decorativa. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s trasformato in %2$s</string>
     <string name="like_faces_error_loading_message">Errore durante il caricamento di dati simili. %s.</string>
-    <string name="like_faces_plural_text">Piace a %d blogger.</string>
-    <string name="like_faces_singular_text">Piace a un blogger.</string>
     <string name="like_title_plural">%d Mi piace</string>
     <string name="suggestion">Suggerimento:</string>
     <string name="like_title_singular">1 Mi piace</string>
@@ -407,7 +495,6 @@ Language: it
     <string name="backup_download_generic_failure">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
     <string name="backup_download_details_action_button_content_description">Pulsante Crea backup scaricabile</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s è il punto selezionato di cui creare un backup scaricabile.</string>
-    <string name="gutenberg_native_image_link_url">URL link immagine</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -503,10 +590,8 @@ Language: it
     <string name="reader_follow_comments_could_not_unsubscribe_error">Impossibile annullare l\'abbonamento dai commenti per questo articolo</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Impossibile abbonarsi dai commenti per questo articolo</string>
     <string name="reader_follow_comments_get_status_error">Errore durante il recupero dello stato dell\'abbonamento per l\'articolo</string>
-    <string name="reader_follow_comments_unsubscribe_success">Annullamento dell\'abbonamento dai commenti completato</string>
     <string name="reader_btn_following_comments">Stai seguendo la conversazione tramite email</string>
     <string name="reader_btn_follow_comments">Segui la conversazione tramite email</string>
-    <string name="reader_follow_comments_subscribe_success">Abbonamento ai commenti completato</string>
     <string name="reader_follow_comments_bad_format_response">Risposta non valida ricevuta</string>
     <string name="reader_follow_comments_null_response">Nessuna risposta ricevuta</string>
     <string name="activity_log_activity_type_filter_clear">Pulisci</string>
@@ -723,6 +808,7 @@ Language: it
     <string name="signup_confirmation_title">Conferma dell\'iscrizione</string>
     <string name="continue_with_google_terms_of_service_text">Se continui con Google e non hai già un account WordPress.com, crei un account e accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="enter_your_site_address">Immetti l\'indirizzo del sito esistente</string>
+    <string name="gutenberg_native_convert_to_link">Converti in link</string>
     <string name="continue_terms_of_service_text">Continuando, accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="signup_confirmation_message">Useremo questo indirizzo email per creare il tuo nuovo account WordPress.com.</string>
     <string name="signup_magic_link_message">Ti abbiamo inviato un\'email con un link per creare il tuo nuovo account WordPress.com. Controlla la tua email su questo dispositivo e tocca il link nell\'email ricevuta da WordPress.com.</string>
@@ -754,6 +840,7 @@ Language: it
     <string name="gutenberg_native_block_cut">Blocco tagliato</string>
     <string name="gutenberg_native_block_copied">Blocco copiato</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Il titolo del sito può essere modificato solamente da un utente con il ruolo di amministratore.</string>
+    <string name="gutenberg_native_remove_block">Rimuovi il blocco</string>
     <string name="my_site_title_changer_dialog_hint">Il titolo del sito viene visualizzato nella barra del titolo di un browser web e nell\'intestazione nella maggior parte dei temi.</string>
     <string name="reader_title_tag_preview">Argomento</string>
     <string name="error_update_site_title_network">Impossibile aggiornare il titolo del sito. Controlla la connessione di rete e riprova.</string>
@@ -1239,10 +1326,6 @@ Language: it
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrazione del nome di dominio in corso…</string>
     <string name="domain_registration_state_picker_dialog_title">Seleziona uno stato</string>
     <string name="domain_registration_country_picker_dialog_title">Seleziona il Paese</string>
-    <string name="domain_registration_result_continue_button">continua</string>
-    <string name="domain_registration_result_description">il tuo nuovo dominio &lt;b&gt;%s&lt;/b&gt; è in fase di configurazione. Un\'ottima cosa\n per il tuo sito!</string>
-    <string name="domain_registration_result_title">Complimenti</string>
-    <string name="domain_contact_information_register_domain_button">Registra dominio</string>
     <string name="domain_contact_information_postal_code_hint">CAP</string>
     <string name="domain_contact_information_state_hint">Stato</string>
     <string name="domain_contact_information_city_hint">Città</string>
@@ -1251,6 +1334,7 @@ Language: it
     <string name="domain_contact_information_country_hint">Paese</string>
     <string name="domain_contact_information_country_code_hint">Prefisso internazionale</string>
     <string name="domain_contact_information_phone_number_hint">Telefono</string>
+    <string name="domain_contact_information_register_domain_button">Registra il dominio</string>
     <string name="domain_contact_information_organization_hint">Organizzazione (opzionale)</string>
     <string name="domain_contact_information_description">Per agevolarti, abbiamo precompilato le tue informazioni di contatto\n di WordPress.com. Rileggi per verificare che le informazioni che desideri utilizzare per questo dominio siano corrette.</string>
     <string name="domain_contact_information_title">Informazioni di contatto per il dominio</string>
@@ -1259,7 +1343,6 @@ Language: it
     <string name="domain_registration_privacy_protection_description">I proprietari del dominio devono condividere le informazioni di contatto in un database pubblico di tutti i domini.\n Con la Protezione della privacy, pubblichiamo le nostre informazioni al posto delle tue e ti inoltriamo privatamente qualsiasi comunicazione.</string>
     <string name="domain_registration_privacy_protection_title">Protezione della privacy</string>
     <string name="domain_registration_contact_form_input_error">Per %s, inserisci un valore valido</string>
-    <string name="domains_suggestions_choose_domain">Scegli dominio</string>
     <string name="stats_management_new">Nuovo</string>
     <string name="stats_management_dismiss_insights_news_card">Chiudi</string>
     <string name="stats_management_try_it_now">Prova ora</string>
@@ -1324,8 +1407,8 @@ Language: it
     <string name="stats_months_and_years_period_label">Periodo</string>
     <string name="stats_detail_months_and_years">Mesi e anni</string>
     <string name="stats_insights_load_more">Carica di più</string>
-    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto del tuo sito in un secondo momento</string>
     <string name="stats_detail_average_views_per_day">Media visualizzazioni al giorno</string>
+    <string name="new_site_creation_preview_subtitle">Potrai personalizzare l’aspetto del tuo sito in un secondo momento</string>
     <string name="stats_insights_today_stats">Oggi</string>
     <string name="stats_insights_best_hour">Orario migliore</string>
     <string name="stats_insights_best_day">Giorno migliore</string>
@@ -1354,7 +1437,6 @@ Language: it
     <string name="site_settings_gutenberg_default_for_new_posts">Usa editor a blocchi</string>
     <string name="exit">esci</string>
     <string name="quick_start_complete_tasks_header">Completato (%d)</string>
-    <string name="quick_start_sites_type_subtitle">%1$d di %2$d completato</string>
     <string name="quick_start_sites">Passi successivi</string>
     <string name="quick_start_dialog_view_site_message">Goditi il tuo prodotto finito.</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
@@ -1362,7 +1444,6 @@ Language: it
     <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
-    <string name="quick_start_dialog_need_help_message">Ti guideremo attraverso le basi per costruire e far crescere il tuo sito.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
@@ -1548,9 +1629,6 @@ Language: it
     <string name="quick_start_dialog_share_site_message">Collega gli account dei tuoi social media: il tuo sito condividerà automaticamente i nuovi articoli.</string>
     <string name="quick_start_dialog_publish_post_title">Pubblica un articolo</string>
     <string name="quick_start_dialog_publish_post_message_short">Tocca %1$s Crea un articolo %2$s per creare un nuovo articolo</string>
-    <string name="quick_start_dialog_need_help_title">Desideri un po\' di aiuto per iniziare?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accetta</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Mai</string>
     <string name="quick_start_dialog_follow_sites_title">Segui altri siti</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
     <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti interessano e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
@@ -1745,14 +1823,11 @@ Language: it
     <string name="open_external_link_desc">Apri link esterno</string>
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANNULLA</string>
     <string name="menu_visual_mode">Modalità visuale</string>
     <string name="menu_html_mode">Modalità HTML</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
     <string name="menu_save_as_draft">Salva come bozza</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">Passato alla modalità visuale.</string>
-    <string name="menu_html_mode_done_snackbar">Passato alla modalità HTML.</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -1900,8 +1975,8 @@ Language: it
     <string name="site_settings_tags_hint">Gestisci i tag del tuo sito</string>
     <string name="dlg_saving_tag">Salvataggio</string>
     <string name="dlg_deleting_tag">Cancellazione</string>
-    <string name="my_site_btn_site_pages">Pagine</string>
     <string name="dlg_confirm_delete_tag">Eliminare definitivamente il tag \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Pagine</string>
     <string name="error_tag_exists">Esiste già un tag con questo nome</string>
     <string name="tag_description_hint">Descrizione</string>
     <string name="tag_name_hint">Tag</string>
@@ -2659,8 +2734,8 @@ Language: it
     <string name="my_site_btn_view_site">Visualizza il sito</string>
     <string name="my_site_header_look_and_feel">Aspetto</string>
     <string name="my_site_header_publish">Pubblica</string>
-    <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="my_site_btn_site_settings">Impostazioni sito</string>
+    <string name="my_site_btn_blog_posts">Articoli</string>
     <string name="my_site_header_configuration">Configurazione</string>
     <string name="reader_label_new_posts_subtitle">Tocca per visualizzarli</string>
     <string name="deselect_all">Deseleziona tutto</string>
@@ -2730,6 +2805,7 @@ Language: it
     <string name="comment_reply_to_user">Replica a %s</string>
     <string name="signing_out">Disconnessione in corso…</string>
     <string name="reader_empty_posts_in_tag">Nessun articolo con questo argomento</string>
+    <string name="help_and_support">Guida e supporto</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="reader_toast_err_block_blog">Impossibile bloccare questo sito</string>
     <string name="reader_menu_block_blog">Blocca questo sito</string>
@@ -2831,7 +2907,6 @@ Language: it
     <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>
     <string name="reader_likes_multi">Piace a %,d persone</string>
-    <string name="reader_label_reply">Rispondi</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
     <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="reader_likes_you_and_one">Piace a te e a un\'altra persona</string>

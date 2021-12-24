@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-15 23:21:07+0000
+Translation-Revision-Date: 2021-10-23 23:05:18+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
@@ -23,6 +23,7 @@ Language: sr_RS
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
+    <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
     <string name="quick_start_list_check_stats_title">Проверите своју статистику</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
@@ -47,6 +48,8 @@ Language: sr_RS
     <string name="backup_download_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="backup_download_complete_failed_action_button">Урађено</string>
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
+    <string name="scan_history_all_threats_tab">Све</string>
+    <string name="scan_history_menu_title">Историја</string>
     <string name="backup_item_sqls">База података веб места</string>
     <string name="backup_item_roots_hint">(садржи wp-config.php и све не-Вордпресове датотеке)</string>
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
@@ -229,6 +232,7 @@ Language: sr_RS
     <string name="send_link_by_email">Пошаљи повезницу електронском поштом</string>
     <string name="reset_your_password">Ресетујте своју лозинку</string>
     <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
+    <string name="quick_start_list_update_site_title_title">Проверите наслов свог сајта</string>
     <string name="gutenberg_native_s_block_options">опције блока %s</string>
     <string name="gutenberg_native_duplicate_block">Дуплирај блок</string>
     <string name="gutenberg_native_copy_block">Копирај блок</string>
@@ -241,6 +245,7 @@ Language: sr_RS
     <string name="reader_title_tag_preview">Тема</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
     <string name="gutenberg_native_open_link_in_a_browser">Отвори везу у прегледачу</string>
+    <string name="gutenberg_native_go_back">Иди назад</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Двапут тапни за одабир опције</string>
     <string name="pages_list_author">Аутор странице</string>
     <string name="everyone">Сви</string>
@@ -527,7 +532,6 @@ Language: sr_RS
     <string name="site_settings_disconnected_toast">Нема интернет везе. Уређивање је онемогућено.</string>
     <string name="domain_registration_country_picker_dialog_title">Одабери државу</string>
     <string name="domain_registration_state_picker_dialog_title">Одабери покрајину</string>
-    <string name="domain_registration_result_title">Честитамо</string>
     <string name="domain_contact_information_register_domain_button">Региструјте домен</string>
     <string name="domain_contact_information_postal_code_hint">Поштански број</string>
     <string name="domain_contact_information_state_hint">Покрајина</string>
@@ -537,13 +541,11 @@ Language: sr_RS
     <string name="domain_contact_information_country_hint">Држава</string>
     <string name="domain_contact_information_country_code_hint">Код државе</string>
     <string name="domain_contact_information_phone_number_hint">Телефон</string>
-    <string name="domain_registration_result_continue_button">настави</string>
     <string name="domain_contact_information_organization_hint">Организација (опционо)</string>
     <string name="domain_privacy_option_off_title">Региструј јавно</string>
     <string name="domain_privacy_option_on_title">Региструј приватно са Заштитом приватности</string>
     <string name="domain_registration_privacy_protection_title">Заштита приватности</string>
     <string name="domain_registration_contact_form_input_error">Молимо унесите исправан %s</string>
-    <string name="domains_suggestions_choose_domain">Одаберите домен</string>
     <string name="stats_management_new">Ново</string>
     <string name="stats_management_dismiss_insights_news_card">Одбаци</string>
     <string name="stats_management_try_it_now">Испробајте сада</string>
@@ -613,7 +615,8 @@ Language: sr_RS
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
-    <string name="quick_start_sites_type_subtitle">%1$d од %2$d завршено</string>
+    <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
+    <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
@@ -772,10 +775,9 @@ Language: sr_RS
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
     <string name="quick_start_dialog_view_site_message_short">Додирни %1$s Види сајт %2$s за преглед свог сајта</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
-    <string name="quick_start_dialog_need_help_button_positive">Прихвати</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Никад</string>
     <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
+    <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
     <string name="quick_start_button_negative">Не сада</string>
@@ -942,10 +944,7 @@ Language: sr_RS
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Сачувај као нацрт</string>
     <string name="menu_preview">Преглед</string>
-    <string name="menu_undo_snackbar_action">ВРАТИ</string>
-    <string name="menu_html_mode_done_snackbar">Пребачено на HTML режим</string>
     <string name="menu_html_mode">HTML режим</string>
-    <string name="menu_visual_mode_done_snackbar">Пребачено на визуални режим</string>
     <string name="menu_visual_mode">Визуални режим</string>
     <string name="signup_epilogue_screen_title">Нови налог</string>
     <string name="comment_unapproved_talkback">Коментар није одобрен</string>
@@ -1074,10 +1073,10 @@ Language: sr_RS
     <string name="plugin_byline">од %s</string>
     <string name="change_photo">Промените фотографију</string>
     <string name="plugin_fetch_error">Није у могућности да учита додатке</string>
-    <string name="my_site_btn_site_pages">Странице сајта</string>
     <string name="dlg_saving_tag">Снимање</string>
     <string name="dlg_deleting_tag">Брисање</string>
     <string name="dlg_confirm_delete_tag">Трајно обриши ознаку \'%s\'?</string>
+    <string name="my_site_btn_site_pages">Странице</string>
     <string name="error_tag_exists">Ознака са овим именом већ постоји</string>
     <string name="tag_name_hint">Ознака</string>
     <string name="add_new_tag">Додај нову ознаку</string>
@@ -1694,9 +1693,10 @@ Language: sr_RS
     <string name="my_site_btn_view_site">Види веб место</string>
     <string name="site_picker_title">Одабери веб место</string>
     <string name="my_site_btn_switch_site">Промени веб место</string>
-    <string name="my_site_btn_blog_posts">Чланци блога</string>
     <string name="my_site_header_look_and_feel">Изглед и осећај</string>
     <string name="my_site_header_publish">Објави</string>
+    <string name="my_site_btn_blog_posts">Чланци</string>
+    <string name="my_site_btn_site_settings">Подешавања сајта</string>
     <string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>
     <string name="my_site_header_configuration">Поставка</string>
     <string name="hide">Сакриј</string>
@@ -1766,6 +1766,7 @@ Language: sr_RS
     <string name="signing_out">Одјава…</string>
     <string name="comment_reply_to_user">Одговорите %s</string>
     <string name="reader_empty_posts_in_tag">Нема чланака са овом темом</string>
+    <string name="help_and_support">Помоћ и подршка</string>
     <string name="reader_toast_err_generic">Није могуће обавити овај поступак</string>
     <string name="reader_toast_err_block_blog">Није могуће блокирати ову страницу</string>
     <string name="reader_menu_block_blog">Блокирај овај сајт</string>
@@ -1866,7 +1867,6 @@ Language: sr_RS
     <string name="share_link">Подели везу</string>
     <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
-    <string name="reader_label_reply">Одговор</string>
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпресу без видљивог блога</string>
     <string name="reader_likes_multi">%,d људи ово воли</string>

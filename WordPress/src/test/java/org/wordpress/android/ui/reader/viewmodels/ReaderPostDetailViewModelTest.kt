@@ -91,12 +91,14 @@ import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
+import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.ContextProvider
@@ -136,6 +138,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Mock private lateinit var contextProvider: ContextProvider
     @Mock private lateinit var engagementUtils: EngagementUtils
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -174,7 +179,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 getLikesHandler,
                 likesEnhancementsFeatureConfig,
-                engagementUtils
+                engagementUtils,
+                htmlMessageUtils,
+                contextProvider,
+                networkUtilsWrapper,
+                commentsSnippetFeatureConfig
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -848,10 +857,12 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
         val likers = MutableList(5) { mock<FaceItem>() }
+        val testTextString = "10 bloggers like this."
 
         getLikesState.value = likesState
         whenever(accountStore.account).thenReturn(AccountModel().apply { userId = -1 })
         whenever(engagementUtils.likesToTrainOfFaces(anyList())).thenReturn(likers)
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyInt())).thenReturn(testTextString)
         val post = mock<ReaderPost>()
         whenever(post.isWP).thenReturn(true)
         viewModel.post = post
@@ -862,15 +873,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
-            assertThat(engageItemsList).isEqualTo(
-                    likers + BloggersLikingTextItem(
-                            textWithParams = UiStringResWithParams(
-                                    stringRes = R.string.like_faces_more_bloggers_text,
-                                    params = listOf(UiStringText("10"), UiStringRes(R.string.like_this))
-                            ),
-                            underlineDelimiterClosure = UiStringRes(R.string.like_this)
-                    )
-            )
+            assertThat(engageItemsList).isEqualTo(likers + BloggersLikingTextItem(UiStringText(testTextString)))
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
         }

@@ -3,8 +3,7 @@
     android:id="@+id/quick_start"
     style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_medium">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

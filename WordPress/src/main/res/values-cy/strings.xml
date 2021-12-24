@@ -380,7 +380,6 @@ Language: cy_GB
     <string name="my_site_btn_view_site">Gweld Gwefan</string>
     <string name="site_picker_title">Dewis gwefan</string>
     <string name="my_site_btn_switch_site">Newid Gwefan</string>
-    <string name="my_site_btn_blog_posts">Cofnodion Blog</string>
     <string name="my_site_header_look_and_feel">Golwg a Theimlad</string>
     <string name="my_site_header_publish">Cyhoeddi</string>
     <string name="my_site_header_configuration">Ffurfweddiad</string>
@@ -530,7 +529,6 @@ Language: cy_GB
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
     <string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
     <string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>
-    <string name="reader_label_reply">Ateb</string>
     <string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
     <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>

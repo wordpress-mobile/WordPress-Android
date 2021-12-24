@@ -13,11 +13,9 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -26,8 +24,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteSource
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -44,8 +40,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.mapAsync
-import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -72,14 +66,13 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils
-) : CoroutineScope, MySiteSource<QuickStartUpdate> {
+) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
             .associateBy { it.task }
-    private val refresh = MutableLiveData<Boolean>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
@@ -91,50 +84,31 @@ class QuickStartRepository
 
     private var pendingTask: QuickStartTask? = null
 
-    private fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
+    fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
             uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] },
             completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
-        _activeTask.value = null
-        pendingTask = null
-        if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
-                !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
-            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteLocalId)
-            refresh()
-        }
-        val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
-                if (quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)) {
-                    onCategoryCompleted(siteLocalId, taskType)
-                }
-            }
-        }
-        return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
-            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)) {
-                types?.map { buildQuickStartCategory(siteLocalId, it) } ?: listOf()
-            } else {
-                listOf()
-            }
-            QuickStartUpdate(activeTask, categories)
-        }
+    fun resetTask() {
+        clearActiveTask()
+        clearPendingTask()
     }
 
-    private suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
+    fun clearActiveTask() {
+        _activeTask.value = null
+    }
+
+    private fun clearPendingTask() {
+        pendingTask = null
+    }
+
+    suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
         return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             dynamicCardStore.getCards(siteLocalId).dynamicCardTypes.map { it.toQuickStartTaskType() }
         } else {
             listOf(CUSTOMIZE, GROW)
-        }
-    }
-
-    fun startQuickStart(siteLocalId: Int) {
-        if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
-            quickStartUtilsWrapper.startQuickStart(siteLocalId)
-            refresh()
         }
     }
 
@@ -148,13 +122,9 @@ class QuickStartRepository
         }
     }
 
-    fun refresh() {
-        refresh.postValue(true)
-    }
-
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
-        pendingTask = null
+        clearPendingTask()
         if (task == UPDATE_SITE_TITLE) {
             val shortQuickStartMessage = resourceProvider.getString(
                     R.string.quick_start_dialog_update_site_title_message_short,
@@ -168,15 +138,10 @@ class QuickStartRepository
         }
     }
 
-    fun clearActiveTask() {
-        _activeTask.value = null
-    }
-
-    @JvmOverloads fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
+    fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (task != activeTask.value && task != pendingTask) return
-            _activeTask.value = null
-            pendingTask = null
+            resetTask()
             if (quickStartStore.hasDoneTask(selectedSite.id.toLong(), task)) return
             quickStartUtilsWrapper.completeTaskAndRemindNextOne(
                     task,
@@ -185,10 +150,6 @@ class QuickStartRepository
                     contextProvider.getContext()
             )
             setTaskDoneAndTrack(task, selectedSite.id)
-            // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
-            if (refreshImmediately) {
-                refresh()
-            }
             if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
@@ -198,7 +159,7 @@ class QuickStartRepository
         }
     }
 
-    private fun setTaskDoneAndTrack(
+    fun setTaskDoneAndTrack(
         task: QuickStartTask,
         siteLocalId: Int
     ) {
@@ -208,7 +169,7 @@ class QuickStartRepository
 
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
-        _activeTask.value = null
+        clearActiveTask()
         pendingTask = task
         eventBus.postSticky(QuickStartEvent(task))
     }
@@ -217,7 +178,7 @@ class QuickStartRepository
         job.cancel()
     }
 
-    private suspend fun onCategoryCompleted(siteLocalId: Int, categoryType: QuickStartTaskType) {
+    suspend fun onCategoryCompleted(siteLocalId: Int, categoryType: QuickStartTaskType) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             val completionMessage = getCategoryCompletionMessage(categoryType)
             _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))

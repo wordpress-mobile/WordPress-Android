@@ -14,7 +14,7 @@ private const val LONG_DURATION_MS = 2750L
 
 const val INDEFINITE_SNACKBAR_NOT_ALLOWED = "Snackbar.LENGTH_INDEFINITE not allowed in getSnackbarDurationMs."
 
-class SnackbarItem(
+class SnackbarItem @JvmOverloads constructor(
     val info: Info,
     val action: Action? = null,
     dismissCallback: ((transientBottomBar: Snackbar?, event: Int) -> Unit)? = null,
@@ -33,7 +33,7 @@ class SnackbarItem(
         }
     }
 
-    class Info(
+    class Info @JvmOverloads constructor(
         view: View,
         val textRes: UiString,
         val duration: Int,

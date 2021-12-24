@@ -36,6 +36,10 @@ public class SiteUtils {
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
+    public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_INSTAGRAM_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_LOOM_EMBED_JETPACK_VERSION = "9.0";
+    public static final String WP_SMARTFRAME_EMBED_JETPACK_VERSION = "10.2";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
@@ -46,7 +50,6 @@ public class SiteUtils {
      * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
      * -- 12.9 ON -> turn all sites ON in 13.0
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
-     *
      */
     public static void migrateAppWideMobileEditorPreferenceToRemote(final AccountStore accountStore,
                                                                     final SiteStore siteStore,
@@ -205,7 +208,7 @@ public class SiteUtils {
         dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
-    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+    public static boolean isBlockEditorDefaultForNewPost(@Nullable SiteModel site) {
         if (site == null) {
             return true;
         }
@@ -347,6 +350,10 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || site.isWPComAtomic());
     }
 
+    public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
+    }
+
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
         return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
@@ -362,10 +369,6 @@ public class SiteUtils {
     public static boolean onBloggerPlan(@NonNull SiteModel site) {
         return site.getPlanId() == PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
                || site.getPlanId() == PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID;
-    }
-
-    public static boolean hasCustomDomain(@NonNull SiteModel site) {
-        return !site.getUrl().contains(".wordpress.com") && !site.getUrl().contains(".wpcomstaging.com");
     }
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {

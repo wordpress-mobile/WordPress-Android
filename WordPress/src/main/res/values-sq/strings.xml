@@ -1,11 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-29 11:33:28+0000
+Translation-Revision-Date: 2021-11-10 15:18:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
+    <string name="gutenberg_native_create_link">Krijo lidhje</string>
+    <string name="domain_registration_result_description">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset. Mund të duhen deri në 30 minuta që përkatësia juaj të fillojë të funksionojë.</string>
+    <string name="domain_registration_result_title">Përgëzime për blerjen tuaj!</string>
+    <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
+    <string name="domains_title">Përkatësi</string>
+    <string name="post_status_sticky">Ngjitës</string>
+    <string name="post_settings_post_sticky">Ngjite postimin te faqja ballore</string>
+    <string name="post_settings_mark_as_sticky_options_header">Vëri shenjë si ngjitës</string>
+    <string name="reader_follow_comments_unfollow_conversation">Mos e ndiq më bisedën</string>
+    <string name="reader_follow_comments_enable_push_notifications">Aktivizo njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_message">Po e ndiqni këtë bisedë. Do të merrni njoftime me email, kur botohen komente të reja.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Administroni mundësi ndjekjeje bisede, dritarja Flluskë</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">S’u çaktivizuan dot njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">S’u aktivizuan dot njoftime brenda aplikacionit</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Njoftime brenda aplikacionit të çaktivizuara</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Njoftime brenda aplikacionit të aktivizuara</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">U shpajtua prej kësaj bisede</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Po ndiqet kjo bisedë\nTë aktivizohen njoftimet brenda aplikacionit?</string>
+    <string name="domains_search_for_a_domain_button">Kërkoni për një përkatësi</string>
+    <string name="domains_free_plan_get_your_domain_caption">Përkatësitë e blera në këtë sajt do t’i ridrejtojnë vizitorët te &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Me planin tuaj keni të përfshirë një regjistrim përkatësie falas për një vit</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Kërkoni përkatësinë tuaj falas</string>
+    <string name="domains_manage_domains">Administroni Përkatësi</string>
+    <string name="domains_add_a_domain">Shtoni një përkatësi</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Skadon më %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Skadon më %s</string>
+    <string name="domains_site_domains">Përkatësitë e sajtit tuaj</string>
+    <string name="domains_primary_site_address_chip">Adresë parësore sajti</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Ndryshoni adresën e sajtit</string>
+    <string name="domains_primary_site_caption">Adresa juaj falas WordPress.com është</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /vit&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /vit&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Doni të hidhen tej?</string>
+    <string name="comment_edit_cancel_dialog_title">Ka ndryshime të paruajtura</string>
+    <string name="comment_edit_comment_error">Komenti s’mund të jetë i zbrazët</string>
+    <string name="comment_edit_user_email_error">Email përdoruesi jo i vlefshëm</string>
+    <string name="comment_edit_web_address_error">Adresë Web jo e vlefshme</string>
+    <string name="comment_edit_user_name_error">Emri i përdoruesit s’mund të jetë i zbrazët</string>
+    <string name="comment_edit_email_address">Adresë email</string>
+    <string name="comment_edit_web_address">Adresë Web</string>
+    <string name="comment_edit_comment">Koment</string>
+    <string name="comment_edit_user_name">Emër</string>
+    <string name="comment_edit_menu_done">U bë</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
+    <string name="weekly_roundup">Përmbledhje Javore</string>
+    <string name="gutenberg_native_embed_options">Mundësi trupëzimi</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Prekeni dy herë që të shihni mundësi trupëzimi.</string>
+    <string name="quick_start_list_create_site_message">Sajti u krijua! Plotësoni hap tjetër.</string>
+    <string name="like_faces_others_like_text">Këtë e pëlqejnë &lt;a href=\"\"&gt;%1$s blogues&lt;/a&gt;.</string>
+    <string name="like_faces_one_blogger_likes_text">Këtë e pëlqen &lt;a href=\"\"&gt;1 blogues&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_others_like_text">Këtë e pëlqejnë &lt;a href=\"\"&gt;%1$s blogues dhe ju&lt;/a&gt;.</string>
+    <string name="like_faces_you_plus_one_like_text">Këtë e pëlqen &lt;a href=\"\"&gt;1 blogues dhe ju&lt;/a&gt;.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ju&lt;/a&gt; pëlqen kjo.</string>
+    <string name="gutenberg_native_line_height">Lartësi Rreshti</string>
+    <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>
+    <string name="recommend_app_bad_format_response">U mor përgjigje e pavlefshme</string>
+    <string name="recommend_app_null_response">S’u mor përgjigje</string>
+    <string name="recommend_app_subject">Aplikacione WordPress - Aplikacione për çfarëdo ekrani</string>
+    <string name="me_btn_share">Jepjani WordPress-in një shoku</string>
+    <string name="my_site_quick_actions_title">Lidhje të Shpejta</string>
+    <string name="my_site_btn_domains">Përkatësi</string>
     <string name="weekly_roundup_notification_text">Sajti juaj pati %1$d parje, %2$d pëlqime, %3$d komente.</string>
     <string name="weekly_roundup_notification_title">Përmbledhje Javore: %s</string>
     <string name="blogging_reminders_notification_time">Kohë njoftimi</string>
@@ -48,13 +113,13 @@ Language: sq_AL
     <string name="stats_disabled_subtitle">Që të shihni të dhëna të hollësishme mbi trafikun tuaj, pëlqimet, komentet dhe pajtimtarët, aktivizoni statistika sajti.</string>
     <string name="stats_disabled_title">Po shihni për statistika?</string>
     <string name="gutenberg_native_what_is_a_block">Ç’është një bllok?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga postimi.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Po punojmë fort për të shtuar mbulim për paraparje trupëzimesh. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga faqja.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Po punojmë fort për të shtuar mbulim për paraparje %s. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga postimi.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Po punojmë fort për të shtuar mbulim për paraparje %s. Ndërkohë, mund të bëni paraparje të lëndës së trupëzuar që nga faqja.</string>
     <string name="gutenberg_native_unable_to_embed_media">S’arrihet të trupëzohet media</string>
     <string name="gutenberg_native_try_another_search_term">Provoni një tjetër term kërkimi</string>
     <string name="gutenberg_native_no_blocks_found">S’u gjetën blloqe</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Paraparje trupëzimesh ende jo gati</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Paraparjet e trupëzimeve të blloqeve vijnë së shpejti</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Paraparje %s ende jo gati</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Paraparjet e blloqeve %s vijnë së shpejti</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Që të parashihni postimin, prekeni dy herë.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Që të parashihni faqen, prekeni dy herë.</string>
     <string name="quick_start_list_upload_icon_subtitle">Shfaqur te skeda e shfletuesit të vizitorit tuaj dhe në vende të tjera në internet.</string>
@@ -100,9 +165,6 @@ Language: sq_AL
     <string name="fab_add_category_desc">Krijoni Kategori</string>
     <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
-    <string name="site_settings_categories_empty_title">S’keni ndonjë kategori</string>
-    <string name="site_settings_categories_empty_subtitle">Shtoni këtu kategoritë që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur caktoni kategori për postimet tuaja</string>
-    <string name="site_settings_categories_empty_button">Krijoni një kategori</string>
     <string name="site_settings_categories_title">Kategori</string>
     <string name="site_settings_blogging_reminders_title">Kujtues blogimi</string>
     <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
@@ -114,7 +176,6 @@ Language: sq_AL
     <string name="gutenberg_native_y_axis_position">Pozicion në boshtin Y</string>
     <string name="gutenberg_native_x_axis_position">Pozicion në boshtin X</string>
     <string name="gutenberg_native_type_a_url">Shtypni një URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Prekeni që të shotni lëndë</string>
     <string name="gutenberg_native_s_has_url_set">%s ka të caktuar URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s s’ka të caktuar URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s shndërruar në blloqe të rregullt</string>
@@ -159,9 +220,15 @@ Language: sq_AL
     <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_post_meta_settings">Rregullime Meta postimi</string>
     <string name="gutenberg_native_post_content_settings">Rregullime lënde postimi</string>
+    <string name="gutenberg_native_retry">Riprovoni</string>
+    <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
+    <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
     <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
+    <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
+    <string name="gutenberg_native_column_d">Shtylla %d</string>
+    <string name="gutenberg_native_none">Asnjë</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
     <string name="gutenberg_native_add_blocks">Shtoni blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
@@ -173,8 +240,6 @@ Language: sq_AL
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Përshkruani qëllimin e figurës. Lëreni të zbrazët, nëse figura është thjesht dekorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s u shndërrua në %2$s</string>
     <string name="like_faces_error_loading_message">Gabim gjatë ngarkimi të dhënash pëlqimesh. %s.</string>
-    <string name="like_faces_plural_text">Këtë e pëlqejnë %d blogues.</string>
-    <string name="like_faces_singular_text">Këtë e pëlqen 1 blogues.</string>
     <string name="like_title_plural">%d Pëlqime</string>
     <string name="like_title_singular">1 Pëlqim</string>
     <string name="suggestion">Sugjerim:</string>
@@ -405,7 +470,6 @@ Language: sq_AL
     <string name="backup_download_generic_failure">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
     <string name="backup_download_details_action_button_content_description">Buton “Krijoni kopjeruajtje të shkarkueshme”</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s është pika e përzgjedhur për të krijuar një kopjeruajtje të shkarkueshme.</string>
-    <string name="gutenberg_native_image_link_url">URL Lidhjeje Figure</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -502,8 +566,6 @@ Language: sq_AL
     <string name="reader_follow_comments_could_not_unsubscribe_error">S’u bë dot shpajtimi nga komentet për këtë postim</string>
     <string name="reader_follow_comments_could_not_subscribe_error">S’u bë dot pajtimi te komentet për këtë postim</string>
     <string name="reader_follow_comments_get_status_error">Gabim në sjellje gjendjeje pajtimi për këtë postim</string>
-    <string name="reader_follow_comments_unsubscribe_success">U shpajtua me sukses nga komentet</string>
-    <string name="reader_follow_comments_subscribe_success">U pajtua me sukses te komentet</string>
     <string name="reader_follow_comments_bad_format_response">U mor përgjigje e pavlefshme</string>
     <string name="reader_follow_comments_null_response">S’u mor përgjigje</string>
     <string name="activity_log_activity_type_filter_clear">Spastroje</string>
@@ -713,6 +775,7 @@ Language: sq_AL
     <string name="pick_file">Shtoni kartelë</string>
     <string name="gutenberg_native_replace_video">Zëvendësoni video</string>
     <string name="gutenberg_native_replace_image_or_video">Zëvendësoni figurë ose video</string>
+    <string name="gutenberg_native_convert_to_link">Shndërroje në lidhje</string>
     <string name="gutenberg_native_choose_video">Zgjidhni video</string>
     <string name="gutenberg_native_choose_image_or_video">Zgjidhni figurë ose video</string>
     <string name="gutenberg_native_choose_image">Zgjidhni figurë</string>
@@ -1236,10 +1299,7 @@ Language: sq_AL
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Po regjistrohet emër përkatësie…</string>
     <string name="domain_registration_state_picker_dialog_title">Përzgjidhni Shtet</string>
     <string name="domain_registration_country_picker_dialog_title">Përzgjidhni Vend</string>
-    <string name="domain_registration_result_continue_button">vazhdo</string>
-    <string name="domain_registration_result_description">po ujdiset përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt;. Sajti juaj po bën\n     rrotullime në ajër nga gëzimi!</string>
-    <string name="domain_registration_result_title">Përgëzime</string>
-    <string name="domain_contact_information_register_domain_button">Regjistroni Përkatësie</string>
+    <string name="domain_contact_information_register_domain_button">Regjistroni përkatësi</string>
     <string name="domain_contact_information_postal_code_hint">Kod postar</string>
     <string name="domain_contact_information_state_hint">Shtet</string>
     <string name="domain_contact_information_city_hint">Qytet</string>
@@ -1256,7 +1316,6 @@ Language: sq_AL
     <string name="domain_registration_privacy_protection_description">Të zotëve të përkatësive u duhet të ndajnë me të tjerët të dhëna kontakti, në një bazë publike të dhënash të krejt përkatësive.\n        Me Mbrojtje Privatësie, ne botojmë të dhënat tona, në vend se tuajat, dhe ju përcjellim privatisht çfarëdo komunikimi.</string>
     <string name="domain_registration_privacy_protection_title">Mbrojtje Privatësie</string>
     <string name="domain_registration_contact_form_input_error">Ju lutemi, jepni një %s të vlefshëm</string>
-    <string name="domains_suggestions_choose_domain">Zgjidhni Përkatësi</string>
     <string name="stats_management_new">E re</string>
     <string name="stats_management_dismiss_insights_news_card">Hidhe tej</string>
     <string name="stats_management_try_it_now">Provojeni që tani</string>
@@ -1337,7 +1396,7 @@ Language: sq_AL
     <string name="stats_site_not_loaded_yet">Sajt ende i pangarkuar</string>
     <string name="stats_more_posts">Më tepër postime</string>
     <string name="stats_fewer_posts">Më pak postime</string>
-    <string name="new_site_creation_preview_back_pressed_warning">Mund të humbi sa keni bërë. Jeni i sigurt se doni të dilet?</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Mund të humbni sa keni bërë. Jeni i sigurt se doni të dilet?</string>
     <string name="plans_loading_error_with_cache_button">Shihini Planet, Sido Qoftë</string>
     <string name="plans_loading_error_with_cache_subtitle">Që të shihni Planet, lypset lidhje në internet, kështu që hollësitë mund të jenë të vjetruara.</string>
     <string name="plans_loading_error_no_cache_subtitle">Që të shihni Planet, lypset një lidhje internet.</string>
@@ -1350,7 +1409,6 @@ Language: sq_AL
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Përdorni Përpunuesin Me Blloqe</string>
     <string name="exit">dalje</string>
-    <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
     <string name="quick_start_sites_type_grow">Shtoni publikun tuaj</string>
     <string name="quick_start_sites_type_customize">Përshtatni sajtin tuaj</string>
     <string name="quick_start_sites">Hapat Pasues</string>
@@ -1362,7 +1420,6 @@ Language: sq_AL
     <string name="quick_start_dialog_check_stats_message_short">Prekni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
     <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
-    <string name="quick_start_dialog_need_help_message">Do t’ju udhëheqim përmes gjërave elementare të krijimit dhe fuqizimit të sajtit tuaj.</string>
     <string name="quick_start_dialog_explore_plans_title">Eksploroni plane</string>
     <string name="quick_start_dialog_explore_plans_message">Mësoni rreth mjetesh marketingu dhe SEO në planet tona me pagesë.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivizo ndarje postimesh me të tjerët</string>
@@ -1545,9 +1602,6 @@ Language: sq_AL
     <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore — sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
     <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
     <string name="quick_start_dialog_publish_post_message_short">Prekni %1$s Krijo Postim %2$s që të krijohet një postim i ri</string>
-    <string name="quick_start_dialog_need_help_title">Doni pakëz ndihmë për t’ia filluar?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Pranoj</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
     <string name="quick_start_dialog_need_help_button_negative">Jo, faleminderit</string>
     <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me tema të ngjashme</string>
@@ -1742,10 +1796,7 @@ Language: sq_AL
     <string name="signup_with_google_progress">Po bëhet regjistrim me Google…</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack-un: %s</string>
     <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur te Jetpack-u</string>
-    <string name="menu_undo_snackbar_action">ZHBËJE</string>
-    <string name="menu_visual_mode_done_snackbar">U kalua nën mënyrën Pamore</string>
     <string name="menu_visual_mode">Mënyra Pamore</string>
-    <string name="menu_html_mode_done_snackbar">U kalua nën mënyrën HTML</string>
     <string name="menu_html_mode">Mënyra HTML</string>
     <string name="menu_preview">Paraparje</string>
     <string name="menu_save_as_draft">Ruaje si Skicë</string>
@@ -1894,7 +1945,7 @@ Language: sq_AL
     <string name="plugin_byline">nga %s</string>
     <string name="change_photo">Ndryshoni foton</string>
     <string name="plugin_fetch_error">S’arrihet të ngarkohen shtojca</string>
-    <string name="my_site_btn_site_pages">Faqe Sajti</string>
+    <string name="my_site_btn_site_pages">Faqe</string>
     <string name="site_settings_tags_hint">Administroni etiketat e sajtit tuaj</string>
     <string name="dlg_saving_tag">Po ruhet</string>
     <string name="dlg_deleting_tag">Po fshihet</string>
@@ -2655,7 +2706,7 @@ Language: sq_AL
     <string name="my_site_btn_view_admin">Shihni Përgjegjësin</string>
     <string name="my_site_btn_switch_site">Këmbe Sajt</string>
     <string name="my_site_btn_site_settings">Rregullime Sajti</string>
-    <string name="my_site_btn_blog_posts">Postime Blogu</string>
+    <string name="my_site_btn_blog_posts">Postime</string>
     <string name="my_site_header_publish">Botoje</string>
     <string name="my_site_header_look_and_feel">Pamja dhe Ndjesitë</string>
     <string name="my_site_header_configuration">Formësim</string>
@@ -2721,6 +2772,7 @@ Language: sq_AL
     <string name="older_month">Më të vjetër se një muaj</string>
     <string name="older_last_week">Më të vjetër se një javë</string>
     <string name="older_two_days">Më të vjetër se 2 ditë</string>
+    <string name="help_and_support">Ndihmë &amp; Asistencë</string>
     <string name="mnu_comment_liked">U pëlqye</string>
     <string name="comment">Koment</string>
     <string name="comment_trashed">Komenti u hodh te hedhurinat</string>
@@ -2828,7 +2880,6 @@ Language: sq_AL
     <string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
     <string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>
     <string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
-    <string name="reader_label_reply">Përgjigjuni</string>
     <string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
     <string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
     <string name="reader_toast_err_get_post">I pazoti të marrë këtë postim</string>

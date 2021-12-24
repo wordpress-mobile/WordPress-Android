@@ -8,13 +8,18 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 
 sealed class ReaderNavigationEvents {
     data class ShowPostDetail(val post: ReaderPost) : ReaderNavigationEvents()
     data class SharePost(val post: ReaderPost) : ReaderNavigationEvents()
     data class OpenPost(val post: ReaderPost) : ReaderNavigationEvents()
     data class ShowPostsByTag(val tag: ReaderTag) : ReaderNavigationEvents()
-    data class ShowReaderComments(val blogId: Long, val postId: Long) : ReaderNavigationEvents()
+    data class ShowReaderComments(
+        val blogId: Long,
+        val postId: Long,
+        val source: ThreadedCommentsActionSource
+    ) : ReaderNavigationEvents()
     object ShowNoSitesToReblog : ReaderNavigationEvents()
     data class ShowSitePickerForResult(val preselectedSite: SiteModel, val post: ReaderPost, val mode: SitePickerMode) :
             ReaderNavigationEvents()

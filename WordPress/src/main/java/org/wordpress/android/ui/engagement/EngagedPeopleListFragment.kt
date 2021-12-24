@@ -160,7 +160,8 @@ class EngagedPeopleListFragment : Fragment() {
                             this,
                             event.siteId,
                             event.commentPostId,
-                            event.postOrCommentId
+                            event.postOrCommentId,
+                            event.source.sourceDescription
                     )
                 }
                 is PreviewPostInReader -> {

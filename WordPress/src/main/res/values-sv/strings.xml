@@ -1,11 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-08-23 11:06:42+0000
+Translation-Revision-Date: 2021-11-29 20:49:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Från urklipp</string>
+    <string name="gutenberg_native_featured_image">Utvald bild</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopiera URL från urklipp, %s</string>
+    <string name="me_btn_about">Om WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts"> Gå till schemalagda inlägg</string>
+    <string name="my_site_post_card_link_go_to_drafts">Gå till utkast</string>
+    <string name="my_site_post_card_link_create_post">Skapa ett inlägg</string>
+    <string name="my_site_create_next_post_excerpt">Genom att publicera regelbundet bygger du upp en större publik!</string>
+    <string name="my_site_create_next_post_title">Skapa ditt nästa inlägg</string>
+    <string name="menu_visual_mode_switched_notice">Växlat till visuellt läge</string>
+    <string name="menu_html_mode_switched_notice">Växlat till HTML-läge</string>
+    <string name="post_link_copied_to_clipboard">Länk kopierad till urklipp</string>
+    <string name="comment_author_badge">Författare</string>
+    <string name="button_copy_link">Kopiera länk</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Genom att lägga till ett anpassat domännamn underlättar du för besökare att hitta din webbplats</string>
+    <string name="domains_paid_plan_add_your_domain_title">Lägg till en egen domän</string>
+    <string name="my_site_create_first_post_excerpt">Inlägg visas i omvänd kronologisk ordning på din bloggsida. Dags att berätta om dina tankar för världen!</string>
+    <string name="my_site_create_first_post_title">Skapa ditt första inlägg</string>
+    <string name="my_site_untitled_post">Utan namn</string>
+    <string name="my_site_post_card_scheduled_title">Kommande schemalagda inlägg</string>
+    <string name="my_site_post_card_draft_title">Arbeta med ett inläggsutkast</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/år&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Din domän kommer omdirigeras till din webbplats på %s</string>
+    <string name="gutenberg_native_create_link">Skapa länk</string>
+    <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Det kan dröja upp till 30 minuter innan din domän börjar fungera.</string>
+    <string name="domain_registration_result_title">Grattis till ditt köp!</string>
+    <string name="domains_suggestions_select_domain">Välj domän</string>
+    <string name="domains_title">Domäner</string>
+    <string name="post_status_sticky">Klistrat</string>
+    <string name="post_settings_post_sticky">Klistra inlägget på startsidan</string>
+    <string name="post_settings_mark_as_sticky_options_header">Märk som klistrad</string>
+    <string name="reader_follow_comments_unfollow_conversation">Sluta följ konversation</string>
+    <string name="reader_follow_comments_enable_push_notifications">Aktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_message">Du följer denna konversation och kommer att få e-postaviseringar när nya kommentarer publiceras.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Hantera val för följning av konversation, popup-fönster</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Det gick inte att inaktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Det gick inte att aktivera aviseringar i appen</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Aviseringar i appen har inaktiverats</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Aviseringar i appen har aktiverats</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Du har slutat följa denna konversation</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Du följer denna konversation\nVill du aktivera aviseringar i appen?</string>
+    <string name="domains_search_for_a_domain_button">Sök en domän</string>
+    <string name="domains_free_plan_get_your_domain_caption">Domäner som är köpta på denna webbplats kommer att omdirigera besökare till &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Ditt paket inkluderar en gratis domännamnsregistrering i ett år</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Gör anspråk på din gratisdomän</string>
+    <string name="domains_manage_domains">Hantera domäner</string>
+    <string name="domains_add_a_domain">Lägg till en domän</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Upphör att gälla %s</string>
+    <string name="domains_site_domains">Domänerna för din webbplats</string>
+    <string name="domains_primary_site_address_chip">Primär webbplatsadress</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Ändra webbplatsens adress</string>
+    <string name="domains_primary_site_caption">Din gratisadress hos WordPress.com är</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /år&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /år&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Vill du kasta dem?</string>
+    <string name="comment_edit_cancel_dialog_title">Det finns osparade ändringar</string>
+    <string name="comment_edit_comment_error">Kommentarfältet får inte vara tomt</string>
+    <string name="comment_edit_user_email_error">Användarens e-postadress ogiltig</string>
+    <string name="comment_edit_web_address_error">Ogiltig webbadress</string>
+    <string name="comment_edit_user_name_error">Användarnamnet får inte vara tomt</string>
+    <string name="comment_edit_email_address">E-postadress</string>
+    <string name="comment_edit_web_address">Webbadress</string>
+    <string name="comment_edit_comment">Kommentar</string>
+    <string name="comment_edit_user_name">Namn</string>
+    <string name="comment_edit_menu_done">Klart</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Förhandsgranskning av inbäddade block kommer snart</string>
+    <string name="weekly_roundup">Veckosammanfattning</string>
+    <string name="gutenberg_native_embed_options">Inbäddningsalternativ</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Dubbeltryck för att visa inbäddningsalternativ.</string>
+    <string name="quick_start_list_create_site_message">Webbplatsen skapad! Slutför någon annan uppgift.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s bloggare&lt;/a&gt; gillar detta.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;En bloggare&lt;/a&gt; gillar detta.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Du och ytterligare %1$s bloggare&lt;/a&gt; gillar detta.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Du och ytterligare en bloggare&lt;/a&gt; gillar detta.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Du&lt;/a&gt; gillar detta.</string>
+    <string name="gutenberg_native_line_height">Radhöjd</string>
+    <string name="domains_free_plan_get_your_domain_title">Skaffa din egen domän</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="recommend_app_generic_get_template_error">Okänt fel vid hämtning av rekommenderad app-mall</string>
+    <string name="recommend_app_bad_format_response">Ett ogiltigt svar har tagits emot</string>
+    <string name="recommend_app_null_response">Inget svar har tagits emot</string>
+    <string name="recommend_app_subject">WordPress-appar – appar för alla skärmtyper</string>
+    <string name="me_btn_share">Dela WordPress med en vän</string>
+    <string name="my_site_quick_actions_title">Snabblänkar</string>
+    <string name="my_site_btn_domains">Domäner</string>
     <string name="weekly_roundup_notification_text">Din webbplats har fått %1$d visningar, %2$d gillamarkeringar, %3$d kommentarer.</string>
     <string name="weekly_roundup_notification_title">Veckosammanfattning: %s</string>
     <string name="blogging_reminders_notification_time">Aviseringstid</string>
@@ -48,13 +134,13 @@ Language: sv_SE
     <string name="stats_disabled_subtitle">Aktivera webbplatsstatistik för att se detaljerad information om din trafik, gillamarkeringar, kommentarer och prenumeranter.</string>
     <string name="stats_disabled_title">Letar du efter statistik?</string>
     <string name="gutenberg_native_what_is_a_block">Vad är ett block?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av inbäddningar. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">Vi jobbar hårt på att lägga till stöd för förhandsgranskning av %s. Tills dess kan du förhandsgranska det inbäddade innehållet i inlägget.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Vi jobbar hårt på att lägga till stöd för förhandsgranskningar av %s. Tills dess kan du förhandsgranska det inbäddade innehållet på sidan.</string>
     <string name="gutenberg_native_unable_to_embed_media">Kan inte bädda in media</string>
     <string name="gutenberg_native_try_another_search_term"> Prova en annan sökterm</string>
     <string name="gutenberg_native_no_blocks_found">Inga block hittades.</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Förhandsgranskning av inbäddningar är inte tillgängligt ännu</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Förhandsgranskning av inbäddade block kommer snart</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">Förhandsgranskning av %s är inte tillgängligt ännu</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Förhandsgranskningar av inbäddat block för %s kommer snart</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Dubbeltryck för att förhandsgranska inlägget.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Dubbeltryck för att förhandsgranska sidan.</string>
     <string name="quick_start_list_upload_icon_subtitle">Visas i besökarens webbläsarflik och på andra ställen på nätet.</string>
@@ -100,9 +186,6 @@ Language: sv_SE
     <string name="fab_add_category_desc">Skapa kategori</string>
     <string name="support_ticket_subject">Support för WordPress för Android</string>
     <string name="site_settings_categories_hint">Hantera kategorierna för din webbplats</string>
-    <string name="site_settings_categories_empty_title">Du har inte några kategorier</string>
-    <string name="site_settings_categories_empty_subtitle">Lägg till dina vanligaste kategorier här, så att du snabbt kan välja dem för att kategorisera dina inlägg</string>
-    <string name="site_settings_categories_empty_button">Skapa en kategori</string>
     <string name="site_settings_categories_title">Kategorier</string>
     <string name="site_settings_blogging_reminders_title">Bloggningspåminnelser</string>
     <string name="page_is_posts_page_warning">Innehållet på sidan med dina senaste inlägg genereras automatiskt och kan inte redigeras.</string>
@@ -114,7 +197,6 @@ Language: sv_SE
     <string name="gutenberg_native_y_axis_position">Läge på Y-axeln</string>
     <string name="gutenberg_native_x_axis_position">Läge på X-axeln</string>
     <string name="gutenberg_native_type_a_url">Skriv en URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tryck för att lägga till innehåll</string>
     <string name="gutenberg_native_slash_inserter_results">Resultat från ”snedstrecksinfogaren”</string>
     <string name="gutenberg_native_s_has_url_set">URL angiven för %s</string>
     <string name="gutenberg_native_s_has_no_url_set">Ingen URL angiven för %s</string>
@@ -162,9 +244,16 @@ Language: sv_SE
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_post_meta_settings">Inställningar för metainformation om inlägg</string>
     <string name="gutenberg_native_post_content_settings">Inställningar för inläggsinnehåll</string>
+    <string name="gutenberg_native_retry">Försök igen</string>
+    <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
+    <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_featured">Utvalda</string>
     <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
+    <string name="gutenberg_native_custom_url">Anpassad URL</string>
+    <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
+    <string name="gutenberg_native_column_d">Kolumn %d</string>
+    <string name="gutenberg_native_none">Ingen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="gutenberg_native_add_blocks">Lägg till block</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
@@ -176,8 +265,6 @@ Language: sv_SE
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beskriv bildens syfte. Lämna tomt om bilden endast har dekorativ funktion.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s har omvandats till %2$s</string>
     <string name="like_faces_error_loading_message">Fel vid hämtning av info om gillamarkeringar. %s.</string>
-    <string name="like_faces_plural_text">%d bloggare gillar detta.</string>
-    <string name="like_faces_singular_text">En bloggare gillar detta.</string>
     <string name="like_title_plural">%d gillamarkeringar</string>
     <string name="like_title_singular">1 gillamarkering</string>
     <string name="suggestion">Förslag:</string>
@@ -408,7 +495,6 @@ Language: sv_SE
     <string name="backup_download_generic_failure">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="backup_download_details_action_button_content_description">Skapa knapp för nedladdningsbar säkerhetskopia</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s är den valda punkten för att skapa en nedladdningsbar säkerhetskopia.</string>
-    <string name="gutenberg_native_image_link_url">URL-länk till bild</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s –</string>
     <string name="pages_item_date_author">%1$s – %2$s</string>
     <string name="pages_item_date_subtitle">%1$s –</string>
@@ -506,8 +592,6 @@ Language: sv_SE
     <string name="reader_follow_comments_could_not_unsubscribe_error">Det gick inte att avsluta prenumerationen på kommentarer till detta inlägg</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Det gick inte att prenumerera på kommentarer till detta inlägg</string>
     <string name="reader_follow_comments_get_status_error">Ett fel inträffade när prenumerationsstatusen för inlägget skulle hämtas</string>
-    <string name="reader_follow_comments_unsubscribe_success">Prenumeration på kommentarer har avslutats</string>
-    <string name="reader_follow_comments_subscribe_success">Prenumeration på kommentarer har startats</string>
     <string name="reader_follow_comments_bad_format_response">Ett ogiltigt svar har tagits emot</string>
     <string name="reader_follow_comments_null_response">Inget svar har tagits emot</string>
     <string name="activity_log_activity_type_filter_clear">Rensa</string>
@@ -717,6 +801,7 @@ Language: sv_SE
     <string name="pick_file">Lägg till fil</string>
     <string name="gutenberg_native_replace_video">Byt video</string>
     <string name="gutenberg_native_replace_image_or_video">Ersätt en bild eller ett videoklipp</string>
+    <string name="gutenberg_native_convert_to_link">Konvertera till länk</string>
     <string name="gutenberg_native_choose_video">Välj video</string>
     <string name="gutenberg_native_choose_image_or_video">Välj bild eller video</string>
     <string name="gutenberg_native_choose_image">Välj bild</string>
@@ -747,6 +832,7 @@ Language: sv_SE
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att ange en ny rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
     <string name="gutenberg_native_s_block_options">Inställningar för blocket %s</string>
+    <string name="gutenberg_native_remove_block">Ta bort blocket</string>
     <string name="gutenberg_native_duplicate_block">Duplicera block</string>
     <string name="gutenberg_native_copy_block">Kopiera block</string>
     <string name="gutenberg_native_copied_block">Blocket kopierat</string>
@@ -1240,9 +1326,6 @@ Language: sv_SE
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerar domännamn…</string>
     <string name="domain_registration_state_picker_dialog_title">Välj delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Välj land</string>
-    <string name="domain_registration_result_continue_button">fortsätt</string>
-    <string name="domain_registration_result_description">Din nya domän &lt;b&gt;%s&lt;/b&gt; håller på att konfigureras. Webbplatsen gör förväntansfulla kullerbyttor!</string>
-    <string name="domain_registration_result_title">Grattis</string>
     <string name="domain_contact_information_register_domain_button">Registrera domän</string>
     <string name="domain_contact_information_postal_code_hint">Postnummer</string>
     <string name="domain_contact_information_state_hint">Delstat</string>
@@ -1260,7 +1343,6 @@ Language: sv_SE
     <string name="domain_registration_privacy_protection_description">Domänägare måste uppge kontaktinformation i en publik databas som omfattar alla domäner. Med integritetsskydd publicerar vi våra uppgifter istället för dina, och vidarebefordrar sedan privat eventuella meddelanden till dig.</string>
     <string name="domain_registration_privacy_protection_title">Integritetsskydd</string>
     <string name="domain_registration_contact_form_input_error">Ange en giltig %s</string>
-    <string name="domains_suggestions_choose_domain">Välj domän</string>
     <string name="stats_management_new">Nytt</string>
     <string name="stats_management_dismiss_insights_news_card">Avfärda</string>
     <string name="stats_management_try_it_now">Prova det nu</string>
@@ -1316,7 +1398,7 @@ Language: sv_SE
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrera domän</string>
     <string name="plugin_install_custom_domain_required_dialog_message">För att installera tillägg måste du ha en anpassad domän som är associerad med din webbplats.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installera tillägg</string>
-    <string name="new_site_creation_preview_subtitle">Du kommer att kunna anpassa utseendet och känslan hos din webbplats senare</string>
+    <string name="new_site_creation_preview_subtitle">Du kommer att kunna anpassa utseendet och känslan på din webbplats senare</string>
     <string name="publish_on">Publicera den: %s</string>
     <string name="schedule_for">Schemalägg till: %s</string>
     <string name="published_on">Publicerat: %s</string>
@@ -1354,7 +1436,6 @@ Language: sv_SE
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Redigera nya inlägg och sidor med blockredigeraren</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Använd blockredigerare</string>
     <string name="exit">avbryt</string>
-    <string name="quick_start_sites_type_subtitle">%1$d av %2$d klart</string>
     <string name="quick_start_sites_type_grow">Vidga din läsekrets</string>
     <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
     <string name="quick_start_sites">Gå vidare</string>
@@ -1366,7 +1447,6 @@ Language: sv_SE
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
-    <string name="quick_start_dialog_need_help_message">Vi hjälper dig att gå igenom grunderna för hur du bygger din webbplats och får den att växa.</string>
     <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
     <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
@@ -1549,9 +1629,6 @@ Language: sv_SE
     <string name="quick_start_dialog_share_site_message">Anslut till dina konton på sociala medier – din webbplats kommer automatiskt att dela nya inlägg.</string>
     <string name="quick_start_dialog_publish_post_title">Publicera ett inlägg</string>
     <string name="quick_start_dialog_publish_post_message_short">Tryck på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
-    <string name="quick_start_dialog_need_help_title">Vill du ha lite hjälp att komma igång?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Ja</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej tack</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>
@@ -1746,10 +1823,7 @@ Language: sv_SE
     <string name="signup_with_google_progress">Registrering via Google…</string>
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
-    <string name="menu_undo_snackbar_action">ÅNGRA</string>
-    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge</string>
     <string name="menu_visual_mode">Visuellt läge</string>
-    <string name="menu_html_mode_done_snackbar">Växlat till HTML-läge</string>
     <string name="menu_html_mode">HTML-läge</string>
     <string name="menu_preview">Förhandsgranskning</string>
     <string name="menu_save_as_draft">Spara som utkast</string>
@@ -1898,7 +1972,7 @@ Language: sv_SE
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Byt foto</string>
     <string name="plugin_fetch_error">Kan inte läsa in tillägg</string>
-    <string name="my_site_btn_site_pages">Webbplatssidor</string>
+    <string name="my_site_btn_site_pages">Sidor</string>
     <string name="site_settings_tags_hint">Hantera etiketterna för din webbplats</string>
     <string name="dlg_saving_tag">Sparar</string>
     <string name="dlg_deleting_tag">Raderar</string>
@@ -2659,7 +2733,7 @@ Language: sv_SE
     <string name="my_site_btn_view_admin">Visa admin</string>
     <string name="my_site_btn_switch_site">Byt webbplats</string>
     <string name="my_site_btn_site_settings">Webbplatsinställningar</string>
-    <string name="my_site_btn_blog_posts">Blogginlägg</string>
+    <string name="my_site_btn_blog_posts">Inlägg</string>
     <string name="my_site_header_publish">Publicera</string>
     <string name="my_site_header_look_and_feel">Utseende och känsla</string>
     <string name="my_site_header_configuration">Konfiguration</string>
@@ -2725,6 +2799,7 @@ Language: sv_SE
     <string name="older_month">Äldre än en månad</string>
     <string name="older_last_week">Äldre än en vecka</string>
     <string name="older_two_days">Äldre än 2 dagar</string>
+    <string name="help_and_support">Hjälp och support</string>
     <string name="mnu_comment_liked">Gillat</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar förkastad</string>
@@ -2832,7 +2907,6 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag_updating">Hämtar inlägg…</string>
     <string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>
     <string name="reader_likes_multi">%,d gillar detta</string>
-    <string name="reader_label_reply">Svara</string>
     <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
     <string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>

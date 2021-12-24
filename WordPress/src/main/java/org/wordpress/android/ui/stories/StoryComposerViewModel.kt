@@ -114,7 +114,6 @@ class StoryComposerViewModel @Inject constructor(
                 editPostRepository.getPost(),
                 site
         )
-        this.postEditorAnalyticsSession?.start(null, null, null)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -125,6 +124,14 @@ class StoryComposerViewModel @Inject constructor(
                 PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
                 post, site, true
         )
+    }
+
+    fun onStoryComposerStartAnalyticsSession() {
+        this.postEditorAnalyticsSession?.start(null, null)
+    }
+
+    fun onStoryComposerAnalyticsSessionStartTimeReset() {
+        this.postEditorAnalyticsSession?.resetStartTime()
     }
 
     fun writeToBundle(outState: Bundle) {
@@ -185,6 +192,6 @@ class StoryComposerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        postEditorAnalyticsSession?.end(null)
+        postEditorAnalyticsSession?.end()
     }
 }

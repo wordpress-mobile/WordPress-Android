@@ -63,7 +63,6 @@
     <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
-    <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>
@@ -82,8 +81,6 @@
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
-    <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -157,10 +154,10 @@
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
     <!-- reader follow unfollow comments dimensions -->
-    <dimen name="reader_follow_button_min_height">32dp</dimen>
-    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
-    <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
-    <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
+    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
+    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
+    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
+    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
 
     <!-- reader more menu spacer height -->
     <dimen name="reader_more_menu_spacer_height">16dp</dimen>
@@ -229,6 +226,10 @@
 
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">160dp</dimen>
+
+    <dimen name="reader_comments_actions_height">24dp</dimen>
+    <dimen name="reader_comments_content_line_height">24dp</dimen>
+    <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
 
     <!-- Increased touch targets to make views more accessible -->
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
@@ -303,18 +304,31 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
-    <dimen name="my_site_bottom_spacing">64dp</dimen>
+    <dimen name="my_site_bottom_spacing">64dp</dimen> <!-- added so that the list items are not hidden behind the toast -->
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
     <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
     <dimen name="my_site_card_row_padding">16dp</dimen>
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
+    <dimen name="my_site_card_footer_link_padding">16dp</dimen>
+    <dimen name="my_site_card_footer_link_padding_top">8dp</dimen>
+
+    <!-- my site post card item -->
+    <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
+    <dimen name="my_site_post_item_image_size">48dp</dimen>
+    <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
+    <dimen name="my_site_create_first_image_width">75dp</dimen>
+
+    <!-- my site error card -->
+    <dimen name="my_site_error_card_border_radius">4dp</dimen>
+    <dimen name="my_site_error_card_stroke_width">1dp</dimen>
+    <dimen name="my_site_error_card_dash_gap">5dp</dimen>
+    <dimen name="my_site_error_card_dash_width">10dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -546,6 +560,7 @@
     <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
+    <dimen name="domain_suggestions_progress_indicator_size">24dp</dimen>
 
     <dimen name="keyline_second">72dp</dimen>
 

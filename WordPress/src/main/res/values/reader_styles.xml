@@ -284,23 +284,17 @@
         <item name="wpShowFollowButtonCaption">false</item>
     </style>
 
-    <style name="Reader.Follow.Button.Comments" parent="Reader.Follow.Button">
-        <item name="iconTint">@color/secondary_gray_20_disabled_selector</item>
-        <item name="android:textColor">@color/secondary_gray_20_disabled_selector</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-        <item name="android:minHeight">@dimen/reader_follow_button_min_height</item>
-        <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:background">@color/transparent</item>
-        <item name="wpShowFollowButtonCaption">true</item>
-        <item name="wpReaderFollowButtonType">followComments</item>
-    </style>
-
     <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="WordPress.FollowComments.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
     <!-- EditTexts -->

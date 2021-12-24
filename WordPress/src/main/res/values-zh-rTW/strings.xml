@@ -1,11 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 09:54:09+0000
+Translation-Revision-Date: 2021-12-08 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">從剪貼簿</string>
+    <string name="gutenberg_native_featured_image">精選圖片</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">從剪貼簿複製 URL，%s</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">前往已排程的文章</string>
+    <string name="my_site_post_card_link_go_to_drafts">前往草稿</string>
+    <string name="me_btn_about">關於 WordPress</string>
+    <string name="my_site_post_card_link_create_post">建立文章</string>
+    <string name="my_site_create_next_post_excerpt">定期發文有助於建立讀者群！</string>
+    <string name="my_site_create_next_post_title">建立下一篇文章</string>
+    <string name="menu_visual_mode_switched_notice">已切換至「視覺化」模式</string>
+    <string name="menu_html_mode_switched_notice">已切換至「HTML」模式</string>
+    <string name="comment_author_badge">作者</string>
+    <string name="button_copy_link">複製連結</string>
+    <string name="post_link_copied_to_clipboard">連結已複製到剪貼簿</string>
+    <string name="domains_paid_plan_add_your_domain_caption">新增自訂網域可讓訪客輕鬆找到你的網站</string>
+    <string name="domains_paid_plan_add_your_domain_title">新增你的網域</string>
+    <string name="my_site_create_first_post_excerpt">文章會在你的網誌頁面上按時間倒序顯示。 是時候和全世界分享你的想法了！</string>
+    <string name="my_site_create_first_post_title">建立你的首篇文章</string>
+    <string name="my_site_untitled_post">無標題</string>
+    <string name="my_site_post_card_scheduled_title">即將發表的排程文章</string>
+    <string name="my_site_post_card_draft_title">編輯草稿文章</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免費，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">你的網域會重新導向你的網站 %s</string>
+    <string name="gutenberg_native_create_link">建立連結</string>
+    <string name="domain_registration_result_description">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。 網域可能需要 30 分鐘才能開始運作。</string>
+    <string name="domain_registration_result_title">謝謝你的選購！</string>
+    <string name="domains_suggestions_select_domain">選取網域</string>
+    <string name="domains_title">網域</string>
+    <string name="post_status_sticky">置頂</string>
+    <string name="post_settings_post_sticky">將文章置於首頁</string>
+    <string name="post_settings_mark_as_sticky_options_header">標記為置頂</string>
+    <string name="reader_follow_comments_unfollow_conversation">取消追蹤討論</string>
+    <string name="reader_follow_comments_enable_push_notifications">啟用應用程式內通知</string>
+    <string name="reader_follow_comments_message">你正在追蹤這個討論。 新留言發表時，你會收到電子郵件通知。</string>
+    <string name="reader_follow_comments_bottom_sheet_description">管理追蹤討論選項，彈出視窗</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">無法停用應用程式內通知</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">無法啟用應用程式內通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">已停用應用程式內通知</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">已啟用應用程式內通知</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">已取消訂閱此討論</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">正在追蹤此討論\n是否啟用應用程式內通知？</string>
+    <string name="domains_search_for_a_domain_button">搜尋網域</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">你的方案已包含一年免費網域註冊</string>
+    <string name="domains_free_plan_get_your_domain_caption">此網站購買的網域會將訪客重新導向至 &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_title">索取你的免費網域</string>
+    <string name="domains_manage_domains">管理網域</string>
+    <string name="domains_add_a_domain">新增網域</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日： %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">到期日： %s</string>
+    <string name="domains_site_domains">你網站的網域名稱</string>
+    <string name="domains_primary_site_address_chip">網站主要網址</string>
+    <string name="domains_primary_site_more_menu_change_site_address">變更網址</string>
+    <string name="domains_primary_site_caption">你的 WordPress.com 免費位址是</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/年&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">第一年 &lt;span style=\"color:#B26200;\"&gt;%1$s，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">你要捨棄這些變更嗎？</string>
+    <string name="comment_edit_cancel_dialog_title">有未儲存的變更</string>
+    <string name="comment_edit_comment_error">留言不可空白</string>
+    <string name="comment_edit_user_email_error">使用者電子郵件無效</string>
+    <string name="comment_edit_web_address_error">網址無效</string>
+    <string name="comment_edit_user_name_error">使用者名稱不可空白</string>
+    <string name="comment_edit_email_address">電子郵件地址</string>
+    <string name="comment_edit_web_address">網址</string>
+    <string name="comment_edit_comment">留言</string>
+    <string name="comment_edit_user_name">名稱</string>
+    <string name="comment_edit_menu_done">搞定</string>
+    <string name="weekly_roundup">每週綜合整理</string>
+    <string name="gutenberg_native_embed_options">嵌入選項</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
+    <string name="quick_start_list_create_site_message">網站已建立！ 完成另一項任務。</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s 位部落客&lt;/a&gt;說這個讚。</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 位部落客&lt;/a&gt;說這個讚。</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;你和其他 %1$s 位部落客&lt;/a&gt;都說這個讚。</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;你和 1 位部落客&lt;/a&gt;都說這個讚。</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;你&lt;/a&gt;說這個讚。</string>
+    <string name="gutenberg_native_line_height">行高</string>
+    <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
+    <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
+    <string name="recommend_app_bad_format_response">收到無效回應</string>
+    <string name="recommend_app_null_response">未收到回應</string>
+    <string name="recommend_app_subject">WordPress 應用程式 - 適用任何螢幕</string>
+    <string name="me_btn_share">向朋友推薦 WordPress</string>
+    <string name="my_site_quick_actions_title">快速連結</string>
+    <string name="my_site_btn_domains">網域</string>
     <string name="weekly_roundup_notification_text">你的網站獲得 %1$d 次瀏覽、%2$d 個讚和 %3$d 個留言。</string>
     <string name="weekly_roundup_notification_title">每週綜合整理：%s</string>
     <string name="blogging_reminders_notification_time">通知時間</string>
@@ -48,13 +132,13 @@ Language: zh_TW
     <string name="stats_disabled_subtitle">啟用網站統計資料即可查看網站詳細資訊，包括流量、按讚數、留言數和訂閱人數。</string>
     <string name="stats_disabled_title">在尋找統計資料嗎？</string>
     <string name="gutenberg_native_what_is_a_block">什麼是區塊？</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">我們正努力為嵌入內容預覽提供支援。 你可以在此期間預覽文章的嵌入內容。</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">我們正努力為嵌入內容預覽提供支援。 你可以在此期間預覽頁面的嵌入內容。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在文章中預覽嵌入內容。</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">我們正努力新增對 %s 預覽的支援。 在此期間，你可以在頁面中預覽嵌入內容。</string>
     <string name="gutenberg_native_unable_to_embed_media">無法內嵌媒體</string>
     <string name="gutenberg_native_try_another_search_term">嘗試其他搜尋字詞</string>
     <string name="gutenberg_native_no_blocks_found">找不到區塊</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">嵌入內容預覽尚無法使用</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入內容區塊預覽功能即將推出</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">尚未推出 %s 預覽</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s 嵌入內容區塊預覽功能即將推出</string>
     <string name="gutenberg_native_double_tap_to_preview_post">點兩下可預覽文章。</string>
     <string name="gutenberg_native_double_tap_to_preview_page">點兩下可預覽頁面。</string>
     <string name="quick_start_list_upload_icon_subtitle">在訪客瀏覽器分頁和其他線上位置顯示。</string>
@@ -100,9 +184,6 @@ Language: zh_TW
     <string name="fab_add_category_desc">建立分類</string>
     <string name="support_ticket_subject">Android 版 WordPress 支援</string>
     <string name="site_settings_categories_hint">管理你的網站分類</string>
-    <string name="site_settings_categories_empty_title">你沒有任何分類</string>
-    <string name="site_settings_categories_empty_subtitle">請在此處新增你常用的標籤，為文章分類時就能快速選取</string>
-    <string name="site_settings_categories_empty_button">建立分類</string>
     <string name="site_settings_categories_title">分類</string>
     <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
     <string name="site_settings_blogging_reminders_title">網誌提醒</string>
@@ -114,7 +195,6 @@ Language: zh_TW
     <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
     <string name="gutenberg_native_x_axis_position">X 軸位置</string>
     <string name="gutenberg_native_type_a_url">輸入 URL</string>
-    <string name="gutenberg_native_tap_to_add_content">點選以新增內容</string>
     <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
     <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
     <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>
@@ -162,9 +242,16 @@ Language: zh_TW
     <string name="gutenberg_native_post_meta_settings">文章中繼資料設定</string>
     <string name="gutenberg_native_preview_page">閱覽頁面</string>
     <string name="gutenberg_native_preview_post">預覽文章</string>
+    <string name="gutenberg_native_retry">重試</string>
+    <string name="gutenberg_native_no_preview_available">未提供預覽</string>
+    <string name="gutenberg_native_s_link">%s 連結</string>
     <string name="gutenberg_native_featured">精選內容</string>
     <string name="gutenberg_native_embed_link">內嵌連結</string>
     <string name="gutenberg_native_display_post_date">顯示內容發佈日期</string>
+    <string name="gutenberg_native_create_embed">建立嵌入內容</string>
+    <string name="gutenberg_native_custom_url">自訂 URL</string>
+    <string name="gutenberg_native_column_d">欄 %d</string>
+    <string name="gutenberg_native_none">無</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
     <string name="gutenberg_native_add_blocks">新增區塊</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
@@ -176,8 +263,6 @@ Language: zh_TW
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">說明圖片用途。 如果圖片只是為了裝飾，請保留空白。 </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s 已轉換為 %2$s</string>
     <string name="like_faces_error_loading_message">載入讚資料時發生錯誤。%s。</string>
-    <string name="like_faces_plural_text">%d 位部落客說這個讚。</string>
-    <string name="like_faces_singular_text">1 位部落客說這個讚。</string>
     <string name="like_title_plural">%d 按讚數</string>
     <string name="like_title_singular">1 個讚</string>
     <string name="suggestion">建議：</string>
@@ -408,7 +493,6 @@ Language: zh_TW
     <string name="backup_download_generic_failure">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="backup_download_details_action_button_content_description">建立可下載備份按鈕</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s 是選定建立可下載備份的時間點。</string>
-    <string name="gutenberg_native_image_link_url">圖片連結 URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -503,11 +587,9 @@ Language: zh_TW
     <string name="reader_follow_comments_could_not_unsubscribe_error">無法取消訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_could_not_subscribe_error">無法訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_get_status_error">擷取文章訂閱狀態時發生錯誤</string>
-    <string name="reader_follow_comments_unsubscribe_success">已成功取消訂閱留言</string>
     <string name="reader_btn_following_comments">透過電子郵件追蹤對話</string>
     <string name="reader_btn_follow_comments">透過電子郵件追蹤對話</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
-    <string name="reader_follow_comments_subscribe_success">已成功訂閱留言</string>
     <string name="reader_follow_comments_bad_format_response">收到無效回應</string>
     <string name="reader_follow_comments_null_response">未收到回應</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
@@ -724,6 +806,7 @@ Language: zh_TW
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
+    <string name="gutenberg_native_convert_to_link">轉換為連結</string>
     <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
     <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
@@ -755,6 +838,7 @@ Language: zh_TW
     <string name="gutenberg_native_block_cut">已剪下區塊</string>
     <string name="gutenberg_native_block_copied">已複製區塊</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">只有具有管理員角色的使用者才能變更網站標題。</string>
+    <string name="gutenberg_native_remove_block">移除區塊</string>
     <string name="my_site_title_changer_dialog_hint">網站標題會顯示在網頁瀏覽器的標題列中，且會顯示在大部分佈景主題的頁首中。</string>
     <string name="reader_title_tag_preview">主旨</string>
     <string name="error_update_site_title_network">無法更新網站標題。 請檢查你的網路連線並再試一次。</string>
@@ -1240,10 +1324,6 @@ Language: zh_TW
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在註冊網域名稱…</string>
     <string name="domain_registration_state_picker_dialog_title">選取州/省</string>
     <string name="domain_registration_country_picker_dialog_title">選取國家</string>
-    <string name="domain_registration_result_continue_button">繼續</string>
-    <string name="domain_registration_result_description">正在設定你的新網域 &lt;b&gt;%s&lt;/b&gt;。你的網站\n簡直令人樂不可支！</string>
-    <string name="domain_registration_result_title">恭喜</string>
-    <string name="domain_contact_information_register_domain_button">註冊網域</string>
     <string name="domain_contact_information_postal_code_hint">郵遞區號</string>
     <string name="domain_contact_information_state_hint">州</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -1260,7 +1340,6 @@ Language: zh_TW
     <string name="domain_registration_privacy_protection_description">網域擁有者必須在所有網域的公共資料庫中分享自己的聯絡資訊。\n基於隱私權保護，我們只會發佈自己的資訊而非你的資訊，並會將所有通訊內容私密轉寄給你。</string>
     <string name="domain_registration_privacy_protection_title">隱私權保護</string>
     <string name="domain_registration_contact_form_input_error">請輸入有效的 %s</string>
-    <string name="domains_suggestions_choose_domain">選擇網域</string>
     <string name="stats_management_new">新增</string>
     <string name="stats_management_dismiss_insights_news_card">忽略</string>
     <string name="stats_management_try_it_now">立即試試</string>
@@ -1326,7 +1405,7 @@ Language: zh_TW
     <string name="stats_months_and_years_period_label">期間</string>
     <string name="stats_detail_months_and_years">月份與年份</string>
     <string name="stats_insights_load_more">載入更多</string>
-    <string name="new_site_creation_preview_subtitle">稍後可以自訂網站的外觀和風格</string>
+    <string name="new_site_creation_preview_subtitle">你可以稍後自訂網站的外觀和風格</string>
     <string name="stats_insights_today_stats">今天</string>
     <string name="stats_insights_best_hour">最佳時段</string>
     <string name="stats_insights_best_day">最好的一天</string>
@@ -1354,7 +1433,6 @@ Language: zh_TW
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
     <string name="menu_switch_to_gutenberg_editor">切換至區塊編輯器</string>
     <string name="exit">結束</string>
-    <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受完成的成果！</string>
@@ -1365,7 +1443,6 @@ Language: zh_TW
     <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_check_stats_message_short">點選%1$s統計資料%2$s以瞭解網站的成效。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
-    <string name="quick_start_dialog_need_help_message">我們會逐步說明建立網站以及讓網站成長的基本事項。</string>
     <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
     <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
     <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
@@ -1549,9 +1626,6 @@ Language: zh_TW
     <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
     <string name="quick_start_dialog_publish_post_message_short">點選%1$s建立文章%2$s以建立新文章</string>
-    <string name="quick_start_dialog_need_help_title">需要協助開始使用嗎？</string>
-    <string name="quick_start_dialog_need_help_button_positive">接受</string>
-    <string name="quick_start_dialog_need_help_button_neutral">從未</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>
@@ -1746,14 +1820,11 @@ Language: zh_TW
     <string name="open_external_link_desc">開啟外部連結</string>
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
-    <string name="menu_undo_snackbar_action">復原</string>
     <string name="menu_visual_mode">視覺化模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_save_as_draft">儲存為草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
-    <string name="menu_visual_mode_done_snackbar">已切換至「視覺化」模式</string>
-    <string name="menu_html_mode_done_snackbar">已切換至「HTML」模式</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -1898,11 +1969,11 @@ Language: zh_TW
     <string name="plugin_byline">由 %s 提供</string>
     <string name="change_photo">變更照片</string>
     <string name="plugin_fetch_error">無法載入外掛程式</string>
-    <string name="my_site_btn_site_pages">網站頁面</string>
     <string name="site_settings_tags_hint">管理你的網站標籤</string>
     <string name="dlg_saving_tag">儲存中</string>
     <string name="dlg_deleting_tag">正在刪除</string>
     <string name="dlg_confirm_delete_tag">是否要永久刪除「%s」標籤？</string>
+    <string name="my_site_btn_site_pages">頁面</string>
     <string name="error_tag_exists">已存在使用此名稱的標籤</string>
     <string name="add_new_tag">新增標籤</string>
     <string name="tag_description_hint">說明</string>
@@ -2658,10 +2729,10 @@ Language: zh_TW
     <string name="my_site_btn_view_site">檢視網站</string>
     <string name="site_picker_title">選擇網站</string>
     <string name="my_site_btn_switch_site">切換網站</string>
-    <string name="my_site_btn_blog_posts">網誌文章</string>
     <string name="my_site_header_look_and_feel">外觀和風格</string>
     <string name="my_site_header_publish">發表</string>
     <string name="my_site_btn_site_settings">網站設定</string>
+    <string name="my_site_btn_blog_posts">文章</string>
     <string name="my_site_header_configuration">組態</string>
     <string name="reader_label_new_posts_subtitle">點選以顯示</string>
     <string name="deselect_all">取消全選</string>
@@ -2731,6 +2802,7 @@ Language: zh_TW
     <string name="comment_reply_to_user">回覆 %s</string>
     <string name="signing_out">正在登出…</string>
     <string name="reader_empty_posts_in_tag">沒有任何與此主題相關的文章</string>
+    <string name="help_and_support">說明與客戶服務</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
     <string name="reader_toast_err_block_blog">無法封鎖此網站</string>
     <string name="reader_toast_blog_blocked">將不再顯示此網站的文章</string>
@@ -2832,7 +2904,6 @@ Language: zh_TW
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>
     <string name="reader_likes_multi">%,d 人說這個讚</string>
-    <string name="reader_label_reply">回覆</string>
     <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>

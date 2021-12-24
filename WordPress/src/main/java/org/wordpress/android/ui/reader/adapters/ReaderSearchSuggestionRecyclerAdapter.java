@@ -66,7 +66,7 @@ public class ReaderSearchSuggestionRecyclerAdapter extends RecyclerView.Adapter<
     }
 
     private void onBindSuggestionViewHolder(final SearchSuggestionHolder holder) {
-        final String query = mCursor.getString(mCursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        final String query = mCursor.getString(mCursor.getColumnIndexOrThrow(ReaderSearchTable.COL_QUERY));
         holder.mHistoryImageView.setVisibility(View.VISIBLE);
         holder.mSuggestionTextView.setText(query);
         holder.mDeleteImageView.setVisibility(View.VISIBLE);
@@ -95,7 +95,7 @@ public class ReaderSearchSuggestionRecyclerAdapter extends RecyclerView.Adapter<
         } else if (!mCursor.moveToPosition(position)) {
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-        return mCursor.getLong(mCursor.getColumnIndex(ReaderSearchTable.COL_ID));
+        return mCursor.getLong(mCursor.getColumnIndexOrThrow(ReaderSearchTable.COL_ID));
     }
 
     private boolean isLast(final int position) {

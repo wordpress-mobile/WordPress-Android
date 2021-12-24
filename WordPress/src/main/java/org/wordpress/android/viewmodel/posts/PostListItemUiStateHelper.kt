@@ -46,6 +46,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -115,14 +116,13 @@ class PostListItemUiStateHelper @Inject constructor(
         )
         val statuses = getStatuses(
                 postStatus = postStatus,
-                isLocalDraft = post.isLocalDraft,
-                isLocallyChanged = post.isLocallyChanged,
+                post = post,
                 uploadUiState = uploadUiState,
                 hasUnhandledConflicts = unhandledConflicts,
                 hasAutoSave = hasAutoSave
         )
         val statusesColor = labelColorUseCase.getLabelsColor(post, uploadUiState, unhandledConflicts, hasAutoSave)
-        val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
+        val statusesDelimiter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
                 TRASHED -> {
@@ -148,7 +148,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postInfo = postInfo,
                 statuses = statuses,
                 statusesColor = statusesColor,
-                statusesDelimiter = statusesDelimeter,
+                statusesDelimiter = statusesDelimiter,
                 progressBarUiState = getProgressBarState(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
@@ -157,7 +157,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
                 ),
-                disableRippleEffect = postStatus == PostStatus.TRASHED
+                disableRippleEffect = postStatus == TRASHED
         )
 
         return PostListItemUiState(
@@ -232,17 +232,15 @@ class PostListItemUiStateHelper @Inject constructor(
                 uploadUiState is UploadQueued
     }
 
-    private fun getStatuses(
-        postStatus: PostStatus,
-        isLocalDraft: Boolean,
-        isLocallyChanged: Boolean,
+    private fun getErrorAndProgressStatuses(
         uploadUiState: PostUploadUiState,
+        postStatus: PostStatus,
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
-    ): List<UiString> {
+    ): MutableList<UiString> {
         val labels: MutableList<UiString> = ArrayList()
         when {
-            uploadUiState is PostUploadUiState.UploadFailed -> {
+            uploadUiState is UploadFailed -> {
                 getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
@@ -253,28 +251,53 @@ class PostListItemUiStateHelper @Inject constructor(
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
             uploadUiState is UploadWaitingForConnection -> {
-                when (uploadUiState.postStatus) {
-                    UNKNOWN, PUBLISHED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_publish))
-                    PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
-                    PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
-                    SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
-                    DRAFT -> labels.add(UiStringRes(R.string.post_waiting_for_connection_draft))
-                    TRASHED -> AppLog.e(
-                            POSTS,
-                            "Developer error: This state shouldn't happen. Trashed post is in " +
-                                    "UploadWaitingForConnection state."
-                    )
+                getWaitingForConnectionStatus(uploadUiState.postStatus)?.let {
+                    labels.add(it)
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
             hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
+        return labels
+    }
+
+    private fun getWaitingForConnectionStatus(postStatus: PostStatus): UiString? {
+        return when (postStatus) {
+            UNKNOWN, PUBLISHED -> (UiStringRes(R.string.post_waiting_for_connection_publish))
+            PRIVATE -> (UiStringRes(R.string.post_waiting_for_connection_private))
+            PENDING -> (UiStringRes(R.string.post_waiting_for_connection_pending))
+            SCHEDULED -> (UiStringRes(R.string.post_waiting_for_connection_scheduled))
+            DRAFT -> (UiStringRes(R.string.post_waiting_for_connection_draft))
+            TRASHED -> {
+                AppLog.e(
+                        POSTS,
+                        "Developer error: This state shouldn't happen. Trashed post is in " +
+                                "UploadWaitingForConnection state."
+                )
+                return null
+            }
+        }
+    }
+
+    private fun getStatuses(
+        postStatus: PostStatus,
+        post: PostModel,
+        uploadUiState: PostUploadUiState,
+        hasUnhandledConflicts: Boolean,
+        hasAutoSave: Boolean
+    ): List<UiString> {
+        val labels = getErrorAndProgressStatuses(
+                uploadUiState,
+                postStatus,
+                hasUnhandledConflicts,
+                hasAutoSave
+        )
 
         // we want to show either single error/progress label or 0-n info labels.
         if (labels.isEmpty()) {
-            if (isLocalDraft) {
+            if (post.isLocalDraft) {
                 labels.add(UiStringRes(R.string.local_draft))
-            } else if (isLocallyChanged) {
+            } else if (post.isLocallyChanged) {
                 labels.add(UiStringRes(R.string.local_changes))
             }
             if (postStatus == PRIVATE) {
@@ -282,6 +305,9 @@ class PostListItemUiStateHelper @Inject constructor(
             }
             if (postStatus == PENDING) {
                 labels.add(UiStringRes(R.string.post_status_pending_review))
+            }
+            if (post.sticky) {
+                labels.add(UiStringRes(R.string.post_status_sticky))
             }
         }
         return labels
@@ -343,9 +369,9 @@ class PostListItemUiStateHelper @Inject constructor(
         siteHasCapabilitiesToPublish: Boolean,
         statsSupported: Boolean
     ): List<PostListButtonType> {
-        val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
+        val canRetryUpload = uploadUiState is UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
+                (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
@@ -355,7 +381,8 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocalDraft &&
                 !isLocallyChanged
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
+        val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
+        val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
@@ -369,26 +396,17 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowPublishButton) {
             buttonTypes.add(
-                    if (canRetryUpload) {
-                        BUTTON_RETRY
-                    } else if (!siteHasCapabilitiesToPublish) {
-                        BUTTON_SUBMIT
-                    } else if (postStatus == SCHEDULED && isLocallyChanged) {
-                        BUTTON_SYNC
-                    } else {
-                        BUTTON_PUBLISH
+                    when {
+                        canRetryUpload -> BUTTON_RETRY
+                        !siteHasCapabilitiesToPublish -> BUTTON_SUBMIT
+                        postStatus == SCHEDULED && isLocallyChanged -> BUTTON_SYNC
+                        else -> BUTTON_PUBLISH
                     }
             )
         }
 
         if (canShowViewButton) {
-            buttonTypes.add(
-                    if (isLocalDraft || isLocallyChanged) {
-                        BUTTON_PREVIEW
-                    } else {
-                        BUTTON_VIEW
-                    }
-            )
+            buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
         }
 
         if (canShowStats) {
@@ -401,15 +419,28 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
-        when {
-            isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
-            postStatus == TRASHED -> {
-                buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
-            }
-            postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
+        if (canShowCopyUrlButton) {
+            buttonTypes.add(BUTTON_COPY_URL)
         }
 
+        buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
+
         return buttonTypes
+    }
+
+    private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
+        add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
+    }
+
+    private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(
+        isLocalDraft: Boolean,
+        postStatus: PostStatus
+    ) {
+        when {
+            isLocalDraft -> add(BUTTON_DELETE)
+            postStatus == TRASHED -> add(BUTTON_DELETE_PERMANENTLY)
+            postStatus != TRASHED -> add(BUTTON_TRASH)
+        }
     }
 
     private fun MutableList<PostListButtonType>.addMoveToDraftActionIfAvailable(postStatus: PostStatus) {

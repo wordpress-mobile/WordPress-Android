@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-01 12:54:08+0000
+Translation-Revision-Date: 2021-12-08 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_from_clipboard">Panodan</string>
+    <string name="gutenberg_native_featured_image">Öne çıkan görsel</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">URL\'yi panodan kopyalayın, %s</string>
+    <string name="me_btn_about">WordPress hakkında</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Zamanlanmış gönderilere git</string>
+    <string name="my_site_post_card_link_go_to_drafts">Taslaklara git</string>
+    <string name="my_site_post_card_link_create_post">Bir yazı oluştur</string>
+    <string name="my_site_create_next_post_excerpt">Düzenli olarak paylaşım yapmak, hedef kitlenizi oluşturmanıza yardımcı olur!</string>
+    <string name="my_site_create_next_post_title">Bir sonraki gönderinizi oluşturun</string>
+    <string name="menu_visual_mode_switched_notice">Görsel moda geçildi</string>
+    <string name="menu_html_mode_switched_notice">HTML moduna geçildi</string>
+    <string name="post_link_copied_to_clipboard">Bağlantı panoya kopyalandı</string>
+    <string name="comment_author_badge">Yazar</string>
+    <string name="button_copy_link">Bağlantıyı kopyala</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Özel bir alan adı eklemek ziyaretçilerin sitenizi bulmasını kolaylaştırır</string>
+    <string name="domains_paid_plan_add_your_domain_title">Aalan adınızı ekleyin</string>
+    <string name="my_site_create_first_post_excerpt">Gönderiler blog sayfanızda ters kronolojik sırada görünür. Fikirlerinizi dünyayla paylaşmanın zamanı geldi!</string>
+    <string name="my_site_post_card_scheduled_title">Yaklaşan zamanlanmış gönderiler</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
+    <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
+    <string name="domain_registration_result_description">Yeni alan adınız &lt;b&gt;%s&lt;/b&gt; oluşturuluyor. Alan adınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
+    <string name="domain_registration_result_title">Satın aldığınız için tebrikler!</string>
+    <string name="domains_suggestions_select_domain">Alan adı seç</string>
+    <string name="domains_title">Alan adları</string>
+    <string name="post_status_sticky">Yapışkan</string>
+    <string name="post_settings_post_sticky">Yazıyı ön sayfaya yapıştır</string>
+    <string name="post_settings_mark_as_sticky_options_header">Yapışkan olarak işaretle</string>
+    <string name="reader_follow_comments_unfollow_conversation">Görüşmeyi takip etmeyi bırak</string>
+    <string name="reader_follow_comments_enable_push_notifications">Uygulama içi bildirimleri etkinleştir</string>
+    <string name="reader_follow_comments_message">Bu konuşmayı takip ediyorsunuz. Yeni yorumlar yayınlandığında e-posta ile bildirim alacaksınız.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Konuşma takibi seçeneklerini yönet, Açılır pencere</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Uygulama içi bildirimler devre dışı bırakılamadı</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Uygulama içi bildirimler etkinleştirilemedi</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Uygulama içi bildirimler devre dışı bırakıldı</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Uygulama içi bildirimler etkinleştirildi</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Bu konuşmanın aboneliğinden çıkıldı</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Bu konuşmanın ardından\nUygulama içi bildirimler etkinleştirilsin mi?</string>
+    <string name="domains_search_for_a_domain_button">Alan adı ara</string>
+    <string name="domains_free_plan_get_your_domain_caption">Bu siteden satın alınan alan adları ziyaretçileri &lt;b&gt;%s&lt;/b&gt; sitesine yönlendirir</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">Paketiniz ücretsiz bir yıllık alan adı kaydını içerir</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Ücretsiz alan adınızı isteyin</string>
+    <string name="domains_manage_domains">Alan Adlarını Yönet</string>
+    <string name="domains_add_a_domain">Alan adı ekle</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Sona erme tarihi: %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Sona erme tarihi: %s</string>
+    <string name="domains_site_domains">Sitenizin alan adları</string>
+    <string name="domains_primary_site_address_chip">Birincil site adresi</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Site adresini değiştir</string>
+    <string name="domains_primary_site_caption">Ücretsiz WordPress.com adresiniz</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">İlk yıl için &lt;span style=\"color:#B26200;\"&gt;%1$s &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /yıl&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/yıl&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Bunları iptal etmek istiyor musunuz?</string>
+    <string name="comment_edit_cancel_dialog_title">Kaydedilmemiş değişiklikler var</string>
+    <string name="comment_edit_comment_error">Yorum boş olamaz</string>
+    <string name="comment_edit_user_email_error">Kullanıcı e-postası geçerli değil</string>
+    <string name="comment_edit_web_address_error">Web adresi geçerli değil</string>
+    <string name="comment_edit_user_name_error">Kullanıcı adı boş olamaz</string>
+    <string name="comment_edit_email_address">E-posta adresi</string>
+    <string name="comment_edit_web_address">Web adresi</string>
+    <string name="comment_edit_comment">Yorum yap</string>
+    <string name="comment_edit_user_name">İsim</string>
+    <string name="comment_edit_menu_done">Bitti</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Gömülü blok önizlemeleri yakında geliyor</string>
+    <string name="weekly_roundup">Haftalık Özet</string>
+    <string name="gutenberg_native_embed_options">Gömme seçenekleri</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Gömme seçeneklerini görüntülemek için iki kez dokunun.</string>
+    <string name="quick_start_list_create_site_message">Site oluşturuldu! Başka bir görevi tamamlayın.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Sizinle birlikte %1$s blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Sizinle birlikte 1 blog yazarı&lt;/a&gt; bunu beğendi.</string>
+    <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
+    <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
+    <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
+    <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
+    <string name="recommend_app_null_response">Yanıt alınamadı</string>
+    <string name="recommend_app_subject">WordPress Uygulamaları - Her ekran için uygulamalar</string>
+    <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
+    <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
+    <string name="my_site_btn_domains">Alan adları</string>
     <string name="weekly_roundup_notification_text">Siteniz %1$d görüntüleme, %2$d beğeni, %3$d yorum aldı.</string>
     <string name="weekly_roundup_notification_title">Haftalık Özet: %s</string>
     <string name="blogging_reminders_notification_time">Bildirim zamanı</string>
@@ -48,13 +131,13 @@ Language: tr
     <string name="stats_disabled_subtitle">Trafiğiniz, beğenileriniz, yorumlarınız ve aboneleriniz hakkındaki ayrıntılı bilgileri görmek için site istatistiklerini etkinleştirin.</string>
     <string name="stats_disabled_title">İstatistikleri mi arıyorsunuz?</string>
     <string name="gutenberg_native_what_is_a_block">Blok nedir?</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me_7978045c">Gömülü ön izlemelere destek eklemek için çok çalışıyoruz. Bu arada, yazıdaki gömülü içeriği ön izleyebilirsiniz.</string>
-    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_embed_previews_in_the_me">Gömülü içerik önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, sayfadaki gömülü içeriği önizleyebilirsiniz.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e">%s önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, gönderideki gömülü içeriği önizleyebilirsiniz.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">%s önizlemelerine yönelik destek eklemek için çalışmalarımız devam ediyor. Bu arada, sayfadaki gömülü içeriği önizleyebilirsiniz.</string>
     <string name="gutenberg_native_unable_to_embed_media">Ortam gömülemiyor</string>
     <string name="gutenberg_native_try_another_search_term">Başka bir arama terimi deneyin</string>
     <string name="gutenberg_native_no_blocks_found">Blok bulunamadı</string>
-    <string name="gutenberg_native_embed_previews_not_yet_available">Gömülü içerik önizlemeleri henüz kullanılamıyor</string>
-    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Gömülü blok önizlemeleri yakında geliyor</string>
+    <string name="gutenberg_native_s_previews_not_yet_available">%s önizlemeleri henüz kullanılamıyor</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">%s gömülü blok önizlemeleri yakında geliyor</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Yazıyı önizlemek için iki kez dokunun.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Sayfayı önizlemek için iki kez dokunun.</string>
     <string name="quick_start_list_upload_icon_subtitle">Ziyaretçinizin tarayıcı sekmesinde ve diğer çevrimiçi yerlerde gösterilir.</string>
@@ -100,9 +183,6 @@ Language: tr
     <string name="fab_add_category_desc">Kategori oluştur</string>
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
-    <string name="site_settings_categories_empty_title">Hiç kategoriniz yok</string>
-    <string name="site_settings_categories_empty_subtitle">Gönderilerinizi kategorilere ayırırken hızlı bir şekilde seçilebilmesi için sık kullandığınız kategorilerinizi buraya ekleyin</string>
-    <string name="site_settings_categories_empty_button">Bir kategori oluştur</string>
     <string name="site_settings_categories_title">Kategoriler</string>
     <string name="site_settings_blogging_reminders_title">Blog hatırlatıcıları</string>
     <string name="page_is_posts_page_warning">Güncel paylaşımlar sayfanızın içeriği, otomatik olarak oluşturulur ve düzenlenemez.</string>
@@ -114,7 +194,6 @@ Language: tr
     <string name="gutenberg_native_y_axis_position">Y Ekseni Konumu</string>
     <string name="gutenberg_native_x_axis_position">X Ekseni Konumu</string>
     <string name="gutenberg_native_type_a_url">Bir URL yazın</string>
-    <string name="gutenberg_native_tap_to_add_content">İçerik eklemek için dokunun</string>
     <string name="gutenberg_native_slash_inserter_results">Eğik çizgi yerleştirici sonuçları</string>
     <string name="gutenberg_native_s_has_url_set">%s için URL ayarlanmış</string>
     <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
@@ -162,9 +241,16 @@ Language: tr
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_post_meta_settings">Yazı meta ayarları</string>
     <string name="gutenberg_native_post_content_settings">Yazı içeriği ayarları</string>
+    <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
+    <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_embed_link">Bağlantı göm</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
+    <string name="gutenberg_native_custom_url">Özel adres</string>
+    <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
+    <string name="gutenberg_native_column_d">Sütun %d</string>
+    <string name="gutenberg_native_none">Hiçbiri</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="gutenberg_native_add_blocks">Blok ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
@@ -176,8 +262,6 @@ Language: tr
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Görselin amacını açıklayın. Görsel tamamen dekoratif amaçlıysa boş bırakın. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s, %2$s olarak dönüştürüldü</string>
     <string name="like_faces_error_loading_message">Beğeni verileri yüklenirken hata oluştu. %s.</string>
-    <string name="like_faces_plural_text">%d blog yazarı bunu beğendi.</string>
-    <string name="like_faces_singular_text">1 blog yazarı bunu beğendi.</string>
     <string name="like_title_plural">%d Beğenilenler</string>
     <string name="like_title_singular">1 beğeni</string>
     <string name="suggestion">Öneri:</string>
@@ -408,7 +492,6 @@ Language: tr
     <string name="backup_download_generic_failure">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="backup_download_details_action_button_content_description">İndirilebilir yedekleme düğmesi oluştur</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s indirme yedeklemesi oluşturmak için seçtiğiniz saattir.</string>
-    <string name="gutenberg_native_image_link_url">Görsel bağlantı adresi</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -506,8 +589,6 @@ Language: tr
     <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
     <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
-    <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
-    <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
     <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
     <string name="activity_log_activity_type_filter_clear">Temizle</string>
@@ -717,6 +798,7 @@ Language: tr
     <string name="pick_file">Dosya ekle</string>
     <string name="gutenberg_native_replace_video">Videoyu değiştir</string>
     <string name="gutenberg_native_replace_image_or_video">Video veya görseli değiştir</string>
+    <string name="gutenberg_native_convert_to_link">Bağlantıya dönüştür</string>
     <string name="gutenberg_native_choose_video">Video seç</string>
     <string name="gutenberg_native_choose_image_or_video">Görsel veya video seç</string>
     <string name="gutenberg_native_choose_image">Görsel seç</string>
@@ -1240,9 +1322,6 @@ Language: tr
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
-    <string name="domain_registration_result_continue_button">devam</string>
-    <string name="domain_registration_result_description">Alan adınız &lt;b&gt;%s&lt;/b&gt; kuruluyor. Siteniz heyecanla takla atıyor!</string>
-    <string name="domain_registration_result_title">Tebrikler</string>
     <string name="domain_contact_information_register_domain_button">Alan adı kaydet</string>
     <string name="domain_contact_information_postal_code_hint">Posta kodu</string>
     <string name="domain_contact_information_state_hint">Eyalet</string>
@@ -1260,7 +1339,6 @@ Language: tr
     <string name="domain_registration_privacy_protection_description">Alan adı sahiplerinin, tüm alan adlarının herkese açık bir veritabanında iletişim bilgilerini paylaşmaları gerekir. Privacy Protection özelliğiyle sizin bilgileriniz yerine kendi bilgilerimizi yayımlıyoruz ve her türlü iletişimi size gizlice iletiyoruz.</string>
     <string name="domain_registration_privacy_protection_title">Gizlilik koruması</string>
     <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>
-    <string name="domains_suggestions_choose_domain">Alan adını seç</string>
     <string name="stats_management_new">Yeni</string>
     <string name="stats_management_dismiss_insights_news_card">Kapat</string>
     <string name="stats_management_try_it_now">Şimdi deneyin</string>
@@ -1354,7 +1432,6 @@ Language: tr
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni gönderileri ve sayfaları düzenleyin</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok Düzenleyicisini Kullan</string>
     <string name="exit">çıkış</string>
-    <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
     <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
     <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
     <string name="quick_start_sites">Sonraki Adımlar</string>
@@ -1366,7 +1443,6 @@ Language: tr
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">Bir yazıyı taslak olarak yazın ve yayınlayın.</string>
-    <string name="quick_start_dialog_need_help_message">Sitenizi oluşturma ve geliştirme konusundaki temel bilgiler hakkında size rehberlik edeceğiz.</string>
     <string name="quick_start_dialog_explore_plans_title">Paketleri keşfedin</string>
     <string name="quick_start_dialog_explore_plans_message">Ücretli paketlerimizdeki pazarlama ve SEO araçları hakkında bilgi edinin.</string>
     <string name="quick_start_dialog_enable_sharing_title">Gönderi paylaşımına izin verin</string>
@@ -1549,9 +1625,6 @@ Language: tr
     <string name="quick_start_dialog_share_site_message">Sosyal medya hesaplarınıza bağlanın - siteniz yeni yazıları otomatik olarak paylaşır.</string>
     <string name="quick_start_dialog_publish_post_title">Bir yazı yayınla</string>
     <string name="quick_start_dialog_publish_post_message_short">Yeni bir yazı oluşturmak için %1$s yazı oluştur %2$s seçeneğine dokunun</string>
-    <string name="quick_start_dialog_need_help_title">Başlamak için ufak bir yardım ister misin?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Evet</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_need_help_button_negative">Hayır, teşekkürler</string>
     <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Benzer konulara sahip siteleri aramak için %1$sAra%2$s\'ya dokunun</string>
@@ -1746,10 +1819,7 @@ Language: tr
     <string name="signup_with_google_progress">Google ile kaydolunuyor…</string>
     <string name="jetpack_connection_failed_with_reason">Jetpack’e bağlantı kurulamadı: %s</string>
     <string name="jetpack_already_connected_toast">Jetpack’e zaten bağlısınız</string>
-    <string name="menu_undo_snackbar_action">GERİ AL</string>
-    <string name="menu_visual_mode_done_snackbar">Görsel moda geçildi</string>
     <string name="menu_visual_mode">Görsel mod</string>
-    <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML modu</string>
     <string name="menu_preview">Önizleme</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
@@ -1898,7 +1968,7 @@ Language: tr
     <string name="plugin_byline">%s tarafından</string>
     <string name="change_photo">Fotoğrafı değiştir</string>
     <string name="plugin_fetch_error">Eklentiler yüklenemedi</string>
-    <string name="my_site_btn_site_pages">Site sayfaları</string>
+    <string name="my_site_btn_site_pages">Sayfalar</string>
     <string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
     <string name="dlg_saving_tag">Kaydediliyor</string>
     <string name="dlg_deleting_tag">Siliniyor</string>
@@ -2659,7 +2729,7 @@ Language: tr
     <string name="my_site_btn_view_admin">Yöneticiyi görüntüle</string>
     <string name="my_site_btn_switch_site">Site değiştir</string>
     <string name="my_site_btn_site_settings">Site Ayarları</string>
-    <string name="my_site_btn_blog_posts">Blog yazıları</string>
+    <string name="my_site_btn_blog_posts">Gönderiler</string>
     <string name="my_site_header_publish">Yayımla</string>
     <string name="my_site_header_look_and_feel">Genel görünüm</string>
     <string name="my_site_header_configuration">Yapılandırma</string>
@@ -2725,6 +2795,7 @@ Language: tr
     <string name="older_month">Bir aydan eski</string>
     <string name="older_last_week">1 haftadan eski</string>
     <string name="older_two_days">2 günden eski</string>
+    <string name="help_and_support">Yardım ve destek</string>
     <string name="mnu_comment_liked">Beğenildi</string>
     <string name="comment">Yorum yap</string>
     <string name="comment_trashed">Yorum iptal edildi</string>
@@ -2832,7 +2903,6 @@ Language: tr
     <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
-    <string name="reader_label_reply">Yanıtla</string>
     <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>

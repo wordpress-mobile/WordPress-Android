@@ -8,24 +8,28 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CurrentAvatarSource
-@Inject constructor(private val accountStore: AccountStore) : SiteIndependentSource<CurrentAvatarUrl> {
-    private val avatarUrl = MutableLiveData<CurrentAvatarUrl>()
-    override fun buildSource(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
+class CurrentAvatarSource @Inject constructor(
+    private val accountStore: AccountStore
+) : SiteIndependentSource<CurrentAvatarUrl> {
+    override val refresh = MutableLiveData(true)
+
+    override fun build(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
         val result = MediatorLiveData<CurrentAvatarUrl>()
-        result.value = CurrentAvatarUrl(accountStore.account?.avatarUrl.orEmpty())
-        result.addSource(avatarUrl) {
-            result.value = it
-        }
+        result.refreshData()
+        result.addSource(refresh) { result.refreshData(refresh.value) }
         return result
     }
-    fun refresh() {
-        val url = accountStore.account?.avatarUrl.orEmpty()
-        if (url != avatarUrl.value?.url) {
-            avatarUrl.postValue(CurrentAvatarUrl(url))
+
+    private fun MediatorLiveData<CurrentAvatarUrl>.refreshData(
+        isRefresh: Boolean? = null
+    ) {
+        when (isRefresh) {
+            null, true -> {
+                val url = accountStore.account?.avatarUrl.orEmpty()
+                setState(CurrentAvatarUrl(url))
+            }
+            false -> Unit // Do nothing
         }
     }
 }
