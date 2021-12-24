@@ -1,18 +1,24 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class CardsTracker @Inject constructor(
+    private val cardsShownTracker: CardsShownTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     enum class Type(val label: String) {
+        ERROR("error"),
         POST("post")
     }
 
-    enum class Subtype(val label: String) {
+    enum class PostSubtype(val label: String) {
         CREATE_FIRST("create_first"),
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
@@ -20,33 +26,46 @@ class CardsTracker @Inject constructor(
     }
 
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
-        trackCardFooterLinkClicked(Type.POST, postCardType.toSubtypeValue())
+        trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
-    private fun trackCardFooterLinkClicked(
-        type: Type,
-        subtype: Subtype
-    ) {
+    private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
                 mapOf(
-                        TYPE to type.label,
-                        SUBTYPE to subtype.label
+                        TYPE to type,
+                        SUBTYPE to subtype
                 )
         )
     }
 
-    private fun PostCardType.toSubtypeValue(): Subtype {
-        return when (this) {
-            PostCardType.CREATE_FIRST -> Subtype.CREATE_FIRST
-            PostCardType.CREATE_NEXT -> Subtype.CREATE_NEXT
-            PostCardType.DRAFT -> Subtype.DRAFT
-            PostCardType.SCHEDULED -> Subtype.SCHEDULED
-        }
+    fun resetShown() {
+        cardsShownTracker.reset()
+    }
+
+    fun trackShown(dashboardCards: DashboardCards) {
+        cardsShownTracker.track(dashboardCards)
     }
 
     companion object {
-        private const val TYPE = "type"
-        private const val SUBTYPE = "subtype"
+        const val TYPE = "type"
+        const val SUBTYPE = "subtype"
+    }
+}
+
+fun DashboardCardType.toTypeValue(): Type {
+    return when (this) {
+        DashboardCardType.ERROR_CARD -> Type.ERROR
+        DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
+        DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
+    }
+}
+
+fun PostCardType.toSubtypeValue(): PostSubtype {
+    return when (this) {
+        PostCardType.CREATE_FIRST -> PostSubtype.CREATE_FIRST
+        PostCardType.CREATE_NEXT -> PostSubtype.CREATE_NEXT
+        PostCardType.DRAFT -> PostSubtype.DRAFT
+        PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
     }
 }

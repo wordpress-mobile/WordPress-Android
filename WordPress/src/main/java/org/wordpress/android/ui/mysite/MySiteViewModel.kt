@@ -25,6 +25,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -111,7 +113,8 @@ class MySiteViewModel @Inject constructor(
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
-    private val siteItemsTracker: SiteItemsTracker
+    private val siteItemsTracker: SiteItemsTracker,
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -144,6 +147,7 @@ class MySiteViewModel @Inject constructor(
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                resetShownTrackers()
                 val result = MediatorLiveData<SiteIdToState>()
                 for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
                     result.addSource(newSource) { partialState ->
@@ -172,7 +176,7 @@ class MySiteViewModel @Inject constructor(
     ) ->
         val state = if (site != null) {
             cardsUpdate?.checkAndShowSnackbarError()
-            buildSiteSelectedStateAndScroll(
+            val state = buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
                     activeTask,
@@ -184,6 +188,8 @@ class MySiteViewModel @Inject constructor(
                     scanAvailable,
                     cardsUpdate
             )
+            trackCardsAndItemsShownIfNeeded(state)
+            state
         } else {
             buildNoSiteState()
         }
@@ -779,6 +785,17 @@ class MySiteViewModel @Inject constructor(
     fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
         if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         setVisible()
+    }
+
+    private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
+        siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
+                .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
+        siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+    }
+
+    private fun resetShownTrackers() {
+        domainRegistrationCardShownTracker.resetShown()
+        cardsTracker.resetShown()
     }
 
     data class UiModel(

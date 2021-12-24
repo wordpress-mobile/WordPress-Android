@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -74,6 +75,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -136,6 +138,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
+    @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -278,7 +281,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
-                siteItemsTracker
+                siteItemsTracker,
+                domainRegistrationCardShownTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -352,6 +356,20 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
+    }
+
+    @Test
+    fun `when selected site is changed, then cardTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).resetShown()
+    }
+
+    @Test
+    fun `when selected site is changed, then cardShownTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
     }
 
     /* AVATAR */
@@ -804,6 +822,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
+    @Test
+    fun `when domain registration card is shown, then card shown event is tracked`() = test {
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        verify(
+                domainRegistrationCardShownTracker,
+                atLeastOnce()
+        ).trackShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
+    }
+
     /* QUICK START CARD */
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
@@ -1039,6 +1068,22 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostCardFooterLinkClick).invoke(PostCardType.SCHEDULED)
 
         verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
+    }
+
+    @Test
+    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).trackShown(any())
+    }
+
+    @Test
+    fun `when dashboard cards are not shown, then card shown events are not tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        initSelectedSite()
+
+        verify(cardsTracker, never()).trackShown(any())
     }
 
     /* DASHBOARD POST CARD - POST ITEM */
