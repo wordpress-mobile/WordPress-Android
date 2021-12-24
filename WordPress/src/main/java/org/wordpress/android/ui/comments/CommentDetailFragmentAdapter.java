@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.ui.comments.unified.CommentInterfaces.OnLoadMoreListener;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.util.AppLog;
 
 /**

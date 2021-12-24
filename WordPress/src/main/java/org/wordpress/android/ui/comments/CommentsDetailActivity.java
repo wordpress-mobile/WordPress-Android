@@ -31,7 +31,7 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.comments.unified.CommentConstants;
-import org.wordpress.android.ui.comments.unified.CommentInterfaces.OnLoadMoreListener;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
