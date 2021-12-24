@@ -129,7 +129,7 @@ class SiteItemsBuilderTest {
     fun `given my site improvements flag not present, when build info item is invoked, then info item is not built`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
 
-        val infoItem = siteItemsBuilder.buildInfoItem(
+        val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
                 )
@@ -142,7 +142,7 @@ class SiteItemsBuilderTest {
     fun `given stale message present, when build info item is invoked, then info item is built`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
-        val infoItem = siteItemsBuilder.buildInfoItem(
+        val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
                 )
@@ -155,7 +155,7 @@ class SiteItemsBuilderTest {
     fun `given stale message not present, when build info item is invoked, then info item is not built`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
-        val infoItem = siteItemsBuilder.buildInfoItem(
+        val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = false
                 )

@@ -251,7 +251,7 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
     ): List<MySiteCardAndItem> {
-        val infoItem = siteItemsBuilder.buildInfoItem(
+        val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
                 )

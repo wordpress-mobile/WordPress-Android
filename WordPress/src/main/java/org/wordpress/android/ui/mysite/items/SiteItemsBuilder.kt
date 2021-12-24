@@ -81,7 +81,7 @@ class SiteItemsBuilder @Inject constructor(
         )
     }
 
-    fun buildInfoItem(
+    fun build(
         params: InfoItemBuilderParams
     ) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
         params.isStaleMessagePresent.takeIf { it }

@@ -1608,7 +1608,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
-                siteItemsBuilder.buildInfoItem(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
+                siteItemsBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
         ).thenReturn(if (showStaleMessage) InfoItem(title = UiStringText("")) else null)
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
