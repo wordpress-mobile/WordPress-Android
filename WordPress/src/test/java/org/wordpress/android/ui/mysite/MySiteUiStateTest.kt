@@ -22,6 +22,8 @@ class MySiteUiStateTest : BaseUnitTest() {
         mySiteUiState = MySiteUiState()
     }
 
+    /* CARDS UPDATE - SNACKBAR */
+
     @Test
     fun `given cards update with snackbar, when ui state is updated with cards update, then snackbar shown`() {
         val partialState = CardsUpdate(cards = listOf(postsCardModel), showSnackbarError = true)
@@ -40,5 +42,27 @@ class MySiteUiStateTest : BaseUnitTest() {
         updatedUiState = updatedUiState.update(quickStartUpdate)
 
         assertThat(updatedUiState.cardsUpdate?.showSnackbarError).isFalse
+    }
+
+    /* CARDS UPDATE - STALE MESSAGE */
+
+    @Test
+    fun `given cards update with stale msg, when ui state is updated with cards update, then stale msg shown`() {
+        val partialState = CardsUpdate(cards = listOf(postsCardModel), showStaleMessage = true)
+
+        val updatedUiState = mySiteUiState.update(partialState)
+
+        assertThat(updatedUiState.cardsUpdate?.showStaleMessage).isTrue
+    }
+
+    @Test
+    fun `given cards update with stale msg, when ui state is updated with different update, then stale msg shown`() {
+        val cardsUpdate = CardsUpdate(cards = listOf(postsCardModel), showStaleMessage = true)
+        val quickStartUpdate = QuickStartUpdate()
+
+        var updatedUiState = mySiteUiState.update(cardsUpdate)
+        updatedUiState = updatedUiState.update(quickStartUpdate)
+
+        assertThat(updatedUiState.cardsUpdate?.showStaleMessage).isTrue
     }
 }
