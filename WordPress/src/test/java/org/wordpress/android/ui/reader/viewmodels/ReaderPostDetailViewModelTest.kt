@@ -274,6 +274,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
+        whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
+
         likesCaptor = argumentCaptor()
     }
 
