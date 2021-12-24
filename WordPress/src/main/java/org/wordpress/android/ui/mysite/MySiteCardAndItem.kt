@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
@@ -24,6 +25,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         DOMAIN_REGISTRATION_CARD,
         QUICK_START_CARD,
         QUICK_START_DYNAMIC_CARD,
+        INFO_ITEM,
         CATEGORY_HEADER_ITEM,
         LIST_ITEM,
         DASHBOARD_CARDS
@@ -172,6 +174,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        data class InfoItem(val title: UiString) : Item(INFO_ITEM)
+
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
 
         data class ListItem(
