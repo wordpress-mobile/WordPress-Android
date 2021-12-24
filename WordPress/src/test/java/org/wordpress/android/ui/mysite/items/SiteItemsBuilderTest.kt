@@ -9,20 +9,27 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
+    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
     fun setUp() {
-        siteItemsBuilder = SiteItemsBuilder(siteCategoryItemBuilder, siteListItemBuilder)
+        siteItemsBuilder = SiteItemsBuilder(
+                siteCategoryItemBuilder,
+                siteListItemBuilder,
+                mySiteDashboardPhase2FeatureConfig
+        )
     }
 
     @Test
@@ -101,13 +108,56 @@ class SiteItemsBuilderTest {
         val showPlansFocusPoint = true
         setupHeaders(addPlanItem = true, showPlansFocusPoint = showPlansFocusPoint)
 
-        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION,
-                activeTask = EXPLORE_PLANS)
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = EXPLORE_PLANS
+                )
         )
 
         assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
+    }
+
+    /* INFO ITEM */
+
+    @Test
+    fun `given my site improvements flag not present, when build info item is invoked, then info item is not built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+
+        val infoItem = siteItemsBuilder.buildInfoItem(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = true
+                )
+        )
+
+        assertThat(infoItem).isNull()
+    }
+
+    @Test
+    fun `given stale message present, when build info item is invoked, then info item is built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        val infoItem = siteItemsBuilder.buildInfoItem(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = true
+                )
+        )
+
+        assertThat(infoItem).isNotNull
+    }
+
+    @Test
+    fun `given stale message not present, when build info item is invoked, then info item is not built`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        val infoItem = siteItemsBuilder.buildInfoItem(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = false
+                )
+        )
+
+        assertThat(infoItem).isNull()
     }
 
     @Suppress("ComplexMethod", "LongMethod", "LongParameterList")
