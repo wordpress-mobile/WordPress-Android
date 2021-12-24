@@ -915,21 +915,21 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
-        // reload comments from DB and update comments snippet
-        // if it shows comments
-        if (_commentSnippetState.value !is CommentSnippetState.Failure &&
-                _commentSnippetState.value !is CommentSnippetState.Loading) {
-            launch(mainDispatcher) {
-                val comments: ReaderCommentList? = post?.let {
-                    withContext(bgDispatcher) {
-                        readerCommentTableWrapper.getCommentsForPostSnippet(
-                                it,
-                                READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
-                        ) ?: ReaderCommentList()
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            // reload comments from DB and update comments snippet if they are not being loaded
+            if (_commentSnippetState.value !is CommentSnippetState.Loading) {
+                launch(mainDispatcher) {
+                    val comments: ReaderCommentList? = post?.let {
+                        withContext(bgDispatcher) {
+                            readerCommentTableWrapper.getCommentsForPostSnippet(
+                                    it,
+                                    READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                            ) ?: ReaderCommentList()
+                        }
                     }
-                }
 
-                _commentSnippetState.value = getUpdatedSnippetState(comments, CHANGED)
+                    _commentSnippetState.value = getUpdatedSnippetState(comments, CHANGED)
+                }
             }
         }
     }
