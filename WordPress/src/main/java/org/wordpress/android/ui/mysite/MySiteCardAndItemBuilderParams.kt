@@ -19,6 +19,10 @@ sealed class MySiteCardAndItemBuilderParams {
         val activeTask: QuickStartTask?
     ) : MySiteCardAndItemBuilderParams()
 
+    data class InfoItemBuilderParams(
+        val isStaleMessagePresent: Boolean
+    ) : MySiteCardAndItemBuilderParams()
+
     data class QuickActionsCardBuilderParams(
         val siteModel: SiteModel,
         val activeTask: QuickStartTask?,

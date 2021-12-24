@@ -2211,6 +2211,7 @@
 
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
+    <string name="my_site_dashboard_stale_message">Couldn\'t update dashboard. Check your connection and pull to refresh.</string>
 
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
