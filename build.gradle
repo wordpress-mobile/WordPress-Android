@@ -1,6 +1,5 @@
 plugins {
     id "com.automattic.android.fetchstyle"
-    id "checkstyle"
     id "io.gitlab.arturbosch.detekt"
     id "androidx.navigation.safeargs.kotlin" apply false
 }
@@ -50,6 +49,8 @@ ext {
 }
 
 allprojects {
+    apply plugin: 'checkstyle'
+
     repositories {
         google()
         jcenter()
@@ -67,6 +68,7 @@ allprojects {
     }
 
     checkstyle {
+        toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 
