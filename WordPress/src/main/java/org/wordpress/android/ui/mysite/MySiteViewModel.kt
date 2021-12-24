@@ -26,8 +26,11 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
@@ -248,6 +251,11 @@ class MySiteViewModel @Inject constructor(
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
     ): List<MySiteCardAndItem> {
+        val infoItem = siteItemsBuilder.build(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
+                )
+        )
         val cardsResult = cardsBuilder.build(
                 SiteInfoCardBuilderParams(
                         site = site,
@@ -302,7 +310,7 @@ class MySiteViewModel @Inject constructor(
                         onClick = this::onItemClick
                 )
         )
-        return orderForDisplay(cardsResult, dynamicCards, siteItems)
+        return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -312,20 +320,25 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun orderForDisplay(
+        infoItem: InfoItem?,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
+        val indexOfSiteInfoCard = cards.indexOfFirst { it is SiteInfoCard }
+        val indexOfCards = indexOfSiteInfoCard + 1
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
-        return if (indexOfDashboardCards == -1) {
-            cards + dynamicCards + siteItems
-        } else {
-            mutableListOf<MySiteCardAndItem>().apply {
-                addAll(cards)
+        return mutableListOf<MySiteCardAndItem>().apply {
+            add(cards[indexOfSiteInfoCard])
+            infoItem?.let { add(infoItem) }
+            addAll(cards.subList(indexOfCards, cards.size))
+            if (indexOfDashboardCards == -1) {
+                addAll(dynamicCards)
+            } else {
                 addAll(indexOfDashboardCards, dynamicCards)
-                addAll(siteItems)
-            }.toList()
-        }
+            }
+            addAll(siteItems)
+        }.toList()
     }
 
     private fun scrollToQuickStartTaskIfNecessary(

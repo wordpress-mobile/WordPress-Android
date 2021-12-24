@@ -92,11 +92,14 @@ class CardsSource @Inject constructor(
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
         val lastStateCards = this.value?.cards
+        val showErrorCard = lastStateCards.isNullOrEmpty()
+        val showError = lastStateCards?.isNotEmpty() == true
         postState(
                 CardsUpdate(
                         cards = lastStateCards,
-                        showErrorCard = lastStateCards.isNullOrEmpty(),
-                        showSnackbarError = lastStateCards?.isNotEmpty() == true
+                        showErrorCard = showErrorCard,
+                        showSnackbarError = showError,
+                        showStaleMessage = showError
                 )
         )
     }

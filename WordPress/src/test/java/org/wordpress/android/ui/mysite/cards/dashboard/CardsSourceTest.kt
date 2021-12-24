@@ -135,7 +135,7 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given error, when build is invoked, then error snackbar is also shown (network)`() = test {
+    fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(apiError)
@@ -144,7 +144,13 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(cards = data.model, showSnackbarError = true))
+        assertThat(result.first()).isEqualTo(
+                CardsUpdate(
+                        cards = data.model,
+                        showSnackbarError = true,
+                        showStaleMessage = true
+                )
+        )
     }
 
     @Test
@@ -162,7 +168,7 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given error, when refresh is invoked, then error data is also loaded (network)`() = test {
+    fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel)).thenReturn(success).thenReturn(apiError)
@@ -173,7 +179,13 @@ class CardsSourceTest : BaseUnitTest() {
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
-        assertThat(result.last()).isEqualTo(CardsUpdate(cards = data.model, showSnackbarError = true))
+        assertThat(result.last()).isEqualTo(
+                CardsUpdate(
+                        cards = data.model,
+                        showSnackbarError = true,
+                        showStaleMessage = true
+                )
+        )
     }
 
     /* IS REFRESHING */

@@ -52,8 +52,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -1147,6 +1149,28 @@ class MySiteViewModelTest : BaseUnitTest() {
                 verify(mySiteSourceManager).refresh()
             }
 
+    /* INFO ITEM */
+
+    @Test
+    fun `given show stale msg not in cards update, when dashboard cards updated, then info item not shown`() {
+        initSelectedSite(showStaleMessage = false)
+
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = false)
+
+        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+                .isEmpty()
+    }
+
+    @Test
+    fun `given show stale msg in cards update, when dashboard cards updated, then info item shown`() {
+        initSelectedSite(showStaleMessage = true)
+
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
+
+        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+                .isNotEmpty
+    }
+
     /* ITEM CLICK */
 
     @Test
@@ -1306,7 +1330,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any())
+        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1315,7 +1339,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any())
+        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1324,7 +1348,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(2)).build(any())
+        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1333,7 +1357,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder, times(2)).build(any())
+        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1501,6 +1525,19 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ORDERED LIST */
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given info item exist, when cardAndItems list is ordered, then info item succeeds site info card`() {
+        initSelectedSite(showStaleMessage = true)
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
+
+        val siteInfoCardIndex = getLastItems().indexOfFirst { it is SiteInfoCard }
+        val infoItemIndex = getLastItems().indexOfFirst { it is InfoItem }
+
+        assertThat(infoItemIndex).isEqualTo(siteInfoCardIndex + 1)
+    }
+
     @InternalCoroutinesApi
     @Test
     fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
@@ -1556,7 +1593,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
             clickAction = params.onClick
             listOf<MySiteCardAndItem>()
-        }.whenever(siteItemsBuilder).build(any())
+        }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
 
         initSelectedSite()
 
@@ -1566,9 +1603,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initSelectedSite(
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isQuickStartInProgress: Boolean = false
+        isQuickStartInProgress: Boolean = false,
+        showStaleMessage: Boolean = false
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
+        whenever(
+                siteItemsBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
+        ).thenReturn(if (showStaleMessage) InfoItem(title = UiStringText("")) else null)
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
