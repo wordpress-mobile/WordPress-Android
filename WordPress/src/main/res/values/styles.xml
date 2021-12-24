@@ -610,6 +610,13 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
+    <style name="MySiteInfoItemTextView">
+        <item name="android:textAlignment">center</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
     <style name="MeListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

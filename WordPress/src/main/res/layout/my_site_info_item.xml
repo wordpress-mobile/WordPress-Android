@@ -7,13 +7,14 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/my_site_info_message"
-        style="@style/UpdatedMySiteListRowTextView"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_large"
+        style="@style/MySiteInfoItemTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/plan" />
+        tools:text="@string/my_site_dashboard_stale_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
