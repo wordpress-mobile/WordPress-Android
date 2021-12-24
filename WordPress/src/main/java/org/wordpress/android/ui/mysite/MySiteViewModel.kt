@@ -326,12 +326,17 @@ class MySiteViewModel @Inject constructor(
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
         val indexOfSiteInfoCard = cards.indexOfFirst { it is SiteInfoCard }
+        val indexOfCards = indexOfSiteInfoCard + 1
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
             add(cards[indexOfSiteInfoCard])
             infoItem?.let { add(infoItem) }
-            addAll(cards.subList(indexOfSiteInfoCard + 1, cards.size))
-            if (indexOfDashboardCards == -1) addAll(dynamicCards) else addAll(indexOfDashboardCards, dynamicCards)
+            addAll(cards.subList(indexOfCards, cards.size))
+            if (indexOfDashboardCards == -1) {
+                addAll(dynamicCards)
+            } else {
+                addAll(indexOfDashboardCards, dynamicCards)
+            }
             addAll(siteItems)
         }.toList()
     }
