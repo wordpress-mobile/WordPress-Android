@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -38,6 +39,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
@@ -74,6 +77,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -136,6 +140,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
+    @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -182,6 +187,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
+    private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -277,7 +283,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
-                siteItemsTracker
+                siteItemsTracker,
+                domainRegistrationCardShownTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -351,6 +358,20 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
+    }
+
+    @Test
+    fun `when selected site is changed, then cardTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).resetShown()
+    }
+
+    @Test
+    fun `when selected site is changed, then cardShownTracker is reset`() = test {
+        initSelectedSite()
+
+        verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
     }
 
     /* AVATAR */
@@ -803,6 +824,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
+    @Test
+    fun `when domain registration card is shown, then card shown event is tracked`() = test {
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        verify(
+                domainRegistrationCardShownTracker,
+                atLeastOnce()
+        ).trackShown(MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD)
+    }
+
     /* QUICK START CARD */
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
@@ -1040,6 +1072,22 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker).trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
     }
 
+    @Test
+    fun `when dashboard cards are shown, then card shown event is tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+
+        verify(cardsTracker, atLeastOnce()).trackShown(any())
+    }
+
+    @Test
+    fun `when dashboard cards are not shown, then card shown events are not tracked`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        initSelectedSite()
+
+        verify(cardsTracker, never()).trackShown(any())
+    }
+
     /* DASHBOARD POST CARD - POST ITEM */
 
     @Test
@@ -1086,6 +1134,19 @@ class MySiteViewModelTest : BaseUnitTest() {
                 assertThat(snackbars).doesNotContain(
                         SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
                 )
+            }
+
+    /* DASHBOARD ERROR CARD - RETRY */
+
+    @Test
+    fun `given error dashboard card, when retry is clicked, then refresh is triggered`() =
+            test {
+                initSelectedSite()
+                cardsUpdate.value = cardsUpdate.value?.copy(showErrorCard = true)
+
+                requireNotNull(onDashboardErrorRetryClick).invoke()
+
+                verify(mySiteSourceManager).refresh()
             }
 
     /* INFO ITEM */
@@ -1691,9 +1752,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initDashboardCards(mockInvocation: InvocationOnMock): DashboardCards {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         return DashboardCards(
-                cards = listOf(initPostCard(mockInvocation))
+                cards = mutableListOf<DashboardCard>().apply {
+                    if (params.showErrorCard) {
+                        initErrorCard(mockInvocation)
+                    } else {
+                        initPostCard(mockInvocation)
+                    }
+                }
         )
+    }
+
+    private fun initErrorCard(mockInvocation: InvocationOnMock): ErrorCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onDashboardErrorRetryClick = params.onErrorRetryClick
+        return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
     }
 
     private fun initPostCard(mockInvocation: InvocationOnMock): PostCardWithPostItems {

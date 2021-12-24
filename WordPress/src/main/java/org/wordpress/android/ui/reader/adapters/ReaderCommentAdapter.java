@@ -555,10 +555,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mReplyTargetComment = commentId;
     }
 
-    public long getHighlightCommentId() {
-        return mHighlightCommentId;
-    }
-
     /*
      * returns the position of the passed comment in the adapter, taking the header into account
      */

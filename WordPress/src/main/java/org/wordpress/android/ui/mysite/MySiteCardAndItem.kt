@@ -96,7 +96,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 open val dashboardCardType: DashboardCardType
             ) {
                 data class ErrorCard(
-                    override val dashboardCardType: DashboardCardType = DashboardCardType.ERROR_CARD
+                    override val dashboardCardType: DashboardCardType = DashboardCardType.ERROR_CARD,
+                    val onRetryClick: ListItemInteraction
                 ) : DashboardCard(dashboardCardType)
 
                 sealed class PostCard(

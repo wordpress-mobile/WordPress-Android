@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards
 
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -14,7 +13,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
@@ -24,7 +22,6 @@ class CardsBuilder @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val siteInfoCardBuilder: SiteInfoCardBuilder,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
@@ -59,7 +56,6 @@ class CardsBuilder @Inject constructor(
     private fun trackAndBuildDomainRegistrationCard(
         params: DomainRegistrationCardBuilderParams
     ): DomainRegistrationCard {
-        analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN)
         return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
     }
 }
