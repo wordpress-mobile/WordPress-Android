@@ -1822,7 +1822,6 @@
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
 
-    <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
