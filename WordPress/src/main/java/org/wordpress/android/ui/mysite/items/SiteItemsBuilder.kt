@@ -23,6 +23,13 @@ class SiteItemsBuilder @Inject constructor(
     private val siteListItemBuilder: SiteListItemBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
+    fun build(params: InfoItemBuilderParams) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+        params.isStaleMessagePresent.takeIf { it }
+                ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
+    } else {
+        null
+    }
+
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val showViewSiteFocusPoint = params.activeTask == VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == ENABLE_POST_SHARING
@@ -79,14 +86,5 @@ class SiteItemsBuilder @Inject constructor(
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         )
-    }
-
-    fun build(
-        params: InfoItemBuilderParams
-    ) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-        params.isStaleMessagePresent.takeIf { it }
-                ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
-    } else {
-        null
     }
 }
