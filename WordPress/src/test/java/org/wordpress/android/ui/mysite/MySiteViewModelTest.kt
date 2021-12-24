@@ -49,8 +49,10 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
@@ -1086,6 +1088,28 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             }
 
+    /* INFO ITEM */
+
+    @Test
+    fun `given show stale msg not in cards update, when dashboard cards updated, then info item not shown`() {
+        initSelectedSite(showStaleMessage = false)
+
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = false)
+
+        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+                .isEmpty()
+    }
+
+    @Test
+    fun `given show stale msg in cards update, when dashboard cards updated, then info item shown`() {
+        initSelectedSite(showStaleMessage = true)
+
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
+
+        assertThat((uiModels.last().state as SiteSelected).cardAndItems.filterIsInstance(InfoItem::class.java))
+                .isNotEmpty
+    }
+
     /* ITEM CLICK */
 
     @Test
@@ -1505,9 +1529,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initSelectedSite(
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isQuickStartInProgress: Boolean = false
+        isQuickStartInProgress: Boolean = false,
+        showStaleMessage: Boolean = false
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
+        whenever(
+                siteItemsBuilder.buildInfoItem(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
+        ).thenReturn(if (showStaleMessage) InfoItem(title = UiStringText("")) else null)
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
