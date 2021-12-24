@@ -4,20 +4,24 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 
 sealed class MySiteCardAndItemBuilderParams {
-    data class DomainRegistrationCardBuilderParams(
-        val isDomainCreditAvailable: Boolean,
-        val domainRegistrationClick: () -> Unit
+    data class SiteInfoCardBuilderParams(
+        val site: SiteModel,
+        val showSiteIconProgressBar: Boolean,
+        val titleClick: () -> Unit,
+        val iconClick: () -> Unit,
+        val urlClick: () -> Unit,
+        val switchSiteClick: () -> Unit,
+        val activeTask: QuickStartTask?
     ) : MySiteCardAndItemBuilderParams()
 
-    data class PostCardBuilderParams(
-        val posts: PostsCardModel?,
-        val onPostItemClick: (postId: Int) -> Unit,
-        val onFooterLinkClick: (postCardType: PostCardType) -> Unit
+    data class InfoItemBuilderParams(
+        val isStaleMessagePresent: Boolean
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickActionsCardBuilderParams(
@@ -29,21 +33,33 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionMediaClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
+    data class DomainRegistrationCardBuilderParams(
+        val isDomainCreditAvailable: Boolean,
+        val domainRegistrationClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
         val onQuickStartBlockRemoveMenuItemClick: () -> Unit,
         val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
-    data class SiteInfoCardBuilderParams(
-        val site: SiteModel,
-        val showSiteIconProgressBar: Boolean,
-        val titleClick: () -> Unit,
-        val iconClick: () -> Unit,
-        val urlClick: () -> Unit,
-        val switchSiteClick: () -> Unit,
-        val activeTask: QuickStartTask?
+    data class DashboardCardsBuilderParams(
+        val showErrorCard: Boolean = false,
+        val onErrorRetryClick: () -> Unit,
+        val postCardBuilderParams: PostCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
+
+    data class PostCardBuilderParams(
+        val posts: PostsCardModel?,
+        val onPostItemClick: (params: PostItemClickParams) -> Unit,
+        val onFooterLinkClick: (postCardType: PostCardType) -> Unit
+    ) : MySiteCardAndItemBuilderParams() {
+        data class PostItemClickParams(
+            val postCardType: PostCardType,
+            val postId: Int
+        )
+    }
 
     data class SiteItemsBuilderParams(
         val site: SiteModel,

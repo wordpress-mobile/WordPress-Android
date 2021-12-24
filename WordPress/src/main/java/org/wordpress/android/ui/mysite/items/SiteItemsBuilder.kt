@@ -6,19 +6,30 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 class SiteItemsBuilder @Inject constructor(
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
-    private val siteListItemBuilder: SiteListItemBuilder
+    private val siteListItemBuilder: SiteListItemBuilder,
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
+    fun build(params: InfoItemBuilderParams) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+        params.isStaleMessagePresent.takeIf { it }
+                ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
+    } else {
+        null
+    }
+
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val showViewSiteFocusPoint = params.activeTask == VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == ENABLE_POST_SHARING

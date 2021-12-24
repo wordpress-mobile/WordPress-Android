@@ -819,7 +819,9 @@ public final class AnalyticsTracker {
         ABOUT_SCREEN_DISMISSED,
         ABOUT_SCREEN_BUTTON_TAPPED,
         MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-        MY_SITE_PULL_TO_REFRESH
+        MY_SITE_PULL_TO_REFRESH,
+        MY_SITE_MENU_ITEM_TAPPED,
+        MY_SITE_DASHBOARD_CARD_SHOWN
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

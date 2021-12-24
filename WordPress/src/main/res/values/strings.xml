@@ -1857,6 +1857,7 @@
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_video_duration_exceeds_limit">Video not uploaded! Uploading videos longer than 5 minutes requires a paid plan.</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
@@ -2208,6 +2209,10 @@
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
 
+    <!-- My Site - Dashboard -->
+    <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
+    <string name="my_site_dashboard_stale_message">Couldn\'t update dashboard. Check your connection and pull to refresh.</string>
+
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
@@ -2220,6 +2225,10 @@
     <string name="my_site_post_card_link_create_post">Create a post</string>
     <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
+
+    <!-- My Site - Error Card -->
+    <string name="my_site_error_card_title">Some data wasn\'t loaded</string>
+    <string name="my_site_error_card_subtitle">Couldn\'t display more data about your site right now.</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
