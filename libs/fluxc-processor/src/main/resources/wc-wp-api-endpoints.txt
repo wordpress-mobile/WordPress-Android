@@ -54,6 +54,7 @@
 /wc_stripe/account/summary
 /wc_stripe/terminal/locations/store
 /wc_stripe/orders/<order_id>/create_customer
+/wc_stripe/connection_tokens
 
 /taxes
 /taxes/classes/
