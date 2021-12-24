@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @Reusable
 class ReaderCommentTableWrapper @Inject constructor() {
-    fun getCommentsForPostSnippet(post: ReaderPost, limit: Int): ReaderCommentList? =
+    fun getCommentsForPostSnippet(post: ReaderPost?, limit: Int): ReaderCommentList? =
             ReaderCommentTable.getCommentsForPostSnippet(
                     post,
                     limit
