@@ -188,7 +188,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
-    private var siteItemsBuilderParams = SiteItemsBuilderParams(any(), any(), any(), any(), any())
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1331,7 +1330,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(siteItemsBuilderParams)
+        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1340,7 +1339,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(siteItemsBuilderParams)
+        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1349,7 +1348,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(2)).build(siteItemsBuilderParams)
+        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
     }
 
     @Test
@@ -1358,7 +1357,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder, times(2)).build(siteItemsBuilderParams)
+        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1594,7 +1593,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
             clickAction = params.onClick
             listOf<MySiteCardAndItem>()
-        }.whenever(siteItemsBuilder).build(siteItemsBuilderParams)
+        }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
 
         initSelectedSite()
 
