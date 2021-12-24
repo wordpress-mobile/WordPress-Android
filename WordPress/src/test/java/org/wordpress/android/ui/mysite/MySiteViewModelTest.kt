@@ -1464,6 +1464,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* ORDERED LIST */
+
     @InternalCoroutinesApi
     @Test
     fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
@@ -1483,6 +1484,18 @@ class MySiteViewModelTest : BaseUnitTest() {
         val dynamicCardIndex = getLastItems().indexOfFirst { it is DynamicCard }
 
         assertThat(dynamicCardIndex).isLessThan(dashboardCardsIndex)
+    }
+
+    @InternalCoroutinesApi
+    @Test
+    fun `given info item exist, when cardAndItems list is ordered, then info item succeeds site info card`() {
+        initSelectedSite(showStaleMessage = true)
+        cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
+
+        val siteInfoCardIndex = getLastItems().indexOfFirst { it is SiteInfoCard }
+        val infoItemIndex = getLastItems().indexOfFirst { it is InfoItem }
+
+        assertThat(infoItemIndex).isEqualTo(siteInfoCardIndex + 1)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
