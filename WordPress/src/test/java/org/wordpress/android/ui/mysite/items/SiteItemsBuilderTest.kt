@@ -36,9 +36,11 @@ class SiteItemsBuilderTest {
     fun `always adds stats, publish, posts, media, comment, external and view site items`() {
         setupHeaders(addJetpackHeader = false, addLookAndFeelHeader = false, addConfigurationHeader = false)
 
-        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION)
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
         )
 
         assertThat(buildSiteItems).containsExactly(
@@ -72,9 +74,11 @@ class SiteItemsBuilderTest {
                 addScanItem = true
         )
 
-        val buildSiteItems = siteItemsBuilder.build(SiteItemsBuilderParams(
-                site = siteModel,
-                onClick = SITE_ITEM_ACTION)
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
         )
 
         assertThat(buildSiteItems).containsExactly(
