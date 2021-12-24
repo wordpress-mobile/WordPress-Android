@@ -52,6 +52,15 @@ ext {
 allprojects {
     apply plugin: 'checkstyle'
 
+    configurations.all {
+        resolutionStrategy {
+            // Don't allow Gradle to resolve the dependency to any other value
+            force "org.jetbrains.kotlin:kotlin-stdlib:$gradle.ext.kotlinVersion"
+            force "org.jetbrains.kotlin:kotlin-stdlib-common:$gradle.ext.kotlinVersion"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
+        }
+    }
+
     repositories {
         google()
         jcenter()
