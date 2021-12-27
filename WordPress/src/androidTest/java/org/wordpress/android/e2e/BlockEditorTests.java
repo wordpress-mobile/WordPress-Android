@@ -42,12 +42,12 @@ public class BlockEditorTests extends BaseTest {
                        + "<!-- /wp:image --></div>\n";
 
     @Test
-    public void testPublishSimplePost() {
-        MySitesPage mySitesPage = new MySitesPage().go();
-        mySitesPage.startNewPost();
+    public void publishSimplePost() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        BlockEditorPage blockEditorPage = new BlockEditorPage();
-        blockEditorPage
+        new BlockEditorPage()
                 .waitForTitleDisplayed()
                 .enterTitle(mTitle)
                 .enterParagraphText(mPostText)
@@ -56,12 +56,12 @@ public class BlockEditorTests extends BaseTest {
     }
 
     @Test
-    public void testPublishFullPost() {
-        MySitesPage mySitesPage = new MySitesPage().go();
-        mySitesPage.startNewPost();
+    public void publishFullPost() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        BlockEditorPage blockEditorPage = new BlockEditorPage();
-        blockEditorPage
+        new BlockEditorPage()
                 .waitForTitleDisplayed()
                 .enterTitle(mTitle)
                 .enterParagraphText(mPostText)
@@ -74,12 +74,12 @@ public class BlockEditorTests extends BaseTest {
     }
 
     @Test
-    public void testHtmlMode() {
-        MySitesPage mySitesPage = new MySitesPage().go();
-        mySitesPage.startNewPost();
+    public void blockEditorCanDisplayElementAddedInHtmlMode() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        BlockEditorPage blockEditorPage = new BlockEditorPage();
-        blockEditorPage
+        new BlockEditorPage()
                 .waitForTitleDisplayed()
                 .enterTitle(mTitle)
                 .switchToHtmlMode()
