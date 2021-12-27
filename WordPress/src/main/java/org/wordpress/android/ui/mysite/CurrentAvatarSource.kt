@@ -27,8 +27,7 @@ class CurrentAvatarSource @Inject constructor(
         when (isRefresh) {
             null, true -> {
                 val url = accountStore.account?.avatarUrl.orEmpty()
-                postState(CurrentAvatarUrl(url))
-                onRefreshedMainThread()
+                setState(CurrentAvatarUrl(url))
             }
             false -> Unit // Do nothing
         }

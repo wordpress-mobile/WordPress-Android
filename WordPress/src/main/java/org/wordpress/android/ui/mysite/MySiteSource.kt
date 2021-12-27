@@ -28,6 +28,11 @@ interface MySiteSource<T : PartialState> {
             this@postState.postValue(value)
         }
 
+        fun MediatorLiveData<T>.setState(value: T) {
+            refresh.value = false
+            this@setState.value = value
+        }
+
         fun onRefreshedMainThread() {
             refresh.value = false
         }
