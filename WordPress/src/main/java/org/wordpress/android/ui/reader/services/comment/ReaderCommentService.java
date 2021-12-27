@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.services;
+package org.wordpress.android.ui.reader.services.comment;
 
 import android.app.Service;
 import android.content.Context;

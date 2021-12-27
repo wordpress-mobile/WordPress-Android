@@ -794,7 +794,7 @@
             android:label="Reader Search Job Service" />
 
         <service
-            android:name=".ui.reader.services.ReaderCommentService"
+            android:name=".ui.reader.services.comment.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />
         <service
