@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContract
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.comments.CommentsActivity
 import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
@@ -25,8 +24,8 @@ class CommentDetailsActivityContract : ActivityResultContract<CommentDetailsActi
     override fun parseResult(resultCode: Int, intent: Intent?): CommentDetailsActivityResponse? = when {
         resultCode != Activity.RESULT_OK || intent == null -> null
         else -> {
-            val commentId = intent.getLongExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, -1)
-            val newStatus = intent.getStringExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA)
+            val commentId = intent.getLongExtra(CommentConstants.COMMENT_MODERATE_ID_EXTRA, -1)
+            val newStatus = intent.getStringExtra(CommentConstants.COMMENT_MODERATE_STATUS_EXTRA)
             CommentDetailsActivityResponse(commentId, CommentStatus.fromString(newStatus))
         }
     }

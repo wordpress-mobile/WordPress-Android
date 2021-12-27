@@ -213,11 +213,6 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:launchMode="singleTop"
-            android:label="@string/comments"/>
-        <activity
             android:name=".ui.comments.unified.UnifiedCommentsActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
