@@ -9,6 +9,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.util.AppLog
+
 import org.wordpress.android.util.JSONUtils
 import javax.inject.Inject
 
@@ -46,7 +48,12 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         }
         val jsonInterests = interestCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
         for (i in 0 until jsonInterests.length()) {
-            interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
+            val interestJSONTag = jsonInterests.optJSONObject(i)
+            if (interestJSONTag != null) {
+                interestTags.add(parseInterestTag(interestJSONTag))
+            } else {
+                AppLog.d(AppLog.T.READER, "Could not find interest JSON tag inside $jsonInterests at index $i")
+            }
         }
         return interestTags
     }
