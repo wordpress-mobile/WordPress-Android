@@ -10,11 +10,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
-import org.wordpress.android.e2e.pages.PostPreviewPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
-import static org.wordpress.android.support.WPSupportUtils.sleep;
+import java.time.Instant;
 
 public class BlockEditorTests extends BaseTest {
     @Rule
@@ -29,23 +28,63 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
+    String mTitle = "Hello Espresso!";
+    String mPostText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    String mCategory = "Wedding";
+    String mTag = "Tag " + Instant.now().toEpochMilli();
+    String mHtmlPost = "<!-- wp:paragraph -->\n"
+                       + "<p>" + mPostText + "</p>\n"
+                       + "<!-- /wp:paragraph -->"
+                       + "\n"
+                       + "<div class=\"wp-block-column\"><!-- wp:image {\"id\":65,\"sizeSlug\":\"large\"} -->\n"
+                       + "<figure class=\"wp-block-image size-large\"><img src=\"https://fourpawsdoggrooming.files"
+                       + ".wordpress.com/2020/08/image-1.jpg?w=731\" alt=\"\" class=\"wp-image-65\"/></figure>\n"
+                       + "<!-- /wp:image --></div>\n";
+
     @Test
-    public void testPreview() {
-        String title = "Hello Espresso!";
-
+    public void testPublishSimplePost() {
         MySitesPage mySitesPage = new MySitesPage().go();
-        sleep();
-
         mySitesPage.startNewPost();
 
         BlockEditorPage blockEditorPage = new BlockEditorPage();
-        blockEditorPage.waitForTitleDisplayed();
+        blockEditorPage
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .enterParagraphText(mPostText)
+                .publish()
+                .verifyPostPublished();
+    }
 
-        blockEditorPage.enterTitle(title);
+    @Test
+    public void testPublishFullPost() {
+        MySitesPage mySitesPage = new MySitesPage().go();
+        mySitesPage.startNewPost();
 
-        blockEditorPage.previewPost();
-        sleep();
+        BlockEditorPage blockEditorPage = new BlockEditorPage();
+        blockEditorPage
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .enterParagraphText(mPostText)
+                .addImage()
+                .addPostSettings(mCategory, mTag)
+                .clickPublish()
+                .verifyPostSettings(mCategory, mTag)
+                .confirmPublish()
+                .verifyPostPublished();
+    }
 
-        new PostPreviewPage();
+    @Test
+    public void testHtmlMode() {
+        MySitesPage mySitesPage = new MySitesPage().go();
+        mySitesPage.startNewPost();
+
+        BlockEditorPage blockEditorPage = new BlockEditorPage();
+        blockEditorPage
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .switchToHtmlMode()
+                .enterParagraphText(mHtmlPost)
+                .switchToVisualMode()
+                .verifyPostElementText(mPostText);
     }
 }
