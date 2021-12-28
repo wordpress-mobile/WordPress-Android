@@ -22,6 +22,7 @@ import android.text.TextUtils
 import android.util.AndroidRuntimeException
 import android.util.Log
 import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.provider.FontRequest
 import androidx.emoji.text.EmojiCompat
@@ -47,6 +48,7 @@ import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAV
 import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_SUCCESS
 import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_ERROR
 import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_SUCCESS
+import dagger.Lazy
 import kotlinx.coroutines.CoroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -140,16 +142,12 @@ import javax.inject.Singleton
 
 @Suppress("TooManyFunctions")
 @Singleton
-class AppInitializer @Inject constructor() : LifecycleObserver {
-    // Even if `mWebViewDataDirectorySuffixInitializer`, `mWellSqlInitializer` aren't used, they need to be initialized
-    // at application startup.
-    @Inject lateinit var mWebViewDataDirectorySuffixInitializer: WebViewDataDirectorySuffixInitializer
-
-    // Well sql is initialized with `WPWellSqlConfig` for debug, `WellSqlConfig` for release.
-    @Inject lateinit var mWellSqlInitializer: WellSqlInitializer
-
+class AppInitializer @Inject constructor(
+    wellSqlInitializer: WellSqlInitializer,
+    private val application: Application
+) : LifecycleObserver {
     @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var accountStore: Lazy<AccountStore>
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var mediaStore: MediaStore
     @Inject lateinit var zendeskHelper: ZendeskHelper
@@ -173,24 +171,25 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
-    @Inject lateinit var mTracker: Tracker
+    @Inject lateinit var tracker: Tracker
 
     @Inject @Named("custom-ssl") lateinit var requestQueue: RequestQueue
     @Inject lateinit var imageLoader: FluxCImageLoader
     @Inject lateinit var oAuthAuthenticator: OAuthAuthenticator
 
-    private lateinit var application: Application
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     private lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
 
     private lateinit var credentialsClient: GoogleApiClient
+
+    private var startDate: Long
 
     /**
      * Update site list in a background task. (WPCOM site list, and eventually self hosted multisites)
      */
     var updateSiteList = object : RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         override fun run(): Boolean {
-            if (accountStore.hasAccessToken()) {
+            if (accountStore.get().hasAccessToken()) {
                 dispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()))
                 dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
             }
@@ -217,11 +216,17 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
         }
     }
 
-    fun init(application: Application) {
+    init {
         context = application
-        this.application = application
-        val startDate = SystemClock.elapsedRealtime()
+        startDate = SystemClock.elapsedRealtime()
 
+        // This call needs be made before accessing any methods in android.webkit package
+        setWebViewDataDirectorySuffixOnAndroidP()
+
+        wellSqlInitializer.init()
+    }
+
+    fun init() {
         dispatcher.register(this)
         appConfig.init()
 
@@ -320,6 +325,34 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
         debugCookieManager.sync()
     }
 
+    /*
+     * Since Android P:
+     * "Apps can no longer share a single WebView data directory across processes.
+     * If your app has more than one process using WebView, CookieManager, or any other API in the android.webkit
+     * package, your app will crash when the second process calls a WebView method."
+     *
+     * (see https://developer.android.com/about/versions/pie/android-9.0-migration)
+     *
+     * Also here: https://developer.android.com/about/versions/pie/android-9.0-changes-28#web-data-dirs
+     *
+     * "If your app must use instances of WebView in more than one process, you must assign a unique data
+     * directory suffix for each process, using the WebView.setDataDirectorySuffix() method, before
+     * using a given instance of WebView in that process."
+     *
+     * While we don't explicitly use a different process other than the default, making the directory suffix be
+     * the actual process name will ensure there's one directory per process, should the Application's
+     * onCreate() method be called from a different process any time.
+     *
+    */
+    private fun setWebViewDataDirectorySuffixOnAndroidP() {
+        if (VERSION.SDK_INT >= VERSION_CODES.P) {
+            val procName = Application.getProcessName()
+            if (!TextUtils.isEmpty(procName)) {
+                WebView.setDataDirectorySuffix(procName)
+            }
+        }
+    }
+
     private fun initWorkManager() {
         val configBuilder = androidx.work.Configuration.Builder().setWorkerFactory(wordPressWorkerFactory)
         if (BuildConfig.DEBUG) {
@@ -408,9 +441,9 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
     }
 
     private fun initAnalytics(elapsedTimeOnCreate: Long) {
-        AnalyticsTracker.registerTracker(mTracker)
+        AnalyticsTracker.registerTracker(tracker)
         AnalyticsTracker.init(context)
-        AnalyticsUtils.refreshMetadata(accountStore, siteStore)
+        AnalyticsUtils.refreshMetadata(accountStore.get(), siteStore)
 
         // Track app upgrade and install
         val versionCode = PackageUtils.getVersionCode(context)
@@ -441,7 +474,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
         AppLog.i(UTILS, "Deferred Initialisation")
 
         // Refresh account informations
-        if (accountStore.hasAccessToken()) {
+        if (accountStore.get().hasAccessToken()) {
             dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
             NotificationsUpdateServiceStarter.startService(context)
@@ -485,23 +518,23 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
         }
 
         // Once fully logged out refresh the metadata so the user information doesn't persist for logged out events
-        AnalyticsUtils.refreshMetadata(accountStore, siteStore)
+        AnalyticsUtils.refreshMetadata(accountStore.get(), siteStore)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore.get(), siteStore)) {
             flushHttpCache()
 
             // Analytics resets
             AnalyticsTracker.endSession(false)
             AnalyticsTracker.clearAllData()
         }
-        if (!event.isError && accountStore.hasAccessToken()) {
+        if (!event.isError && accountStore.get().hasAccessToken()) {
             // previously we reset the reader database on logout but this meant losing saved posts
             // so now we only reset it when the user id changes
             if (event.causeOfChange == FETCH_ACCOUNT) {
-                val thisUserId: Long = accountStore.account.userId
+                val thisUserId: Long = accountStore.get().account.userId
                 val lastUserId = AppPrefs.getLastUsedUserId()
                 if (thisUserId != lastUserId) {
                     AppPrefs.setLastUsedUserId(thisUserId)
@@ -513,8 +546,13 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
                 val hasUserOptedOut = !prefs.getBoolean(application.getString(string.pref_key_send_usage), true)
                 AnalyticsTracker.setHasUserOptedOut(hasUserOptedOut)
                 // When local and remote prefs are different, force opt out to TRUE
-                if (hasUserOptedOut != accountStore.account.tracksOptOut) {
-                    AnalyticsUtils.updateAnalyticsPreference(WordPress.getContext(), dispatcher, accountStore, true)
+                if (hasUserOptedOut != accountStore.get().account.tracksOptOut) {
+                    AnalyticsUtils.updateAnalyticsPreference(
+                            WordPress.getContext(),
+                            dispatcher,
+                            accountStore.get(),
+                            true
+                    )
                 }
             }
         }
@@ -522,7 +560,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged?) {
-        if (accountStore.hasAccessToken()) {
+        if (accountStore.get().hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(
                     application,
@@ -675,7 +713,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
          */
         private fun updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded && accountStore.hasAccessToken()) {
+            if (isPushNotificationPingNeeded && accountStore.get().hasAccessToken()) {
                 // Register for Cloud messaging
                 GCMRegistrationIntentService.enqueueWork(
                         context,
@@ -746,14 +784,14 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
                         IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
                 )
             }
-            AnalyticsUtils.refreshMetadata(accountStore, siteStore)
+            AnalyticsUtils.refreshMetadata(accountStore.get(), siteStore)
             applicationOpenedDate = Date()
             // This stat is part of a funnel that provides critical information.  Before
             // making ANY modification to this stat please refer to: p4qSXL-35X-p2
             AnalyticsTracker.track(APPLICATION_OPENED)
             if (NetworkUtils.isNetworkAvailable(context)) {
                 // Refresh account informations and Notifications
-                if (accountStore.hasAccessToken()) {
+                if (accountStore.get().hasAccessToken()) {
                     NotificationsUpdateServiceStarter.startService(context)
                 }
 
@@ -771,7 +809,7 @@ class AppInitializer @Inject constructor() : LifecycleObserver {
             }
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
-            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(accountStore, siteStore, dispatcher)
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(accountStore.get(), siteStore, dispatcher)
             if (!firstActivityResumed) {
                 // Since we're force refreshing on app startup, we don't need to try refreshing again
                 // when starting our first Activity.

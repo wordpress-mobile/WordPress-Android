@@ -52,7 +52,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public void onCreate() {
         super.onCreate();
 
-        mAppInitializer.init(this);
+        mAppInitializer.init();
     }
 
     public static Context getContext() {

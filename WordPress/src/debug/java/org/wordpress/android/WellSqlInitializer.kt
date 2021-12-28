@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WellSqlInitializer @Inject constructor(@ApplicationContext private val context: Context) {
-    init {
+    fun init() {
         val wellSqlConfig = WPWellSqlConfig(context)
         WellSql.init(wellSqlConfig)
     }
