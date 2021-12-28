@@ -20,7 +20,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
-import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
@@ -111,7 +110,7 @@ public class BlockEditorPage {
     public void dismissBloggingRemindersAlertIfNeeded() {
         ViewInteraction bloggingRemindersAlertTitle = onView(withText(R.string.set_your_blogging_reminders_title));
 
-        if (isElementDisplayed(bloggingRemindersAlertTitle)) {
+        if (waitForElementToBeDisplayedWithoutFailure(bloggingRemindersAlertTitle)) {
             bloggingRemindersAlertTitle.perform(swipeDown());
         }
     }
