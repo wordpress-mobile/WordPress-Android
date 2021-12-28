@@ -204,17 +204,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
-        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="toolbarNavigationButtonStyle">
-            @style/Widget.AppCompat.Toolbar.Button.Navigation
-        </item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>

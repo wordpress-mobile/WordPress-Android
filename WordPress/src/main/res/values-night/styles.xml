@@ -122,17 +122,6 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
-        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="toolbarNavigationButtonStyle">
-            @style/Widget.AppCompat.Toolbar.Button.Navigation
-        </item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
