@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-08 13:54:08+0000
+Translation-Revision-Date: 2021-12-21 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">בשיתוף</string>
+    <string name="about_automattic_source_code">קוד מקור</string>
+    <string name="about_automattic_california_privacy_notice">הצהרת פרטיות של קליפורניה</string>
+    <string name="about_automattic_privacy_policy">מדיניות פרטיות</string>
+    <string name="about_automattic_terms_of_service">תנאי שימוש</string>
+    <string name="about_automattic_work_from_anywhere">לעבוד מכל מקום</string>
+    <string name="about_automattic_work_with_us">לעבוד איתנו</string>
+    <string name="about_automattic_family">משפחת Automattic</string>
+    <string name="about_automattic_legal_and_more">מידע משפטי ופרטים נוספים</string>
+    <string name="about_automattic_twitter">טוויטר</string>
+    <string name="about_automattic_instagram">אינסטגרם</string>
+    <string name="about_automattic_rate_us">נשמח לקבל ממך דירוג</string>
+    <string name="about_automattic_share_with_friends">לשתף עם חברים</string>
+    <string name="about_automattic_version_label">גרסה ⁦%1$s⁩</string>
+    <string name="about_automattic_acknowledgements_page_title">בשיתוף</string>
+    <string name="about_automattic_legal_page_title">מידע משפטי ופרטים נוספים</string>
+    <string name="about_automattic_main_page_title">אודות ⁦%1$s⁩</string>
+    <string name="about_automattic_app_name">אודות Automattic</string>
+    <string name="about_blog">בלוג</string>
+    <string name="gutenberg_native_the_basics">השלבים הבסיסיים</string>
+    <string name="gutenberg_native_selected_default">נבחר: ברירת מחדל</string>
+    <string name="gutenberg_native_more_support_options">אפשרויות תמיכה נוספות</string>
+    <string name="gutenberg_native_get_support">לקבלת תמיכה</string>
+    <string name="gutenberg_native_font_size">גודל הגופן</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">יש להקיש פעמיים כדי לבחור את גודל הגופן</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">יש להקיש פעמיים כדי לבחור את גודל הגופן שבברירת מחדל</string>
+    <string name="gutenberg_native_contact_support">לפנות לתמיכה</string>
+    <string name="my_site_no_content_post">אין תוכן</string>
+    <string name="reader_comments_follow_conversation">מעקב אחר השיחה</string>
+    <string name="reader_comments_be_first_to_comment">יש לך אפשרות לרשום את התגובה הראשונה</string>
+    <string name="reader_comments_view_all">להציג את כל התגובות</string>
+    <string name="reader_comments_post_fetch_failure">אירעה שגיאה בקבלת הנתונים של הפוסט</string>
+    <string name="reader_comments_fetch_failure">אירעה שגיאה בקבלת התגובות</string>
+    <string name="reader_btn_follow_conversation_settings">הגדרות של מעקב אחר השיחה</string>
     <string name="gutenberg_native_from_clipboard">מהלוח</string>
     <string name="gutenberg_native_featured_image">תמונה ראשית</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">להעתיק כתובת URL מהלוח, %s</string>
@@ -151,7 +185,6 @@ Language: he_IL
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">כתובת URL לא תקינה. נא להזין כתובת אינטרנט תקנית</string>
     <string name="gutenberg_native_embed_caption_s">כיתוב התמונה מוטמע. %s</string>
     <string name="gutenberg_native_embed_caption_empty">כיתוב התמונה מוטמע. ריק</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">להוסיף קישור</string>
     <string name="activity_log_visit_our_documentation_page">היכנס לעמוד המסמכים שלנו</string>
     <string name="activity_log_multisite_message">ההתקנות של השירות Jetpack Backup for Multisite מספקות גיבויים להורדה אך לא שחזורים בלחיצה אחת. למידע נוסף ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">פרסום באופן שגרתי יכול לעזור בשילוב הקוראים שלך, ולמשוך מבקרים חדשים לאתר שלך.</string>
@@ -199,7 +232,6 @@ Language: he_IL
     <string name="gutenberg_native_s_has_no_url_set">ב-%s לא הוגדרה כתובת URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">התוכן של %s הומר לבלוקים רגילים</string>
     <string name="gutenberg_native_s_block">בלוק %s</string>
-    <string name="gutenberg_native_minimum_height">גובה מינימלי</string>
     <string name="gutenberg_native_media_options">אפשרויות מדיה</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">כתובת URL לא תקינה. לא נמצא קובץ אודיו.</string>
     <string name="gutenberg_native_insert_crosspost">להוסיף למספר פוסטים</string>
@@ -223,10 +255,8 @@ Language: he_IL
     <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
     <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
     <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
-    <string name="gutenberg_native_edit_link">ערוך קישור</string>
     <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
     <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
-    <string name="gutenberg_native_image_settings">הגדרות תמונה</string>
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
@@ -234,23 +264,17 @@ Language: he_IL
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
     <string name="likes_list_screen_title">רשימת לייקים %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">מיון וסינון</string>
     <string name="gutenberg_native_s_social_icon">סמל של הרשת החברתית %s</string>
     <string name="gutenberg_native_mention">אזכור</string>
-    <string name="gutenberg_native_post_content_settings">הגדרות תוכן פוסט</string>
-    <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
     <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
     <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
     <string name="gutenberg_native_retry">לנסות שוב</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
-    <string name="gutenberg_native_embed_link">קישור מוטמע</string>
-    <string name="gutenberg_native_display_post_date">הצגת תאריך הפוסט</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>
-    <string name="gutenberg_native_none">ללא</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -289,7 +313,6 @@ Language: he_IL
     <string name="comments_empty_list_filtered_unreplied">אין תגובות ללא מענה</string>
     <string name="comment_status_unreplied">ללא מענה</string>
     <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
-    <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>

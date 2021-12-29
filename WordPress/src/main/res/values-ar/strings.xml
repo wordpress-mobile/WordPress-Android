@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-05 04:18:37+0000
+Translation-Revision-Date: 2021-12-20 19:54:10+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="about_automattic_work_with_us">العمل معنا</string>
+    <string name="about_automattic_privacy_policy">سياسة الخصوصية</string>
+    <string name="about_automattic_acknowledgements">شكر وتقدير</string>
+    <string name="about_automattic_source_code">شفرة المصدر</string>
+    <string name="about_automattic_california_privacy_notice">إشعار الخصوصية في كاليفورنيا</string>
+    <string name="about_automattic_work_from_anywhere">العمل من أي مكان</string>
+    <string name="about_automattic_family">عائلة Automattic</string>
+    <string name="about_automattic_legal_and_more">الشؤون القانونية والمزيد</string>
+    <string name="about_blog">المدوّنة</string>
+    <string name="about_automattic_rate_us">صنّفنا</string>
+    <string name="about_automattic_acknowledgements_page_title">شكر وتقدير</string>
+    <string name="about_automattic_legal_page_title">الشؤون القانونية والمزيد</string>
+    <string name="about_automattic_main_page_title">نبذة عن ⁦%1$s⁩</string>
+    <string name="about_automattic_app_name">نبذة عن شركة Automattic</string>
+    <string name="gutenberg_native_the_basics">الأساسيات</string>
+    <string name="gutenberg_native_selected_default">المحدَّد: الإعداد الافتراضي</string>
+    <string name="gutenberg_native_more_support_options">خيارات دعم إضافية</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">الضغط المزدوج لتحديد حجم الخط</string>
+    <string name="gutenberg_native_contact_support">الاتصال بالدعم</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">الضغط المزدوج لتحديد حجم الخط الافتراضي</string>
+    <string name="reader_comments_be_first_to_comment">كن أول من يعلق</string>
+    <string name="reader_comments_view_all">عرض كل التعليقات</string>
+    <string name="reader_comments_post_fetch_failure">حدث خطأ في أثناء الحصول على بيانات المقالة</string>
+    <string name="reader_comments_fetch_failure">حدث خطأ في أثناء الحصول على التعليقات</string>
     <string name="my_site_post_card_link_go_to_drafts">الانتقال إلى المسودات</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">الانتقال إلى المقالات المجدولة</string>
     <string name="me_btn_about">نبذة عن ووردبريس</string>
@@ -154,7 +178,6 @@ Language: ar
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">رابط غير صالح. الرجاء إدخال عنوان موقع صالح.</string>
     <string name="gutenberg_native_embed_caption_s">قم بتضمين تسمية توضيحية. %s</string>
     <string name="gutenberg_native_embed_caption_empty">قم بتضمين تسمية توضيحية. فارغ</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">إضافة رابط</string>
     <string name="activity_log_visit_our_documentation_page">زيارة صفحة الوثائق الخاصة بنا</string>
     <string name="activity_log_multisite_message">يوفِّر Jetpack Backup الخاصة بعمليات تثبيت مواقع متعددة نسخًا احتياطية قابلة للتنزيل، ولا يوفِّر عمليات استعادة من نقرة واحدة. لمزيد من المعلومات ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">يمكن أن يساعد النشر بشكل منتظم على الحفاظ على انشغال القراء وجذب زائرين جدد إلى موقعك.</string>
@@ -202,7 +225,6 @@ Language: ar
     <string name="gutenberg_native_s_has_no_url_set">ليس لدى %s عنوان URL معين</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">تم تحويل %s إلى مكوِّنات عادية</string>
     <string name="gutenberg_native_s_block">مكوّن [%s]</string>
-    <string name="gutenberg_native_minimum_height">أدنى ارتفاع</string>
     <string name="gutenberg_native_media_options">خيارات الوسائط</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">رابط غير صالح. لم يتم العثور على ملف صوت.</string>
     <string name="gutenberg_native_insert_crosspost">إدراج مقالة في عدد من المجموعات الإخبارية في وقت واحد</string>
@@ -226,10 +248,8 @@ Language: ar
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
     <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تنصيب إضافة Jetpack المجانية وربطها بحسابك على WordPress.com.</string>
-    <string name="gutenberg_native_edit_link">تحرير رابط</string>
     <string name="login_empty_view_avatar_content_description">صورة ملفك الشخصي</string>
     <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على WordPress.com.</string>
-    <string name="gutenberg_native_image_settings">إعدادات الصورة</string>
     <string name="gutenberg_native_move_image_backward">تحريك الصورة إلى الخلف</string>
     <string name="gutenberg_native_move_image_forward">تحريك الصورة إلى الأمام</string>
     <string name="gutenberg_native_width_settings">إعدادات العرض</string>
@@ -237,23 +257,17 @@ Language: ar
     <string name="user_profile_untitled_site">(بدون عنوان)</string>
     <string name="user_profile_bottom_sheet_description">معلومات الورقة السفلية لملف المستخدم الشخصي</string>
     <string name="likes_list_screen_title">قائمة الإعجابات %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">الفرز والتصفية</string>
     <string name="gutenberg_native_s_social_icon">أيقونة %s الاجتماعية</string>
     <string name="gutenberg_native_mention">الإشارة</string>
-    <string name="gutenberg_native_post_content_settings">إعدادات محتوى المقالة</string>
-    <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
     <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
     <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_retry">أعد المحاولة</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_s_link">%s رابط</string>
     <string name="gutenberg_native_featured">مميز</string>
-    <string name="gutenberg_native_embed_link">تضمين رابط</string>
-    <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_create_embed">إنشاء تضمين</string>
     <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
     <string name="gutenberg_native_column_d">عمود %d</string>
-    <string name="gutenberg_native_none">بدون</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
