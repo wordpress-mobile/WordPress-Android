@@ -52,15 +52,17 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor(
         }
         val jsonInterests = interestCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
         for (i in 0 until jsonInterests.length()) {
-            try {
-                val interestJSONTag = jsonInterests.optJSONObject(i)
+            val interestJSONTag = jsonInterests.optJSONObject(i)
+            if (interestJSONTag != null) {
                 interestTags.add(parseInterestTag(interestJSONTag))
-            } catch (e: NullPointerException) {
+            } else {
                 if (BuildConfig.DEBUG) {
-                    throw RuntimeException("Debug build crash ${e.message} on parsing reader interests $jsonInterests")
+                    throw RuntimeException("Debug build crash on parsing reader interests $jsonInterests")
                 } else {
-                    crashLogging.sendReportWithTag(e, AppLog.T.READER)
-                    AppLog.e(AppLog.T.READER, "Error parsing reader interests $jsonInterests ${e.message}")
+                    crashLogging.sendReportWithTag(
+                            exception = NullPointerException("Error parsing reader interests $jsonInterests"),
+                            tag = AppLog.T.READER
+                    )
                 }
             }
         }
