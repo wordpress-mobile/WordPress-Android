@@ -56,13 +56,11 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor(
             if (interestJSONTag != null) {
                 interestTags.add(parseInterestTag(interestJSONTag))
             } else {
+                val errorMsg = "Error parsing reader interests $jsonInterests at index $i."
                 if (BuildConfig.DEBUG) {
-                    throw RuntimeException("Debug build crash on parsing reader interests $jsonInterests")
+                    throw NullPointerException("Debug build crash: $errorMsg")
                 } else {
-                    crashLogging.sendReportWithTag(
-                            exception = NullPointerException("Error parsing reader interests $jsonInterests"),
-                            tag = AppLog.T.READER
-                    )
+                    crashLogging.sendReportWithTag(exception = NullPointerException(errorMsg), tag = AppLog.T.READER)
                 }
             }
         }
