@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import dagger.Reusable
 import org.json.JSONArray
 import org.json.JSONObject
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -10,12 +12,14 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.AppLog
-
 import org.wordpress.android.util.JSONUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import javax.inject.Inject
 
 @Reusable
-class ParseDiscoverCardsJsonUseCase @Inject constructor() {
+class ParseDiscoverCardsJsonUseCase @Inject constructor(
+    private val crashLogging: CrashLogging
+) {
     fun parsePostCard(postCardJson: JSONObject): ReaderPost {
         return ReaderPost.fromJson(postCardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA))
     }
@@ -48,11 +52,16 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         }
         val jsonInterests = interestCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
         for (i in 0 until jsonInterests.length()) {
-            val interestJSONTag = jsonInterests.optJSONObject(i)
-            if (interestJSONTag != null) {
+            try {
+                val interestJSONTag = jsonInterests.optJSONObject(i)
                 interestTags.add(parseInterestTag(interestJSONTag))
-            } else {
-                AppLog.d(AppLog.T.READER, "Could not find interest JSON tag inside $jsonInterests at index $i")
+            } catch (e: NullPointerException) {
+                if (BuildConfig.DEBUG) {
+                    throw RuntimeException("Debug build crash ${e.message} on parsing reader interests $jsonInterests")
+                } else {
+                    crashLogging.sendReportWithTag(e, AppLog.T.READER)
+                    AppLog.e(AppLog.T.READER, "Error parsing reader interests $jsonInterests ${e.message}")
+                }
             }
         }
         return interestTags
