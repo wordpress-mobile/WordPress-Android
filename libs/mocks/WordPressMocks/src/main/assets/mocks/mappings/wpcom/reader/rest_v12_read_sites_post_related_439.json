@@ -1,0 +1,61 @@
+{
+    "request": {
+        "urlPath": "/rest/v1.2/read/site/106707880/post/439/related",
+        "method": "GET",
+        "queryParameters": {
+            "size_global": {
+                "equalTo": "2"
+            },
+            "size_local": {
+                "equalTo": "2"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "algorithm_local": "read:related:posts:local/0",
+            "algorithm_global": "read:related:posts:global/1",
+            "posts": [
+                {
+                    "ID": 21,
+                    "site_ID": 189147064,
+                    "title": "About",
+                    "excerpt": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pharetra nisl sed nisl elementum, vitae venenatis eros aliquam. Morbi interdum metus in est fermentum, in dapibus odio malesuada. Proin interdum auctor fringilla. Ut imperdiet elementum vehicula. Aenean eu erat et dui bibendum pulvinar. Integer eget libero dictum, auctor nisi nec, condimentum metus. Vivamus a metus [&hellip;]</p>\n",
+                    "featured_image": "https://natemarketing.files.wordpress.com/2021/02/3.png",
+                    "site_name": "Nate's Crayon Box",
+                    "featured_media": {},
+                    "railcar": {
+                        "railcar": "p*&dLY6J7$((",
+                        "fetch_algo": "read:related:posts:global/1",
+                        "fetch_position": 0,
+                        "rec_blog_id": 189147064,
+                        "rec_post_id": 21,
+                        "fetch_query": "blog_id:106707880,post_id:439"
+                    }
+                },
+                {
+                    "ID": 267,
+                    "site_ID": 196166139,
+                    "title": "Training video article",
+                    "excerpt": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Praesent interdum iaculis ullamcorper. In eget varius nisl. Vestibulum lacinia magna dolor, finibus venenatis enim molestie sit amet. Nullam tincidunt sapien in eros tincidunt rutrum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris [&hellip;]</p>\n",
+                    "featured_image": "https://orbitproject.files.wordpress.com/2021/08/lion-wild-africa-african.jpg",
+                    "site_name": "ORBIT PROJECT",
+                    "featured_media": {},
+                    "railcar": {
+                        "railcar": "JiqnJjyM5wGi",
+                        "fetch_algo": "read:related:posts:global/1",
+                        "fetch_position": 1,
+                        "rec_blog_id": 196166139,
+                        "rec_post_id": 267,
+                        "fetch_query": "blog_id:106707880,post_id:439"
+                    }
+                }
+            ]
+        },
+        "headers": {
+            "name": "Content-Type",
+            "value": "application/json"
+        }
+    }
+}
