@@ -5,6 +5,7 @@ import android.Manifest.permission;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,12 +28,23 @@ public class ReaderTests extends BaseTest {
         new ReaderPage().go();
     }
 
+    @After
+    public void tearDown() {
+        new ReaderPage().dismissReaderViewIfNeeded();
+    }
+
     @Test
     public void viewPost() {
-        String title = "Sit Elit Adipiscing Elit Dolor Lorem";
+        String postTitle = "Sit Elit Adipiscing Elit Dolor Lorem";
+        String postText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                        + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
+                        + "sollicitudin bibendum erat bibendum nec. "
+                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
 
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(title);
+                .openPost(postTitle)
+                .verifyPostDisplayed(postTitle, postText);
     }
 }
