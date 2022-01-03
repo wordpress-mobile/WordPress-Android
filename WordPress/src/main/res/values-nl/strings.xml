@@ -154,7 +154,6 @@ Language: nl
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ongeldige URL. Geef een geldige URL in.</string>
     <string name="gutenberg_native_embed_caption_s">Bijschrift insluiten. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Bijschrift insluiten. Leeg</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">LINK TOEVOEGEN</string>
     <string name="activity_log_visit_our_documentation_page">bezoek onze documentatie pagina</string>
     <string name="activity_log_multisite_message">Jetpack Backup voor Multisite installaties biedt downloadbare back-ups, geen terugzet bewerkingen met één klik. Voor meer informatie %1$s.</string>
     <string name="blogging_reminders_tip_message">Regelmatig publiceren kan je lezers betrokken houden en nieuwe bezoekers naar je site aantrekken.</string>
@@ -202,7 +201,6 @@ Language: nl
     <string name="gutenberg_native_s_has_no_url_set">%s heeft geen URL ingesteld</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s geconverteerd naar gewone blokken</string>
     <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_minimum_height">Minimale hoogte</string>
     <string name="gutenberg_native_media_options">Media opties</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Ongeldige URL. Audiobestand niet gevonden.</string>
     <string name="gutenberg_native_insert_crosspost">Kruisbericht invoegen</string>
@@ -223,7 +221,6 @@ Language: nl
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Voer je server referenties in&lt;/a&gt; om bedreigingen op te lossen.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Voer je server referenties in&lt;/a&gt; om de dreiging op te lossen.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltik om een link toe te voegen.</string>
-    <string name="gutenberg_native_edit_link">LINK BEWERKEN</string>
     <string name="login_empty_view_try_another_account">Probeer het met een ander account</string>
     <string name="login_empty_view_see_instructions">Bekijk de instructies</string>
     <string name="login_no_jetpack_sites_error_message">Als je al een site hebt, zul je de gratis Jetpack plugin moeten installeren en deze verbinden met je WordPress.com account.</string>
@@ -232,28 +229,21 @@ Language: nl
     <string name="gutenberg_native_move_image_forward">Verplaats afbeelding naar voren</string>
     <string name="gutenberg_native_move_image_backward">Verplaats afbeelding naar achteren</string>
     <string name="gutenberg_native_width_settings">Breedte instellingen</string>
-    <string name="gutenberg_native_image_settings">Afbeeldingsinstellingen</string>
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Gebruikersprofiel onderste blad informatie</string>
     <string name="likes_list_screen_title">Vind-ik-leuks lijst %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sortering en filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
-    <string name="gutenberg_native_post_meta_settings">Bericht meta-instellingen</string>
-    <string name="gutenberg_native_post_content_settings">Berichtinhoud instellingen</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
-    <string name="gutenberg_native_embed_link">Sluit link in</string>
-    <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
     <string name="gutenberg_native_custom_url">Aangepaste URL</string>
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
-    <string name="gutenberg_native_none">Geen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
     <string name="gutenberg_native_add_blocks">Voeg blokken toe</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
@@ -291,7 +281,6 @@ Language: nl
     <string name="get_likes_no_network_error">Geen netwerk beschikbaar.</string>
     <string name="comments_empty_list_filtered_unreplied">Geen onbeantwoorde reacties</string>
     <string name="comment_status_unreplied">Onbeantwoord</string>
-    <string name="gutenberg_native_add_link">Link toevoegen</string>
     <string name="gutenberg_native_search_settings">Zoek instellingen</string>
     <string name="jetpack_brute_force_allowlist_title">Altijd toegestane IP-adressen</string>
     <string name="site_settings_denylist_title">Niet toegelaten reacties</string>

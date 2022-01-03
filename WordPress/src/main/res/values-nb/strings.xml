@@ -15,7 +15,6 @@ Language: nb_NO
     <string name="gutenberg_native_no_blocks_found">Ingen blokker funnet</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Vis meg rundt</string>
     <string name="login_epilogue_create_new_site_button">Lag et nytt nettsted</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">LEGG TIL LENKE</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_update">Oppdater</string>
     <string name="blogging_reminders_n_a_week">%s i uka</string>

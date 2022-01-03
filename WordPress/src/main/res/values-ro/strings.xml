@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-01 18:27:51+0000
+Translation-Revision-Date: 2021-12-14 17:40:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="about_automattic_legal_and_more">Legal și altele</string>
+    <string name="about_automattic_family">Familia Automattic</string>
+    <string name="about_automattic_work_with_us">Lucrează cu noi</string>
+    <string name="about_automattic_work_from_anywhere">Lucrează de oriunde</string>
+    <string name="about_automattic_terms_of_service">Termenii de utilizare ai serviciului</string>
+    <string name="about_automattic_privacy_policy">Politică de confidențialitate</string>
+    <string name="about_automattic_california_privacy_notice">Notificarea de confidențialitate California</string>
+    <string name="about_automattic_source_code">Cod sursă</string>
+    <string name="about_automattic_acknowledgements">Certificări</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Atinge de două ori pentru a selecta dimensiunea fontului</string>
+    <string name="gutenberg_native_font_size">Dimensiune font</string>
+    <string name="gutenberg_native_get_support">Obține suport</string>
+    <string name="gutenberg_native_more_support_options">Mai multe opțiuni de suport</string>
+    <string name="gutenberg_native_selected_default">Selectat: implicit</string>
+    <string name="gutenberg_native_the_basics">De bază</string>
+    <string name="about_blog">Blog</string>
+    <string name="about_automattic_app_name">Despre Automattic</string>
+    <string name="about_automattic_main_page_title">Despre %1$s</string>
+    <string name="about_automattic_legal_page_title">Legal și altele</string>
+    <string name="about_automattic_acknowledgements_page_title">Certificări</string>
+    <string name="about_automattic_version_label">Versiune %1$s</string>
+    <string name="about_automattic_share_with_friends">Partajează cu prietenii</string>
+    <string name="about_automattic_rate_us">Evaluează-ne</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="reader_comments_post_fetch_failure">A fost o eroare la preluarea datelor articolului</string>
+    <string name="reader_comments_view_all">Vezi toate comentariile</string>
+    <string name="reader_comments_be_first_to_comment">Fii primul care comentează</string>
+    <string name="reader_comments_follow_conversation">Urmărește conversația</string>
+    <string name="my_site_no_content_post">Fără conținut</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_contact_support">Contactează suportul</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Atinge de două ori pentru a selecta dimensiunea implicită pentru font</string>
+    <string name="reader_comments_fetch_failure">A fost o eroare la preluarea comentariilor</string>
+    <string name="reader_btn_follow_conversation_settings">Setări pentru urmărirea conversațiilor</string>
     <string name="my_site_post_card_link_go_to_drafts">Mergi la ciorne</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">Mergi la articole programate</string>
     <string name="me_btn_about">Despre WordPress</string>
@@ -152,7 +187,6 @@ Language: ro
     <string name="quick_start_dialog_need_help_manage_site_title">Vrei puțin ajutor ca să-ți administrezi site-ul cu aplicația?</string>
     <string name="scan_multisite_not_supported_title">Instalările WordPress multi-site nu sunt acceptate</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL invalid. Te rog introdu un URL valid.</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">ADAUGĂ LEGĂTURĂ</string>
     <string name="activity_log_multisite_message">Copii de siguranță Jetpack pentru instalări multi-site oferă copii de siguranță care pot fi descărcate, fără restaurări cu un singur clic. Pentru mai multe informații, %1$s.</string>
     <string name="activity_log_visit_our_documentation_page">vizitează pagina cu documentație.</string>
     <string name="gutenberg_native_embed_caption_empty">Înglobează subtitrarea. Nu există</string>
@@ -203,7 +237,6 @@ Language: ro
     <string name="gutenberg_native_s_block">Bloc %s</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s a fost convertit în blocuri normale</string>
     <string name="gutenberg_native_media_options">Opțiuni media</string>
-    <string name="gutenberg_native_minimum_height">Înălțime minimă</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL invalid. Nu am găsit fișierul audio.</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia Acțiuni ca să adaugi o imagine sau un video</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia de jos ca să adaugi o imagine sau un video</string>
@@ -226,10 +259,8 @@ Language: ro
     <string name="login_empty_view_try_another_account">Încearcă cu un alt cont</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Atinge de două ori pentru a adăuga o legătură.</string>
     <string name="login_no_jetpack_sites_error_message">Dacă ai deja un site, trebuie să instalezi modulul gratuit Jetpack și să-l conectezi la contul tău WordPress.com.</string>
-    <string name="gutenberg_native_edit_link">EDITEAZĂ LEGĂTURA</string>
     <string name="login_empty_view_avatar_content_description">Poza ta de profil</string>
     <string name="login_not_a_jetpack_site">Ca să utilizezi această aplicație pentru %1$s, trebuie să instalezi modulul Jetpack și să-l conectezi la contul tău WordPress.com.</string>
-    <string name="gutenberg_native_image_settings">Setări imagine</string>
     <string name="gutenberg_native_move_image_backward">Mută imaginea înapoi</string>
     <string name="gutenberg_native_move_image_forward">Mută imaginea înainte</string>
     <string name="gutenberg_native_width_settings">Setări lățime</string>
@@ -237,23 +268,17 @@ Language: ro
     <string name="user_profile_bottom_sheet_description">Informații din foaia de jos a profilului de utilizator</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="likes_list_screen_title">Lista aprecierilor %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sortare și filtrare</string>
     <string name="gutenberg_native_s_social_icon">Icon social %s</string>
     <string name="gutenberg_native_mention">Mențiune</string>
-    <string name="gutenberg_native_post_content_settings">Setări conținut articol</string>
-    <string name="gutenberg_native_post_meta_settings">Setări metadate articol</string>
     <string name="gutenberg_native_preview_post">Previzualizează articolul</string>
     <string name="gutenberg_native_preview_page">Previzualizează pagina</string>
     <string name="gutenberg_native_retry">Reîncearcă</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
     <string name="gutenberg_native_s_link">Legătură la %s</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
-    <string name="gutenberg_native_embed_link">Înglobează legătura</string>
-    <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
     <string name="gutenberg_native_create_embed">Creează înglobare</string>
     <string name="gutenberg_native_custom_url">URL personalizat</string>
     <string name="gutenberg_native_column_d">Coloana %d</string>
-    <string name="gutenberg_native_none">Nimic</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrie pe scurt legătura pentru a ajuta utilizatorii care folosesc cititorul de ecran</string>
     <string name="gutenberg_native_add_blocks">Adaugă blocuri</string>
     <string name="login_no_jetpack_sites">Nu am găsit niciun site Jetpack</string>
@@ -292,7 +317,7 @@ Language: ro
     <string name="comment_status_unreplied">Fără răspuns</string>
     <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri.</string>
     <string name="gutenberg_native_search_settings">Setări căutare</string>
-    <string name="gutenberg_native_add_link">Adaugă o legătură</string>
+    <string name="gutenberg_native_add_link">ADAUGĂ O LEGĂTURĂ</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
@@ -1971,7 +1996,7 @@ Language: ro
     <string name="plugin_version">Versiunea %s</string>
     <string name="plugin_byline">de %s</string>
     <string name="change_photo">Schimbă fotografia</string>
-    <string name="plugin_fetch_error">Nu pot încărca module</string>
+    <string name="plugin_fetch_error">Nu pot să încarc module</string>
     <string name="dlg_saving_tag">Salvez</string>
     <string name="dlg_deleting_tag">Șterg</string>
     <string name="dlg_confirm_delete_tag">Ștergi definitiv eticheta „%s”?</string>
@@ -2322,7 +2347,7 @@ Language: ro
     <string name="duplicate_site_detected">A fost detectat un site duplicat.</string>
     <string name="cannot_add_duplicate_site">Acest site există deja în aplicație, nu-l poți adăuga.</string>
     <string name="already_logged_in_wpcom">Ești deja autentificat în contul tău WordPress.com, nu poți adăuga un site WordPress.com legat la un alt cont.</string>
-    <string name="error_media_load">Nu pot încărca media</string>
+    <string name="error_media_load">Nu pot să încarc elemente media</string>
     <string name="error_media_refresh_no_connection">Este necesară o conexiune pentru a împrospăta biblioteca</string>
     <string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
     <string name="error_media_not_found">Media n-a putut fi găsită</string>
