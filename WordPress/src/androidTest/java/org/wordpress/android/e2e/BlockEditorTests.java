@@ -6,18 +6,14 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
-import org.wordpress.android.e2e.pages.PostPreviewPage;
-import org.wordpress.android.e2e.pages.SiteSettingsPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
-import static androidx.test.espresso.Espresso.pressBack;
-import static org.wordpress.android.support.WPSupportUtils.sleep;
+import java.time.Instant;
 
 public class BlockEditorTests extends BaseTest {
     @Rule
@@ -32,34 +28,63 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
-    @Ignore("until startup times are improved or idling resources are made more reliable")
+    String mTitle = "Hello Espresso!";
+    String mPostText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    String mCategory = "Wedding";
+    String mTag = "Tag " + Instant.now().toEpochMilli();
+    String mHtmlPost = "<!-- wp:paragraph -->\n"
+                       + "<p>" + mPostText + "</p>\n"
+                       + "<!-- /wp:paragraph -->"
+                       + "\n"
+                       + "<div class=\"wp-block-column\"><!-- wp:image {\"id\":65,\"sizeSlug\":\"large\"} -->\n"
+                       + "<figure class=\"wp-block-image size-large\"><img src=\"https://fourpawsdoggrooming.files"
+                       + ".wordpress.com/2020/08/image-1.jpg?w=731\" alt=\"\" class=\"wp-image-65\"/></figure>\n"
+                       + "<!-- /wp:image --></div>\n";
+
     @Test
-    public void testSwitchToClassicAndPreview() {
-        String title = "Hello Espresso!";
+    public void publishSimplePost() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        MySitesPage mySitesPage = new MySitesPage().go();
-        sleep();
+        new BlockEditorPage()
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .enterParagraphText(mPostText)
+                .publish()
+                .verifyPostPublished();
+    }
 
-        mySitesPage.clickSettingsItem();
+    @Test
+    public void publishFullPost() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        // Set to Gutenberg. Apparently the site is defaulting to Aztec still.
-        new SiteSettingsPage().setEditorToGutenberg();
+        new BlockEditorPage()
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .enterParagraphText(mPostText)
+                .addImage()
+                .addPostSettings(mCategory, mTag)
+                .clickPublish()
+                .verifyPostSettings(mCategory, mTag)
+                .confirmPublish()
+                .verifyPostPublished();
+    }
 
-        // exit the Settings page
-        pressBack();
+    @Test
+    public void blockEditorCanDisplayElementAddedInHtmlMode() {
+        new MySitesPage()
+                .go()
+                .startNewPost();
 
-        mySitesPage.clickBlogPostsItem();
-
-        mySitesPage.startNewPost();
-
-        BlockEditorPage blockEditorPage = new BlockEditorPage();
-        blockEditorPage.waitForTitleDisplayed();
-
-        blockEditorPage.enterTitle(title);
-
-        blockEditorPage.previewPost();
-        sleep();
-
-        new PostPreviewPage();
+        new BlockEditorPage()
+                .waitForTitleDisplayed()
+                .enterTitle(mTitle)
+                .switchToHtmlMode()
+                .enterParagraphText(mHtmlPost)
+                .switchToVisualMode()
+                .verifyPostElementText(mPostText);
     }
 }

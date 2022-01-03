@@ -8,7 +8,6 @@ Language: el_GR
 <resources>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>

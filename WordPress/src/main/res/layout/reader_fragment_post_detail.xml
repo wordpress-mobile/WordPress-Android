@@ -55,11 +55,18 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/layout_post_detail_content" />
 
+                    <include
+                        android:id="@+id/comments_snippet"
+                        layout="@layout/reader_post_comments_snippet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/liker_faces_container" />
+
                     <LinearLayout
                         android:id="@+id/container_related_posts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/liker_faces_container"
+                        android:layout_below="@+id/comments_snippet"
                         android:orientation="vertical"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
                         android:layout_alignStart="@+id/layout_post_detail_content"

@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
@@ -26,7 +25,7 @@ data class MySiteUiState(
     val quickStartCategories: List<QuickStartCategory> = listOf(),
     val pinnedDynamicCard: DynamicCardType? = null,
     val visibleDynamicCards: List<DynamicCardType> = listOf(),
-    val cards: CardsResult<List<CardModel>>? = null
+    val cardsUpdate: CardsUpdate? = null
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -44,28 +43,40 @@ data class MySiteUiState(
             val cards: List<DynamicCardType>
         ) : PartialState()
 
-        data class CardsUpdate(val cards: CardsResult<List<CardModel>>) : PartialState()
+        data class CardsUpdate(
+            val cards: List<CardModel>? = null,
+            val showErrorCard: Boolean = false,
+            val showSnackbarError: Boolean = false,
+            val showStaleMessage: Boolean = false
+        ) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {
+        val uiState = updateSnackbarStatusToShowOnlyOnce(partialState)
+
         return when (partialState) {
-            is CurrentAvatarUrl -> this.copy(currentAvatarUrl = partialState.url)
-            is SelectedSite -> this.copy(site = partialState.site)
-            is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
-            is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
-            is JetpackCapabilities -> this.copy(
+            is CurrentAvatarUrl -> uiState.copy(currentAvatarUrl = partialState.url)
+            is SelectedSite -> uiState.copy(site = partialState.site)
+            is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
+            is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
+            is JetpackCapabilities -> uiState.copy(
                     scanAvailable = partialState.scanAvailable,
                     backupAvailable = partialState.backupAvailable
             )
-            is QuickStartUpdate -> this.copy(
+            is QuickStartUpdate -> uiState.copy(
                     activeTask = partialState.activeTask,
                     quickStartCategories = partialState.categories
             )
-            is DynamicCardsUpdate -> this.copy(
+            is DynamicCardsUpdate -> uiState.copy(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )
-            is CardsUpdate -> this.copy(cards = partialState.cards)
+            is CardsUpdate -> uiState.copy(cardsUpdate = partialState)
         }
     }
+
+    private fun updateSnackbarStatusToShowOnlyOnce(partialState: PartialState) =
+            if (partialState !is CardsUpdate) {
+                this.copy(cardsUpdate = this.cardsUpdate?.copy(showSnackbarError = false))
+            } else this
 }

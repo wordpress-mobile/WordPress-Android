@@ -26,25 +26,19 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     private lateinit var dynamicCardsSource: DynamicCardsSource
     private val siteLocalId: Int = 1
     private lateinit var isRefreshing: MutableList<Boolean>
+    private val pinnedItem = GROW_QUICK_START
+    private val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
 
     @InternalCoroutinesApi
     @Before
-    fun setUp() {
-        dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)
-        whenever(siteModel.id).thenReturn(siteLocalId)
+    fun setUp() = test {
         isRefreshing = mutableListOf()
     }
 
     @Test
-    fun `returns cards from the store`() = test {
-        val pinnedItem = GROW_QUICK_START
-        val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-        whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
-                DynamicCardsModel(
-                        pinnedItem,
-                        dynamicCardTypes
-                )
-        )
+    fun `given selected site, when source is build, then cards returned from the store`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
+
         var result: DynamicCardsUpdate? = null
         dynamicCardsSource.build(testScope(), siteLocalId).observeForever { result = it }
 
@@ -53,8 +47,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `hides card when site is present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+    fun `given selected site, when hide action done, then card hidden`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
 
         dynamicCardsSource.hideItem(CUSTOMIZE_QUICK_START)
 
@@ -62,8 +56,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not hide card when site not present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+    fun `given no selected site, when hide action done, then card not hidden`() = test {
+        initDynamicCardsSource(hasSelectedSite = false)
 
         dynamicCardsSource.hideItem(GROW_QUICK_START)
 
@@ -71,8 +65,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `pins card when site is present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+    fun `given selected site, when pin action done, then card is pinned`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
 
         dynamicCardsSource.pinItem(CUSTOMIZE_QUICK_START)
 
@@ -80,8 +74,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not pin card when site not present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+    fun `given no selected site, when pin action done, then card is not pinned`() = test {
+        initDynamicCardsSource(hasSelectedSite = false)
 
         dynamicCardsSource.pinItem(GROW_QUICK_START)
 
@@ -89,8 +83,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unpins when site is present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+    fun `given selected site, when unpin action done, then card is unpinned`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
 
         dynamicCardsSource.unpinItem()
 
@@ -98,8 +92,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not unpin when site not present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+    fun `given no selected site, when unpin action done, then card is not unpinned`() = test {
+        initDynamicCardsSource(hasSelectedSite = false)
 
         dynamicCardsSource.unpinItem()
 
@@ -107,7 +101,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when source is invoked, then refresh is false`() = test {
+    fun `given selected site, when source is build, then refresh is false`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
         dynamicCardsSource.build(testScope(), siteLocalId)
@@ -116,7 +111,8 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when refresh is invoked, then refresh is true`() = test {
+    fun `given selected site, when refresh is invoked, then refresh is true`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
         dynamicCardsSource.refresh()
@@ -125,20 +121,31 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when data has been refreshed, then refresh is set to false`() = test {
-        val pinnedItem = GROW_QUICK_START
-        val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-        whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
-                DynamicCardsModel(
-                        pinnedItem,
-                        dynamicCardTypes
-                )
-        )
+    fun `given selected site, when data has been refreshed, then refresh is set to false`() = test {
+        initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
         dynamicCardsSource.build(testScope(), siteLocalId).observeForever { }
         dynamicCardsSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse
+    }
+
+    private suspend fun initDynamicCardsSource(
+        hasSelectedSite: Boolean = true
+    ) {
+        whenever(siteModel.id).thenReturn(siteLocalId)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(if (hasSelectedSite) siteModel else null)
+        if (hasSelectedSite) {
+            val pinnedItem = GROW_QUICK_START
+            val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+            whenever(dynamicCardStore.getCards(siteLocalId)).thenReturn(
+                    DynamicCardsModel(
+                            pinnedItem,
+                            dynamicCardTypes
+                    )
+            )
+        }
+        dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)
     }
 }

@@ -103,7 +103,6 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
-        buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
@@ -114,8 +113,8 @@ android {
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
-        buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
+        buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -184,8 +183,6 @@ android {
 
             versionName versionProperties.getProperty("alpha.versionName")
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
-
-            buildConfigField "boolean", "UNIFIED_THREADED_COMMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -335,7 +332,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }

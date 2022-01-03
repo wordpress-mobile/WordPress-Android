@@ -17,7 +17,15 @@ class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
 ) : MySiteRefreshSource<SelectedSite> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(selectedSiteRepository.hasSelectedSite())
+
+    init {
+        dispatcher.register(this)
+    }
+
+    fun clear() {
+        dispatcher.unregister(this)
+    }
 
     override fun build(
         coroutineScope: CoroutineScope,
@@ -36,18 +44,10 @@ class SelectedSiteSource @Inject constructor(
 
     fun updateSiteSettingsIfNecessary() = selectedSiteRepository.updateSiteSettingsIfNecessary()
 
-    init {
-        dispatcher.register(this)
-    }
-
-    fun clear() {
-        dispatcher.unregister(this)
-    }
-
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
-        onRefreshed()
+        onRefreshedMainThread()
     }
 }

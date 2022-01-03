@@ -25,21 +25,21 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.ACTIVITY_LOG_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import javax.inject.Inject
 
 private const val DOMAIN_WP_COM = "wordpress.com"
 
 class FormattableContentClickHandler @Inject constructor(
     val siteStore: SiteStore,
-    val readerTracker: ReaderTracker,
-    val unifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
+    val readerTracker: ReaderTracker
 ) {
     fun onClick(
         activity: FragmentActivity,
@@ -66,7 +66,7 @@ class FormattableContentClickHandler @Inject constructor(
                 // Load the comment in the reader list if it exists, otherwise show a webview
                 val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
-                    showReaderCommentsList(activity, siteId, postId, id)
+                    showReaderCommentsList(activity, siteId, postId, id, ACTIVITY_LOG_DETAIL)
                 } else {
                     showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
@@ -150,13 +150,19 @@ class FormattableContentClickHandler @Inject constructor(
         ReaderActivityLauncher.showReaderLikingUsers(activity, blogId, postId)
     }
 
-    private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
+    private fun showReaderCommentsList(
+        activity: FragmentActivity,
+        siteId: Long,
+        postId: Long,
+        commentId: Long,
+        source: ThreadedCommentsActionSource
+    ) {
         ReaderActivityLauncher.showReaderComments(
                 activity,
                 siteId,
                 postId,
                 commentId,
-                unifiedThreadedCommentsFeatureConfig.isEnabled()
+                source.sourceDescription
         )
     }
 

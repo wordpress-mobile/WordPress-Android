@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-30 05:08:28+0000
+Translation-Revision-Date: 2021-12-14 06:59:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Agradecimientos</string>
+    <string name="about_automattic_source_code">Código fuente</string>
+    <string name="about_automattic_california_privacy_notice">Aviso de privacidad de California</string>
+    <string name="about_automattic_privacy_policy">Política de privacidad</string>
+    <string name="about_automattic_terms_of_service">Términos del servicio</string>
+    <string name="about_automattic_work_from_anywhere">Trabaja desde cualquier parte</string>
+    <string name="about_automattic_work_with_us">Trabaja con nosotros</string>
+    <string name="about_automattic_family">Familia Automattic</string>
+    <string name="about_automattic_legal_and_more">Legal y otros</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_rate_us">Valóranos</string>
+    <string name="about_automattic_share_with_friends">Compartir con amigos</string>
+    <string name="about_automattic_version_label">Versión %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Agradecimientos</string>
+    <string name="about_automattic_legal_page_title">Legal y otros</string>
+    <string name="about_automattic_main_page_title">Sobre %1$s</string>
+    <string name="about_automattic_app_name">Sobre Automattic</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">Lo básico</string>
+    <string name="gutenberg_native_selected_default">Seleccionado: Por defecto</string>
+    <string name="gutenberg_native_more_support_options">Más opciones de soporte</string>
+    <string name="gutenberg_native_get_support">Obtener soporte</string>
+    <string name="gutenberg_native_font_size">Tamaño de la fuente</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Toca dos veces para seleccionar un tamaño de fuente</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Toca dos veces para seleccionar el tamaño de fuente por defecto</string>
+    <string name="gutenberg_native_contact_support">Contactar con el soporte</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Sin contenido</string>
+    <string name="reader_comments_follow_conversation">Seguir la conversación</string>
+    <string name="reader_comments_be_first_to_comment">Sé el primero en comentar</string>
+    <string name="reader_comments_view_all">Ver todos los comentarios</string>
+    <string name="reader_comments_post_fetch_failure">Ha habido un error al obtener los datos de la entrada</string>
+    <string name="reader_comments_fetch_failure">Ha habido un error al obtener los comentarios</string>
+    <string name="reader_btn_follow_conversation_settings">Ajustes para seguir la conversación</string>
     <string name="gutenberg_native_from_clipboard">Desde el portapapeles</string>
     <string name="gutenberg_native_featured_image">Imagen destacada</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar la URL desde el portapapeles, %s</string>
@@ -154,7 +189,6 @@ Language: es_CO
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL no válida. Por favor, introduce una URL válida.</string>
     <string name="gutenberg_native_embed_caption_s">Leyenda incrustada. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Leyenda incrustada. Vacía</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">AÑADIR ENLACE</string>
     <string name="activity_log_visit_our_documentation_page">visita nuestra página de documentación</string>
     <string name="activity_log_multisite_message">Jetpack Backup para instalaciones multisitio proporciona copias de seguridad descargables, no restauraciones con un solo clic. Para más información, %1$s.</string>
     <string name="blogging_reminders_tip_message">Publicar regularmente puede ayudar a que tus lectores permanezcan implicados, y a atraer nuevos visitantes a tu sitio.</string>
@@ -202,7 +236,6 @@ Language: es_CO
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL configurada</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
     <string name="gutenberg_native_s_block">Bloque %s</string>
-    <string name="gutenberg_native_minimum_height">Altura mínima</string>
     <string name="gutenberg_native_media_options">Opciones de medios</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL no válida. Archivo de audio no encontrado.</string>
     <string name="gutenberg_native_insert_crosspost">Insertar entrada cruzada</string>
@@ -223,7 +256,6 @@ Language: es_CO
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir las amenazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir la amenaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dos veces para añadir un enlace.</string>
-    <string name="gutenberg_native_edit_link">EDITAR ENLACE</string>
     <string name="login_empty_view_try_another_account">Probar con otra cuenta</string>
     <string name="login_empty_view_see_instructions">Ver las instrucciones</string>
     <string name="login_no_jetpack_sites_error_message">Si ya tienes un sitio, tendrás que instalar el plugin gratuito de Jetpack y conectarlo a tu cuenta de WordPress.</string>
@@ -232,28 +264,21 @@ Language: es_CO
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
-    <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Ordenación y filtrado</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
-    <string name="gutenberg_native_post_meta_settings">Ajustes meta de la entrada</string>
-    <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_embed_link">Enlace incrustado</string>
-    <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
-    <string name="gutenberg_native_none">Ninguna</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
     <string name="gutenberg_native_add_blocks">Añadir bloques</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
@@ -291,7 +316,7 @@ Language: es_CO
     <string name="get_likes_no_network_error">No hay ninguna red disponible.</string>
     <string name="comments_empty_list_filtered_unreplied">No hay ningún comentario sin responder</string>
     <string name="comment_status_unreplied">Sin responder</string>
-    <string name="gutenberg_native_add_link">Añadir enlace</string>
+    <string name="gutenberg_native_add_link">AÑADIR ENLACE</string>
     <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>

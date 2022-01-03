@@ -54,6 +54,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
@@ -63,7 +64,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -92,7 +92,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject ReaderTracker mReaderTracker;
     @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
     @Inject ListScenarioUtils mListScenarioUtils;
-    @Inject UnifiedThreadedCommentsFeatureConfig mUnifiedThreadedCommentsFeatureConfig;
 
     private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -533,7 +532,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 siteId,
                 postId,
                 commentId,
-                mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                ThreadedCommentsActionSource.COMMENT_NOTIFICATION.getSourceDescription()
         );
     }
 
