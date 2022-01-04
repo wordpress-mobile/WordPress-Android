@@ -18,8 +18,9 @@ jobs:
       PR_TITLE: ${{ github.event.inputs.title || format('Automated gutenberg-mobile version update for {0} !', github.event.inputs.gutenbergMobileVersion ) }}
       PR_BODY: ${{ github.event.inputs.body || format('This PR incorporates changes from {0}.', github.event.inputs.prURL ) }}
       GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
-
-      run: |
+    steps:
+      - name: create PR Description
+        run: |
           PR_DESCRIPTION=$(cat << EOF
           ## Description
           
@@ -29,8 +30,9 @@ jobs:
 
           EOF
           )
-          echo "::set-output name=pr_description::$PR_DESCRIPTION"
-    steps:
+          echo "::set-output name=description::$PR_DESCRIPTION"
+        id: pr_description
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -63,5 +65,5 @@ jobs:
           title: ${{ steps.vars.outputs.title }}
           branch: ${{ steps.vars.outputs.branch_name }}
           labels: gutenberg-mobile
-          body: ${{ steps.vars.outputs.pr_description }}
+          body: ${{ steps.pr_description.outputs.description }}
           delete-branch: true
