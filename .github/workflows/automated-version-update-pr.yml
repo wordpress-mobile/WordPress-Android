@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
       - name: Update Gutenberg Mobile Version
         run: |
-          sed -i '' -E "s/gutenbergMobileVersion = '(.*)'/gutenbergMobileVersion = '$GUTENBERG_MOBILE_VERSION'/" build.gradle
+          sed -i '' -E "s/gutenbergMobileVersion = '(.*)'/gutenbergMobileVersion = '{$GUTENBERG_MOBILE_VERSION}'/" build.gradle
       - name: Compute vars
         id: vars
         run: |
