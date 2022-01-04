@@ -19,7 +19,7 @@ jobs:
       PR_BODY: ${{ github.event.inputs.body || format('This PR incorporates changes from {0}.', github.event.inputs.prURL ) }}
       GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
     steps:
-      - name: create PR Description
+      - name: Create PR Description
         run: |
           PR_DESCRIPTION=$(cat << EOF
           ## Description
@@ -30,6 +30,9 @@ jobs:
 
           EOF
           )
+          PR_DESCRIPTION="${PR_DESCRIPTION//'%'/'%25'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\n'/'%0A'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\r'/'%0D'}"
           echo "::set-output name=description::$PR_DESCRIPTION"
         id: pr_description
 
