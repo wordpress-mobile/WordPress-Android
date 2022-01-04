@@ -479,20 +479,6 @@ public class WPSupportUtils {
         return isElementDisplayed(element);
     }
 
-    public static boolean waitForElementToBeDisplayedWithoutFailure(final ViewInteraction element) {
-        try {
-            waitForConditionToBeTrueWithoutFailure(new Supplier<Boolean>() {
-                @Override
-                public Boolean get() {
-                    return isElementDisplayed(element);
-                }
-            });
-        } catch (Exception e) {
-            // ignore the failure
-        }
-        return isElementDisplayed(element);
-    }
-
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {
         if (supplier.get()) {
             return;
