@@ -197,7 +197,8 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
-        assertThat(result.size).isEqualTo(1)
+        assertThat(result.size).isEqualTo(2)
+        assertThat(result.first()).isFalse
         assertThat(result.last()).isTrue
     }
 
@@ -211,11 +212,12 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(4)
-        assertThat(result[0]).isTrue // init
-        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(result[2]).isTrue // refresh()
-        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result.size).isEqualTo(5)
+        assertThat(result[0]).isFalse // init
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
     @Test
@@ -228,11 +230,12 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(4)
-        assertThat(result[0]).isTrue // init
-        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(result[2]).isTrue // refresh()
-        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result.size).isEqualTo(5)
+        assertThat(result[0]).isFalse // init
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
     }
 
     @Test
@@ -245,11 +248,12 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.refresh()
 
-        assertThat(result.size).isEqualTo(4)
-        assertThat(result[0]).isTrue // init
-        assertThat(result[1]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
-        assertThat(result[2]).isTrue // refresh()
-        assertThat(result[3]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(result.size).isEqualTo(5)
+        assertThat(result[0]).isFalse // init
+        assertThat(result[1]).isTrue // build(...) -> refresh()
+        assertThat(result[2]).isFalse // build(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(result[3]).isTrue // refresh()
+        assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> error
     }
 
     /* INVALID SITE */
