@@ -163,46 +163,6 @@ buildScan {
     }
 }
 
-<<<<<<< HEAD
-ext {
-    minSdkVersion = 24
-    compileSdkVersion = 31
-    targetSdkVersion = 30
-
-    coroutinesVersion = '1.3.9'
-    androidxWorkVersion = "2.4.0"
-
-    daggerVersion = '2.40.3'
-    fluxCVersion = '1.31.0'
-
-    appCompatVersion = '1.0.2'
-    coreVersion = '1.3.2'
-    lifecycleVersion = '2.2.0'
-    constraintLayoutVersion = '1.1.3'
-    materialVersion = '1.2.1'
-    preferenceVersion = '1.1.0'
-    swipeToRefresh = '1.1.0'
-    uCropVersion = '2.2.4'
-    lifecycleVersion = '2.2.0'
-    tracksVersion = '2.1.0'
-    roomVersion = '2.3.0'
-
-    coreLibraryDesugaringVersion = '1.1.5'
-
-    exoPlayerVersion = '2.9.3'
-
-    // testing
-    jUnitVersion = '4.13'
-    androidxTestVersion = '1.1.0'
-    androidxArchCoreVersion = '2.0.0'
-    assertJVersion = '3.11.1'
-    espressoVersion = '3.1.0'
-    mockitoCoreVersion = "3.3.3"
-    nhaarmanMockitoVersion = "2.2.0"
-}
-
-=======
->>>>>>> origin/develop
 // Onboarding and dev env setup tasks
 tasks.register("checkBundler", Exec) {
     doFirst {
