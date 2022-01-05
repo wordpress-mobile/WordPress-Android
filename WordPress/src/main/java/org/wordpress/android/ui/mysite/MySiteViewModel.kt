@@ -126,6 +126,9 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
+    // Capture and track the first `onResume` event so we can circumvent refreshing sources on initial onResume
+    private var _isFirstResume = true
+
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
             quickStartRepository.activeTask
@@ -512,8 +515,9 @@ class MySiteViewModel @Inject constructor(
         mySiteSourceManager.refresh()
     }
 
-    fun onResume(isFirstResume: Boolean) {
-        mySiteSourceManager.onResume(isFirstResume)
+    fun onResume() {
+        mySiteSourceManager.onResume(_isFirstResume)
+        _isFirstResume = false
         checkAndShowQuickStartNotice()
         _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }
