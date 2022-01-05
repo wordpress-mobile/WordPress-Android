@@ -126,8 +126,8 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
-    // Capture and track the first `onResume` event so we can circumvent refreshing sources on initial onResume
-    private var _isFirstResume = true
+    // Capture and track the site selected event so we can circumvent refreshing sources on resume as they're already built on site select.
+    private var _isSiteSelected = false
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -151,6 +151,7 @@ class MySiteViewModel @Inject constructor(
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                _isSiteSelected = true
                 resetShownTrackers()
                 val result = MediatorLiveData<SiteIdToState>()
                 for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
@@ -516,8 +517,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onResume() {
-        mySiteSourceManager.onResume(_isFirstResume)
-        _isFirstResume = false
+        mySiteSourceManager.onResume(_isSiteSelected)
+        _isSiteSelected = false
         checkAndShowQuickStartNotice()
         _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }

@@ -99,8 +99,8 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 
-    fun onResume(isFirstResume: Boolean) {
-        when (isFirstResume) {
+    fun onResume(isSiteSelected: Boolean) {
+        when (isSiteSelected) {
             true -> refreshSubsetOfAllSources()
             false -> refresh()
         }
