@@ -126,7 +126,8 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
-    // Capture and track the site selected event so we can circumvent refreshing sources on resume as they're already built on site select.
+    /* Capture and track the site selected event so we can circumvent refreshing sources on resume
+       as they're already built on site select. */
     private var _isSiteSelected = false
 
     val onScrollTo: LiveData<Event<Int>> = merge(
