@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
-      PR_TITLE: ${{ github.event.inputs.title || format('{ Automated gutenberg-mobile version update for {0} ! }', github.event.inputs.gutenbergMobileVersion ) }}
-      PR_BODY: ${{ github.event.inputs.body || format( '{ This PR incorporates changes from {0}. }', github.event.inputs.prURL ) }}
+      PR_TITLE: ${{ github.event.inputs.title || format('Automated gutenberg-mobile version update for {0} !', github.event.inputs.gutenbergMobileVersion ) }}
+      PR_BODY: ${{ github.event.inputs.body || format('This PR incorporates changes from {0}.', github.event.inputs.prURL ) }}
       GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
-
-      run: |
+    steps:
+      - name: Create PR Description
+        run: |
           PR_DESCRIPTION=$(cat << EOF
           ## Description
           
@@ -29,14 +30,18 @@ jobs:
 
           EOF
           )
-          echo "::set-output name=pr_description::$PR_DESCRIPTION"
-    steps:
+          PR_DESCRIPTION="${PR_DESCRIPTION//'%'/'%25'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\n'/'%0A'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\r'/'%0D'}"
+          echo "::set-output name=description::$PR_DESCRIPTION"
+        id: pr_description
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Update Gutenberg Mobile Version
         run: |
-          sed -i '' -E "s/gutenbergMobileVersion = '(.*)'/gutenbergMobileVersion = '$GUTENBERG_MOBILE_VERSION'/" build.gradle
+          sed -i "s/gutenbergMobileVersion = '.*'/gutenbergMobileVersion = '$GUTENBERG_MOBILE_VERSION'/g" build.gradle
       - name: Compute vars
         id: vars
         run: |
@@ -63,5 +68,5 @@ jobs:
           title: ${{ steps.vars.outputs.title }}
           branch: ${{ steps.vars.outputs.branch_name }}
           labels: gutenberg-mobile
-          body: ${{ steps.vars.outputs.pr_description }}
+          body: ${{ steps.pr_description.outputs.description }}
           delete-branch: true
