@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-23 15:54:07+0000
+Translation-Revision-Date: 2021-12-28 13:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">승인</string>
+    <string name="about_automattic_source_code">소스 코드</string>
+    <string name="about_automattic_privacy_policy">개인정보 취급방침</string>
+    <string name="about_automattic_terms_of_service">서비스 약관</string>
+    <string name="about_automattic_work_from_anywhere">어디에서나 근무</string>
+    <string name="about_automattic_work_with_us">채용 공고</string>
+    <string name="about_automattic_family">Automattic 가족</string>
+    <string name="about_automattic_legal_and_more">법적 고지 사항 및 기타</string>
+    <string name="about_automattic_california_privacy_notice">캘리포니아주 개인정보 고지사항</string>
+    <string name="about_automattic_twitter">트위터</string>
+    <string name="about_automattic_instagram">인스타그램</string>
+    <string name="about_automattic_rate_us">평가하기</string>
+    <string name="about_automattic_share_with_friends">친구와 공유</string>
+    <string name="about_automattic_version_label">버전 %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">승인</string>
+    <string name="about_automattic_legal_page_title">법적 고지 사항 및 기타</string>
+    <string name="about_automattic_main_page_title">%1$s 소개</string>
+    <string name="about_automattic_app_name">Automattic 소개</string>
+    <string name="about_blog">블로그</string>
+    <string name="gutenberg_native_the_basics">기본 사항</string>
+    <string name="gutenberg_native_selected_default">선택됨: 기본값</string>
+    <string name="gutenberg_native_more_support_options">추가 지원 옵션</string>
+    <string name="gutenberg_native_get_support">지원받기</string>
+    <string name="gutenberg_native_font_size">글꼴 크기</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">두 번 눌러 글꼴 크기 선택</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">두 번 눌러 기본 글꼴 크기 선택</string>
+    <string name="gutenberg_native_contact_support">지원팀에 문의</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s(%2$s)</string>
+    <string name="my_site_no_content_post">콘텐츠 없음</string>
+    <string name="reader_comments_follow_conversation">대화 팔로우</string>
+    <string name="reader_comments_be_first_to_comment">첫 번째 댓글 달기</string>
+    <string name="reader_comments_view_all">모든 댓글 보기</string>
+    <string name="reader_comments_post_fetch_failure">글 데이터를 가져오는 중 오류가 발생했습니다.</string>
+    <string name="reader_btn_follow_conversation_settings">대화 팔로우 설정</string>
+    <string name="reader_comments_fetch_failure">댓글을 가져오는 중 오류가 발생했습니다.</string>
+    <string name="gutenberg_native_from_clipboard">클립보드에서</string>
+    <string name="gutenberg_native_featured_image">특성 이미지</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">클립보드에서 URL 복사, %s</string>
+    <string name="me_btn_about">워드프레스 소개</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">예약된 글로 이동</string>
+    <string name="my_site_post_card_link_go_to_drafts">임시글로 이동</string>
+    <string name="my_site_post_card_link_create_post">글 작성</string>
+    <string name="my_site_create_next_post_excerpt">정기적으로 글을 작성하면 잠재 고객 유치에 도움이 됩니다!</string>
+    <string name="my_site_create_next_post_title">다음 글 작성</string>
+    <string name="menu_visual_mode_switched_notice">비주얼 모드로 전환됨</string>
+    <string name="menu_html_mode_switched_notice">HTML 모드로 전환됨</string>
+    <string name="post_link_copied_to_clipboard">링크가 클립보드에 복사됨</string>
+    <string name="comment_author_badge">글쓴이</string>
+    <string name="button_copy_link">링크 복사</string>
     <string name="domains_paid_plan_add_your_domain_caption">방문자가 사이트를 쉽게 찾을 수 있도록 사용자 정의 도메인 추가하기</string>
     <string name="domains_paid_plan_add_your_domain_title">도메인 추가</string>
     <string name="my_site_create_first_post_excerpt">글은 시간 역순으로 블로그 페이지에 표시됩니다. 전 세계와 아이디어 공유할 때가 되었습니다!</string>
@@ -137,7 +186,6 @@ Language: ko_KR
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">유효하지 않은 URL입니다. 유효한 URL을 입력하세요.</string>
     <string name="gutenberg_native_embed_caption_s">캡션을 임베드합니다. %s</string>
     <string name="gutenberg_native_embed_caption_empty">캡션을 임베드합니다. 비어 있음</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">링크 추가</string>
     <string name="activity_log_visit_our_documentation_page">설명서 페이지 방문</string>
     <string name="activity_log_multisite_message">멀티사이트 설치용 Jetpack Backup에서는 다운로드 가능한 백업이 제공되며, 원클릭 복원은 없습니다. 자세한 내용은 %1$s.</string>
     <string name="blogging_reminders_tip_message">정기적으로 게시하면 독자의 참여도를 높이고 새 방문자를 사이트로 유도하는 데 도움이 됩니다.</string>
@@ -185,7 +233,6 @@ Language: ko_KR
     <string name="gutenberg_native_s_has_no_url_set">%s에 설정된 URL 없음</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">일반 블록으로 %s 변환됨</string>
     <string name="gutenberg_native_s_block">%s 블록</string>
-    <string name="gutenberg_native_minimum_height">최소 높이</string>
     <string name="gutenberg_native_media_options">미디어 옵션</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">유효하지 않은 URL입니다. 오디오 파일을 찾을 수 없습니다.</string>
     <string name="gutenberg_native_insert_crosspost">교차 글 삽입</string>
@@ -209,10 +256,8 @@ Language: ko_KR
     <string name="login_empty_view_try_another_account">다른 계정으로 시도</string>
     <string name="login_empty_view_see_instructions">지침 참조</string>
     <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 워드프레스닷컴 계정에 연결해야 합니다.</string>
-    <string name="gutenberg_native_edit_link">링크 편집</string>
     <string name="login_empty_view_avatar_content_description">프로필 사진</string>
     <string name="login_not_a_jetpack_site">%1$s에 이 앱을 사용하려면 설치되고 워드프레스닷컴 계정에 연결된 젯팩 플러그인이 있어야 합니다.</string>
-    <string name="gutenberg_native_image_settings">이미지 설정</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_width_settings">폭 설정</string>
@@ -220,23 +265,17 @@ Language: ko_KR
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
     <string name="likes_list_screen_title">좋아요 목록 %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">정렬과 필터</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
-    <string name="gutenberg_native_post_content_settings">글 콘텐츠 설정</string>
-    <string name="gutenberg_native_post_meta_settings">글 메타 설정</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_featured">추천</string>
-    <string name="gutenberg_native_embed_link">링크 임베드</string>
-    <string name="gutenberg_native_display_post_date">발행일 보이기</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_column_d">열 %d</string>
-    <string name="gutenberg_native_none">없음</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
     <string name="gutenberg_native_add_blocks">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
@@ -275,7 +314,6 @@ Language: ko_KR
     <string name="comments_empty_list_filtered_unreplied">응답 없는 댓글 없음</string>
     <string name="comment_status_unreplied">응답 없음</string>
     <string name="gutenberg_native_search_settings">설정 검색</string>
-    <string name="gutenberg_native_add_link">링크 추가</string>
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
     <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
@@ -567,7 +605,6 @@ Language: ko_KR
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">파일 업로드를 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
     <string name="gutenberg_native_file_block_settings">파일 블록 설정</string>
     <string name="gutenberg_native_file_name">파일 이름</string>
-    <string name="reader_follow_comments_unsubscribe_success">댓글을 성공적으로 구독 해제했습니다</string>
     <string name="reader_follow_comments_get_status_error">글에 대한 구독상태를 가져오는데 오류가 있습니다</string>
     <string name="reader_follow_comments_could_not_subscribe_error">이 글에 대한 댓글을 구독할 수 없습니다</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">이 글에 대한 댓글을 구독 해제할 수 없습니다</string>
@@ -580,7 +617,6 @@ Language: ko_KR
     <string name="activity_log_activity_type_filter_clear">지우기</string>
     <string name="reader_follow_comments_null_response">받은 응답이 없습니다</string>
     <string name="reader_follow_comments_bad_format_response">유효하지 않은 반응을 받았습니다</string>
-    <string name="reader_follow_comments_subscribe_success">이 댓글을 성공적으로 구독했습니다</string>
     <string name="dialog_edit_story_unsupported_format_message">하나 또는 그 이상의 슬라이드는 지금 이야기가 GIF 파일을 지원하지 않기에 이야기에 추가할 수 없습니다. 정지한 이미지 또는 비디오 배경을 대신 선택하시기 바랍니다.</string>
     <string name="dialog_edit_story_limited_message">이 이야기는 다른 장치에서 편집하였고 특정 객체를 편집하는 기능을 제한할 수도 있습니다.</string>
     <string name="dialog_edit_story_unavailable_title">이야기를 편집할 수 없습니다</string>
@@ -1807,10 +1843,7 @@ Language: ko_KR
     <string name="reader_cardview_post_play_video_desc">특성 비디오 재생</string>
     <string name="jetpack_connection_failed_with_reason">젯팩에 연결 실패: %s</string>
     <string name="jetpack_already_connected_toast">이미 젯팩에 연결되어 있습니다.</string>
-    <string name="menu_undo_snackbar_action">실행 취소</string>
-    <string name="menu_visual_mode_done_snackbar">비주얼 모드로 전환했습니다.</string>
     <string name="menu_visual_mode">비주얼 모드</string>
-    <string name="menu_html_mode_done_snackbar">HTML 모드로 전환했습니다.</string>
     <string name="menu_html_mode">HTML 모드</string>
     <string name="menu_preview">미리보기</string>
     <string name="menu_save_as_draft">임시글로 저장</string>
@@ -2893,7 +2926,6 @@ Language: ko_KR
     <string name="share_link">링크 공유</string>
     <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
-    <string name="reader_label_reply">회신</string>
     <string name="cant_share_no_visible_blog">공개 블로그가 없기 때문에 WordPress에 공유 할 수 없습니다</string>
     <string name="reader_likes_you_and_multi">당신에게 %d명이 \"좋아요\"를 하고 있습니다.</string>
     <string name="reader_likes_multi">%d명이 \"좋아요\"를 눌렀습니다.</string>

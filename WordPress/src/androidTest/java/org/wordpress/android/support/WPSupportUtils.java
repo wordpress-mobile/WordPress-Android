@@ -462,17 +462,21 @@ public class WPSupportUtils {
     }
 
     public static boolean waitForElementToBeDisplayedWithoutFailure(final Integer elementID) {
+        return waitForElementToBeDisplayedWithoutFailure(onView(withId(elementID)));
+    }
+
+    public static boolean waitForElementToBeDisplayedWithoutFailure(final ViewInteraction element) {
         try {
             waitForConditionToBeTrueWithoutFailure(new Supplier<Boolean>() {
                 @Override
                 public Boolean get() {
-                    return isElementDisplayed(elementID);
+                    return isElementDisplayed(element);
                 }
             });
         } catch (Exception e) {
             // ignore the failure
         }
-        return isElementDisplayed(elementID);
+        return isElementDisplayed(element);
     }
 
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-23 23:05:18+0000
+Translation-Revision-Date: 2021-12-20 22:02:12+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
@@ -44,12 +44,28 @@ Language: sr_RS
     <string name="restore_complete_visit_site_button_content_description">Дугме за посети веб место</string>
     <string name="restore_complete_done_button_content_description">Дугме за урађено</string>
     <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_progress_description_with_two_parameters">Враћамо Ваш сајт назад на %1$s %2$s.</string>
+    <string name="restore_progress_header">Тренутно се враћа сајт</string>
+    <string name="restore_progress_icon_content_description">Иконица враћања сајта</string>
     <string name="restore_warning_header">Упозорење</string>
+    <string name="restore_details_action_button_content_description">Дугме враћања сајта</string>
     <string name="backup_download_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="backup_download_complete_failed_action_button">Урађено</string>
+    <string name="restore_details_icon_content_description">Иконица враћања</string>
+    <string name="restore_details_action_button">Врати сајт</string>
+    <string name="restore_details_header">Врати сајт</string>
+    <string name="restore">Поврати</string>
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
+    <string name="web_preview_tablet">Таблет</string>
+    <string name="web_preview_mobile">Мобилни</string>
+    <string name="quick_start_card_menu_remove">Не приказуј поново</string>
+    <string name="quick_start_dialog_edit_homepage_title">Уреди своју почетну страницу</string>
+    <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
+    <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
     <string name="scan_history_menu_title">Историја</string>
+    <string name="scan_history_ignored_threats_tab">Игнорисано</string>
+    <string name="scan_history_fixed_threats_tab">Поправљено</string>
     <string name="backup_item_sqls">База података веб места</string>
     <string name="backup_item_roots_hint">(садржи wp-config.php и све не-Вордпресове датотеке)</string>
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
@@ -944,10 +960,7 @@ Language: sr_RS
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_save_as_draft">Сачувај као нацрт</string>
     <string name="menu_preview">Преглед</string>
-    <string name="menu_undo_snackbar_action">ВРАТИ</string>
-    <string name="menu_html_mode_done_snackbar">Пребачено на HTML режим</string>
     <string name="menu_html_mode">HTML режим</string>
-    <string name="menu_visual_mode_done_snackbar">Пребачено на визуални режим</string>
     <string name="menu_visual_mode">Визуални режим</string>
     <string name="signup_epilogue_screen_title">Нови налог</string>
     <string name="comment_unapproved_talkback">Коментар није одобрен</string>
@@ -1870,7 +1883,6 @@ Language: sr_RS
     <string name="share_link">Подели везу</string>
     <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
-    <string name="reader_label_reply">Одговор</string>
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпресу без видљивог блога</string>
     <string name="reader_likes_multi">%,d људи ово воли</string>

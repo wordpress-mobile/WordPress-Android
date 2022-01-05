@@ -4,8 +4,10 @@ import android.os.Bundle
 import com.automattic.about.model.AboutConfigProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.Dismiss
+import org.wordpress.android.ui.about.UnifiedAboutNavigationAction.OpenBlog
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -19,7 +21,8 @@ class UnifiedAboutActivity : LocaleAwareActivity(), AboutConfigProvider {
 
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
-                Dismiss -> finish()
+                is Dismiss -> finish()
+                is OpenBlog -> ActivityLauncher.openUrlExternal(this, it.url)
             }
         }
     }

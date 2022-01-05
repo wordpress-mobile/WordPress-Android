@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,29 +11,23 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.cards.post.PostCardBuilder
-import org.wordpress.android.ui.mysite.cards.post.PostCardType
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Post
-import org.wordpress.android.ui.mysite.cards.post.mockdata.MockedPostsData.Posts
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -42,19 +35,18 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
-    @Mock lateinit var postCardBuilder: PostCardBuilder
+    @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
     @Mock lateinit var site: SiteModel
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 
@@ -66,22 +58,13 @@ class CardsBuilderTest {
                 completedTasks = emptyList()
         )
 
-    private val mockedPostsData: MockedPostsData
-        get() = MockedPostsData(
-                posts = Posts(
-                        hasPublishedPosts = true,
-                        draft = listOf(Post(id = 1, title = "draft")),
-                        scheduled = listOf(Post(id = 1, title = "scheduled"))
-                )
-        )
-
     @Before
     fun setUp() {
         setUpCardsBuilder()
         setUpSiteInfoCardBuilder()
         setUpQuickActionsBuilder()
         setUpQuickStartCardBuilder()
-        setUpPostCardBuilder()
+        setUpDashboardCardsBuilder()
     }
 
     /* SITE INFO CARD */
@@ -102,10 +85,17 @@ class CardsBuilderTest {
 
     /* DOMAIN REGISTRATION CARD */
     @Test
-    fun `when domain credit is available, then correct event is tracked`() {
-        buildCards(isDomainCreditAvailable = true)
+    fun `when domain credit is available, then domain card is built`() {
+        val cards = buildCards(isDomainCreditAvailable = true)
 
-        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+        assertThat(cards.findDomainRegistrationCard()).isNotNull
+    }
+
+    @Test
+    fun `when domain credit is not available, then domain card is not built`() {
+        val cards = buildCards(isDomainCreditAvailable = false)
+
+        assertThat(cards.findDomainRegistrationCard()).isNull()
     }
 
     /* QUICK ACTIONS CARD */
@@ -149,19 +139,20 @@ class CardsBuilderTest {
         assertThat(cards.findQuickStartCard()).isNull()
     }
 
-    /* POST CARD */
+    /* DASHBOARD CARDS */
+
     @Test
-    fun `given mySiteDashboardPhase2 disabled, then post card is not built`() {
+    fun `given mySiteDashboardPhase2 disabled, when cards are built, then dashboard cards not built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
 
-        assertThat(cards.findPostCard()).isNull()
+        assertThat(cards.findDashboardCards()).isNull()
     }
 
     @Test
-    fun `given mySiteDashboardPhase2 enabled with posts, then post card is built`() {
+    fun `given mySiteDashboardPhase2 enabled, when cards are built, then dashboard cards built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = true)
 
-        assertThat(cards.findPostCard()).isNotNull
+        assertThat(cards.findDashboardCards()).isNotNull
     }
 
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
@@ -171,7 +162,10 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
-    private fun List<MySiteCardAndItem>.findPostCard() = this.find { it is PostCard } as PostCard?
+    private fun List<MySiteCardAndItem>.findDashboardCards() = this.find { it is DashboardCards }
+
+    private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
+            this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun buildCards(
         activeTask: QuickStartTask? = null,
@@ -183,24 +177,6 @@ class CardsBuilderTest {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         return cardsBuilder.build(
-                domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
-                        isDomainCreditAvailable = isDomainCreditAvailable,
-                        domainRegistrationClick = mock()
-                ),
-                postCardBuilderParams = PostCardBuilderParams(mockedPostsData, mock(), mock()),
-                quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
-                        siteModel = site,
-                        activeTask = activeTask,
-                        onQuickActionMediaClick = mock(),
-                        onQuickActionPagesClick = mock(),
-                        onQuickActionPostsClick = mock(),
-                        onQuickActionStatsClick = mock()
-                ),
-                quickStartCardBuilderParams = QuickStartCardBuilderParams(
-                        if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
-                        mock(),
-                        mock()
-                ),
                 siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
                         site,
                         showSiteIconProgressBar = false,
@@ -209,6 +185,27 @@ class CardsBuilderTest {
                         mock(),
                         mock(),
                         activeTask
+                ),
+                quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
+                        siteModel = site,
+                        activeTask = activeTask,
+                        onQuickActionMediaClick = mock(),
+                        onQuickActionPagesClick = mock(),
+                        onQuickActionPostsClick = mock(),
+                        onQuickActionStatsClick = mock()
+                ),
+                domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = mock()
+                ),
+                quickStartCardBuilderParams = QuickStartCardBuilderParams(
+                        if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList(),
+                        mock(),
+                        mock()
+                ),
+                dashboardCardsBuilderParams = DashboardCardsBuilderParams(
+                    onErrorRetryClick = mock(),
+                    postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )
     }
@@ -231,10 +228,10 @@ class CardsBuilderTest {
         }.whenever(quickStartCardBuilder).build(any())
     }
 
-    private fun setUpPostCardBuilder() {
+    private fun setUpDashboardCardsBuilder() {
         doAnswer {
-            initPostCard()
-        }.whenever(postCardBuilder).build(any())
+            initDashboardCards()
+        }.whenever(dashboardCardsBuilder).build(any())
     }
 
     private fun setUpCardsBuilder() {
@@ -242,10 +239,9 @@ class CardsBuilderTest {
                 buildConfigWrapper,
                 quickStartDynamicCardsFeatureConfig,
                 siteInfoCardBuilder,
-                analyticsTrackerWrapper,
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
-                postCardBuilder,
+                dashboardCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig
         )
     }
@@ -297,12 +293,5 @@ class CardsBuilderTest {
             )
     )
 
-    private fun initPostCard() = listOf(
-            PostCardWithPostItems(
-                    postCardType = PostCardType.DRAFT,
-                    title = UiStringText(""),
-                    postItems = emptyList(),
-                    footerLink = FooterLink(UiStringText(""), onClick = mock())
-            )
-    )
+    private fun initDashboardCards() = DashboardCards(cards = mock())
 }

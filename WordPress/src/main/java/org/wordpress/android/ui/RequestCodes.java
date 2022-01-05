@@ -73,4 +73,7 @@ public class RequestCodes {
 
     // Reader Interests
     public static final int READER_INTERESTS = 9001;
+
+    // Comments related
+    public static final int READER_FOLLOW_CONVERSATION = 10000;
 }
