@@ -24,13 +24,13 @@ class CardsSource @Inject constructor(
     private val cardsStore: CardsStore,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
-    override val refresh = MutableLiveData(true)
+    override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
         val result = MediatorLiveData<CardsUpdate>()
         result.getData(coroutineScope, siteLocalId)
-        result.refreshData(coroutineScope, siteLocalId)
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        refresh()
         return result
     }
 

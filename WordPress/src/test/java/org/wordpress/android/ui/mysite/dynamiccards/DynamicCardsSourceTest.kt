@@ -101,13 +101,13 @@ class DynamicCardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site, when source is build, then refresh is false`() = test {
+    fun `given selected site, when source is build, then refresh is true`() = test {
         initDynamicCardsSource(hasSelectedSite = true)
         dynamicCardsSource.refresh.observeForever { isRefreshing.add(it) }
 
         dynamicCardsSource.build(testScope(), siteLocalId)
 
-        assertThat(isRefreshing.last()).isFalse
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test
