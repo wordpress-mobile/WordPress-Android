@@ -165,6 +165,29 @@ class CardsStoreTest {
     }
 
     @Test
+    fun `given authorization required, when fetch cards gets triggered, then db is cleared of cards model`() = test {
+        val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
+        val payload = CardsPayload<CardsResponse>(CardsError(errorType))
+        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel)
+
+        verify(dao).clear()
+    }
+
+    @Test
+    fun `given authorization required, when fetch cards gets triggered, then empty cards model is returned`() = test {
+        val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
+        val payload = CardsPayload<CardsResponse>(CardsError(errorType))
+        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+
+        val result = cardsStore.fetchCards(siteModel)
+
+        assertThat(result.model).isNull()
+        assertThat(result.error).isNull()
+    }
+
+    @Test
     fun `given empty cards payload, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload<CardsResponse>()
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
