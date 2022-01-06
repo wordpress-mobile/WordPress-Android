@@ -14,8 +14,6 @@ import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
-import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
-import static junit.framework.TestCase.assertTrue;
 
 public class ReaderPage {
     public ReaderPage go() {
@@ -30,13 +28,13 @@ public class ReaderPage {
         return this;
     }
 
-    public ReaderPage openPost(String postTitle) {
+    public ReaderViewPage openPost(String postTitle) {
         ViewInteraction post = onView(withChild(withText(postTitle)));
 
         scrollIntoView(post);
-        clickOn(post);
+        clickOn(postTitle);
 
-        return this;
+        return new ReaderViewPage().waitUntilLoaded();
     }
 
     private void scrollIntoView(ViewInteraction postContainer) {
@@ -49,14 +47,5 @@ public class ReaderPage {
         if (isElementDisplayed(onView(withId(R.id.scroll_view_reader)))) {
             pressBack();
         }
-    }
-
-    public ReaderPage verifyPostDisplayed(String title, String text) {
-        assertTrue("Post title was not displayed",
-                waitForElementToBeDisplayedWithoutFailure(onView(withText(title))));
-        assertTrue("Post text was not displayed.",
-                waitForElementToBeDisplayedWithoutFailure(onView(withText(text))));
-
-        return this;
     }
 }

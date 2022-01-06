@@ -33,18 +33,32 @@ public class ReaderTests extends BaseTest {
         new ReaderPage().dismissReaderViewIfNeeded();
     }
 
+    String mPostTitle = "Sit Elit Adipiscing Elit Dolor Lorem";
+    String mPostText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                      + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                      + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
+                      + "sollicitudin bibendum erat bibendum nec. "
+                      + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
+
     @Test
     public void viewPost() {
-        String postTitle = "Sit Elit Adipiscing Elit Dolor Lorem";
-        String postText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                        + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
-                        + "sollicitudin bibendum erat bibendum nec. "
-                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
-
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(postTitle)
-                .verifyPostDisplayed(postTitle, postText);
+                .openPost(mPostTitle)
+                .verifyPostDisplayed(mPostTitle, mPostText)
+                .goBackToReader();
+    }
+
+    @Test
+    public void likePost() {
+        new ReaderPage()
+                .tapFollowingTab()
+                .openPost(mPostTitle)
+                .verifyPostNotLiked()
+                .like()
+                .verifyPostLiked()
+                .unlike()
+                .verifyPostNotLiked()
+                .goBackToReader();
     }
 }
