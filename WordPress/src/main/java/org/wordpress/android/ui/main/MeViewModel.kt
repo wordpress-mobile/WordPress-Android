@@ -17,7 +17,7 @@ class MeViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
-    private val selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog

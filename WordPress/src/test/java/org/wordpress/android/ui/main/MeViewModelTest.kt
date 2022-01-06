@@ -24,7 +24,7 @@ class MeViewModelTest : BaseUnitTest() {
         viewModel = MeViewModel(
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
-                selectedSiteRepository,
+                selectedSiteRepository
         )
     }
 
