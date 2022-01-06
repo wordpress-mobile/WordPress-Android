@@ -31,7 +31,6 @@
 
     <!-- Screen titles -->
     <string name="release_notes_screen_title">Release notes</string>
-    <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My Site</string>
@@ -879,7 +878,6 @@
     <!--      End      -->
 
     <!-- preferences -->
-    <string name="open_source_licenses">Open source licenses</string>
     <string name="whats_new_in_version_title">What\'s New</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
@@ -1780,15 +1778,7 @@
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
-    <string name="publisher">Publisher:</string>
-    <string name="publisher_with_company_param">Publisher: %s</string>
-    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="automattic_inc" translatable="false">Automattic, Inc</string>
-    <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="version">Version</string>
     <string name="version_with_name_param">Version %s</string>
-    <string name="tos">Terms of Service</string>
-    <string name="privacy_policy">Privacy policy</string>
 
     <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
@@ -2248,7 +2238,6 @@
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
-    <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
