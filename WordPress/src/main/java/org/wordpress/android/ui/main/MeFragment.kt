@@ -12,11 +12,9 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -45,27 +43,21 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
-import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
-import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -85,9 +77,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
-    @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +126,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
+        rowAboutTheApp.setOnClickListener {
+            viewModel.showUnifiedAbout()
+        }
+
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -161,17 +155,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (unifiedAboutFeatureConfig.isEnabled()) {
-            recommendTheAppContainer.isVisible = false
-            aboutTheAppContainer.isVisible = true
-
-            rowAboutTheApp.setOnClickListener {
-                viewModel.showUnifiedAbout()
-            }
-        } else {
-            initRecommendUiState()
-        }
-
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
         })
@@ -182,66 +165,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 false -> hideDisconnectDialog()
             }
         })
-
-        viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
-            if (!isAdded) return@observeEvent
-
-            manageRecommendUiState(it)
-        })
-    }
-
-    private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
-        recommendTheAppShimmer.let {
-            it.isEnabled = !startShimmer
-
-            if (startShimmer) {
-                if (it.isShimmerVisible) {
-                    it.startShimmer()
-                } else {
-                    it.showShimmer(true)
-                }
-            } else {
-                it.hideShimmer()
-            }
-        }
-    }
-
-    private fun MeFragmentBinding.initRecommendUiState() {
-        // Limiting the feature to WordPress only in this v1
-        if (recommendTheAppFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-            setRecommendLoadingState(false)
-            recommendTheAppContainer.visibility = View.VISIBLE
-            rowRecommendTheApp.setOnClickListener {
-                viewModel.onRecommendTheApp()
-            }
-        } else {
-            recommendTheAppContainer.visibility = View.GONE
-        }
-    }
-
-    private fun manageRecommendUiState(state: RecommendAppUiState) {
-        binding?.setRecommendLoadingState(state.showLoading)
-
-        if (!state.showLoading) {
-            if (state.isError()) {
-                view?.let { view ->
-                    sequencer.enqueue(
-                            SnackbarItem(
-                                    Info(view, UiStringText(state.error!!), Snackbar.LENGTH_LONG),
-                                    null,
-                                    null
-                            )
-                    )
-                }
-            } else {
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type = "text/plain"
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "${state.message}\n${state.link}")
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.recommend_app_subject))
-
-                startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_link)))
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
