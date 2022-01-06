@@ -31,16 +31,25 @@ class CardsStore @Inject constructor(
         site: SiteModel,
         payload: CardsPayload<CardsResponse>
     ): CardsResult<List<CardModel>> = when {
-        payload.isError -> CardsResult(payload.error)
-        payload.response != null -> {
-            try {
-                cardsDao.insertWithDate(site.id, payload.response.toCards())
-                CardsResult()
-            } catch (e: Exception) {
-                CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))
-            }
-        }
+        payload.isError -> handlePayloadError(payload.error)
+        payload.response != null -> handlePayloadResponse(site, payload.response)
         else -> CardsResult(CardsError(CardsErrorType.INVALID_RESPONSE))
+    }
+
+    private fun handlePayloadError(
+        error: CardsError
+    ): CardsResult<List<CardModel>> {
+        return CardsResult(error)
+    }
+
+    private suspend fun handlePayloadResponse(
+        site: SiteModel,
+        response: CardsResponse
+    ): CardsResult<List<CardModel>> = try {
+        cardsDao.insertWithDate(site.id, response.toCards())
+        CardsResult()
+    } catch (e: Exception) {
+        CardsResult(CardsError(CardsErrorType.GENERIC_ERROR))
     }
 
     fun getCards(
