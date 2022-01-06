@@ -22,6 +22,9 @@ abstract class CardsDao {
         insert(cards.map { CardEntity.from(siteLocalId, it, insertDate) })
     }
 
+    @Query("DELETE FROM DashboardCards")
+    abstract fun clear()
+
     @Entity(
             tableName = "DashboardCards",
             primaryKeys = ["siteLocalId", "type"]
