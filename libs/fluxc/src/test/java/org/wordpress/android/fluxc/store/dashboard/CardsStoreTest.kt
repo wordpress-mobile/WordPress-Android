@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.dashboard
 
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
@@ -117,7 +118,17 @@ class CardsStoreTest {
     }
 
     @Test
-    fun `given cards response, when fetch cards gets triggered, then null no error cards model is returned`() = test {
+    fun `given cards response, when fetch cards gets triggered, then cards model is inserted into db`() = test {
+        val payload = CardsPayload(CARDS_RESPONSE)
+        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel)
+
+        verify(dao).insertWithDate(siteModel.id, CARDS_MODEL)
+    }
+
+    @Test
+    fun `given cards response, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
         whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
 
