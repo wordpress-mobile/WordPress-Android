@@ -1832,6 +1832,12 @@ open class WellSqlConfig : DefaultWellConfig {
                 167 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel")
                 }
+                168 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderSummaryModel")
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel")
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderShipmentTrackingModel")
+                    db.execSQL("DROP TABLE IF EXISTS WCOrderSummaryModel")
+                }
             }
         }
         db.setTransactionSuccessful()
