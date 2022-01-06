@@ -38,8 +38,12 @@ class CardsStore @Inject constructor(
 
     private fun handlePayloadError(
         error: CardsError
-    ): CardsResult<List<CardModel>> {
-        return CardsResult(error)
+    ): CardsResult<List<CardModel>> = when (error.type) {
+        CardsErrorType.AUTHORIZATION_REQUIRED -> {
+            cardsDao.clear()
+            CardsResult()
+        }
+        else -> CardsResult(error)
     }
 
     private suspend fun handlePayloadResponse(
