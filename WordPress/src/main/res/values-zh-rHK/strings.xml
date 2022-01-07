@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-23 01:36:49+0000
+Translation-Revision-Date: 2022-01-04 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
@@ -104,6 +104,7 @@ Language: zh_TW
     <string name="comment_edit_comment">留言</string>
     <string name="comment_edit_user_name">名稱</string>
     <string name="comment_edit_menu_done">搞定</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入內容區塊預覽功能即將推出</string>
     <string name="weekly_roundup">每週綜合整理</string>
     <string name="gutenberg_native_embed_options">嵌入選項</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
@@ -894,7 +895,6 @@ Language: zh_TW
     <string name="prepublishing_nudges_toolbar_title_publish">發表日期</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
-    <string name="post_status_post_published">已發表</string>
     <string name="post_status_post_trashed">已移至垃圾桶</string>
     <string name="post_status_post_scheduled">已排程</string>
     <string name="publish_date">發表日期</string>
@@ -903,6 +903,7 @@ Language: zh_TW
     <string name="reader_btn_done">完成</string>
     <string name="reader_label_choose_your_interests">選擇你的主題</string>
     <string name="reader_choose_interests_content_description">選擇你的主題</string>
+    <string name="post_status_post_published">已發佈</string>
     <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">馬上更新</string>
@@ -2977,7 +2978,7 @@ Language: zh_TW
     <string name="new_notifications">%d 個新通知</string>
     <string name="more_notifications">還有 %d 個。</string>
     <string name="follows">關注者</string>
-    <string name="loading">載入中…</string>
+    <string name="loading">正在載入…</string>
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
