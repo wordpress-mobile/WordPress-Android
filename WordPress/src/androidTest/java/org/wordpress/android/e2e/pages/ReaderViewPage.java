@@ -4,6 +4,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 import androidx.test.uiautomator.Until;
 
 import static junit.framework.TestCase.assertTrue;
@@ -16,7 +18,6 @@ public class ReaderViewPage {
     BySelector mLikerSelector = By.res("org.wordpress.android.prealpha:id/liker_faces_container");
     BySelector mLikeCountSelector = By.res("org.wordpress.android.prealpha:id/text_count");
     BySelector mRelatedPostsContainer = By.res("org.wordpress.android.prealpha:id/container_related_posts");
-    BySelector mLikeButton = By.res("org.wordpress.android.prealpha:id/count_likes");
 
     public ReaderViewPage waitUntilLoaded() {
         mDevice.wait(Until.hasObject(mRelatedPostsContainer), DEFAULT_TIMEOUT);
@@ -39,7 +40,14 @@ public class ReaderViewPage {
     }
 
     private void tapLikeButton() {
-        mDevice.findObject(mLikeButton).click();
+        UiObject likeButton =
+                mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/count_likes"));
+
+        try {
+            likeButton.click();
+        } catch (Exception e) {
+            // Ignore
+        }
     }
 
     public ReaderPage goBackToReader() {
