@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-10 15:18:34+0000
+Translation-Revision-Date: 2021-12-31 17:13:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Falënderime</string>
+    <string name="about_automattic_source_code">Kod burim</string>
+    <string name="about_automattic_california_privacy_notice">Shënim mbi privatësinë për përdorues në Kaliforni</string>
+    <string name="about_automattic_privacy_policy">Rregulla privatësie</string>
+    <string name="about_automattic_terms_of_service">Kushte shërbimi</string>
+    <string name="about_automattic_work_from_anywhere">Punoni prej ngado</string>
+    <string name="about_automattic_work_with_us">Punoni me ne</string>
+    <string name="about_automattic_family">Familja Automattic</string>
+    <string name="about_automattic_legal_and_more">Ligjore dhe të tjera</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_rate_us">Vlerësonani</string>
+    <string name="about_automattic_share_with_friends">Ndajeni me shokët</string>
+    <string name="about_automattic_version_label">Version %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Falënderime</string>
+    <string name="about_automattic_legal_page_title">Ligjore dhe Të tjera</string>
+    <string name="about_automattic_main_page_title">Mbi %1$s-in</string>
+    <string name="about_automattic_app_name">Mbi Automattic-un</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">Bazat</string>
+    <string name="gutenberg_native_selected_default">Përzgjedhur: Parazgjedhje</string>
+    <string name="gutenberg_native_more_support_options">Më tepër mundësi asistence</string>
+    <string name="gutenberg_native_get_support">Merrni asistencë</string>
+    <string name="gutenberg_native_font_size">Madhësi Shkronjash</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Prekeni dy herë që të përzgjidhet madhësi shkronjash</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Prekeni dyfish që të përzgjidhet madhësi parazgjedhje shkronjash</string>
+    <string name="gutenberg_native_contact_support">Lidhuni me asistencën</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Pa Lëndë</string>
+    <string name="reader_comments_follow_conversation">Ndiqe Bisedën</string>
+    <string name="reader_comments_be_first_to_comment">Jini i pari që komentoni</string>
+    <string name="reader_comments_view_all">Shihini krejt komentet</string>
+    <string name="reader_comments_post_fetch_failure">Pati një gabim teksa merreshin të dhëna postimi</string>
+    <string name="reader_comments_fetch_failure">Pati një gabim në marrje komentesh</string>
+    <string name="reader_btn_follow_conversation_settings">Rregullime për ndjekje bisedash</string>
+    <string name="gutenberg_native_from_clipboard">Prej së papastre</string>
+    <string name="gutenberg_native_featured_image">Figurë e Zgjedhur</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopjoje URL-në prej të papastre, %s</string>
+    <string name="me_btn_about">Rreth WordPress-it</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Kalo te postime të planifikuara</string>
+    <string name="my_site_post_card_link_go_to_drafts">Shko te skicat</string>
+    <string name="my_site_post_card_link_create_post">Krijoni një postim</string>
+    <string name="my_site_create_next_post_excerpt">Postimi rregullisht ndihmon të krijoni publikun tuaj!</string>
+    <string name="my_site_create_next_post_title">Krijoni postimin tuaj pasues</string>
+    <string name="menu_visual_mode_switched_notice">U kalua nën mënyrën Pamore</string>
+    <string name="menu_html_mode_switched_notice">U kalua nën mënyrën HTML</string>
+    <string name="post_link_copied_to_clipboard">Lidhja u kopjua në të papastër</string>
+    <string name="comment_author_badge">Autori</string>
+    <string name="button_copy_link">Kopjoji lidhjen</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Shtimi i një përkatësie vetjake e bën të lehtë gjetjen e sajtit për vizitorët</string>
+    <string name="domains_paid_plan_add_your_domain_title">Shtoni përkatësinë tuaj</string>
+    <string name="my_site_create_first_post_excerpt">Në faqen tuaj të blogut postimet shfaqen në rend të përmbysur kohor. Erdhi koha të ndani idetë tuaja me botën!</string>
+    <string name="my_site_create_first_post_title">Krijoni postimin tuaj të parë</string>
+    <string name="my_site_untitled_post">E patitull</string>
+    <string name="my_site_post_card_scheduled_title">Postime të ardhshme të planifikuara</string>
+    <string name="my_site_post_card_draft_title">Merruni me një skicë postimi</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
     <string name="gutenberg_native_create_link">Krijo lidhje</string>
@@ -181,6 +237,7 @@ Language: sq_AL
     <string name="gutenberg_native_s_block">Bllok %s</string>
     <string name="gutenberg_native_media_options">Mundësi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL e pavlefshme. S’u gjet kartelë audio.</string>
+    <string name="gutenberg_native_insert_crosspost">Futni “crosspost”</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Që të rregulloni vatrën, tërhiqeni</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Poshtme për shtim figure ose videoje</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Veprimeve për shtim figure ose videoje</string>
@@ -217,6 +274,7 @@ Language: sq_AL
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
+    <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
@@ -256,6 +314,7 @@ Language: sq_AL
     <string name="get_likes_no_network_error">S’ka rrjet.</string>
     <string name="comments_empty_list_filtered_unreplied">S’ka komente pa përgjigje</string>
     <string name="comment_status_unreplied">Pa përgjigje</string>
+    <string name="gutenberg_native_add_link">SHTONI LIDHJE</string>
     <string name="gutenberg_native_search_settings">Rregullime kërkimi</string>
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
@@ -795,6 +854,7 @@ Language: sq_AL
     <string name="quick_start_dialog_update_site_title_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të caktoni një titull të ri</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="gutenberg_native_s_block_options">Mundësi blloku %s</string>
+    <string name="gutenberg_native_remove_block">Hiqe bllokun</string>
     <string name="gutenberg_native_duplicate_block">Bllok Përsëdyte</string>
     <string name="gutenberg_native_copy_block">Bllok Kopjoje</string>
     <string name="gutenberg_native_copied_block">Blloku u kopjua</string>

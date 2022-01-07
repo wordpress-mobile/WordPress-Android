@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-21 16:54:08+0000
+Translation-Revision-Date: 2022-01-03 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -106,6 +106,7 @@ Language: he_IL
     <string name="comment_edit_comment">תגובה</string>
     <string name="comment_edit_user_name">שם</string>
     <string name="comment_edit_menu_done">הושלם</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">תצוגות מקדימות של בלוק ההטמעה יהיו זמינות בקרוב</string>
     <string name="weekly_roundup">סיכום שבועי</string>
     <string name="gutenberg_native_embed_options">אפשרויות הטמעה</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">יש להקיש פעמיים כדי להציג את אפשרויות ההטמעה.</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-21 09:54:08+0000
+Translation-Revision-Date: 2021-12-31 15:49:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
@@ -28,6 +28,9 @@ Language: it
     <string name="gutenberg_native_get_support">Ottieni assistenza</string>
     <string name="gutenberg_native_font_size">Dimensione carattere</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Tocca due volte per selezionare la dimensione del carattere</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_blog">Blog</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Tocca due volte per selezionare la dimensione del carattere predefinito</string>
     <string name="gutenberg_native_contact_support">Contatta il supporto</string>
     <string name="my_site_no_content_post">Nessun contenuto</string>
@@ -35,6 +38,7 @@ Language: it
     <string name="reader_comments_be_first_to_comment">Sii il primo a scrivere un commento</string>
     <string name="reader_comments_view_all">Visualizza tutti i commenti</string>
     <string name="reader_comments_post_fetch_failure">Si è verificato un errore durante l\'ottenimento dei dati dell\'articolo</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">Si è verificato un errore durante l\'ottenimento dei commenti</string>
     <string name="reader_btn_follow_conversation_settings">Segui le impostazioni della conversazione</string>
     <string name="gutenberg_native_from_clipboard">Dagli appunti</string>

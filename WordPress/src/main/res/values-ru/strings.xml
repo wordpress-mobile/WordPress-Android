@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-13 20:11:37+0000
+Translation-Revision-Date: 2022-01-03 16:38:46+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
@@ -2953,7 +2953,7 @@ Language: ru
     <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
-    <string name="reader_view_reblog">Реблог</string>
+    <string name="reader_view_reblog">Перепубликация</string>
     <string name="reader_untitled_post">(Без названия)</string>
     <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>

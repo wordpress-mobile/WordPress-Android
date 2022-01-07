@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-22 09:54:09+0000
+Translation-Revision-Date: 2022-01-04 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
@@ -104,6 +104,7 @@ Language: ja_JP
     <string name="comment_edit_comment">コメント</string>
     <string name="comment_edit_user_name">名前</string>
     <string name="comment_edit_menu_done">完了</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
     <string name="weekly_roundup">1週間のまとめ</string>
     <string name="gutenberg_native_embed_options">埋め込みオプション</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
