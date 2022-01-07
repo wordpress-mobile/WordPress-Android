@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.AppInitializer
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.LayoutPickerPreviewFragmentBinding
@@ -118,7 +119,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         binding?.previewTypeSelectorButton?.setOnClickListener { viewModel.onPreviewModePressed() }
 
-        binding?.webView?.settings?.userAgentString = WordPress.getUserAgent()
+        binding?.webView?.settings?.userAgentString = AppInitializer.userAgent
         binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)

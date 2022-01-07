@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.AppInitializer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -239,9 +240,9 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
-import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -2169,7 +2170,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                         mSite.getPassword(),
                                         mSite.isUsingWpComRestApi(),
                                         mSite.getWebEditor(),
-                                        WordPress.getUserAgent(),
+                                        AppInitializer.Companion.getUserAgent(),
                                         mIsJetpackSsoEnabled);
 
                         return GutenbergEditorFragment.newInstance(
@@ -2211,7 +2212,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
                         // Set up custom headers for the visual editor's internal WebView
-                        mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
+                        mEditorFragment.setCustomHttpHeader("User-Agent", AppInitializer.Companion.getUserAgent());
 
                         reattachUploadingMediaForAztec();
                     }

@@ -17,7 +17,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.Reusable
-import org.wordpress.android.WordPress
+import org.wordpress.android.AppInitializer
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class ExoPlayerUtils
 
     fun buildHttpDataSourceFactory(url: String): DefaultHttpDataSourceFactory {
         if (httpDataSourceFactory == null) {
-            httpDataSourceFactory = DefaultHttpDataSourceFactory(WordPress.getUserAgent())
+            httpDataSourceFactory = DefaultHttpDataSourceFactory(AppInitializer.userAgent)
         }
         httpDataSourceFactory?.defaultRequestProperties?.set(authenticationUtils.getAuthHeaders(url))
         return httpDataSourceFactory as DefaultHttpDataSourceFactory

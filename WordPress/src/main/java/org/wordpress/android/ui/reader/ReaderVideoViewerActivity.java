@@ -8,8 +8,8 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.AppInitializer;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
@@ -31,7 +31,7 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
 
         mWebView.setBackgroundColor(Color.TRANSPARENT);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        mWebView.getSettings().setUserAgentString(AppInitializer.Companion.getUserAgent());
 
         mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(mWebView, R.drawable.media_movieclip) {
             public void onProgressChanged(WebView view, int progress) {

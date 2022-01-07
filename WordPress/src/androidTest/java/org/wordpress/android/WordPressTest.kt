@@ -22,10 +22,6 @@ open class BaseWordPressTest : Application(), HasAndroidInjector {
 
     private lateinit var injector: AndroidInjector<Any>
 
-    override fun onCreate() {
-        super.onCreate()
-    }
-
     override fun androidInjector(): AndroidInjector<Any> {
         if (!this::injector.isInitialized) {
             injector = EntryPoints.get(

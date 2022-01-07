@@ -877,6 +877,9 @@ class AppInitializer @Inject constructor(
     }
 
     companion object {
+        const val USER_AGENT_APPNAME = "wp-android"
+        @SuppressLint("StaticFieldLeak") var context: Context? = null
+
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
         private const val SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60 // 15 minutes
         private const val SECONDS_BETWEEN_SITE_UPDATE = 60 * 60 // 1 hour
@@ -885,8 +888,9 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
 
-        @SuppressLint("StaticFieldLeak") public var context: Context? = null
         private var sOAuthAuthenticator: OAuthAuthenticator? = null
+
+        private var bitmapCache: BitmapLruCache? = null
 
         val restClientUtils: RestClientUtils by lazy {
             RestClientUtils(
@@ -947,8 +951,6 @@ class AppInitializer @Inject constructor(
             )
         }
 
-        private var bitmapCache: BitmapLruCache? = null
-
         /**
          * Device's default User-Agent string.
          * E.g.:
@@ -991,10 +993,9 @@ class AppInitializer @Inject constructor(
          **/
         val userAgent: String by lazy {
             if (TextUtils.isEmpty(defaultUserAgent)) {
-                WordPress.USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context)
+                USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context)
             } else {
-                (defaultUserAgent + " " + WordPress.USER_AGENT_APPNAME + "/" +
-                        PackageUtils.getVersionName(WordPress.getContext()))
+                (defaultUserAgent + " " + USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context))
             }
         }
 

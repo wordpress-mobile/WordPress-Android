@@ -15,6 +15,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.AppInitializer;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -103,7 +104,7 @@ public class ReaderWebView extends WPWebView {
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this));
-            this.getSettings().setUserAgentString(WordPress.getUserAgent());
+            this.getSettings().setUserAgentString(AppInitializer.Companion.getUserAgent());
             this.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
             // Enable third-party cookies since they are disabled by default;
@@ -306,7 +307,7 @@ public class ReaderWebView extends WPWebView {
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(TIMEOUT_MS);
                     conn.setConnectTimeout(TIMEOUT_MS);
-                    conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.setRequestProperty("User-Agent", AppInitializer.Companion.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
                             conn.getContentEncoding(),

@@ -91,16 +91,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mAppInitializer.wordPressComSignOut();
     }
 
-    public static String getDefaultUserAgent() {
-       return AppInitializer.Companion.getDefaultUserAgent();
-    }
-
-    public static final String USER_AGENT_APPNAME = "wp-android";
-
-    public static String getUserAgent() {
-        return AppInitializer.Companion.getUserAgent();
-    }
-
     /**
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.

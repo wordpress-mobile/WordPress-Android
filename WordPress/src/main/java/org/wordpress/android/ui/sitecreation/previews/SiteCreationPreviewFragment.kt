@@ -16,6 +16,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.AppInitializer
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -166,7 +167,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.webViewClient =
                         URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.settings.userAgentString =
-                        WordPress.getUserAgent()
+                        AppInitializer.userAgent
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.loadUrl(urlString)
             }
         })
