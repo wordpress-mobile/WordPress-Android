@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-15 20:07:31+0000
+Translation-Revision-Date: 2021-12-16 08:27:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Erkännanden</string>
+    <string name="about_automattic_source_code">Källkod</string>
+    <string name="about_automattic_california_privacy_notice">Integritetsnotis för Kalifornien</string>
+    <string name="about_automattic_privacy_policy">Integritetspolicy</string>
+    <string name="about_automattic_terms_of_service">Användarvillkor</string>
+    <string name="about_automattic_work_from_anywhere">Jobba var du än är</string>
+    <string name="about_automattic_work_with_us">Jobba med oss</string>
+    <string name="about_automattic_family">Automattic-familjen</string>
+    <string name="about_automattic_legal_and_more">Juridisk information med mera</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_rate_us">Betygsätt oss</string>
+    <string name="about_automattic_share_with_friends">Dela med vänner</string>
+    <string name="about_automattic_version_label">Version %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Erkännanden</string>
+    <string name="about_automattic_legal_page_title">Juridisk information med mera</string>
+    <string name="about_automattic_main_page_title">Om %1$s</string>
+    <string name="about_automattic_app_name">Om Automattic</string>
+    <string name="about_blog">Blogg</string>
+    <string name="gutenberg_native_the_basics">Grunderna</string>
+    <string name="gutenberg_native_selected_default">Valt: standard</string>
+    <string name="gutenberg_native_more_support_options">Fler supportalternativ</string>
+    <string name="gutenberg_native_get_support">Skaffa support</string>
+    <string name="gutenberg_native_font_size">Textstorlek</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Dubbeltryck för att välja textstorlek</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Dubbeltryck för att välja standardtextstorlek</string>
+    <string name="gutenberg_native_contact_support">Kontakta supporten</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Inget innehåll</string>
+    <string name="reader_comments_follow_conversation">Följ konversation</string>
+    <string name="reader_comments_be_first_to_comment">Bli först att kommentera</string>
+    <string name="reader_comments_view_all">Visa alla kommentarer</string>
+    <string name="reader_comments_post_fetch_failure">Ett fel inträffade när inläggsdata skulle hämtas</string>
+    <string name="reader_comments_fetch_failure">Ett fel inträffade när kommentarer skulle hämtas</string>
+    <string name="reader_btn_follow_conversation_settings">Inställningar för att följa konversationer</string>
+    <string name="gutenberg_native_from_clipboard">Från urklipp</string>
+    <string name="gutenberg_native_featured_image">Utvald bild</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopiera URL från urklipp, %s</string>
+    <string name="me_btn_about">Om WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts"> Gå till schemalagda inlägg</string>
+    <string name="my_site_post_card_link_go_to_drafts">Gå till utkast</string>
+    <string name="my_site_post_card_link_create_post">Skapa ett inlägg</string>
+    <string name="my_site_create_next_post_excerpt">Genom att publicera regelbundet bygger du upp en större publik!</string>
+    <string name="my_site_create_next_post_title">Skapa ditt nästa inlägg</string>
+    <string name="menu_visual_mode_switched_notice">Växlat till visuellt läge</string>
+    <string name="menu_html_mode_switched_notice">Växlat till HTML-läge</string>
+    <string name="post_link_copied_to_clipboard">Länk kopierad till urklipp</string>
+    <string name="comment_author_badge">Författare</string>
+    <string name="button_copy_link">Kopiera länk</string>
     <string name="domains_paid_plan_add_your_domain_caption">Genom att lägga till ett anpassat domännamn underlättar du för besökare att hitta din webbplats</string>
     <string name="domains_paid_plan_add_your_domain_title">Lägg till en egen domän</string>
     <string name="my_site_create_first_post_excerpt">Inlägg visas i omvänd kronologisk ordning på din bloggsida. Dags att berätta om dina tankar för världen!</string>
@@ -140,7 +189,6 @@ Language: sv_SE
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ogiltig URL. Ange en giltig URL.</string>
     <string name="gutenberg_native_embed_caption_s">Bädda in bildtext. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Beskrivning för inbäddning. Tom</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">LÄGG TILL LÄNK</string>
     <string name="activity_log_visit_our_documentation_page">besök vår dokumentationssida</string>
     <string name="activity_log_multisite_message">Jetpack Backup för Multisite-installationer möjliggör nedladdningsbara säkerhetskopior utan återställning med ett klick. Mer information: %1$s.</string>
     <string name="blogging_reminders_tip_message">Genom att publicera regelbundet kan du bidra till att hålla dina läsare engagerade och locka nya besökare till webbplatsen.</string>
@@ -188,7 +236,6 @@ Language: sv_SE
     <string name="gutenberg_native_s_has_no_url_set">Ingen URL angiven för %s</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s konverterades till vanliga block</string>
     <string name="gutenberg_native_s_block">%s-block</string>
-    <string name="gutenberg_native_minimum_height">Minsta höjd</string>
     <string name="gutenberg_native_media_options">Mediaalternativ</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Ogiltig URL. Ljudfil hittades inte.</string>
     <string name="gutenberg_native_insert_crosspost">Infoga korspublicering</string>
@@ -209,7 +256,6 @@ Language: sv_SE
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hoten.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hotet.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltryck för att lägga till en länk.</string>
-    <string name="gutenberg_native_edit_link">REDIGERA  LÄNK</string>
     <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
     <string name="login_empty_view_see_instructions">Se instruktionerna</string>
     <string name="login_no_jetpack_sites_error_message">Om du redan har en webbplats behöver du installera gratis-tillägget Jetpack och ansluta det till ditt konto hos WordPress.com.</string>
@@ -218,28 +264,21 @@ Language: sv_SE
     <string name="gutenberg_native_move_image_forward">Flytta bilden framåt</string>
     <string name="gutenberg_native_move_image_backward">Flytta bilden bakåt</string>
     <string name="gutenberg_native_width_settings">Breddinställningar</string>
-    <string name="gutenberg_native_image_settings">Bildinställningar</string>
     <string name="user_profile_untitled_site">(utan rubrik)</string>
     <string name="user_profile_site_section_header">Webbplats</string>
     <string name="user_profile_bottom_sheet_description">Användarprofil, information på nedre blad</string>
     <string name="likes_list_screen_title">Lista över gilla-markeringar %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sortering och filtrering</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
-    <string name="gutenberg_native_post_meta_settings">Inställningar för metainformation om inlägg</string>
-    <string name="gutenberg_native_post_content_settings">Inställningar för inläggsinnehåll</string>
     <string name="gutenberg_native_retry">Försök igen</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_featured">Utvalda</string>
-    <string name="gutenberg_native_embed_link">Bädda in länk</string>
-    <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
     <string name="gutenberg_native_custom_url">Anpassad URL</string>
     <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>
-    <string name="gutenberg_native_none">Ingen</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="gutenberg_native_add_blocks">Lägg till block</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
@@ -277,7 +316,7 @@ Language: sv_SE
     <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
     <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
     <string name="comment_status_unreplied">Obesvarat</string>
-    <string name="gutenberg_native_add_link">Lägg till länk</string>
+    <string name="gutenberg_native_add_link">LÄGG TILL LÄNK</string>
     <string name="gutenberg_native_search_settings">Sökinställningar</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
@@ -578,8 +617,6 @@ Language: sv_SE
     <string name="reader_follow_comments_could_not_unsubscribe_error">Det gick inte att avsluta prenumerationen på kommentarer till detta inlägg</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Det gick inte att prenumerera på kommentarer till detta inlägg</string>
     <string name="reader_follow_comments_get_status_error">Ett fel inträffade när prenumerationsstatusen för inlägget skulle hämtas</string>
-    <string name="reader_follow_comments_unsubscribe_success">Prenumeration på kommentarer har avslutats</string>
-    <string name="reader_follow_comments_subscribe_success">Prenumeration på kommentarer har startats</string>
     <string name="reader_follow_comments_bad_format_response">Ett ogiltigt svar har tagits emot</string>
     <string name="reader_follow_comments_null_response">Inget svar har tagits emot</string>
     <string name="activity_log_activity_type_filter_clear">Rensa</string>
@@ -1811,10 +1848,7 @@ Language: sv_SE
     <string name="signup_with_google_progress">Registrering via Google…</string>
     <string name="jetpack_connection_failed_with_reason">Anslutningen till Jetpack fungerade inte: %s</string>
     <string name="jetpack_already_connected_toast">DU är redan ansluten till Jetpack</string>
-    <string name="menu_undo_snackbar_action">ÅNGRA</string>
-    <string name="menu_visual_mode_done_snackbar">Växlat till visuellt läge</string>
     <string name="menu_visual_mode">Visuellt läge</string>
-    <string name="menu_html_mode_done_snackbar">Växlat till HTML-läge</string>
     <string name="menu_html_mode">HTML-läge</string>
     <string name="menu_preview">Förhandsgranskning</string>
     <string name="menu_save_as_draft">Spara som utkast</string>
@@ -2898,7 +2932,6 @@ Language: sv_SE
     <string name="reader_empty_posts_in_tag_updating">Hämtar inlägg…</string>
     <string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>
     <string name="reader_likes_multi">%,d gillar detta</string>
-    <string name="reader_label_reply">Svara</string>
     <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
     <string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>

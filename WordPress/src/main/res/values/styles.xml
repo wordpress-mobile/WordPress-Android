@@ -204,17 +204,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
-        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="toolbarNavigationButtonStyle">
-            @style/Widget.AppCompat.Toolbar.Button.Navigation
-        </item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>
@@ -246,6 +235,10 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="bottomSheetStyle">@style/WordPress.BottomSheetDialogTheme.BottomSheetStyle
         </item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.NonTranslucent" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
@@ -606,6 +599,13 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
+    <style name="MySiteInfoItemTextView">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
     <style name="MeListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -765,6 +765,24 @@
         <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
         <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--My Site Error Card-->
+    <style name="MySiteErrorCardTitle" parent="MySiteCardItemTitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="MySiteErrorCardSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="MySiteErrorCardRetry" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!--My Site Card - Post Item-->

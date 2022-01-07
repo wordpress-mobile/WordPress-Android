@@ -90,6 +90,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
@@ -129,7 +130,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -226,7 +226,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject ReaderTracker mReaderTracker;
-    @Inject UnifiedThreadedCommentsFeatureConfig mUnifiedThreadedCommentsFeatureConfig;
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     private enum ActionableEmptyViewButtonType {
@@ -2619,7 +2618,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         requireContext(),
                         post.blogId,
                         post.postId,
-                        mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                        ThreadedCommentsActionSource.READER_POST_CARD.getSourceDescription()
                 );
                 break;
             case TOGGLE_SEEN_STATUS:

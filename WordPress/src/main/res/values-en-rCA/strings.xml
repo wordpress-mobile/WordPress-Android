@@ -47,7 +47,6 @@ Language: en_CA
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Invalid URL. Please enter a valid URL.</string>
     <string name="gutenberg_native_embed_caption_s">Embed caption. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Embed caption. Empty</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">ADD LINK</string>
     <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
@@ -94,7 +93,6 @@ Language: en_CA
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to regular blocks</string>
     <string name="gutenberg_native_s_block">%s block</string>
-    <string name="gutenberg_native_minimum_height">Minimum height</string>
     <string name="gutenberg_native_media_options">Media options</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_insert_crosspost">Insert crosspost</string>
@@ -115,7 +113,6 @@ Language: en_CA
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threats.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threat.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Double tap to add a link.</string>
-    <string name="gutenberg_native_edit_link">EDIT LINK</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
@@ -124,21 +121,15 @@ Language: en_CA
     <string name="gutenberg_native_move_image_forward">Move Image Forward</string>
     <string name="gutenberg_native_move_image_backward">Move Image Backward</string>
     <string name="gutenberg_native_width_settings">Width settings</string>
-    <string name="gutenberg_native_image_settings">Image settings</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="likes_list_screen_title">Likes list %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sorting and filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
-    <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
-    <string name="gutenberg_native_post_content_settings">Post content settings</string>
     <string name="gutenberg_native_featured">Featured</string>
-    <string name="gutenberg_native_embed_link">Embed link</string>
-    <string name="gutenberg_native_display_post_date">Display post date</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="gutenberg_native_what_is_alt_text">What is alt text?</string>
@@ -175,7 +166,6 @@ Language: en_CA
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comment_status_unreplied">Unreplied</string>
-    <string name="gutenberg_native_add_link">Add link</string>
     <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
@@ -476,8 +466,6 @@ Language: en_CA
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
@@ -1705,10 +1693,7 @@ Language: en_CA
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -2788,7 +2773,6 @@ Language: en_CA
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>

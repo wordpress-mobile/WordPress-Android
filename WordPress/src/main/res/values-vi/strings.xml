@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-14 15:18:48+0000
+Translation-Revision-Date: 2021-12-16 15:59:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Lời cảm ơn</string>
+    <string name="about_automattic_source_code">Mã nguồn</string>
+    <string name="about_automattic_california_privacy_notice">Lưu ý người dùng California</string>
+    <string name="about_automattic_privacy_policy">Chính sách riêng tư</string>
+    <string name="about_automattic_terms_of_service">Điều khoản dịch vụ</string>
+    <string name="about_automattic_work_from_anywhere">Làm việc từ xa</string>
+    <string name="about_automattic_work_with_us">Cơ hội nghề nghiệp</string>
+    <string name="about_automattic_family">Dịch vụ của Automattic</string>
+    <string name="about_automattic_legal_and_more">Pháp lý</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_rate_us">Đánh giá</string>
+    <string name="about_automattic_share_with_friends">Chia sẻ với bạn bè</string>
+    <string name="about_automattic_version_label">Phiên bản %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Lời cảm ơn</string>
+    <string name="about_automattic_legal_page_title">Pháp lý</string>
+    <string name="about_automattic_main_page_title">Giới thiệu %1$s</string>
+    <string name="about_automattic_app_name">Về Automattic</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">Cơ bản</string>
+    <string name="gutenberg_native_selected_default">Đã chọn: Mặc định</string>
+    <string name="gutenberg_native_more_support_options">Tùy chọn hỗ trợ khác</string>
+    <string name="gutenberg_native_get_support">Hỗ trợ</string>
+    <string name="gutenberg_native_font_size">Cỡ chữ</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Nhấn hai lần để cỡ chữ</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Nhấn hai lần để chọn cỡ chữ mặc định</string>
+    <string name="gutenberg_native_contact_support">Hỗ trợ</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Chưa có nội dung</string>
+    <string name="reader_comments_follow_conversation">Theo dõi thảo luận</string>
+    <string name="reader_comments_be_first_to_comment">Trở thành người phản hồi đầu tiên</string>
+    <string name="reader_comments_view_all">Xem tất cả bình luận</string>
+    <string name="reader_comments_post_fetch_failure">Xảy ra lỗi khi tải dữ liệu bài viết</string>
+    <string name="reader_comments_fetch_failure">Xảy ra lỗi khi tải bình luận</string>
+    <string name="reader_btn_follow_conversation_settings">Tùy chọn theo dõi thảo luận</string>
+    <string name="gutenberg_native_from_clipboard">Từ bộ nhớ tạm</string>
+    <string name="gutenberg_native_featured_image">Ảnh minh họa</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Chép URL từ bộ nhớ tạm, %s</string>
+    <string name="me_btn_about">Về WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Xem bài viết đã lên lịch</string>
+    <string name="my_site_post_card_link_go_to_drafts">Xem bản nháp</string>
+    <string name="my_site_post_card_link_create_post">Viết bài mới</string>
+    <string name="my_site_create_next_post_excerpt">Đăng thường xuyên để thu hút độc giả!</string>
+    <string name="my_site_create_next_post_title">Tạo bài viết kế tiếp</string>
+    <string name="menu_visual_mode_switched_notice">Chuyển sang chế độ trực quan</string>
+    <string name="menu_html_mode_switched_notice">Chuyển sang chế độ HTML</string>
+    <string name="post_link_copied_to_clipboard">Đã chép URL vào bộ nhớ tạm</string>
+    <string name="comment_author_badge">Tác giả</string>
+    <string name="button_copy_link">Chép liên kết</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Thêm tên miền dễ nhớ cho khách truy cập trang của bạn</string>
+    <string name="domains_paid_plan_add_your_domain_title">Thêm tên miền</string>
+    <string name="my_site_create_first_post_excerpt">Những bài viết sẽ xuất hiện theo thứ tự thời gian. Hãy chia sẻ ý tưởng của bạn với thế giới!</string>
+    <string name="my_site_create_first_post_title">Tạo bài viết đầu tiên</string>
+    <string name="my_site_untitled_post">Chưa có tựa đề</string>
+    <string name="my_site_post_card_scheduled_title">Bài viết đã lên lịch sắp tới</string>
+    <string name="my_site_post_card_draft_title">Chỉnh sửa bản nháp</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
@@ -133,7 +189,6 @@ Language: vi_VN
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL không hợp lệ. Hãy nhập lại.</string>
     <string name="gutenberg_native_embed_caption_s">Chú thích nhúng. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Chú thích nhúng. Trống</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">CHÈN LIÊN KẾT</string>
     <string name="activity_log_visit_our_documentation_page">xem trang tài liệu</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite cung cấp các bản sao lưu có thể tải xuống, dễ dàng khôi phục nội dung. Tìm hiểu thêm %1$s.</string>
     <string name="blogging_reminders_tip_message">Đăng thường xuyên để giữ tương tác với độc giả, cũng như thu hút khách truy cập.</string>
@@ -181,7 +236,6 @@ Language: vi_VN
     <string name="gutenberg_native_s_has_no_url_set">%s không áp dụng URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s đã chuyển sang khối thông dụng</string>
     <string name="gutenberg_native_s_block">%s khối</string>
-    <string name="gutenberg_native_minimum_height">Chiều cao tối thiểu</string>
     <string name="gutenberg_native_media_options">Tùy chọn Media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">UR không hợp lệ. Không tìm thấy tập tin âm thanh.</string>
     <string name="gutenberg_native_insert_crosspost">Nhập đăng chéo</string>
@@ -202,7 +256,6 @@ Language: vi_VN
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục các mối đe dọa.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Nhập thông tin đăng nhập máy chủ của bạn&lt;/a&gt; để khắc phục mối đe dọa.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Nhấn hai lần để chèn liên kết</string>
-    <string name="gutenberg_native_edit_link">SỬA LIÊN KẾT</string>
     <string name="login_empty_view_try_another_account">Thử một tài khoản khác</string>
     <string name="login_empty_view_see_instructions">Xem hướng dẫn</string>
     <string name="login_no_jetpack_sites_error_message">Nếu bạn đã có sẵn một trang, bạn cần cài đặt plugin Jetpack miễn phí và kết nối nó với tài khoản WordPress.com của bạn.</string>
@@ -211,27 +264,21 @@ Language: vi_VN
     <string name="gutenberg_native_move_image_forward">Chuyển Ảnh lên</string>
     <string name="gutenberg_native_move_image_backward">Chuyển Ảnh xuống</string>
     <string name="gutenberg_native_width_settings">Thiết lập Chiều Rộng</string>
-    <string name="gutenberg_native_image_settings">Thiết lập Ảnh</string>
     <string name="user_profile_untitled_site">(Không tựa)</string>
     <string name="user_profile_site_section_header">Trang</string>
     <string name="user_profile_bottom_sheet_description">Thông tin menu dưới của hồ sơ người dùng</string>
     <string name="likes_list_screen_title">Những người thích %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sắp xếp và lọc</string>
     <string name="gutenberg_native_s_social_icon">%s biểu tượng mạng xã hội</string>
     <string name="gutenberg_native_mention">Nhắc đến</string>
     <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
     <string name="gutenberg_native_preview_page">Xem trước trang con</string>
-    <string name="gutenberg_native_post_meta_settings">Thiết lập siêu dữ liệu bài viết</string>
-    <string name="gutenberg_native_post_content_settings">Thiết lập nội dung bài viết</string>
     <string name="gutenberg_native_retry">Thử lại</string>
     <string name="gutenberg_native_no_preview_available">Không có bản xem trước</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_featured">Nổi Bật</string>
-    <string name="gutenberg_native_embed_link">Liên kết nhúng</string>
-    <string name="gutenberg_native_display_post_date">Hiển thị ngày đăng</string>
+    <string name="gutenberg_native_custom_url">URL tùy chỉnh</string>
     <string name="gutenberg_native_create_embed">Chèn mã nhúng</string>
     <string name="gutenberg_native_column_d">Cột %d</string>
-    <string name="gutenberg_native_none">Không</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Mô tả ngắn gọn các liên kết để độc giả hiểu.</string>
     <string name="gutenberg_native_add_blocks">Thêm khối</string>
     <string name="login_no_jetpack_sites">Không tìm thấy trang có Jetpack</string>
@@ -570,8 +617,6 @@ Language: vi_VN
     <string name="reader_follow_comments_could_not_unsubscribe_error">Không thể hủy theo dõi nhận xét của bài viết này</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Không thể theo dõi nhận xét của bài viết này</string>
     <string name="reader_follow_comments_get_status_error">Lỗi tải trạng thái đăng ký của bài viết này</string>
-    <string name="reader_follow_comments_unsubscribe_success">Hủy theo dõi bình luận thành công</string>
-    <string name="reader_follow_comments_subscribe_success">Theo dõi bình luận thành công</string>
     <string name="reader_follow_comments_bad_format_response">Nhận phản hồi không hợp lệ</string>
     <string name="reader_follow_comments_null_response">Không nhận được phản hồi</string>
     <string name="activity_log_activity_type_filter_clear">Xóa</string>
@@ -812,6 +857,7 @@ Language: vi_VN
     <string name="quick_start_dialog_update_site_title_message_short">Nhấn &lt;b&gt;%1$s&lt;/b&gt; để thêm tựa đề mới</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Cho bài này vào thùng rác sẽ hủy bỏ hết thay đổi, bạn có chắc muốn tiếp tục?</string>
     <string name="gutenberg_native_s_block_options">Tùy chọn %s</string>
+    <string name="gutenberg_native_remove_block">Xóa khối</string>
     <string name="gutenberg_native_duplicate_block">Nhân đôi khối</string>
     <string name="gutenberg_native_copy_block">Chép khối</string>
     <string name="gutenberg_native_copied_block">Đã chép khối</string>
@@ -1131,10 +1177,10 @@ Language: vi_VN
     <string name="gutenberg_native_current_value_is_s">Giá trị hiện tại là %s</string>
     <string name="gutenberg_native_choose_from_device">Chọn từ thiết bị</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Đã có lỗi xảy ra. Xin thử lại.</string>
-    <string name="gutenberg_native_alt_text">Văn bản Alt</string>
+    <string name="gutenberg_native_alt_text">Văn bản thay thế</string>
     <string name="gutenberg_native_add_video">THÊM VIDEO</string>
     <string name="gutenberg_native_add_url">Chèn URL</string>
-    <string name="gutenberg_native_add_alt_text">Thêm văn bản alt</string>
+    <string name="gutenberg_native_add_alt_text">Thêm văn bản thay thế</string>
     <string name="gutenberg_native_add_image_or_video">THÊM ẢNH HOẶC VIDEO</string>
     <string name="gutenberg_native_add_image">THÊM ẢNH</string>
     <string name="gutenberg_native_add_block_here">THÊM KHỐI Ở ĐÂY</string>
@@ -1802,10 +1848,7 @@ Language: vi_VN
     <string name="signup_with_google_progress">Đang đăng ký với Google…</string>
     <string name="jetpack_connection_failed_with_reason">Kết nối Jetpack thất bại: %s</string>
     <string name="jetpack_already_connected_toast">Bạn đã được kết nối với Jetpack</string>
-    <string name="menu_undo_snackbar_action">LÀM LẠI</string>
-    <string name="menu_visual_mode_done_snackbar">Chuyển sang chế độ Trực Quan</string>
     <string name="menu_visual_mode">Chế độ Trực Quan</string>
-    <string name="menu_html_mode_done_snackbar">Chuyển sang chế độ HTML</string>
     <string name="menu_html_mode">Chế độ HTML</string>
     <string name="menu_preview">Xem trước</string>
     <string name="menu_save_as_draft">Lưu bản nháp</string>
@@ -2076,7 +2119,7 @@ Language: vi_VN
     <string name="media_edit_filetype_caption">Định dạng tập tin</string>
     <string name="media_edit_filename_caption">Tên tập tin</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_alttext_text">Văn bản alt</string>
+    <string name="media_edit_alttext_text">Văn bản thay thế</string>
     <string name="connect_site">Kết nối một trang</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Chớp đèn</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Rung</string>
@@ -2889,7 +2932,6 @@ Language: vi_VN
     <string name="reader_empty_posts_in_tag_updating">Đang tải bài viết…</string>
     <string name="reader_likes_you_and_multi">Bạn và %,d người khác thích bài viết này</string>
     <string name="reader_likes_multi">%,d người thích</string>
-    <string name="reader_label_reply">Trả lời</string>
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog</string>
     <string name="comment_spammed">Bình luận bị đánh dấu spam</string>
     <string name="reader_toast_err_get_post">Không thể tải bài viết này</string>

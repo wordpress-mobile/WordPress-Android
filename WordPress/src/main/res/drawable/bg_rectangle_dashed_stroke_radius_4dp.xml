@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/my_site_error_card_border_radius" />
+    <stroke
+        android:width="@dimen/my_site_error_card_stroke_width"
+        android:color="@color/on_surface_divider"
+        android:dashGap="@dimen/my_site_error_card_dash_gap"
+        android:dashWidth="@dimen/my_site_error_card_dash_width" />
+</shape>

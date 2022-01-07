@@ -185,7 +185,6 @@ Language: az
     <string name="notifications_empty_all">Bildiriş yoxdur…</string>
     <string name="share_link">Bağlantını paylaş</string>
     <string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir…</string>
-    <string name="reader_label_reply">Cavab</string>
     <string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
     <string name="reader_likes_multi">%,d şəxs bunu bəyənir</string>
     <string name="reader_likes_you_and_multi">Siz və bir digər şəxs %,d bunu bəyənir</string>
