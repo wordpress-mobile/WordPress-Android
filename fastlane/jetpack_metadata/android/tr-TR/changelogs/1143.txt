@@ -1,7 +1,0 @@
-18.8:
-- Düğme ve Görüntü blokları için otomatik olarak doldurulan pano bağlantıları yerine bağlantı önerileri alın. 
-- Yayınlanan gönderi bağlantılarını paylaşmak için "Bağlantıyı Kopyala"ya tıklayın.
-- Ekleyici menü sekmeleri cihazınızın diliyle eşleşir.
-- Bir Galeri bloku oluştururken cihaz medya seçenekleri açılır.
-- Yazı tipi boyutu hatası ve Görsel RTL sorunları çözüldü.
-- Blok Ayarları'ndan Gömülü blok bağlantısını düzenleyin.
