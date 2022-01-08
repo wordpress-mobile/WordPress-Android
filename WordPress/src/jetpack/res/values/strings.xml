@@ -20,4 +20,7 @@
     <!-- Log out actions in Me -->
     <string name="me_disconnect_from_wordpress_com">Log out of Jetpack</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of Jetpack?</string>
+
+    <!-- About button in Me -->
+    <string name="me_btn_about">About Jetpack</string>
 </resources>

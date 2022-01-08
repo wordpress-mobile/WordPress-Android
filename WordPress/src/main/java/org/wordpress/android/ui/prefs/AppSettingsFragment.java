@@ -240,15 +240,15 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private void removeWhatsNewPreference() {
-        PreferenceCategory aboutTheAppPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
-        aboutTheAppPreferenceCategory.removePreference(mWhatsNew);
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(mWhatsNew);
     }
 
     private void addWhatsNewPreference() {
-        PreferenceCategory aboutTheAppPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
-        aboutTheAppPreferenceCategory.addPreference(mWhatsNew);
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.addPreference(mWhatsNew);
     }
 
     @Override

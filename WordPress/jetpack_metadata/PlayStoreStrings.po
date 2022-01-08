@@ -11,22 +11,25 @@ msgstr ""
 "Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_189"
+msgid ""
+"18.9:\n"
+"- Highlight text with any color in Paragraph blocks.\n"
+"- Create new Gallery blocks with the new design and auto-convert old galleries to match.\n"
+"- Undo and redo changes when formatting link text in blocks.\n"
+"- Load faster when reblogging posts and sharing text from other apps.\n"
+"- See background colors in pre-formatted blocks on sites with standard themes.\n"
+msgstr ""
+
 msgctxt "release_note_188"
 msgid ""
 "18.8:\n"
 "- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.\n"
-"- Click "Copy Link" to share published post links.\n"
+"- Click \"Copy Link\" to share published post links.\n"
 "- Inserter menu tabs match your device's language.\n"
 "- Device media options open when creating a Gallery block.\n"
 "- Font size bug and RTL visual issues are resolved.\n"
 "- Edit Embed block link in Block Settings.\n"
-msgstr ""
-
-msgctxt "release_note_187"
-msgid ""
-"18.7:\n"
-"- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.\n"
-"- We solved a problem with content autosaves so they now run more smoothly.\n"
 msgstr ""
 
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!

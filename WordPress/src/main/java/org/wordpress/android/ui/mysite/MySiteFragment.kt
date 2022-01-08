@@ -95,9 +95,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
 
-    // Capture and track the first `onResume` event so we can circumvent refreshing sources on initial onResume
-    private var isFirstResume = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // The following prevents the soft keyboard from leaving a white space when dismissed.
@@ -116,6 +113,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            swipeToRefreshHelper.isRefreshing = true
         }
     }
 
@@ -177,7 +175,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (NetworkUtils.checkConnection(requireActivity())) {
-                viewModel.refresh()
+                viewModel.refresh(isPullToRefresh = true)
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
@@ -268,7 +266,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
         is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is SiteNavigationAction.OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is SiteNavigationAction.ConnectJetpackForStats ->
@@ -320,8 +317,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     false,
                     PagePostCreationSourcesDetail.POST_FROM_MY_SITE
             )
-        // TODO: ashiagr this is unhandled right now as mocked post is being used which cannot be opened in the editor
-        is SiteNavigationAction.EditPost -> Unit
+        // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
+        // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
+        is SiteNavigationAction.EditDraftPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+        is SiteNavigationAction.EditScheduledPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
@@ -376,8 +377,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.onResume(isFirstResume)
-        isFirstResume = false
+        viewModel.onResume()
     }
 
     override fun onPause() {
@@ -559,9 +559,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun hideRefreshIndicatorIfNeeded() {
-        if (swipeToRefreshHelper.isRefreshing) {
-            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
-        }
+        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
     }
 
     companion object {
