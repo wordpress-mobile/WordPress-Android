@@ -1,12 +1,16 @@
 package org.wordpress.android.networking;
 
+import android.content.Context;
 import android.os.Handler;
-import android.test.InstrumentationTestCase;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.wordpress.android.InitializationRule;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -14,20 +18,31 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class WPNetworkImageViewTest extends InstrumentationTestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
+import javax.inject.Inject;
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+import static junit.framework.TestCase.assertTrue;
+
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
+public class WPNetworkImageViewTest {
+    @Rule(order = 0)
+    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
+    @Rule(order = 1)
+    public InitializationRule initRule = new InitializationRule();
+
+    @Inject Context mContext;
+
+    @Before
+    public void setUp() {
+        hiltRule.inject();
     }
 
     // https://github.com/wordpress-mobile/WordPress-Android/issues/1549
+    @Test
     public void testVolleyImageLoaderGetNullHost() throws InterruptedException {
-        Handler mainLooperHandler = new Handler(WordPress.getContext().getMainLooper());
+        Handler mainLooperHandler = new Handler(mContext.getMainLooper());
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final boolean[] success = new boolean[1];
         Runnable getImage = new Runnable() {
