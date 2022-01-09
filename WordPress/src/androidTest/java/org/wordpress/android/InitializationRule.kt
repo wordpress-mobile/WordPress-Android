@@ -14,36 +14,23 @@ class InitializationRule : TestRule {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface AppInitializerEntryPoint {
-        fun initializer(): AppInitializer
+        fun appInitializer(): AppInitializer
     }
-
-    private val instrumentation
-        get() = InstrumentationRegistry.getInstrumentation()
 
     override fun apply(base: Statement?, description: Description?): Statement {
         return object : Statement() {
             override fun evaluate() {
-                if (!isInitialized) {
-                    instrumentation.runOnMainSync {
-                        val application = instrumentation.targetContext.applicationContext as Application
-                        val appInitializer = EntryPoints.get(
-                                application,
-                                AppInitializerEntryPoint::class.java
-                        ).initializer()
+                val instrumentation = InstrumentationRegistry.getInstrumentation()
 
-                        appInitializer.init()
-                    }
-                    isInitialized = true
-                }
+                val application = instrumentation.targetContext.applicationContext as Application
+                val appInitializer = EntryPoints.get(
+                        application,
+                        AppInitializerEntryPoint::class.java
+                ).appInitializer()
+                instrumentation.runOnMainSync { appInitializer.init() }
+
                 base?.evaluate()
             }
         }
-    }
-
-    companion object {
-        // InitializationRule must be initialized only once. Otherwise some static functions in AppInitializer throws
-        // exception, if they are initialized more than once. (e.g. WebView.setDataDirectorySuffix(),
-        // EventBusBuilder.installDefaultEventBus)
-        private var isInitialized = false
     }
 }

@@ -20,15 +20,8 @@ open class BaseWordPressTest : Application(), HasAndroidInjector {
         fun injector(): DispatchingAndroidInjector<Any>
     }
 
-    private lateinit var injector: AndroidInjector<Any>
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        if (!this::injector.isInitialized) {
-            injector = EntryPoints.get(
-                    applicationContext,
-                    AndroidInjectorEntryPoint::class.java
-            ).injector()
-        }
-        return injector
-    }
+    override fun androidInjector(): AndroidInjector<Any> = EntryPoints.get(
+            applicationContext,
+            AndroidInjectorEntryPoint::class.java
+    ).injector()
 }
