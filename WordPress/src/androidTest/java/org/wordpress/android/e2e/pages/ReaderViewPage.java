@@ -1,13 +1,12 @@
 package org.wordpress.android.e2e.pages;
 
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
-import androidx.test.uiautomator.Until;
 
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.DEFAULT_TIMEOUT;
 import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
@@ -15,36 +14,38 @@ import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    BySelector mLikerSelector = By.res("org.wordpress.android.prealpha:id/liker_faces_container");
-    BySelector mLikeCountSelector = By.res("org.wordpress.android.prealpha:id/text_count");
-    BySelector mRelatedPostsContainer = By.res("org.wordpress.android.prealpha:id/container_related_posts");
+    UiObject mLikeButton =
+            mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/count_likes"));
+    UiObject mLikerContainer =
+            mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/liker_faces_container"));
+    UiObject mLikeCountSelector =
+            mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/text_count"));
+    UiObject mRelatedPostsContainer =
+            mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/container_related_posts"));
 
     public ReaderViewPage waitUntilLoaded() {
-        mDevice.wait(Until.hasObject(mRelatedPostsContainer), DEFAULT_TIMEOUT);
+        mRelatedPostsContainer.waitForExists(DEFAULT_TIMEOUT);
 
         return this;
     }
 
     public ReaderViewPage like() {
         tapLikeButton();
-        mDevice.wait(Until.hasObject(mLikerSelector), DEFAULT_TIMEOUT);
+        mLikerContainer.waitForExists(DEFAULT_TIMEOUT);
 
         return this;
     }
 
     public ReaderViewPage unlike() {
         tapLikeButton();
-        mDevice.wait(Until.gone(mLikerSelector), DEFAULT_TIMEOUT);
+        mLikerContainer.waitUntilGone(DEFAULT_TIMEOUT);
 
         return this;
     }
 
     private void tapLikeButton() {
-        UiObject likeButton =
-                mDevice.findObject(new UiSelector().resourceId("org.wordpress.android.prealpha:id/count_likes"));
-
         try {
-            likeButton.click();
+            mLikeButton.click();
         } catch (Exception e) {
             // Ignore
         }
@@ -63,9 +64,9 @@ public class ReaderViewPage {
         return this;
     }
 
-    public ReaderViewPage verifyPostLiked() {
-        boolean likerDisplayed = !mDevice.findObjects(mLikerSelector).isEmpty();
-        boolean postHasOneLike = mDevice.findObject(mLikeCountSelector).getText().equals("1");
+    public ReaderViewPage verifyPostLiked() throws UiObjectNotFoundException {
+        boolean likerDisplayed = mLikerContainer.exists();
+        boolean postHasOneLike = mLikeCountSelector.getText().equals("1");
 
         assertTrue("Liker was not displayed.", likerDisplayed);
         assertTrue("Like count was different from '1'.", postHasOneLike);
@@ -74,9 +75,9 @@ public class ReaderViewPage {
     }
 
     public ReaderViewPage verifyPostNotLiked() {
-        boolean likerNotDisplayed = mDevice.findObjects(mLikerSelector).isEmpty();
+        boolean likerDisplayed = mLikerContainer.exists();
 
-        assertTrue("Liker faces container was not displayed.", likerNotDisplayed);
+        assertFalse("Liker faces container was displayed.", likerDisplayed);
 
         return this;
     }

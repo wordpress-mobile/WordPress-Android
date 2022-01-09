@@ -4,6 +4,7 @@ import android.Manifest.permission;
 
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class ReaderTests extends BaseTest {
     }
 
     @Test
-    public void likePost() {
+    public void likePost() throws UiObjectNotFoundException {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mPostTitle)
