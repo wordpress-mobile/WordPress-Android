@@ -1,6 +1,5 @@
 package org.wordpress.android
 
-import android.app.Application
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -13,15 +12,19 @@ import dagger.hilt.components.SingletonComponent
 @CustomTestApplication(BaseWordPressTest::class)
 interface WordPressTest
 
-open class BaseWordPressTest : Application(), HasAndroidInjector {
+open class BaseWordPressTest : WordPress(), HasAndroidInjector {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface AndroidInjectorEntryPoint {
         fun injector(): DispatchingAndroidInjector<Any>
     }
 
+    var initializer: AppInitializer? = null
+
     override fun androidInjector(): AndroidInjector<Any> = EntryPoints.get(
             applicationContext,
             AndroidInjectorEntryPoint::class.java
     ).injector()
+
+    override fun getAppInitializer() = initializer
 }

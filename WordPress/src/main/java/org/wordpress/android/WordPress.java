@@ -18,14 +18,13 @@ import org.wordpress.android.util.BitmapLruCache;
 
 import java.lang.reflect.Field;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasAndroidInjector;
 import dagger.hilt.EntryPoints;
 
-public class WordPress extends MultiDexApplication implements HasAndroidInjector {
+/**
+ * An abstract class to be extended by {@link WordPressApplication} for real application and WordPressTest for
+ * UI test application. Containing public static variables and methods to be accessed by other classes.
+ */
+public abstract class WordPress extends MultiDexApplication {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static final String REMOTE_SITE_ID = "REMOTE_SITE_ID";
@@ -33,12 +32,28 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public static WordPressDB wpDB;
     public static boolean sAppIsInTheBackground = true;
 
-    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
-
-    @Inject AppInitializer mAppInitializer;
-
     public static RequestQueue sRequestQueue;
     public static FluxCImageLoader sImageLoader;
+
+    /**
+     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
+     * are used at the project level to set custom fields.
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     *
+     * @param application Used to find the correct file
+     * @param fieldName   The name of the field-to-access
+     * @return The value of the field, or {@code null} if the field is not found.
+     */
+    public static Object getBuildConfigValue(Application application, String fieldName) {
+        try {
+            String packageName = application.getClass().getPackage().getName();
+            Class<?> clazz = Class.forName(packageName + ".BuildConfig");
+            Field field = clazz.getField(fieldName);
+            return field.get(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public AppComponent component() {
         return EntryPoints.get(this, AppComponent.class);
@@ -46,13 +61,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
     public static BitmapLruCache getBitmapCache() {
         return AppInitializer.Companion.getBitmapCache();
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        mAppInitializer.init();
     }
 
     public static Context getContext() {
@@ -87,36 +95,12 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         return AppInitializer.Companion.getRestClientUtilsV0();
     }
 
-    public void wordPressComSignOut() {
-        mAppInitializer.wordPressComSignOut();
-    }
-
     /**
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
      * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
      *
-     * @param application Used to find the correct file
-     * @param fieldName The name of the field-to-access
-     * @return The value of the field, or {@code null} if the field is not found.
-     */
-    public static Object getBuildConfigValue(Application application, String fieldName) {
-        try {
-            String packageName = application.getClass().getPackage().getName();
-            Class<?> clazz = Class.forName(packageName + ".BuildConfig");
-            Field field = clazz.getField(fieldName);
-            return field.get(null);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
-     * are used at the project level to set custom fields.
-     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
-     *
-     * @param activity Used to get the Application instance
+     * @param activity        Used to get the Application instance
      * @param configValueName The name of the field-to-access
      * @return The string value of the field, or empty string if the field is not found.
      */
@@ -125,7 +109,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             return "";
         }
 
-        String value = (String) WordPress.getBuildConfigValue(activity.getApplication(), configValueName);
+        String value = (String) getBuildConfigValue(activity.getApplication(), configValueName);
         if (!TextUtils.isEmpty(value)) {
             AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
             return value;
@@ -134,11 +118,13 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         return "";
     }
 
-    public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
-        return mAppInitializer.getStoryNotificationTrackerProvider();
+    protected abstract AppInitializer getAppInitializer();
+
+    public void wordPressComSignOut() {
+        getAppInitializer().wordPressComSignOut();
     }
 
-    @Override public AndroidInjector<Object> androidInjector() {
-        return mDispatchingAndroidInjector;
+    public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
+        return getAppInitializer().getStoryNotificationTrackerProvider();
     }
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android
 
-import android.app.Application
 import androidx.test.platform.app.InstrumentationRegistry
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
@@ -22,12 +21,14 @@ class InitializationRule : TestRule {
             override fun evaluate() {
                 val instrumentation = InstrumentationRegistry.getInstrumentation()
 
-                val application = instrumentation.targetContext.applicationContext as Application
+                val application = instrumentation.targetContext.applicationContext as WordPressTest_Application
                 val appInitializer = EntryPoints.get(
                         application,
                         AppInitializerEntryPoint::class.java
                 ).appInitializer()
                 instrumentation.runOnMainSync { appInitializer.init() }
+
+                application.initializer = appInitializer
 
                 base?.evaluate()
             }

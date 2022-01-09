@@ -3,4 +3,4 @@ package org.wordpress.android
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class WordPressRelease : WordPress()
+class WordPressRelease : WordPressApplication()
