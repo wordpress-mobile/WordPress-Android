@@ -7,6 +7,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.rule.ActivityTestRule;
 
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -87,5 +88,6 @@ public class SignupFlow {
     public void confirmSignup() {
         // Confirm signup
         waitForElementToBeDisplayed(R.id.nav_sites);
+        new MySitesPage().go();
     }
 }
