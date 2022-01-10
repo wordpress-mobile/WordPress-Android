@@ -3864,8 +3864,22 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
+    <string name="about_automattic_app_name">About Automattic</string>
     <string name="about_automattic_main_page_title">About %1$s</string>
     <string name="about_automattic_legal_page_title">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title">Acknowledgements</string>
     <string name="about_automattic_version_label">Version %1$s</string>
+    <string name="about_automattic_share_with_friends">Share with friends</string>
+    <string name="about_automattic_rate_us">Rate us</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_legal_and_more">Legal and more</string>
+    <string name="about_automattic_family">Automattic family</string>
+    <string name="about_automattic_work_with_us">Work with us</string>
+    <string name="about_automattic_work_from_anywhere">Work from anywhere</string>
+    <string name="about_automattic_terms_of_service">Terms of service</string>
+    <string name="about_automattic_privacy_policy">Privacy policy</string>
+    <string name="about_automattic_california_privacy_notice">California privacy notice</string>
+    <string name="about_automattic_source_code">Source code</string>
+    <string name="about_automattic_acknowledgements">Acknowledgements</string>
 </resources>
