@@ -13,6 +13,7 @@ import javax.inject.Named
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.R
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
@@ -37,9 +38,10 @@ class ReaderFollowCommentsHandler @Inject constructor(
         blogId: Long,
         postId: Long,
         askSubscribe: Boolean,
+        source: ThreadedCommentsActionSource,
         onSuccessSnackbarAction: (() -> Unit)?
     ) {
-        readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe)
+        readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe, source)
                 .flowOn(bgDispatcher).collect { state ->
             manageState(state, onSuccessSnackbarAction)
         }
@@ -56,9 +58,10 @@ class ReaderFollowCommentsHandler @Inject constructor(
         blogId: Long,
         postId: Long,
         askEnable: Boolean,
+        source: ThreadedCommentsActionSource,
         onSuccessSnackbarAction: (() -> Unit)? = null
     ) {
-        readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, askEnable)
+        readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, askEnable, source)
                 .flowOn(bgDispatcher).collect { state ->
                     manageState(state, onSuccessSnackbarAction)
                 }

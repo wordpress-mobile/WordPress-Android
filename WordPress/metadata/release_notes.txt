@@ -1,6 +1,5 @@
-- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.
-- Click "Copy Link" to share published post links.
-- Inserter menu tabs match your device's language.
-- Device media options open when creating a Gallery block.
-- Font size bug and RTL visual issues are resolved.
-- Edit Embed block link in Block Settings.
+- Highlight text with any color in Paragraph blocks.
+- See and respond to comments after your post content in the Reader.
+- Create new Gallery blocks with the new design and auto-convert old galleries to match.
+- Undo and redo changes when formatting link text in blocks.
+- Load faster when reblogging posts and sharing text from other apps.

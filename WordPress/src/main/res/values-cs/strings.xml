@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-29 21:52:37+0000
+Translation-Revision-Date: 2021-12-13 21:20:37+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Poděkování</string>
+    <string name="about_automattic_source_code">Zdrojový kód</string>
+    <string name="about_automattic_privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="about_automattic_california_privacy_notice">Zásady o ochraně osobních údajů v Kalifornii</string>
+    <string name="about_automattic_terms_of_service">Podmínky služby</string>
+    <string name="about_automattic_work_from_anywhere">Pracujte odkudkoli</string>
+    <string name="about_automattic_work_with_us">Pracuj s námi</string>
+    <string name="about_automattic_family">Automatická rodina</string>
+    <string name="about_automattic_legal_and_more">Právní a další</string>
+    <string name="about_automattic_twitter">Twitter</string>
+    <string name="about_automattic_instagram">Instagram</string>
+    <string name="about_automattic_rate_us">Ohodnoťte nás</string>
+    <string name="about_automattic_share_with_friends">Sdílet s přáteli</string>
+    <string name="about_automattic_version_label">Verze %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Poděkování</string>
+    <string name="about_automattic_legal_page_title">Právní a další</string>
+    <string name="about_automattic_main_page_title">O autorovi %1$s</string>
+    <string name="about_automattic_app_name">O Automattic</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">Základy</string>
+    <string name="gutenberg_native_selected_default">Vybrat: výchozí</string>
+    <string name="gutenberg_native_more_support_options">Více možností podpory</string>
+    <string name="gutenberg_native_get_support">Získejte podporu</string>
+    <string name="gutenberg_native_font_size">Velikost písma</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Dvojitým klepnutím vyberte velikost písma</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Dvojitým klepnutím vyberte výchozí velikost písma</string>
+    <string name="gutenberg_native_contact_support">Kontaktovat podporu</string>
+    <string name="my_site_no_content_post">Žádný obsah</string>
+    <string name="reader_comments_follow_conversation">Sledovat konverzaci</string>
+    <string name="reader_comments_be_first_to_comment">Buďte první! Přidejte komentář</string>
+    <string name="reader_comments_view_all">Zobrazit všechny komentáře</string>
+    <string name="reader_comments_post_fetch_failure">Došlo k chybě při získávání dat příspěvku</string>
+    <string name="reader_comments_fetch_failure">Došlo k chybě při získávání komentářů</string>
+    <string name="reader_btn_follow_conversation_settings">Sledovat podle nastavení konverzace</string>
     <string name="gutenberg_native_from_clipboard">Ze schránky</string>
     <string name="gutenberg_native_featured_image">Náhledový obrázek</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Zkopírujte URL adresu ze schránky, %s</string>
@@ -154,7 +189,6 @@ Language: cs_CZ
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Neplatná URL. Zadejte platnou adresu URL.</string>
     <string name="gutenberg_native_embed_caption_s">Vložit titulek. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Vložit titulek. Prázdný</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">PŘIDAT ODKAZ</string>
     <string name="activity_log_visit_our_documentation_page">navštivte naši stránku s dokumentací</string>
     <string name="activity_log_multisite_message">Jetpack Backup pro instalace na více webů poskytuje zálohy ke stažení, žádné obnovení jediným kliknutím. Další informace %1$s.</string>
     <string name="blogging_reminders_tip">Tip</string>
@@ -202,7 +236,6 @@ Language: cs_CZ
     <string name="gutenberg_native_slash_inserter_results">Výsledky lomítka</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
     <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_minimum_height">Minimální výška</string>
     <string name="gutenberg_native_media_options">Nastavení médií</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
     <string name="gutenberg_native_insert_crosspost">Vložit crosspost</string>
@@ -222,14 +255,12 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
-    <string name="gutenberg_native_edit_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
     <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
     <string name="login_no_jetpack_sites_error_message">Pokud již web máte, budete si muset nainstalovat bezplatný plugin Jetpack a připojit ho ke svému účtu WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Vaše profilová fotka</string>
     <string name="login_not_a_jetpack_site">Abyste mohli tuto aplikaci používat po dobu %1$s, musíte mít nainstalovaný plugin Jetpack a připojený k vašemu účtu WordPress.com.</string>
-    <string name="gutenberg_native_image_settings">Nastavení obrázku</string>
     <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
     <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
     <string name="gutenberg_native_width_settings">Nastavení šířky</string>
@@ -237,23 +268,17 @@ Language: cs_CZ
     <string name="user_profile_site_section_header">Web</string>
     <string name="user_profile_bottom_sheet_description">Informace spodního listu profilu uživatele</string>
     <string name="likes_list_screen_title">Seznam to se mi líbí %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Filtry a řazení</string>
     <string name="gutenberg_native_s_social_icon">%s ikona sociální sítě</string>
     <string name="gutenberg_native_mention">Zmínit</string>
-    <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
-    <string name="gutenberg_native_post_content_settings">Nastavení obsahu příspěvku</string>
     <string name="gutenberg_native_preview_page">Náhled stránky</string>
     <string name="gutenberg_native_preview_post">Náhled příspěvku</string>
     <string name="gutenberg_native_retry">Opakovat</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_featured">Doporučené</string>
-    <string name="gutenberg_native_embed_link">Vložit odkaz</string>
-    <string name="gutenberg_native_display_post_date">Zobrazit datum příspěvku</string>
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
     <string name="gutenberg_native_column_d">Sloupec %d</string>
-    <string name="gutenberg_native_none">Žádný</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="gutenberg_native_add_blocks">Přidat bloky</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -291,8 +316,8 @@ Language: cs_CZ
     <string name="get_likes_no_network_error">Síť není dostupná.</string>
     <string name="comments_empty_list_filtered_unreplied">Žádné nezodpovězené komentáře</string>
     <string name="comment_status_unreplied">Bez odpovědi</string>
-    <string name="gutenberg_native_add_link">Odkaz štítku</string>
     <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
+    <string name="gutenberg_native_add_link">PŘIDAT ODKAZ</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
     <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
