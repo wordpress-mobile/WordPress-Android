@@ -54,12 +54,36 @@ class CardsTrackerTest {
         verifyFooterLinkClickedTracked(Type.POST, PostSubtype.SCHEDULED)
     }
 
+    @Test
+    fun `when post draft item is clicked, then post item event is tracked`() {
+        cardsTracker.trackPostItemClicked(PostCardType.DRAFT)
+
+        verifyPostItemClickedTracked(Type.POST, PostSubtype.DRAFT)
+    }
+
+    @Test
+    fun `when post scheduled item is clicked, then post item event is tracked`() {
+        cardsTracker.trackPostItemClicked(PostCardType.SCHEDULED)
+
+        verifyPostItemClickedTracked(Type.POST, PostSubtype.SCHEDULED)
+    }
+
     private fun verifyFooterLinkClickedTracked(
         typeValue: Type,
         subtypeValue: PostSubtype
     ) {
         verify(analyticsTracker).track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
+                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue.label)
+        )
+    }
+
+    private fun verifyPostItemClickedTracked(
+        typeValue: Type,
+        subtypeValue: PostSubtype
+    ) {
+        verify(analyticsTracker).track(
+                Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
                 mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue.label)
         )
     }
