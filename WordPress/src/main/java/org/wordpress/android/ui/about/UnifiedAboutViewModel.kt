@@ -58,7 +58,7 @@ class UnifiedAboutViewModel @Inject constructor(
                     privacyPolicyUrl = Constants.URL_PRIVACY_POLICY,
                     acknowledgementsUrl = LICENSES_FILE_URL
             ),
-            analyticsTracker = AnalyticsConfig(
+            analyticsConfig = AnalyticsConfig(
                     trackScreenShown = unifiedAboutTracker::trackScreenShown,
                     trackScreenDismissed = unifiedAboutTracker::trackScreenDismissed,
                     trackButtonTapped = unifiedAboutTracker::trackButtonTapped
