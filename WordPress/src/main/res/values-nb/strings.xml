@@ -15,7 +15,6 @@ Language: nb_NO
     <string name="gutenberg_native_no_blocks_found">Ingen blokker funnet</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Vis meg rundt</string>
     <string name="login_epilogue_create_new_site_button">Lag et nytt nettsted</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">LEGG TIL LENKE</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_update">Oppdater</string>
     <string name="blogging_reminders_n_a_week">%s i uka</string>
@@ -1234,10 +1233,7 @@ Language: nb_NO
     <string name="signup_with_google_progress">Registrering hos Google…</string>
     <string name="jetpack_connection_failed_with_reason">Tilkobling til Jetpack feilet: %s</string>
     <string name="jetpack_already_connected_toast">Du er allerede koblet til Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANGRE</string>
-    <string name="menu_visual_mode_done_snackbar">Byttet til visuell modus</string>
     <string name="menu_visual_mode">Visuell modus</string>
-    <string name="menu_html_mode_done_snackbar">Byttet ti HTML-modus</string>
     <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Forhåndsvis</string>
     <string name="menu_save_as_draft">Lagre som kladd</string>
@@ -2304,7 +2300,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
-    <string name="reader_label_reply">Svar</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
     <string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>

@@ -43,7 +43,6 @@ import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
-import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
@@ -636,13 +635,6 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
-    }
-
-    public static void viewCurrentBlogComments(Context context, SiteModel site) {
-        Intent intent = new Intent(context, CommentsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
@@ -1488,13 +1480,6 @@ public class ActivityLauncher {
         intent = new Intent(activity, LoginActivity.class);
         LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
-    public static void loginWithoutMagicLink(Fragment fragment) {
-        Intent intent;
-        intent = new Intent(fragment.getContext(), LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
-        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForJetpackStats(Fragment fragment) {

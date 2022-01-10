@@ -14,16 +14,14 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class QuickStartCardSource @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
 ) : MySiteRefreshSource<QuickStartUpdate> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         quickStartRepository.resetTask()

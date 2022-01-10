@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -138,6 +140,30 @@ public class ReaderCommentTable {
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(
                 "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+        try {
+            ReaderCommentList comments = new ReaderCommentList();
+            if (c.moveToFirst()) {
+                do {
+                    comments.add(getCommentFromCursor(c));
+                } while (c.moveToNext());
+            }
+            return comments;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    @Nullable
+    public static ReaderCommentList getCommentsForPostSnippet(ReaderPost post, int limit) {
+        if (post == null) {
+            return new ReaderCommentList();
+        }
+
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(limit)};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND parent_id=0 ORDER BY timestamp LIMIT ?",
+                args
+        );
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {

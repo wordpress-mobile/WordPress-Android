@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -26,12 +28,15 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Info;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import javax.inject.Inject;
 
@@ -54,6 +59,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject AccountStore mAccountStore;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -139,12 +145,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
             showQuickStartFocusPoint();
-
-            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(requireContext(),
-                    R.string.quick_start_dialog_enable_sharing_message_short_connections);
-
-            WPDialogSnackbar.make(getView(), title,
-                    getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)).show();
+            showQuickStartSnackbar();
         }
     }
 
@@ -175,6 +176,16 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                 }
             }
         });
+    }
+
+    private void showQuickStartSnackbar() {
+        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                requireContext(),
+                R.string.quick_start_dialog_enable_sharing_message_short_connections
+        );
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(new Info(mRecycler, new UiStringText(title), Snackbar.LENGTH_LONG))
+        );
     }
 
     @Override

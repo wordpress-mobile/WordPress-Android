@@ -430,11 +430,8 @@ Language: es_CL
     <string name="menu_preview">Vista previa</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_html_mode">Modo HTML</string>
-    <string name="menu_html_mode_done_snackbar">Cambiado al modo HTML</string>
     <string name="menu_save_as_draft">Guardar como Borrador</string>
-    <string name="menu_undo_snackbar_action">DESHACER</string>
     <string name="menu_visual_mode">Modo Visual</string>
-    <string name="menu_visual_mode_done_snackbar">Cambiado al modo visual</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
     <string name="site_settings_quota_header">Multimedia</string>
@@ -1476,7 +1473,6 @@ Language: es_CL
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
-    <string name="reader_label_reply">Responder</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
     <string name="cant_share_no_visible_blog">No puedes compartir en WordPress sin un blog visible</string>
     <string name="pick_photo">Elige una foto</string>

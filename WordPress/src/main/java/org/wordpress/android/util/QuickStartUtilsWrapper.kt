@@ -42,21 +42,6 @@ class QuickStartUtilsWrapper
         return QuickStartUtils.stylizeQuickStartPrompt(
                 activityContext = activityContext,
                 messageId = messageId,
-                isThemedSnackbar = false,
-                iconId = iconId
-        )
-    }
-
-    @JvmOverloads
-    fun stylizeThemedQuickStartPrompt(
-        activityContext: Context,
-        messageId: Int,
-        iconId: Int = QuickStartUtils.ICON_NOT_SET
-    ): Spannable {
-        return QuickStartUtils.stylizeQuickStartPrompt(
-                activityContext = activityContext,
-                messageId = messageId,
-                isThemedSnackbar = true,
                 iconId = iconId
         )
     }

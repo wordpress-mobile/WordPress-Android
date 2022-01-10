@@ -6,6 +6,8 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.reader.FollowConversationStatusFlags
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.DISABLE_PUSH_NOTIFICATION
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.ENABLE_PUSH_NOTIFICATION
@@ -71,11 +73,13 @@ class ReaderCommentsFollowUseCase @Inject constructor(
     suspend fun setMySubscriptionToPost(
         blogId: Long,
         postId: Long,
-        subscribe: Boolean
+        subscribe: Boolean,
+        source: ThreadedCommentsActionSource
     ): Flow<FollowCommentsState> = flow {
         val properties = mutableMapOf<String, Any?>()
 
         properties.addFollowAction(subscribe)
+        properties.addFollowActionSource(source)
 
         emit(FollowCommentsState.Loading)
 
@@ -130,10 +134,12 @@ class ReaderCommentsFollowUseCase @Inject constructor(
     suspend fun setEnableByPushNotifications(
         blogId: Long,
         postId: Long,
-        enable: Boolean
+        enable: Boolean,
+        source: ThreadedCommentsActionSource
     ): Flow<FollowCommentsState> = flow {
         val properties = mutableMapOf<String, Any?>()
         properties.addEnablePushNotificationAction(enable)
+        properties.addFollowActionSource(source)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(FollowCommentsState.FollowStateChanged(
@@ -213,6 +219,10 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         object FollowCommentsNotAllowed : FollowCommentsState()
 
         object UserNotAuthenticated : FollowCommentsState()
+
+        data class FlagsMappedState(
+            val flags: FollowConversationStatusFlags
+        ) : FollowCommentsState()
     }
 
     private enum class AnalyticsFollowCommentsAction(val action: String) {
@@ -260,9 +270,17 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         return this
     }
 
+    private fun MutableMap<String, Any?>.addFollowActionSource(
+        source: ThreadedCommentsActionSource
+    ): MutableMap<String, Any?> {
+        this[FOLLOW_COMMENT_ACTION_SOURCE] = source.sourceDescription
+        return this
+    }
+
     companion object {
         private const val FOLLOW_COMMENT_ACTION = "follow_action"
         private const val FOLLOW_COMMENT_ACTION_RESULT = "follow_action_result"
         private const val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"
+        private const val FOLLOW_COMMENT_ACTION_SOURCE = "source"
     }
 }
