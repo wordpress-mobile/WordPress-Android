@@ -1105,6 +1105,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
+    @Test
+    fun `given post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
