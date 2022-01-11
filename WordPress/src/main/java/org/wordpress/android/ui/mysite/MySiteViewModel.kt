@@ -760,6 +760,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun onPostItemClick(params: PostItemClickParams) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
+            cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))

@@ -4,7 +4,7 @@ ext {
     wordPressLoginVersion = '0.0.8'
     gutenbergMobileVersion = '4291-b86cf372385217d3a8cdd38bcce45b9ceeeaddbd'
     storiesVersion = '1.2.0'
-    aboutAutomatticVersion = '0.0.2'
+    aboutAutomatticVersion = '0.0.4'
 
     minSdkVersion = 24
     compileSdkVersion = 31
@@ -14,7 +14,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.32.0'
+    fluxCVersion = '1.33.0'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
