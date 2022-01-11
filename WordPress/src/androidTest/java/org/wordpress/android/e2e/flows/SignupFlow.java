@@ -86,8 +86,13 @@ public class SignupFlow {
     }
 
     public void confirmSignup() {
-        // Confirm signup
+        // Confirm if signup is successful and "My Site" button is visible at bottom bar
         waitForElementToBeDisplayed(R.id.nav_sites);
+
+        // After successful signup, the list data in "Reader" screen starts to load. If we end the test before the
+        // data is loaded, ReaderExpandableTagsView is crashing after ending the test. Because it can't access Hilt
+        // components.
+        // Navigate "My Site" to ensure there is no problem and avoid ReaderExpandableTagsView crash.
         new MySitesPage().go();
     }
 }
