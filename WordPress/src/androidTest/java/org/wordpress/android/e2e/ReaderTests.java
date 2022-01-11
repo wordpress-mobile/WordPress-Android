@@ -8,7 +8,6 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
@@ -51,7 +50,6 @@ public class ReaderTests extends BaseTest {
                 .goBackToReader();
     }
 
-    @Ignore
     @Test
     public void likePost() throws UiObjectNotFoundException {
         new ReaderPage()
