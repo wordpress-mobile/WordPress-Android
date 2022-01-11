@@ -19,7 +19,7 @@ public class ReaderViewPage {
     String mLikeCountId = "org.wordpress.android.prealpha:id/text_count";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
 
-    UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
+
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
     UiObject mLikeCount = mDevice.findObject(new UiSelector().resourceId(mLikeCountId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
@@ -48,6 +48,7 @@ public class ReaderViewPage {
     private void tapLikeButton() {
         try {
             mSwipeForMore.waitUntilGone(DEFAULT_TIMEOUT);
+            UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
             mLikeButton.click();
         } catch (Exception e) {
             // Ignore
