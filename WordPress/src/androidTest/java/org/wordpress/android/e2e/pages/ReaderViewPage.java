@@ -18,15 +18,13 @@ public class ReaderViewPage {
 
     String mLikeButtonId = "org.wordpress.android.prealpha:id/count_likes";
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
-    String mLikeCountId = "org.wordpress.android.prealpha:id/text_count";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
-    String mPostTitleId = "org.wordpress.android.prealpha:id/text_title";
+    String mLayoutBlogSectionId = "org.wordpress.android.prealpha:id/layout_blog_section";
 
     UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
-    UiObject mLikeCount = mDevice.findObject(new UiSelector().resourceId(mLikeCountId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
-    UiObject mPostTitle = mDevice.findObject(new UiSelector().resourceId(mPostTitleId));
+    UiObject mLayoutBlogSection = mDevice.findObject(new UiSelector().resourceId(mLayoutBlogSectionId));
     UiObject mSwipeForMore = mDevice.findObject(new UiSelector().textContains("Swipe for more"));
 
     public ReaderViewPage waitUntilLoaded() {
@@ -58,7 +56,7 @@ public class ReaderViewPage {
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
             // Click outside the footer to remove focus
-            mPostTitle.click();
+            mLayoutBlogSection.click();
         } catch (Exception e) {
             // Ignore
         }
@@ -79,10 +77,12 @@ public class ReaderViewPage {
 
     public ReaderViewPage verifyPostLiked() throws UiObjectNotFoundException {
         boolean likerDisplayed = mLikerContainer.exists();
-        boolean postHasOneLike = mLikeCount.getText().equals("1");
+        String likeButtonDescription = mLikeButton.getContentDescription();
+
 
         assertTrue("Liker was not displayed.", likerDisplayed);
-        assertTrue("Like count was different from '1'.", postHasOneLike);
+        assertTrue("Like button content description was different from 'You like this'.",
+                likeButtonDescription.equals("You like this"));
 
         return this;
     }
