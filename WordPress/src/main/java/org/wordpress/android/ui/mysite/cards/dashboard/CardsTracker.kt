@@ -29,9 +29,23 @@ class CardsTracker @Inject constructor(
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
+    fun trackPostItemClicked(postCardType: PostCardType) {
+        trackCardPostItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
+    }
+
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
+                mapOf(
+                        TYPE to type,
+                        SUBTYPE to subtype
+                )
+        )
+    }
+
+    private fun trackCardPostItemClicked(type: String, subtype: String) {
+        analyticsTrackerWrapper.track(
+                Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
                 mapOf(
                         TYPE to type,
                         SUBTYPE to subtype

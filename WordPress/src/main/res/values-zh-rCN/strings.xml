@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-08 13:54:08+0000
+Translation-Revision-Date: 2021-12-21 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">确认</string>
+    <string name="about_automattic_source_code">源代码</string>
+    <string name="about_automattic_california_privacy_notice">加州隐私声明</string>
+    <string name="about_automattic_privacy_policy">隐私政策</string>
+    <string name="about_automattic_terms_of_service">服务条款</string>
+    <string name="about_automattic_work_from_anywhere">随时随地工作</string>
+    <string name="about_automattic_work_with_us">与我们合作</string>
+    <string name="about_automattic_family">Automattic 家族</string>
+    <string name="about_automattic_legal_and_more">法律及更多信息</string>
+    <string name="about_automattic_rate_us">给我们评分</string>
+    <string name="about_automattic_share_with_friends">分享给朋友</string>
+    <string name="about_automattic_version_label">版本 %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">确认</string>
+    <string name="about_automattic_legal_page_title">法律及更多信息</string>
+    <string name="about_automattic_main_page_title">关于 %1$s</string>
+    <string name="about_automattic_app_name">关于 Automattic</string>
+    <string name="about_blog">博客</string>
+    <string name="gutenberg_native_the_basics">基础知识</string>
+    <string name="gutenberg_native_selected_default">已选：默认</string>
+    <string name="gutenberg_native_more_support_options">更多支持选项</string>
+    <string name="gutenberg_native_get_support">获取支持</string>
+    <string name="gutenberg_native_font_size">字体大小</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">轻按两下选择字体大小</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">轻按两下选择默认字体大小</string>
+    <string name="gutenberg_native_contact_support">联系支持</string>
+    <string name="my_site_no_content_post">尚无评论</string>
+    <string name="reader_comments_follow_conversation">关注对话</string>
+    <string name="reader_comments_be_first_to_comment">成为第一个发表评论的用户</string>
+    <string name="reader_comments_view_all">查看所有评论</string>
+    <string name="reader_comments_post_fetch_failure">获取文章数据时出错</string>
+    <string name="reader_comments_fetch_failure">获取评论时出错</string>
+    <string name="reader_btn_follow_conversation_settings">关注对话设置</string>
     <string name="gutenberg_native_from_clipboard">从剪贴板</string>
     <string name="gutenberg_native_featured_image">特色图片</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">从剪贴板复制 URL，%s</string>
@@ -154,7 +186,6 @@ Language: zh_CN
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">无效 URL。请输入有效 URL。</string>
     <string name="gutenberg_native_embed_caption_s">嵌入说明文字。%s</string>
     <string name="gutenberg_native_embed_caption_empty">嵌入说明文字。空</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">添加链接</string>
     <string name="activity_log_visit_our_documentation_page">访问我们的文档页面</string>
     <string name="activity_log_multisite_message">多站点安装的 Jetpack Backup 只提供可下载的备份，没有一键还原。更多信息 %1$s。</string>
     <string name="blogging_reminders_tip_message">定期发布文章有助于留住读者以及吸引新访客访问您的站点。</string>
@@ -202,7 +233,6 @@ Language: zh_CN
     <string name="gutenberg_native_s_has_no_url_set">%s没有URL集</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已转换为常规区块</string>
     <string name="gutenberg_native_s_block">%s区块</string>
-    <string name="gutenberg_native_minimum_height">最小高度</string>
     <string name="gutenberg_native_media_options">媒体选项</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">无效的URL。找不到音频文件。</string>
     <string name="gutenberg_native_insert_crosspost">插入交叉发表</string>
@@ -223,7 +253,6 @@ Language: zh_CN
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以修复威胁。</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">双击可添加链接。</string>
-    <string name="gutenberg_native_edit_link">编辑链接</string>
     <string name="login_empty_view_try_another_account">使用其他账户尝试</string>
     <string name="login_empty_view_see_instructions">请参阅说明</string>
     <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
@@ -232,28 +261,21 @@ Language: zh_CN
     <string name="gutenberg_native_move_image_forward">前移图像</string>
     <string name="gutenberg_native_move_image_backward">后移图像</string>
     <string name="gutenberg_native_width_settings">宽度设置</string>
-    <string name="gutenberg_native_image_settings">图像设置</string>
     <string name="user_profile_untitled_site">（无标题）</string>
     <string name="user_profile_site_section_header">站点</string>
     <string name="user_profile_bottom_sheet_description">用户个人资料底部信息</string>
     <string name="likes_list_screen_title">作者 %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">排序和筛选</string>
     <string name="gutenberg_native_s_social_icon">%s 社交图标</string>
     <string name="gutenberg_native_mention">提及</string>
     <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_preview_page">预览页面</string>
-    <string name="gutenberg_native_post_meta_settings">文章元数据设置</string>
-    <string name="gutenberg_native_post_content_settings">文章内容设置</string>
     <string name="gutenberg_native_retry">重试</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
     <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
-    <string name="gutenberg_native_embed_link">嵌入链接</string>
-    <string name="gutenberg_native_display_post_date">显示文章日期</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
-    <string name="gutenberg_native_none">无</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
     <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
@@ -291,7 +313,6 @@ Language: zh_CN
     <string name="get_likes_no_network_error">无网络可用。</string>
     <string name="comments_empty_list_filtered_unreplied">没有未回复的评论</string>
     <string name="comment_status_unreplied">未回复</string>
-    <string name="gutenberg_native_add_link">添加链接</string>
     <string name="gutenberg_native_search_settings">搜索设置</string>
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="site_settings_denylist_title">不允许的评论</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-08 16:54:08+0000
+Translation-Revision-Date: 2021-12-21 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Teşekkürler</string>
+    <string name="about_automattic_source_code">Kaynak kodu</string>
+    <string name="about_automattic_california_privacy_notice">Kaliforniya için gizlilik bildirimi</string>
+    <string name="about_automattic_privacy_policy">Gizlilik politikası</string>
+    <string name="about_automattic_terms_of_service">Hizmet koşulları</string>
+    <string name="about_automattic_work_from_anywhere">İstediğiniz yerden çalışın</string>
+    <string name="about_automattic_work_with_us">Bizimle çalışın</string>
+    <string name="about_automattic_family">Automattic ailesi</string>
+    <string name="about_automattic_legal_and_more">Yasal bilgiler ve daha fazlası</string>
+    <string name="about_automattic_rate_us">Bizi değerlendirin</string>
+    <string name="about_automattic_share_with_friends">Arkadaşlarla paylaş</string>
+    <string name="about_automattic_version_label">Sürüm %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Teşekkürler</string>
+    <string name="about_automattic_legal_page_title">Yasal Bilgiler ve Daha Fazlası</string>
+    <string name="about_automattic_main_page_title">%1$s Hakkında</string>
+    <string name="about_automattic_app_name">Automattic Hakkında</string>
+    <string name="gutenberg_native_the_basics">Temel bilgiler</string>
+    <string name="gutenberg_native_selected_default">Seçili: Varsayılan</string>
+    <string name="gutenberg_native_more_support_options">Daha fazla destek seçeneği</string>
+    <string name="gutenberg_native_get_support">Destek alın</string>
+    <string name="gutenberg_native_font_size">Font Boyutu</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Yazı tipi boyutunu seçmek için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Varsayılan yazı tipi boyutunu seçmek için iki kez dokunun</string>
+    <string name="gutenberg_native_contact_support">Destek ile iletişim kur</string>
+    <string name="my_site_no_content_post">İçerik Yok</string>
+    <string name="reader_comments_follow_conversation">Sohbeti Takip Et</string>
+    <string name="reader_comments_be_first_to_comment">İlk yorumu siz yapın</string>
+    <string name="reader_comments_view_all">Tüm yorumları görüntüle</string>
+    <string name="reader_comments_post_fetch_failure">Gönderi verileri alınırken bir hata oluştu </string>
+    <string name="reader_comments_fetch_failure">Yorumlar alınırken bir hata oluştu</string>
+    <string name="reader_btn_follow_conversation_settings">Sohbet takip ayarları</string>
     <string name="gutenberg_native_from_clipboard">Panodan</string>
     <string name="gutenberg_native_featured_image">Öne çıkan görsel</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">URL\'yi panodan kopyalayın, %s</string>
@@ -151,7 +182,6 @@ Language: tr
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Geçersiz URL. Lütfen geçerli bir URL girin.</string>
     <string name="gutenberg_native_embed_caption_s">Açıklama göm. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Açıklama göm. Boş</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">BAĞLANTI EKLE</string>
     <string name="activity_log_visit_our_documentation_page">belge sayfamızı ziyaret edin</string>
     <string name="activity_log_multisite_message">Çoklu site kurulumları için Jetpack Backup, indirilebilir yedekler sunar, tek tıkla geri yükleme sunmaz. Daha fazla bilgi için %1$s.</string>
     <string name="blogging_reminders_tip_message">Düzenli olarak paylaşım yapmak, okuyucularınızın ilgisini ve sitenize de yeni ziyaretçileri çekmenize yardımcı olabilir.</string>
@@ -199,7 +229,6 @@ Language: tr
     <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s normal bloklara dönüştürüldü</string>
     <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_minimum_height">Minimum yükseklik</string>
     <string name="gutenberg_native_media_options">Medya seçenekleri</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Geçersiz URL. Ses dosyası bulunamadı.</string>
     <string name="gutenberg_native_insert_crosspost">Çapraz gönderi ekle</string>
@@ -220,7 +249,6 @@ Language: tr
     <string name="threat_fix_enter_server_creds_msg_plural">Tehditleri gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Tehdidi gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Bağlantı eklemek için iki kez dokunun.</string>
-    <string name="gutenberg_native_edit_link">BAĞLANTIYI DÜZENLE</string>
     <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
     <string name="login_empty_view_see_instructions">Talimatlara bakın</string>
     <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini yüklemeniz ve WordPress.com hesabınıza bağlamanız gerekir.</string>
@@ -229,28 +257,21 @@ Language: tr
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
     <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
-    <string name="gutenberg_native_image_settings">Görsel ayarları</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sıralama ve filtreleme</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
-    <string name="gutenberg_native_post_meta_settings">Yazı meta ayarları</string>
-    <string name="gutenberg_native_post_content_settings">Yazı içeriği ayarları</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
-    <string name="gutenberg_native_embed_link">Bağlantı göm</string>
-    <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
-    <string name="gutenberg_native_none">Hiçbiri</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
     <string name="gutenberg_native_add_blocks">Blok ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
@@ -288,7 +309,7 @@ Language: tr
     <string name="get_likes_no_network_error">Kullanılabilir ağ yok.</string>
     <string name="comments_empty_list_filtered_unreplied">Cevaplanmamış yorum yok</string>
     <string name="comment_status_unreplied">Cevaplanmamış</string>
-    <string name="gutenberg_native_add_link">Bağlantı ekle</string>
+    <string name="gutenberg_native_add_link">BAĞLANTI EKLE</string>
     <string name="gutenberg_native_search_settings">Arama ayarları</string>
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>

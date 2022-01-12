@@ -10,6 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -127,5 +128,10 @@ public class LoginFlow {
         populateTextField(R.id.input, siteAddress);
         clickOn(R.id.bottom_button);
         return this;
+    }
+
+    public HelpAndSupportScreen tapHelp() {
+        clickOn(onView(withId(R.id.help)));
+        return new HelpAndSupportScreen();
     }
 }

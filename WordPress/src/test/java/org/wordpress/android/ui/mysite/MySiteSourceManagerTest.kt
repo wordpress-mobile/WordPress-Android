@@ -279,7 +279,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     /* ON RESUME */
 
     @Test
-    fun `given not first resume and phase 2 disabled, when on resume, then update site settings if necessary`() {
+    fun `given site not selected and phase 2 disabled, when on resume, then update site settings if necessary`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
 
         mySiteSourceManager.onResume(false)
@@ -288,7 +288,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given not first resume and phase 2 disabled, when on resume, then refresh quick start`() {
+    fun `given site not selected and phase 2 disabled, when on resume, then refresh quick start`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
 
         mySiteSourceManager.onResume(false)
@@ -297,7 +297,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given not first resume and phase 2 disabled, when on resume, then refresh current avatar`() {
+    fun `given site not selected and phase 2 disabled, when on resume, then refresh current avatar`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
 
         mySiteSourceManager.onResume(false)
@@ -306,49 +306,49 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given first resume and phase 2 disabled, when on resume, then update site settings if necessary`() {
+    fun `given site selected and phase 2 disabled, when on resume, then update site settings if necessary`() {
         mySiteSourceManager.onResume(true)
 
         verify(selectedSiteSource).updateSiteSettingsIfNecessary()
     }
 
     @Test
-    fun `given first resume and phase 2 disabled, when on resume, then refresh quick start`() {
+    fun `given site selected and phase 2 disabled, when on resume, then refresh quick start`() {
         mySiteSourceManager.onResume(true)
 
         verify(quickStartCardSource).refresh()
     }
 
     @Test
-    fun `given first resume and phase 2 disabled, when on resume, then refresh current avatar`() {
+    fun `given site selected and phase 2 disabled, when on resume, then refresh current avatar`() {
         mySiteSourceManager.onResume(true)
 
         verify(currentAvatarSource).refresh()
     }
 
     @Test
-    fun `given first resume and phase 2 enabled, when on resume, then update site settings if necessary`() {
+    fun `given site selected and phase 2 enabled, when on resume, then update site settings if necessary`() {
         mySiteSourceManager.onResume(true)
 
         verify(selectedSiteSource).updateSiteSettingsIfNecessary()
     }
 
     @Test
-    fun `given first resume and phase 2 enabled, when on resume, then refresh quick start`() {
+    fun `given site selected and phase 2 enabled, when on resume, then refresh quick start`() {
         mySiteSourceManager.onResume(true)
 
         verify(quickStartCardSource).refresh()
     }
 
     @Test
-    fun `given first resume and phase 2 enabled, when on resume, then refresh current avatar`() {
+    fun `given site selected and phase 2 enabled, when on resume, then refresh current avatar`() {
         mySiteSourceManager.onResume(true)
 
         verify(currentAvatarSource).refresh()
     }
 
     @Test
-    fun `given first resume and phase 2 enabled, when on resume, then refresh is invoked`() {
+    fun `given site selected and phase 2 enabled, when on resume, then refresh is invoked`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
 
         mySiteSourceManager.onResume(false)

@@ -17,15 +17,13 @@ class DynamicCardsSource
     private val dynamicCardStore: DynamicCardStore,
     private val selectedSiteRepository: SelectedSiteRepository
 ) : MySiteRefreshSource<DynamicCardsUpdate> {
-    override val refresh = MutableLiveData(true)
+    override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DynamicCardsUpdate> {
-        val data = MediatorLiveData<DynamicCardsUpdate>()
-        data.refreshData(coroutineScope, siteLocalId)
-        data.addSource(refresh) {
-            data.refreshData(coroutineScope, siteLocalId, refresh.value)
-        }
-        return data
+        val result = MediatorLiveData<DynamicCardsUpdate>()
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        refresh()
+        return result
     }
 
     private fun MediatorLiveData<DynamicCardsUpdate>.refreshData(

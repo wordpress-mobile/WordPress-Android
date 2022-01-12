@@ -2204,7 +2204,7 @@
 
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
-    <string name="my_site_dashboard_stale_message">Couldn\'t update dashboard. Check your connection and pull to refresh.</string>
+    <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
@@ -2220,8 +2220,8 @@
     <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
 
     <!-- My Site - Error Card -->
-    <string name="my_site_error_card_title">Some data wasn\'t loaded</string>
-    <string name="my_site_error_card_subtitle">Couldn\'t display more data about your site right now.</string>
+    <string name="my_site_error_card_title">Some data hasn\'t loaded</string>
+    <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -3354,6 +3354,7 @@
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Add link to %s</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources">ADD MEDIA</string>
     <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Add paragraph block</string>
     <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources">Add this email link</string>
     <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources">Add this link</string>
@@ -3362,6 +3363,7 @@
     <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Add To End</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources">Address Settings</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
@@ -3407,6 +3409,7 @@
     <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Clear search</string>
     <!-- translators: %d: column index. -->
     <string name="gutenberg_native_column_d" tools:ignore="UnusedResources">Column %d</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources">Column Settings</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources">Contact support</string>
     <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources">Convert to link</string>
@@ -3559,14 +3562,18 @@ translators: %s: Select control button label e.g. "Button width" -->
     <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">No custom placeholder set</string>
     <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources">No preview available</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Layout may vary between themes and screen sizes</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Note: You must allow WordPress.com login to edit this block in the mobile editor.</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
     <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Once you become familiar with the names of different blocks, you can add a block by typing a forward slash followed by the block name — for example, /image or /heading.</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open" tools:ignore="UnusedResources">OPEN</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources">Open Jetpack Security settings</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
     <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Outside</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources">Padding</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
     <!-- translators: accessibility text. empty page title. -->
@@ -3646,6 +3653,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Text color</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">The basics</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>
@@ -3676,6 +3684,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
     <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X–Axis Position</string>
     <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y–Axis Position</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">You can edit this block using the web version of the editor.</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">You can rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it above or below other blocks.</string>
     <!--/Autogenerated:Gutenberg Native-->
     <string name="toast_capture_operation_permission_needed">You need to grant the app audio recording permission in order to record video</string>
@@ -3864,22 +3873,31 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
-    <string name="about_automattic_app_name">About Automattic</string>
     <string name="about_automattic_main_page_title">About %1$s</string>
     <string name="about_automattic_legal_page_title">Legal and More</string>
     <string name="about_automattic_acknowledgements_page_title">Acknowledgements</string>
     <string name="about_automattic_version_label">Version %1$s</string>
-    <string name="about_automattic_share_with_friends">Share with friends</string>
-    <string name="about_automattic_rate_us">Rate us</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_legal_and_more">Legal and more</string>
-    <string name="about_automattic_family">Automattic family</string>
-    <string name="about_automattic_work_with_us">Work with us</string>
-    <string name="about_automattic_work_from_anywhere">Work from anywhere</string>
-    <string name="about_automattic_terms_of_service">Terms of service</string>
-    <string name="about_automattic_privacy_policy">Privacy policy</string>
-    <string name="about_automattic_california_privacy_notice">California privacy notice</string>
-    <string name="about_automattic_source_code">Source code</string>
-    <string name="about_automattic_acknowledgements">Acknowledgements</string>
+    <string name="about_automattic_share_with_friends_item_title">Share with Friends</string>
+    <string name="about_automattic_rate_us_item_title">Rate Us</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_legal_and_more_item_title">Legal and More</string>
+    <string name="about_automattic_family_item_title">Automattic Family</string>
+    <string name="about_automattic_work_with_us_item_title">Work With Us</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Work from Anywhere</string>
+    <string name="about_automattic_terms_of_service_item_title">Terms of Service</string>
+    <string name="about_automattic_privacy_policy_item_title">Privacy Policy</string>
+    <string name="about_automattic_california_privacy_notice_item_title">California Privacy Notice</string>
+    <string name="about_automattic_source_code_item_title">Source Code</string>
+    <string name="about_automattic_acknowledgements_item_title">Acknowledgements</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_logo_description">Automattic logo</string>
+    <string name="about_automattic_back_icon_description">Back icon</string>
+    <string name="about_automattic_app_icon_description">App icon</string>
 </resources>
