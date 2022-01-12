@@ -1,5 +1,7 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.KeyEvent;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
@@ -14,15 +16,17 @@ import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    String mLikeButtonId = "org.wordpress.android.prealpha:id/bookmark";
+    String mLikeButtonId = "org.wordpress.android.prealpha:id/count_likes";
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
     String mLikeCountId = "org.wordpress.android.prealpha:id/text_count";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
+    String mPostTitleId = "org.wordpress.android.prealpha:id/text_title";
 
     UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
     UiObject mLikeCount = mDevice.findObject(new UiSelector().resourceId(mLikeCountId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
+    UiObject mPostTitle = mDevice.findObject(new UiSelector().resourceId(mPostTitleId));
     UiObject mSwipeForMore = mDevice.findObject(new UiSelector().textContains("Swipe for more"));
 
     public ReaderViewPage waitUntilLoaded() {
@@ -48,7 +52,13 @@ public class ReaderViewPage {
     private void tapLikeButton() {
         try {
             mSwipeForMore.waitUntilGone(DEFAULT_TIMEOUT);
-            mLikeButton.click();
+            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
+            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
+            // Click outside the footer to remove focus
+            mPostTitle.click();
         } catch (Exception e) {
             // Ignore
         }

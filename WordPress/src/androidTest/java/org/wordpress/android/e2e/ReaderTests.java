@@ -55,7 +55,6 @@ public class ReaderTests extends BaseTest {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mPostTitle)
-                .verifyPostNotLiked()
                 .like()
                 .verifyPostLiked()
                 .unlike()
