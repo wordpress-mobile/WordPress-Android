@@ -77,8 +77,10 @@ public class ReaderViewPage {
     }
 
     public ReaderViewPage verifyPostDisplayed(String title, String content) {
-        assertTrue("Post title was not displayed", mDevice.findObject(new UiSelector().text(title)).exists());
-        assertTrue("Post text was not displayed.", mDevice.findObject(new UiSelector().text(content)).exists());
+        assertTrue("Post title was not displayed",
+                mDevice.findObject(new UiSelector().textContains(title)).waitForExists(DEFAULT_TIMEOUT));
+        assertTrue("Post content was not displayed.",
+                mDevice.findObject(new UiSelector().text(content)).waitForExists(DEFAULT_TIMEOUT));
 
         return this;
     }
