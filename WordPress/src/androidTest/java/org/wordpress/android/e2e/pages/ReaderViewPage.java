@@ -10,7 +10,6 @@ import androidx.test.uiautomator.UiSelector;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.DEFAULT_TIMEOUT;
-import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -77,9 +76,9 @@ public class ReaderViewPage {
         return new ReaderPage();
     }
 
-    public ReaderViewPage verifyPostDisplayed(String title, String text) {
-        assertTrue("Post title was not displayed", isTextDisplayed(title));
-        assertTrue("Post text was not displayed.", isTextDisplayed(text));
+    public ReaderViewPage verifyPostDisplayed(String title, String content) {
+        assertTrue("Post title was not displayed", mDevice.findObject(new UiSelector().text(title)).exists());
+        assertTrue("Post text was not displayed.", mDevice.findObject(new UiSelector().text(content)).exists());
 
         return this;
     }
