@@ -335,7 +335,7 @@ jobs:
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk
           test-apk-path: libs/utils/WordPressUtils/build/outputs/apk/androidTest/debug/WordPressUtils-debug-androidTest.apk
-          device: model=Pixel2,version=28,locale=en,orientation=portrait
+          device: model=Pixel2,version=30,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
           results-history-name: CircleCI WPUtils Connected Tests
