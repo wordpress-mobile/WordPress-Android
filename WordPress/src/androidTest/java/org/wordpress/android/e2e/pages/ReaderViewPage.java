@@ -80,7 +80,7 @@ public class ReaderViewPage {
         assertTrue("Post title was not displayed",
                 mDevice.findObject(new UiSelector().textContains(title)).waitForExists(DEFAULT_TIMEOUT));
         assertTrue("Post content was not displayed.",
-                mDevice.findObject(new UiSelector().text(content)).waitForExists(DEFAULT_TIMEOUT));
+                mDevice.findObject(new UiSelector().textContains(content)).waitForExists(DEFAULT_TIMEOUT));
 
         return this;
     }
