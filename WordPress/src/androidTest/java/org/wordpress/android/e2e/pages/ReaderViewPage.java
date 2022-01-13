@@ -1,5 +1,6 @@
 package org.wordpress.android.e2e.pages;
 
+import android.graphics.Rect;
 import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -16,10 +17,12 @@ import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
+    String mTextTitleContainerId = "org.wordpress.android.prealpha:id/text_title";
     String mLikeButtonId = "org.wordpress.android.prealpha:id/count_likes";
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
 
+    UiObject mTextTitleContainer = mDevice.findObject(new UiSelector().resourceId(mTextTitleContainerId));
     UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
@@ -50,17 +53,24 @@ public class ReaderViewPage {
             mSwipeForMore.waitUntilGone(DEFAULT_TIMEOUT);
             // Even though it was working locally in simulator, tapping the footer buttons like 'mLikeButton.click()'
             // was not working in CI with same settings Pixel 2 API 28 Android 9.0.
+            // mLikeButton.click();
             // The current workaround is to use arrows navigation.
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
             mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
-            // Click somewhere remove focus
-            mDevice.click(10, 10);
+            // Click somewhere to remove focus
+            removeFooterButtonFocus();
         } catch (Exception e) {
             // Ignore
         }
+    }
+
+    private void removeFooterButtonFocus() throws UiObjectNotFoundException {
+        Rect textTitleContainerBounds = mTextTitleContainer.getBounds();
+        mDevice.drag(textTitleContainerBounds.centerX(), textTitleContainerBounds.top,
+                textTitleContainerBounds.centerX(), textTitleContainerBounds.centerY(), 10);
     }
 
     public ReaderPage goBackToReader() {
@@ -76,14 +86,10 @@ public class ReaderViewPage {
         return this;
     }
 
-    public ReaderViewPage verifyPostLiked() throws UiObjectNotFoundException {
+    public ReaderViewPage verifyPostLiked() {
         boolean likerDisplayed = mLikerContainer.exists();
-        String likeButtonDescription = mLikeButton.getContentDescription();
-
 
         assertTrue("Liker was not displayed.", likerDisplayed);
-        assertTrue("Like button content description was different from 'You like this'.",
-                likeButtonDescription.equals("You like this"));
 
         return this;
     }
