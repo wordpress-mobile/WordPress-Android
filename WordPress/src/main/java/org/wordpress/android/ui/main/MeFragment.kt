@@ -162,15 +162,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         if (unifiedAboutFeatureConfig.isEnabled()) {
-            recommendTheAppContainer.isVisible = false
             aboutTheAppContainer.isVisible = true
 
             rowAboutTheApp.setOnClickListener {
                 viewModel.showUnifiedAbout()
             }
-        } else {
-            initRecommendUiState()
         }
+
+        initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
